@@ -1,1 +1,8 @@
 <?php
+
+// DBサーバ接続設定
+$GLOBALS['DSN']['development']['default'] = array(
+	'dsn'        => 'mysql:host=localhost;dbname=dbname',
+	'username'   => 'root',
+	'password'   => '',
+);
