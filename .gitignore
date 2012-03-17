@@ -17,5 +17,3 @@ config.php
 public_html
 
 /fuel/app/config/crypt.php
-
-fuel/app/config/development/db.php
