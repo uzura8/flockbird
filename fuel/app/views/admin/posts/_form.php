@@ -10,14 +10,6 @@
 			</div>
 		</div>
 		<div class="clearfix">
-			<?php echo Form::label('Slug', 'slug'); ?>
-
-			<div class="input">
-				<?php echo Form::input('slug', Input::post('slug', isset($post) ? $post->slug : ''), array('class' => 'span6')); ?>
-
-			</div>
-		</div>
-		<div class="clearfix">
 			<?php echo Form::label('Summary', 'summary'); ?>
 
 			<div class="input">
@@ -37,7 +29,7 @@
 			<?php echo Form::label('User id', 'user_id'); ?>
 
 			<div class="input">
-				<?php echo Form::input('user_id', Input::post('user_id', isset($post) ? $post->user_id : ''), array('class' => 'span6')); ?>
+				<?php echo Form::select('user_id', Input::post('user_id', isset($post) ? $post->user_id : $current_user->id), $users, array('class' => 'span6')); ?>
 
 			</div>
 		</div>

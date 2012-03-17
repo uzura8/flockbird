@@ -27,7 +27,7 @@ class Model_Post extends \Orm\Model
 	{
 		$val = Validation::forge($factory);
 		$val->add_field('title', 'Title', 'required|max_length[255]');
-		$val->add_field('slug', 'Slug', 'required|max_length[255]');
+		//$val->add_field('slug', 'Slug', 'required|max_length[255]');
 		$val->add_field('summary', 'Summary', 'required');
 		$val->add_field('body', 'Body', 'required');
 		$val->add_field('user_id', 'User Id', 'required|valid_string[numeric]');

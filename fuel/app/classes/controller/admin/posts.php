@@ -16,7 +16,6 @@ class Controller_Admin_Posts extends Controller_Admin
 
 		$this->template->title = "Post";
 		$this->template->content = View::forge('admin/posts/view', $data);
-
 	}
 
 	public function action_create($id = null)
@@ -29,7 +28,8 @@ class Controller_Admin_Posts extends Controller_Admin
 			{
 				$post = Model_Post::forge(array(
 					'title' => Input::post('title'),
-					'slug' => Input::post('slug'),
+					//'slug' => Input::post('slug'),
+					'slug' => Inflector::friendly_title(Input::post('title'), '-', true),
 					'summary' => Input::post('summary'),
 					'body' => Input::post('body'),
 					'user_id' => Input::post('user_id'),
@@ -53,9 +53,13 @@ class Controller_Admin_Posts extends Controller_Admin
 			}
 		}
 
-		$this->template->title = "Posts";
-		$this->template->content = View::forge('admin/posts/create');
+		$this->template->title = "Create Post";
+		$view = View::forge('admin/posts/create');
 
+		// Set some data
+		$view->set_global('users', Arr::assoc_to_keyval(Model_User::find('all'), 'id', 'username'));
+
+		$this->template->content = $view;
 	}
 
 	public function action_edit($id = null)
@@ -66,7 +70,7 @@ class Controller_Admin_Posts extends Controller_Admin
 		if ($val->run())
 		{
 			$post->title = Input::post('title');
-			$post->slug = Input::post('slug');
+			//$post->slug = Input::post('slug');
 			$post->summary = Input::post('summary');
 			$post->body = Input::post('body');
 			$post->user_id = Input::post('user_id');
@@ -100,9 +104,13 @@ class Controller_Admin_Posts extends Controller_Admin
 			$this->template->set_global('post', $post, false);
 		}
 
-		$this->template->title = "Posts";
-		$this->template->content = View::forge('admin/posts/edit');
+		$this->template->title = "Create Post";
+		$view = View::forge('admin/posts/create');
 
+		// Set some data
+		$view->set_global('users', Arr::assoc_to_keyval(Model_User::find('all'), 'id', 'username'));
+
+		$this->template->content = $view;
 	}
 
 	public function action_delete($id = null)
