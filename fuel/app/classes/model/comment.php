@@ -1,6 +1,8 @@
 <?php
 class Model_Comment extends \Orm\Model
 {
+	protected static $_belongs_to = array('post', 'user');
+
 	protected static $_properties = array(
 		'id',
 		'name',

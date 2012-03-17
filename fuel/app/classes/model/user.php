@@ -2,7 +2,7 @@
 
 class Model_User extends \Orm\Model
 {
-	protected static $_has_many = array('posts');
+	protected static $_has_many = array('posts', 'comments');
 
 	protected static $_properties = array(
 		'id',
