@@ -29,6 +29,14 @@ define('COREPATH', realpath(__DIR__.'/../fuel/core/').DIRECTORY_SEPARATOR);
 defined('FUEL_START_TIME') or define('FUEL_START_TIME', microtime(true));
 defined('FUEL_START_MEM') or define('FUEL_START_MEM', memory_get_usage());
 
+/**
+ * Path to the project base directory.
+ */
+define('PRJ_BASEPATH', realpath(__DIR__.'/../').DIRECTORY_SEPARATOR);
+
+// Load original setting file.
+require PRJ_BASEPATH.'config.php';
+
 // Boot the app
 require APPPATH.'bootstrap.php';
 
