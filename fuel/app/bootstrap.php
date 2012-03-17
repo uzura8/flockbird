@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Path to the project base directory.
+ */
+define('PRJ_BASEPATH', realpath(__DIR__.'/../../').DIRECTORY_SEPARATOR);
+
+// Load original setting file.
+require PRJ_BASEPATH.'config.php';
+
 // Load in the Autoloader
 require COREPATH.'classes'.DIRECTORY_SEPARATOR.'autoloader.php';
 class_alias('Fuel\\Core\\Autoloader', 'Autoloader');
