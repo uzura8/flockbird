@@ -8,8 +8,12 @@ $GLOBALS['DSN']['development'] = array(
 			'username'   => 'root',
 			'password'   => '',
 		),
+		'profiling' => true,
 	),
 );
+
+// プロファイル実行設定
+define('PRJ_PROFILING', false);
 
 // 暗号化キー(ASCII文字列)
 define('ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');

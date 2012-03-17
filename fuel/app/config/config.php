@@ -43,7 +43,7 @@ return array(
 	 */
 	'index_file'  => '',
 
-	'profiling'  => false,
+	'profiling'  => PRJ_PROFILING,
 
 	/**
 	 * Settings for Cache class
