@@ -4,7 +4,7 @@ return array(
 	array(
 		'app' => 
 		array(
-			'default' => 1,
+			'default' => 2,
 		),
 		'module' => 
 		array(
