@@ -17,3 +17,10 @@ define('PRJ_PROFILING', false);
 
 // 暗号化キー(ASCII文字列)
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
+
+
+// 運営者名 (お問い合わせフォームに表示)
+define('PRJ_ADMIN_NAME', '運営事務局');
+
+// 運営者名 (お問い合わせフォームに表示)
+define('PRJ_ADMIN_MAIL', 'admin@example.com');
