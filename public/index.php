@@ -1,9 +1,17 @@
 <?php
 /**
+ * Path to the project base directory.
+ */
+define('PRJ_BASEPATH', realpath(__DIR__.'/../').DIRECTORY_SEPARATOR);
+
+// Load original setting file.
+require PRJ_BASEPATH.'config.php';
+
+/**
  * Set error reporting and display errors settings.  You will want to change these when in production.
  */
-error_reporting(-1);
-ini_set('display_errors', 1);
+error_reporting(PRJ_ERROR_REPORTING);
+ini_set('display_errors', PRJ_DISPLAY_ERRORS);
 
 /**
  * Website document root
