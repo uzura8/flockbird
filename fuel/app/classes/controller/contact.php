@@ -135,22 +135,23 @@ class Controller_Contact extends Controller_Template
 			
 			\Config::load('contact', true);
 			
-			$data['from']      = $post['email'];
-			$data['from_name'] = $post['name'];
+			$data = array();
+			$data['email']      = $post['email'];
+			$data['name'] = $post['name'];
 			$data['to']        = \Config::get('contact.admin_email');
 			$data['to_name']   = \Config::get('contact.admin_name');
 			$data['subject']   = \Config::get('contact.mail_subject');
 			
-			$ip           = \Input::ip();
-			$agent        = \Input::user_agent();
+			$data['ip']        = \Input::ip();
+			$data['ua']        = \Input::user_agent();
 			$langs = implode(' ', $post['lang']);
 			
 			$data['body'] = <<< END
 ====================
 名前: {$post['name']}
 メールアドレス: {$post['email']}
-IPアドレス: $ip
-ブラウザ: $agent
+IPアドレス: {$data['ip']}
+ブラウザ: {$data['ua']}
 ====================
 コメント: 
 {$post['comment']}
@@ -164,6 +165,7 @@ END;
 			try
 			{
 				$this->sendmail($data);
+				$this->save($data);
 				$this->template->title = 'コンタクトフォーム: 送信完了';
 				$this->template->content = View::forge('contact/send');
 			}
@@ -171,7 +173,7 @@ END;
 			{
 				$this->template->title = 'コンタクトフォーム: 送信エラー';
 				$this->template->content = View::forge('contact/error');
-				
+
 				\Log::error(
 					__METHOD__ . ' email validation error: ' .
 					$e->getMessage()
@@ -181,9 +183,19 @@ END;
 			{
 				$this->template->title = 'コンタクトフォーム: 送信エラー';
 				$this->template->content = View::forge('contact/error');
-				
+
 				\Log::error(
 					__METHOD__ . ' email sending error: ' .
+					$e->getMessage()
+				);
+			}
+			catch(EmailSavingFailedException $e)
+			{
+				$this->template->title = 'コンタクトフォーム: 送信エラー';
+				$this->template->content = View::forge('contact/error');
+
+				\Log::error(
+					__METHOD__ . ' email saving error: ' .
 					$e->getMessage()
 				);
 			}
@@ -195,12 +207,23 @@ END;
 			$this->template->content->set_safe('html_error', $val->show_errors());
 		}
 	}
-	
+
+	public function save($data)
+	{
+		unset($data['to'], $data['to_name']);
+		$contact = Model_Contact::forge($data);
+
+		if (!$contact->save())
+		{
+			throw new EmailSavingFailedException('One or more email did not saved '.$item);
+		}
+	}
+
 	public function sendmail($data)
 	{
 		Package::load('email');
 		
-		$items = array('from', 'from_name', 'to', 'to_name', 'subject');
+		$items = array('email', 'name', 'to', 'to_name', 'subject');
 		foreach ($items as $item)
 		{
 			if (preg_match('/[\r\n]/u', $data[$item]) === 1)
@@ -210,7 +233,7 @@ END;
 		}
 		
 		$email = Email::forge();
-		$email->from($data['from'], $data['from_name']);
+		$email->from($data['email'], $data['name']);
 		$email->to($data['to'], $data['to_name']);
 		$email->subject($data['subject']);
 		$email->body($data['body']);
