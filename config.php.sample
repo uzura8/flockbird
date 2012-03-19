@@ -33,6 +33,12 @@ define('PRJ_PROFILING', false);
 // 暗号化キー(ASCII文字列)
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
+// サイト名
+define('PRJ_SITE_NAME', 'とりらいふ');
+define('PRJ_SITE_DESCRIPTION', '野鳥とバードウォッチングの総合情報サイト');
+define('PRJ_HEADER_DESCRIPTION_DEFAULT', 'とりらいふは、野鳥の特徴やバードウォッチングスポットの紹介など、鳥を愛するみなさま向けの情報を提供するサイトです。');
+define('PRJ_HEADER_KEYWORDS_DEFAULT', '野鳥,鳥,バードウォッチング,鳥見,とりライフ,トリライフ,鳥らいふ,鳥ライフ');
+
 
 // 運営者名 (お問い合わせフォームに表示)
 define('PRJ_ADMIN_NAME', '運営事務局');
@@ -40,6 +46,8 @@ define('PRJ_ADMIN_NAME', '運営事務局');
 // 運営者名 (お問い合わせフォームに表示)
 define('PRJ_ADMIN_MAIL', 'admin@example.com');
 
+// Google 関連設定
+define('GOOGLE_SITE_VERIFICATION', '');
 
 // error level 設定
 switch (PRJ_ENVIRONMENT)

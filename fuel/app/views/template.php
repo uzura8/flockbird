@@ -2,21 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title><?php echo ($header_title) ? $header_title : $title; ?></title>
+  <title><?php echo (!empty($header_title)) ? $header_title : $title; ?></title>
   <meta NAME="robots" CONTENT="index,follow">
-  <meta name="description" content="<?php echo ($header_description) ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
+  <meta name="description" content="<?php echo (!$header_description) ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
   <meta name="keywords" content="<?php echo site_header_keywords($header_keywords); ?>">
   <meta http-equiv="Content-Style-Type" content="text/css">
-<?php if (defined('GOOGLE_SITE_VERIFICATION')): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
+<?php if (GOOGLE_SITE_VERIFICATION): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
   <link rel="shortcut icon"href="/favicon.ico">
 	<?php //echo Asset::css(array('bootstrap.css', 'torilife/bw.css')); ?>
   <link href="<?php echo Uri::create('/css/bw.css'); ?>" rel="stylesheet" type="text/css">
 </head>
-<body <?php if ($google_map_on): ?>onload="onLoad();"<?php endif; ?>>
+<body <?php if (!empty($google_map_on)): ?>onload="onLoad();"<?php endif; ?>>
 <div id="all"><!-- #page ページの整形：中央寄せとか -->
 
 <div id="head"><!-- #header 画面上部のヘッド部分 -->
-  <h1><a href="/"><img src="/img/logo.gif" alt="<?php echo $header_h1; ?>"></a></h1>
+  <h1><a href="/"><img src="/img/logo.gif" alt="<?php echo PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME; ?>"></a></h1>
   <p class="sitemap"><a href="/sitemap/"><img src="/img/sitemap.gif" alt="サイトマップ" /></a><p>
 </div><!-- head -->
 

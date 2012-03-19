@@ -9,8 +9,16 @@
  * @package  app
  * @extends  Controller
  */
-class Controller_Site extends Controller_Template
+class Controller_Site extends Controller_Base
 {
+	public function before()
+	{
+		parent::before();
+
+		$this->template->header_keywords = '';
+		$this->template->header_description = '';
+	}
+
 	/**
 	 * Site index
 	 * 
