@@ -28,3 +28,6 @@ Fuel::$env = (isset($_SERVER['FUEL_ENV']) ? $_SERVER['FUEL_ENV'] : constant('Fue
 
 // Initialize the framework with the config file.
 Fuel::init('config.php');
+
+// include helpers.
+Util_toolkit::include_php_files(APPPATH.'helpers');
