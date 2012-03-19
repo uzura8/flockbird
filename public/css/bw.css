@@ -1,0 +1,482 @@
+
+
+* {
+	font-size: 13px;
+	padding: 0;
+	margin: 0;
+	word-break: break-all;
+	line-height: 140%;
+}
+
+img {
+	border:none;
+}
+
+h1{font-size: 110%;}
+h2{font-size: 100%;}
+h3{font-size: 100%;}
+
+li,ol,dl{
+	list-style:none;
+}
+
+a:link,
+a:visited{
+	color:#666;
+	text-decoration:none;
+}
+a:hover{
+	color:#949468;
+	text-decoration:underline;
+}
+
+/* 汎用パーツ */
+
+.center {text-align:center;}
+.left   {text-align:left;}
+.right  {text-align:right;}
+
+.fl_right  {
+	float: right;
+	white-space: nowrap;}
+.fl_left   {
+	float:left;
+	white-space: nowrap;}
+
+.clear {
+    zoom: 100%;
+}
+.clear:after {
+    content: ".";
+    clear: both;
+    height: 0;
+    display: block;
+    visibility: hidden;
+}
+
+.inline {
+	display: inline;
+	white-space: nowrap;
+}
+
+.mb5{margin-bottom:5px;}
+.mb10{margin-bottom:10px;}
+.mb15{margin-bottom:15px;}
+.mb20{margin-bottom:20px;}
+.mb30{margin-bottom:30px;}
+
+.mt5{margin-top:5px;}
+.mt10{margin-top:10px;}
+.mt15{margin-top:15px;}
+.mt20{margin-top:20px;}
+.mt30{margin-top:30px;}
+
+
+/* ボディー */
+
+body {
+	text-align:center;
+	background-color: #DAE0C2;
+}
+
+#all{
+    margin:0px auto;
+	width:900px;
+	padding: 0 10px 10px 10px;
+	text-align:left;
+	background: url(/img/bg_body.gif) repeat-y left top;
+}
+
+/* ヘッダー */
+
+#head{
+	position: relative;
+	height: 58px;
+	background: url(/img/bg_header.gif) no-repeat bottom left;
+	padding-bottom: 12px;
+	margin-bottom: 15px;
+}
+
+#head p.sitemap{
+	position: absolute;
+	background: url(/img/sitemap_on.gif) no-repeat right bottom;
+	bottom: 12px;
+	right: 20px;
+}
+/*#head p.sitemap a:hover{
+	background-color:transparent;
+}
+#head p.sitemap a:hover img{
+	visibility:hidden;
+}*/
+
+/* パンクズ */
+
+#pankuzu{
+	text-align: left;
+    font-size: 10px;
+	color: #666;
+	padding-left: 20px;
+	margin-bottom: 15px;
+}
+
+#pankuzu a{
+	text-decoration: none;
+	color: #666;
+}
+
+/* 2カラムレイアウト（グローバルナビ、メイン） */
+#globalNavi{
+	float: left;
+	width: 150px;
+}
+
+#main{
+	float: right;
+	width: 720px;
+}
+#main .padding{
+	padding-right:40px;
+}
+
+/* グローバルナビ */
+
+#globalNavi{
+	padding-left:18px;
+}
+
+#globalNavi li.top{
+	background: url(/img/navi_top_on.gif) no-repeat top left;
+}
+#globalNavi li.news{
+	background: url(/img/navi_news_on.gif) no-repeat top left;
+}
+#globalNavi li.bird{
+	background: url(/img/navi_bird_on.gif) no-repeat top left;
+}
+#globalNavi li.spot{
+	background: url(/img/navi_spot_on.gif) no-repeat top left;
+}
+#globalNavi li.item{
+	background: url(/img/navi_item_on.gif) no-repeat top left;
+}
+#globalNavi li.qa{
+	background: url(/img/navi_qa_on.gif) no-repeat top left;
+}
+#globalNavi li.uranai{
+	background: url(/img/navi_uranai_on.gif) no-repeat top left;
+}
+#globalNavi li.torilife{
+	background: url(/img/navi_torilife_on.gif) no-repeat top left;
+}
+#globalNavi li.link{
+	background: url(/img/navi_link_on.gif) no-repeat top left;
+}
+
+#globalNavi li a{
+	display:block;
+	width:121px;
+	height:31px;
+}
+#globalNavi li a:hover{
+	background-color:transparent;
+}
+#globalNavi li a:hover img{
+	visibility:hidden;
+}
+
+
+/* h2 */
+h2{
+	border-left: 6px solid #C29860;
+	padding-left:8px;
+	margin-bottom:20px;
+	font-size: 14px;
+}
+
+/* h3 or トピックタイトル */
+.topicTitle{
+	border-left: 6px solid #E0E0C2;
+	padding-left:8px;
+	margin-top:20px;
+	margin-bottom:10px;
+	font-size: 14px;
+}
+
+/* トピックBOX */
+
+.topicBox{
+	border: 1px dotted #E0E0C2;
+	padding: 15px;
+	margin-bottom:30px;
+}
+
+/* ホットキーワード */
+
+.keywords li{
+	float: left;
+	white-space: nowrap;
+	margin-right: 15px;
+	margin-bottom:10px;
+}
+.serviceBy{
+	font-size: 10px;
+	color: #999;
+	text-align: right;
+}	
+
+/* index */
+
+.mainMenu{
+	background: url(/img/bg_main_menu.gif) no-repeat top left;
+	padding: 15px 0 0 20px;
+	height: 173px;
+}
+
+.mainMenu li{
+	float: left;
+	margin-right: 15px;
+}
+.mainMenu li.end{
+	margin-right: 0;
+}
+
+.mainMenu li.news{
+	background: url(/img/main_menu_news_on.gif) no-repeat top left;
+}
+.mainMenu li.bird{
+	background: url(/img/main_menu_bird_on.gif) no-repeat top left;
+}
+.mainMenu li.spot{
+	background: url(/img/main_menu_spot_on.gif) no-repeat top left;
+}
+.mainMenu li.item{
+	background: url(/img/main_menu_item_on.gif) no-repeat top left;
+}
+.mainMenu li.qa{
+	background: url(/img/main_menu_qa_on.gif) no-repeat top left;
+}
+.mainMenu li.uranai{
+	background: url(/img/main_menu_uranai_on.gif) no-repeat top left;
+}
+.mainMenu li.torilife{
+	background: url(/img/main_menu_torilife_on.gif) no-repeat top left;
+}
+.mainMenu li.link{
+	background: url(/img/main_menu_link_on.gif) no-repeat top left;
+}
+
+.mainMenu li a{
+	display:block;
+	width:149px;
+	height:67px;
+}
+.mainMenu li a:hover{
+	background-color:transparent;
+}
+.mainMenu li a:hover img{
+	visibility:hidden;
+}
+
+/* news */
+
+.news li,
+.blog li{
+	border-bottom: 1px dotted #E0E0C2;
+	padding-bottom: 10px;
+}
+
+.blog dt{
+	font-weight: bold;
+}
+
+/* birds */
+
+.birdNavi li{
+	float: left;
+	margin-right: 20px;
+}
+
+.sort-birdName li{
+	float: left;
+	margin-bottom: 10px;
+}
+
+.sort-birdName dl{
+	padding: 5px;
+	border: 1px dotted #E0E0C2;
+	margin-right: 10px;
+	width: 114px;
+	height: 100px;
+}
+
+.sort-birdName dt,
+.sort-birdName dd{
+	text-align: center;
+}
+
+/* birdsEach */
+
+.birdInfo .L{
+	float: left;
+	width: 300px;
+}
+
+.birdInfo .L dt{
+	font-weight: bold;
+	font-size: 16px;
+	border-bottom: 1px dotted #E0E0C2;
+	border-top: 1px dotted #E0E0C2;
+	padding: 10px 0;
+	margin-bottom: 10px;
+}
+
+.birdInfo .L dt span{
+	color: #E0E0C2;
+}
+
+.birdInfo .R{
+	float: right;
+	width: 360px;
+}
+
+.birdInfo .R table{
+	border-right: 1px dotted #E0E0C2;
+	border-bottom: 1px dotted #E0E0C2;
+	width: 360px;
+}
+
+.birdInfo .R th,
+.birdInfo .R td{
+	border-top: 1px dotted #E0E0C2;
+	border-left: 1px dotted #E0E0C2;
+	padding: 3px 10px;
+	font-weight: normal;
+}
+
+.birdInfo .R th{
+	background-color: #F7F7DD;
+	white-space: nowrap;
+}
+
+.birdInfo .R th.group{
+	text-align: center;
+	font-weight: bold;
+}
+
+.birdInfo dl.wiki{
+	border-bottom: 1px dotted #E0E0C2;
+	border-top: 1px dotted #E0E0C2;
+	padding: 10px 0;
+}
+
+.imgSearch dt{
+	float: left;
+	width: 145px;
+}
+
+.imgSearch dd{
+	float: right;
+	width: 480px;
+}
+
+.imgSearch dd .ttl{
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.imgSearch li{
+	border-bottom: 1px dotted #E0E0C2;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+/* item */
+
+.itemlist-box{
+	border-bottom: 1px dotted #E0E0C2;
+	padding-bottom: 15px;
+	margin-bottom: 15px;
+}
+
+h3.itemTitle{
+	font-weight: bold;
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+.itemlist li{
+	float: left;
+	margin-right: 30px;
+}
+
+/* itemEach */
+
+.itemEach-list dt{
+	float: left;
+	width: 64px;
+}
+
+.itemEach-list dd{
+	float: right;
+	width: 570px;
+}
+
+.itemEach-list li{
+	border-bottom: 1px dotted #E0E0C2;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+
+/* link */
+
+.linkList li{
+	border-bottom: 1px dotted #E0E0C2;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+.linkList dt{
+	float: left;
+	margin-right: 20px;
+}
+
+.linkList dd{
+	padding-top: 50px;
+}
+
+.spotlist {
+}
+
+.spotlist li{
+	float: left;
+	width: 170px;
+}
+
+.spotlisttitle{
+	font-size: 14px;
+	font-weight: bold;
+	clear: left;
+}
+
+/* フッター */
+#foot{
+	margin-top: 20px;
+	padding-top: 10px;
+	border-top: 1px dotted #ddd;
+	text-align: center;
+	width:860px;
+}
+#foot p{
+	color : #9A5108;
+	font-size: 10px;
+}
+#foot img{
+	vertical-align: middle;
+	margin-right:10px;
+}
+
+
+
+
