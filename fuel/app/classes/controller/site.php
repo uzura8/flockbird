@@ -19,7 +19,10 @@ class Controller_Site extends Controller_Template
 	 */
 	public function action_index()
 	{
-		$this->template->title = 'トップ';
+		$this->template->title = PRJ_SITE_NAME.'メインメニュー';
+		$this->template->header_title = site_title();
+		$this->template->breadcrumbs = array('HOME' => '');
+
 		$this->template->content = View::forge('site/index');
 	}
 }
