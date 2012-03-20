@@ -46,7 +46,6 @@
 
 <!-- 五十音 -->
 <div class="sort-birdName">
-
 <?php foreach ($initial_syllabary_list as $key => $syllabary_row): ?>
 <?php $var_name = 'birds_list50'.$key; ?>
 <?php if ($$var_name): ?>
@@ -64,3 +63,4 @@
 </ul>
 <?php endif; ?>
 <?php endforeach; ?>
+</div><!-- sort-birdName -->
