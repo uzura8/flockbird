@@ -40,6 +40,7 @@
     <li class="link"><a href="/link/"><img src="/img/navi_link.gif" alt="リンク集" title="リンク集" /></a></li>
   </ul>
 
+<?php /*
 <!-- SiteSearch Google -->
 <form method="get" action="http://www.google.co.jp/custom" target="_top">
 <table border="0" bgcolor="#ffffff">
@@ -75,9 +76,9 @@
 </td></tr></table>
 </form>
 <!-- SiteSearch Google -->
+*/ ?>
 
-<br><br>
-
+<?php /*
 <!-- Rakuten Dynamicad FROM HERE -->
 <script type="text/javascript">
 <!--
@@ -94,7 +95,7 @@ rakuten_color_price = "CC0000";
   src="http://dynamic.rakuten.co.jp/js/rakuten_dynamic.js">
 </script>
 <!-- Rakuten Dynamicad TO HERE -->
-
+*/?>
 </div><!-- globalNavi -->
 
 <div id="main">
