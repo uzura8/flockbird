@@ -52,4 +52,15 @@ class Birds extends \Model
 			->execute()
 			->as_array();
 	}
+
+	public static function get_result_array4b_size_id($b_size_id, $cols = array())
+	{
+		return \DB::select_array($cols)
+			->from('birds')
+			->where('b_size_id', $b_size_id)
+			->and_where('del_flag', 0)
+			->order_by('name')
+			->execute()
+			->as_array();
+	}
 }

@@ -99,6 +99,31 @@ class Controller_Birds extends Controller_Site
 		$this->template->content = View::forge('birds/watch_spot', $data);
 	}
 
+	/**
+	 * Size
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_size()
+	{
+		$this->set_default_variable4template();
+		$this->template->breadcrumbs = array(
+			'HOME' => '/',
+			'鳥から探す' => '/birds/',
+			'大きさから探す' => '',
+		);
+
+		$data = array();
+		$data['sizes'] = Util_db::get_assoc(\Model\BSize::get_result_array_all());
+		foreach ($data['sizes'] as $key => $value)
+		{
+			$var_name = 'birds_listP'.$key;
+			$data[$var_name] = \Model\Birds::get_result_array4b_size_id($key, array('name', 'url', 'img'));
+		}
+		$this->template->content = View::forge('birds/size', $data);
+	}
+
 	private function set_default_variable4template()
 	{
 		$this->template->title = '鳥から探す';
