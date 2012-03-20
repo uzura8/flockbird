@@ -1,6 +1,17 @@
 <?php
 class Util_db
 {
+	public static function get_assoc($rows)
+	{
+		$return = array();
+		foreach ($rows as $row)
+		{
+			$return[array_shift($row)] = array_shift($row);
+		}
+
+		return $return;
+	}
+
 	public static function get_syllabary_range_array($initial)
 	{
 		$syllabary_range_list = array(

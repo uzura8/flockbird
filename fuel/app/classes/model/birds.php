@@ -7,7 +7,13 @@ class Birds extends \Model
 	{
 		if (!$range = \Util_db::get_syllabary_range_array($initial)) return false;
 
-		return \DB::select_array($cols)->from('birds')->where('name', 'between', $range)->order_by('name')->execute()->as_array();
+		return \DB::select_array($cols)
+			->from('birds')
+			->where('name', 'between', $range)
+			->and_where('del_flag', 0)
+			->order_by('name')
+			->execute()
+			->as_array();
 	}
 
 	public static function get4url($url)
@@ -23,5 +29,16 @@ class Birds extends \Model
 		$result = $query->execute()->current();// 1件分
 
 		return isset($result) ? $result : false;
+	}
+
+	public static function get_result_array4life_place($life_place, $cols = array())
+	{
+		return \DB::select_array($cols)
+			->from('birds')
+			->where('life_place', $life_place)
+			->and_where('del_flag', 0)
+			->order_by('name')
+			->execute()
+			->as_array();
 	}
 }

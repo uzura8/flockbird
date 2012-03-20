@@ -19,11 +19,8 @@ class Controller_Birds extends Controller_Site
 	 */
 	public function action_index()
 	{
-		$this->template->title = '鳥から探す';
-		$this->template->header_title = site_title('鳥一覧 特徴、生態、写真');
-		$this->template->header_keywords = '野鳥図鑑,ニュース,ブログ,検索';
+		$this->set_default_variable4template();
 		$this->template->breadcrumbs = array('HOME' => '/', '鳥から探す' => '');
-
 		$this->template->content = ViewModel::forge('birds/index');
 	}
 
@@ -50,5 +47,37 @@ class Controller_Birds extends Controller_Site
 		$data = array();
 		$data['bird'] = $bird;
 		$this->template->content = View::forge('birds/detail', $data);
+	}
+
+	/**
+	 * Life_place
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_life_place()
+	{
+		$this->set_default_variable4template();
+		$this->template->breadcrumbs = array(
+			'HOME' => '/',
+			'鳥から探す' => '/birds/',
+			'生活場所から探す' => '',
+		);
+
+		$data = array();
+		$data['life_places'] = Util_db::get_assoc(\Model\Bplace::get_result_array_all());
+		foreach ($data['life_places'] as $key => $value)
+		{
+			$var_name = 'birds_listP'.$key;
+			$data[$var_name] = \Model\Birds::get_result_array4life_place($key, array('name', 'url', 'img'));
+		}
+		$this->template->content = View::forge('birds/life_place', $data);
+	}
+
+	private function set_default_variable4template()
+	{
+		$this->template->title = '鳥から探す';
+		$this->template->header_title = site_title('鳥一覧 特徴、生態、写真');
+		$this->template->header_keywords = '野鳥図鑑,ニュース,ブログ,検索';
 	}
 }
