@@ -20,6 +20,7 @@ class Controller_Birds extends Controller_Site
 	public function action_index()
 	{
 		$this->set_default_variable4template();
+		$this->template->title = '鳥から探す　アイウエオ順';
 		$this->template->breadcrumbs = array('HOME' => '/', '鳥から探す' => '');
 		$this->template->content = ViewModel::forge('birds/index');
 	}
@@ -58,6 +59,7 @@ class Controller_Birds extends Controller_Site
 	public function action_life_place()
 	{
 		$this->set_default_variable4template();
+		$this->template->title = '鳥から探す　生活場所';
 		$this->template->breadcrumbs = array(
 			'HOME' => '/',
 			'鳥から探す' => '/birds/',
@@ -83,6 +85,7 @@ class Controller_Birds extends Controller_Site
 	public function action_watch_spot()
 	{
 		$this->set_default_variable4template();
+		$this->template->title = '鳥から探す　見られる場所';
 		$this->template->breadcrumbs = array(
 			'HOME' => '/',
 			'鳥から探す' => '/birds/',
@@ -108,6 +111,7 @@ class Controller_Birds extends Controller_Site
 	public function action_size()
 	{
 		$this->set_default_variable4template();
+		$this->template->title = '鳥から探す　サイズ';
 		$this->template->breadcrumbs = array(
 			'HOME' => '/',
 			'鳥から探す' => '/birds/',
