@@ -50,7 +50,7 @@ class Controller_Birds extends Controller_Site
 	}
 
 	/**
-	 * Life_place
+	 * Lifeplace
 	 * 
 	 * @access  public
 	 * @return  Response
@@ -65,13 +65,38 @@ class Controller_Birds extends Controller_Site
 		);
 
 		$data = array();
-		$data['life_places'] = Util_db::get_assoc(\Model\Bplace::get_result_array_all());
+		$data['life_places'] = Util_db::get_assoc(\Model\BLifePlace::get_result_array_all());
 		foreach ($data['life_places'] as $key => $value)
 		{
 			$var_name = 'birds_listP'.$key;
-			$data[$var_name] = \Model\Birds::get_result_array4life_place($key, array('name', 'url', 'img'));
+			$data[$var_name] = \Model\Birds::get_result_array4b_life_place_id($key, array('name', 'url', 'img'));
 		}
 		$this->template->content = View::forge('birds/life_place', $data);
+	}
+
+	/**
+	 * Wspot
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_watch_spot()
+	{
+		$this->set_default_variable4template();
+		$this->template->breadcrumbs = array(
+			'HOME' => '/',
+			'鳥から探す' => '/birds/',
+			'見られる場所から探す' => '',
+		);
+
+		$data = array();
+		$data['watch_spots'] = Util_db::get_assoc(\Model\BWatchSpot::get_result_array_all());
+		foreach ($data['watch_spots'] as $key => $value)
+		{
+			$var_name = 'birds_listP'.$key;
+			$data[$var_name] = \Model\Birds::get_result_array4b_watch_spot_id($key, array('name', 'url', 'img'));
+		}
+		$this->template->content = View::forge('birds/watch_spot', $data);
 	}
 
 	private function set_default_variable4template()

@@ -1,6 +1,6 @@
 <ul class="birdNavi clear mb20">
   <li><a href="/birds/life_place/">■鳥の生活場所で探す</a></li>
-  <li><a href="/birds/wspot/">■鳥を見かける場所で探す</a></li>
+  <li><a href="/birds/watch_spot/">■鳥を見かける場所で探す</a></li>
   <li><a href="/birds/size/">■鳥のサイズから探す</a></li>
 </ul>
 <?php

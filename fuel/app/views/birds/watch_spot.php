@@ -1,6 +1,6 @@
 <ul class="birdNavi clear mb20">
   <li><a href="/birds/">■鳥をアイウエオ順に探す</a></li>
-  <li><a href="/birds/watch_spot/">■鳥の見られる場所から探す</a></li>
+  <li><a href="/birds/life_place/">■鳥の生活場所から探す</a></li>
   <li><a href="/birds/size/">■鳥のサイズから探す</a></li>
 </ul>
 
@@ -34,20 +34,20 @@
 //<div style="clear: left;"></div>
 ?>
 
-<h3 class="topicTitle">鳥の生活場所から探す</h3>
+<h3 class="topicTitle">鳥の見られる場所から探す</h3>
 
 <div style="margin-bottom: 10px;">
 <p><strong>
-<?php foreach ($life_places as $key => $value): ?>
+<?php foreach ($watch_spots as $key => $value): ?>
 <?php if ($key != 1) echo '　'; ?>
 <a href="#list<?php echo $key; ?>"><?php echo $value; ?></a>
 <?php endforeach; ?>
 </strong></p>
 </div>
 
-<!-- 生活場所　 -->
+<!-- 生活場所 -->
 <div class="sort-birdName">
-<?php foreach ($life_places as $key => $value): ?>
+<?php foreach ($watch_spots as $key => $value): ?>
 <?php $var_name = 'birds_listP'.$key; ?>
 <?php if ($$var_name): ?>
 <a name="list<?php echo $key; ?>"></a>

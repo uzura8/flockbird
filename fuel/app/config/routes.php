@@ -4,5 +4,5 @@ return array(
 	'_404_'   => 'welcome/404',    // The main 404 route
 	
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
-	'birds/(((?!(size|wspot|life_place)).)+)'    => 'birds/detail/$1',
+	'birds/(((?!(size|watch_spot|life_place)).)+)'    => 'birds/detail/$1',
 );

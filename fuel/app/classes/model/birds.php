@@ -31,11 +31,22 @@ class Birds extends \Model
 		return isset($result) ? $result : false;
 	}
 
-	public static function get_result_array4life_place($life_place, $cols = array())
+	public static function get_result_array4b_life_place_id($b_life_place_id, $cols = array())
 	{
 		return \DB::select_array($cols)
 			->from('birds')
-			->where('life_place', $life_place)
+			->where('b_life_place_id', $b_life_place_id)
+			->and_where('del_flag', 0)
+			->order_by('name')
+			->execute()
+			->as_array();
+	}
+
+	public static function get_result_array4b_watch_spot_id($b_watch_spot_id, $cols = array())
+	{
+		return \DB::select_array($cols)
+			->from('birds')
+			->where('b_watch_spot_id', $b_watch_spot_id)
 			->and_where('del_flag', 0)
 			->order_by('name')
 			->execute()
