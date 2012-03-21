@@ -1,8 +1,10 @@
 <ul class="birdNavi clear mb20">
-  <li><a href="/birds/life_place/">■鳥の生活場所で探す</a></li>
-  <li><a href="/birds/watch_spot/">■鳥の見られる場所で探す</a></li>
-  <li><a href="/birds/size/">■鳥のサイズから探す</a></li>
+<?php if (Uri::segment(2) != false): ?>  <li><a href="/birds/">■鳥をアイウエオ順に探す</a></li><?php endif; ?>
+<?php if (Uri::segment(2) != 'life_place'): ?>  <li><a href="/birds/life_place/">■鳥の生活場所から探す</a></li><?php endif; ?>
+<?php if (Uri::segment(2) != 'watch_spot'): ?>  <li><a href="/birds/watch_spot/">■鳥の見られる場所から探す</a></li><?php endif; ?>
+<?php if (Uri::segment(2) != 'size'): ?>  <li><a href="/birds/size/">■鳥のサイズから探す</a></li><?php endif; ?>
 </ul>
+
 <?php
 //<div style="float: left;">
 //<script type="text/javascript"><!--
@@ -33,26 +35,27 @@
 //<div style="clear: left;"></div>
 ?>
 
-<h3 class="topicTitle">鳥をアイウエオ順に探す</strong></h3>
+<h3 class="topicTitle"><?php echo $subtitle; ?></h3>
 
 <div style="margin-bottom: 10px;">
 <p><strong>
-<?php foreach ($initial_syllabary_list as $key => $syllabary_row): ?>
-<?php if ($key != 'A') echo '　'; ?>
-<a href="#list<?php echo $key; ?>"><?php echo $syllabary_row['view']; ?>行</a>
+<?php $i = 0; ?>
+<?php foreach ($parent_list as $key => $value): ?>
+<?php if ($i) echo '　'; ?>
+<a href="#list<?php echo $key; ?>"><?php echo $value; ?></a>
+<?php $i++; ?>
 <?php endforeach; ?>
 </strong></p>
 </div>
 
-<!-- 五十音 -->
 <div class="sort-birdName">
-<?php foreach ($initial_syllabary_list as $key => $syllabary_row): ?>
-<?php $var_name = 'birds_list50'.$key; ?>
-<?php if ($$var_name): ?>
+<?php foreach ($parent_list as $key => $value): ?>
+<?php $var_name = 'birds_listP'.$key; ?>
+<?php if (!empty($bird_list[$key])): ?>
 <a name="list<?php echo $key; ?>"></a>
-<p class="mb10"><?php echo $syllabary_row['view']; ?>行</p>
+<p class="mb10"><?php echo $value; ?></p>
 <ul class="clear mb20">
-<?php foreach ($$var_name as $row): ?>
+<?php foreach ($bird_list[$key] as $row): ?>
   <li>
     <dl class="clear">
       <dt class="mb5"><a href="/birds/<?php echo $row['url']; ?>/"><?php echo $row['name']; ?></a></dt>
