@@ -29,7 +29,8 @@ return array(
 	/**
 	 * DB table name for the user table
 	 */
-	'table_name' => 'users',
+	//'table_name' => 'users',
+	'table_name' => 'member',
 
 	/**
 	 * Choose which columns are selected, must include: username, password, email, last_login,

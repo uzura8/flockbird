@@ -33,4 +33,52 @@ class Controller_Site extends Controller_Base
 
 		$this->template->content = View::forge('site/index');
 	}
+
+	public function action_login()
+	{
+		// Already logged in
+		Auth::check() and Response::redirect('member');
+
+		$val = Validation::forge();
+
+		if (Input::method() == 'POST')
+		{
+			$val->add('email', 'Email or Username')
+			    ->add_rule('required');
+			$val->add('password', 'Password')
+			    ->add_rule('required');
+
+			if ($val->run())
+			{
+				$auth = Auth::instance();
+
+				// check the credentials. This assumes that you have the previous table created
+				if (Auth::check() or $auth->login(Input::post('email'), Input::post('password')))
+				{
+					// credentials ok, go right in
+					Session::set_flash('notice', 'Welcome, '.$current_user->username);
+					Response::redirect('member');
+				}
+				else
+				{
+					$this->template->set_global('login_error', 'Fail');
+				}
+			}
+		}
+
+		$this->template->title = 'Login';
+		$this->template->content = View::forge('site/login', array('val' => $val));
+	}
+
+	/**
+	 * The logout action.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_logout()
+	{
+		Auth::logout();
+		Response::redirect('site/login');
+	}
 }
