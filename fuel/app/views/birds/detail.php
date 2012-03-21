@@ -25,16 +25,16 @@
         <td><?php echo $bird['life_type']; ?></td>
       </tr>
 <?php endif; ?>
-<?php if ($bird['life_place']): ?>
+<?php if ($bird['b_life_place_id']): ?>
       <tr>
         <th>生息地</th>
         <td><?php echo $bird['place']; ?></td>
 	  </tr>
 <?php endif; ?>
-<?php if ($bird['wspot']): ?>
+<?php if ($bird['b_watch_spot_id']): ?>
       <tr>
         <th>見られる場所</th>
-        <td><?php echo $bird['life_spot']; ?></td>
+        <td><?php echo $bird['spot']; ?></td>
 	  </tr>
 <?php endif; ?>
 <?php if ($bird['distoribution']): ?>
@@ -55,7 +55,7 @@
         <td>約<?php echo $bird['size']; ?>cm</td>
 	  </tr>
 <?php endif; ?>
-<?php if ($bird['size_class']): ?>
+<?php if ($bird['b_size_id']): ?>
       <tr>
         <th>大きさの目安</th>
         <td><?php echo $bird['size_meyasu']; ?></td>

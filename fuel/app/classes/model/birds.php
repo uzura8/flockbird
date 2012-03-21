@@ -19,12 +19,12 @@ class Birds extends \Model
 	public static function get4url($url)
 	{
 		$query = \DB::select()->from('birds');
-		$query->join('b_place');
-		$query->on('birds.place_id', '=', 'b_place.place_id');
-		$query->join('b_lifespot');
-		$query->on('birds.wspot', '=', 'b_lifespot.ls_id');
+		$query->join('b_life_place');
+		$query->on('birds.b_life_place_id', '=', 'b_life_place.id');
+		$query->join('b_watch_spot');
+		$query->on('birds.b_watch_spot_id', '=', 'b_watch_spot.id');
 		$query->join('b_size');
-		$query->on('birds.size_class', '=', 'b_size.size_id');
+		$query->on('birds.b_size_id', '=', 'b_size.id');
 		$query->where('birds.url', $url);
 		$result = $query->execute()->current();// 1件分
 
