@@ -24,9 +24,11 @@
 </div><!-- head -->
 
 <div id="pankuzu">
+<?php if (isset($breadcrumbs)): ?>
 <?php foreach ($breadcrumbs as $name => $path): ?>
 <?php echo ($path) ? Html::anchor($path, $name).'&nbsp;&gt;&nbsp;' : sprintf('<strong>%s</strong>', $name);?>
 <?php endforeach; ?>
+<?php endif; ?>
 </div>
 <div class="clear">
 
