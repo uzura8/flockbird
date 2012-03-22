@@ -48,7 +48,7 @@ class Controller_Member extends Controller_Site {
 		}
 		$this->template->title = PRJ_SITE_NAME.'　メンバー登録';
 		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(Config::get('site.term.signup') => '/', Config::get('site.term.signup') => '');
+		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', Config::get('site.term.signup') => '');
 		$data = array('form' => $form);
 		$this->template->content = View::forge('member/signup', $data);
 		$this->template->content->set_safe('html_form', $form->build('/member/register'));// form の action に入る
@@ -184,7 +184,6 @@ END;
 		$form->add('nickname', 'ニックネーム')
 			->add_rule('trim')
 			->add_rule('no_controll')
-			->add_rule('min_length', 6)
 			->add_rule('max_length', 50);
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信'));

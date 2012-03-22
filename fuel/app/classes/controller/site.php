@@ -30,7 +30,7 @@ class Controller_Site extends Controller_Base
 	{
 		$this->template->title = PRJ_SITE_NAME.'メインメニュー';
 		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array('HOME' => '');
+		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '');
 
 		$this->template->content = View::forge('site/index');
 	}
@@ -70,7 +70,7 @@ class Controller_Site extends Controller_Base
 		$title = 'ログイン';
 		$this->template->title = $title;
 		$this->template->header_title = site_title($title);
-		$this->template->breadcrumbs = array('HOME' => '/', $title => 'site/login');
+		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', $title => '');
 
 		$this->template->content = View::forge('site/login', array('val' => $val));
 	}
