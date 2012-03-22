@@ -107,6 +107,9 @@ rakuten_color_price = "CC0000";
 
 <div id="main">
 	<div class="padding">
+<?php if ($message = Session::get_flash('message')): ?>
+	<div class="message"><?php echo $message; ?></div>
+<?php endif; ?>
 	<div class="pageTitle"><h2><?php echo $title; ?></h2></div>
 <?php echo $content; ?>
 	</div><!-- padding -->

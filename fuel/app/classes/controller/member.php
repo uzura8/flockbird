@@ -107,7 +107,7 @@ END;
 			{
 				$this->save($data);
 				Util_toolkit::sendmail($maildata);
-				Session::set_flash('notice', 'メンバー登録が完了しました。ログインしてください。');
+				Session::set_flash('message', 'メンバー登録が完了しました。ログインしてください。');
 				Response::redirect('site/login');
 			}
 			catch(EmailValidationFailedException $e)

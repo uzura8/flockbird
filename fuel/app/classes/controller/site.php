@@ -57,7 +57,7 @@ class Controller_Site extends Controller_Base
 				if (Auth::check() or $auth->login(Input::post('email'), Input::post('password')))
 				{
 					// credentials ok, go right in
-					Session::set_flash('notice', 'Welcome, '.$current_user->username);
+					Session::set_flash('message', 'ログインしました');
 					Response::redirect('member');
 				}
 				else
@@ -67,7 +67,11 @@ class Controller_Site extends Controller_Base
 			}
 		}
 
-		$this->template->title = 'Login';
+		$title = 'ログイン';
+		$this->template->title = $title;
+		$this->template->header_title = site_title($title);
+		$this->template->breadcrumbs = array('HOME' => '/', $title => 'site/login');
+
 		$this->template->content = View::forge('site/login', array('val' => $val));
 	}
 
@@ -80,6 +84,7 @@ class Controller_Site extends Controller_Base
 	public function action_logout()
 	{
 		Auth::logout();
+		Session::set_flash('message', 'ログアウトしました');
 		Response::redirect('site/login');
 	}
 }
