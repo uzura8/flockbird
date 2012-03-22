@@ -1,7 +1,9 @@
 <?php
+use Orm\Model;
 
-class Model_Member extends \Orm\Model
+class Model_Member extends Model
 {
+	protected static $_table_name = 'member';
 	protected static $_properties = array(
 		'id',
 		'username',
@@ -9,7 +11,7 @@ class Model_Member extends \Orm\Model
 		'group',
 		'email',
 		'nickname',
-		'lastlogin',
+		'last_login',
 		'profile_fields',
 		'created_at',
 		'updated_at'
@@ -25,4 +27,12 @@ class Model_Member extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 	);
+
+	public static function validate($factory)
+	{
+		$val = Validation::forge($factory);
+		//$val->add_field('title', 'Title', 'required|max_length[255]');
+
+		return $val;
+	}
 }

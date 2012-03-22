@@ -30,4 +30,26 @@ class Util_toolkit
 			closedir($dh);
 		}
 	}
+
+	public static function sendmail($data)
+	{
+		Package::load('email');
+
+		$items = array('from_address', 'from_name', 'to_address', 'to_name', 'subject');
+		foreach ($items as $item)
+		{
+			if (preg_match('/[\r\n]/u', $data[$item]) === 1)
+			{
+				throw new EmailValidationFailedException('One or more email headers did not pass validation: '.$item);
+			}
+		}
+
+		$email = Email::forge();
+		$email->from($data['from_address'], $data['from_name']);
+		$email->to($data['to_address'], $data['to_name']);
+		$email->subject($data['subject']);
+		$email->body($data['body']);
+
+		$email->send();
+	}
 }

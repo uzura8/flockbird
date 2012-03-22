@@ -30,4 +30,8 @@
 		<?php echo Form::submit(array('value'=>'Login', 'name'=>'submit')); ?>
 	</div>
 
+	<div class="link">
+		<?php echo Html::anchor('member/signup', '新規登録'); ?>
+	</div>
+
 <?php echo Form::close(); ?>
