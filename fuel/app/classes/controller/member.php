@@ -25,7 +25,7 @@ class Controller_Member extends Controller_Site {
 	 */
 	public function action_index()
 	{
-		$this->template->title = PRJ_SITE_NAME.'マイホーム';
+		$this->template->title = 'マイホーム';
 		$this->template->header_title = site_title();
 		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', Config::get('site.term.myhome') => '');
 
@@ -151,6 +151,46 @@ END;
 			$this->template->content->set_safe('html_error', $val->show_errors());
 			$this->template->content->set_safe('html_form', $form->build('/member/register'));
 		}
+	}
+
+	/**
+	 * Mmeber setting
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_setting()
+	{
+		$title = '設定変更';
+		$this->template->title = $title;
+		$this->template->header_title = site_title();
+		$this->template->breadcrumbs = array(
+			Config::get('site.term.toppage') => '/',
+			Config::get('site.term.myhome') => '/member/',
+			$title => '',
+		);
+
+		$this->template->content = View::forge('member/setting');
+	}
+
+	/**
+	 * Mmeber leave
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_leave()
+	{
+		$title = Config::get('site.term.member_leave');
+		$this->template->title = $title;
+		$this->template->header_title = site_title();
+		$this->template->breadcrumbs = array(
+			Config::get('site.term.toppage') => '/',
+			Config::get('site.term.myhome') => '/member/',
+			$title => '',
+		);
+
+		$this->template->content = View::forge('member/leave');
 	}
 
 	private function check_not_auth_action()

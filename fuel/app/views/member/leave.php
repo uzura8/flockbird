@@ -1,3 +1,3 @@
 <?php include_partial('member/_submenu'); ?>
 
-<p>マイホームです</p>
+<p>退会ページです</p>
