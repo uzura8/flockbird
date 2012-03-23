@@ -12,4 +12,9 @@ return array(
 		'from_mail_address' => PRJ_ADMIN_MAIL,
 		'subject'           => 'メンバー登録完了のお知らせ',
 	),
+	'member_leave_mail' => array(
+		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
+		'from_mail_address' => PRJ_ADMIN_MAIL,
+		'subject'           => 'メンバー退会完了のお知らせ',
+	),
 );

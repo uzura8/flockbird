@@ -6,4 +6,5 @@ return array(
   'max_length'    => ':label 欄は :param:1 文字を超えてはいけません。',
   'valid_email'   => ':label 欄には正しい Email アドレスを入力する必要があります。',
   'match_pattern' => ':label 欄にエラーがあります。',
+  'alpha_small_char_numeric' => ':label 欄は半角の小文字英字と数字でなければなりません。',
 );

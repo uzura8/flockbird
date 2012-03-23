@@ -75,4 +75,15 @@ class MyValidation
 			return array();
 		}
 	}
+
+	/**
+	 * Validate if there is alpha_numeric small character
+	 *
+	 * @param   string
+	 * @return  true|Exception
+	 */
+	public static function _validation_alpha_small_char_numeric($val)
+	{
+		return (bool)preg_match('/^[a-z0-9]*$/', $val);
+	}
 }
