@@ -62,16 +62,7 @@ class Controller_Member extends Controller_Site {
 	 */
 	public function action_register()
 	{
-		if ( ! \Security::check_token())
-		{
-			\Log::error(
-				'CSRF: '.
-				\Input::uri().' '.
-				\Input::ip().
-				' "'.\Input::user_agent().'"'
-			);
-			throw new HttpInvalidInputException('Invalid input data');
-		}
+		Util_security::check_csrf();
 
 		$form = $this->form();
 		$val = $this->form()->validation();
@@ -245,16 +236,7 @@ END;
 
 	public function action_delete()
 	{
-		if ( ! \Security::check_token())
-		{
-			\Log::error(
-				'CSRF: '.
-				\Input::uri().' '.
-				\Input::ip().
-				' "'.\Input::user_agent().'"'
-			);
-			throw new HttpInvalidInputException('Invalid input data');
-		}
+		Util_security::check_csrf();
 
 		$form = $this->form_leave();
 		$val  = $form->validation();
@@ -355,16 +337,7 @@ END;
 
 	public function action_change_password()
 	{
-		if ( ! \Security::check_token())
-		{
-			\Log::error(
-				'CSRF: '.
-				\Input::uri().' '.
-				\Input::ip().
-				' "'.\Input::user_agent().'"'
-			);
-			throw new HttpInvalidInputException('Invalid input data');
-		}
+		Util_security::check_csrf();
 
 		$form = $this->form_setting_password();
 		$val  = $form->validation();
@@ -498,16 +471,8 @@ END;
 	 */
 	public function action_change_email()
 	{
-		if ( ! \Security::check_token())
-		{
-			\Log::error(
-				'CSRF: '.
-				\Input::uri().' '.
-				\Input::ip().
-				' "'.\Input::user_agent().'"'
-			);
-			throw new HttpInvalidInputException('Invalid input data');
-		}
+		Util_security::check_csrf();
+
 		$form = $this->form_setting_email();
 		$val  = $form->validation();
 		$val->add_callable('myvalidation');
