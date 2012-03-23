@@ -6,6 +6,7 @@ return array(
 		'myhome' => 'マイホーム',
 		'signup' => 'メンバー登録',
 		'member_leave'  => '退会',
+		'guest' => 'ゲスト',
 	),
 	'member_register_mail' => array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,

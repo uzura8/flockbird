@@ -29,3 +29,10 @@ function site_header_keywords($keywords = '')
 
 	return $keywords.','.PRJ_HEADER_KEYWORDS_DEFAULT;
 }
+
+function site_get_screen_name($current_user)
+{
+	if (!$current_user) return Config::get('site.term.guest');
+
+	return (empty($current_user->nickname)) ? $current_user->username : $current_user->nickname;
+}

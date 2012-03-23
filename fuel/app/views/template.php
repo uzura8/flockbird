@@ -18,9 +18,9 @@
 <div id="head"><!-- #header 画面上部のヘッド部分 -->
   <h1><a href="/"><img src="/img/logo.gif" alt="<?php echo PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME; ?>"></a></h1>
 <?php if (Auth::check()): ?>
-  <p><a href="/site/logout">ログアウト</a><p>
+  <p>こんにちは <?php echo site_get_screen_name($current_user); ?> さん[<a href="/site/logout">ログアウト</a>]<p>
 <?php else: ?>
-  <p>こんにちはゲストさん[<a href="/site/login">ログイン</a>]<p>
+  <p>こんにちは <?php echo site_get_screen_name($current_user); ?> さん[<a href="/site/login">ログイン</a>]<p>
 <?php endif; ?>
   <p class="sitemap"><a href="/sitemap/"><img src="/img/sitemap.gif" alt="サイトマップ" /></a><p>
 </div><!-- head -->
