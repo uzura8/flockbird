@@ -112,7 +112,7 @@ rakuten_color_price = "CC0000";
 	<div id="message"><?php echo $message; ?></div>
 <?php endif; ?>
 <?php if ($error = Session::get_flash('error')): ?>
-	<div id="error_message"><?php echo $error; ?></div>
+	<div id="error_message"><?php echo view_convert_list($error); ?></div>
 <?php endif; ?>
 	<div class="pageTitle"><h2><?php echo $title; ?></h2></div>
 <?php echo $content; ?>

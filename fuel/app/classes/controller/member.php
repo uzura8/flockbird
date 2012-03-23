@@ -333,7 +333,7 @@ END;
 	 */
 	public function action_setting_password()
 	{
-		//$form = $this->form_leave();
+		$form = $this->form_setting_password();
 
 		if (Input::method() === 'POST')
 		{
@@ -346,10 +346,120 @@ END;
 		$this->template->breadcrumbs = array(
 			Config::get('site.term.toppage') => '/',
 			Config::get('site.term.myhome') => '/member/',
+			'設定変更' => '/member/setting/',
 			$title => '',
 		);
 		$this->template->content = View::forge('member/setting_password');
-		//$this->template->content->set_safe('html_form', $form->build('/member/change_email'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('/member/change_password'));// form の action に入る
+	}
+
+	public function action_change_password()
+	{
+		if ( ! \Security::check_token())
+		{
+			\Log::error(
+				'CSRF: '.
+				\Input::uri().' '.
+				\Input::ip().
+				' "'.\Input::user_agent().'"'
+			);
+			throw new HttpInvalidInputException('Invalid input data');
+		}
+
+		$form = $this->form_setting_password();
+		$val  = $form->validation();
+		$val->add_callable('myvalidation');
+
+		$errors = '';
+		if ($val->run())
+		{
+			$post = $val->validated();
+		}
+		else
+		{
+			$errors = $val->show_errors();
+		}
+		if (!$errors && !$this->check_password($post['password']))
+		{
+			$errors = Util_toolkit::convert_show_error('現在のパスワードが正しくありません。');
+		}
+		if (!$errors && $post['password'] == $post['password_new'])
+		{
+			$errors = Util_toolkit::convert_show_error('現在のパスワードとは異なるパスワードを設定してください。');
+		}
+
+		if (!$errors)
+		{
+			$data = array();
+			$data['to_name']      = $this->current_user->username;
+			$data['to_address']   = $this->current_user->email;
+			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
+			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+			$data['subject']      = \Config::get('site.member_setting_password.subject');
+
+			$data['body'] = <<< END
+{$data['to_name']} 様
+
+パスワードを変更しました。
+
+====================
+パスワード: {$post['password_new']}
+====================
+END;
+
+			try
+			{
+				$this->change_password($post['password'], $post['password_new']);
+				Util_toolkit::sendmail($data);
+				Session::set_flash('message', 'パスワードを変更しました。再度ログインしてください。');
+				Response::redirect('site/login');
+			}
+			catch(EmailValidationFailedException $e)
+			{
+				$this->template->title = 'パスワード変更: 送信エラー';
+				$this->template->content = View::forge('contact/error');
+
+				\Log::error(
+					__METHOD__ . ' email validation error: ' .
+					$e->getMessage()
+				);
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				$this->template->title = 'パスワード変更: 送信エラー';
+				$this->template->content = View::forge('contact/error');
+
+				\Log::error(
+					__METHOD__ . ' email sending error: ' .
+					$e->getMessage()
+				);
+			}
+			catch(EmailSavingFailedException $e)
+			{
+				$this->template->title = 'パスワード変更: 送信エラー';
+				$this->template->content = View::forge('contact/error');
+
+				\Log::error(
+					__METHOD__ . ' email saving error: ' .
+					$e->getMessage()
+				);
+			}
+		}
+		else
+		{
+			Session::set_flash('error', $errors);
+
+			$form->repopulate();
+			$title = 'パスワード変更';
+			$this->template->title = $title;
+			$this->template->breadcrumbs = array(
+				Config::get('site.term.toppage') => '/',
+				Config::get('site.term.myhome') => '/member/',
+				$title => '',
+			);
+			$this->template->content = View::forge('member/setting_password');
+			$this->template->content->set_safe('html_form', $form->build('/member/change_password'));
+		}
 	}
 
 	/**
@@ -373,6 +483,7 @@ END;
 		$this->template->breadcrumbs = array(
 			Config::get('site.term.toppage') => '/',
 			Config::get('site.term.myhome') => '/member/',
+			'設定変更' => '/member/setting/',
 			$title => '',
 		);
 		$this->template->content = View::forge('member/setting_email');
@@ -434,10 +545,50 @@ END;
 		return $form;
 	}
 
-	protected function check_password()
+	public function form_setting_password()
+	{
+		$form = Fieldset::forge();
+
+		$form->add('password', '現在のパスワード', array('type'=>'password'))
+			->add_rule('trim')
+			->add_rule('required')
+			->add_rule('no_controll')
+			->add_rule('min_length', 6)
+			->add_rule('max_length', 20);
+
+		$form->add('password_new', '新しいパスワード', array('type'=>'password'))
+			->add_rule('trim')
+			->add_rule('required')
+			->add_rule('no_controll')
+			->add_rule('min_length', 6)
+			->add_rule('max_length', 20);
+
+		$form->add('password_new_confirm', '新しいパスワード(確認用)', array('type'=>'password'))
+			->add_rule('trim')
+			->add_rule('required')
+			->add_rule('match_field', 'password_new');
+
+		$form->add('submit', '', array('type'=>'submit', 'value' => '変更'));
+		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
+
+		return $form;
+	}
+
+	protected function check_password($password = '')
 	{
 		$auth = Auth::instance();
-		return $auth->check_password();
+		return $auth->check_password($password);
+	}
+
+	protected function change_password($password_old, $password)
+	{
+		$auth = Auth::instance();
+		if (!$auth->change_password($password_old, $password))
+		{
+			throw new Exception('change password error.');
+		}
+
+		return $auth->logout();
 	}
 
 	protected function delete_user($username)

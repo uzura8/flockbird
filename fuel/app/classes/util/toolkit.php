@@ -52,4 +52,31 @@ class Util_toolkit
 
 		$email->send();
 	}
+
+	public static function convert_show_error($errors, $options = array())
+	{
+		$default = array(
+			'open_list'    => \Config::get('validation.open_list', '<ul>'),
+			'close_list'   => \Config::get('validation.close_list', '</ul>'),
+			'open_error'   => \Config::get('validation.open_error', '<li>'),
+			'close_error'  => \Config::get('validation.close_error', '</li>'),
+			'no_errors'    => \Config::get('validation.no_errors', '')
+		);
+		$options = array_merge($default, $options);
+		if (!is_array($errors)) $errors = (array)$errors;
+
+		if (empty($errors))
+		{
+			return $options['no_errors'];
+		}
+
+		$output = $options['open_list'];
+		foreach($errors as $e)
+		{
+			$output .= $options['open_error'].$e.$options['close_error'];
+		}
+		$output .= $options['close_list'];
+
+		return $output;
+	}
 }
