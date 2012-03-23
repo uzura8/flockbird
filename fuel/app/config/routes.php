@@ -5,4 +5,6 @@ return array(
 	
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
 	'birds/(((?!(size|watch_spot|life_place)).)+)'    => 'birds/detail/$1',
+	'member/setting/email'    => 'member/setting_email',
+	'member/setting/password'    => 'member/setting_password',
 );

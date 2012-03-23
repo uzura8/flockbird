@@ -325,6 +325,60 @@ END;
 		}
 	}
 
+	/**
+	 * Mmeber setting password
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_setting_password()
+	{
+		//$form = $this->form_leave();
+
+		if (Input::method() === 'POST')
+		{
+			$form->repopulate();
+		}
+
+		$title = 'パスワード変更';
+		$this->template->title = $title;
+		$this->template->header_title = site_title();
+		$this->template->breadcrumbs = array(
+			Config::get('site.term.toppage') => '/',
+			Config::get('site.term.myhome') => '/member/',
+			$title => '',
+		);
+		$this->template->content = View::forge('member/setting_password');
+		//$this->template->content->set_safe('html_form', $form->build('/member/change_email'));// form の action に入る
+	}
+
+	/**
+	 * Mmeber setting email
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_setting_email()
+	{
+		//$form = $this->form_leave();
+
+		if (Input::method() === 'POST')
+		{
+			$form->repopulate();
+		}
+
+		$title = 'メールアドレス変更';
+		$this->template->title = $title;
+		$this->template->header_title = site_title();
+		$this->template->breadcrumbs = array(
+			Config::get('site.term.toppage') => '/',
+			Config::get('site.term.myhome') => '/member/',
+			$title => '',
+		);
+		$this->template->content = View::forge('member/setting_email');
+		//$this->template->content->set_safe('html_form', $form->build('/member/change_email'));// form の action に入る
+	}
+
 	private function check_not_auth_action()
 	{
 		return in_array(Request::active()->action, $this->check_not_auth_action);
