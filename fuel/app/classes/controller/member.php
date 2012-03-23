@@ -470,7 +470,7 @@ END;
 	 */
 	public function action_setting_email()
 	{
-		//$form = $this->form_leave();
+		$form = $this->form_setting_email();
 
 		if (Input::method() === 'POST')
 		{
@@ -487,7 +487,116 @@ END;
 			$title => '',
 		);
 		$this->template->content = View::forge('member/setting_email');
-		//$this->template->content->set_safe('html_form', $form->build('/member/change_email'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('/member/change_email'));// form の action に入る
+	}
+
+	/**
+	 * Mmeber change email
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_change_email()
+	{
+		if ( ! \Security::check_token())
+		{
+			\Log::error(
+				'CSRF: '.
+				\Input::uri().' '.
+				\Input::ip().
+				' "'.\Input::user_agent().'"'
+			);
+			throw new HttpInvalidInputException('Invalid input data');
+		}
+		$form = $this->form_setting_email();
+		$val  = $form->validation();
+		$val->add_callable('myvalidation');
+
+		$errors = '';
+		if ($val->run())
+		{
+			$post = $val->validated();
+		}
+		else
+		{
+			$errors = $val->show_errors();
+		}
+		if (!$errors && Util_db::check_record_exist('member', 'email', $post['email']))
+		{
+			$errors = Util_toolkit::convert_show_error('そのアドレスは登録できません。');
+		}
+		if (!$errors)
+		{
+			$data = array();
+			$data['to_name']      = $this->current_user->username;
+			$data['to_address']   = $post['email'];
+			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
+			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+			$data['subject']      = \Config::get('site.member_setting_email.subject');
+
+			$data['body'] = <<< END
+{$data['to_name']} 様
+
+メールアドレスを変更しました。
+
+====================
+メールアドレス: {$post['email']}
+====================
+END;
+
+			try
+			{
+				$this->change_email($post['email']);
+				Util_toolkit::sendmail($data);
+				Session::set_flash('message', 'メールアドレスを変更しました。再度ログインしてください。');
+				Response::redirect('site/login');
+			}
+			catch(EmailValidationFailedException $e)
+			{
+				$this->template->title = 'メールアドレス変更: 送信エラー';
+				$this->template->content = View::forge('contact/error');
+
+				\Log::error(
+					__METHOD__ . ' email validation error: ' .
+					$e->getMessage()
+				);
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				$this->template->title = 'メールアドレス変更: 送信エラー';
+				$this->template->content = View::forge('contact/error');
+
+				\Log::error(
+					__METHOD__ . ' email sending error: ' .
+					$e->getMessage()
+				);
+			}
+			catch(EmailSavingFailedException $e)
+			{
+				$this->template->title = 'メールアドレス変更: 送信エラー';
+				$this->template->content = View::forge('contact/error');
+
+				\Log::error(
+					__METHOD__ . ' email saving error: ' .
+					$e->getMessage()
+				);
+			}
+		}
+		else
+		{
+			Session::set_flash('error', $errors);
+
+			$form->repopulate();
+			$title = 'メールアドレス変更';
+			$this->template->title = $title;
+			$this->template->breadcrumbs = array(
+				Config::get('site.term.toppage') => '/',
+				Config::get('site.term.myhome') => '/member/',
+				$title => '',
+			);
+			$this->template->content = View::forge('member/setting_email');
+			$this->template->content->set_safe('html_form', $form->build('/member/change_email'));
+		}
 	}
 
 	private function check_not_auth_action()
@@ -572,6 +681,38 @@ END;
 		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
 
 		return $form;
+	}
+
+	public function form_setting_email()
+	{
+		$form = Fieldset::forge();
+
+		$form->add('email', 'メールアドレス')
+			->add_rule('trim')
+			->add_rule('required')
+			->add_rule('no_controll')
+			->add_rule('valid_email');
+
+		$form->add('email_confirm', 'メールアドレス(確認用)')
+			->add_rule('trim')
+			->add_rule('required')
+			->add_rule('match_field', 'email');
+
+		$form->add('submit', '', array('type'=>'submit', 'value' => '変更'));
+		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
+
+		return $form;
+	}
+
+	protected function change_email($email)
+	{
+		$auth = Auth::instance();
+		if (!$auth->update_user(array('email' => $email)))
+		{
+			throw new Exception('change email error.');
+		}
+
+		return $auth->logout();
 	}
 
 	protected function check_password($password = '')

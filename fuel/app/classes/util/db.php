@@ -29,4 +29,11 @@ class Util_db
 
 		return $syllabary_range_list[$initial];
 	}
+
+	public static function check_record_exist($table, $field, $value)
+	{
+		$model = 'Model_'.ucwords($table);
+
+		return $model::find()->where($field, $value)->count() > 0;
+	}
 }
