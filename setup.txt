@@ -1,0 +1,48 @@
+================
+インストール方法
+================
+
+
+1. セットアップスクリプトの実施
+
+	----
+	sh setup.sh
+	----
+
+
+2. 設定ファイルの編集 (config.php)
+
+	----
+	define('PRJ_ENVIRONMENT', 'DEVELOPMENT');
+
+	// DBサーバ接続設定
+	$GLOBALS['DSN']['development'] = array(
+		'default' => array(
+			'connection'  => array(
+				'dsn'        => 'mysql:host=localhost;dbname=dbname',
+				'username'   => 'root',
+				'password'   => '',
+			),
+			'profiling' => true,
+		),
+	);
+
+	// 暗号化キー(ASCII文字列)
+	define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
+	----
+
+
+3. DBの作成 & セットアップSQLの実行
+
+	----
+	echo "CREATE DATABASE DB-name DEFAULT CHARACTER SET utf8" | mysql -u root -p
+	mysql -u root -p DB-name < data/sql/setup/setup.sql
+	----
+
+4. .htaccess の RewriteBase を設定
+
+	----
+	vi .htaccess
+
+	RewriteBase /(設置パス/)
+	----
