@@ -30,7 +30,13 @@
 		<?php echo Form::submit(array('value'=>'Login', 'name'=>'submit')); ?>
 	</div>
 
-	<div class="link">
+<?php if (PRJ_FACEBOOK_APP_ID): ?>
+	<div class="facebook_login">
+		<?php echo Html::anchor('fb/login', 'facebookでログイン'); ?>
+	</div>
+<?php endif; ?>
+
+	<div class="signup">
 		<?php echo Html::anchor('member/signup', '新規登録'); ?>
 	</div>
 
