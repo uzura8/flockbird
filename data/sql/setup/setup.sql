@@ -419,19 +419,13 @@ DROP TABLE IF EXISTS `member`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(20) NOT NULL DEFAULT '',
-  `password` varchar(255) NOT NULL,
-  `group` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `nickname` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
   `last_login` datetime NOT NULL,
   `login_hash` varchar(255) NOT NULL DEFAULT '',
-  `profile_fields` text,
+  `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email_UNIQUE_idx` (`email`),
-  UNIQUE KEY `username_UNIQUE_idx` (`username`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -443,6 +437,70 @@ LOCK TABLES `member` WRITE;
 /*!40000 ALTER TABLE `member` DISABLE KEYS */;
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Table structure for table `member_auth`
+--
+
+DROP TABLE IF EXISTS `member_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `member_auth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
+  UNIQUE KEY `email_UNIQUE_idx` (`email`),
+  CONSTRAINT `member_auth_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `member_auth`
+--
+
+LOCK TABLES `member_auth` WRITE;
+/*!40000 ALTER TABLE `member_auth` DISABLE KEYS */;
+/*!40000 ALTER TABLE `member_auth` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
+-- Table structure for table `member_facebook`
+--
+
+DROP TABLE IF EXISTS `member_facebook`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `member_facebook` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `facebook_id` varchar(50) NOT NULL,
+  `facebook_name` varchar(255) NOT NULL,
+  `facebook_link` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `facebook_id_UNIQUE_idx` (`facebook_id`),
+  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
+  CONSTRAINT `member_facebook_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `member_facebook`
+--
+
+LOCK TABLES `member_facebook` WRITE;
+/*!40000 ALTER TABLE `member_facebook` DISABLE KEYS */;
+/*!40000 ALTER TABLE `member_facebook` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Table structure for table `migration`

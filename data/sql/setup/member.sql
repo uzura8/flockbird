@@ -1,4 +1,4 @@
-Create Table: CREATE TABLE `member` (
+CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `last_login` datetime NOT NULL,
