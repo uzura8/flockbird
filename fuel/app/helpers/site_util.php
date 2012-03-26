@@ -34,5 +34,5 @@ function site_get_screen_name($current_user)
 {
 	if (!$current_user) return Config::get('site.term.guest');
 
-	return (empty($current_user->nickname)) ? $current_user->username : $current_user->nickname;
+	return (!empty($current_user->name)) ? $current_user->name : 'メンバーID:'.$current_user->id;
 }

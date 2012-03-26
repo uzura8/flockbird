@@ -32,7 +32,7 @@ class Util_db
 
 	public static function check_record_exist($table, $field, $value)
 	{
-		$model = 'Model_'.ucwords($table);
+		$model = 'Model_'.Util_string::camelize($table);
 
 		return $model::find()->where($field, $value)->count() > 0;
 	}

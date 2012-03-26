@@ -49,6 +49,12 @@ define('PRJ_ADMIN_MAIL', 'admin@example.com');
 // Google 関連設定
 define('GOOGLE_SITE_VERIFICATION', '');
 
+
+// Facebook 関連設定
+define('PRJ_FACEBOOK_APP_ID', '');
+define('PRJ_FACEBOOK_APP_SECRET', '');
+
+
 // error level 設定
 switch (PRJ_ENVIRONMENT)
 {
