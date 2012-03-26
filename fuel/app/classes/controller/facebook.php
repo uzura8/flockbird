@@ -3,7 +3,7 @@ require_once APPPATH.'vendor/facebook-php-sdk/facebook.php';
 
 use Model\Fbuser;
 
-class Controller_Fb extends Controller_Site
+class Controller_Facebook extends Controller_Site
 {
 	private $fb;
 
@@ -48,11 +48,11 @@ class Controller_Fb extends Controller_Site
 				{
 					Session::set_flash('message', $e->getMessage());
 				}
-				Response::redirect('fb/index/');
+				Response::redirect('facebook/index/');
 			}
 		}
 
-		$this->template->content = View::forge('fb/index',$data);
+		$this->template->content = View::forge('facebook/index',$data);
 	}
 
 	public function action_login()
@@ -109,7 +109,7 @@ class Controller_Fb extends Controller_Site
 	public function action_logout()
 	{
 		$url = $this->fb->getLogoutUrl(Config::get('facebook.logout'));
-		if (Config::get('facebook.is_destory_facebook_session')) $this->fb->destroySession();
+		$this->fb->destroySession();
 		Auth::logout();
 		Session::set_flash('message', 'ログアウトしました');
 		Response::redirect($url);

@@ -28,7 +28,7 @@
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
 	<div class="facebook_login">
-		<?php echo Html::anchor('fb/login', 'facebookでログイン'); ?>
+		<?php echo Html::anchor('facebook/login', 'facebookでログイン'); ?>
 	</div>
 <?php endif; ?>
 

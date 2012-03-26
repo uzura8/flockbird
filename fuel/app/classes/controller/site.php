@@ -83,7 +83,7 @@ class Controller_Site extends Controller_Base
 	 */
 	public function action_logout()
 	{
-		if ($this->current_user->register_type == 1) Response::redirect('fb/logout');
+		if ($this->current_user->register_type == 1) Response::redirect('facebook/logout');
 
 		Auth::logout();
 		Session::set_flash('message', 'ログアウトしました');
