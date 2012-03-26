@@ -1,8 +1,6 @@
 <?php
 require_once APPPATH.'vendor/facebook-php-sdk/facebook.php';
 
-use Model\Fbuser;
-
 class Controller_Facebook extends Controller_Site
 {
 	private $fb;
@@ -16,44 +14,44 @@ class Controller_Facebook extends Controller_Site
 		$this->fb = new Facebook(Config::get('facebook.init'));
 	}
 
-	public function action_index()
-	{
-		$this->template->title = 'Index » Index';
-
-		$is_login = $this->fb->getUser()?true:false;
-		$data = array(
-			'is_login' => $is_login,
-		);
-
-		if($is_login and Input::method() == 'POST')
-		{
-			$v = Validation::forge();
-			$v->add('message', 'message')->add_rule('required');
-			if(!$v->run())
-			{
-				Session::set_flash('message', $v->errors('message')->get_message());
-			}
-			else
-			{
-				$message = $v->validated('message');
-				try
-				{
-					$res = $this->fb->api(array(
-						'method' => 'stream.publish',
-						'message' => $message,
-					));
-					Session::set_flash('message', 'complete!!');
-				}
-				catch (FacebookApiException $e)
-				{
-					Session::set_flash('message', $e->getMessage());
-				}
-				Response::redirect('facebook/index/');
-			}
-		}
-
-		$this->template->content = View::forge('facebook/index',$data);
-	}
+//	public function action_index()
+//	{
+//		$this->template->title = 'Index » Index';
+//
+//		$is_login = $this->fb->getUser()?true:false;
+//		$data = array(
+//			'is_login' => $is_login,
+//		);
+//
+//		if($is_login and Input::method() == 'POST')
+//		{
+//			$v = Validation::forge();
+//			$v->add('message', 'message')->add_rule('required');
+//			if(!$v->run())
+//			{
+//				Session::set_flash('message', $v->errors('message')->get_message());
+//			}
+//			else
+//			{
+//				$message = $v->validated('message');
+//				try
+//				{
+//					$res = $this->fb->api(array(
+//						'method' => 'stream.publish',
+//						'message' => $message,
+//					));
+//					Session::set_flash('message', 'complete!!');
+//				}
+//				catch (FacebookApiException $e)
+//				{
+//					Session::set_flash('message', $e->getMessage());
+//				}
+//				Response::redirect('facebook/index/');
+//			}
+//		}
+//
+//		$this->template->content = View::forge('facebook/index',$data);
+//	}
 
 	public function action_login()
 	{
@@ -67,10 +65,10 @@ class Controller_Facebook extends Controller_Site
 		{
 			$fb = $this->fb->api('/me');
 			$is_save = false;
-			if (!$user = Fbuser::find_by_facebook_id($fb['id']))
+			if (!$user = Model_MemberFacebook::find_by_facebook_id($fb['id']))
 			{
 				$member_id = $this->create_member_from_facebook($fb['id'], $fb['name']);
-				$user = new Fbuser;
+				$user = new Model_MemberFacebook;
 				$user->member_id = $member_id;
 				$user->facebook_id   = $fb['id'];
 				$user->facebook_name = $fb['name'];
