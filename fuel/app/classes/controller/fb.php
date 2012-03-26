@@ -115,9 +115,9 @@ class Controller_Fb extends Controller_Site
 		Response::redirect($url);
 	}
 
-	private function create_member_from_facebook($facebook_id, $nickname)
+	private function create_member_from_facebook($facebook_id, $name)
 	{
-		if (!$member_id = Model_Member::create_member_from_facebook($facebook_id, $nickname))
+		if (!$member_id = Model_Member::create_member_from_facebook($facebook_id, $name))
 		{
 			throw new Exception('Create member failed.');
 		}

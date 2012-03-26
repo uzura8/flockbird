@@ -70,39 +70,18 @@ class Model_Member extends Model
 	 * @param   Array
 	 * @return  bool
 	 */
-	public function create_member_from_facebook($facebook_id, $nickname)
+	public function create_member_from_facebook($facebook_id, $name)
 	{
 		$facebook_id = trim($facebook_id);
-		if (empty($facebook_id))
-		{
-			throw new \SimpleUserUpdateException('Facebook can\'t be empty.');
-		}
-
-		$username = 'fb_'.$facebook_id.'_'.date('YmdHis');
-		$nickname = trim($nickname);
-		$group = 1;
-		$profile_fields = array();
-
-		Config::load('simpleauth', 'simpleauth');
-		$same_users = \DB::select_array(\Config::get('simpleauth.table_columns', array('*')))
-			->where('username', '=', $username)
-			->from(\Config::get('simpleauth.table_name'))
-			->execute(\Config::get('simpleauth.db_connection'));
-
-		if ($same_users->count() > 0)
-		{
-			throw new \SimpleUserUpdateException('Username already exists');
-		}
+		if (empty($facebook_id)) return false;
+		$name = trim($name);
 
 		$user = array(
-			'username'        => (string) $username,
-			'nickname'        => (string) $nickname,
-			'group'           => (int) $group,
-			'profile_fields'  => serialize($profile_fields),
+			'name'        => (string) $name,
 			'register_type'   => 1,// 0: normal, 1:facebook
 			'created_at'      => date('Y-m-d H:i:s')
 		);
-
+		Config::load('simpleauth', 'simpleauth');
 		$result = \DB::insert(\Config::get('simpleauth.table_name'))
 			->set($user)
 			->execute(\Config::get('simpleauth.db_connection'));
