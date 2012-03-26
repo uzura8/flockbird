@@ -1,6 +1,8 @@
 <?php
 
-class MyValidation extends Fuel\Core\Validation
+//class MyValidation extends \Validation
+class Validation extends Fuel\Core\Validation
+//class MyValidation
 {
 	protected function __construct($fieldset)
 	{

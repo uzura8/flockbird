@@ -1,10 +1,12 @@
 <?php
 
-class Controller_Member extends Controller_Site {
+class WrongPasswordException extends \FuelException {}
 
+class Controller_Member extends Controller_Site
+{
 	//public $template = 'admin/template';
 
-	private $check_not_auth_action = array(
+	protected $check_not_auth_action = array(
 		'signup',
 		'register',
 	);
@@ -66,23 +68,21 @@ class Controller_Member extends Controller_Site {
 
 		$form = $this->form();
 		$val = $this->form()->validation();
-		$val->add_callable('myvalidation');
 
 		if ($val->run())
 		{
 			$post = $val->validated();
 
 			$data = array();
-			$data['username'] = $post['username'];
-			$data['password'] = $post['password'];
-			$data['nickname'] = $post['nickname'];
+			$data['name'] = $post['name'];
 			$data['email']    = $post['email'];
+			$data['password'] = $post['password'];
 
 			$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
 			$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
 			$maildata['subject']      = \Config::get('site.member_register_mail.subject');
 			$maildata['to_address']    = $post['email'];
-			$maildata['to_name'] = (!empty($post['nickname'])) ? $post['nickname'] : $post['username'];
+			$maildata['to_name'] = $post['name'];
 
 			$maildata['body'] = <<< END
 メンバー登録が完了しました。
@@ -121,26 +121,16 @@ END;
 					$e->getMessage()
 				);
 			}
-			catch(EmailSavingFailedException $e)
+			catch(Auth\NormalUserUpdateException $e)
 			{
-				$this->template->title = 'メンバー登録: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email saving error: ' .
-					$e->getMessage()
-				);
+				Session::set_flash('error', 'そのアドレスは登録できません');
+				$this->action_signup();
 			}
 		}
 		else
 		{
-			$form->repopulate();
-
-			$this->template->title = 'メンバー登録: エラー';
-			$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', Config::get('site.term.signup') => '');
-			$this->template->content = View::forge('member/signup');
-			$this->template->content->set_safe('html_error', $val->show_errors());
-			$this->template->content->set_safe('html_form', $form->build('/member/register'));
+			Session::set_flash('error', $val->show_errors());
+			$this->action_signup();
 		}
 	}
 
@@ -201,7 +191,6 @@ END;
 	{
 		$form = $this->form_leave();
 		$val  = $form->validation();
-		$val->add_callable('myvalidation');
 
 		if ($val->run() && $this->check_password())
 		{
@@ -218,19 +207,15 @@ END;
 		}
 		else
 		{
-			$form->repopulate();
-
-			$this->template->title = Config::get('site.term.member_leave');
-			$this->template->content = View::forge('member/leave');
 			if ($val->show_errors())
 			{
-				$this->template->content->set_safe('html_error', $val->show_errors());
+				Session::set_flash('error', $val->show_errors());
 			}
 			else
 			{
 				Session::set_flash('error', 'パスワードが正しくありません');
 			}
-			$this->template->content->set_safe('html_form', $form->build('/member/leave_confirm'));
+			$this->action_leave();
 		}
 	}
 
@@ -240,13 +225,12 @@ END;
 
 		$form = $this->form_leave();
 		$val  = $form->validation();
-		$val->add_callable('myvalidation');
 
 		if ($val->run() && $this->check_password())
 		{
 			$data = array();
-			$data['to_name']      = $this->current_user->username;
-			$data['to_address']   = $this->current_user->email;
+			$data['to_name']      = $this->current_user->name;
+			$data['to_address']   = $this->current_user->member_auth->email;
 			$data['from_name']    = \Config::get('site.member_leave_mail.from_name');
 			$data['from_address'] = \Config::get('site.member_leave_mail.from_mail_address');
 			$data['subject']      = \Config::get('site.member_leave_mail.subject');
@@ -259,7 +243,7 @@ END;
 
 			try
 			{
-				$this->delete_user($this->current_user->username);
+				$this->delete_user($this->current_user->id);
 				Util_toolkit::sendmail($data);
 				Session::set_flash('message', '退会が完了しました。');
 				Response::redirect('site/login');
@@ -284,26 +268,23 @@ END;
 					$e->getMessage()
 				);
 			}
-			catch(EmailSavingFailedException $e)
+			catch(Exception $e)
 			{
-				$this->template->title = 'メンバー退会: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email saving error: ' .
-					$e->getMessage()
-				);
+				Session::set_flash('error', '退会に失敗しました。');
+				$this->action_setting_password();
 			}
 		}
 		else
 		{
-			$form->repopulate();
-
-			$this->template->title = 'メンバー退会: エラー';
-			$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', Config::get('site.term.signup') => '');
-			$this->template->content = View::forge('member/leave');
-			$this->template->content->set_safe('html_error', $val->show_errors());
-			$this->template->content->set_safe('html_form', $form->build('/member/leave_confirm'));
+			if ($val->show_errors())
+			{
+				Session::set_flash('error', $val->show_errors());
+			}
+			else
+			{
+				Session::set_flash('error', 'パスワードが正しくありません');
+			}
+			$this->action_leave();
 		}
 	}
 
@@ -341,31 +322,14 @@ END;
 
 		$form = $this->form_setting_password();
 		$val  = $form->validation();
-		$val->add_callable('myvalidation');
 
-		$errors = '';
 		if ($val->run())
 		{
 			$post = $val->validated();
-		}
-		else
-		{
-			$errors = $val->show_errors();
-		}
-		if (!$errors && !$this->check_password($post['password']))
-		{
-			$errors = Util_toolkit::convert_show_error('現在のパスワードが正しくありません。');
-		}
-		if (!$errors && $post['password'] == $post['password_new'])
-		{
-			$errors = Util_toolkit::convert_show_error('現在のパスワードとは異なるパスワードを設定してください。');
-		}
 
-		if (!$errors)
-		{
 			$data = array();
-			$data['to_name']      = $this->current_user->username;
-			$data['to_address']   = $this->current_user->email;
+			$data['to_name']      = $this->current_user->name;
+			$data['to_address']   = $this->current_user->member_auth->email;
 			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
 			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
 			$data['subject']      = \Config::get('site.member_setting_password.subject');
@@ -375,14 +339,14 @@ END;
 
 パスワードを変更しました。
 
-====================
-パスワード: {$post['password_new']}
-====================
+================================
+新しいパスワード: {$post['password']}
+================================
 END;
 
 			try
 			{
-				$this->change_password($post['password'], $post['password_new']);
+				$this->change_password($post['old_password'], $post['password']);
 				Util_toolkit::sendmail($data);
 				Session::set_flash('message', 'パスワードを変更しました。再度ログインしてください。');
 				Response::redirect('site/login');
@@ -407,31 +371,16 @@ END;
 					$e->getMessage()
 				);
 			}
-			catch(EmailSavingFailedException $e)
+			catch(WrongPasswordException $e)
 			{
-				$this->template->title = 'パスワード変更: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email saving error: ' .
-					$e->getMessage()
-				);
+				Session::set_flash('error', '現在のパスワードが正しくありません。');
+				$this->action_setting_password();
 			}
 		}
 		else
 		{
-			Session::set_flash('error', $errors);
-
-			$form->repopulate();
-			$title = 'パスワード変更';
-			$this->template->title = $title;
-			$this->template->breadcrumbs = array(
-				Config::get('site.term.toppage') => '/',
-				Config::get('site.term.myhome') => '/member/',
-				$title => '',
-			);
-			$this->template->content = View::forge('member/setting_password');
-			$this->template->content->set_safe('html_form', $form->build('/member/change_password'));
+			Session::set_flash('error', $val->show_errors());
+			$this->action_setting_password();
 		}
 	}
 
@@ -449,7 +398,6 @@ END;
 		{
 			$form->repopulate();
 		}
-
 		$title = 'メールアドレス変更';
 		$this->template->title = $title;
 		$this->template->header_title = site_title();
@@ -475,25 +423,13 @@ END;
 
 		$form = $this->form_setting_email();
 		$val  = $form->validation();
-		$val->add_callable('myvalidation');
 
-		$errors = '';
 		if ($val->run())
 		{
 			$post = $val->validated();
-		}
-		else
-		{
-			$errors = $val->show_errors();
-		}
-		if (!$errors && Util_db::check_record_exist('member', 'email', $post['email']))
-		{
-			$errors = Util_toolkit::convert_show_error('そのアドレスは登録できません。');
-		}
-		if (!$errors)
-		{
+
 			$data = array();
-			$data['to_name']      = $this->current_user->username;
+			$data['to_name']      = $this->current_user->name;
 			$data['to_address']   = $post['email'];
 			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
 			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
@@ -536,55 +472,28 @@ END;
 					$e->getMessage()
 				);
 			}
-			catch(EmailSavingFailedException $e)
+			catch(Auth\NormalUserUpdateException $e)
 			{
-				$this->template->title = 'メールアドレス変更: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email saving error: ' .
-					$e->getMessage()
-				);
+				Session::set_flash('error', 'そのアドレスは登録できません');
+				$this->action_setting_email();
 			}
 		}
 		else
 		{
-			Session::set_flash('error', $errors);
-
-			$form->repopulate();
-			$title = 'メールアドレス変更';
-			$this->template->title = $title;
-			$this->template->breadcrumbs = array(
-				Config::get('site.term.toppage') => '/',
-				Config::get('site.term.myhome') => '/member/',
-				$title => '',
-			);
-			$this->template->content = View::forge('member/setting_email');
-			$this->template->content->set_safe('html_form', $form->build('/member/change_email'));
+			Session::set_flash('error', $val->show_errors());
+			$this->action_setting_email();
 		}
-	}
-
-	private function check_not_auth_action()
-	{
-		return in_array(Request::active()->action, $this->check_not_auth_action);
 	}
 
 	public function form()
 	{
 		$form = Fieldset::forge();
 
-		$form->add('username', '名前')
+		$form->add('name', '名前')
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('no_controll')
-			->add_rule('max_length', 20);
-
-		$form->add('password', 'パスワード', array('type'=>'password'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('no_controll')
-			->add_rule('min_length', 6)
-			->add_rule('max_length', 20);
+			->add_rule('max_length', 50);
 
 		$form->add('email', 'メールアドレス')
 			->add_rule('trim')
@@ -592,10 +501,12 @@ END;
 			->add_rule('no_controll')
 			->add_rule('valid_email');
 
-		$form->add('nickname', 'ニックネーム')
+		$form->add('password', 'パスワード', array('type'=>'password'))
 			->add_rule('trim')
+			->add_rule('required')
 			->add_rule('no_controll')
-			->add_rule('max_length', 50);
+			->add_rule('min_length', 6)
+			->add_rule('max_length', 20);
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信'));
 		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
@@ -623,24 +534,25 @@ END;
 	{
 		$form = Fieldset::forge();
 
-		$form->add('password', '現在のパスワード', array('type'=>'password'))
+		$form->add('old_password', '現在のパスワード', array('type'=>'password'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('no_controll')
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20);
 
-		$form->add('password_new', '新しいパスワード', array('type'=>'password'))
+		$form->add('password', '新しいパスワード', array('type'=>'password'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('no_controll')
 			->add_rule('min_length', 6)
-			->add_rule('max_length', 20);
+			->add_rule('max_length', 20)
+			->add_rule('unmatch_field', 'old_password');
 
-		$form->add('password_new_confirm', '新しいパスワード(確認用)', array('type'=>'password'))
+		$form->add('password_confirm', '新しいパスワード(確認用)', array('type'=>'password'))
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('match_field', 'password_new');
+			->add_rule('match_field', 'password');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '変更'));
 		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
@@ -686,38 +598,32 @@ END;
 		return $auth->check_password($password);
 	}
 
-	protected function change_password($password_old, $password)
+	protected function change_password($old_password, $password)
 	{
 		$auth = Auth::instance();
-		if (!$auth->change_password($password_old, $password))
+		if (!$auth->change_password($old_password, $password))
 		{
-			throw new Exception('change password error.');
+			throw new WrongPasswordException('change password error.');
 		}
 
 		return $auth->logout();
 	}
 
-	protected function delete_user($username)
+	protected function delete_user($member_id)
 	{
 		$auth = Auth::instance();
-		return $auth->delete_user($username) && $auth->logout();
+		return $auth->delete_user($member_id) && $auth->logout();
 	}
 
 	public function save($data)
 	{
 		// create new member
 		$auth = Auth::instance();
-		if (!$member_id = $auth->create_user($data['username'], $data['password'], $data['email']))
+		if (!$member_id = $auth->create_user($data['email'], $data['password'], $data['name']))
 		{
 			throw new Exception('create member error.');
 		}
 
-		// update for nickname.
-		$member = Model_Member::find($member_id);
-		$member->nickname = $data['nickname'];
-		if (!$member->save())
-		{
-			throw new Exception('update member error.');
-		}
+		return $member_id;
 	}
 }

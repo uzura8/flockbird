@@ -44,9 +44,9 @@ class Controller_Site extends Controller_Base
 
 		if (Input::method() == 'POST')
 		{
-			$val->add('email', 'Email or Username')
+			$val->add('email', 'メールアドレス')
 			    ->add_rule('required');
-			$val->add('password', 'Password')
+			$val->add('password', 'パスワード')
 			    ->add_rule('required');
 
 			if ($val->run())
@@ -62,7 +62,7 @@ class Controller_Site extends Controller_Base
 				}
 				else
 				{
-					$this->template->set_global('login_error', 'Fail');
+					Session::set_flash('error', 'ログインに失敗しました');
 				}
 			}
 		}

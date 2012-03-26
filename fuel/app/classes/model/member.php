@@ -3,17 +3,40 @@ use Orm\Model;
 
 class Model_Member extends Model
 {
+	protected static $_has_one = array(
+		'member_auth' => array(
+			'key_from' => 'id',
+			'model_to' => 'Model_MemberAuth',
+			'key_to' => 'member_id',
+			'cascade_save' => false,
+			'cascade_delete' => false,
+		)
+	);
+
 	protected static $_table_name = 'member';
 	protected static $_properties = array(
 		'id',
-		'username',
-		'password',
-		'group',
-		'email',
-		'nickname',
+		'name' => array(
+			'validation' => array(
+				'trim',
+				'required',
+				'max_length' => array(255),
+			),
+		),
+		'login_hash' => array(
+			'validation' => array(
+				'trim',
+				'max_length' => array(255),
+			),
+		),
 		'last_login',
-		'profile_fields',
-		'register_type',// 0: normal, 1:facebook
+		'register_type' => array(// 0: normal, 1:facebook
+			'validation' => array(
+				'trim',
+				'required',
+				'match_pattern' => array('/[01]{1}/'),
+			),
+		),
 		'created_at',
 		'updated_at'
 	);
