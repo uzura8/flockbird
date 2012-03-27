@@ -39,10 +39,19 @@
 	mysql -u root -p DB-name < data/sql/setup/setup.sql
 	----
 
+
 4. .htaccess の RewriteBase を設定
 
 	----
 	vi .htaccess
 
 	RewriteBase /(設置パス/)
+	----
+
+
+5. auth package をカスタマイズしたものに変更
+
+	----
+	cd fuel/packages/auth/
+	git checkout master
 	----
