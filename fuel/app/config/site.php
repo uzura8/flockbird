@@ -7,6 +7,7 @@ return array(
 		'signup' => 'メンバー登録',
 		'member_leave'  => '退会',
 		'guest' => 'ゲスト',
+		'note' => '日記',
 	),
 	'member_register_mail' => array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
