@@ -1,7 +1,5 @@
 <?php
-use Orm\Model;
-
-class Model_MemberFacebook extends Model
+class Model_Memberfacebook extends \Orm\Model
 {
 	protected static $_table_name = 'member_facebook';
 	protected static $_has_one = array(

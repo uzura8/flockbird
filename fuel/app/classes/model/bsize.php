@@ -1,7 +1,7 @@
 <?php
 namespace Model;
 
-class BSize extends \Model
+class Bsize extends \Model
 {
 	public static function get_result_array_all($cols = array())
 	{

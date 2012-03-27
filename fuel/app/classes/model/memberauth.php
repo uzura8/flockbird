@@ -1,10 +1,7 @@
 <?php
-use Orm\Model;
-
-class Model_MemberAuth extends Model
+class Model_Memberauth extends \Orm\Model
 {
 	protected static $_table_name = 'member_auth';
-	//protected static $_has_one = array('member');
 	protected static $_has_one = array(
 		'member' => array(
 			'key_from' => 'member_id',

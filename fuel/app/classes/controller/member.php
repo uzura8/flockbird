@@ -230,7 +230,7 @@ END;
 		{
 			$data = array();
 			$data['to_name']      = $this->current_user->name;
-			$data['to_address']   = $this->current_user->member_auth->email;
+			$data['to_address']   = $this->current_user->memberauth->email;
 			$data['from_name']    = \Config::get('site.member_leave_mail.from_name');
 			$data['from_address'] = \Config::get('site.member_leave_mail.from_mail_address');
 			$data['subject']      = \Config::get('site.member_leave_mail.subject');
@@ -329,7 +329,7 @@ END;
 
 			$data = array();
 			$data['to_name']      = $this->current_user->name;
-			$data['to_address']   = $this->current_user->member_auth->email;
+			$data['to_address']   = $this->current_user->memberauth->email;
 			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
 			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
 			$data['subject']      = \Config::get('site.member_setting_password.subject');
