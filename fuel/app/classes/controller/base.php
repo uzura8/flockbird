@@ -32,7 +32,6 @@ class Controller_Base extends Controller_Template
 
 	protected function auth_check()
 	{
-		if ($this->check_not_auth_action() && Auth::check()) Response::redirect('member/index');
 		if (!$this->check_not_auth_action() && !Auth::check())
 		{
 			Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
