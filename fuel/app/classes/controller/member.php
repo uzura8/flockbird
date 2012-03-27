@@ -15,8 +15,7 @@ class Controller_Member extends Controller_Site
 	{
 		parent::before();
 
-		if (!$this->check_not_auth_action() && !Auth::check()) Response::redirect('site/login');
-		if ($this->check_not_auth_action() && Auth::check()) Response::redirect('member/index');
+		$this->auth_check();
 	}
 
 	/**

@@ -44,10 +44,9 @@ class Controller_Site extends Controller_Base
 
 		if (Input::method() == 'POST')
 		{
-			$val->add('email', 'メールアドレス')
-			    ->add_rule('required');
-			$val->add('password', 'パスワード')
-			    ->add_rule('required');
+			$val->add('email', 'メールアドレス')->add_rule('required');
+			$val->add('password', 'パスワード')->add_rule('required');
+			$val->add('destination');
 
 			if ($val->run())
 			{
@@ -58,6 +57,8 @@ class Controller_Site extends Controller_Base
 				{
 					// credentials ok, go right in
 					Session::set_flash('message', 'ログインしました');
+
+					if (Input::post('destination')) Response::redirect(urldecode(Input::post('destination')));
 					Response::redirect('member');
 				}
 				else
@@ -72,7 +73,10 @@ class Controller_Site extends Controller_Base
 		$this->template->header_title = site_title($title);
 		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', $title => '');
 
-		$this->template->content = View::forge('site/login', array('val' => $val));
+		$destination = '';
+		$destination = (Input::post('destination')) ? Input::post('destination') : null;
+		$destination = (Session::get_flash('destination')) ? Session::get_flash('destination') : null;
+		$this->template->content = View::forge('site/login', array('val' => $val, 'destination' => $destination));
 	}
 
 	/**
