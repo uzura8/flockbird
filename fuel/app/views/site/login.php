@@ -1,7 +1,7 @@
 <?php echo Form::open(array()); ?>
 
-	<?php if (isset($_GET['destination'])): ?>
-		<?php echo Form::hidden('destination',$_GET['destination']); ?>
+	<?php if (isset($destination)): ?>
+		<?php echo Form::hidden('destination' ,$destination); ?>
 	<?php endif; ?>
 
 	<div class="row">
