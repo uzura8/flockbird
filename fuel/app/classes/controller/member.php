@@ -103,23 +103,11 @@ END;
 			}
 			catch(EmailValidationFailedException $e)
 			{
-				$this->template->title = 'メンバー登録: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email validation error: ' .
-					$e->getMessage()
-				);
+				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
-				$this->template->title = 'メンバー登録: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email sending error: ' .
-					$e->getMessage()
-				);
+				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(Auth\NormalUserUpdateException $e)
 			{
@@ -250,23 +238,11 @@ END;
 			}
 			catch(EmailValidationFailedException $e)
 			{
-				$this->template->title = 'メンバー退会: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email validation error: ' .
-					$e->getMessage()
-				);
+				$this->display_error('メンバー退会: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
-				$this->template->title = 'メンバー退会: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email sending error: ' .
-					$e->getMessage()
-				);
+				$this->display_error('メンバー退会: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(Exception $e)
 			{
@@ -353,23 +329,11 @@ END;
 			}
 			catch(EmailValidationFailedException $e)
 			{
-				$this->template->title = 'パスワード変更: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email validation error: ' .
-					$e->getMessage()
-				);
+				$this->display_error('パスワード変更: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
-				$this->template->title = 'パスワード変更: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email sending error: ' .
-					$e->getMessage()
-				);
+				$this->display_error('パスワード変更: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(WrongPasswordException $e)
 			{
@@ -454,23 +418,11 @@ END;
 			}
 			catch(EmailValidationFailedException $e)
 			{
-				$this->template->title = 'メールアドレス変更: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email validation error: ' .
-					$e->getMessage()
-				);
+				$this->display_error('メールアドレス変更: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
-				$this->template->title = 'メールアドレス変更: 送信エラー';
-				$this->template->content = View::forge('contact/error');
-
-				\Log::error(
-					__METHOD__ . ' email sending error: ' .
-					$e->getMessage()
-				);
+				$this->display_error('メールアドレス変更: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(Auth\NormalUserUpdateException $e)
 			{
