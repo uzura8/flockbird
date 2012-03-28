@@ -45,4 +45,18 @@ class Model_NoteComment extends \Orm\Model
 
 		return $val;
 	}
+
+	public static function check_authority($id, $target_member_id = 0, $accept_member_ids = array())
+	{
+		if (!$id) return false;
+
+		$obj = self::find()->where('id', $id)->related('note')->related('member')->get_one();
+		if (!$obj) return false;
+
+		$accept_member_ids[] = $obj->member_id;
+		$accept_member_ids[] = $obj->note->member_id;
+		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
+
+		return $obj;
+	}
 }

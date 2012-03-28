@@ -19,13 +19,16 @@ by <?php echo $note->member->name ?>
 <h3 id="comments">Comments</h3>
 
 <?php foreach ($comments as $comment): ?>
-   <div><?php echo Html::anchor('/member/'.$comment->member_id, $comment->member->name); ?></div>
-   <p><?php echo $comment->body ?>"</p>
+  <div><?php echo Html::anchor('/member/'.$comment->member_id, $comment->member->name); ?></div>
+  <p><?php echo $comment->body ?>"</p>
+<?php if (in_array($current_user->id, array($comment->member_id, $note->member_id))): ?>
+  <div><?php echo Html::anchor('note/comment/delete/'.$comment->id, '削除'); ?></div>
+<?php endif ; ?>
 <?php endforeach; ?>
 
 <p>Write a comment</p>
 
-<?php echo Form::open('note/comment_create/'.$note->id) ?>
+<?php echo Form::open('note/comment/create/'.$note->id) ?>
 
 <div class="row">
    <label for="cbody">Comment:</label>

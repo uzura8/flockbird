@@ -53,4 +53,16 @@ class Model_Note extends \Orm\Model
 
 		return $val;
 	}
+
+	public static function check_authority($id, $target_member_id = 0)
+	{
+		if (!$id) return false;
+
+		$obj = self::find()->where('id', $id)->related('member')->get_one();
+		if (!$obj) return false;
+
+		if ($target_member_id && $obj->member_id != $target_member_id) return false;
+
+		return $obj;
+	}
 }

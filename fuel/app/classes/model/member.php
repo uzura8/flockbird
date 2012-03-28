@@ -87,4 +87,16 @@ class Model_Member extends \Orm\Model
 
 		return ($result[1] > 0) ? $result[0] : false;
 	}
+
+	public static function check_authority($id, $target_member_id = 0)
+	{
+		if (!$id) return false;
+
+		$obj = self::find()->where('id', $id)->get_one();
+		if (!$obj) return false;
+
+		if ($target_member_id && $obj->id != $target_member_id) return false;
+
+		return $obj;
+	}
 }

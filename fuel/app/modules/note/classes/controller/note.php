@@ -80,7 +80,7 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_list_member($member_id = null)
 	{
-		if (!$member_id || !$member = \Model_Member::find()->where('id', $member_id)->get_one())
+		if (!$member = \Model_Member::check_authority($member_id))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -103,7 +103,7 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_detail($id = null)
 	{
-		if (!$id || !$note = Model_Note::find()->where('id', $id)->related('member')->get_one())
+		if (!$note = Model_Note::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -136,7 +136,7 @@ class Controller_Note extends \Controller_Site
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_create($id = null)
+	public function action_create()
 	{
 		$form = $this->form();
 
@@ -186,16 +186,12 @@ class Controller_Note extends \Controller_Site
 	 * Note edit
 	 * 
 	 * @access  public
+	 * @params  integer
 	 * @return  Response
 	 */
 	public function action_edit($id = null)
 	{
-		if (!$id)
-		{
-			throw new \HttpNotFoundException;
-		}
-		$note = Model_Note::find()->where('id', $id)->related('member')->get_one();
-		if (!$note || $note->member_id != $this->current_user->id)
+		if (!$note = Model_Note::check_authority($id, $this->current_user->id))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -246,39 +242,26 @@ class Controller_Note extends \Controller_Site
 		$this->template->content->set_safe('html_form', $form->build('note/edit/'.$id));// form の action に入る
 	}
 
-	public function action_comment_create($note_id)
+	/**
+	 * Note delete
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_delete($id = null)
 	{
-		$comment = Model_NoteComment::find_by_note_id($note_id);
-
-		// Lazy validation
-		if (\Input::post('body'))
+		if (!$note = Model_Note::check_authority($id, $this->current_user->id))
 		{
-			// Create a new comment
-			$comment = new Model_NoteComment(array(
-				'body' => \Input::post('body'),
-				'note_id' => $note_id,
-				'member_id' => $this->current_user->id,
-			));
-
-			// Save the post and the comment will save too
-			if ($comment->save())
-			{
-				\Session::set_flash('message', 'コメントしました。');
-			}
-			else
-			{
-				\Session::set_flash('error', 'コメントに失敗しました。');
-			}
-
-			\Response::redirect('note/detail/'.$note_id);
+			throw new \HttpNotFoundException;
 		}
-		else
-		{
-			$this->action_detail($note_id);
-		}
+		$note->delete();
+
+		\Session::set_flash('message', \Config::get('site.term.note').'を削除しました。');
+		\Response::redirect('note/member');
 	}
 
-	public function form()
+	protected function form()
 	{
 		$form = \Fieldset::forge();
 
