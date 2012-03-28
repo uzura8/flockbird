@@ -7,4 +7,7 @@ return array(
 	'birds/(((?!(size|watch_spot|life_place)).)+)'    => 'birds/detail/$1',
 	'member/setting/email'    => 'member/setting_email',
 	'member/setting/password'    => 'member/setting_password',
+	// note
+	'note/list_member/(\d+)'    => 'note/list/$1',
+	'member/note'    => 'note/member',
 );

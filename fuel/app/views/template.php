@@ -46,6 +46,7 @@
     <li class="torilife"><a href="/about/"><img src="/img/navi_torilife.gif" alt="とりらいふについて" title="とりらいふについて" /></a></li>
     <li class="link"><a href="/link/"><img src="/img/navi_link.gif" alt="リンク集" title="リンク集" /></a></li>
     <li class="mypage"><a href="/member/"><?php echo Config::get('site.term.myhome'); ?></a></li>
+    <li class="mypage"><a href="/note/"><?php echo Config::get('site.term.note'); ?></a></li>
   </ul>
 
 <?php /*
