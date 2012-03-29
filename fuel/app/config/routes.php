@@ -6,8 +6,9 @@ return array(
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
 	'birds/(((?!(size|watch_spot|life_place)).)+)'    => 'birds/detail/$1',
 	'member/setting/email'    => 'member/setting_email',
-	'member/setting/password'    => 'member/setting_password',
+	'member/setting/password' => 'member/setting_password',
+	'member/(\d+)'  => 'member/home/$1',
 	// note
-	'note/list_member/(\d+)'    => 'note/list/$1',
-	'member/note'    => 'note/member',
+	'note/list_member/(\d+)'  => 'note/list/$1',
+	'member/note'             => 'note/member',
 );

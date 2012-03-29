@@ -34,6 +34,35 @@ class Controller_Member extends Controller_Site
 	}
 
 	/**
+	 * Mmeber profile
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_home($id = null)
+	{
+		if ($id)
+		{
+			if (!$member = Model_Member::find()->where('id', $id)->get_one())
+			{
+				throw new \HttpNotFoundException;
+			}
+		}
+		else
+		{
+			$member = $this->current_user;
+		}
+
+		$this->template->title = $member->name.' さんのページ';
+		$this->template->header_title = site_title($this->template->title);
+		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', $this->template->title => '');
+
+		$list = \Note\Model_Note::find()->where('member_id', $id)->order_by('created_at', 'desc')->get();
+
+		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list));
+	}
+
+	/**
 	 * Mmeber signup
 	 * 
 	 * @access  public
