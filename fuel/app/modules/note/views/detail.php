@@ -7,7 +7,7 @@ by <?php echo $note->member->name ?>
 
 <p><?php echo nl2br($note->body) ?></p>
 
-<?php if ($current_user->id == $note->member_id): ?>
+<?php if (isset($current_user) && $current_user->id == $note->member_id): ?>
 <ul>
 <li><?php echo Html::anchor('note/edit/'.$note->id, '編集'); ?></li>
 <li><?php echo Html::anchor('note/delete/'.$note->id, '削除'); ?></li>
@@ -21,7 +21,7 @@ by <?php echo $note->member->name ?>
 <?php foreach ($comments as $comment): ?>
   <div><?php echo Html::anchor('/member/'.$comment->member_id, $comment->member->name); ?></div>
   <p><?php echo $comment->body ?>"</p>
-<?php if (in_array($current_user->id, array($comment->member_id, $note->member_id))): ?>
+<?php if (isset($current_user) && in_array($current_user->id, array($comment->member_id, $note->member_id))): ?>
   <div><?php echo Html::anchor('note/comment/delete/'.$comment->id, '削除'); ?></div>
 <?php endif ; ?>
 <?php endforeach; ?>
