@@ -33,6 +33,14 @@ define('PRJ_PROFILING', false);
 // 暗号化キー(ASCII文字列)
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
+
+// アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum)
+define('PRJ_UPLOAD_FILE_MAX_SIZE', 0);
+
+// ファイルをアップロードするディレクトリ
+define('PRJ_UPLOAD_DIR', PRJ_BASEPATH.'/public/upload');
+
+
 // サイト名
 define('PRJ_SITE_NAME', 'とりらいふ');
 define('PRJ_SITE_DESCRIPTION', '野鳥とバードウォッチングの総合情報サイト');
