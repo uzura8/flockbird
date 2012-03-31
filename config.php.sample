@@ -63,6 +63,16 @@ define('PRJ_FACEBOOK_APP_ID', '');
 define('PRJ_FACEBOOK_APP_SECRET', '');
 
 
+// 画像ライブラリの指定 ( gd / imagemagick )
+define('PRJ_IMAGE_DRIVER', 'gd');
+
+// ImageMagick のパス(ImageMagick を使用する場合のみ)
+// define('PRJ_IMAGE_IMGMAGICK_PATH', '/usr/bin/');
+
+// 画像変換後のQUALITY値
+define('PRJ_IMAGE_OUTPUT_IMAGE_QUALITY', 100);
+
+
 // error level 設定
 switch (PRJ_ENVIRONMENT)
 {

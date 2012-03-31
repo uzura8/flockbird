@@ -61,7 +61,7 @@ return array(
 	'prefix'			=> '',
 
 	// suffix given to every file when saved
-	'suffix'			=> '_' . time(),
+	'suffix'			=> '',
 
 	// replace the extension of the uploaded file by this extension
 	'extension'			=> '',

@@ -36,6 +36,12 @@ class Model_Member extends \Orm\Model
 				'match_pattern' => array('/[01]{1}/'),
 			),
 		),
+		'image' => array(
+			'validation' => array(
+				'trim',
+				'max_length' => array(100),
+			),
+		),
 		'created_at',
 		'updated_at'
 	);
