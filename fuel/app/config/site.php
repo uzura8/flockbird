@@ -3,11 +3,12 @@
 return array(
 	'term' => array(
 		'toppage' => 'トップ',
-		'myhome' => 'マイホーム',
-		'signup' => 'メンバー登録',
+		'myhome'  => 'マイホーム',
+		'profile' => 'プロフィール',
+		'signup'  => 'メンバー登録',
 		'member_leave'  => '退会',
-		'guest' => 'ゲスト',
-		'note' => '日記',
+		'guest'   => 'ゲスト',
+		'note'    => '日記',
 	),
 	'image' => array(
 		'member' => array(
@@ -26,8 +27,8 @@ return array(
 			),
 			'medium' => array(
 				'path' => PRJ_UPLOAD_DIR.'/img/member/medium',
-				'width'  => 100,
-				'height' => 100,
+				'width'  => 180,
+				'height' => 180,
 			),
 			'lerge' => array(
 				'path' => PRJ_UPLOAD_DIR.'/img/member/lerge',

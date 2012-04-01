@@ -22,6 +22,8 @@ class Controller_Comment extends \Controller_Site
 		// Lazy validation
 		if (\Input::post('body'))
 		{
+			\Util_security::check_csrf();
+
 			// Create a new comment
 			$comment = new Model_NoteComment(array(
 				'body' => \Input::post('body'),
@@ -56,10 +58,13 @@ class Controller_Comment extends \Controller_Site
 	 */
 	public function action_delete($id = null)
 	{
+		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
+
 		if (!$comment = Model_NoteComment::check_authority($id, $this->current_user->id))
 		{
 			throw new \HttpNotFoundException;
 		}
+
 		$note_id = $comment->note_id;
 		$comment->delete();
 

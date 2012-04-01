@@ -40,9 +40,10 @@ function site_get_screen_name($current_user)
 function site_profile_image($member_image, $size, $uri = '', $is_link_to_lerge_image = false)
 {
 	$config = Config::get('site.image.member');
+//return var_dump($size, $config[$size]);
 	if (empty($config[$size])) $size = 'medium';
 
-	$noimage_tag = Html::img('upload/img/member/noimage.gif', array('alt' => 'No image.', 'size' => $config[$size]['width']));
+	$noimage_tag = Html::img('upload/img/member/noimage.gif', array('alt' => 'No image.', 'width' => $config[$size]['width']));
 	$file = sprintf('%s/img/member/%s/%s', PRJ_UPLOAD_DIR, $size, $member_image);
 
 	if (empty($member_image) || !file_exists($file))

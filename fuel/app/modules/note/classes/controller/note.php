@@ -251,6 +251,8 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_delete($id = null)
 	{
+		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
+
 		if (!$note = Model_Note::check_authority($id, $this->current_user->id))
 		{
 			throw new \HttpNotFoundException;

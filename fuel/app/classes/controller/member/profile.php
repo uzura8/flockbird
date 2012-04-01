@@ -25,7 +25,7 @@ class Controller_Member_profile extends Controller_Member
 		$this->template->breadcrumbs = array(
 			Config::get('site.term.toppage') => '/',
 			Config::get('site.term.myhome') => '/member/',
-			'プロフィール' => '',
+			Config::get('site.term.profile') => '',
 		);
 
 		$this->template->content = View::forge('member/profile/index');
@@ -44,8 +44,8 @@ class Controller_Member_profile extends Controller_Member
 		$this->template->breadcrumbs = array(
 			Config::get('site.term.toppage') => '/',
 			Config::get('site.term.myhome') => '/member/',
-			'プロフィール' => '/member/profile/',
-			'プロフィール写真設定' => '',
+			Config::get('site.term.profile') => '/member/profile/',
+			Config::get('site.term.profile').'写真設定' => '',
 		);
 
 		$this->template->content = View::forge('member/profile/setting_image');
