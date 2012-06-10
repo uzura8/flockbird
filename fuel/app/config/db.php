@@ -19,7 +19,7 @@ return array(
 		'identifier'   => '`',
 		'table_prefix' => '',
 		'charset'      => 'utf8',
-		'caching'      => false,
+		'enable_cache' => true,
 		'profiling'    => false,
 	),
 

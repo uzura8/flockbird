@@ -46,10 +46,14 @@ return array(
 	'profiling'  => PRJ_PROFILING,
 
 	/**
-	 * Settings for Cache class
+	 * Default location for the file cache
+	 */
+	'cache_dir'       => APPPATH.'cache/',
+
+	/**
+	 * Setttings for the file finder cache (the Cache class has it's own config!)
 	 */
 	'caching'         => false,
-	'cache_dir'       => APPPATH.'cache/',
 	'cache_lifetime'  => 3600, // In Seconds
 
 	/**
@@ -155,6 +159,27 @@ return array(
 		'secure'      => false,
 		// Only transmit cookies over HTTP, disabling Javascript access
 		'http_only'   => false,
+	),
+
+	/**
+	 * Validation settings.
+	 */
+	'validation' => array(
+		/**
+		 * Wether to fallback to global when a
+		 *value is not found in the input array.
+		 */
+		'global_input_fallback' => true,
+	),
+
+	/**
+	 * Routing settings.
+	 */
+	'routing' => array(
+		/**
+		 * Whether URI routing is case sensitive or not
+		 */
+		'case_sensitive' => true,
 	),
 
 	/**
