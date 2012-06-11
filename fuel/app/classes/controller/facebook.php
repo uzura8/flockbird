@@ -29,7 +29,7 @@ class Controller_Facebook extends Controller_Site
 //			$v->add('message', 'message')->add_rule('required');
 //			if(!$v->run())
 //			{
-//				Session::set_flash('message', $v->errors('message')->get_message());
+//				Session::set_flash('message', $v->error('message')->get_message());
 //			}
 //			else
 //			{

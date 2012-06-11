@@ -8,8 +8,8 @@
 		<label for="email">メールアドレス:</label>
 		<div class="input"><?php echo Form::input('email', Input::post('email')); ?></div>
 		
-		<?php if ($val->errors('email')): ?>
-			<div class="error"><?php echo $val->errors('email')->get_message(':label を入力してください'); ?></div>
+		<?php if ($val->error('email')): ?>
+			<div class="error"><?php echo $val->error('email')->get_message(':label を入力してください'); ?></div>
 		<?php endif; ?>
 	</div>
 
@@ -17,8 +17,8 @@
 		<label for="password">パスワード:</label>
 		<div class="input"><?php echo Form::password('password'); ?></div>
 		
-		<?php if ($val->errors('password')): ?>
-			<div class="error"><?php echo $val->errors('password')->get_message(':label を入力してください'); ?></div>
+		<?php if ($val->error('password')): ?>
+			<div class="error"><?php echo $val->error('password')->get_message(':label を入力してください'); ?></div>
 		<?php endif; ?>
 	</div>
 
