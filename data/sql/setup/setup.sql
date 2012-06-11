@@ -423,6 +423,7 @@ CREATE TABLE `member` (
   `last_login` datetime NOT NULL,
   `login_hash` varchar(255) NOT NULL DEFAULT '',
   `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook',
+  `image` varchar(100) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
@@ -525,6 +526,50 @@ LOCK TABLES `migration` WRITE;
 INSERT INTO `migration` VALUES ('default','app',4);
 /*!40000 ALTER TABLE `migration` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `note`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `title` text NOT NULL,
+  `body` text NOT NULL,
+  `public_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_at_idx` (`created_at`),
+  KEY `member_id_created_at_idx` (`member_id`,`created_at`),
+  KEY `public_flag_craeted_at_idx` (`public_flag`,`created_at`),
+  KEY `member_id_idx` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `note_comment`
+--
+
+DROP TABLE IF EXISTS `note_comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `note_id` int(11) NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `body` text NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `note_id_created_at` (`note_id`,`created_at`),
+  KEY `note_id_idx` (`note_id`),
+  KEY `member_id_idx` (`member_id`),
+  CONSTRAINT `note_comment_note_id_note_id` FOREIGN KEY (`note_id`) REFERENCES `note` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `post_blog`
