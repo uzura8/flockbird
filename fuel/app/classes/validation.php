@@ -1,7 +1,12 @@
 <?php
 
-class MyValidation
+class Validation extends Fuel\Core\Validation
 {
+	protected function __construct($fieldset)
+	{
+		parent::__construct($fieldset);
+	}
+
 	/**
 	 * Validate if there is no controll char
 	 *
@@ -85,5 +90,18 @@ class MyValidation
 	public static function _validation_alpha_small_char_numeric($val)
 	{
 		return (bool)preg_match('/^[a-z0-9]*$/', $val);
+	}
+
+	/**
+	 * Match specific other submitted field string value
+	 * (must be both strings, check is type sensitive)
+	 *
+	 * @param   string
+	 * @param   string
+	 * @return  bool
+	 */
+	public function _validation_unmatch_field($val, $field)
+	{
+		return $this->_empty($val) || $this->input($field) !== $val;
 	}
 }

@@ -33,6 +33,14 @@ define('PRJ_PROFILING', false);
 // 暗号化キー(ASCII文字列)
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
+
+// アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum)
+define('PRJ_UPLOAD_FILE_MAX_SIZE', 0);
+
+// ファイルをアップロードするディレクトリ
+define('PRJ_UPLOAD_DIR', PRJ_BASEPATH.'/public/upload');
+
+
 // サイト名
 define('PRJ_SITE_NAME', 'とりらいふ');
 define('PRJ_SITE_DESCRIPTION', '野鳥とバードウォッチングの総合情報サイト');
@@ -48,6 +56,22 @@ define('PRJ_ADMIN_MAIL', 'admin@example.com');
 
 // Google 関連設定
 define('GOOGLE_SITE_VERIFICATION', '');
+
+
+// Facebook 関連設定
+define('PRJ_FACEBOOK_APP_ID', '');
+define('PRJ_FACEBOOK_APP_SECRET', '');
+
+
+// 画像ライブラリの指定 ( gd / imagemagick )
+define('PRJ_IMAGE_DRIVER', 'gd');
+
+// ImageMagick のパス(ImageMagick を使用する場合のみ)
+// define('PRJ_IMAGE_IMGMAGICK_PATH', '/usr/bin/');
+
+// 画像変換後のQUALITY値
+define('PRJ_IMAGE_OUTPUT_IMAGE_QUALITY', 100);
+
 
 // error level 設定
 switch (PRJ_ENVIRONMENT)

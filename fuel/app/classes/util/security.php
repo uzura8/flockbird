@@ -1,9 +1,9 @@
 <?php
 class Util_security
 {
-	public static function check_csrf()
+	public static function check_csrf($value = null)
 	{
-		if ( ! \Security::check_token())
+		if ( ! \Security::check_token($value))
 		{
 			\Log::error(
 				'CSRF: '.

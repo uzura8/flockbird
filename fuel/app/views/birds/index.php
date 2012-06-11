@@ -1,8 +1,8 @@
 <ul class="birdNavi clear mb20">
-<?php if (Uri::segment(2) != false): ?>  <li><a href="/birds/">■鳥をアイウエオ順に探す</a></li><?php endif; ?>
-<?php if (Uri::segment(2) != 'life_place'): ?>  <li><a href="/birds/life_place/">■鳥の生活場所から探す</a></li><?php endif; ?>
-<?php if (Uri::segment(2) != 'watch_spot'): ?>  <li><a href="/birds/watch_spot/">■鳥の見られる場所から探す</a></li><?php endif; ?>
-<?php if (Uri::segment(2) != 'size'): ?>  <li><a href="/birds/size/">■鳥のサイズから探す</a></li><?php endif; ?>
+<?php if (Request::active()->action != 'index'): ?>  <li><a href="/birds/">■鳥をアイウエオ順に探す</a></li><?php endif; ?>
+<?php if (Request::active()->action != 'life_place'): ?>  <li><a href="/birds/life_place/">■鳥の生活場所から探す</a></li><?php endif; ?>
+<?php if (Request::active()->action != 'watch_spot'): ?>  <li><a href="/birds/watch_spot/">■鳥の見られる場所から探す</a></li><?php endif; ?>
+<?php if (Request::active()->action != 'size'): ?>  <li><a href="/birds/size/">■鳥のサイズから探す</a></li><?php endif; ?>
 </ul>
 
 <?php

@@ -18,9 +18,9 @@
 <div id="head"><!-- #header 画面上部のヘッド部分 -->
   <h1><a href="/"><img src="/img/logo.gif" alt="<?php echo PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME; ?>"></a></h1>
 <?php if (Auth::check()): ?>
-  <p>こんにちは <?php echo site_get_screen_name($current_user); ?> さん[<a href="/site/logout">ログアウト</a>]<p>
+  <p>こんにちは <?php echo site_get_screen_name($current_user); ?> さん[<a href="<?php echo Uri::create('site/logout'); ?>">ログアウト</a>]<p>
 <?php else: ?>
-  <p>こんにちは <?php echo site_get_screen_name($current_user); ?> さん[<a href="/site/login">ログイン</a>]<p>
+  <p>こんにちは <?php echo site_get_screen_name($current_user); ?> さん[<a href="<?php echo Uri::create('site/login'); ?>">ログイン</a>]<p>
 <?php endif; ?>
   <p class="sitemap"><a href="/sitemap/"><img src="/img/sitemap.gif" alt="サイトマップ" /></a><p>
 </div><!-- head -->
@@ -46,6 +46,7 @@
     <li class="torilife"><a href="/about/"><img src="/img/navi_torilife.gif" alt="とりらいふについて" title="とりらいふについて" /></a></li>
     <li class="link"><a href="/link/"><img src="/img/navi_link.gif" alt="リンク集" title="リンク集" /></a></li>
     <li class="mypage"><a href="/member/"><?php echo Config::get('site.term.myhome'); ?></a></li>
+    <li class="mypage"><a href="/note/"><?php echo Config::get('site.term.note'); ?></a></li>
   </ul>
 
 <?php /*
