@@ -488,7 +488,7 @@ END;
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20);
 
-		$form->add('submit', '', array('type'=>'submit', 'value' => '送信'));
+		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
 		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
 
 		return $form;
@@ -505,7 +505,7 @@ END;
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20);
 
-		$form->add('submit', '', array('type'=>'submit', 'value' => '確認'));
+		$form->add('submit', '', array('type'=>'submit', 'value' => '確認', 'class' => 'btn'));
 
 		return $form;
 	}
@@ -534,7 +534,7 @@ END;
 			->add_rule('required')
 			->add_rule('match_field', 'password');
 
-		$form->add('submit', '', array('type'=>'submit', 'value' => '変更'));
+		$form->add('submit', '', array('type'=>'submit', 'value' => '変更', 'class' => 'btn'));
 		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
 
 		return $form;
@@ -542,7 +542,7 @@ END;
 
 	public function form_setting_email()
 	{
-		$form = Fieldset::forge();
+		$form = Fieldset::forge('', array('class' => 'form-horizontal'));
 
 		$form->add('email', 'メールアドレス')
 			->add_rule('trim')
@@ -555,7 +555,7 @@ END;
 			->add_rule('required')
 			->add_rule('match_field', 'email');
 
-		$form->add('submit', '', array('type'=>'submit', 'value' => '変更'));
+		$form->add('submit', '', array('type'=>'submit', 'value' => '変更', 'class' => 'btn'));
 		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
 
 		return $form;

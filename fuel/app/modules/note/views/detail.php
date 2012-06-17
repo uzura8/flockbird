@@ -28,6 +28,7 @@
 <?php endif ; ?>
 <?php endforeach; ?>
 
+<?php if (Auth::check()): ?>
 <p>Write a comment</p>
 
 <?php echo Form::open('note/comment/create/'.$note->id) ?>
@@ -44,3 +45,4 @@
 </div>
 
 <?php echo Form::close() ?>
+<?php endif; ?>

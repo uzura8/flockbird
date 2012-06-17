@@ -1,8 +1,8 @@
-<?php include_partial('member/_submenu'); ?>
-
-<p>設定変更ページです</p>
-
-<ul>
-  <li><a href="/member/setting/email">メールアドレス変更</a></li>
-  <li><a href="/member/setting/password">パスワード変更</a></li>
+<ul class="nav nav-tabs">
+	<li><?php echo Html::anchor('member/setting/email', 'メールアドレス変更'); ?></li>
+	<li><?php echo Html::anchor('member/setting/password', 'パスワード変更'); ?></li>
+	<li><?php echo Html::anchor('member/leave', Config::get('site.term.member_leave')); ?></li>
 </ul>
+<div class="well">
+	<p>設定変更ページです</p>
+</div>

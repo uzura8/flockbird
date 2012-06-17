@@ -1,3 +1,4 @@
-<p>入力してください。</p>
-
-<?php echo $html_form; ?>
+<div class="alert alert-info">入力してください</div>
+<div class="well">
+	<?php echo $html_form; ?>
+</div>

@@ -265,17 +265,17 @@ class Controller_Note extends \Controller_Site
 
 	protected function form()
 	{
-		$form = \Fieldset::forge();
+		$form = \Fieldset::forge('', array('class' => 'form-horizontal'));
 
-		$form->add('title', 'タイトル', array('size' => 60))
+		$form->add('title', 'タイトル', array('class' => 'input-xlarge'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('max_length', 255);
 
-		$form->add('body', '本文', array('type' => 'textarea', 'cols' => 60, 'rows' => 10))
+		$form->add('body', '本文', array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'))
 			->add_rule('required');
 
-		$form->add('submit', '', array('type'=>'submit', 'value' => '送信'));
+		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
 		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Security::fetch_token()));
 
 		return $form;

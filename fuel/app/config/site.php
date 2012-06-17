@@ -2,13 +2,13 @@
 
 return array(
 	'term' => array(
-		'toppage' => 'トップ',
-		'myhome'  => 'マイホーム',
-		'profile' => 'プロフィール',
-		'signup'  => 'メンバー登録',
+		'toppage' => 'Top',
+		'myhome'  => 'Home',
+		'profile' => 'Profile',
+		'signup'  => 'Sign Up',
 		'member_leave'  => '退会',
-		'guest'   => 'ゲスト',
-		'note'    => '日記',
+		'guest'   => 'Guest',
+		'note'    => 'Note',
 	),
 	'image' => array(
 		'member' => array(

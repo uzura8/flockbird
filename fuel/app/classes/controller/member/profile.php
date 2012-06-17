@@ -20,7 +20,9 @@ class Controller_Member_profile extends Controller_Member
 	 */
 	public function action_index()
 	{
-		$this->template->title = 'マイホーム';
+
+		$member = $this->current_user;
+		$this->template->title = $member->name.' さんのページ';
 		$this->template->header_title = site_title();
 		$this->template->breadcrumbs = array(
 			Config::get('site.term.toppage') => '/',
@@ -39,7 +41,7 @@ class Controller_Member_profile extends Controller_Member
 	 */
 	public function action_setting_image()
 	{
-		$this->template->title = 'マイホーム';
+		$this->template->title = Config::get('site.term.profile').'写真設定';
 		$this->template->header_title = site_title();
 		$this->template->breadcrumbs = array(
 			Config::get('site.term.toppage') => '/',

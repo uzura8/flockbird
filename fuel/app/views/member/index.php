@@ -1,3 +1,3 @@
-<?php include_partial('member/_submenu'); ?>
-
+<div class="hero-unit">
 <p>マイホームです</p>
+</div>
