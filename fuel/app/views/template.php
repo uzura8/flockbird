@@ -117,6 +117,18 @@
 		<div class="span3">
 <?php if (Auth::check()): ?>
 			<div class="well sidebar-nav">
+				<div class="profile_img_box">
+					<a class="account-summary account-summary-small" data-nav="profile" href="<?php echo Uri::create('member/profile'); ?>">
+					<div class="content">
+					<div class="account-group js-mini-current-user" data-screen-name="uzura8">
+					<?php echo site_profile_image($current_user->image, 'small', '', false); ?>
+					<b class="fullname">uzura8</b>
+					<small class="metadata">プロフィールを見る</small>
+					</div>
+					</div>
+					</a>
+				</div>
+
 				<ul class="nav nav-list">
 					<li class="nav-header">Member</li>
 					<li><a href="<?php echo Uri::create('member'); ?>"><?php echo Config::get('site.term.myhome'); ?></a></li>

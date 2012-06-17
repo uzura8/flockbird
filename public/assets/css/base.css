@@ -5,3 +5,29 @@ body {
 .sidebar-nav {
 	padding: 9px 0;
 }
+
+img.profile_image {
+	border-radius: 4px;
+}
+.fullname {
+	color: #333333;
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+}
+.profile_img_box {
+	padding: 7px 5px;
+	position: relative;
+	margin-bottom: 5px;
+}
+.profile_img_box img.profile_image {
+	position: absolute;
+	left: 10px;
+	top: 0;
+}
+.profile_img_box {
+	position: relative;
+}
+.profile_img_box div.content {
+	margin-left: 65px;
+}
