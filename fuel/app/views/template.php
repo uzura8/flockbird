@@ -3,6 +3,12 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title><?php echo (!empty($header_title)) ? $header_title : $title; ?></title>
+
+  <meta name="viewport" content="width=device-width,minimum-scale=1">
+  <?php echo Asset::css('bootstrap.min.css');?>
+  <?php echo Asset::css('bootstrap-responsive.min.css');?>
+  <?php //echo Asset::css('my-style.css');?>
+
   <meta NAME="robots" CONTENT="index,follow">
   <meta name="description" content="<?php echo (!$header_description) ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
   <meta name="keywords" content="<?php echo site_header_keywords($header_keywords); ?>">
@@ -52,5 +58,9 @@
 </div><!-- foot -->
 
 </div><!-- all -->
+
+<?php echo Asset::js('jquery-1.7.2.min.js');?>
+<?php echo Asset::js('bootstrap.min.js');?>
+
 </body>
 </html>
