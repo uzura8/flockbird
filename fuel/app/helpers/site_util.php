@@ -63,3 +63,31 @@ function site_profile_image($member_image, $size, $uri = '', $is_link_to_lerge_i
 
 	return $image_tag;
 }
+
+function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal_timestamp = false, $is_display_both = false)
+{
+	$time = $mysql_datetime;
+	if (!$is_normal_timestamp) $time = strtotime($mysql_datetime);
+
+	$normal_time = date($format, $time);
+	$past_time   = Date::time_ago($time);
+
+	$display = '';
+	if ($is_display_both)
+	{
+		$display = sprintf('%s (%s)', $normal_time, $past_time);
+	}
+	else
+	{
+		if ($time < strtotime('-1 day'))
+		{
+			$display = $normal_time;
+		}
+		else
+		{
+			$display = $past_time;
+		}
+	}
+
+	return $display;
+}

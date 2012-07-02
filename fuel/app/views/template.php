@@ -18,6 +18,7 @@
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
+  <link href="<?php echo Uri::create('assets/js/jquery.alerts/jquery.alerts.css'); ?>" rel="stylesheet" type="text/css" media="screen">
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="<?php echo Uri::create('assets/img/ico/favicon.ico'); ?>">
@@ -103,15 +104,30 @@
 				</div>
 			<?php endif; ?>
 
-<?php if (isset($title)): ?>
+			<!-- title -->
+<?php if (isset($title) || isset($subtitle)): ?>
 			<div class="page-header">
-			<h2><?php echo $title; ?></h2>
+<?php if (isset($title)): ?><h2><?php echo $title; ?></h2><?php endif; ?>
+<?php if (isset($subtitle)): ?>
+			<div id="subtitle"><?php echo $subtitle; ?></div>
+<?php endif; ?>
 			</div>
 <?php endif; ?>
 
+<?php if (isset($sub_column)): ?>
+			<div class="row-fluid">
+				<div class="span10" id="main_column">
+<?php echo $content; ?>
+				</div><!--/span-->
+				<div class="span2">
+<?php echo $sub_column; ?>
+				</div><!--/span-->
+			</div><!--/row-->
+<?php else: ?>
 			<div id="main">
 <?php echo $content; ?>
 			</div>
+<?php endif; ?>
 		</div><!--/span-->
 
 		<div class="span3">
@@ -120,9 +136,9 @@
 				<div class="profile_img_box">
 					<a class="account-summary account-summary-small" data-nav="profile" href="<?php echo Uri::create('member/profile'); ?>">
 					<div class="content">
-					<div class="account-group js-mini-current-user" data-screen-name="uzura8">
+					<div class="account-group js-mini-current-user" data-screen-name="<?php echo site_get_screen_name($current_user); ?>">
 					<?php echo site_profile_image($current_user->image, 'small', '', false); ?>
-					<b class="fullname">uzura8</b>
+					<div class="main"><b class="fullname"><?php echo site_get_screen_name($current_user); ?></b></div>
 					<small class="metadata">プロフィールを見る</small>
 					</div>
 					</div>
@@ -165,6 +181,7 @@
 
 <?php echo Asset::js('jquery-1.7.2.min.js');?>
 <?php echo Asset::js('bootstrap.min.js');?>
+<?php echo Asset::js('jquery.alerts/jquery.alerts.js');?>
 <!--
   <script src="../assets/js/bootstrap-transition.js"></script>
   <script src="../assets/js/bootstrap-alert.js"></script>

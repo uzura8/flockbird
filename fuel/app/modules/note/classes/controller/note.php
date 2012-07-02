@@ -14,6 +14,7 @@ class Controller_Note extends \Controller_Site
 	{
 		parent::before();
 
+		\Config::load('note::note', 'note');
 		$this->auth_check();
 	}
 
@@ -47,7 +48,7 @@ class Controller_Note extends \Controller_Site
 
 		$list = Model_Note::find()->related('member')->order_by('created_at', 'desc')->get();
 
-		$this->template->content = \View::forge('list', array('list' => $list));
+		$this->template->content = \View::forge('_parts/list', array('list' => $list));
 	}
 
 	/**
@@ -68,7 +69,10 @@ class Controller_Note extends \Controller_Site
 		);
 
 		$list = Model_Note::find()->where('member_id', $this->current_user->id)->order_by('created_at', 'desc')->get();
-		$this->template->content = \View::forge('member', array('member' => $this->current_user, 'list' => $list));
+		// paging 未実装, limit数:  Config::get('note.article_list.limit')
+
+		$this->template->subtitle = \View::forge('_parts/member_subtitle');
+		$this->template->content = \View::forge('_parts/list', array('member' => $this->current_user, 'list' => $list));
 	}
 
 	/**
@@ -91,7 +95,7 @@ class Controller_Note extends \Controller_Site
 
 		$list = Model_Note::find()->where('member_id', $member_id)->order_by('created_at', 'desc')->get();
 
-		$this->template->content = \View::forge('list_member', array('member' => $member, 'list' => $list));
+		$this->template->content = \View::forge('_parts/list', array('member' => $member, 'list' => $list));
 	}
 
 	/**
@@ -109,7 +113,7 @@ class Controller_Note extends \Controller_Site
 		}
 		$comments = Model_NoteComment::find()->where('note_id', $id)->related('member')->order_by('created_at')->get();
 
-		$this->template->title = sprintf('[%s] %s', \Config::get('site.term.note'), trim($note->title));
+		$this->template->title = trim($note->title);
 		$this->template->header_title = site_title(mb_strimwidth($this->template->title, 0, 50, '...'));
 
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
@@ -127,6 +131,7 @@ class Controller_Note extends \Controller_Site
 		}
 		$this->template->breadcrumbs[\Config::get('site.term.note').'詳細'] = '';
 
+		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
 		$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
 	}
 
@@ -234,9 +239,12 @@ class Controller_Note extends \Controller_Site
 		$this->template->header_title = site_title($this->template->title);
 		$this->template->breadcrumbs = array(
 			\Config::get('site.term.toppage') => '/',
-			\Config::get('site.term.note') => '/note/',
+			\Config::get('site.term.myhome') => '/member/',
+			'自分の'.\Config::get('site.term.note').'一覧' => '/member/note/',
+			\Config::get('site.term.note').'詳細' => '/note/detail/'.$id,
 			$this->template->title => '',
 		);
+
 		$data = array('form' => $form);
 		$this->template->content = \View::forge('edit', $data);
 		$this->template->content->set_safe('html_form', $form->build('note/edit/'.$id));// form の action に入る
