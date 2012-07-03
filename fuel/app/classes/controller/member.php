@@ -59,6 +59,7 @@ class Controller_Member extends Controller_Site
 
 		$list = \Note\Model_Note::find()->where('member_id', $id)->order_by('created_at', 'desc')->get();
 
+		$this->template->subtitle = View::forge('_parts/home_subtitle', array('member' => $member));
 		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list));
 	}
 

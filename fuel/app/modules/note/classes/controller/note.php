@@ -14,7 +14,6 @@ class Controller_Note extends \Controller_Site
 	{
 		parent::before();
 
-		\Config::load('note::note', 'note');
 		$this->auth_check();
 	}
 
