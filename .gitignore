@@ -20,3 +20,4 @@ public_html
 /fuel/app/config/crypt.php
 
 public/upload/img/member/*/*
+public/upload/img/album/*/*

@@ -28,7 +28,7 @@
     <link rel="apple-touch-icon-precomposed" href="<?php echo Uri::create('assets/img/ico/apple-touch-icon-57-precomposed.png'); ?>">
 
 </head>
-<body>
+<body id="<?php echo site_get_current_page_id(); ?>">
 
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
@@ -150,6 +150,7 @@
 					<li><a href="<?php echo Uri::create('member'); ?>"><?php echo Config::get('site.term.myhome'); ?></a></li>
 					<li><a href="<?php echo Uri::create('member/profile'); ?>"><?php echo Config::get('site.term.profile'); ?></a></li>
 					<li><a href="<?php echo Uri::create('member/note'); ?>"><?php echo Config::get('site.term.note'); ?></a></li>
+					<li><a href="<?php echo Uri::create('member/album'); ?>"><?php echo Config::get('album.term.album'); ?></a></li>
 					<li><a href="<?php echo Uri::create('member/setting'); ?>">設定変更</a></li>
 					<li><a href="<?php echo Uri::create('site/logout'); ?>">Sign Out</a></li>
 				</ul>
@@ -160,6 +161,7 @@
 					<li class="nav-header">Site</li>
 					<li><a href="<?php echo Uri::create('/'); ?>">Top</a></li>
 					<li><a href="<?php echo Uri::create('note'); ?>"><?php echo Config::get('site.term.note'); ?></a></li>
+					<li><a href="<?php echo Uri::create('album'); ?>"><?php echo Config::get('album.term.album'); ?></a></li>
 					<li><a href="<?php echo Uri::create('about'); ?>">About</a></li>
 <!--
 					<li><a href="<?php echo Uri::create('contact'); ?>">Contact</a></li>
@@ -182,6 +184,10 @@
 <?php echo Asset::js('jquery-1.7.2.min.js');?>
 <?php echo Asset::js('bootstrap.min.js');?>
 <?php echo Asset::js('jquery.alerts/jquery.alerts.js');?>
+
+<?php if (isset($post_footer)): ?>
+<?php echo $post_footer; ?>
+<?php endif; ?>
 <!--
   <script src="../assets/js/bootstrap-transition.js"></script>
   <script src="../assets/js/bootstrap-alert.js"></script>

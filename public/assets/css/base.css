@@ -92,3 +92,11 @@ img.profile_image {
 #article_list .article .header h4 {
 	margin-bottom: 5px;
 }
+
+#album_album_detail .carousel .item > img {
+	display: inline;
+}
+
+#album_album_detail .carousel .item {
+	text-align : center;
+}

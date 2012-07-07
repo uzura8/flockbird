@@ -1,5 +1,19 @@
 <?php
 
+function site_get_current_page_id($delimitter = '_')
+{
+	$items = array();
+	if (isset(Request::main()->route->module)) $items[] = Request::main()->route->module;
+
+	$controller = (isset(Request::main()->route->controller)) ?  Request::main()->route->controller : '';
+	if ($controller) $items[] = Str::lower(preg_replace('/^[a-zA-Z0-9_]+\\\Controller_/', '', $controller));
+
+	if (isset(Request::main()->route->action)) $items[] = Request::main()->route->action;
+
+	return implode($delimitter, $items);
+}
+
+
 function site_title($title = '', $subtitle = '')
 {
 	$default_title = PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME;

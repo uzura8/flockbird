@@ -11,4 +11,7 @@ return array(
 	// note
 	'note/list_member/(\d+)'  => 'note/list/$1',
 	'member/note'             => 'note/member',
+	// album
+	'album/list_member/(\d+)'  => 'album/list/$1',
+	'member/album'             => 'album/member',
 );
