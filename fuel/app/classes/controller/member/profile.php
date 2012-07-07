@@ -132,17 +132,12 @@ class Controller_Member_profile extends Controller_Member
 		$original_file = $original_file_dir.$original_file_name;
 		try
 		{
-			$config = Config::get('site.image.member.x-small');
-			self::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
-
-			$config = Config::get('site.image.member.small');
-			self::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
-
-			$config = Config::get('site.image.member.medium');
-			self::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
-
-			$config = Config::get('site.image.member.lerge');
-			self::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
+			$configs = Config::get('site.image.member');
+			foreach ($configs as $key => $config)
+			{
+				if ($key == 'original') continue;
+				Util_file::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
+			}
 		}
 		catch(Exception $e)
 		{
@@ -152,30 +147,18 @@ class Controller_Member_profile extends Controller_Member
 		return true;
 	}
 
-	private static function resize($original_file, $resized_file, $width, $height)
-	{
-		return Image::load($original_file)
-				->crop_resize($width, $height)
-				->save($resized_file);
-	}
-
 	private static function remove_old_images($old_file_name)
 	{
 		if (!$old_file_name) return true;
 
 		try
 		{
-			$config = Config::get('site.image.member.x-small');
-			self::remove_image($config['path'].'/'.$old_file_name);
-
-			$config = Config::get('site.image.member.small');
-			self::remove_image($config['path'].'/'.$old_file_name);
-
-			$config = Config::get('site.image.member.medium');
-			self::remove_image($config['path'].'/'.$old_file_name);
-
-			$config = Config::get('site.image.member.lerge');
-			self::remove_image($config['path'].'/'.$old_file_name);
+			$configs = Config::get('site.image.member');
+			foreach ($configs as $key => $config)
+			{
+				if ($key == 'original') continue;
+				Util_file::remove($config['path'].'/'.$old_file_name);
+			}
 		}
 		catch(Exception $e)
 		{
