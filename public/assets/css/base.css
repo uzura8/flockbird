@@ -79,6 +79,10 @@ img.profile_image {
 	color: #949494;
 }
 
+.commentBox small {
+	color: #868686;
+}
+
 #article_list .article {
 	margin-bottom: 25px;
 	padding-bottom: 15px;
@@ -98,5 +102,11 @@ img.profile_image {
 }
 
 #album_album_detail .carousel .item {
+	text-align : center;
+}
+#album_album_slide .carousel .active {
+	display: inline;
+}
+#album_album_slide .carousel-inner {
 	text-align : center;
 }

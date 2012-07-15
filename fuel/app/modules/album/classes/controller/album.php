@@ -126,7 +126,47 @@ class Controller_Album extends \Controller_Site
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/footer');
-		$this->template->content = \View::forge('detail', array('album' => $album, 'album_images' => $album_images));
+		$this->template->content = \View::forge('detail', array('id' => $id, 'album' => $album, 'album_images' => $album_images));
+		//$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
+	}
+
+	/**
+	 * Album slide
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_slide($id = null)
+	{
+		if (!$album = Model_Album::check_authority($id))
+		{
+			throw new \HttpNotFoundException;
+		}
+		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->order_by('created_at')->get();
+
+		$this->template->title = trim($album->name);
+		$this->template->header_title = site_title(mb_strimwidth($this->template->title, 0, 50, '...'));
+
+		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
+		if (\Auth::check() && $album->member_id == $this->current_user->id)
+		{
+			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
+			$key = '自分の'.\Config::get('album.term.album').'一覧';
+			$this->template->breadcrumbs[$key] =  '/member/album/';
+		}
+		else
+		{
+			$this->template->breadcrumbs[\Config::get('album.term.album')] = '/album/';
+			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
+			$this->template->breadcrumbs[$key] =  '/album/list/'.$album->member->id;
+		}
+		$this->template->breadcrumbs[\Config::get('site.term.album').'詳細'] = '';
+
+		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
+		$this->template->post_footer = \View::forge('_parts/slide_footer', array('id' => $id));
+		$this->template->content = \View::forge('slide', array('album' => $album, 'album_images' => $album_images));
+		$this->template->subside_contents = \View::forge('_parts/subside_contents');
 		//$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
 	}
 
@@ -291,9 +331,10 @@ class Controller_Album extends \Controller_Site
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_upload_images($album_id = null)
+	public function action_upload_images()
 	{
-		if (!$album_id = (int)$album_id || !$album = Model_Album::find($album_id))
+		$album_id = (int)\Input::post('id');
+		if (!$album_id || !$album = Model_Album::find($album_id))
 		{
 			throw new \HttpNotFoundException;
 		}

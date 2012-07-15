@@ -2,7 +2,8 @@
 
 return array(
 	'term' => array(
-		'album'    => 'アルバム',
+		'album'       => 'アルバム',
+		'album_image' => 'アルバム写真',
 	),
 	'article_list' => array(
 		'limit' => 20,

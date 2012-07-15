@@ -4,22 +4,6 @@
 
 <h3 id="comments">Comments</h3>
 
-<div class="well">
-<?php echo Form::open(array('action' => 'album/upload_images/'.$album->id, 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
-<?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
-<div class="control-group">
-	<div class="controls">
-	<?php echo Form::input('image', '写真', array('type' => 'file', 'class' => 'input-file')); ?>
-	</div>
-</div>
-<div class="control-group">
-	<div class="controls">
-	<?php echo Form::input('submit', '送信', array('type' => 'submit', 'class' => 'btn')); ?>
-	</div>
-</div>
-<?php echo Form::close(); ?>
-</div>
-
 <?php if ($album_images): ?>
 <div id="myCarousel" class="carousel slide">
 	<div class="carousel-inner">
@@ -39,6 +23,38 @@
 	<a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
 	<a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
 </div>
+<?php endif; ?>
+
+<div class="well">
+<?php echo Form::open(array('action' => 'album/upload_images', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
+<?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
+<?php echo Form::hidden('id', $id); ?>
+<div class="control-group">
+	<div class="controls">
+	<?php echo Form::input('image', '写真', array('type' => 'file', 'class' => 'input-file')); ?>
+	</div>
+</div>
+<div class="control-group">
+	<div class="controls">
+	<?php echo Form::input('submit', '送信', array('type' => 'submit', 'class' => 'btn')); ?>
+	</div>
+</div>
+<?php echo Form::close(); ?>
+</div>
+
+<?php if ($album_images): ?>
+<dl>
+<?php $i = 0; ?>
+<?php foreach ($album_images as $album_image): ?>
+	<dt><?php echo Html::anchor('album/image/detail/'.$album_image->id, Html::img('upload/img/album/medium/'.$album_image->image)); ?></dt>
+	<dd>
+<?php if (!empty($album_image->name)): ?>
+				<?php echo $album_image->name; ?>
+<?php endif; ?>
+	</dd>
+<?php $i++; ?>
+<?php endforeach; ?>
+</dl>
 <?php endif; ?>
 
 <?php /*foreach ($comments as $comment): ?>

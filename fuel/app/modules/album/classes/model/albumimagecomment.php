@@ -1,29 +1,28 @@
 <?php
 namespace Album;
 
-class Model_AlbumImage extends \Orm\Model
+class Model_AlbumImageComment extends \Orm\Model
 {
-	protected static $_table_name = 'album_image';
+	protected static $_table_name = 'album_image_comment';
 
 	protected static $_belongs_to = array(
-		'album' => array(
-			'key_from' => 'album_id',
-			'model_to' => '\Album\Model_Album',
+		'album_image' => array(
+			'key_from' => 'album_image_id',
+			'model_to' => '\Album\Model_AlbumImage',
+			'key_to' => 'id',
+		),
+		'member' => array(
+			'key_from' => 'member_id',
+			'model_to' => 'Model_Member',
 			'key_to' => 'id',
 		),
 	);
 
 	protected static $_properties = array(
 		'id',
-		'album_id',
-		'image' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(100),
-			),
-		),
-		'name',
-		'shot_at',
+		'album_image_id',
+		'member_id',
+		'body',
 		'created_at',
 		'updated_at',
 	);
@@ -42,6 +41,7 @@ class Model_AlbumImage extends \Orm\Model
 	public static function validate($factory)
 	{
 		$val = \Validation::forge($factory);
+		$val->add_field('body', 'コメント', 'required');
 
 		return $val;
 	}
@@ -50,10 +50,11 @@ class Model_AlbumImage extends \Orm\Model
 	{
 		if (!$id) return false;
 
-		$obj = self::find()->where('id', $id)->related('album')->get_one();
+		$obj = self::find()->where('id', $id)->related('album_image')->related('member')->get_one();
 		if (!$obj) return false;
 
-		$accept_member_ids[] = $obj->album->member_id;
+		$accept_member_ids[] = $obj->member_id;
+		$accept_member_ids[] = $obj->album_image->album->member_id;
 		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
 
 		return $obj;

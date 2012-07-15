@@ -14,6 +14,7 @@
   <?php echo Asset::css('bootstrap.min.css');?>
   <?php echo Asset::css('base.css');?>
   <?php echo Asset::css('bootstrap-responsive.min.css');?>
+  <?php echo Asset::css('jquery.jgrowl.css');?>
   <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -169,6 +170,11 @@
 					<li><a href="<?php echo Uri::create('sitemap'); ?>">Sitemap</a></li>
 				</ul>
 			</div><!--/.well -->
+
+<?php if (isset($subside_contents)): ?>
+<?php echo $subside_contents; ?>
+<?php endif; ?>
+
 		</div><!--/span-->
 
 	</div><!--/row-->
@@ -184,7 +190,11 @@
 <?php echo Asset::js('jquery-1.7.2.min.js');?>
 <?php echo Asset::js('bootstrap.min.js');?>
 <?php echo Asset::js('jquery.alerts/jquery.alerts.js');?>
-
+<?php echo Asset::js('jquery.autogrow-textarea.js');?>
+<?php echo Asset::js('jquery.jgrowl_minimized.js');?>
+<script type="text/javascript" charset="utf-8">
+$('textarea.autogrow').autogrow();
+</script>
 <?php if (isset($post_footer)): ?>
 <?php echo $post_footer; ?>
 <?php endif; ?>
