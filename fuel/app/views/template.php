@@ -28,6 +28,9 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo Uri::create('assets/img/ico/apple-touch-icon-72-precomposed.png'); ?>">
     <link rel="apple-touch-icon-precomposed" href="<?php echo Uri::create('assets/img/ico/apple-touch-icon-57-precomposed.png'); ?>">
 
+<?php if (isset($post_header)): ?>
+<?php echo $post_header; ?>
+<?php endif; ?>
 </head>
 <body id="<?php echo site_get_current_page_id(); ?>">
 

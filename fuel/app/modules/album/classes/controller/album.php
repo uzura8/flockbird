@@ -125,8 +125,40 @@ class Controller_Album extends \Controller_Site
 		$this->template->breadcrumbs[\Config::get('site.term.album').'詳細'] = '';
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
-		$this->template->post_footer = \View::forge('_parts/footer');
+		$this->template->post_footer = \View::forge('_parts/detail_footer');
 		$this->template->content = \View::forge('detail', array('id' => $id, 'album' => $album, 'album_images' => $album_images));
+		//$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
+	}
+
+	/**
+	 * Album manage images
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_manage_images($id = null)
+	{
+		$id = (int)$id;
+		if (!$id || !$album = Model_Album::check_authority($id))
+		{
+			throw new \HttpNotFoundException;
+		}
+		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->order_by('created_at')->get();
+
+		$this->template->title = trim($album->name);
+		$this->template->header_title = site_title(mb_strimwidth($this->template->title, 0, 50, '...'));
+
+		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
+		$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
+		$this->template->breadcrumbs['自分の'.\Config::get('album.term.album').'一覧'] =  '/member/album/';
+		$this->template->breadcrumbs[\Config::get('site.term.album').'詳細'] = '/album/detail/'.$id;
+		$this->template->breadcrumbs[\Config::get('site.term.album').'写真管理'] = '';
+
+		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
+		$this->template->post_header = \View::forge('_parts/manage_images_header');
+		$this->template->post_footer = \View::forge('_parts/manage_images_footer');
+		$this->template->content = \View::forge('manage_images', array('id' => $id, 'album' => $album, 'album_images' => $album_images));
 		//$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
 	}
 
@@ -326,12 +358,12 @@ class Controller_Album extends \Controller_Site
 	}
 
 	/**
-	 * Mmeber_profile edit_image
+	 * Album upload image
 	 * 
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_upload_images()
+	public function action_upload_image()
 	{
 		$album_id = (int)\Input::post('id');
 		if (!$album_id || !$album = Model_Album::find($album_id))
@@ -347,36 +379,12 @@ class Controller_Album extends \Controller_Site
 				'path'   => \Config::get('album.image.album_image.original.path'),
 				'prefix' => sprintf('ai_%d_', $album_id),
 			);
-			\Upload::process($config);
+			$uploader = new Uploader($config);
+			$uploader->upload($album_id, \Config::get('album.image.album_image'));
 
-			$error = '';
-			if (count(\Upload::get_files()) != 1 || !\Upload::is_valid())
+			if ($uploader->error)
 			{
-				$result = \Upload::get_errors();
-				if (!empty($result[0]['errors'][0]['message'])) $error = $result[0]['errors'][0]['message'];
-			}
-
-			if (!$error)
-			{
-				\Upload::save(0);
-				$file = \Upload::get_files(0);
-				/**
-				 * ここで$fileを使ってアップロード後の処理
-				 * $fileの中にいろんな情報が入っている
-				 **/
-
-				try
-				{
-					$this->save_images($file['saved_to'], $file['saved_as'], $album_id);
-				}
-				catch(Exception $e)
-				{
-					$error = $e->getMessage();
-				}
-			}
-			if ($error)
-			{
-				\Session::set_flash('error', $error);
+				\Session::set_flash('error', $uploader->error);
 			}
 			else
 			{
@@ -387,67 +395,68 @@ class Controller_Album extends \Controller_Site
 		\Response::redirect('album/detail/'.$album_id);
 	}
 
-	private function save_images($original_file_dir, $original_file_name, $album_id)
+	/**
+	 * Album upload images
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_upload_images($album_id = null)
 	{
-		// 各サイズの icon を作成
-		if (!self::make_thumbnails($original_file_dir, $original_file_name))
+		$album_id = (int)$album_id;
+		if (!$album_id || !$album = Model_Album::find($album_id))
 		{
-			throw new Exception('Resize error.');
+			throw new \HttpNotFoundException;
 		}
-/*
-		$member = $this->current_user;
-		// 古い icon の削除
-		if (!self::remove_old_images($member->image))
-		{
-			throw new Exception('Remove old image error.');
-		}
-*/
-		// filename の保存
-		$album_image = Model_AlbumImage::forge(array(
-			'album_id' => (int)$album_id,
-			'image' => $original_file_name,
-		));
-		$album_image->save();
-	}
+		//\Util_security::check_csrf();
 
-	private static function make_thumbnails($original_file_dir, $original_file_name)
-	{
-		$original_file = $original_file_dir.$original_file_name;
-		try
-		{
-			$configs = \Config::get('album.image.album_image');
-			foreach ($configs as $key => $config)
-			{
-				if ($key == 'original') continue;
-				\Util_file::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
-			}
-		}
-		catch(Exception $e)
-		{
-			return false;
-		}
+		$options = array();
+		$options['script_url'] = \Uri::create('album/upload_images/'.$album_id);
+		$upload_handler = new \JqueryFileUpload_UploadHandler($options);
 
-		return true;
-	}
+		$response = \Request::active()->controller_instance->response;
+		$response->set_header('Pragma', 'no-cache');
+		$response->set_header('Cache-Control', 'no-store, no-cache, must-revalidate');
+		$response->set_header('Content-Disposition', 'inline; filename="files.json"');
+		$response->set_header('X-Content-Type-Options', 'nosniff');
+		$response->set_header('Access-Control-Allow-Origin', '*');
+		$response->set_header('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
+		$response->set_header('Access-Control-Allow-$response->set_headers', 'X-File-Name, X-File-Type, X-File-Size');
 
-	private static function remove_old_images($old_file_name)
-	{
-		if (!$old_file_name) return true;
-
-		try
-		{
-			$configs = \Config::get('album.image.album_image');
-			foreach ($configs as $key => $config)
-			{
-				//if ($key == 'original') continue;
-				\Util_file::remove($config['path'].'/'.$old_file_name);
-			}
-		}
-		catch(Exception $e)
-		{
-			return false;
+		$body = '';
+		switch (\Input::method()) {
+			case 'OPTIONS':
+				break;
+			case 'HEAD':
+			case 'GET':
+				$body = $upload_handler->get();
+				break;
+			case 'POST':
+				$_method = \Input::post('_method');
+				if (isset($_method) && $_method === 'DELETE') {
+					$body = $upload_handler->delete();
+				}
+				else
+				{
+					$body = $upload_handler->post();
+					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
+					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))
+					{
+						$response->set_header('Content-type', 'application/json');
+					}
+					else
+					{
+						$response->set_header('Content-type', 'text/plain');
+					}
+				}
+				break;
+			case 'DELETE':
+				$body = $upload_handler->delete();
+				break;
+			default:
+				header('HTTP/1.1 405 Method Not Allowed');
 		}
 
-		return true;
+		return $response->body($body);
 	}
 }

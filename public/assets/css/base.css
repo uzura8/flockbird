@@ -110,3 +110,7 @@ img.profile_image {
 #album_album_slide .carousel-inner {
 	text-align : center;
 }
+
+#album_album_detail .bar {
+    background: green;
+}

@@ -26,7 +26,7 @@
 <?php endif; ?>
 
 <div class="well">
-<?php echo Form::open(array('action' => 'album/upload_images', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
+<?php echo Form::open(array('action' => 'album/upload_image', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
 <?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
 <?php echo Form::hidden('id', $id); ?>
 <div class="control-group">
@@ -41,6 +41,11 @@
 </div>
 <?php echo Form::close(); ?>
 </div>
+
+<div>
+<?php echo Html::anchor('album/manage_images/'.$album->id, '写真管理'); ?>
+</div>
+
 
 <?php if ($album_images): ?>
 <dl>
