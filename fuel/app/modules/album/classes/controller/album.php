@@ -412,7 +412,10 @@ class Controller_Album extends \Controller_Site
 
 		$options = array();
 		$options['script_url'] = \Uri::create('album/upload_images/'.$album_id);
-		$upload_handler = new \JqueryFileUpload_UploadHandler($options);
+		$options['upload_dir'] = PRJ_UPLOAD_DIR.'/img/album/original/';
+		$options['upload_url'] = \Uri::create('upload/img/album/original/');
+		$options['image_versions'] = \Config::get('album.image.image_versions');
+		$upload_handler = new UploadHandler($options);
 
 		$response = \Request::active()->controller_instance->response;
 		$response->set_header('Pragma', 'no-cache');
@@ -429,7 +432,8 @@ class Controller_Album extends \Controller_Site
 				break;
 			case 'HEAD':
 			case 'GET':
-				$body = $upload_handler->get();
+				$body = $upload_handler->get($album_id);
+				$response->set_header('Content-type', 'application/json');
 				break;
 			case 'POST':
 				$_method = \Input::post('_method');
@@ -438,7 +442,7 @@ class Controller_Album extends \Controller_Site
 				}
 				else
 				{
-					$body = $upload_handler->post();
+					$body = $upload_handler->post($album_id);
 					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
 					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))
 					{
@@ -451,7 +455,8 @@ class Controller_Album extends \Controller_Site
 				}
 				break;
 			case 'DELETE':
-				$body = $upload_handler->delete();
+				$body = $upload_handler->delete($album_id);
+				$response->set_header('Content-type', 'application/json');
 				break;
 			default:
 				header('HTTP/1.1 405 Method Not Allowed');
