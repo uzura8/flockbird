@@ -11,7 +11,7 @@ $(function(){
 	var image_ids = []; // 画像id格納用配列
 	var slideNumber = 0;
 
-	$.get('/album/api/detail.json', {id:<?php echo $id; ?>}, function(json){
+	$.get('/album/api/detail/<?php echo $id; ?>.json', function(json){
 			$.each(json, function(i, data){
 					images.push(basePath + data.image);
 					image_ids.push(data.id);

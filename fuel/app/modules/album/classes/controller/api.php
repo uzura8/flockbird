@@ -21,8 +21,8 @@ class Controller_Api extends \Controller_Rest
 	 */
 	public function get_detail($id = null)
 	{
-		//$id = (int)\Input::get('id');
-		if (!$id = (int)$id || !$album = Model_Album::check_authority($id))
+		$id = (int)$id;
+		if (!$id || !$album = Model_Album::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
 		}
