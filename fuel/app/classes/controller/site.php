@@ -32,7 +32,7 @@ class Controller_Site extends Controller_Base
 	{
 		$this->template->title = PRJ_SITE_NAME.'メインメニュー';
 		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '');
+		//$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '');
 
 		$this->template->content = View::forge('site/index');
 	}
