@@ -149,6 +149,7 @@ class UploadHandler extends \JqueryFileUpload
 		}
 
 		$upload = \Input::file($this->options['param_name'], null);
+
 		$HTTP_X_FILE_NAME = \Input::server('HTTP_X_FILE_NAME');
 		$prefix = 'ai_'.$album_id;
 		$info = array();
@@ -158,7 +159,11 @@ class UploadHandler extends \JqueryFileUpload
 			// $_FILES is a multi-dimensional array:
 			foreach ($upload['tmp_name'] as $index => $value)
 			{
-				$filename = self::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name'][$index]), $upload['type'][$index], $prefix);
+				if (!$extention = \Util_file::check_image_type($upload['tmp_name'][$index], array('jpeg', 'jpg', 'png', 'gif'), $upload['type'][$index]))
+				{
+					continue;
+				}
+				$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name'][$index]), $extention, $prefix);
 
 				// filename の保存
 				$album_image = Model_AlbumImage::forge(array(
@@ -184,7 +189,11 @@ class UploadHandler extends \JqueryFileUpload
 		}
 		elseif ($upload || isset($HTTP_X_FILE_NAME))
 		{
-			$filename = self::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name']), $prefix);
+			if (!$extention = \Util_file::check_image_type($upload['tmp_name'], array('jpeg', 'jpg', 'png', 'gif'), $upload['type']))
+			{
+				return;
+			}
+			$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name']), $prefix);
 			// filename の保存
 			$album_image = Model_AlbumImage::forge(array(
 				'album_id' => (int)$album_id,
@@ -248,13 +257,5 @@ class UploadHandler extends \JqueryFileUpload
 		$album_image->delete();
 
 		return json_encode($success);
-	}
-
-	private static function make_filename($original_filename, $file_type, $prefix = '')
-	{
-		$filename = sha1($original_filename.rand(11111, 99999).$file_type);
-		if ($prefix) $prefix .= '_';
-
-		return $prefix.$filename;
 	}
 }

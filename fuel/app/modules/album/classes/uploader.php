@@ -52,7 +52,7 @@ class Uploader
 	private function save_images($original_file_dir, $original_file_name, $album_id, $sizes)
 	{
 		// 各サイズの icon を作成
-		if (!self::make_thumbnails($original_file_dir, $original_file_name, $sizes))
+		if (!\Util_file::make_thumbnails($original_file_dir, $original_file_name, $sizes, 'original'))
 		{
 			throw new Exception('Resize error.');
 		}
@@ -71,25 +71,6 @@ class Uploader
 		));
 
 		return $album_image->save();
-	}
-
-	private static function make_thumbnails($original_file_dir, $original_file_name, $sizes)
-	{
-		$original_file = $original_file_dir.$original_file_name;
-		try
-		{
-			foreach ($sizes as $key => $config)
-			{
-				if ($key == 'original') continue;
-				\Util_file::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
-			}
-		}
-		catch(Exception $e)
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	private static function remove_old_images($old_file_name, $sizes)

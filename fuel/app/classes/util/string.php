@@ -13,4 +13,9 @@ class Util_string
 
 		return $result;
 	}
+
+	public static function get_random($prefix = '', $surfix = '')
+	{
+		return sha1($prefix.rand(11111, 99999).$surfix);
+	}
 }
