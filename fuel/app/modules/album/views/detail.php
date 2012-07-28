@@ -25,6 +25,7 @@
 </div>
 <?php endif; ?>
 
+<?php if (Auth::check()): ?>
 <div class="well">
 <?php echo Form::open(array('action' => 'album/upload_image', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
 <?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
@@ -43,8 +44,9 @@
 </div>
 
 <div>
-<?php echo Html::anchor('album/manage_images/'.$album->id, '写真管理'); ?>
+<?php echo Html::anchor('album/manage_images/'.$album->id, '<i class="icon-th-list"></i> 写真管理', array('class' => 'btn')); ?>
 </div>
+<?php endif; ?>
 
 
 <?php if ($album_images): ?>

@@ -71,8 +71,9 @@
 					<!-- <li class="active"><a href="<?php echo Uri::create('/'); ?>">Home</a></li> -->
 					<li class="active"><a href="<?php echo Uri::create('/'); ?>">Top</a></li>
 					<li><a href="<?php echo Uri::create('member'); ?>"><?php echo Config::get('site.term.myhome'); ?></a></li>
-					<li><a href="<?php echo Uri::create('about'); ?>">About</a></li>
+					<li><a href="<?php echo Uri::create('album'); ?>"><?php echo Config::get('album.term.album'); ?></a></li>
 <!--
+					<li><a href="<?php echo Uri::create('about'); ?>">About</a></li>
 					<li><a href="<?php echo Uri::create('contact'); ?>">Contact</a></li>
 -->
 					<li><a href="<?php echo Uri::create('sitemap'); ?>">Sitemap</a></li>
@@ -153,26 +154,29 @@
 					<li class="nav-header">Member</li>
 					<li><a href="<?php echo Uri::create('member'); ?>"><?php echo Config::get('site.term.myhome'); ?></a></li>
 					<li><a href="<?php echo Uri::create('member/profile'); ?>"><?php echo Config::get('site.term.profile'); ?></a></li>
-					<li><a href="<?php echo Uri::create('member/note'); ?>"><?php echo Config::get('site.term.note'); ?></a></li>
 					<li><a href="<?php echo Uri::create('member/album'); ?>"><?php echo Config::get('album.term.album'); ?></a></li>
+<!--
+					<li><a href="<?php echo Uri::create('member/note'); ?>"><?php echo Config::get('site.term.note'); ?></a></li>
+-->
 					<li><a href="<?php echo Uri::create('member/setting'); ?>">設定変更</a></li>
 					<li><a href="<?php echo Uri::create('site/logout'); ?>">Sign Out</a></li>
 				</ul>
 			</div><!--/.well -->
-<?php endif; ?>
+<?php else: ?>
 			<div class="well sidebar-nav">
 				<ul class="nav nav-list">
 					<li class="nav-header">Site</li>
 					<li><a href="<?php echo Uri::create('/'); ?>">Top</a></li>
-					<li><a href="<?php echo Uri::create('note'); ?>"><?php echo Config::get('site.term.note'); ?></a></li>
 					<li><a href="<?php echo Uri::create('album'); ?>"><?php echo Config::get('album.term.album'); ?></a></li>
-					<li><a href="<?php echo Uri::create('about'); ?>">About</a></li>
 <!--
+					<li><a href="<?php echo Uri::create('note'); ?>"><?php echo Config::get('site.term.note'); ?></a></li>
+					<li><a href="<?php echo Uri::create('about'); ?>">About</a></li>
 					<li><a href="<?php echo Uri::create('contact'); ?>">Contact</a></li>
 -->
 					<li><a href="<?php echo Uri::create('sitemap'); ?>">Sitemap</a></li>
 				</ul>
 			</div><!--/.well -->
+<?php endif; ?>
 
 <?php if (isset($subside_contents)): ?>
 <?php echo $subside_contents; ?>

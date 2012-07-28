@@ -9,6 +9,7 @@ class Controller_Member extends Controller_Site
 	protected $check_not_auth_action = array(
 		'signup',
 		'register',
+		'home',
 	);
 
 	public function before()
