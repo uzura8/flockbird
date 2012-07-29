@@ -73,9 +73,10 @@ class Controller_Facebook extends Controller_Site
 				$user->facebook_id   = $fb['id'];
 				$user->facebook_name = $fb['name'];
 				$user->facebook_link = $fb['link'];
-				if (!$image = $this->save_profile_image($user->member_id, $user->facebook_id))
+				if ($image = $this->save_profile_image($user->member_id, $user->facebook_id))
 				{
-					$user->member->image = $image;
+					$member = Model_Member::find()->where('id', $user->member_id)->get_one();
+					$member->image = $image;
 				}
 				$is_save = true;
 			}
@@ -93,7 +94,7 @@ class Controller_Facebook extends Controller_Site
 				}
 				if ($image = $this->save_profile_image($user->member_id, $user->facebook_id, $user->member->image))
 				{
-					$member = Model_Member::find($user->member_id);
+					$member = Model_Member::find()->where('id', $user->member_id)->get_one();
 					$member->image = $image;
 					$is_save = true;
 				}
@@ -101,7 +102,7 @@ class Controller_Facebook extends Controller_Site
 			if ($is_save)
 			{
 				$user->save();
-				$member->save();
+				if (!empty($image)) $member->save();
 			}
 			$this->login($user->member_id);
 			Session::set_flash('message', 'ログインしました');
