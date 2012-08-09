@@ -1,5 +1,5 @@
 <?php
-return array(
+$routes = array(
 	'_root_'  => 'site/index',  // The default route
 	'_404_'   => 'error/404',   // The main 404 route
 	
@@ -8,10 +8,14 @@ return array(
 	'member/setting/email'    => 'member/setting_email',
 	'member/setting/password' => 'member/setting_password',
 	'member/(\d+)'  => 'member/home/$1',
-	// note
-	'note/list_member/(\d+)'  => 'note/list/$1',
-	'member/note'             => 'note/member',
-	// album
-	'album/list_member/(\d+)'  => 'album/list/$1',
-	'member/album'             => 'album/member',
 );
+
+$modules = Module::loaded();
+foreach ($modules as $module => $path)
+{
+	Config::load($module.'::routes', $module.'_routes');
+	$module_routes = Config::get($module.'_routes');
+	if (!empty($module_routes)) $routes += $module_routes;
+}
+
+return $routes;
