@@ -15,9 +15,6 @@ class Controller_Site extends Controller_Base
 	{
 		parent::before();
 
-		Config::load('site', 'site');
-		Config::load('note::note', 'note');
-		Config::load('album::album', 'album');
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
 	}

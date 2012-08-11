@@ -34,3 +34,18 @@ Fuel::init('config.php');
 
 // include helpers.
 Util_toolkit::include_php_files(APPPATH.'helpers');
+
+
+// Config load.
+Config::load('site', 'site');
+// Config of each module load.
+$modules = Module::loaded();
+foreach ($modules as $module => $path)
+{
+	if (file_exists(sprintf('%sconfig/%s.php', $path, $module)))
+	{
+		Config::load(sprintf('%s::%s', $module, $module), $module);
+	}
+}
+// Config of navigation load.
+Config::load('navigation', 'navigation');

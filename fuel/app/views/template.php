@@ -49,11 +49,9 @@
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="<?php echo Uri::create('member'); ?>"><?php echo Config::get('site.term.myhome'); ?></a></li>
-					<li><a href="<?php echo Uri::create('member/profile'); ?>"><?php echo Config::get('site.term.profile'); ?></a></li>
-					<li><a href="<?php echo Uri::create('member/setting'); ?>">設定変更</a></li>
-					<li class="divider"></li>
-					<li><a href="<?php echo Uri::create('site/logout'); ?>">Sign Out</a></li>
+<?php foreach (Config::get('navigation.secure_user_dropdown') as $name => $path): ?>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+<?php endforeach; ?>
 				</ul>
 <?php else: ?>
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -61,22 +59,17 @@
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="<?php echo Uri::create('site/login'); ?>">Sign In</a></li>
-					<li><a href="<?php echo Uri::create('site/signup'); ?>">Sign Up</a></li>
+<?php foreach (Config::get('navigation.insecure_user_dropdown') as $name => $path): ?>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+<?php endforeach; ?>
 				</ul>
 <?php endif; ?>
 			</div>
 			<div class="nav-collapse">
 				<ul class="nav">
-					<!-- <li class="active"><a href="<?php echo Uri::create('/'); ?>">Home</a></li> -->
-					<li class="active"><a href="<?php echo Uri::create('/'); ?>">Top</a></li>
-					<li><a href="<?php echo Uri::create('member'); ?>"><?php echo Config::get('site.term.myhome'); ?></a></li>
-					<li><a href="<?php echo Uri::create('album'); ?>"><?php echo Config::get('album.term.album'); ?></a></li>
-<!--
-					<li><a href="<?php echo Uri::create('about'); ?>">About</a></li>
-					<li><a href="<?php echo Uri::create('contact'); ?>">Contact</a></li>
--->
-					<li><a href="<?php echo Uri::create('sitemap'); ?>">Sitemap</a></li>
+<?php foreach (Config::get('navigation.global_head') as $name => $path): ?>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+<?php endforeach; ?>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
@@ -152,31 +145,21 @@
 
 				<ul class="nav nav-list">
 					<li class="nav-header">Member</li>
-					<li><a href="<?php echo Uri::create('member'); ?>"><?php echo Config::get('site.term.myhome'); ?></a></li>
-					<li><a href="<?php echo Uri::create('member/profile'); ?>"><?php echo Config::get('site.term.profile'); ?></a></li>
-					<li><a href="<?php echo Uri::create('member/album'); ?>"><?php echo Config::get('album.term.album'); ?></a></li>
-<!--
-					<li><a href="<?php echo Uri::create('member/note'); ?>"><?php echo Config::get('site.term.note'); ?></a></li>
--->
-					<li><a href="<?php echo Uri::create('member/setting'); ?>">設定変更</a></li>
-					<li><a href="<?php echo Uri::create('site/logout'); ?>">Sign Out</a></li>
-				</ul>
-			</div><!--/.well -->
-<?php else: ?>
-			<div class="well sidebar-nav">
-				<ul class="nav nav-list">
-					<li class="nav-header">Site</li>
-					<li><a href="<?php echo Uri::create('/'); ?>">Top</a></li>
-					<li><a href="<?php echo Uri::create('album'); ?>"><?php echo Config::get('album.term.album'); ?></a></li>
-<!--
-					<li><a href="<?php echo Uri::create('note'); ?>"><?php echo Config::get('site.term.note'); ?></a></li>
-					<li><a href="<?php echo Uri::create('about'); ?>">About</a></li>
-					<li><a href="<?php echo Uri::create('contact'); ?>">Contact</a></li>
--->
-					<li><a href="<?php echo Uri::create('sitemap'); ?>">Sitemap</a></li>
+<?php foreach (Config::get('navigation.secure_side') as $name => $path): ?>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+<?php endforeach; ?>
 				</ul>
 			</div><!--/.well -->
 <?php endif; ?>
+
+			<div class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li class="nav-header">Site</li>
+<?php foreach (Config::get('navigation.global_side') as $name => $path): ?>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+<?php endforeach; ?>
+				</ul>
+			</div><!--/.well -->
 
 <?php if (isset($subside_contents)): ?>
 <?php echo $subside_contents; ?>
