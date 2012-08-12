@@ -8,6 +8,7 @@ class Controller_Member extends Controller_Site
 
 	protected $check_not_auth_action = array(
 		'signup',
+		'pre_register',
 		'register',
 		'home',
 	);
@@ -83,11 +84,70 @@ class Controller_Member extends Controller_Site
 		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', Config::get('site.term.signup') => '');
 		$data = array('form' => $form);
 		$this->template->content = View::forge('member/signup', $data);
-		$this->template->content->set_safe('html_form', $form->build('/member/register'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('/member/pre_register'));// form の action に入る
 	}
 
 	/**
-	 * Contact form register
+	 * Execute pre register
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_pre_register()
+	{
+		Util_security::check_csrf();
+
+		$form = $this->form();
+		$val = $this->form()->validation();
+
+		if ($val->run())
+		{
+			$post = $val->validated();
+
+			try
+			{
+				$data = array();
+				$data['name'] = $post['name'];
+				$data['email']    = $post['email'];
+				$data['password'] = $post['password'];
+				$token = $this->save_pre_member($data);
+
+				$maildata = array();
+				$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
+				$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
+				$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+				$maildata['to_address']   = $post['email'];
+				$maildata['to_name']      = $post['name'];
+				$maildata['password']     = $post['password'];
+				$maildata['token']        = $token;
+				$this->send_pre_register_mail($maildata);
+
+				Session::set_flash('message', '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。');
+				Response::redirect('site/login');
+			}
+			catch(EmailValidationFailedException $e)
+			{
+				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+			}
+			catch(Auth\NormalUserUpdateException $e)
+			{
+				Session::set_flash('error', 'そのアドレスは登録できません');
+				$this->action_signup();
+			}
+		}
+		else
+		{
+			Session::set_flash('error', $val->show_errors());
+			$this->action_signup();
+		}
+	}
+
+	/**
+	 * Execute register
 	 * 
 	 * @access  public
 	 * @return  Response
@@ -103,32 +163,26 @@ class Controller_Member extends Controller_Site
 		{
 			$post = $val->validated();
 
-			$data = array();
-			$data['name'] = $post['name'];
-			$data['email']    = $post['email'];
-			$data['password'] = $post['password'];
-
-			$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
-			$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
-			$maildata['subject']      = \Config::get('site.member_register_mail.subject');
-			$maildata['to_address']    = $post['email'];
-			$maildata['to_name'] = $post['name'];
-
-			$maildata['body'] = <<< END
-メンバー登録が完了しました。
-
-====================
-お名前: {$post['name']}
-メールアドレス: {$post['email']}
-パスワード: {$post['password']}
-====================
-END;
-
 			try
 			{
-				$this->save($data);
-				Util_toolkit::sendmail($maildata);
-				Session::set_flash('message', 'メンバー登録が完了しました。ログインしてください。');
+				$data = array();
+				$data['name'] = $post['name'];
+				$data['email']    = $post['email'];
+				$data['password'] = $post['password'];
+				$member_id = $this->save($data);
+				$token = $this->issue_token($member_id, $data['email']);
+
+				$maildata = array();
+				$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
+				$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
+				$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+				$maildata['to_address']   = $post['email'];
+				$maildata['to_name']      = $post['name'];
+				$maildata['password']     = $post['password'];
+				$maildata['token']        = $token;
+				$this->send_pre_register_mail($maildata);
+
+				Session::set_flash('message', '仮登録が完了しました。ログインしてください。');
 				Response::redirect('site/login');
 			}
 			catch(EmailValidationFailedException $e)
@@ -597,7 +651,7 @@ END;
 		return $auth->delete_user($member_id) && $auth->logout();
 	}
 
-	public function save($data)
+	private function save($data)
 	{
 		// create new member
 		$auth = Auth::instance();
@@ -607,5 +661,62 @@ END;
 		}
 
 		return $member_id;
+	}
+
+	private function save_pre_member($data)
+	{
+		$member_pre = new Model_MemberPre();
+		$member_pre->name = $data['name'];
+		$member_pre->email = $data['email'];
+		$member_pre->password = $data['password'];
+		$member_pre->token = Util_toolkit::create_hash();
+		$member_pre->save();
+
+		return $member_pre->token;
+	}
+
+	private function send_pre_register_mail($data)
+	{
+		if (!is_array($data)) $data = (array)$data;
+
+		$register_url = sprintf('%s?token=%s', Uri::create('member/register'), $data['token']);
+		$site_name = PRJ_SITE_NAME;
+
+		$data['body'] = <<< END
+こんにちは、{$to_name}さん
+
+仮登録が完了しました。
+まだ登録は完了しておりません。
+
+以下のアドレスをクリックすることにより、{$site_name}アカウントの登録確認が完了します。
+{$register_url}
+
+上記の確認作業が完了しないと、{$site_name} のサービスが利用できません。
+
+END;
+
+		Util_toolkit::sendmail($data);
+	}
+
+	private function send_register_mail($data)
+	{
+		if (!is_array($data)) $data = (array)$data;
+		$register_url = sprintf('%s?token=%s', Uri::create('member/register'), $data['token']);
+
+		$data['body'] = <<< END
+メンバー登録が完了しました。
+
+====================
+お名前: {$data['name']}
+メールアドレス: {$data['email']}
+パスワード: {$data['password']}
+====================
+
+下記のURLより、登録を完了してください。
+{$register_url}
+
+END;
+
+		Util_toolkit::sendmail($data);
 	}
 }

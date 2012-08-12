@@ -572,6 +572,26 @@ LOCK TABLES `member_facebook` WRITE;
 /*!40000 ALTER TABLE `member_facebook` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `member_pre`
+--
+
+DROP TABLE IF EXISTS `member_pre`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `member_pre` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `token` (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `migration`
