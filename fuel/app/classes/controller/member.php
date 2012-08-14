@@ -73,7 +73,10 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_signup()
 	{
-		$form = $this->form();
+		if (!$form = Fieldset::instance('pre_register'))
+		{
+			$form = $this->form();
+		}
 
 		if (Input::method() === 'POST')
 		{
@@ -217,15 +220,16 @@ class Controller_Member extends Controller_Site
 				catch(EmailValidationFailedException $e)
 				{
 					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+					return;
 				}
 				catch(EmailSendingFailedException $e)
 				{
 					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+					return;
 				}
 				catch(Auth\NormalUserUpdateException $e)
 				{
-					Session::set_flash('error', $e->getMessage());
-					//Session::set_flash('error', 'そのアドレスは登録できません');
+					Session::set_flash('error', 'そのアドレスは登録できません');
 				}
 			}
 			else
@@ -269,8 +273,10 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_leave()
 	{
-		$form = $this->form_leave();
-
+		if (!$form = Fieldset::instance('leave'))
+		{
+			$form = $this->form_leave();
+		}
 		if (Input::method() === 'POST')
 		{
 			$form->repopulate();
@@ -366,7 +372,7 @@ END;
 			catch(Exception $e)
 			{
 				Session::set_flash('error', '退会に失敗しました。');
-				$this->action_setting_password();
+				$this->action_leave();
 			}
 		}
 		else
@@ -391,7 +397,10 @@ END;
 	 */
 	public function action_setting_password()
 	{
-		$form = $this->form_setting_password();
+		if (!$form = Fieldset::instance('setting_password'))
+		{
+			$form = $this->form_setting_password();
+		}
 
 		if (Input::method() === 'POST')
 		{
@@ -475,7 +484,10 @@ END;
 	 */
 	public function action_setting_email()
 	{
-		$form = $this->form_setting_email();
+		if (!$form = Fieldset::instance('setting_email'))
+		{
+			$form = $this->form_setting_email();
+		}
 
 		if (Input::method() === 'POST')
 		{
@@ -558,7 +570,7 @@ END;
 
 	public function form()
 	{
-		$form = Fieldset::forge();
+		$form = Fieldset::forge('pre_register');
 
 		$form->add('name', '名前')
 			->add_rule('trim')
@@ -587,7 +599,7 @@ END;
 
 	public function form_leave()
 	{
-		$form = Fieldset::forge();
+		$form = Fieldset::forge('leave');
 
 		$form->add('password', 'パスワード', array('type'=>'password'))
 			->add_rule('trim')
@@ -603,7 +615,7 @@ END;
 
 	public function form_setting_password()
 	{
-		$form = Fieldset::forge();
+		$form = Fieldset::forge('setting_password');
 
 		$form->add('old_password', '現在のパスワード', array('type'=>'password'))
 			->add_rule('trim')
@@ -633,7 +645,7 @@ END;
 
 	public function form_setting_email()
 	{
-		$form = Fieldset::forge('', array('class' => 'form-horizontal'));
+		$form = Fieldset::forge('setting_email', array('class' => 'form-horizontal'));
 
 		$form->add('email', 'メールアドレス')
 			->add_rule('trim')
