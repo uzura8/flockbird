@@ -588,7 +588,7 @@ CREATE TABLE `member_pre` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `token` (`token`)
+  UNIQUE KEY `token_UNIQUE_idx` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

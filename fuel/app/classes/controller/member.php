@@ -154,56 +154,91 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_register()
 	{
-		Util_security::check_csrf();
+		// Already logged in
+		Auth::check() and Response::redirect('member');
 
-		$form = $this->form();
-		$val = $this->form()->validation();
-
-		if ($val->run())
+		if (!$member_pre = $this->check_token())
 		{
-			$post = $val->validated();
+			$this->display_error('メンバー登録: 不正なURL');
+			return;
+		}
 
-			try
-			{
-				$data = array();
-				$data['name'] = $post['name'];
-				$data['email']    = $post['email'];
-				$data['password'] = $post['password'];
-				$member_id = $this->save($data);
-				$token = $this->issue_token($member_id, $data['email']);
+		$val = Validation::forge('register');
+		if (Input::method() == 'POST')
+		{
+			Util_security::check_csrf();
 
-				$maildata = array();
-				$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
-				$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
-				$maildata['subject']      = \Config::get('site.member_register_mail.subject');
-				$maildata['to_address']   = $post['email'];
-				$maildata['to_name']      = $post['name'];
-				$maildata['password']     = $post['password'];
-				$maildata['token']        = $token;
-				$this->send_pre_register_mail($maildata);
+			$val->add('password', 'パスワード', array('type'=>'password'))
+				->add_rule('trim')
+				->add_rule('required')
+				->add_rule('no_controll')
+				->add_rule('min_length', 6)
+				->add_rule('max_length', 20)
+				->add_rule('match_value', $member_pre->password);
+			$val->set_message('match_value', 'パスワードが正しくありません。');
+			$val->add('token', '', array('type'=>'hidden'))
+				->add_rule('required')
+				->add_rule('no_controll');
 
-				Session::set_flash('message', '仮登録が完了しました。ログインしてください。');
-				Response::redirect('site/login');
-			}
-			catch(EmailValidationFailedException $e)
+			if ($val->run())
 			{
-				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+				try
+				{
+					// create new member
+					$auth = Auth::instance();
+					if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $member_pre->name))
+					{
+						throw new Exception('create member error.');
+					}
+
+					$maildata = array();
+					$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
+					$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
+					$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+					$maildata['to_address']   = $member_pre->email;
+					$maildata['to_name']      = $member_pre->name;
+					$maildata['password']     = $member_pre->password;
+					$this->send_register_mail($maildata);
+
+					// 仮登録情報の削除
+					$email    = $member_pre->email;
+					$password = $member_pre->password;
+					$member_pre->delete();
+
+					if ($auth->login($email, $password))
+					{
+						Session::set_flash('message', '登録が完了しました。');
+						Response::redirect('member');
+					}
+
+					Session::set_flash('error', 'ログインに失敗しました');
+					Response::redirect('site/login');
+				}
+				catch(EmailValidationFailedException $e)
+				{
+					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+				}
+				catch(EmailSendingFailedException $e)
+				{
+					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+				}
+				catch(Auth\NormalUserUpdateException $e)
+				{
+					Session::set_flash('error', $e->getMessage());
+					//Session::set_flash('error', 'そのアドレスは登録できません');
+				}
 			}
-			catch(EmailSendingFailedException $e)
+			else
 			{
-				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-			}
-			catch(Auth\NormalUserUpdateException $e)
-			{
-				Session::set_flash('error', 'そのアドレスは登録できません');
-				$this->action_signup();
+				Session::set_flash('error', $val->show_errors());
 			}
 		}
-		else
-		{
-			Session::set_flash('error', $val->show_errors());
-			$this->action_signup();
-		}
+
+		$this->template->title = 'メンバー登録確認';
+		$this->template->header_title = site_title();
+		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', 'メンバー登録確認' => '');
+		$data = array('val' => $val, 'member_pre' => $member_pre);
+		$this->template->content = View::forge('member/register', $data);
 	}
 
 	/**
@@ -634,6 +669,16 @@ END;
 		return $auth->check_password($password);
 	}
 
+	private function check_token()
+	{
+		if ($member_pre = Model_MemberPre::find()->where('token', Input::param('token'))->get_one())
+		{
+			return $member_pre;
+		}
+
+		return false;
+	}
+
 	protected function change_password($old_password, $password)
 	{
 		$auth = Auth::instance();
@@ -711,9 +756,6 @@ END;
 メールアドレス: {$data['email']}
 パスワード: {$data['password']}
 ====================
-
-下記のURLより、登録を完了してください。
-{$register_url}
 
 END;
 
