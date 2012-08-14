@@ -708,18 +708,6 @@ END;
 		return $auth->delete_user($member_id) && $auth->logout();
 	}
 
-	private function save($data)
-	{
-		// create new member
-		$auth = Auth::instance();
-		if (!$member_id = $auth->create_user($data['email'], $data['password'], $data['name']))
-		{
-			throw new Exception('create member error.');
-		}
-
-		return $member_id;
-	}
-
 	private function save_pre_member($data)
 	{
 		$member_pre = new Model_MemberPre();
