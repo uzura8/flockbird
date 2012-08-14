@@ -98,6 +98,7 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_pre_register()
 	{
+		Util_security::check_method('POST');
 		Util_security::check_csrf();
 
 		$form = $this->form();
@@ -334,6 +335,7 @@ class Controller_Member extends Controller_Site
 
 	public function action_delete()
 	{
+		Util_security::check_method('POST');
 		Util_security::check_csrf();
 
 		$form = $this->form_leave();
@@ -422,6 +424,7 @@ END;
 
 	public function action_change_password()
 	{
+		Util_security::check_method('POST');
 		Util_security::check_csrf();
 
 		$form = $this->form_setting_password();
@@ -514,6 +517,7 @@ END;
 	 */
 	public function action_change_email()
 	{
+		Util_security::check_method('POST');
 		Util_security::check_csrf();
 
 		$form = $this->form_setting_email();
