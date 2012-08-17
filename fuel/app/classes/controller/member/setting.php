@@ -384,7 +384,7 @@ END;
 		$member_email_pre->token     = Util_toolkit::create_hash();
 		$member_email_pre->save();
 
-		return $member_pre->token;
+		return $member_email_pre->token;
 	}
 
 	private function send_confirm_change_email_mail($data)
