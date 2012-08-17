@@ -10,6 +10,7 @@ class Controller_Member extends Controller_Site
 		'signup',
 		'pre_register',
 		'register',
+		'change_email',
 		'home',
 	);
 
@@ -114,7 +115,7 @@ class Controller_Member extends Controller_Site
 				$data['name'] = $post['name'];
 				$data['email']    = $post['email'];
 				$data['password'] = $post['password'];
-				$token = $this->save_pre_member($data);
+				$token = $this->save_member_pre($data);
 
 				$maildata = array();
 				$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
@@ -306,7 +307,8 @@ class Controller_Member extends Controller_Site
 		$form = $this->form_leave();
 		$val  = $form->validation();
 
-		if ($val->run() && $this->check_password())
+		$auth = Auth::instance();
+		if ($val->run() && $auth->check_password())
 		{
 			$data = array('input' => $val->validated());
 			$title = Config::get('site.term.member_leave').'確認';
@@ -341,7 +343,8 @@ class Controller_Member extends Controller_Site
 		$form = $this->form_leave();
 		$val  = $form->validation();
 
-		if ($val->run() && $this->check_password())
+		$auth = Auth::instance();
+		if ($val->run() && $auth->check_password())
 		{
 			$data = array();
 			$data['to_name']      = $this->current_user->name;
@@ -506,16 +509,16 @@ END;
 			$title => '',
 		);
 		$this->template->content = View::forge('member/setting_email');
-		$this->template->content->set_safe('html_form', $form->build('/member/change_email'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('/member/confirm_change_email'));// form の action に入る
 	}
 
 	/**
-	 * Mmeber change email
+	 * Confirm change email
 	 * 
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_change_email()
+	public function action_confirm_change_email()
 	{
 		Util_security::check_method('POST');
 		Util_security::check_csrf();
@@ -523,53 +526,133 @@ END;
 		$form = $this->form_setting_email();
 		$val  = $form->validation();
 
-		if ($val->run())
-		{
-			$post = $val->validated();
-
-			$data = array();
-			$data['to_name']      = $this->current_user->name;
-			$data['to_address']   = $post['email'];
-			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
-			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-			$data['subject']      = \Config::get('site.member_setting_email.subject');
-
-			$data['body'] = <<< END
-{$data['to_name']} 様
-
-メールアドレスを変更しました。
-
-====================
-メールアドレス: {$post['email']}
-====================
-END;
-
-			try
-			{
-				$this->change_email($post['email']);
-				Util_toolkit::sendmail($data);
-				Session::set_flash('message', 'メールアドレスを変更しました。再度ログインしてください。');
-				Response::redirect('site/login');
-			}
-			catch(EmailValidationFailedException $e)
-			{
-				$this->display_error('メールアドレス変更: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-			}
-			catch(EmailSendingFailedException $e)
-			{
-				$this->display_error('メールアドレス変更: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-			}
-			catch(Auth\NormalUserUpdateException $e)
-			{
-				Session::set_flash('error', 'そのアドレスは登録できません');
-				$this->action_setting_email();
-			}
-		}
-		else
+		if (!$val->run())
 		{
 			Session::set_flash('error', $val->show_errors());
 			$this->action_setting_email();
+			return;
 		}
+		$post = $val->validated();
+
+		if (Model_MemberAuth::find()->where('email', $post['email'])->get_one())
+		{
+			Session::set_flash('error', 'そのアドレスは登録できません。');
+			$this->action_setting_email();
+			return;
+		}
+
+		try
+		{
+			$maildata = array();
+			$maildata['to_name']      = $this->current_user->name;
+			$maildata['to_address']   = $post['email'];
+			$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
+			$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+			$maildata['subject']      = \Config::get('site.member_setting_email.subject');
+			$maildata['token']        = $this->save_member_email_pre($this->current_user->id, $post);
+			$this->send_confirm_change_email_mail($maildata);
+
+			Session::set_flash('message', '新しいアドレス宛に確認用メールを送信しました。受信したメール内に記載された URL よりアドレスの変更を完了してください。');
+			Response::redirect('member/setting');
+		}
+		catch(EmailValidationFailedException $e)
+		{
+			$this->display_error('メールアドレス変更: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+		}
+		catch(EmailSendingFailedException $e)
+		{
+			$this->display_error('メールアドレス変更: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+		}
+	}
+
+	/**
+	 * Execute change email.
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_change_email()
+	{
+		$member_email_pre = Model_MemberEmailPre::find()->where('token', Input::param('token'))->get_one();
+		if (!$member_email_pre || (Auth::check() && $member_email_pre->member_id != $this->current_user->id))
+		{
+			$this->display_error('メンバー登録: 不正なURL');
+			return;
+		}
+
+		$val = Validation::forge('change_email');
+		if (Input::method() == 'POST')
+		{
+			Util_security::check_csrf();
+			$val->add('password', 'パスワード', array('type'=>'password'))
+				->add_rule('trim')
+				->add_rule('required')
+				->add_rule('no_controll')
+				->add_rule('min_length', 6)
+				->add_rule('max_length', 20);
+			$val->set_message('match_value', 'パスワードが正しくありません。');
+			$val->add('token', '', array('type'=>'hidden'))
+				->add_rule('required')
+				->add_rule('no_controll');
+
+			$auth = Auth::instance();
+			if ($val->run() && $auth->check_password())
+			{
+				try
+				{
+					if (!$auth->update_user(array('email' => $member_email_pre->email)))
+					{
+						throw new Exception('change email error.');
+					}
+					$member = Model_Member::find()->where('id', $member_email_pre->member_id)->get_one();
+
+					$maildata = array();
+					$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
+					$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
+					$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+					$maildata['to_address']   = $member_email_pre->email;
+					$maildata['to_name']      = $member->name;
+					$this->send_change_email_mail($maildata);
+
+					// 仮登録情報の削除
+					$member_email_pre->delete();
+
+					Session::set_flash('message', 'メールアドレスを変更しました。');
+					Response::redirect('member');
+				}
+				catch(EmailValidationFailedException $e)
+				{
+					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+					return;
+				}
+				catch(EmailSendingFailedException $e)
+				{
+					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+					return;
+				}
+				catch(Auth\NormalUserUpdateException $e)
+				{
+					Session::set_flash('error', 'そのアドレスは登録できません');
+				}
+			}
+			else
+			{
+				if ($val->show_errors())
+				{
+					Session::set_flash('error', $val->show_errors());
+				}
+				else
+				{
+					Session::set_flash('error', 'パスワードが正しくありません');
+				}
+			}
+		}
+
+		$this->template->title = 'メールアドレス変更確認';
+		$this->template->header_title = site_title();
+		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', 'メールアドレス変更確認' => '');
+		$data = array('val' => $val, 'member_email_pre' => $member_email_pre);
+		$this->template->content = View::forge('member/change_email', $data);
 	}
 
 	public function form()
@@ -668,23 +751,6 @@ END;
 		return $form;
 	}
 
-	protected function change_email($email)
-	{
-		$auth = Auth::instance();
-		if (!$auth->update_user(array('email' => $email)))
-		{
-			throw new Exception('change email error.');
-		}
-
-		return $auth->logout();
-	}
-
-	protected function check_password($password = '')
-	{
-		$auth = Auth::instance();
-		return $auth->check_password($password);
-	}
-
 	private function check_token()
 	{
 		if ($member_pre = Model_MemberPre::find()->where('token', Input::param('token'))->get_one())
@@ -712,7 +778,7 @@ END;
 		return $auth->delete_user($member_id) && $auth->logout();
 	}
 
-	private function save_pre_member($data)
+	private function save_member_pre($data)
 	{
 		$member_pre = new Model_MemberPre();
 		$member_pre->name = $data['name'];
@@ -720,6 +786,19 @@ END;
 		$member_pre->password = $data['password'];
 		$member_pre->token = Util_toolkit::create_hash();
 		$member_pre->save();
+
+		return $member_pre->token;
+	}
+
+	private function save_member_email_pre($member_id, $data)
+	{
+		$member_email_pre = Model_MemberEmailPre::find()->where('member_id', $member_id)->get_one();
+		if (!$member_email_pre) $member_email_pre = new Model_MemberEmailPre;
+
+		$member_email_pre->member_id = $member_id;
+		$member_email_pre->email     = $data['email'];
+		$member_email_pre->token     = Util_toolkit::create_hash();
+		$member_email_pre->save();
 
 		return $member_pre->token;
 	}
@@ -750,7 +829,7 @@ END;
 	private function send_register_mail($data)
 	{
 		if (!is_array($data)) $data = (array)$data;
-		$register_url = sprintf('%s?token=%s', Uri::create('member/register'), $data['token']);
+		$register_url = sprintf('%s?token=%s', Uri::create('member/change_email'), $data['token']);
 
 		$data['body'] = <<< END
 メンバー登録が完了しました。
@@ -764,5 +843,41 @@ END;
 END;
 
 		Util_toolkit::sendmail($data);
+	}
+
+	private function send_confirm_change_email_mail($data)
+	{
+		if (!is_array($data)) $data = (array)$data;
+
+		$register_url = sprintf('%s?token=%s', uri::create('member/change_email'), $data['token']);
+
+		$data['body'] = <<< end
+こんにちは、{$to_name}さん
+
+まだメールアドレスの変更は完了しておりません。
+
+以下のアドレスをクリックすることにより、{$site_name}メールアドレスの変更が完了します。
+{$register_url}
+
+end;
+
+		util_toolkit::sendmail($data);
+	}
+
+	private function send_change_email_mail($data)
+	{
+		if (!is_array($data)) $data = (array)$data;
+
+		$data['body'] = <<< end
+こんにちは、{$to_name}さん
+
+まだメールアドレスの変更は完了しておりません。
+
+以下のアドレスをクリックすることにより、{$site_name}メールアドレスの変更が完了します。
+{$register_url}
+
+end;
+
+		util_toolkit::sendmail($data);
 	}
 }

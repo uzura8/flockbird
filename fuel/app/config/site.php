@@ -37,6 +37,10 @@ return array(
 			),
 		),
 	),
+	'member_setting_common' => array(
+		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
+		'from_mail_address' => PRJ_ADMIN_MAIL,
+	),
 	'member_register_mail' => array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
 		'from_mail_address' => PRJ_ADMIN_MAIL,
@@ -46,10 +50,6 @@ return array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
 		'from_mail_address' => PRJ_ADMIN_MAIL,
 		'subject'           => 'メンバー退会完了のお知らせ',
-	),
-	'member_setting_common' => array(
-		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
-		'from_mail_address' => PRJ_ADMIN_MAIL,
 	),
 	'member_setting_password' => array(
 		'subject'           => 'パスワード変更完了のお知らせ',
