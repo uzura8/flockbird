@@ -121,9 +121,9 @@ class Controller_Member extends Controller_Site
 				$token = $this->save_member_pre($data);
 
 				$maildata = array();
-				$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
-				$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
-				$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+				$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
+				$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+				$maildata['subject']      = \Config::get('site.member_confirm_register_mail.subject');
 				$maildata['to_address']   = $post['email'];
 				$maildata['to_name']      = $post['name'];
 				$maildata['password']     = $post['password'];
@@ -200,8 +200,8 @@ class Controller_Member extends Controller_Site
 					}
 
 					$maildata = array();
-					$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
-					$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
+					$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
+					$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
 					$maildata['subject']      = \Config::get('site.member_register_mail.subject');
 					$maildata['to_address']   = $member_pre->email;
 					$maildata['to_name']      = $member_pre->name;
@@ -466,60 +466,6 @@ END;
 		}
 	}
 
-	public function action_change_password()
-	{
-		$form = $this->form_setting_password();
-		$val  = $form->validation();
-
-		if ($val->run())
-		{
-			$post = $val->validated();
-
-			$data = array();
-			$data['to_name']      = $this->current_user->name;
-			$data['to_address']   = $this->current_user->memberauth->email;
-			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
-			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-			$data['subject']      = \Config::get('site.member_setting_password.subject');
-
-			$data['body'] = <<< END
-{$data['to_name']} 様
-
-パスワードを変更しました。
-
-================================
-新しいパスワード: {$post['password']}
-================================
-END;
-
-			try
-			{
-				$this->change_password($post['old_password'], $post['password']);
-				Util_toolkit::sendmail($data);
-				Session::set_flash('message', 'パスワードを変更しました。再度ログインしてください。');
-				Response::redirect('site/login');
-			}
-			catch(EmailValidationFailedException $e)
-			{
-				$this->display_error('パスワード変更: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-			}
-			catch(EmailSendingFailedException $e)
-			{
-				$this->display_error('パスワード変更: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-			}
-			catch(WrongPasswordException $e)
-			{
-				Session::set_flash('error', '現在のパスワードが正しくありません。');
-				$this->action_password();
-			}
-		}
-		else
-		{
-			Session::set_flash('error', $val->show_errors());
-			$this->action_password();
-		}
-	}
-
 	/**
 	 * Execute reset password.
 	 * 
@@ -557,11 +503,12 @@ END;
 					}
 
 					$maildata = array();
-					$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
-					$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
-					$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+					$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
+					$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+					$maildata['subject']      = \Config::get('site.member_reset_password.subject');
 					$maildata['to_address']   = $member_password_pre->email;
 					$maildata['to_name']      = $member_password_pre->member->name;
+					$maildata['password']    = $post['password'];
 					$this->send_reset_password_mail($maildata);
 
 					// 仮登録情報の削除
@@ -681,8 +628,7 @@ END;
 			->add_rule('required')
 			->add_rule('no_controll')
 			->add_rule('min_length', 6)
-			->add_rule('max_length', 20)
-			->add_rule('unmatch_field', 'old_password');
+			->add_rule('max_length', 20);
 
 		$form->add('password_confirm', '新しいパスワード(確認用)', array('type'=>'password'))
 			->add_rule('trim')
@@ -748,7 +694,7 @@ END;
 		$site_name = PRJ_SITE_NAME;
 
 		$data['body'] = <<< END
-こんにちは、{$to_name}さん
+こんにちは、{$data['to_name']}さん
 
 仮登録が完了しました。
 まだ登録は完了しておりません。
@@ -772,8 +718,8 @@ END;
 メンバー登録が完了しました。
 
 ====================
-お名前: {$data['name']}
-メールアドレス: {$data['email']}
+お名前: {$data['to_name']}
+メールアドレス: {$data['to_address']}
 パスワード: {$data['password']}
 ====================
 
@@ -790,7 +736,7 @@ END;
 		$site_name = PRJ_SITE_NAME;
 
 		$data['body'] = <<< END
-こんにちは、{$dasta['to_name']}さん
+こんにちは、{$data['to_name']}さん
 
 {$site_name} は、あなたのアカウントのパスワードをリセットするように依頼を受けました。
 
@@ -813,10 +759,10 @@ END;
 		$data['body'] = <<< END
 {$data['to_name']} さん
 
-パスワードを歳登録しました。
+パスワードを再登録しました。
 
 ================================
-新しいパスワード: {$post['password']}
+新しいパスワード: {$data['password']}
 ================================
 
 END;

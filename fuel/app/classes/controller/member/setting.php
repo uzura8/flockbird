@@ -189,7 +189,7 @@ END;
 			$maildata['to_address']   = $post['email'];
 			$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
 			$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-			$maildata['subject']      = \Config::get('site.member_setting_email.subject');
+			$maildata['subject']      = \Config::get('site.member_confirm_change_email.subject');
 			$maildata['token']        = $this->save_member_email_pre($this->current_user->id, $post);
 			$this->send_confirm_change_email_mail($maildata);
 
@@ -247,9 +247,9 @@ END;
 					$member = Model_Member::find()->where('id', $member_email_pre->member_id)->get_one();
 
 					$maildata = array();
-					$maildata['from_name']    = \Config::get('site.member_register_mail.from_name');
-					$maildata['from_address'] = \Config::get('site.member_register_mail.from_mail_address');
-					$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+					$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
+					$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+					$maildata['subject']      = \Config::get('site.member_change_email.subject');
 					$maildata['to_address']   = $member_email_pre->email;
 					$maildata['to_name']      = $member->name;
 					$this->send_change_email_mail($maildata);
@@ -392,15 +392,15 @@ END;
 
 		$register_url = sprintf('%s?token=%s', uri::create('member/setting/change_email'), $data['token']);
 
-		$data['body'] = <<< end
-こんにちは、{$to_name}さん
+		$data['body'] = <<< END
+こんにちは、{$data['to_name']}さん
 
 まだメールアドレスの変更は完了しておりません。
 
 以下のアドレスをクリックすることにより、{$site_name}メールアドレスの変更が完了します。
 {$register_url}
 
-end;
+END;
 
 		util_toolkit::sendmail($data);
 	}
@@ -409,15 +409,17 @@ end;
 	{
 		if (!is_array($data)) $data = (array)$data;
 
-		$data['body'] = <<< end
-こんにちは、{$to_name}さん
+		$data['body'] = <<< END
+こんにちは、{$data['to_name']}さん
 
-まだメールアドレスの変更は完了しておりません。
+メールアドレスの変更が完了しました。
 
-以下のアドレスをクリックすることにより、{$site_name}メールアドレスの変更が完了します。
-{$register_url}
+====================
+新しいメールアドレス:
+{$data['to_address']}
+====================
 
-end;
+END;
 
 		util_toolkit::sendmail($data);
 	}
