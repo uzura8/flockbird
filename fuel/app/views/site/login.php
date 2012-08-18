@@ -26,6 +26,12 @@
 
 	<div class="control-group">
 		<div class="controls">
+		<?php echo Html::anchor('member/resend_password', 'パスワードを忘れた場合はこちら'); ?>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<div class="controls">
 		<?php echo Form::submit(array('value'=>'ログイン', 'name'=>'submit', 'class' => 'btn')); ?>
 		</div>
 	</div>

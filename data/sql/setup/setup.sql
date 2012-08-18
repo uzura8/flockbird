@@ -595,6 +595,27 @@ LOCK TABLES `member_facebook` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `member_password_pre`
+--
+
+DROP TABLE IF EXISTS `member_password_pre`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `member_password_pre` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
+  UNIQUE KEY `token_UNIQUE_idx` (`token`),
+  CONSTRAINT `member_password_pre_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `member_pre`
 --
 

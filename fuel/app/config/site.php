@@ -57,4 +57,7 @@ return array(
 	'member_setting_email' => array(
 		'subject'           => 'メールアドレス変更完了のお知らせ',
 	),
+	'member_resend_password' => array(
+		'subject'           => 'パスワードのリセット',
+	),
 );

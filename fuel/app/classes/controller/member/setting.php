@@ -231,7 +231,6 @@ END;
 				->add_rule('no_controll')
 				->add_rule('min_length', 6)
 				->add_rule('max_length', 20);
-			$val->set_message('match_value', 'パスワードが正しくありません。');
 			$val->add('token', '', array('type'=>'hidden'))
 				->add_rule('required')
 				->add_rule('no_controll');
