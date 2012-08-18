@@ -532,7 +532,7 @@ END;
 		Auth::check() and Response::redirect('member');
 
 		$member_password_pre = Model_MemberPasswordPre::find()->where('token', Input::param('token'))->related('member')->get_one();
-		if (!$member_password_pre || $member_password_pre->created_at < date('Y-m-d H:i:s', strtotime('-1 day'))
+		if (!$member_password_pre || $member_password_pre->created_at < date('Y-m-d H:i:s', strtotime('-1 day')))
 		{
 			$this->display_error('メンバー登録: 不正なURL');
 			return;
