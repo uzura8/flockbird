@@ -29,8 +29,7 @@ return array(
 	/**
 	 * DB table name for the user table
 	 */
-	//'table_name' => 'users',
-	'table_name' => 'member',
+	'table_name' => 'users',
 
 	/**
 	 * Choose which columns are selected, must include: username, password, email, last_login,
@@ -41,7 +40,7 @@ return array(
 	/**
 	 * This will allow you to use the group & acl driver for non-logged in users
 	 */
-	'guest_login' => true,
+	'guest_login' => false,
 
 	/**
 	 * Groups as id => array(name => <string>, roles => <array>)

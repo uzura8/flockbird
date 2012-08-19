@@ -37,7 +37,6 @@ img.profile_image {
 	margin-left: 65px;
 }
 
-
 .member_img_box_s {
 	position: relative;
 }
@@ -81,36 +80,4 @@ img.profile_image {
 
 .commentBox small {
 	color: #868686;
-}
-
-#article_list .article {
-	margin-bottom: 25px;
-	padding-bottom: 15px;
-	border-bottom: 1px solid #EEEEEE;
-}
-
-#article_list .article .header {
-	margin-bottom: 10px;
-}
-
-#article_list .article .header h4 {
-	margin-bottom: 5px;
-}
-
-#album_album_detail .carousel .item > img {
-	display: inline;
-}
-
-#album_album_detail .carousel .item {
-	text-align : center;
-}
-#album_album_slide .carousel .active {
-	display: inline;
-}
-#album_album_slide .carousel-inner {
-	text-align : center;
-}
-
-#album_album_detail .bar {
-    background: green;
 }

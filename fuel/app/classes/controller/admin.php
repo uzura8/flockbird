@@ -3,15 +3,41 @@
 class Controller_Admin extends Controller_Base {
 
 	public $template = 'admin/template';
+	protected $check_not_auth_action = array(
+		'login',
+	);
 
 	public function before()
 	{
 		parent::before();
 
-		if ( ! Auth::member(100) and Request::active()->action != 'login')
+		$this->auth_check();
+		$this->set_current_user();
+
+		$this->template->header_keywords = '';
+		$this->template->header_description = '';
+	}
+
+	protected function auth_check()
+	{
+		if (!$this->check_not_auth_action() && !Auth::check())
 		{
+			Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
 			Response::redirect('admin/login');
 		}
+
+	}
+
+	private function set_current_user()
+	{
+		$this->current_user = null;
+		if (Auth::check())
+		{
+			$auth = Auth::instance();
+			$user_id = $auth->get_user_id();
+			$this->current_user = Model_User::find()->where('id', $user_id[1])->get_one();
+		}
+		View::set_global('current_user', $this->current_user);
 	}
 	
 	public function action_login()
@@ -71,9 +97,8 @@ class Controller_Admin extends Controller_Base {
 	public function action_index()
 	{		
 		$this->template->title = 'Dashboard';
-		$this->template->content = View::factory('admin/dashboard');
+		$this->template->content = View::forge('admin/dashboard');
 	}
-
 }
 
 /* End of file admin.php */

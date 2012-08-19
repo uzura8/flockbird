@@ -56,7 +56,7 @@ return array(
 			'Top' => 'admin/',
 		),
 		'secure_user_dropdown' => array(
-			'Sign out' => 'member/logout',
+			'Sign out' => 'admin/logout',
 		),
 		'insecure_user_dropdown' => array(
 			'Sign in' => 'admin/login',

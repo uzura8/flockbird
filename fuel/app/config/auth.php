@@ -19,8 +19,19 @@
  * This will allow you to upgrade fuel without losing your custom config.
  */
 
-return array(
-	'driver' => 'NormalAuth',
-	'verify_multiple_logins' => false,
-	'salt' => PRJ_ENCRYPTION_KEY,
-);
+if (Util_admin::check_is_admin_request())
+{
+	return array(
+		'driver' => 'SimpleAuth',
+		'verify_multiple_logins' => false,
+		'salt' => PRJ_ENCRYPTION_KEY,
+	);
+}
+else
+{
+	return array(
+		'driver' => 'NormalAuth',
+		'verify_multiple_logins' => false,
+		'salt' => PRJ_ENCRYPTION_KEY,
+	);
+}
