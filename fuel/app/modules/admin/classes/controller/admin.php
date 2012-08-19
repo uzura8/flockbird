@@ -1,8 +1,9 @@
 <?php
+namespace Admin;
 
-class Controller_Admin extends Controller_Base {
+class Controller_Admin extends \Controller_Base {
 
-	public $template = 'admin/template';
+	//public $template = 'admin/template';
 	protected $check_not_auth_action = array(
 		'login',
 	);
@@ -20,10 +21,10 @@ class Controller_Admin extends Controller_Base {
 
 	protected function auth_check()
 	{
-		if (!$this->check_not_auth_action() && !Auth::check())
+		if (!$this->check_not_auth_action() && !\Auth::check())
 		{
-			Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
-			Response::redirect('admin/login');
+			\Session::set_flash('destination', urlencode(\Input::server('REQUEST_URI')));
+			\Response::redirect('admin/login');
 		}
 
 	}
@@ -31,23 +32,23 @@ class Controller_Admin extends Controller_Base {
 	private function set_current_user()
 	{
 		$this->current_user = null;
-		if (Auth::check())
+		if (\Auth::check())
 		{
-			$auth = Auth::instance();
+			$auth = \Auth::instance();
 			$user_id = $auth->get_user_id();
 			$this->current_user = Model_User::find()->where('id', $user_id[1])->get_one();
 		}
-		View::set_global('current_user', $this->current_user);
+		\View::set_global('current_user', $this->current_user);
 	}
 	
 	public function action_login()
 	{
 		// Already logged in
-		Auth::check() and Response::redirect('admin');
+		\Auth::check() and \Response::redirect('admin');
 
-		$val = Validation::forge();
+		$val = \Validation::forge();
 
-		if (Input::method() == 'POST')
+		if (\Input::method() == 'POST')
 		{
 			$val->add('email', 'Email or Username')
 			    ->add_rule('required');
@@ -56,14 +57,14 @@ class Controller_Admin extends Controller_Base {
 
 			if ($val->run())
 			{
-				$auth = Auth::instance();
+				$auth = \Auth::instance();
 				
 				// check the credentials. This assumes that you have the previous table created
-				if (Auth::check() or $auth->login(Input::post('email'), Input::post('password')))
+				if (\Auth::check() or $auth->login(\Input::post('email'), \Input::post('password')))
 				{
 					// credentials ok, go right in
-					Session::set_flash('notice', 'Welcome, '.$current_user->username);
-					Response::redirect('admin');
+					\Session::set_flash('notice', 'Welcome, '.$current_user->username);
+					\Response::redirect('admin');
 				}
 				else
 				{
@@ -73,7 +74,7 @@ class Controller_Admin extends Controller_Base {
 		}
 
 		$this->template->title = 'Login';
-		$this->template->content = View::forge('admin/login', array('val' => $val));
+		$this->template->content = \View::forge('admin/login', array('val' => $val));
 	}
 	
 	/**
@@ -84,8 +85,8 @@ class Controller_Admin extends Controller_Base {
 	 */
 	public function action_logout()
 	{		
-		Auth::logout();
-		Response::redirect('admin');
+		\Auth::logout();
+		\Response::redirect('admin');
 	}
 
 	/**
@@ -97,7 +98,7 @@ class Controller_Admin extends Controller_Base {
 	public function action_index()
 	{		
 		$this->template->title = 'Dashboard';
-		$this->template->content = View::forge('admin/dashboard');
+		$this->template->content = \View::forge('admin/dashboard');
 	}
 }
 

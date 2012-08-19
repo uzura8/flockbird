@@ -1,7 +1,7 @@
 <?php
 
 return array(
-	'driver' => 'NormalAuth',
+	'driver' => 'SimpleAuth',
 	'verify_multiple_logins' => false,
 	'salt' => PRJ_ENCRYPTION_KEY,
 );
