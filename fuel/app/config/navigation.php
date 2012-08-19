@@ -49,8 +49,13 @@ return array(
 	'admin' => array(
 		'secure_global_head' => array(
 			'Top' => 'admin/',
-			'Member' => 'admin/member',
-			'Settings' => 'admin/setting',
+			'Member' => array(
+				'Member list' => 'admin/member',
+			),
+			'Admin settings' => array(
+				'Account management' => 'admin/setting/account',
+				'Change password' => 'admin/setting/change_password',
+			),
 		),
 		'insecure_global_head' => array(
 			'Top' => 'admin/',
