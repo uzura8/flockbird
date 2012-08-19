@@ -20,6 +20,7 @@
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <link href="<?php echo Uri::create('assets/js/jquery.alerts/jquery.alerts.css'); ?>" rel="stylesheet" type="text/css" media="screen">
+  <?php echo Asset::css('site.css');?>
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="<?php echo Uri::create('assets/img/ico/favicon.ico'); ?>">
@@ -42,36 +43,45 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			<a class="brand" href="<?php echo Uri::create('/'); ?>"><?php echo PRJ_SITE_NAME; ?></a>
-			<div class="btn-group pull-right">
 <?php if (Auth::check()): ?>
+			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="icon-user"></i> <?php echo site_get_screen_name($current_user); ?>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-<?php foreach (Config::get('navigation.secure_user_dropdown') as $name => $path): ?>
+<?php foreach (Config::get('navigation.site.secure_user_dropdown') as $name => $path): ?>
 					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
 <?php endforeach; ?>
 				</ul>
-<?php else: ?>
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($current_user); ?>
-					<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-<?php foreach (Config::get('navigation.insecure_user_dropdown') as $name => $path): ?>
-					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
-<?php endforeach; ?>
-				</ul>
-<?php endif; ?>
 			</div>
 			<div class="nav-collapse">
 				<ul class="nav">
-<?php foreach (Config::get('navigation.global_head') as $name => $path): ?>
+<?php foreach (Config::get('navigation.site.secure_global_head') as $name => $path): ?>
 					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
 <?php endforeach; ?>
 				</ul>
 			</div><!--/.nav-collapse -->
+<?php else: ?>
+			<div class="btn-group pull-right">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="icon-user"></i> <?php echo site_get_screen_name($current_user); ?>
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+<?php foreach (Config::get('navigation.site.insecure_user_dropdown') as $name => $path): ?>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+<?php endforeach; ?>
+				</ul>
+			</div>
+			<div class="nav-collapse">
+				<ul class="nav">
+<?php foreach (Config::get('navigation.site.insecure_global_head') as $name => $path): ?>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+<?php endforeach; ?>
+				</ul>
+			</div><!--/.nav-collapse -->
+<?php endif; ?>
 		</div>
 	</div>
 
@@ -145,7 +155,7 @@
 
 				<ul class="nav nav-list">
 					<li class="nav-header">Member</li>
-<?php foreach (Config::get('navigation.secure_side') as $name => $path): ?>
+<?php foreach (Config::get('navigation.site.secure_side') as $name => $path): ?>
 					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
 <?php endforeach; ?>
 				</ul>
@@ -155,7 +165,7 @@
 			<div class="well sidebar-nav">
 				<ul class="nav nav-list">
 					<li class="nav-header">Site</li>
-<?php foreach (Config::get('navigation.global_side') as $name => $path): ?>
+<?php foreach (Config::get('navigation.site.global_side') as $name => $path): ?>
 					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
 <?php endforeach; ?>
 				</ul>
