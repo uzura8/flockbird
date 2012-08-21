@@ -114,6 +114,10 @@ class Controller_Member extends Controller_Site
 
 			try
 			{
+				if (Model_MemberAuth::find()->where('email', $post['email'])->get_one())
+				{
+					throw new Exception('そのメールアドレスは登録できません。');
+				}
 				$data = array();
 				$data['name'] = $post['name'];
 				$data['email']    = $post['email'];
@@ -141,9 +145,9 @@ class Controller_Member extends Controller_Site
 			{
 				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
-			catch(Auth\NormalUserUpdateException $e)
+			catch(Exception $e)
 			{
-				Session::set_flash('error', 'そのアドレスは登録できません');
+				Session::set_flash('error', $e->getMessage());
 				$this->action_signup();
 			}
 		}
