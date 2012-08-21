@@ -66,7 +66,7 @@ class Controller_Member_profile extends Controller_Member
 			Util_security::check_csrf();
 
 			$config = array(
-				'path'   => Config::get('site.image.member.original.path'),
+				'path'   => Util_site::get_upload_basedir('img', 'member', $this->current_user->id).'/profile/raw/',
 				'prefix' => sprintf('m_%d_', $this->current_user->id),
 			);
 			Upload::process($config);
@@ -110,7 +110,7 @@ class Controller_Member_profile extends Controller_Member
 	private function edit_images($original_file_dir, $original_file_name)
 	{
 		// 各サイズの icon を作成
-		if (!self::make_icons($original_file_dir, $original_file_name))
+		if (!self::make_icons($original_file_dir, $original_file_name, $this->current_user->id))
 		{
 			throw new Exception('Resize error.');
 		}
@@ -127,16 +127,19 @@ class Controller_Member_profile extends Controller_Member
 		$member->save();
 	}
 
-	private static function make_icons($original_file_dir, $original_file_name)
+	private static function make_icons($original_file_dir, $original_file_name, $member_id)
 	{
 		$original_file = $original_file_dir.$original_file_name;
 		try
 		{
-			$configs = Config::get('site.image.member');
-			foreach ($configs as $key => $config)
+			$sizes = Config::get('site.upload_files.img.profile.sizes');
+			foreach ($sizes as $size)
 			{
-				if ($key == 'original') continue;
-				Util_file::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
+				if ($size == 'raw') continue;
+
+				$path = sprintf('%s/profile/%s/%s', Util_site::get_upload_basedir('img', 'member', $member_id), $size, $original_file_name);
+				list($width, $height) = explode('x', $size);
+				Util_file::resize($original_file, $path, $width, $height);
 			}
 		}
 		catch(Exception $e)
