@@ -140,4 +140,22 @@ class Util_file
 
 		return $prefix.$filename;
 	}
+
+	public static function make_dir($path)
+	{
+		if (file_exists($path))
+		{
+			throw new Exception('target directory is already exists.');
+		}
+		if (!mkdir($path, 0777))
+		{
+			throw new Exception('mkdir error.');
+		}
+		if (!chmod($path, 0777))
+		{
+			throw new Exception('chmod error.');
+		}
+
+		return true;
+	}
 }

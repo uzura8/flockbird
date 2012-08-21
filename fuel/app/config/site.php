@@ -10,30 +10,16 @@ return array(
 		'guest'   => 'Guest',
 		'note'    => 'Note',
 	),
-	'image' => array(
-		'member' => array(
-			'original' => array(
-				'path' => PRJ_UPLOAD_DIR.'/img/member/original',
-			),
-			'x-small' => array(
-				'path' => PRJ_UPLOAD_DIR.'/img/member/x-small',
-				'width'  => 30,
-				'height' => 30,
-			),
-			'small' => array(
-				'path' => PRJ_UPLOAD_DIR.'/img/member/small',
-				'width'  => 50,
-				'height' => 50,
-			),
-			'medium' => array(
-				'path' => PRJ_UPLOAD_DIR.'/img/member/medium',
-				'width'  => 180,
-				'height' => 180,
-			),
-			'lerge' => array(
-				'path' => PRJ_UPLOAD_DIR.'/img/member/lerge',
-				'width'  => 600,
-				'height' => 600,
+	'upload_files' => array(
+		'img' => array(
+			'profile' => array(
+				'sizes' => array(
+					'raw',
+					'30x30',
+					'50x50',
+					'180x180',
+				),
+				'max_size' => '600x600',
 			),
 		),
 	),

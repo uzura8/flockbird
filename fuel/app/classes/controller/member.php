@@ -194,9 +194,20 @@ class Controller_Member extends Controller_Site
 				{
 					// create new member
 					$auth = Auth::instance();
+					//DB::start_transaction();
 					if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $member_pre->name))
 					{
 						throw new Exception('create member error.');
+					}
+
+					if (!Util_site::create_upload_dirs('img', 'member', $member_id))
+					{
+						//DB::rollback_transaction();
+						throw new Exception('create upload dir error.');
+					}
+					else
+					{
+						//DB::commit_transaction();
 					}
 
 					$maildata = array();
@@ -235,6 +246,10 @@ class Controller_Member extends Controller_Site
 				catch(Auth\NormalUserUpdateException $e)
 				{
 					Session::set_flash('error', 'そのアドレスは登録できません');
+				}
+				catch(Exception $e)
+				{
+					Session::set_flash('error', '登録にに失敗しました。');
 				}
 			}
 			else
