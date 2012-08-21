@@ -11,14 +11,19 @@ class Util_site
 		return false;
 	}
 
-	public static function get_upload_basedir($type, $key, $id)
+	public static function get_upload_basepath($type, $key, $id)
 	{
 		$allow_types = array('img', 'movie');
 		if (!in_array($type, $allow_types)) throw new Exception($type.' is not accepted.');
 
 		$middle_dir_name = substr($id, -1);
 
-		return sprintf('%s/%s/%s/%s/%s', PRJ_UPLOAD_DIR, $type, $key, $middle_dir_name, $id);
+		return sprintf('%s/%s/%s/%s', $type, $key, $middle_dir_name, $id);
+	}
+
+	public static function get_upload_basedir($type, $key, $id)
+	{
+		return sprintf('%s/%s', PRJ_UPLOAD_DIR, self::get_upload_basepath($type, $key, $id));
 	}
 
 	public static function create_upload_dirs($type, $key, $id)

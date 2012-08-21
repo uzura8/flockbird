@@ -8,7 +8,7 @@
 			<h4><?php echo Html::anchor('note/detail/'.$id, $note->title); ?></h4>
 
 			<div class="member_img_box_s">
-				<?php echo site_profile_image($note->member->image, 'x-small', 'member/'.$note->member_id); ?>
+				<?php echo site_profile_image($note->member->id, $note->member->image, '30x30', 'member/'.$note->member_id); ?>
 				<div class="content">
 					<div class="main">
 						<b class="fullname"><?php echo Html::anchor('member/'.$note->member_id, $note->member->name); ?></b>

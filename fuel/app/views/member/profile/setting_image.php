@@ -1,5 +1,5 @@
 <div class="well">
-<div><?php echo site_profile_image($current_user->image, 'medium', '', true); ?></div>
+<div><?php echo site_profile_image($current_user->id, $current_user->image, '180x180', '', true); ?></div>
 <?php echo Form::open(array('action' => 'member/profile/edit_image', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
 <?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
 <div class="control-group">

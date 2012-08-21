@@ -1,5 +1,5 @@
 <div class="member_img_box_s">
-	<?php echo site_profile_image($album->member->image, 'x-small', 'member/'.$album->member->id); ?>
+	<?php echo site_profile_image($album->member->id, $album->member->image, '30x30', 'member/'.$album->member->id); ?>
 	<div class="content">
 		<div class="main">
 			<b class="fullname"><?php echo Html::anchor('member/'.$album->member->id, $album->member->name); ?></b>

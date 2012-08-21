@@ -8,7 +8,7 @@
 <?php if (Auth::check()): ?>
 <div class="commentBox">
 	<div class="member_img_box_s">
-		<?php echo site_profile_image($current_user->image, 'x-small', 'member/'.$current_user->id); ?>
+		<?php echo site_profile_image($current_user->id, $current_user->image, '30x30', 'member/'.$current_user->id); ?>
 		<div class="content">
 			<div class="main">
 				<b class="fullname"><?php echo Html::anchor('member/'.$current_user->id, $current_user->name); ?></b>

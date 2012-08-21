@@ -171,7 +171,7 @@
 					<a class="account-summary account-summary-small" data-nav="profile" href="<?php echo Uri::create('member/profile'); ?>">
 					<div class="content">
 					<div class="account-group js-mini-current-user" data-screen-name="<?php echo site_get_screen_name($current_user); ?>">
-					<?php echo site_profile_image($current_user->image, 'small', '', false); ?>
+					<?php echo site_profile_image($current_user->id, $current_user->image); ?>
 					<div class="main"><b class="fullname"><?php echo site_get_screen_name($current_user); ?></b></div>
 					<small class="metadata">プロフィールを見る</small>
 					</div>
