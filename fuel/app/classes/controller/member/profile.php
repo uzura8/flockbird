@@ -117,7 +117,7 @@ class Controller_Member_profile extends Controller_Member
 
 		$member = $this->current_user;
 		// 古い icon の削除
-		if (!self::remove_old_images($member->image))
+		if (!self::remove_old_images($member->image, $member->id))
 		{
 			throw new Exception('Remove old image error.');
 		}
@@ -157,17 +157,19 @@ class Controller_Member_profile extends Controller_Member
 		return true;
 	}
 
-	private static function remove_old_images($old_file_name)
+	private static function remove_old_images($old_file_name, $member_id)
 	{
 		if (!$old_file_name) return true;
 
 		try
 		{
-			$configs = Config::get('site.image.member');
-			foreach ($configs as $key => $config)
+			$sizes = Config::get('site.upload_files.img.profile.sizes');
+			foreach ($sizes as $size)
 			{
-				if ($key == 'original') continue;
-				Util_file::remove($config['path'].'/'.$old_file_name);
+				$file = sprintf('%s/profile/%s/%s', Util_site::get_upload_basedir('img', 'member', $member_id), $size, $old_file_name);
+				if (!file_exists($file)) continue;
+
+				Util_file::remove($file);
 			}
 		}
 		catch(Exception $e)
