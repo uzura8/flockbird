@@ -137,7 +137,14 @@ class Controller_Member_profile extends Controller_Member
 			{
 				if ($size == 'raw') continue;
 
-				$path = sprintf('%s/profile/%s/%s', Util_site::get_upload_basedir('img', 'member', $member_id), $size, $original_file_name);
+				$dir = sprintf('%s/profile/%s', Util_site::get_upload_basedir('img', 'member', $member_id), $size);
+				if (!file_exists($dir) && $target_path = Util_file::check_exists_file_path($dir))
+				{
+					Util_file::make_dir_recursive($dir);
+					Util_file::chmod_recursive($target_path, 0777);
+				}
+
+				$path = sprintf('%s/%s', $dir, $original_file_name);
 				list($width, $height) = explode('x', $size);
 				Util_file::resize($original_file, $path, $width, $height);
 			}

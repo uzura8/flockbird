@@ -141,21 +141,70 @@ class Util_file
 		return $prefix.$filename;
 	}
 
-	public static function make_dir($path)
+	public static function make_dir($path, $mode = 0777)
 	{
 		if (file_exists($path))
 		{
 			throw new Exception('target directory is already exists.');
 		}
-		if (!mkdir($path, 0777))
+		if (!mkdir($path, $mode))
 		{
 			throw new Exception('mkdir error.');
 		}
-		if (!chmod($path, 0777))
+		if (!chmod($path, $mode))
 		{
 			throw new Exception('chmod error.');
 		}
 
 		return true;
+	}
+
+	public static function make_dir_recursive($path, $mode = 0777, $is_output_exception = false)
+	{
+		if (file_exists($path))
+		{
+			if ($is_output_exception) throw new Exception('target directory is already exists.');
+
+			return;
+		}
+		if (!mkdir($path, $mode, true))
+		{
+			throw new Exception('mkdir error.');
+		}
+
+		return true;
+	}
+
+	public static function check_exists_file_path($path, $check_level = 0)
+	{
+		$dirs = explode('/', $path);
+		$max  = count($dirs);
+		if (!$check_level || $check_level > $max) $check_level = $max;
+
+		for ($i = 1; $i <= $check_level; $i++)
+		{
+			$check_path = implode('/', $dirs);
+			if (file_exists($check_path)) return $check_path;
+			array_pop($dirs);
+		}
+
+		return false;
+	}
+
+	public static function chmod_recursive($path, $mode = 0777)
+	{
+		$d = dir($path);
+		$base_path = $path;
+		while (false !== ($entry = $d->read()))
+		{
+			if ($entry == '.' || $entry == '..') continue;
+			$path = sprintf('%s/%s', $base_path, $entry);
+			chmod($path, $mode);
+
+			if (is_dir($path))
+			{
+				self::chmod_recursive($path, $mode);
+			}
+		}
 	}
 }
