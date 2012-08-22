@@ -46,7 +46,7 @@
 <?php if (Auth::check()): ?>
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($current_user); ?>
+					<?php echo site_profile_image($current_user->id, $current_user->image, '20x20'); ?> <?php echo site_get_screen_name($current_user); ?>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">

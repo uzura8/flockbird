@@ -15,6 +15,7 @@ return array(
 			'profile' => array(
 				'sizes' => array(
 					'raw',
+					'20x20',
 					'30x30',
 					'50x50',
 					'180x180',
