@@ -1,5 +1,5 @@
 <?php
-class Util_site
+class Site_util
 {
 	public static function check_is_admin_request()
 	{

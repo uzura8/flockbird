@@ -65,7 +65,7 @@ class Controller_Member_profile extends Controller_Member
 		{
 			Util_security::check_csrf();
 
-			$base_dir = Util_site::get_upload_basedir('img', 'member', $this->current_user->id).'/profile';
+			$base_dir = Site_util::get_upload_basedir('img', 'member', $this->current_user->id).'/profile';
 			$config = array(
 				'path'   => $base_dir.'/raw/',
 				'prefix' => sprintf('m_%d_', $this->current_user->id),

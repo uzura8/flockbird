@@ -63,7 +63,7 @@ function site_profile_image($member_id, $member_image, $size = '50x50', $uri = '
 	$config['class'] = 'profile_image';
 	$noimage_tag = Html::img('upload/img/member/noimage.gif', $config);
 
-	$file = sprintf('%s/profile/%s/%s', Util_site::get_upload_basedir('img', 'member', $member_id), $size, $member_image);
+	$file = sprintf('%s/profile/%s/%s', Site_util::get_upload_basedir('img', 'member', $member_id), $size, $member_image);
 	if (empty($member_image) || !file_exists($file))
 	{
 		if (!empty($uri)) return Html::anchor($uri, $noimage_tag);
@@ -71,7 +71,7 @@ function site_profile_image($member_id, $member_image, $size = '50x50', $uri = '
 		return $noimage_tag;
 	}
 
-	$image_uri = sprintf('upload/%s/profile/%s/%s', Util_site::get_upload_basepath('img', 'member', $member_id), $size, $member_image);
+	$image_uri = sprintf('upload/%s/profile/%s/%s', Site_util::get_upload_basepath('img', 'member', $member_id), $size, $member_image);
 	$image_tag = Html::img($image_uri, array('class' => 'profile_image'));
 
 	if (!empty($uri)) return Html::anchor($uri, $image_tag);

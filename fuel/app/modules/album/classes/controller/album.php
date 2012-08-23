@@ -375,7 +375,7 @@ class Controller_Album extends \Controller_Site
 		{
 			\Util_security::check_csrf();
 
-			$base_dir = \Util_site::get_upload_basedir('img', 'member', $this->current_user->id).'/album_image';
+			$base_dir = \Site_util::get_upload_basedir('img', 'member', $this->current_user->id).'/album_image';
 			$config = array(
 				'path'   => $base_dir.'/raw/',
 				'prefix' => sprintf('ai_%d_', $this->current_user->id),

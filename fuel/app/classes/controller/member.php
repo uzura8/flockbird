@@ -204,7 +204,7 @@ class Controller_Member extends Controller_Site
 						throw new Exception('create member error.');
 					}
 
-					if (!Util_site::create_upload_dirs('img', 'member', $member_id))
+					if (!Site_util::create_upload_dirs('img', 'member', $member_id))
 					{
 						//DB::rollback_transaction();
 						throw new Exception('create upload dir error.');
