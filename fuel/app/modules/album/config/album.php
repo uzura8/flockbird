@@ -9,6 +9,19 @@ return array(
 		'limit' => 20,
 		'trim_width' => 2000,
 	),
+	'upload_files' => array(
+		'img' => array(
+			'album_image' => array(
+				'sizes' => array(
+					'raw',
+					'50x50',
+					'200x200',
+					'600x600',
+				),
+				'max_size' => '720x720',
+			),
+		),
+	),
 	'image' => array(
 		'album_image' => array(
 			'original' => array(

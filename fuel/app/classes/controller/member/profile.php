@@ -65,36 +65,14 @@ class Controller_Member_profile extends Controller_Member
 		{
 			Util_security::check_csrf();
 
+			$base_dir = Util_site::get_upload_basedir('img', 'member', $this->current_user->id).'/profile';
 			$config = array(
-				'path'   => Util_site::get_upload_basedir('img', 'member', $this->current_user->id).'/profile/raw/',
+				'path'   => $base_dir.'/raw/',
 				'prefix' => sprintf('m_%d_', $this->current_user->id),
 			);
-			Upload::process($config);
-
-			$error = '';
-			if (count(Upload::get_files()) != 1 || !Upload::is_valid())
-			{
-				$error = Upload::get_errors();
-			}
-			if (!$error)
-			{
-				Upload::save(0);
-				$file = Upload::get_files(0);
-				/**
-				 * ここで$fileを使ってアップロード後の処理
-				 * $fileの中にいろんな情報が入っている
-				 **/
-
-				try
-				{
-					$this->edit_images($file['saved_to'], $file['saved_as']);
-				}
-				catch(Exception $e)
-				{
-					$error = $e->getMessage();
-				}
-			}
-			if ($error)
+			$uploader = new Site_uploader($config);
+			$uploader->base_dir = $base_dir;
+			if (!$uploader->upload($this->current_user->id, \Config::get('site.upload_files.img.profile.sizes'), $this->current_user))
 			{
 				Session::set_flash('error', $error);
 			}
@@ -105,89 +83,5 @@ class Controller_Member_profile extends Controller_Member
 		}
 
 		Response::redirect('member/profile/setting_image');
-	}
-
-	private function edit_images($original_file_dir, $original_file_name)
-	{
-		// 各サイズの icon を作成
-		if (!self::make_icons($original_file_dir, $original_file_name, $this->current_user->id))
-		{
-			throw new Exception('Resize error.');
-		}
-
-		$member = $this->current_user;
-		// 古い icon の削除
-		if (!self::remove_old_images($member->image, $member->id))
-		{
-			throw new Exception('Remove old image error.');
-		}
-
-		// filename の保存
-		$member->image = $original_file_name;
-		$member->save();
-	}
-
-	private static function make_icons($original_file_dir, $original_file_name, $member_id)
-	{
-		$original_file = $original_file_dir.$original_file_name;
-		try
-		{
-			$sizes = Config::get('site.upload_files.img.profile.sizes');
-			foreach ($sizes as $size)
-			{
-				if ($size == 'raw') continue;
-
-				$dir = sprintf('%s/profile/%s', Util_site::get_upload_basedir('img', 'member', $member_id), $size);
-				if (!file_exists($dir) && $target_path = Util_file::check_exists_file_path($dir))
-				{
-					Util_file::make_dir_recursive($dir);
-					Util_file::chmod_recursive($target_path, 0777);
-				}
-
-				$path = sprintf('%s/%s', $dir, $original_file_name);
-				list($width, $height) = explode('x', $size);
-				Util_file::resize($original_file, $path, $width, $height);
-			}
-		}
-		catch(Exception $e)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	private static function remove_old_images($old_file_name, $member_id)
-	{
-		if (!$old_file_name) return true;
-
-		try
-		{
-			$sizes = Config::get('site.upload_files.img.profile.sizes');
-			foreach ($sizes as $size)
-			{
-				$file = sprintf('%s/profile/%s/%s', Util_site::get_upload_basedir('img', 'member', $member_id), $size, $old_file_name);
-				if (!file_exists($file)) continue;
-
-				Util_file::remove($file);
-			}
-		}
-		catch(Exception $e)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	private static function remove_image($file)
-	{
-		if (!file_exists($file)) return;
-		if (!$return = unlink($file))
-		{
-			throw new Exception('Remove image error.');
-		}
-
-		return $return;
 	}
 }

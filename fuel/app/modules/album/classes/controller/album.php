@@ -375,20 +375,22 @@ class Controller_Album extends \Controller_Site
 		{
 			\Util_security::check_csrf();
 
+			$base_dir = \Util_site::get_upload_basedir('img', 'member', $this->current_user->id).'/album_image';
 			$config = array(
-				'path'   => \Config::get('album.image.album_image.original.path'),
-				'prefix' => sprintf('ai_%d_', $album_id),
+				'path'   => $base_dir.'/raw/',
+				'prefix' => sprintf('ai_%d_', $this->current_user->id),
 			);
-			$uploader = new Uploader($config);
-			$uploader->upload($album_id, \Config::get('album.image.album_image'));
-
-			if ($uploader->error)
+			$uploader = new \Site_uploader($config);
+			$uploader->base_dir = $base_dir;
+			$uploader->model    = '\Album\Model_AlbumImage';
+			$uploader->updates  = array('album_id' => $album_id);
+			if (!$uploader->upload($this->current_user->id, \Config::get('album.upload_files.img.album_image.sizes')))
 			{
 				\Session::set_flash('error', $uploader->error);
 			}
 			else
 			{
-				\Session::set_flash('message', '写真を更新しました。');
+				\Session::set_flash('message', '写真を投稿しました。');
 			}
 		}
 
