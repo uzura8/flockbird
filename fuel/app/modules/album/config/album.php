@@ -12,6 +12,7 @@ return array(
 	'upload_files' => array(
 		'img' => array(
 			'album_image' => array(
+				'parent_dir' => 'member',
 				'sizes' => array(
 					'raw',
 					'50x50',

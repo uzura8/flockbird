@@ -1,4 +1,4 @@
-<p><?php echo Html::img('upload/img/album/original/'.$album_image->image); ?></p>
+<p><?php echo Site_util::get_image_uri('member', $album_image->album->member_id, 'album_image', '600x600', $album_image->image); ?></p>
 
 <hr />
 

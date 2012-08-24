@@ -56,4 +56,12 @@ class Site_util
 
 		return $upload_base_dir;
 	}
+
+	public static function get_image_uri($dir_name, $primary_id, $subdir_name, $size, $file_name, $option = array())
+	{
+		$basepath = Site_util::get_upload_basepath('img', $dir_name, $primary_id);
+		$image_uri = sprintf('upload/%s/%s/%s/%s', $basepath, $key, $size, $file_name);
+
+		return Html::img($image_uri, $option);
+	}
 }

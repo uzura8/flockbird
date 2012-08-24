@@ -51,7 +51,7 @@ function site_get_screen_name($current_user)
 	return (!empty($current_user->name)) ? $current_user->name : 'メンバーID:'.$current_user->id;
 }
 
-function site_profile_image($member_id, $member_image, $size = '50x50', $uri = '', $is_link_to_lerge_image = false)
+function site_profile_image($member_id, $member_image, $size = '50x50', $uri = '', $is_link2raw_file = false)
 {
 	$sizes = Config::get('site.upload_files.img.profile.sizes');
 	if (!in_array($size, $sizes)) $size = '50x50';
@@ -62,8 +62,10 @@ function site_profile_image($member_id, $member_image, $size = '50x50', $uri = '
 	$config['width'] = $width;
 	$config['class'] = 'profile_image';
 	$noimage_tag = Html::img('upload/img/member/noimage.gif', $config);
+	$basedir  = Site_util::get_upload_basedir('img', 'member', $member_id);
+	$basepath = Site_util::get_upload_basepath('img', 'member', $member_id);
 
-	$file = sprintf('%s/profile/%s/%s', Site_util::get_upload_basedir('img', 'member', $member_id), $size, $member_image);
+	$file = sprintf('%s/profile/%s/%s', $basedir, $size, $member_image);
 	if (empty($member_image) || !file_exists($file))
 	{
 		if (!empty($uri)) return Html::anchor($uri, $noimage_tag);
@@ -71,11 +73,15 @@ function site_profile_image($member_id, $member_image, $size = '50x50', $uri = '
 		return $noimage_tag;
 	}
 
-	$image_uri = sprintf('upload/%s/profile/%s/%s', Site_util::get_upload_basepath('img', 'member', $member_id), $size, $member_image);
+	$image_uri = sprintf('upload/%s/profile/%s/%s', $basepath, $size, $member_image);
 	$image_tag = Html::img($image_uri, array('class' => 'profile_image'));
 
 	if (!empty($uri)) return Html::anchor($uri, $image_tag);
-	if ($is_link_to_lerge_image) return Html::anchor('upload/img/member/lerge/'.$member_image, $image_tag);
+	if ($is_link2raw_file)
+	{
+		$image_uri = sprintf('upload/%s/profile/%s/%s', $basepath, 'raw', $member_image);
+		return Html::anchor($image_uri, $image_tag);
+	}
 
 	return $image_tag;
 }
