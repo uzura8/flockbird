@@ -22,6 +22,7 @@ $config = array(
 					'180x180',
 				),
 				'max_size' => '600x600',
+				'resize_type' => 'crop',
 			),
 		),
 	),

@@ -6,11 +6,29 @@ class Util_file
 		return rename($original_file, $moved_file);
 	}
 
-	public static function resize($original_file, $resized_file, $width, $height)
+	/**
+	 * type:
+	 *   relative: 縦横比を維持
+	 *   absolute: 指定の長さに変更
+	 *   crop    : 指定の長さになるようにトリミング
+	 */
+	public static function resize($original_file, $resized_file, $width, $height, $type = 'relative')
 	{
-		return Image::load($original_file)
-				->crop_resize($width, $height)
-				->save($resized_file);
+		$image = Image::load($original_file);
+		switch ($type)
+		{
+			case 'relative':
+				$image->resize($width, $height);
+				break;
+			case 'absolute':
+				$image->resize($width, $height, false);
+				break;
+			case 'crop':
+				$image->crop_resize($width, $height);
+				break;
+		}
+
+		return $image->save($resized_file);
 	}
 
 	public static function remove($file)

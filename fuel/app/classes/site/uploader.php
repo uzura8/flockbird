@@ -10,6 +10,9 @@ class Site_uploader
 	private $saved_raw_image_dir_path = '';
 	private $sizes = array();
 	private $old_filename = '';
+	private $max_size = 0;
+	private $resize = 0;
+	private $resize_type = 'relative';
 	public  $new_filename = '';
 
 	public function __construct($options = array())
@@ -21,6 +24,8 @@ class Site_uploader
 		if (!empty($options['prefix'])) $this->prefix = $options['prefix'];
 		if (!empty($options['sizes']))  $this->sizes  = $options['sizes'];
 		if (!empty($options['old_filename'])) $this->old_filename = $options['old_filename'];
+		if (!empty($options['max_size'])) $this->max_size = $options['max_size'];
+		if (!empty($options['resize_type'])) $this->resize_type = $options['resize_type'];
 		$this->saved_raw_image_dir_path = sprintf('%s/%s/', $this->file_path, $this->saved_raw_image_dir_name);
 	}
 
@@ -57,17 +62,38 @@ class Site_uploader
 		 **/
 		$ext = pathinfo($file['saved_as'], PATHINFO_EXTENSION);
 		$filename = sprintf('%s%s.%s', $this->prefix, Util_string::get_unique_id(), $ext);
-		$this->save_raw_file($file['saved_to'], $file['saved_as'], $filename);
+		$this->save_raw_file($file['saved_to'], $file['saved_as'], $filename, $file['size']);
+		if ($size = $this->check_and_resize_raw_file($filename))
+		{
+			$file['size'] = $size;
+		}
 
 		// 各サイズの thumbnail を作成
 		$this->make_thumbnails($this->saved_raw_image_dir_path, $filename);
 
-		// 古い icon の削除
+		// 古い画像の削除
 		$this->remove_old_images();
 
 		$file['new_filename'] = $filename;
 
 		return $file;
+	}
+
+	private function check_and_resize_raw_file($filename)
+	{
+		if (!$this->max_size) return false;
+
+		$file = $this->saved_raw_image_dir_path.$filename;
+		$sizes = Image::sizes($file);
+
+		$max = Site_util::convert_sizes($this->max_size);
+		if ($sizes->widht > $max['width'] || $sizes->height > $max['height'])
+		{
+			Util_file::resize($file, $file, $max['width'], $max['width'], $this->resize_type);
+			return filesize($file);
+		}
+
+		return false;
 	}
 
 	private function save_raw_file($original_file_dir, $original_filename, $new_filename)
@@ -106,7 +132,7 @@ class Site_uploader
 
 			$path = sprintf('%s/%s', $dir, $original_filename);
 			list($width, $height) = explode('x', $size);
-			Util_file::resize($original_file, $path, $width, $height);
+			Util_file::resize($original_file, $path, $width, $height, $this->resize_type);
 		}
 	}
 

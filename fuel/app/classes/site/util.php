@@ -21,9 +21,11 @@ class Site_util
 	public static function upload($identify, $id, $member_id = 0, $old_filename = '', $file_id = 0)
 	{
 		$config = array(
-			'base_path' => sprintf('img/%s/%d', $identify, Site_util::get_middle_dir($id)),
-			'prefix'    => sprintf('%s_%d_', $identify, $id),
-			'sizes'     => Config::get('site.upload_files.img.'.$identify.'.sizes'),
+			'base_path'   => sprintf('img/%s/%d', $identify, Site_util::get_middle_dir($id)),
+			'prefix'      => sprintf('%s_%d_', $identify, $id),
+			'sizes'       => Config::get('site.upload_files.img.'.$identify.'.sizes', array()),
+			'max_size'    => Config::get('site.upload_files.img.'.$identify.'.max_size', 0),
+			'resize_type' => Config::get('site.upload_files.img.'.$identify.'.resize_type', 'relative'),
 		);
 		if ($old_filename) $config['old_filename'] = $old_filename;
 		$uploader = new Site_uploader($config);
@@ -56,5 +58,15 @@ class Site_util
 		if ($is_dir) return $dir_path;
 
 		return $dir_path.'/'.$filename;
+	}
+
+	public static function convert_sizes($size_string)
+	{
+		list($width, $height) = explode('x', $size_string);
+		$sizes = array();
+		$sizes['width']  = $width;
+		$sizes['height'] = $height;
+
+		return $sizes;
 	}
 }
