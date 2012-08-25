@@ -12,14 +12,24 @@ class Model_AlbumImage extends \Orm\Model
 			'key_to' => 'id',
 		),
 	);
+	protected static $_has_one = array(
+		'file' => array(
+			'key_from' => 'file_id',
+			'model_to' => 'Model_File',
+			'key_to' => 'id',
+			'cascade_save' => false,
+			//'cascade_delete' => false,
+		),
+	);
 
 	protected static $_properties = array(
 		'id',
 		'album_id',
-		'image' => array(
+		'file_id' => array(
 			'validation' => array(
 				'trim',
-				'max_length' => array(100),
+				'required',
+				'valid_string' => array('integer'),
 			),
 		),
 		'name',
@@ -57,5 +67,12 @@ class Model_AlbumImage extends \Orm\Model
 		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
 
 		return $obj;
+	}
+
+	public function get_image()
+	{
+		if (empty($this->file_id)) return '';
+
+		return \Model_File::get_name($this->file_id);
 	}
 }

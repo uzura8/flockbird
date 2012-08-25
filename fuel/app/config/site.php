@@ -1,6 +1,6 @@
 <?php
 
-return array(
+$config = array(
 	'term' => array(
 		'toppage' => 'Top',
 		'myhome'  => 'Home',
@@ -56,3 +56,14 @@ return array(
 		'subject'           => 'パスワードの再登録完了のお知らせ',
 	),
 );
+
+
+$modules = Module::loaded();
+foreach ($modules as $module => $path)
+{
+	Config::load($module.'::site', $module.'_site');
+	$module_site = Config::get($module.'_site');
+	if (!empty($module_site)) $config = array_merge_recursive($config, $module_site);
+}
+
+return $config;

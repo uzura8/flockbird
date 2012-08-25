@@ -23,4 +23,12 @@ class Util_string
 	{
 		return sha1(uniqid(mt_rand(), true));
 	}
+
+	public static function get_exploded($string, $number = 0, $delimitter = '_')
+	{
+		$parts = explode($delimitter, $string);
+		if (count($parts) < $number + 1) return false;
+
+		return $parts[$number];
+	}
 }

@@ -365,36 +365,82 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_upload_image()
 	{
+		\Util_security::check_method('POST');
 		$album_id = (int)\Input::post('id');
 		if (!$album_id || !$album = Model_Album::find($album_id))
 		{
 			throw new \HttpNotFoundException;
 		}
+		\Util_security::check_csrf();
 
-		if (\Input::method() == 'POST')
+		try
 		{
-			\Util_security::check_csrf();
+			\DB::start_transaction();
+			$file_id = \Site_util::upload('ai', $album_id, $this->current_user->id);
 
-			$base_dir = \Site_util::get_upload_basedir('img', 'member', $this->current_user->id).'/album_image';
-			$config = array(
-				'path'   => $base_dir.'/raw/',
-				'prefix' => sprintf('ai_%d_', $this->current_user->id),
-			);
-			$uploader = new \Site_uploader($config);
-			$uploader->base_dir = $base_dir;
-			$uploader->model    = '\Album\Model_AlbumImage';
-			$uploader->updates  = array('album_id' => $album_id);
-			if (!$uploader->upload($this->current_user->id, \Config::get('album.upload_files.img.album_image.sizes')))
+			$album_image = new Model_AlbumImage;
+			$album_image->album_id = $album_id;
+			$album_image->file_id = $file_id;
+			$album_image->shot_at = date('Y-m-d H:i:s');
+			$album_image->save();
+
+			$filesize_total = \Model_File::calc_filesize_total($this->current_user->id);
+			if ($filesize_total)
 			{
-				\Session::set_flash('error', $uploader->error);
+				$this->current_user->filesize_total = $filesize_total;
+				$this->current_user->save();
 			}
-			else
-			{
-				\Session::set_flash('message', '写真を投稿しました。');
-			}
+			\DB::commit_transaction();
+
+			\Session::set_flash('message', '写真を投稿しました。');
+		}
+		catch(Exception $e)
+		{
+			\Session::set_flash('error', $e->getMessage());
 		}
 
 		\Response::redirect('album/detail/'.$album_id);
+	}
+
+	public function action_edit_image()
+	{
+		Util_security::check_method('POST');
+		Util_security::check_csrf();
+
+		try
+		{
+			$config = array(
+				'base_path' => sprintf('img/m/%d', Site_util::get_middle_dir($this->current_user->id)),
+				'prefix'    => sprintf('m_%d_', $this->current_user->id),
+				'sizes'     => Config::get('site.upload_files.img.ai.sizes'),
+			);
+			if ($this->current_user->get_image()) $config['old_filename'] = $this->current_user->get_image();
+			$uploader = new Site_uploader($config);
+			$uploaded_file = $uploader->upload();
+
+			DB::start_transaction();
+			$file = ($this->current_user->file_id) ? Model_File::find()->where('id', $this->current_user->file_id)->get_one() : new Model_File;
+			$file->name = $uploaded_file['new_filename'];
+			$file->filesize = $uploaded_file['size'];
+			$file->original_filename = $uploaded_file['filename'].'.'.$uploaded_file['extension'];
+			$file->type = $uploaded_file['type'];
+			$file->member_id = $this->current_user->id;
+			$file->save();
+
+			$this->current_user->file_id = $file->id;
+			$filesize_total = Model_File::calc_filesize_total($this->current_user->id);
+			if ($filesize_total) $this->current_user->filesize_total = $filesize_total;
+			$this->current_user->save();
+			DB::commit_transaction();
+
+			Session::set_flash('message', '写真を更新しました。');
+		}
+		catch(Exception $e)
+		{
+			Session::set_flash('error', $e->getMessage());
+		}
+
+		Response::redirect('member/profile/setting_image');
 	}
 
 	/**

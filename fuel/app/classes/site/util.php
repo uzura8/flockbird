@@ -18,50 +18,26 @@ class Site_util
 		return substr($id, -1);
 	}
 
-	public static function get_upload_basepath($type, $key, $id)
+	public static function upload($identify, $id, $member_id = 0, $old_filename = '', $file_id = 0)
 	{
-		$allow_types = array('img', 'movie');
-		if (!in_array($type, $allow_types)) throw new Exception($type.' is not accepted.');
+		$config = array(
+			'base_path' => sprintf('img/%s/%d', $identify, Site_util::get_middle_dir($id)),
+			'prefix'    => sprintf('%s_%d_', $identify, $id),
+			'sizes'     => Config::get('site.upload_files.img.'.$identify.'.sizes'),
+		);
+		if ($old_filename) $config['old_filename'] = $old_filename;
+		$uploader = new Site_uploader($config);
+		$uploaded_file = $uploader->upload();
 
-		$middle_dir_name = substr($id, -1);
+		$file = ($file_id) ? Model_File::find()->where('id', $file_id)->get_one() : new Model_File;
+		$file->name = $uploaded_file['new_filename'];
+		$file->filesize = $uploaded_file['size'];
+		$file->original_filename = $uploaded_file['filename'].'.'.$uploaded_file['extension'];
+		$file->type = $uploaded_file['type'];
+		if ($member_id) $file->member_id = $member_id;
+		$file->save();
 
-		return sprintf('%s/%s/%s/%s', $type, $key, $middle_dir_name, $id);
-	}
-
-	public static function get_upload_basedir($type, $key, $id)
-	{
-		return sprintf('%s/%s', PRJ_UPLOAD_DIR, self::get_upload_basepath($type, $key, $id));
-	}
-
-	public static function create_upload_dirs($type, $key, $id)
-	{
-		try
-		{
-			$upload_base_dir = self::get_upload_basedir($type, $key, $id);
-			Util_file::make_dir($upload_base_dir);
-			$image_configs = Config::get('site.upload_files.'.$type);
-			foreach ($image_configs as $category => $values)
-			{
-				$category_path = sprintf('%s/%s', $upload_base_dir, $category);
-				if (!file_exists($category_path)) Util_file::make_dir($category_path);
-				foreach ($values as $property => $dirs)
-				{
-					if ($property != 'sizes') continue;
-
-					foreach ($dirs as $dir)
-					{
-						$path = sprintf('%s/%s', $category_path, $dir);
-						if (!file_exists($path)) Util_file::make_dir($path);
-					}
-				}
-			}
-		}
-		catch(Exception $e)
-		{
-			return false;
-		}
-
-		return $upload_base_dir;
+		return $file->id;
 	}
 
 	public static function get_upload_path($type, $filename, $is_dir = false)
@@ -80,13 +56,5 @@ class Site_util
 		if ($is_dir) return $dir_path;
 
 		return $dir_path.'/'.$filename;
-	}
-
-	public static function get_image_uri($dir_name, $primary_id, $subdir_name, $size, $file_name, $option = array())
-	{
-		$basepath = Site_util::get_upload_basepath('img', $dir_name, $primary_id);
-		$image_uri = sprintf('upload/%s/%s/%s/%s', $basepath, $key, $size, $file_name);
-
-		return Html::img($image_uri, $option);
 	}
 }

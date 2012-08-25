@@ -81,9 +81,8 @@ class Model_Member extends \Orm\Model
 	public function get_image()
 	{
 		if (empty($this->file_id)) return '';
-		$file = Model_File::find()->where('id', $this->file_id)->get_one();
 
-		return $file->name;
+		return Model_File::get_name($this->file_id);
 	}
 
 	/**

@@ -128,7 +128,7 @@ DROP TABLE IF EXISTS `album_image`;
 CREATE TABLE `album_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_id` int(11) NOT NULL,
-  `image` varchar(100) NOT NULL,
+  `file_id` varchar(255) NOT NULL,
   `name` text NULL,
   `shot_at` datetime NULL,
   `created_at` datetime NOT NULL,
@@ -515,7 +515,7 @@ CREATE TABLE `member` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `last_login` datetime NOT NULL,
   `login_hash` varchar(255) NOT NULL DEFAULT '',
-  `file_id` varchar(255) NOT NULL,
+  `file_id` varchar(255) NULL,
   `filesize_total` int(11) NOT NULL DEFAULT '0' COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook',
   `created_at` datetime NOT NULL,

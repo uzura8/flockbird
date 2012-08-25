@@ -13,7 +13,6 @@ function site_get_current_page_id($delimitter = '_')
 	return implode($delimitter, $items);
 }
 
-
 function site_title($title = '', $subtitle = '')
 {
 	$default_title = PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME;
@@ -51,30 +50,32 @@ function site_get_screen_name($current_user)
 	return (!empty($current_user->name)) ? $current_user->name : 'メンバーID:'.$current_user->id;
 }
 
-function site_profile_image($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = false)
+function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = false)
 {
-	$sizes = Config::get('site.upload_files.img.m.sizes');
-	if (!in_array($size, $sizes)) $size = '50x50';
+	$identify = Util_string::get_exploded($filename);
+	$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes');
+	if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
 	list($width, $height) = explode('x', $size);
 
 	$uri_basepath = Site_util::get_upload_path('img', $filename, true);
 	$uri_path = sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
 	$file = sprintf('%s/%s', PRJ_PUBLIC_DIR, $uri_path);
 
+	$option = array();
+	if ($identify == 'm') $option = array('class' => 'profile_image');
+
 	if (!$filename || !file_exists($file))
 	{
-		$config = array();
-		$config['alt'] = 'No image.';
-		$config['width'] = $width;
-		$config['class'] = 'profile_image';
-		$noimage_tag = Asset::img('site/m_noimage.gif', $config);
+		$option['alt'] = 'No image.';
+		$option['width'] = $width;
+		$noimage_tag = Asset::img('site/'.$identify.'_noimage.gif', $option);
 
 		if ($uri) return Html::anchor($uri, $noimage_tag);
 
 		return $noimage_tag;
 	}
 
-	$image_tag = Html::img($uri_path, array('class' => 'profile_image'));
+	$image_tag = Html::img($uri_path, $option);
 	if ($uri) return Html::anchor($uri, $image_tag);
 
 	if ($is_link2raw_file)

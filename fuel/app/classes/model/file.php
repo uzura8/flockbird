@@ -49,6 +49,8 @@ class Model_File extends \Orm\Model
 		),
 	);
 
+	protected static $name_list = array();
+
 	public static function validate($factory)
 	{
 		$val = Validation::forge($factory);
@@ -64,5 +66,17 @@ class Model_File extends \Orm\Model
 		$result = DB::query('SELECT SUM(filesize) as sum FROM file WHERE member_id = :member_id')->param('member_id', $member_id)->execute();
 
 		return (int)$result[0]['sum'];
+	}
+
+	public static function get_name($id)
+	{
+		if (!empty(self::$name_list[$id])) return self::$name_list[$id];
+
+		$file = self::find()->where('id', $id)->get_one();
+		if (!$file) return false;
+
+		self::$name_list[$id] = $file->name;
+
+		return $file->name;
 	}
 }
