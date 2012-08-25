@@ -11,6 +11,13 @@ class Site_util
 		return false;
 	}
 
+	public static function get_middle_dir($id)
+	{
+		if (!strlen($id)) return '';
+
+		return substr($id, -1);
+	}
+
 	public static function get_upload_basepath($type, $key, $id)
 	{
 		$allow_types = array('img', 'movie');
@@ -55,6 +62,24 @@ class Site_util
 		}
 
 		return $upload_base_dir;
+	}
+
+	public static function get_upload_path($type, $filename, $is_dir = false)
+	{
+		$parts = explode('_', $filename);
+		if (count($parts) < 3) return false;
+
+		$dirs = array(
+			PRJ_UPLOAD_DIRNAME,
+			$type,
+			$parts[0],
+			Site_util::get_middle_dir($parts[1]),
+		);
+		$dir_path = implode('/', $dirs);
+
+		if ($is_dir) return $dir_path;
+
+		return $dir_path.'/'.$filename;
 	}
 
 	public static function get_image_uri($dir_name, $primary_id, $subdir_name, $size, $file_name, $option = array())

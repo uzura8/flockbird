@@ -12,7 +12,8 @@ return array(
 	),
 	'upload_files' => array(
 		'img' => array(
-			'profile' => array(
+			// member profile image
+			'm' => array(
 				'sizes' => array(
 					'raw',
 					'20x20',

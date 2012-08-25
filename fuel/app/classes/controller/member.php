@@ -198,20 +198,9 @@ class Controller_Member extends Controller_Site
 				{
 					// create new member
 					$auth = Auth::instance();
-					//DB::start_transaction();
 					if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $member_pre->name))
 					{
 						throw new Exception('create member error.');
-					}
-
-					if (!Site_util::create_upload_dirs('img', 'member', $member_id))
-					{
-						//DB::rollback_transaction();
-						throw new Exception('create upload dir error.');
-					}
-					else
-					{
-						//DB::commit_transaction();
 					}
 
 					$maildata = array();

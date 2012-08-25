@@ -51,35 +51,35 @@ function site_get_screen_name($current_user)
 	return (!empty($current_user->name)) ? $current_user->name : 'メンバーID:'.$current_user->id;
 }
 
-function site_profile_image($member_id, $member_image, $size = '50x50', $uri = '', $is_link2raw_file = false)
+function site_profile_image($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = false)
 {
-	$sizes = Config::get('site.upload_files.img.profile.sizes');
+	$sizes = Config::get('site.upload_files.img.m.sizes');
 	if (!in_array($size, $sizes)) $size = '50x50';
 	list($width, $height) = explode('x', $size);
 
-	$config = array();
-	$config['alt'] = 'No image.';
-	$config['width'] = $width;
-	$config['class'] = 'profile_image';
-	$noimage_tag = Html::img('upload/img/member/noimage.gif', $config);
-	$basedir  = Site_util::get_upload_basedir('img', 'member', $member_id);
-	$basepath = Site_util::get_upload_basepath('img', 'member', $member_id);
+	$uri_basepath = Site_util::get_upload_path('img', $filename, true);
+	$uri_path = sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
+	$file = sprintf('%s/%s', PRJ_PUBLIC_DIR, $uri_path);
 
-	$file = sprintf('%s/profile/%s/%s', $basedir, $size, $member_image);
-	if (empty($member_image) || !file_exists($file))
+	if (!$filename || !file_exists($file))
 	{
-		if (!empty($uri)) return Html::anchor($uri, $noimage_tag);
+		$config = array();
+		$config['alt'] = 'No image.';
+		$config['width'] = $width;
+		$config['class'] = 'profile_image';
+		$noimage_tag = Asset::img('site/m_noimage.gif', $config);
+
+		if ($uri) return Html::anchor($uri, $noimage_tag);
 
 		return $noimage_tag;
 	}
 
-	$image_uri = sprintf('upload/%s/profile/%s/%s', $basepath, $size, $member_image);
-	$image_tag = Html::img($image_uri, array('class' => 'profile_image'));
+	$image_tag = Html::img($uri_path, array('class' => 'profile_image'));
+	if ($uri) return Html::anchor($uri, $image_tag);
 
-	if (!empty($uri)) return Html::anchor($uri, $image_tag);
 	if ($is_link2raw_file)
 	{
-		$image_uri = sprintf('upload/%s/profile/%s/%s', $basepath, 'raw', $member_image);
+		$image_uri = sprintf('%s/%s/%s', $uri_basepath, 'raw', $filename);
 		return Html::anchor($image_uri, $image_tag);
 	}
 

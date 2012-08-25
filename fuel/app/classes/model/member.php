@@ -1,18 +1,24 @@
 <?php
 class Model_Member extends \Orm\Model
 {
-	//protected static $_has_one = array('memberauth');
+	protected static $_table_name = 'member';
+
 	protected static $_has_one = array(
 		'memberauth' => array(
 			'key_from' => 'id',
 			'model_to' => 'Model_MemberAuth',
 			'key_to' => 'member_id',
 			'cascade_save' => false,
-			'cascade_delete' => false,
-		)
+			//'cascade_delete' => false,
+		),
+		'file' => array(
+			'key_from' => 'file_id',
+			'model_to' => 'Model_File',
+			'key_to' => 'id',
+			'cascade_save' => false,
+			//'cascade_delete' => false,
+		),
 	);
-
-	protected static $_table_name = 'member';
 	protected static $_properties = array(
 		'id',
 		'name' => array(
@@ -36,10 +42,17 @@ class Model_Member extends \Orm\Model
 				'match_pattern' => array('/[01]{1}/'),
 			),
 		),
-		'image' => array(
+		'file_id' => array(
 			'validation' => array(
 				'trim',
-				'max_length' => array(100),
+				'required',
+				'valid_string' => array('integer'),
+			),
+		),
+		'filesize_total' => array(
+			'validation' => array(
+				'trim',
+				'valid_string' => array('integer'),
 			),
 		),
 		'created_at',
@@ -63,6 +76,14 @@ class Model_Member extends \Orm\Model
 		//$val->add_field('title', 'Title', 'required|max_length[255]');
 
 		return $val;
+	}
+
+	public function get_image()
+	{
+		if (empty($this->file_id)) return '';
+		$file = Model_File::find()->where('id', $this->file_id)->get_one();
+
+		return $file->name;
 	}
 
 	/**

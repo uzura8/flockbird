@@ -46,7 +46,7 @@
 <?php if (Auth::check()): ?>
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<?php echo site_profile_image($current_user->id, $current_user->image, '20x20'); ?> <?php echo site_get_screen_name($current_user); ?>
+					<?php echo site_profile_image($current_user->get_image(), '20x20'); ?> <?php echo site_get_screen_name($current_user); ?>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
@@ -171,7 +171,7 @@
 					<a class="account-summary account-summary-small" data-nav="profile" href="<?php echo Uri::create('member/profile'); ?>">
 					<div class="content">
 					<div class="account-group js-mini-current-user" data-screen-name="<?php echo site_get_screen_name($current_user); ?>">
-					<?php echo site_profile_image($current_user->id, $current_user->image); ?>
+					<?php echo site_profile_image($current_user->get_image()); ?>
 					<div class="main"><b class="fullname"><?php echo site_get_screen_name($current_user); ?></b></div>
 					<small class="metadata">プロフィールを見る</small>
 					</div>

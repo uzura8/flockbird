@@ -18,4 +18,9 @@ class Util_string
 	{
 		return sha1($prefix.rand(11111, 99999).$surfix);
 	}
+
+	public static function get_unique_id()
+	{
+		return sha1(uniqid(mt_rand(), true));
+	}
 }

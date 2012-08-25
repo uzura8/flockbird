@@ -91,7 +91,7 @@ return array(
 	'normalize'			=> false,
 
 	// valid values are 'upper', 'lower', and false. case will be changed after all other transformations
-	'change_case'		=> false,
+	'change_case'		=> 'lower',
 
 	// maximum lengh of the filename, after all name modifications have been made. 0 = no maximum
 	'max_length'		=> 0

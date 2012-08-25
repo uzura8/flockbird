@@ -2,22 +2,33 @@
 
 class Site_uploader
 {
-	public $base_dir = '';
-	public $model    = '';
-	public $file_column = 'image';
-	public $updates = array();
-	public $error = '';
+	private $base_path = '';
+	private $file_path = '';
+	private $prefix = '';
+	private $tmp_dir_path = '';
+	private $saved_raw_image_dir_name = 'raw';
+	private $saved_raw_image_dir_path = '';
+	private $sizes = array();
+	private $old_filename = '';
+	public  $new_filename = '';
 
 	public function __construct($options = array())
 	{
-		\Upload::process($options);
+		$this->base_path = (!empty($options['base_path'])) ? $options['base_path'] : 'img/general';
+		$this->file_path = sprintf('%s/%s', PRJ_UPLOAD_DIR, $this->base_path );
+		$this->saved_raw_image_dir_name = (!empty($options['saved_raw_image_dir_name'])) ? $options['saved_raw_image_dir_name'] : 'raw';
+		$this->tmp_dir_path = (!empty($options['tmp_dir_path'])) ? $options['tmp_dir_path'] : APPPATH.'tmp';
+		if (!empty($options['prefix'])) $this->prefix = $options['prefix'];
+		if (!empty($options['sizes']))  $this->sizes  = $options['sizes'];
+		if (!empty($options['old_filename'])) $this->old_filename = $options['old_filename'];
+		$this->saved_raw_image_dir_path = sprintf('%s/%s/', $this->file_path, $this->saved_raw_image_dir_name);
 	}
 
 	public function validate()
 	{
 		$result = true;
-		if (count(\Upload::get_files()) != 1) $result = false;
-		if (!\Upload::is_valid()) $result = false;
+		if (count(Upload::get_files()) != 1) $result = false;
+		if (!Upload::is_valid()) $result = false;
 
 		if (!$result)
 		{
@@ -28,110 +39,87 @@ class Site_uploader
 		return $result;
 	}
 
-	public function upload($content_id, $sizes = array(), $obj = '')
+	public function upload($sizes = array(), $old_image = '')
 	{
-		if ($this->validate())
-		{
-			\Upload::save(0);
-			$file = \Upload::get_files(0);
-			/**
-			 * ここで$fileを使ってアップロード後の処理
-			 * $fileの中にいろんな情報が入っている
-			 **/
+		$options = array(
+			'path'   => $this->tmp_dir_path,
+			'prefix' => $this->prefix,
+		);
+		Upload::process($options);
 
-			try
-			{
-				// 各サイズの thumbnail を作成
-				if (!$this->make_thumbnails($file['saved_to'], $file['saved_as'], $content_id, $sizes))
-				{
-					throw new Exception('Resize error.');
-				}
+		if (!$this->validate()) throw new Exception('Validation error.');
 
-				// 古い icon の削除
-				$column = $this->file_column;
-				if (!empty($obj) && !$this->remove_old_images($content_id, $obj->$column, $sizes))
-				{
-					throw new Exception('Remove old image error.');
-				}
+		Upload::save(0);
+		$file = Upload::get_files(0);
+		/**
+		 * ここで$fileを使ってアップロード後の処理
+		 * $fileの中にいろんな情報が入っている
+		 **/
+		$ext = pathinfo($file['saved_as'], PATHINFO_EXTENSION);
+		$filename = sprintf('%s%s.%s', $this->prefix, Util_string::get_unique_id(), $ext);
+		$this->save_raw_file($file['saved_to'], $file['saved_as'], $filename);
 
-				// filename の保存
-				if (empty($obj))
-				{
-					$obj = new $this->model();
-				}
-				$column = $this->file_column;
-				$obj->$column = $file['saved_as'];
-				foreach ($this->updates as $key => $value) $obj->$key = $value;
-				$obj->save();
-			}
-			catch(Exception $e)
-			{
-				$this->error = $e->getMessage();
-			}
-		}
+		// 各サイズの thumbnail を作成
+		$this->make_thumbnails($this->saved_raw_image_dir_path, $filename);
 
-		return empty($this->error);
+		// 古い icon の削除
+		$this->remove_old_images();
+
+		$file['new_filename'] = $filename;
+
+		return $file;
 	}
 
-	private function make_thumbnails($original_file_dir, $original_file_name, $content_id, $sizes)
+	private function save_raw_file($original_file_dir, $original_filename, $new_filename)
 	{
-		$original_file = $original_file_dir.$original_file_name;
-		try
+		$from = $original_file_dir.$original_filename;
+		if (!file_exists($from))
 		{
-			foreach ($sizes as $size)
-			{
-				if ($size == 'raw') continue;
-
-				$dir = sprintf('%s/%s', $this->base_dir, $size);
-				if (!file_exists($dir) && $target_path = Util_file::check_exists_file_path($dir))
-				{
-					Util_file::make_dir_recursive($dir);
-					Util_file::chmod_recursive($target_path, 0777);
-				}
-
-				$path = sprintf('%s/%s', $dir, $original_file_name);
-				list($width, $height) = explode('x', $size);
-				Util_file::resize($original_file, $path, $width, $height);
-			}
+			throw new Exception('File not found.');
 		}
-		catch(Exception $e)
+		if (!file_exists($this->saved_raw_image_dir_path) && $target_path = Util_file::check_exists_file_path($this->saved_raw_image_dir_path))
 		{
-			return false;
+			Util_file::make_dir_recursive($this->saved_raw_image_dir_path);
+			Util_file::chmod_recursive($target_path, 0777);
 		}
 
-		return true;
+		$to = $this->saved_raw_image_dir_path.$new_filename;
+		if (file_exists($to)) return;
+
+		if (!rename($from, $to)) throw new Exception('save raw file error.');
 	}
 
-	private function remove_old_images($content_id, $old_file_name, $sizes)
+	private function make_thumbnails($original_file_dir, $original_filename)
 	{
-		if (!$old_file_name) return true;
+		$original_file = $original_file_dir.$original_filename;
 
-		try
+		foreach ($this->sizes as $size)
 		{
-			foreach ($sizes as $size)
+			if ($size == $this->saved_raw_image_dir_name) continue;
+
+			$dir = sprintf('%s/%s', $this->file_path, $size);
+			if (!file_exists($dir) && $target_path = Util_file::check_exists_file_path($dir))
 			{
-				$file = sprintf('%s/%s/%s', $this->base_dir, $size, $old_file_name);
-				if (!file_exists($file)) continue;
-
-				Util_file::remove($file);
+				Util_file::make_dir_recursive($dir);
+				Util_file::chmod_recursive($target_path, 0777);
 			}
-		}
-		catch(Exception $e)
-		{
-			return false;
-		}
 
-		return true;
+			$path = sprintf('%s/%s', $dir, $original_filename);
+			list($width, $height) = explode('x', $size);
+			Util_file::resize($original_file, $path, $width, $height);
+		}
 	}
 
-	private static function remove_image($file)
+	private function remove_old_images()
 	{
-		if (!file_exists($file)) return;
-		if (!$return = unlink($file))
-		{
-			throw new Exception('Remove image error.');
-		}
+		if (!strlen($this->old_filename)) return;
 
-		return $return;
+		foreach ($this->sizes as $size)
+		{
+			$file = sprintf('%s/%s/%s', $this->file_path, $size, $this->old_filename);
+			if (!file_exists($file)) continue;
+
+			Util_file::remove($file);
+		}
 	}
 }

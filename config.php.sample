@@ -34,11 +34,15 @@ define('PRJ_PROFILING', false);
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
 
-// アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum)
-define('PRJ_UPLOAD_FILE_MAX_SIZE', 0);
+// 公開ディレクトリ
+define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public');
 
 // ファイルをアップロードするディレクトリ
-define('PRJ_UPLOAD_DIR', PRJ_BASEPATH.'/public/upload');
+define('PRJ_UPLOAD_DIRNAME', 'media');
+define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.'/'.PRJ_UPLOAD_DIRNAME);
+
+// アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum)
+define('PRJ_UPLOAD_FILE_MAX_SIZE', 0);
 
 
 // サイト名

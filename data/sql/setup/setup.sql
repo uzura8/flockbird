@@ -370,6 +370,29 @@ LOCK TABLES `fbusers` WRITE;
 /*!40000 ALTER TABLE `fbusers` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `file`
+--
+
+DROP TABLE IF EXISTS `file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `file` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
+  `type` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
+  `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
+  `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
+  `member_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of files uploaded';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 --
 -- Table structure for table `items`
 --
@@ -492,8 +515,9 @@ CREATE TABLE `member` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `last_login` datetime NOT NULL,
   `login_hash` varchar(255) NOT NULL DEFAULT '',
+  `file_id` varchar(255) NOT NULL,
+  `filesize_total` int(11) NOT NULL DEFAULT '0' COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook',
-  `image` varchar(100) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
@@ -539,6 +563,7 @@ LOCK TABLES `member_auth` WRITE;
 /*!40000 ALTER TABLE `member_auth` DISABLE KEYS */;
 /*!40000 ALTER TABLE `member_auth` ENABLE KEYS */;
 UNLOCK TABLES;
+
 
 --
 -- Table structure for table `member_email_pre`
