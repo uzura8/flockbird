@@ -45,7 +45,7 @@
 <?php if (Auth::check()): ?>
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($current_user); ?>
+					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
@@ -77,7 +77,7 @@
 <?php else: ?>
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($current_user); ?>
+					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">

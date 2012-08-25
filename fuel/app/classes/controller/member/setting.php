@@ -79,8 +79,8 @@ class Controller_Member_setting extends Controller_Member
 			$post = $val->validated();
 
 			$data = array();
-			$data['to_name']      = $this->current_user->name;
-			$data['to_address']   = $this->current_user->memberauth->email;
+			$data['to_name']      = $this->u->name;
+			$data['to_address']   = $this->u->memberauth->email;
 			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
 			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
 			$data['subject']      = \Config::get('site.member_setting_password.subject');
@@ -185,12 +185,12 @@ END;
 		try
 		{
 			$maildata = array();
-			$maildata['to_name']      = $this->current_user->name;
+			$maildata['to_name']      = $this->u->name;
 			$maildata['to_address']   = $post['email'];
 			$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
 			$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
 			$maildata['subject']      = \Config::get('site.member_confirm_change_email.subject');
-			$maildata['token']        = $this->save_member_email_pre($this->current_user->id, $post);
+			$maildata['token']        = $this->save_member_email_pre($this->u->id, $post);
 			$this->send_confirm_change_email_mail($maildata);
 
 			Session::set_flash('message', '新しいアドレス宛に確認用メールを送信しました。受信したメール内に記載された URL よりアドレスの変更を完了してください。');
@@ -215,7 +215,7 @@ END;
 	public function action_change_email()
 	{
 		$member_email_pre = Model_MemberEmailPre::find()->where('token', Input::param('token'))->get_one();
-		if (!$member_email_pre || (Auth::check() && $member_email_pre->member_id != $this->current_user->id))
+		if (!$member_email_pre || (Auth::check() && $member_email_pre->member_id != $this->u->id))
 		{
 			$this->display_error('メンバー登録: 不正なURL');
 			return;

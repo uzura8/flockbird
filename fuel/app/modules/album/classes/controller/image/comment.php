@@ -28,7 +28,7 @@ class Controller_Image_comment extends \Controller_Site
 			$comment = new Model_AlbumImageComment(array(
 				'body' => \Input::post('body'),
 				'album_image_id' => $album_image_id,
-				'member_id' => $this->current_user->id,
+				'member_id' => $this->u->id,
 			));
 
 			// Save the post and the comment will save too
@@ -63,7 +63,7 @@ class Controller_Image_comment extends \Controller_Site
 		$values = array(
 			'body' => \Input::post('body'),
 			'album_image_id' => $album_image_id,
-			'member_id' => $this->current_user->id,
+			'member_id' => $this->u->id,
 		);
 
 		$comment = new Model_AlbumImageComment($values);
@@ -103,7 +103,7 @@ class Controller_Image_comment extends \Controller_Site
 	public function action_delete($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->current_user->id))
+		if (!$id || !$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -126,7 +126,7 @@ class Controller_Image_comment extends \Controller_Site
 	public function action_delete_ajax($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->current_user->id))
+		if (!$id || !$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}

@@ -23,8 +23,8 @@ class Controller_Site extends Controller_Base
 	private function set_current_user()
 	{
 		$auth = Auth::instance();
-		$this->current_user = Auth::check() ? Model_Member::find()->where('id', $auth->get_member_id())->related('memberauth')->get_one() : null;
-		View::set_global('current_user', $this->current_user);
+		$this->u = Auth::check() ? Model_Member::find()->where('id', $auth->get_member_id())->related('memberauth')->get_one() : null;
+		View::set_global('u', $this->u);
 	}
 
 	/**
@@ -94,7 +94,7 @@ class Controller_Site extends Controller_Base
 	 */
 	public function action_logout()
 	{
-		if ($this->current_user->register_type == 1) Response::redirect('facebook/logout');
+		if ($this->u->register_type == 1) Response::redirect('facebook/logout');
 
 		Auth::logout();
 		Session::set_flash('message', 'ログアウトしました');

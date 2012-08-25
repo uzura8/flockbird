@@ -53,7 +53,7 @@ class Controller_Member extends Controller_Site
 		}
 		else
 		{
-			$member = $this->current_user;
+			$member = $this->u;
 		}
 
 		$this->template->title = $member->name.' さんのページ';
@@ -338,8 +338,8 @@ class Controller_Member extends Controller_Site
 		if ($val->run() && $auth->check_password())
 		{
 			$data = array();
-			$data['to_name']      = $this->current_user->name;
-			$data['to_address']   = $this->current_user->memberauth->email;
+			$data['to_name']      = $this->u->name;
+			$data['to_address']   = $this->u->memberauth->email;
 			$data['from_name']    = \Config::get('site.member_leave_mail.from_name');
 			$data['from_address'] = \Config::get('site.member_leave_mail.from_mail_address');
 			$data['subject']      = \Config::get('site.member_leave_mail.subject');
@@ -352,7 +352,7 @@ END;
 
 			try
 			{
-				$this->delete_user($this->current_user->id);
+				$this->delete_user($this->u->id);
 				Util_toolkit::sendmail($data);
 				Session::set_flash('message', '退会が完了しました。');
 				Response::redirect('site/login');

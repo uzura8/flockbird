@@ -31,14 +31,14 @@ class Controller_Admin extends \Controller_Base {
 
 	private function set_current_user()
 	{
-		$this->current_user = null;
+		$this->u = null;
 		if (\Auth::check())
 		{
 			$auth = \Auth::instance();
 			$user_id = $auth->get_user_id();
-			$this->current_user = Model_User::find()->where('id', $user_id[1])->get_one();
+			$this->u = Model_User::find()->where('id', $user_id[1])->get_one();
 		}
-		\View::set_global('current_user', $this->current_user);
+		\View::set_global('u', $this->u);
 	}
 	
 	public function action_login()
@@ -63,7 +63,7 @@ class Controller_Admin extends \Controller_Base {
 				if (\Auth::check() or $auth->login(\Input::post('email'), \Input::post('password')))
 				{
 					// credentials ok, go right in
-					\Session::set_flash('notice', 'Welcome, '.$current_user->username);
+					\Session::set_flash('notice', 'Welcome, '.$this->u->username);
 					\Response::redirect('admin');
 				}
 				else

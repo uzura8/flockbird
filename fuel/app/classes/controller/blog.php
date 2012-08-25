@@ -38,7 +38,7 @@ class Controller_Blog extends Controller_Base
 				'website' => Input::post('website'),
 				'email'   => Input::post('email'),
 				'message' => Input::post('message'),
-				'user_id' => $this->current_user->id,
+				'user_id' => $this->u->id,
 			));
 
 			// Save the post and the comment will save too

@@ -43,11 +43,11 @@ function site_header_keywords($keywords = '')
 	return $keywords.','.PRJ_HEADER_KEYWORDS_DEFAULT;
 }
 
-function site_get_screen_name($current_user)
+function site_get_screen_name($u)
 {
-	if (!$current_user) return Config::get('site.term.guest');
+	if (!$u) return Config::get('site.term.guest');
 
-	return (!empty($current_user->name)) ? $current_user->name : 'メンバーID:'.$current_user->id;
+	return (!empty($u->name)) ? $u->name : 'メンバーID:'.$u->id;
 }
 
 function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = false)

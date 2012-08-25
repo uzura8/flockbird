@@ -11,7 +11,7 @@
 	</div>
 </div>
 
-<?php if (isset($current_user) && $current_user->id == $note->member_id): ?>
+<?php if (isset($u) && $u->id == $note->member_id): ?>
 <div class="btn-group">
 	<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-edit"></i> edit <span class="caret"/></button>
 	<ul class="dropdown-menu">

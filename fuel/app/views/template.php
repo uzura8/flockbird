@@ -46,7 +46,7 @@
 <?php if (Auth::check()): ?>
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<?php echo img($current_user->get_image(), '20x20'); ?> <?php echo site_get_screen_name($current_user); ?>
+					<?php echo img($u->get_image(), '20x20'); ?> <?php echo site_get_screen_name($u); ?>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
@@ -78,7 +78,7 @@
 <?php else: ?>
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($current_user); ?>
+					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
@@ -170,9 +170,9 @@
 				<div class="profile_img_box">
 					<a class="account-summary account-summary-small" data-nav="profile" href="<?php echo Uri::create('member/profile'); ?>">
 					<div class="content">
-					<div class="account-group js-mini-current-user" data-screen-name="<?php echo site_get_screen_name($current_user); ?>">
-					<?php echo img($current_user->get_image()); ?>
-					<div class="main"><b class="fullname"><?php echo site_get_screen_name($current_user); ?></b></div>
+					<div class="account-group js-mini-current-user" data-screen-name="<?php echo site_get_screen_name($u); ?>">
+					<?php echo img($u->get_image()); ?>
+					<div class="main"><b class="fullname"><?php echo site_get_screen_name($u); ?></b></div>
 					<small class="metadata">プロフィールを見る</small>
 					</div>
 					</div>

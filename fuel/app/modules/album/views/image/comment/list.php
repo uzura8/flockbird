@@ -18,7 +18,7 @@
 			<small><?php echo site_get_time($comment->created_at); ?></small>
 		</div>
 	</div>
-<?php if (isset($current_user) && in_array($current_user->id, array($comment->member_id, $album_image->album->member_id))): ?>
+<?php if (isset($u) && in_array($u->id, array($comment->member_id, $album_image->album->member_id))): ?>
 	<a class="btn btn-mini boxBtn btn_album_image_comment_delete" id="btn_album_image_comment_delete_<?php echo $comment->id ?>" href="javascript:void(0);"><i class="icon-trash"></i></a>
 <?php endif ; ?>
 </div>

@@ -28,7 +28,7 @@ class Controller_Comment extends \Controller_Site
 			$comment = new Model_NoteComment(array(
 				'body' => \Input::post('body'),
 				'note_id' => $note_id,
-				'member_id' => $this->current_user->id,
+				'member_id' => $this->u->id,
 			));
 
 			// Save the post and the comment will save too
@@ -60,7 +60,7 @@ class Controller_Comment extends \Controller_Site
 	{
 		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
 
-		if (!$comment = Model_NoteComment::check_authority($id, $this->current_user->id))
+		if (!$comment = Model_NoteComment::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}

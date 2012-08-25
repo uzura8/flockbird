@@ -21,7 +21,7 @@ class Controller_Member_profile extends Controller_Member
 	public function action_index()
 	{
 
-		$member = $this->current_user;
+		$member = $this->u;
 		$this->template->title = $member->name.' さんのページ';
 		$this->template->header_title = site_title();
 		$this->template->breadcrumbs = array(
@@ -67,12 +67,12 @@ class Controller_Member_profile extends Controller_Member
 		try
 		{
 			DB::start_transaction();
-			$file_id = Site_util::upload('m', $this->current_user->id, $this->current_user->id, $this->current_user->get_image(), $this->current_user->file_id);
+			$file_id = Site_util::upload('m', $this->u->id, $this->u->id, $this->u->get_image(), $this->u->file_id);
 
-			$this->current_user->file_id = $file_id;
-			$filesize_total = Model_File::calc_filesize_total($this->current_user->id);
-			if ($filesize_total) $this->current_user->filesize_total = $filesize_total;
-			$this->current_user->save();
+			$this->u->file_id = $file_id;
+			$filesize_total = Model_File::calc_filesize_total($this->u->id);
+			if ($filesize_total) $this->u->filesize_total = $filesize_total;
+			$this->u->save();
 
 			DB::commit_transaction();
 

@@ -233,7 +233,7 @@ class UploadHandler extends \JqueryFileUpload
 	public function delete($album_id)
 	{
 		$album_image_id = (int)\Input::get('id');
-		if (!$album_image = Model_AlbumImage::check_authority($album_image_id, $this->current_user->id))
+		if (!$album_image = Model_AlbumImage::check_authority($album_image_id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}

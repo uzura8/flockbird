@@ -67,11 +67,11 @@ class Controller_Note extends \Controller_Site
 			$this->template->title => '',
 		);
 
-		$list = Model_Note::find()->where('member_id', $this->current_user->id)->order_by('created_at', 'desc')->get();
+		$list = Model_Note::find()->where('member_id', $this->u->id)->order_by('created_at', 'desc')->get();
 		// paging 未実装, limit数:  Config::get('note.article_list.limit')
 
 		$this->template->subtitle = \View::forge('_parts/member_subtitle');
-		$this->template->content = \View::forge('_parts/list', array('member' => $this->current_user, 'list' => $list));
+		$this->template->content = \View::forge('_parts/list', array('member' => $this->u, 'list' => $list));
 	}
 
 	/**
@@ -116,7 +116,7 @@ class Controller_Note extends \Controller_Site
 		$this->template->header_title = site_title(mb_strimwidth($this->template->title, 0, 50, '...'));
 
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		if (\Auth::check() && $note->member_id == $this->current_user->id)
+		if (\Auth::check() && $note->member_id == $this->u->id)
 		{
 			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
 			$key = '自分の'.\Config::get('site.term.note').'一覧';
@@ -155,7 +155,7 @@ class Controller_Note extends \Controller_Site
 				$note = Model_Note::forge(array(
 					'title' => $post['title'],
 					'body'  => $post['body'],
-					'member_id' => $this->current_user->id,
+					'member_id' => $this->u->id,
 				));
 
 				if ($note and $note->save())
@@ -195,7 +195,7 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_edit($id = null)
 	{
-		if (!$note = Model_Note::check_authority($id, $this->current_user->id))
+		if (!$note = Model_Note::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -260,7 +260,7 @@ class Controller_Note extends \Controller_Site
 	{
 		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
 
-		if (!$note = Model_Note::check_authority($id, $this->current_user->id))
+		if (!$note = Model_Note::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}
