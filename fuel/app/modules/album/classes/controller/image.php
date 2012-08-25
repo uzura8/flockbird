@@ -28,7 +28,25 @@ class Controller_Image extends \Controller_Site
 
 		$this->template->title = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
 		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
+
+		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
+		if (\Auth::check() && $album_image->album->member_id == $this->current_user->id)
+		{
+			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
+			$key = '自分の'.\Config::get('album.term.album').'一覧';
+			$this->template->breadcrumbs[$key] =  '/member/album/';
+			$key = $album_image->album->name;
+			$this->template->breadcrumbs[$key] =  '/album/detail/'.$album_image->album_id;
+		}
+		else
+		{
+			$this->template->breadcrumbs[\Config::get('album.term.album')] = '/album/';
+			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
+			$this->template->breadcrumbs[$key] =  '/album/list/'.$album->member->id;
+			$key = $album_image->album->name;
+			$this->template->breadcrumbs[$key] =  '/album/detail/'.$album_image->album_id;
+		}
+		$this->template->breadcrumbs[$this->template->title] = '';
 
 		$this->template->content = \View::forge('image/index.php', array('album_image' => $album_image, 'comments' => $comments));
 	}
