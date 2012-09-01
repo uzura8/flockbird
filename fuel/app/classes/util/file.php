@@ -209,13 +209,15 @@ class Util_file
 		return false;
 	}
 
-	public static function chmod_recursive($path, $mode = 0777)
+	public static function chmod_recursive($path, $mode = 0777, $is_directory_only = true)
 	{
 		$d = dir($path);
 		$base_path = $path;
 		while (false !== ($entry = $d->read()))
 		{
 			if ($entry == '.' || $entry == '..') continue;
+			if ($is_directory_only && !is_dir($entry)) continue;
+
 			$path = sprintf('%s/%s', $base_path, $entry);
 			chmod($path, $mode);
 

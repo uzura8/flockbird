@@ -10,7 +10,7 @@
 <?php $i = 0; ?>
 <?php foreach ($album_images as $album_image): ?>
 		<div class="item<?php if (!$i): ?> active<?php endif; ?>">
-			<?php echo img($album_image->get_image(), '600x600', '', true); ?>
+			<?php echo img($album_image->file->name, '600x600', '', true); ?>
 <?php if (!empty($album_image->name)): ?>
 			<div class="carousel-caption">
 				<p><?php echo $album_image->name; ?></p>
@@ -53,7 +53,7 @@
 <dl>
 <?php $i = 0; ?>
 <?php foreach ($album_images as $album_image): ?>
-	<dt><?php echo img($album_image->get_image(), '200x200', 'album/image/detail/'.$album_image->id); ?></dt>
+	<dt><?php echo img($album_image->file->name, '200x200', 'album/image/detail/'.$album_image->id); ?></dt>
 	<dd>
 <?php if (!empty($album_image->name)): ?>
 				<?php echo $album_image->name; ?>

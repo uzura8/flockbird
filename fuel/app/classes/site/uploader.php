@@ -103,7 +103,7 @@ class Site_uploader
 		{
 			throw new Exception('File not found.');
 		}
-		if (!file_exists($this->saved_raw_image_dir_path) && $target_path = Util_file::check_exists_file_path($this->saved_raw_image_dir_path))
+		if (!file_exists($this->saved_raw_image_dir_path) && $target_path = Util_file::check_exists_file_path($this->saved_raw_image_dir_path, 4))
 		{
 			Util_file::make_dir_recursive($this->saved_raw_image_dir_path);
 			Util_file::chmod_recursive($target_path, 0777);
@@ -124,7 +124,7 @@ class Site_uploader
 			if ($size == $this->saved_raw_image_dir_name) continue;
 
 			$dir = sprintf('%s/%s', $this->file_path, $size);
-			if (!file_exists($dir) && $target_path = Util_file::check_exists_file_path($dir))
+			if (!file_exists($dir) && $target_path = Util_file::check_exists_file_path($dir, 4))
 			{
 				Util_file::make_dir_recursive($dir);
 				Util_file::chmod_recursive($target_path, 0777);
