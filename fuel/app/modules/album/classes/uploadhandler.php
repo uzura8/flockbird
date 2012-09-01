@@ -24,27 +24,27 @@ class UploadHandler extends \JqueryFileUpload
 		$album_images = Model_AlbumImage::find()->where('album_id', $album_id)->related('album')->related('file')->order_by('created_at')->get();
 		foreach ($album_images as $album_image)
 		{
-			$info[] = $this->get_file_object($album_image->file->name, $album_image->id);
+			$info[] = $this->get_file_object($album_image->file->name, $album_image->id, $album_image->file->original_filename);
 		}
 
 		return $info;
 	}
 
-	protected function get_file_object($file_name, $album_image_id = 0)
+	protected function get_file_object($file_name, $album_image_id = 0, $original_filename = '')
 	{
 		$file_path = $this->options['upload_dir'].$file_name;
 		if (is_file($file_path) && $file_name[0] !== '.')
 		{
 			$file = new \stdClass();
-			$file->name = $file_name;
+			$file->name = ($original_filename)? $original_filename : $file_name;
 			$file->size = filesize($file_path);
-			$file->url = $this->options['upload_url'].rawurlencode($file->name);
+			$file->url = $this->options['upload_url'].rawurlencode($file_name);
 
 			foreach($this->options['image_versions'] as $version => $options)
 			{
 				if (is_file($options['upload_dir'].$file_name))
 				{
-					$file->{$version.'_url'} = $options['upload_url'].rawurlencode($file->name);
+					$file->{$version.'_url'} = $options['upload_url'].rawurlencode($file_name);
 				}
 			}
 
@@ -66,7 +66,7 @@ class UploadHandler extends \JqueryFileUpload
 		}
 	}
 
-	protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null, $album_image_id = 0)
+	protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null, $album_image_id = 0, $original_filename = '')
 	{
 		$file = new \stdClass();
 		$file->name = $this->trim_file_name($name, $type, $index);
@@ -132,6 +132,9 @@ class UploadHandler extends \JqueryFileUpload
 				unlink($file_path);
 				$file->error = 'abort';
 			}
+
+			if ($original_filename) $file->name = $original_filename;
+
 			$file->size = $file_size;
 			$file->album_image_id = $album_image_id;
 			$this->set_file_delete_url($file);
@@ -147,7 +150,6 @@ class UploadHandler extends \JqueryFileUpload
 		{
 			return $this->delete();
 		}
-
 		$upload = \Input::file($this->options['param_name'], null);
 
 		$HTTP_X_FILE_NAME = \Input::server('HTTP_X_FILE_NAME');
@@ -163,41 +165,7 @@ class UploadHandler extends \JqueryFileUpload
 				{
 					continue;
 				}
-				$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name'][$index]), $extention, $prefix);
-				$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size'][$index]);
-				$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type'][$index]);
-
-				// album_image の保存
-				$album_image = Model_AlbumImage::forge(array(
-					'album_id' => (int)$album_id,
-					'file_id'  => 0,
-					'shot_at'  => date('Y-m-d H:i:s'),
-				));
-				$album_image->save();
-
-				$result = $this->handle_file_upload(
-					isset($upload['tmp_name'][$index]) ? $upload['tmp_name'][$index] : null,
-					$filename,
-					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'][$index])? $upload['size'][$index] : null),
-					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'][$index])? $upload['type'][$index] : null),
-					isset($upload['error']) ? $upload['error'][$index] : null,
-					$index,
-					$album_image->id
-				);
-				$info[] = $result;
-
-				// file の保存
-				$model_file = new \Model_File;
-				$model_file->name = $result->name;
-				$model_file->filesize = $filesize;
-				$model_file->type = $file_type;
-				//$model_file->original_filename = $filename;
-				if ($member_id) $model_file->member_id = $member_id;
-				$model_file->save();
-
-				// album_image の保存
-				$album_image->file_id = $model_file->id;
-				$album_image->save();
+				$info[] = $this->save_file($upload, $album_id, $member_id, $extention, $prefix, $index);
 			}
 		}
 		elseif ($upload || isset($HTTP_X_FILE_NAME))
@@ -206,43 +174,7 @@ class UploadHandler extends \JqueryFileUpload
 			{
 				return;
 			}
-			$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name']), $prefix);
-			$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size']);
-			$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type']);
-
-			// album_image の保存
-			$album_image = Model_AlbumImage::forge(array(
-				'album_id' => (int)$album_id,
-				'file_id'  => 0,
-				'shot_at'  => date('Y-m-d H:i:s'),
-			));
-			$album_image->save();
-
-			// param_name is a single object identifier like "file",
-			// $_FILES is a one-dimensional array:
-			$result = $this->handle_file_upload(
-				isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
-				$filename,
-				\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'])? $upload['size'] : null),
-				\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'])? $upload['type'] : null),
-				isset($upload['error']) ? $upload['error'] : null,
-				null,
-				$album_image->id
-			);
-			$info[] = $result;
-
-			// file の保存
-			$model_file = new \Model_File;
-			$model_file->name = $result->name;
-			$model_file->filesize = $filesize;
-			$model_file->type = $file_type;
-			//$model_file->original_filename = $filename;
-			if ($member_id) $model_file->member_id = $member_id;
-			$model_file->save();
-
-			// album_image の保存
-			$album_image->file_id = $model_file->id;
-			$album_image->save();
+			$info[] = $this->save_file($upload, $album_id, $member_id, $extention, $prefix);
 		}
 
 		header('Vary: Accept');
@@ -284,5 +216,70 @@ class UploadHandler extends \JqueryFileUpload
 		$album_image->delete();
 
 		return json_encode($success);
+	}
+
+	protected function save_file($upload, $album_id, $member_id, $extention = '', $prefix = '', $index = null)
+	{
+		// album_image の保存
+		$album_image = Model_AlbumImage::forge(array(
+			'album_id' => (int)$album_id,
+			'file_id'  => 0,
+			'shot_at'  => date('Y-m-d H:i:s'),
+		));
+		$album_image->save();
+
+		// param_name is a single object identifier like "file",
+		// $_FILES is a one-dimensional array:
+		if ($index)
+		{
+			$original_filename = $upload['name'][$index];
+			$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name'][$index]), $extention, $prefix);
+			$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size'][$index]);
+			$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type'][$index]);
+
+			$result = $this->handle_file_upload(
+				isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
+				$filename,
+				\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'])? $upload['size'] : null),
+				\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'])? $upload['type'] : null),
+				isset($upload['error']) ? $upload['error'] : null,
+				null,
+				$album_image->id,
+				$original_filename
+			);
+		}
+		else
+		{
+			$original_filename = $upload['name'];
+			$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name']), $extention, $prefix);
+			$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size']);
+			$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type']);
+
+			$result = $this->handle_file_upload(
+				isset($upload['tmp_name'][$index]) ? $upload['tmp_name'][$index] : null,
+				$filename,
+				\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'][$index])? $upload['size'][$index] : null),
+				\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'][$index])? $upload['type'][$index] : null),
+				isset($upload['error']) ? $upload['error'][$index] : null,
+				$index,
+				$album_image->id,
+				$original_filename
+			);
+		}
+
+		// file の保存
+		$model_file = new \Model_File;
+		$model_file->name = $filename;
+		$model_file->filesize = $filesize;
+		$model_file->type = $file_type;
+		$model_file->original_filename = $original_filename;
+		if ($member_id) $model_file->member_id = $member_id;
+		$model_file->save();
+
+		// album_image の保存
+		$album_image->file_id = $model_file->id;
+		$album_image->save();
+
+		return $result;
 	}
 }

@@ -476,37 +476,29 @@ class Controller_Album extends \Controller_Site
 		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_util::get_middle_dir($album_id));
 		$base_path_full = PRJ_PUBLIC_DIR.'/'.$base_path;
 		$base_url = \Uri::create($base_path);
-		$sizes = \Config::get('site.upload_files.img.ai.sizes');
 
 		$options = array();
 		$options['script_url'] = \Uri::create('album/upload_images/'.$album_id);
-		$options['upload_base_dir'] = $base_path_full;
-		$options['upload_raw_dirname'] = '/raw/';
 		$options['upload_dir'] = $base_path_full.'/raw/';
-		$options['upload_base_url'] = $base_url;
 		$options['upload_url'] = $base_url.'/raw/';
-		$options['sizes'] = $sizes;
-		$options['image_versions'] = array(
-			'thumbnail' => array(
-				'upload_dir' => $base_path_full.'/80x80/',
-				'upload_url' => $base_url.'/80x80/',
-				'max_width' => 80,
-				'max_height' => 80
-			),
-			'200x200' => array(
-				'upload_dir' => $base_path_full.'/200x200/',
-				'upload_url' => $base_url.'/200x200/',
-				'max_width' => 200,
-				'max_height' => 200
-			),
-			'600x600' => array(
-				'upload_dir' => $base_path_full.'/600x600/',
-				'upload_url' => $base_url.'/600x600/',
-				'max_width' => 600,
-				'max_height' => 600
-			),
-		);
 
+		$config_upload_files = \Config::get('site.upload_files.img.ai');
+		$sizes = $config_upload_files['sizes'];
+		$thumbnail_size = $config_upload_files['thumbnail_size'];
+		$options['image_versions'] = array();
+		foreach ($sizes as $size)
+		{
+			if ($size == 'raw') continue;
+
+			$key = ($size == $thumbnail_size)? 'thumbnail' : $size;
+			list($width, $height) = explode('x', $size);
+			$options['image_versions'][$key] = array(
+				'upload_dir' => sprintf('%s/%s/', $base_path_full, $size),
+				'upload_url' => sprintf('%s/%s/', $base_url, $size),
+				'max_width' => $width,
+				'max_height' => $height,
+			);
+		}
 		$upload_handler = new UploadHandler($options);
 
 		$response = \Request::active()->controller_instance->response;
@@ -535,76 +527,6 @@ class Controller_Album extends \Controller_Site
 				else
 				{
 					$body = $upload_handler->post($album_id, $this->u->id);
-					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
-					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))
-					{
-						$response->set_header('Content-type', 'application/json');
-					}
-					else
-					{
-						$response->set_header('Content-type', 'text/plain');
-					}
-				}
-				break;
-			case 'DELETE':
-				$body = $upload_handler->delete($album_id);
-				$response->set_header('Content-type', 'application/json');
-				break;
-			default:
-				header('HTTP/1.1 405 Method Not Allowed');
-		}
-
-		return $response->body($body);
-	}
-
-	/**
-	 * Album upload images
-	 * 
-	 * @access  public
-	 * @return  Response
-	 */
-	public function action_upload_images_old($album_id = null)
-	{
-		$album_id = (int)$album_id;
-		if (!$album_id || !$album = Model_Album::find($album_id))
-		{
-			throw new \HttpNotFoundException;
-		}
-		//\Util_security::check_csrf();
-
-		$options = array();
-		$options['script_url'] = \Uri::create('album/upload_images/'.$album_id);
-		$options['upload_dir'] = PRJ_UPLOAD_DIR.'/img/album/original/';
-		$options['upload_url'] = \Uri::create('upload/img/album/original/');
-		$options['image_versions'] = \Config::get('album.image.image_versions');
-		$upload_handler = new UploadHandler($options);
-
-		$response = \Request::active()->controller_instance->response;
-		$response->set_header('Pragma', 'no-cache');
-		$response->set_header('Cache-Control', 'no-store, no-cache, must-revalidate');
-		$response->set_header('Content-Disposition', 'inline; filename="files.json"');
-		$response->set_header('X-Content-Type-Options', 'nosniff');
-		$response->set_header('Access-Control-Allow-Origin', '*');
-		$response->set_header('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
-		$response->set_header('Access-Control-Allow-$response->set_headers', 'X-File-Name, X-File-Type, X-File-Size');
-
-		$body = '';
-		switch (\Input::method()) {
-			case 'OPTIONS':
-				break;
-			case 'HEAD':
-			case 'GET':
-				$body = $upload_handler->get($album_id);
-				$response->set_header('Content-type', 'application/json');
-				break;
-			case 'POST':
-				$_method = \Input::post('_method');
-				if (isset($_method) && $_method === 'DELETE') {
-					$body = $upload_handler->delete();
-				}
-				else
-				{
-					$body = $upload_handler->post($album_id);
 					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
 					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))
 					{

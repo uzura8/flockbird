@@ -14,9 +14,10 @@ class Util_string
 		return $result;
 	}
 
-	public static function get_random($prefix = '', $surfix = '')
+	public static function get_random($prefix = '', $surfix = '', $is_seccure = true)
 	{
-		return sha1($prefix.rand(11111, 99999).$surfix);
+		$str = $prefix.rand(11111, 99999).$surfix;
+		return ($is_seccure)? sha1($str) : md5($str);;
 	}
 
 	public static function get_unique_id()

@@ -150,9 +150,9 @@ class Util_file
 		return true;
 	}
 
-	public static function make_filename($original_filename, $extension = '', $prefix = '', $with_extension = true, $delimitter = '_')
+	public static function make_filename($original_filename, $extension = '', $prefix = '', $with_extension = true, $delimitter = '_', $is_seccure = false)
 	{
-		$filename = Util_string::get_random($original_filename, $extension);
+		$filename = Util_string::get_random($original_filename, $extension, $is_seccure);
 		if ($prefix) $prefix .= $delimitter;
 		if ($with_extension) $filename .= '.'.$extension;
 
