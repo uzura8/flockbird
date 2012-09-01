@@ -19,6 +19,7 @@
  * This will allow you to upgrade fuel without losing your custom config.
  */
 
+$PRJ_IMAGE_IMGMAGICK_PATH = (defined('PRJ_IMAGE_IMGMAGICK_PATH'))? PRJ_IMAGE_IMGMAGICK_PATH : null;
 
 return array(
 	/**
@@ -55,7 +56,7 @@ return array(
 	 * The install location of the imagemagick executables.
 	 */
 	//'imagemagick_dir' => '/usr/bin/',
-	'imagemagick_dir' => PRJ_IMAGE_IMGMAGICK_PATH,
+	'imagemagick_dir' => $PRJ_IMAGE_IMGMAGICK_PATH,
 
 	/**
 	 * Temporary directory to store image files in that are being edited.

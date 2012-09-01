@@ -69,4 +69,18 @@ class Site_util
 
 		return $sizes;
 	}
+
+	public function check_max_size_and_resize($file, $max_size, $width, $height, $resize_type = 'relative')
+	{
+		$sizes = Image::sizes($file);
+
+		$max = self::convert_sizes($max_size);
+		if ($width > $max['width'] || $height > $max['height'])
+		{
+			Util_file::resize($file, $file, $max['width'], $max['width'], $resize_type);
+			return filesize($file);
+		}
+
+		return false;
+	}
 }

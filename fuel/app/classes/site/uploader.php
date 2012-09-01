@@ -86,14 +86,7 @@ class Site_uploader
 		$file = $this->saved_raw_image_dir_path.$filename;
 		$sizes = Image::sizes($file);
 
-		$max = Site_util::convert_sizes($this->max_size);
-		if ($sizes->widht > $max['width'] || $sizes->height > $max['height'])
-		{
-			Util_file::resize($file, $file, $max['width'], $max['width'], $this->resize_type);
-			return filesize($file);
-		}
-
-		return false;
+		return Site_util::check_max_size_and_resize($file, $this->max_size, $sizes->width, $sizes->height, $this->resize_type);
 	}
 
 	private function save_raw_file($original_file_dir, $original_filename, $new_filename)

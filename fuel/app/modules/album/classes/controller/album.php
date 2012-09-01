@@ -526,7 +526,7 @@ class Controller_Album extends \Controller_Site
 				}
 				else
 				{
-					$body = $upload_handler->post($album_id, $this->u->id);
+					$body = $upload_handler->post($album_id, $this->u->id, $config_upload_files['max_size']);
 					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
 					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))
 					{
