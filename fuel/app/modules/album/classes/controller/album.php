@@ -481,6 +481,8 @@ class Controller_Album extends \Controller_Site
 		$options['script_url'] = \Uri::create('album/upload_images/'.$album_id);
 		$options['upload_dir'] = $base_path_full.'/raw/';
 		$options['upload_url'] = $base_url.'/raw/';
+		$options['max_file_size'] = PRJ_UPLOAD_MAX_FILESIZE;
+		$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
 
 		$config_upload_files = \Config::get('site.upload_files.img.ai');
 		$sizes = $config_upload_files['sizes'];

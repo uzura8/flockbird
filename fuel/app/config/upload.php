@@ -32,7 +32,7 @@ return array(
 	*/
 
 	// maximum size of the uploaded file in bytes. 0 = no maximum
-	'max_size'			=> PRJ_UPLOAD_FILE_MAX_SIZE,
+	'max_size'			=> PRJ_UPLOAD_MAX_FILESIZE,
 
 	// list of file extensions that a user is allowed to upload
 	'ext_whitelist'		=> array('jpg', 'jpeg', 'gif', 'png'),
