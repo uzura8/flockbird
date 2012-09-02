@@ -180,6 +180,8 @@ class UploadHandler extends \JqueryFileUpload
 			$info[] = $this->save_file($upload, $album_id, $member_id, $extention, $prefix, $max_size);
 		}
 
+		\Model_Member::recalculate_filesize_total($member_id);
+
 		header('Vary: Accept');
 		$json = json_encode($info);
 		$redirect = \Input::post(stripslashes('redirect'), null);
@@ -223,10 +225,10 @@ class UploadHandler extends \JqueryFileUpload
 
 	protected function save_file($upload, $album_id, $member_id, $extention = '', $prefix = '', $max_size = 0, $index = null)
 	{
-		\DB::start_transaction();
-
 		try
 		{
+			\DB::start_transaction();
+
 			// album_image の保存
 			$album_image = Model_AlbumImage::forge(array(
 				'album_id' => (int)$album_id,
@@ -294,14 +296,6 @@ class UploadHandler extends \JqueryFileUpload
 		catch(Exception $e)
 		{
 			\DB::rollback_transaction();
-		}
-
-		$filesize_total = \Model_File::calc_filesize_total($member_id);
-		if ($filesize_total)
-		{
-			$member = \Model_Member::find()->where('id', $member_id)->get_one();
-			$member->filesize_total = $filesize_total;
-			$member->save();
 		}
 
 		return $result;

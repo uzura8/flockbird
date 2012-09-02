@@ -70,9 +70,8 @@ class Controller_Member_profile extends Controller_Member
 			$file_id = Site_util::upload('m', $this->u->id, $this->u->id, $this->u->get_image(), $this->u->file_id);
 
 			$this->u->file_id = $file_id;
-			$filesize_total = Model_File::calc_filesize_total($this->u->id);
-			if ($filesize_total) $this->u->filesize_total = $filesize_total;
 			$this->u->save();
+			Model_Member::recalculate_filesize_total($this->u->id);
 
 			DB::commit_transaction();
 
@@ -80,6 +79,7 @@ class Controller_Member_profile extends Controller_Member
 		}
 		catch(Exception $e)
 		{
+			\DB::rollback_transaction();
 			Session::set_flash('error', $e->getMessage());
 		}
 
