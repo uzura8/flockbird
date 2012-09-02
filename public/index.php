@@ -5,7 +5,7 @@
 define('PRJ_BASEPATH', realpath(__DIR__.'/../').DIRECTORY_SEPARATOR);
 
 // Load original setting file.
-require PRJ_BASEPATH.'config.php';
+require PRJ_BASEPATH.'fuel/app/config.inc.php';
 
 /**
  * Set error reporting and display errors settings.  You will want to change these when in production.

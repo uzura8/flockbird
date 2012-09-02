@@ -11,9 +11,7 @@ define('PRJ_ENVIRONMENT', 'DEVELOPMENT');
 
 // BASE_URL
 define('PRJ_HOSTNAME', 'torilife.info');
-$PRJ_BASE_URL = sprintf('http://%s/', PRJ_HOSTNAME); $DEBUG_MODE = 0;
-if (PRJ_ENVIRONMENT == 'STAGE') $PRJ_BASE_URL = str_replace('http://', 'http://stg.', $PRJ_BASE_URL);
-define('PRJ_BASE_URL', $PRJ_BASE_URL);
+define('PRJ_BASE_PATH', '/');
 
 // DBサーバ接続設定
 $GLOBALS['DSN']['development'] = array(
@@ -34,15 +32,9 @@ define('PRJ_PROFILING', false);
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
 
-// 公開ディレクトリ
-define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public');
-
 // ファイルをアップロードするディレクトリ
 define('PRJ_UPLOAD_DIRNAME', 'media');
-define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.'/'.PRJ_UPLOAD_DIRNAME);
-
-// アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum)
-define('PRJ_UPLOAD_FILE_MAX_SIZE', 0);
+//define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.'/'.PRJ_UPLOAD_DIRNAME);
 
 
 // サイト名
@@ -67,6 +59,14 @@ define('PRJ_FACEBOOK_APP_ID', '');
 define('PRJ_FACEBOOK_APP_SECRET', '');
 
 
+// アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum) K/M/G 使用可能
+// 未指定の場合は php.ini の値
+// define('PRJ_UPLOAD_MAX_FILESIZE', '1M');
+
+// 一度にアップロードできるファイル数
+// 未指定の場合は php.ini の値
+// define('PRJ_MAX_FILE_UPLOADS', 20);
+
 // 画像ライブラリの指定 ( gd / imagemagick )
 define('PRJ_IMAGE_DRIVER', 'gd');
 
@@ -75,23 +75,3 @@ define('PRJ_IMAGE_DRIVER', 'gd');
 
 // 画像変換後のQUALITY値
 define('PRJ_IMAGE_OUTPUT_IMAGE_QUALITY', 100);
-
-
-// error level 設定
-switch (PRJ_ENVIRONMENT)
-{
-	case 'DEVELOPMENT':
-		define('PRJ_ERROR_REPORTING', E_ALL);
-		define('PRJ_DISPLAY_ERRORS', 1);
-		break;
-	case 'TEST':
-		define('PRJ_ERROR_REPORTING', E_ALL ^ E_NOTICE);
-		define('PRJ_DISPLAY_ERRORS', 1);
-		break;
-	case 'STAGE':
-	case 'PRODUCTION':
-	default:
-		define('PRJ_ERROR_REPORTING', 0);
-		define('PRJ_DISPLAY_ERRORS', 0);
-		break;
-}
