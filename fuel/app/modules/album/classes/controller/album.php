@@ -159,8 +159,6 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->related('file')->order_by('created_at')->get();
-
 		$this->template->title = trim($album->name);
 		$this->template->header_title = site_title(mb_strimwidth($this->template->title, 0, 50, '...'));
 
@@ -173,7 +171,7 @@ class Controller_Album extends \Controller_Site
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_header = \View::forge('_parts/manage_images_header');
 		$this->template->post_footer = \View::forge('_parts/manage_images_footer');
-		$this->template->content = \View::forge('manage_images', array('id' => $id, 'album' => $album, 'album_images' => $album_images));
+		$this->template->content = \View::forge('manage_images', array('id' => $id, 'album' => $album));
 		//$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
 	}
 

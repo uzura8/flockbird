@@ -18,16 +18,25 @@ class UploadHandler extends \JqueryFileUpload
 		return json_encode($info);
 	}
 
-	protected function get_file_objects($album_id)
+	protected function get_file_objects($album_id = 0)
 	{
-		$info = array();
-		$album_images = Model_AlbumImage::find()->where('album_id', $album_id)->related('album')->related('file')->order_by('created_at')->get();
-		foreach ($album_images as $album_image)
+		if ($album_id)
 		{
-			$info[] = $this->get_file_object($album_image->file->name, $album_image->id, $album_image->file->original_filename);
+			$info = array();
+			$album_images = Model_AlbumImage::find()->where('album_id', $album_id)->related('album')->related('file')->order_by('created_at')->get();
+			foreach ($album_images as $album_image)
+			{
+				$info[] = $this->get_file_object($album_image->file->name, $album_image->id, $album_image->file->original_filename);
+			}
+
+			return $info;
 		}
 
-		return $info;
+		return array_values(array_filter(array_map(
+				array($this, 'get_file_object'),
+				scandir($this->options['upload_dir'])
+		)));
+
 	}
 
 	protected function get_file_object($file_name, $album_image_id = 0, $original_filename = '')
@@ -59,7 +68,8 @@ class UploadHandler extends \JqueryFileUpload
 
 	protected function set_file_delete_url($file)
 	{
-		$file->delete_url = $this->options['script_url'].'?id='.rawurlencode($file->album_image_id);
+		$file->delete_url = $this->options['script_url'];
+		if (isset($file->album_image_id)) $file->delete_url .= '?id='.rawurlencode($file->album_image_id);
 		$file->delete_type = $this->options['delete_type'];
 		if ($file->delete_type !== 'DELETE') {
 			$file->delete_url .= '&_method=DELETE';
@@ -278,6 +288,8 @@ class UploadHandler extends \JqueryFileUpload
 				);
 			}
 
+			if (isset($result->error)) throw new \Exception($result->error);
+
 			// file の保存
 			$model_file = new \Model_File;
 			$model_file->name = $filename;
@@ -293,9 +305,10 @@ class UploadHandler extends \JqueryFileUpload
 
 			\DB::commit_transaction();
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			\DB::rollback_transaction();
+			$result->name = $original_filename;
 		}
 
 		return $result;
