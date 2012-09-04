@@ -8,12 +8,14 @@ class Site_uploader
 	private $tmp_dir_path = '';
 	private $saved_raw_image_dir_name = 'raw';
 	private $saved_raw_image_dir_path = '';
-	private $sizes = array();
-	private $old_filename = '';
-	private $max_size = 0;
-	private $resize = 0;
-	private $resize_type = 'relative';
-	public  $new_filename = '';
+	private $sizes         = array();
+	private $old_filename  = '';
+	private $max_size      = 0;
+	private $resize        = 0;
+	private $resize_type   = 'relative';
+	private $max_file_size = null;
+	private $error         = '';
+	public  $new_filename  = '';
 
 	public function __construct($options = array())
 	{
@@ -31,17 +33,15 @@ class Site_uploader
 
 	public function validate()
 	{
-		$result = true;
-		if (count(Upload::get_files()) != 1) $result = false;
-		if (!Upload::is_valid()) $result = false;
-
-		if (!$result)
+		if (!Upload::is_valid())
 		{
-			$errors = \Upload::get_errors();
-			if (!empty($errors[0]['errors'][0]['message'])) $this->error = $result[0]['errors'][0]['message'];
+			$errors = Upload::get_errors();
+			if (!empty($errors[0]['errors'][0]['message']))
+			{
+				throw new Exception($errors[0]['errors'][0]['message']);
+			}
 		}
-
-		return $result;
+		if (count(Upload::get_files()) != 1) throw new Exception('File upload error.');
 	}
 
 	public function upload($sizes = array(), $old_image = '')
@@ -51,8 +51,7 @@ class Site_uploader
 			'prefix' => $this->prefix,
 		);
 		Upload::process($options);
-
-		if (!$this->validate()) throw new Exception('Validation error.');
+		$this->validate();
 
 		Upload::save(0);
 		$file = Upload::get_files(0);

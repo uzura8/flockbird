@@ -402,7 +402,7 @@ class Controller_Album extends \Controller_Site
 
 			\Session::set_flash('message', '写真を投稿しました。');
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			\DB::rollback_transaction();
 			\Session::set_flash('error', $e->getMessage());
@@ -421,10 +421,11 @@ class Controller_Album extends \Controller_Site
 			$config = array(
 				'base_path' => sprintf('img/m/%d', Site_util::get_middle_dir($this->u->id)),
 				'prefix'    => sprintf('m_%d_', $this->u->id),
-				'sizes'     => Config::get('site.upload_files.img.ai.sizes'),
+				'sizes'     => \Config::get('site.upload_files.img.ai.sizes'),
+				'max_file_size' => PRJ_UPLOAD_MAX_FILESIZE,
 			);
 			if ($this->u->get_image()) $config['old_filename'] = $this->u->get_image();
-			$uploader = new Site_uploader($config);
+			$uploader = new \Site_uploader($config);
 			$uploaded_file = $uploader->upload();
 
 			\DB::start_transaction();
@@ -444,7 +445,7 @@ class Controller_Album extends \Controller_Site
 
 			\Session::set_flash('message', '写真を更新しました。');
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			\DB::rollback_transaction();
 			\Session::set_flash('error', $e->getMessage());
