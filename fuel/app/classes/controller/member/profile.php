@@ -67,7 +67,7 @@ class Controller_Member_profile extends Controller_Member
 		try
 		{
 			DB::start_transaction();
-			$file_id = Site_util::upload('m', $this->u->id, $this->u->id, $this->u->get_image(), $this->u->file_id);
+			$file_id = Site_util::upload('m', $this->u->id, $this->u->id, $this->u->filesize_total, $this->u->get_image(), $this->u->file_id);
 
 			$this->u->file_id = $file_id;
 			$this->u->save();

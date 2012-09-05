@@ -26,6 +26,11 @@ $config = array(
 			),
 		),
 	),
+	'accepted_upload_filesize_type' => array(
+		'small' => array(
+			'limit_size' => '256M',
+		),
+	),
 	'member_setting_common' => array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
 		'from_mail_address' => PRJ_ADMIN_MAIL,

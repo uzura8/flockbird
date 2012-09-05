@@ -75,3 +75,6 @@ define('PRJ_IMAGE_DRIVER', 'gd');
 
 // 画像変換後のQUALITY値
 define('PRJ_IMAGE_OUTPUT_IMAGE_QUALITY', 100);
+
+// メンバーごとにアップロードファイルサイズの上限を設けるかどうか
+define('PRJ_IS_LIMIT_UPLOAD_FILE_SIZE', false);

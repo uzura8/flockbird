@@ -389,7 +389,7 @@ class Controller_Album extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			$file_id = \Site_util::upload('ai', $album_id, $this->u->id);
+			$file_id = \Site_util::upload('ai', $album_id, $this->u->id, $this->u->filesize_total);
 
 			$album_image = new Model_AlbumImage;
 			$album_image->album_id = $album_id;

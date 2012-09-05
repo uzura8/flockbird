@@ -18,8 +18,10 @@ class Site_util
 		return substr($id, -1);
 	}
 
-	public static function upload($identify, $id, $member_id = 0, $old_filename = '', $file_id = 0)
+	public static function upload($identify, $id, $member_id = 0, $member_filesize_total = 0, $old_filename = '', $file_id = 0)
 	{
+		$file = ($file_id) ? Model_File::find()->where('id', $file_id)->get_one() : new Model_File;
+
 		$config = array(
 			'base_path'   => sprintf('img/%s/%d', $identify, Site_util::get_middle_dir($id)),
 			'prefix'      => sprintf('%s_%d_', $identify, $id),
@@ -27,11 +29,20 @@ class Site_util
 			'max_size'    => Config::get('site.upload_files.img.'.$identify.'.max_size', 0),
 			'resize_type' => Config::get('site.upload_files.img.'.$identify.'.resize_type', 'relative'),
 		);
+		if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE && $member_id)
+		{
+			$config['member_id'] = $member_id;
+
+			$accepted_upload_filesize_type = 'small';// default
+			$config['file_size_limit'] = Config::get('site.accepted_upload_filesize_type.'.$accepted_upload_filesize_type.'.limit_size');
+			$config['member_filesize_total'] = $member_filesize_total;
+			if ($file_id) $config['old_file_size'] = $file->filesize;
+		}
+
 		if ($old_filename) $config['old_filename'] = $old_filename;
 		$uploader = new Site_uploader($config);
 		$uploaded_file = $uploader->upload();
 
-		$file = ($file_id) ? Model_File::find()->where('id', $file_id)->get_one() : new Model_File;
 		$file->name = $uploaded_file['new_filename'];
 		$file->filesize = $uploaded_file['size'];
 		$file->original_filename = $uploaded_file['filename'].'.'.$uploaded_file['extension'];
