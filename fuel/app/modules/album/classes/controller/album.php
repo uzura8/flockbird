@@ -493,7 +493,7 @@ class Controller_Album extends \Controller_Site
 			$options['image_versions'][$key] = array(
 				'upload_dir' => sprintf('%s/%s/', $base_path_full, $size),
 				'upload_url' => sprintf('%s/%s/', $base_url, $size),
-				'max_width' => $width,
+				'max_width'  => $width,
 				'max_height' => $height,
 			);
 		}
@@ -524,6 +524,12 @@ class Controller_Album extends \Controller_Site
 				}
 				else
 				{
+					if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE)
+					{
+						$accepted_upload_filesize_type = 'small';// default
+						$upload_handler->accepted_upload_filesize = (int)\Util_string::convert2bytes(\Config::get('site.accepted_upload_filesize_type.'.$accepted_upload_filesize_type.'.limit_size'));
+						$upload_handler->member_filesize_total    = $this->u->filesize_total;
+					}
 					$body = $upload_handler->post($album_id, $this->u->id, $config_upload_files['max_size']);
 					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
 					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))

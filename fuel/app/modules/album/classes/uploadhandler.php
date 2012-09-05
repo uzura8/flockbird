@@ -1,8 +1,14 @@
 <?php
 namespace Album;
 
+class LimitUploadFileSizeException extends \FuelException {}
+
 class UploadHandler extends \JqueryFileUpload
 {
+	public $is_limit_upload_file_size = false;
+	public $accepted_upload_filesize = 0;
+	public $member_filesize_total = 0;
+
 	public function get($album_id)
 	{
 		$file_name = isset($_REQUEST['file']) ? basename(stripslashes($_REQUEST['file'])) : null;
@@ -249,20 +255,21 @@ class UploadHandler extends \JqueryFileUpload
 
 			// param_name is a single object identifier like "file",
 			// $_FILES is a one-dimensional array:
-			if ($index)
+			if (isset($index))
 			{
 				$original_filename = $upload['name'][$index];
 				$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name'][$index]), $extention, $prefix);
 				$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size'][$index]);
 				$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type'][$index]);
 
+				$this->check_filesize_per_member($filesize);
 				$result = $this->handle_file_upload(
-					isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
+					isset($upload['tmp_name'][$index]) ? $upload['tmp_name'][$index] : null,
 					$filename,
-					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'])? $upload['size'] : null),
-					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'])? $upload['type'] : null),
-					isset($upload['error']) ? $upload['error'] : null,
-					null,
+					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'][$index])? $upload['size'][$index] : null),
+					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'][$index])? $upload['type'][$index] : null),
+					isset($upload['error'][$index]) ? $upload['error'][$index] : null,
+					$index,
 					$album_image->id,
 					$original_filename,
 					$max_size
@@ -275,13 +282,14 @@ class UploadHandler extends \JqueryFileUpload
 				$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size']);
 				$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type']);
 
+				$this->check_filesize_per_member($filesize);
 				$result = $this->handle_file_upload(
-					isset($upload['tmp_name'][$index]) ? $upload['tmp_name'][$index] : null,
+					isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
 					$filename,
-					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'][$index])? $upload['size'][$index] : null),
-					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'][$index])? $upload['type'][$index] : null),
-					isset($upload['error']) ? $upload['error'][$index] : null,
-					$index,
+					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'])? $upload['size'] : null),
+					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'])? $upload['type'] : null),
+					isset($upload['error']) ? $upload['error'] : null,
+					null,
 					$album_image->id,
 					$original_filename,
 					$max_size
@@ -303,7 +311,15 @@ class UploadHandler extends \JqueryFileUpload
 			$album_image->file_id = $model_file->id;
 			$album_image->save();
 
+			$this->member_filesize_total += $filesize;
+
 			\DB::commit_transaction();
+		}
+		catch(LimitUploadFileSizeException $e)
+		{
+			\DB::rollback_transaction();
+			$result->name = $original_filename;
+			$result->error = $e->getMessage();
 		}
 		catch(\Exception $e)
 		{
@@ -312,5 +328,13 @@ class UploadHandler extends \JqueryFileUpload
 		}
 
 		return $result;
+	}
+
+	private function check_filesize_per_member($size)
+	{
+		if (!$this->accepted_upload_filesize) return;
+
+		$accept_size = $this->accepted_upload_filesize - $this->member_filesize_total;
+		if ($size > $accept_size) throw new LimitUploadFileSizeException('File size is over the limit of the member.');
 	}
 }
