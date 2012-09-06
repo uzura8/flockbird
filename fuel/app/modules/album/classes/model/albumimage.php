@@ -18,7 +18,7 @@ class Model_AlbumImage extends \Orm\Model
 			'model_to' => 'Model_File',
 			'key_to' => 'id',
 			'cascade_save' => false,
-			//'cascade_delete' => false,
+			'cascade_delete' => true,
 		),
 	);
 
@@ -63,8 +63,7 @@ class Model_AlbumImage extends \Orm\Model
 		$obj = self::find()->where('id', $id)->related('album')->get_one();
 		if (!$obj) return false;
 
-		$accept_member_ids[] = $obj->album->member_id;
-		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
+		if ($target_member_id != $obj->album->member_id) return false;
 
 		return $obj;
 	}

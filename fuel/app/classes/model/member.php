@@ -138,4 +138,13 @@ class Model_Member extends \Orm\Model
 
 		return $filesize_total;
 	}
+
+	public static function add_filesize($size, $member_id = 0)
+	{
+		$member = self::find($member_id);
+		$member->filesize_total += $size;
+		$member->save();
+
+		return $member->filesize_total;
+	}
 }

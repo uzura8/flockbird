@@ -25,7 +25,7 @@
 </div>
 <?php endif; ?>
 
-<?php if (Auth::check()): ?>
+<?php if (Auth::check() && $album->member_id == $u->id): ?>
 <div class="well">
 <?php echo Form::open(array('action' => 'album/upload_image', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
 <?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
@@ -57,6 +57,9 @@
 	<dd>
 <?php if (!empty($album_image->name)): ?>
 				<?php echo $album_image->name; ?>
+<?php endif; ?>
+<?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
+				<p><a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Security::fetch_token())); ?>';});"><i class="icon-trash"></i></a></p>
 <?php endif; ?>
 	</dd>
 <?php $i++; ?>

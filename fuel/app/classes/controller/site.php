@@ -27,6 +27,16 @@ class Controller_Site extends Controller_Base
 		View::set_global('u', $this->u);
 	}
 
+	protected function add_member_filesize_total($size)
+	{
+		if (!$this->u) throw new Exception('Not authenticated.');
+
+		$this->u->filesize_total += $size;
+		$this->u->save();
+
+		return $this->u->filesize_total;
+	}
+
 	/**
 	 * Site index
 	 * 

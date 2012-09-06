@@ -90,7 +90,7 @@ class Controller_Image extends \Controller_Site
 	}
 
 	/**
-	 * Note delete
+	 * Album delete
 	 * 
 	 * @access  public
 	 * @params  integer
@@ -99,16 +99,29 @@ class Controller_Image extends \Controller_Site
 	public function action_delete($id = null)
 	{
 		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
-
-		if (!$comment = Model_NoteComment::check_authority($id, $this->u->id))
+		if (!$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}
 
-		$note_id = $comment->note_id;
-		$comment->delete();
+		$album_id = $album_image->album_id;
+		try
+		{
+			\DB::start_transaction();
+			$album_image->file = \Model_File::find($album_image->file_id);
+			$this->add_member_filesize_total(-$album_image->file->filesize);// ファイルサイズの減算
+			$album_image->file->delete();
+			$album_image->delete();
+			\DB::commit_transaction();
 
-		\Session::set_flash('message', \Config::get('site.term.note').'を削除しました。');
-		\Response::redirect('note/detail/'.$note_id);
+			\Session::set_flash('message', \Config::get('album.term.album_image').'を削除しました。');
+		}
+		catch (Exception $e)
+		{
+			\Session::set_flash('error', $e->getMessage());
+			\DB::rollback_transaction();
+		}
+
+		\Response::redirect('album/detail/'.$album_id);
 	}
 }

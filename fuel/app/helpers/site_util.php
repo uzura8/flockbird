@@ -52,23 +52,32 @@ function site_get_screen_name($u)
 
 function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = false)
 {
-	$identify = Util_string::get_exploded($filename);
-	$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes');
-	if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
-	list($width, $height) = explode('x', $size);
-
-	$uri_basepath = Site_util::get_upload_path('img', $filename, true);
-	$uri_path = sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
-	$file = sprintf('%s/%s', PRJ_PUBLIC_DIR, $uri_path);
-
+	$file = '';
+	$identify = '';
+	$width = 0;
 	$option = array();
-	if ($identify == 'm') $option = array('class' => 'profile_image');
+	if ($filename)
+	{
+		$identify = Util_string::get_exploded($filename);
+		$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes');
+		if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
+		list($width, $height) = explode('x', $size);
+
+		$uri_basepath = Site_util::get_upload_path('img', $filename, true);
+		$uri_path = sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
+		$file = sprintf('%s/%s', PRJ_PUBLIC_DIR, $uri_path);
+
+		if ($identify == 'm') $option = array('class' => 'profile_image');
+	}
 
 	if (!$filename || !file_exists($file))
 	{
 		$option['alt'] = 'No image.';
-		$option['width'] = $width;
-		$noimage_tag = Asset::img('site/'.$identify.'_noimage.gif', $option);
+		if (!empty($width)) $option['width'] = $width;
+
+		$noimage_filename = 'noimage.gif';
+		if ($identify) $noimage_filename = $identify.'_noimage.gif';
+		$noimage_tag = Asset::img('site/'.$noimage_filename, $option);
 
 		if ($uri) return Html::anchor($uri, $noimage_tag);
 
