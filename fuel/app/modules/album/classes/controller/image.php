@@ -108,10 +108,13 @@ class Controller_Image extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
+			$album_id = $album_image->album_id;
 			$album_image->file = \Model_File::find($album_image->file_id);
+			$file_name = $album_image->file->name;
 			$this->add_member_filesize_total(-$album_image->file->filesize);// ファイルサイズの減算
 			$album_image->file->delete();
 			$album_image->delete();
+			\Site_util::remove_images('ai', $album_id, $file_name);
 			\DB::commit_transaction();
 
 			\Session::set_flash('message', \Config::get('album.term.album_image').'を削除しました。');

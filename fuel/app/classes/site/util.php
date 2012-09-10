@@ -53,6 +53,19 @@ class Site_util
 		return $file->id;
 	}
 
+	public static function remove_images($identify, $id, $file_name = '')
+	{
+		$base_path = sprintf('%s/img/%s/%d', PRJ_UPLOAD_DIR, $identify, Site_util::get_middle_dir($id));
+		$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes', array());
+		foreach ($sizes as $size)
+		{
+			$file = sprintf('%s/%s/%s', $base_path, $size, $file_name);
+			Util_file::remove($file);
+		}
+
+		return true;
+	}
+
 	public static function get_upload_path($type, $filename, $is_dir = false)
 	{
 		$parts = explode('_', $filename);
