@@ -13,4 +13,7 @@
 	</div>
 </div>
 <?php echo Form::close(); ?>
+<?php if (Auth::check() && $u->file_id): ?>
+<div><a class="btn boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('member/profile/delete_image?%s=%s', Config::get('security.csrf_token_key'), Security::fetch_token())); ?>';});"><i class="icon-trash"></i> 削除</a></div>
+<?php endif; ?>
 </div>

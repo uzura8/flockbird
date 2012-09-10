@@ -85,4 +85,39 @@ class Controller_Member_profile extends Controller_Member
 
 		Response::redirect('member/profile/setting_image');
 	}
+
+	/**
+	 * Mmeber_profile delete_image
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_delete_image()
+	{
+		Util_security::check_csrf(Input::get(Config::get('security.csrf_token_key')));
+
+		try
+		{
+			if (empty($this->u->file_id)) throw new Exception('No profile image.');
+
+			$file_name = $this->u->get_image();
+			DB::start_transaction();
+			$this->u->filesize_total -= $this->u->file->filesize;
+			$this->u->file->delete();
+			$this->u->file_id = null;
+			$this->u->save();
+
+			Site_util::remove_images('m', $this->u->id, $file_name);
+			DB::commit_transaction();
+
+			Session::set_flash('message', '写真を削除しました。');
+		}
+		catch(Exception $e)
+		{
+			DB::rollback_transaction();
+			Session::set_flash('error', $e->getMessage());
+		}
+
+		Response::redirect('member/profile/setting_image');
+	}
 }

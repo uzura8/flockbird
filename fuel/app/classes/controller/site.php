@@ -24,6 +24,7 @@ class Controller_Site extends Controller_Base
 	{
 		$auth = Auth::instance();
 		$this->u = Auth::check() ? Model_Member::find()->where('id', $auth->get_member_id())->related('memberauth')->get_one() : null;
+
 		View::set_global('u', $this->u);
 	}
 
