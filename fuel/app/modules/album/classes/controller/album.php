@@ -520,7 +520,7 @@ class Controller_Album extends \Controller_Site
 			case 'POST':
 				$_method = \Input::post('_method');
 				if (isset($_method) && $_method === 'DELETE') {
-					$body = $upload_handler->delete();
+					$body = $upload_handler->delete($this->u->id);
 				}
 				else
 				{
@@ -543,7 +543,7 @@ class Controller_Album extends \Controller_Site
 				}
 				break;
 			case 'DELETE':
-				$body = $upload_handler->delete($album_id);
+				$body = $upload_handler->delete($this->u->id);
 				$response->set_header('Content-type', 'application/json');
 				break;
 			default:

@@ -210,14 +210,21 @@ class UploadHandler extends \JqueryFileUpload
 		return $json;
 	}
 
-	public function delete($album_id)
+	public function delete($member_id = null)
 	{
 		$album_image_id = (int)\Input::get('id');
-		if (!$album_image = Model_AlbumImage::check_authority($album_image_id, $this->u->id))
+		if (!$album_image = Model_AlbumImage::check_authority($album_image_id, $member_id))
 		{
 			throw new \HttpNotFoundException;
 		}
-		$file_name = $album_image->image;
+
+		\DB::start_transaction();
+		$album_image->file = \Model_File::find($album_image->file_id);
+		$file_name = $album_image->file->name;
+
+		\Model_Member::add_filesize(-$album_image->file->filesize, $album_image->album->member_id);
+		$album_image->file->delete();
+		$album_image->delete();
 
 		if (isset($file_name)) $file_name = basename(stripslashes($file_name));
 		$file_path = $this->options['upload_dir'].$file_name;
@@ -233,8 +240,7 @@ class UploadHandler extends \JqueryFileUpload
 				}
 			}
 		}
-
-		$album_image->delete();
+		\DB::commit_transaction();
 
 		return json_encode($success);
 	}
