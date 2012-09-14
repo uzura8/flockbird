@@ -84,6 +84,14 @@ class Site_uploader
 		$ext = pathinfo($file['saved_as'], PATHINFO_EXTENSION);
 		$filename = sprintf('%s%s.%s', $this->prefix, Util_string::get_unique_id(), $ext);
 		$this->save_raw_file($file['saved_to'], $file['saved_as'], $filename, $file['size']);
+
+		// Exif データの取得
+		if (PRJ_USE_EXIF_DATA)
+		{
+			$exif = $this->get_exif_data_from_raw_file($filename);
+			$file['exif'] = ($exif) ? $exif : array();
+		}
+
 		if ($size = $this->check_and_resize_raw_file($filename))
 		{
 			$file['size'] = $size;
@@ -98,6 +106,13 @@ class Site_uploader
 		$file['new_filename'] = $filename;
 
 		return $file;
+	}
+
+	private function get_exif_data_from_raw_file($filename)
+	{
+		$file = $this->saved_raw_image_dir_path.$filename;
+
+		return exif_read_data($file);
 	}
 
 	private function check_and_resize_raw_file($filename)

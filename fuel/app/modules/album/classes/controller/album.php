@@ -237,7 +237,6 @@ class Controller_Album extends \Controller_Site
 					'name' => $post['name'],
 					'body'  => $post['body'],
 					'member_id' => $this->u->id,
-					'shot_at'  => date('Y-m-d H:i:s'),
 				));
 
 				if ($album and $album->save())
@@ -394,7 +393,6 @@ class Controller_Album extends \Controller_Site
 			$album_image = new Model_AlbumImage;
 			$album_image->album_id = $album_id;
 			$album_image->file_id = $file_id;
-			$album_image->shot_at = date('Y-m-d H:i:s');
 			$album_image->save();
 
 			\Model_Member::recalculate_filesize_total($this->u->id);
@@ -530,6 +528,7 @@ class Controller_Album extends \Controller_Site
 						$upload_handler->accepted_upload_filesize = (int)\Util_string::convert2bytes(\Config::get('site.accepted_upload_filesize_type.'.$accepted_upload_filesize_type.'.limit_size'));
 						$upload_handler->member_filesize_total    = $this->u->filesize_total;
 					}
+					$upload_handler->is_save_exif_data = PRJ_USE_EXIF_DATA;
 					$body = $upload_handler->post($album_id, $this->u->id, $config_upload_files['max_size']);
 					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
 					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))

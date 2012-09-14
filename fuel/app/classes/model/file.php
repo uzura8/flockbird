@@ -34,6 +34,8 @@ class Model_File extends \Orm\Model
 				'valid_string' => array('integer'),
 			),
 		),
+		'exif',
+		'shot_at',
 		'created_at',
 		'updated_at'
 	);

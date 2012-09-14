@@ -48,6 +48,12 @@ class Site_util
 		$file->original_filename = $uploaded_file['filename'].'.'.$uploaded_file['extension'];
 		$file->type = $uploaded_file['type'];
 		if ($member_id) $file->member_id = $member_id;
+		if ($uploaded_file['exif'])
+		{
+			$exif = $uploaded_file['exif'];
+			if (!empty($exif['DateTimeOriginal'])) $file->shot_at = date('Y-m-d H:i:s', strtotime($exif['DateTimeOriginal']));
+			$file->exif = serialize($exif);
+		}
 		$file->save();
 
 		return $file->id;

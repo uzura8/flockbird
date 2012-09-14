@@ -8,6 +8,7 @@ class UploadHandler extends \JqueryFileUpload
 	public $is_limit_upload_file_size = false;
 	public $accepted_upload_filesize = 0;
 	public $member_filesize_total = 0;
+	public $is_save_exif_data = false;
 
 	public function get($album_id)
 	{
@@ -255,7 +256,6 @@ class UploadHandler extends \JqueryFileUpload
 			$album_image = Model_AlbumImage::forge(array(
 				'album_id' => (int)$album_id,
 				'file_id'  => 0,
-				'shot_at'  => date('Y-m-d H:i:s'),
 			));
 			$album_image->save();
 
@@ -267,6 +267,9 @@ class UploadHandler extends \JqueryFileUpload
 				$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name'][$index]), $extention, $prefix);
 				$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size'][$index]);
 				$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type'][$index]);
+
+				// Exif データの取得
+				$exif = ($this->is_save_exif_data) ? exif_read_data($upload['tmp_name'][$index]) : array();
 
 				$this->check_filesize_per_member($filesize);
 				$result = $this->handle_file_upload(
@@ -287,6 +290,9 @@ class UploadHandler extends \JqueryFileUpload
 				$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name']), $extention, $prefix);
 				$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size']);
 				$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type']);
+
+				// Exif データの取得
+				$exif = ($this->is_save_exif_data) ? exif_read_data($upload['tmp_name']) : array();
 
 				$this->check_filesize_per_member($filesize);
 				$result = $this->handle_file_upload(
@@ -311,6 +317,11 @@ class UploadHandler extends \JqueryFileUpload
 			$model_file->type = $file_type;
 			$model_file->original_filename = $original_filename;
 			if ($member_id) $model_file->member_id = $member_id;
+			if ($exif)
+			{
+				if (!empty($exif['DateTimeOriginal'])) $model_file->shot_at = date('Y-m-d H:i:s', strtotime($exif['DateTimeOriginal']));
+				$model_file->exif = serialize($exif);
+			}
 			$model_file->save();
 
 			// album_image の保存
