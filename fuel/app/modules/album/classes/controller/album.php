@@ -345,9 +345,21 @@ class Controller_Album extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		$album->delete();
 
-		\Session::set_flash('message', \Config::get('album.term.album').'を削除しました。');
+		try
+		{
+			\DB::start_transaction();
+			Model_Album::delete_all($id);
+			\Model_Member::recalculate_filesize_total($this->u->id);
+			\DB::commit_transaction();
+			\Session::set_flash('message', \Config::get('album.term.album').'を削除しました。');
+		}
+		catch(Exception $e)
+		{
+			\DB::rollback_transaction();
+			\Session::set_flash('error', $e->getMessage());
+		}
+
 		\Response::redirect('album/member');
 	}
 

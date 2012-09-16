@@ -20,7 +20,7 @@ class Controller_Image extends \Controller_Site
 	public function action_detail($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album_image = Model_Albumimage::check_authority($id))
+		if (!$id || !$album_image = Model_Albumimage::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -108,13 +108,8 @@ class Controller_Image extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			$album_id = $album_image->album_id;
-			$album_image->file = \Model_File::find($album_image->file_id);
-			$file_name = $album_image->file->name;
-			$this->add_member_filesize_total(-$album_image->file->filesize);// ファイルサイズの減算
-			$album_image->file->delete();
-			$album_image->delete();
-			\Site_util::remove_images('ai', $album_id, $file_name);
+			$deleted_filesize = Model_AlbumImage::delete_with_file($id);
+			\Model_Member::add_filesize($this->u->id, -$deleted_filesize);
 			\DB::commit_transaction();
 
 			\Session::set_flash('message', \Config::get('album.term.album_image').'を削除しました。');

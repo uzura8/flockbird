@@ -55,7 +55,7 @@ class Model_AlbumImage extends \Orm\Model
 		return $val;
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $accept_member_ids = array())
+	public static function check_authority($id, $target_member_id = 0)
 	{
 		if (!$id) return false;
 
@@ -72,5 +72,22 @@ class Model_AlbumImage extends \Orm\Model
 		if (empty($this->file_id)) return '';
 
 		return \Model_File::get_name($this->file_id);
+	}
+
+	public static function delete_with_file($id)
+	{
+		if (!$id || !$album_image = self::find()->where('id', $id)->related('album')->get_one())
+		{
+			throw new \Exception('Invalid album_image id.');
+		}
+		$album_id = $album_image->album_id;
+		$album_image->file = \Model_File::find($album_image->file_id);
+		$file_name = $album_image->file->name;
+		$filesize = $album_image->file->filesize;
+		$album_image->file->delete();
+		$album_image->delete();
+		\Site_util::remove_images('ai', $album_id, $file_name);
+
+		return $filesize;
 	}
 }

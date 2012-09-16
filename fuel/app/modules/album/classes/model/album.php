@@ -66,4 +66,31 @@ class Model_Album extends \Orm\Model
 
 		return $obj;
 	}
+
+	public static function delete_all($id)
+	{
+		if (!$id || !$album = self::find()->where('id', $id)->get_one())
+		{
+			throw new \Exception('Invalid album id.');
+		}
+
+		// Delete album_image file.
+		$files = \DB::select('file.id', 'file.name')
+			->from('file')
+			->join('album_image', 'LEFT')->on('album_image.file_id', '=', 'file.id')
+			->where('album_image.album_id', $id)
+			->execute()->as_array();
+		$file_ids = array();
+		foreach ($files as $file)
+		{
+			\Site_util::remove_images('ai', $id, $file['name']);
+			$file_ids[] = $file['id'];
+		}
+
+		// Delete table file data.
+		\DB::delete('file')->where('id', 'in', $file_ids)->execute();
+
+		// Delete album.
+		$album->delete();
+	}
 }
