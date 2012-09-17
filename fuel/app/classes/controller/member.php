@@ -590,7 +590,7 @@ END;
 			->add_rule('max_length', 20);
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
-		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
+		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Util_security::get_csrf()));
 
 		return $form;
 	}
@@ -622,7 +622,7 @@ END;
 			->add_rule('valid_email');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
-		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
+		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Util_security::get_csrf()));
 
 		return $form;
 	}
@@ -648,7 +648,7 @@ END;
 			->add_rule('no_controll');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '変更', 'class' => 'btn'));
-		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Security::fetch_token()));
+		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Util_security::get_csrf()));
 
 		return $form;
 	}

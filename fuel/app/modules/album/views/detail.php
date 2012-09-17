@@ -28,7 +28,7 @@
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
 <div class="well">
 <?php echo Form::open(array('action' => 'album/upload_image', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
-<?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
+<?php echo Form::hidden(Config::get('security.csrf_token_key'), Util_security::get_csrf()); ?>
 <?php echo Form::hidden('id', $id); ?>
 <div class="control-group">
 	<div class="controls">
@@ -59,7 +59,7 @@
 				<?php echo $album_image->name; ?>
 <?php endif; ?>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
-				<p><a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Security::fetch_token())); ?>';});"><i class="icon-trash"></i></a></p>
+				<p><a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a></p>
 <?php endif; ?>
 	</dd>
 <?php $i++; ?>
@@ -80,7 +80,7 @@
 		</div>
 	</div>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $note->member_id))): ?>
-	<a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('note/comment/delete/%d?%s=%s', $comment->id, Config::get('security.csrf_token_key'), Security::fetch_token())); ?>';});"><i class="icon-trash"></i></a>
+	<a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('note/comment/delete/%d?%s=%s', $comment->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a>
 <?php endif ; ?>
 </div>
 <?php endforeach; ?>
@@ -94,7 +94,7 @@
 			<div class="main">
 				<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>
 <?php echo Form::open('note/comment/create/'.$note->id) ?>
-<?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
+<?php echo Form::hidden(Config::get('security.csrf_token_key'), Util_security::get_csrf()); ?>
 		 <div class="input"><?php echo Form::textarea('body', null, array('cols' => 60, 'rows' => 1, 'class' => 'input-xlarge')); ?></div>
 		 <div class="input"><?php echo Form::submit(array('name' => 'submit', 'value' => 'submit', 'class' => 'btn btn-mini')); ?></div>
 <?php echo Form::close() ?>

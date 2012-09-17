@@ -376,7 +376,7 @@ class Controller_Album extends \Controller_Site
 			->add_rule('required');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
-		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Security::fetch_token()));
+		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
 
 		return $form;
 	}

@@ -2,7 +2,7 @@
 
 <?php echo Form::open(array('action' => 'member/setting/change_email', 'class' => 'form-horizontal well')); ?>
 	<?php echo Form::hidden('token' ,$member_email_pre['token']); ?>
-	<?php echo Form::hidden(Config::get('security.csrf_token_key') ,Security::fetch_token()); ?>
+	<?php echo Form::hidden(Config::get('security.csrf_token_key') ,Util_security::get_csrf()); ?>
 
 	<div class="control-group">
 		<label class="control-label">メールアドレス</label>

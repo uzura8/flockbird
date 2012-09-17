@@ -118,7 +118,7 @@ console.log(body);
 				baseUrl + 'album/image/comment/create_ajax/' + image_ids[slideNumber],
 				{
 					'body': body,
-					'<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Security::fetch_token(); ?>',
+					'<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>',
 				},
 				function(data){
 					$.jGrowl('コメントを投稿しました。');
@@ -138,7 +138,7 @@ console.log(body);
 				$.ajax({
 					url : baseUrl + 'album/image/comment/delete_ajax/' + id,
 					dataType : "text",
-					data : {'id': id, '<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Security::fetch_token(); ?>'},
+					data : {'id': id, '<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>'},
 					type : 'POST',
 					success: function(status_after){
 						$('#commentBox_' + id).fadeOut();

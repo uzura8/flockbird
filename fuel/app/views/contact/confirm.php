@@ -40,7 +40,7 @@
 <?php echo Form::close(); ?>
 
 <?php echo Form::open('contact/send'); ?>
-<?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()); ?>
+<?php echo Form::hidden(Config::get('security.csrf_token_key'), Util_security::get_csrf()); ?>
 <?php echo Form::hidden('name', $input['name'], array('id' => 'name', 'dont_prep' => true)); ?>
 <?php echo Form::hidden('email', $input['email'], array('id' => 'email', 'dont_prep' => true)); ?>
 <?php echo Form::hidden('comment', $input['comment'], array('id' => 'comment', 'dont_prep' => true)); ?>
