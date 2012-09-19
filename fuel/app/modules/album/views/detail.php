@@ -10,7 +10,7 @@
 <?php $i = 0; ?>
 <?php foreach ($album_images as $album_image): ?>
 		<div class="item<?php if (!$i): ?> active<?php endif; ?>">
-			<?php echo img($album_image->file->name, '600x600', '', true); ?>
+			<?php echo img($album_image->file->name, '600x600', 'album/image/detail/'.$album_image->id); ?>
 <?php if (!empty($album_image->name)): ?>
 			<div class="carousel-caption">
 				<p><?php echo $album_image->name; ?></p>
@@ -55,12 +55,14 @@
 <?php foreach ($album_images as $album_image): ?>
 	<dt><?php echo img($album_image->file->name, '200x200', 'album/image/detail/'.$album_image->id); ?></dt>
 	<dd>
+		<p>
 <?php if (!empty($album_image->name)): ?>
-				<?php echo $album_image->name; ?>
+			<?php echo Html::anchor('album/image/detail/'.$album_image->id, $album_image->name); ?>
 <?php endif; ?>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
-				<p><a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a></p>
+			<a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a>
 <?php endif; ?>
+		</p>
 	</dd>
 <?php $i++; ?>
 <?php endforeach; ?>

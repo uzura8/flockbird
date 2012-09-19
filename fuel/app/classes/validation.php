@@ -104,4 +104,23 @@ class Validation extends Fuel\Core\Validation
 	{
 		return $this->_empty($val) || $this->input($field) !== $val;
 	}
+
+	public function _validation_datetime_except_second($val, $delimiter = '-')
+	{
+		$dlt = '\\'.$delimiter;
+		$pattern = '#^([12]{1}[0-9]{3})'.$dlt.'([0-9]{2})'.$dlt.'([0-9]{2}) ([0-9]{2}):([0-9]{2})$#';
+		if (!preg_match($pattern, $val, $matches)) return false;
+
+		$year  = (int)$matches[1];
+		$month = (int)$matches[2];
+		$date  = (int)$matches[3];
+		if (!checkdate($month, $date, $year)) return false;
+
+		$hour   = (int)$matches[4];
+		$minute = (int)$matches[5];
+		if ($hour < 0 || $hour > 23)     return false;
+		if ($minute < 0 || $minute > 60) return false;
+
+		return true;
+	}
 }
