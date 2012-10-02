@@ -81,3 +81,10 @@ img.profile_image {
 .commentBox small {
 	color: #868686;
 }
+
+.ml {
+  margin-left: 5px;
+}
+.ml10 {
+  margin-left: 10px;
+}

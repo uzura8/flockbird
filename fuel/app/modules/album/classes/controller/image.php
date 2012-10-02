@@ -159,6 +159,8 @@ class Controller_Image extends \Controller_Site
 
 		$this->template->title = \Config::get('album.term.album_image').'を編集する';
 		$this->template->header_title = site_title($this->template->title);
+		$this->template->post_header = \View::forge('image/_parts/edit_header');
+		$this->template->post_footer = \View::forge('image/_parts/edit_footer');
 
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
 		$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
@@ -236,7 +238,7 @@ class Controller_Image extends \Controller_Site
 			{
 				$shot_at = substr($album_image->file->shot_at, 0, 16);
 			}
-			$form->add('shot_at', '撮影日時', array('value' => $shot_at))
+			$form->add('shot_at', '撮影日時', array('value' => $shot_at, 'class' => 'input-medium'))
 				->add_rule('trim')
 				->add_rule('max_length', 16)
 				->add_rule('datetime_except_second');
