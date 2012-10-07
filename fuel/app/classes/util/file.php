@@ -227,4 +227,22 @@ class Util_file
 			}
 		}
 	}
+
+	public static function get_content_type_string($extention)
+	{
+		switch ($extention) {
+			case 'jpeg':
+			case 'jpg':
+				return 'image/jpeg';
+				break;
+			case 'gif':
+				return 'image/gif';
+				break;
+			case 'png':
+				return 'image/png';
+				break;
+			default:
+				return false;
+		}
+	}
 }

@@ -15,6 +15,8 @@ if (!defined('PRJ_PUBLIC_DIR')) define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public');
 
 // ファイルをアップロードするディレクトリ
 if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.'/'.PRJ_UPLOAD_DIRNAME);
+//// Controller で Response する場合
+//if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_BASEPATH.'fuel/app/cache');
 
 // アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum) K/M/G 使用可能
 if (!defined('PRJ_UPLOAD_MAX_FILESIZE')) define('PRJ_UPLOAD_MAX_FILESIZE', _convert2bytes(ini_get('upload_max_filesize')));

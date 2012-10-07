@@ -18,6 +18,27 @@ class Site_util
 		return substr($id, -1);
 	}
 
+	public static function check_filename_format($filename)
+	{
+		$ids = array_keys(Config::get('site.upload_files.img'));
+		$pattern = '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]{32}\.(jpg|png|gif)/i';
+		if (preg_match($pattern, $filename) === false) return false;
+
+		return true;
+	}
+
+	public static function get_upload_file_path($filename, $size)
+	{
+		$identify = Util_string::get_exploded($filename);
+		$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes');
+		if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
+
+		$uri_basepath = Site_util::get_upload_path('img', $filename, true);
+		$uri_path = sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
+
+		return sprintf('%s/%s', PRJ_UPLOAD_DIR, $uri_path);
+	}
+
 	public static function upload($identify, $id, $member_id = 0, $member_filesize_total = 0, $old_filename = '', $file_id = 0)
 	{
 		$file = ($file_id) ? Model_File::find()->where('id', $file_id)->get_one() : new Model_File;
