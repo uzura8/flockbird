@@ -88,3 +88,9 @@ img.profile_image {
 .ml10 {
   margin-left: 10px;
 }
+
+div#popup_container.ui-draggable #popup_message {
+	color: #000;
+}
+
+

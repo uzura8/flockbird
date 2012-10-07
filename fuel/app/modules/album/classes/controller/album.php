@@ -122,7 +122,7 @@ class Controller_Album extends \Controller_Site
 			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
 			$this->template->breadcrumbs[$key] =  '/album/list/'.$album->member->id;
 		}
-		$this->template->breadcrumbs[\Config::get('site.term.album').'詳細'] = '';
+		$this->template->breadcrumbs[$album->name] = '';
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/detail_footer');
@@ -165,8 +165,8 @@ class Controller_Album extends \Controller_Site
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
 		$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
 		$this->template->breadcrumbs['自分の'.\Config::get('album.term.album').'一覧'] =  '/member/album/';
-		$this->template->breadcrumbs[\Config::get('site.term.album').'詳細'] = '/album/detail/'.$id;
-		$this->template->breadcrumbs[\Config::get('site.term.album').'写真管理'] = '';
+		$this->template->breadcrumbs[$album->name] = '/album/detail/'.$id;
+		$this->template->breadcrumbs[\Config::get('site.term.album').'写真をアップロード'] = '';
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_header = \View::forge('_parts/manage_images_header');
@@ -328,6 +328,127 @@ class Controller_Album extends \Controller_Site
 		$data = array('form' => $form);
 		$this->template->content = \View::forge('edit', $data);
 		$this->template->content->set_safe('html_form', $form->build('album/edit/'.$id));// form の action に入る
+	}
+
+	/**
+	 * Album edit images
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_edit_images($id = null)
+	{
+		if (!$album = Model_Album::check_authority($id, $this->u->id))
+		{
+			throw new \HttpNotFoundException;
+		}
+		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->related('file')->order_by('created_at')->get();
+
+		$val = \Validation::forge();
+
+		$shot_at = '';
+		$album_image_ids = array();
+		if (\Input::method() == 'POST')
+		{
+			\Util_security::check_csrf();
+
+			$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
+			$val->add('shot_at', '撮影日時')
+				->add_rule('trim')
+				->add_rule('max_length', 16)
+				->add_rule('datetime_except_second');
+
+			$error = '';
+			$album_image_ids = array_map('intval', \Input::post('album_image_ids', array()));
+			if (empty($album_image_ids))
+			{
+				$error =  '実施対象が選択されていません';
+			}
+			if (!$error && !self::check_album_image_ids($album_image_ids, $id))
+			{
+				$error =  '実施対象が正しく選択されていません';
+			}
+
+			$post = array();
+			if (!$error && \Input::post('clicked_btn') == 'post')
+			{
+				if ($val->run())
+				{
+					$post = $val->validated();
+					if (empty($post['name']) && empty($post['shot_at']))
+					{
+						$error =  '入力してください';
+					}
+				}
+				else
+				{
+					$error = $val->show_errors();
+				}
+			}
+
+			if (!$error)
+			{
+				$file_ids = array();
+				if (!(\Input::post('post') && empty($post['shot_at'])))
+				{
+					$file_ids =\Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $album_image_ids)->execute()->as_array());
+				}
+
+				$is_db_error = false;
+				$message     = '';
+				\DB::start_transaction();
+				if (\Input::post('clicked_btn') == 'delete')
+				{
+					if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
+					if (!$result = \DB::delete('album_image')->where('id', 'in', $album_image_ids)->execute()) $is_db_error = true;
+					$message = $result.'件削除しました';
+				}
+				elseif (\Input::post('clicked_btn') == 'post')
+				{
+					$updated_at = date('Y-m-d H:i:s');
+					if (!empty($post['name']))
+					{
+						$values = array('name' => $post['name'], 'updated_at' => $updated_at);
+						if (!$result = \DB::update('album_image')->set($values)->where('id', 'in', $album_image_ids)->execute()) $is_db_error = true;
+					}
+					if (!empty($post['shot_at']))
+					{
+						$values = array('shot_at' => $post['shot_at'], 'updated_at' => $updated_at);
+						if (!$result = \DB::update('file')->set($values)->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
+					}
+					$message = $result.'件更新しました';
+				}
+				if ($is_db_error)
+				{
+					\DB::rollback_transaction();
+					\Session::set_flash('error', '更新に失敗しました');
+				}
+				else
+				{
+					\DB::commit_transaction();
+					\Session::set_flash('message', $message);
+					\Response::redirect('album/edit_images/'.$id);
+				}
+			}
+
+			if ($error) \Session::set_flash('error', $error);
+		}
+
+		$this->template->title = \Config::get('album.term.album_image').'管理';
+		$this->template->header_title = site_title($this->template->title);
+		$this->template->breadcrumbs = array(
+			\Config::get('site.term.toppage') => '/',
+			\Config::get('site.term.myhome')  => '/member/',
+			'自分の'.\Config::get('album.term.album').'一覧' => '/member/album/',
+			$album->name => '/album/detail/'.$id,
+			$this->template->title => '',
+		);
+		$this->template->post_header = \View::forge('_parts/edit_header');
+		$this->template->post_footer = \View::forge('_parts/edit_footer');
+
+		$data = array('id' => $id, 'album' => $album, 'album_images' => $album_images, 'val' => $val, 'album_image_ids' => $album_image_ids);
+		$this->template->content = \View::forge('edit_images', $data);
 	}
 
 	/**
@@ -562,5 +683,16 @@ class Controller_Album extends \Controller_Site
 		}
 
 		return $response->body($body);
+	}
+
+	protected static function check_album_image_ids($target_album_image_ids, $album_id)
+	{
+		$album_image_ids =\Util_db::conv_col(\DB::select('id')->from('album_image')->where('album_id', '=', $album_id)->execute()->as_array());
+		foreach ($target_album_image_ids as $target_album_image_id)
+		{
+			if (!in_array($target_album_image_id, $album_image_ids)) return false;
+		}
+
+		return true;
 	}
 }

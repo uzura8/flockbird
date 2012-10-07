@@ -159,8 +159,8 @@ class Controller_Image extends \Controller_Site
 
 		$this->template->title = \Config::get('album.term.album_image').'を編集する';
 		$this->template->header_title = site_title($this->template->title);
-		$this->template->post_header = \View::forge('image/_parts/edit_header');
-		$this->template->post_footer = \View::forge('image/_parts/edit_footer');
+		$this->template->post_header = \View::forge('_parts/edit_header');
+		$this->template->post_footer = \View::forge('_parts/edit_footer');
 
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
 		$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
@@ -226,7 +226,6 @@ class Controller_Image extends \Controller_Site
 
 		$form->add('name', \Config::get('album.term.album_image').'タイトル', array('class' => 'input-xlarge'))
 			->add_rule('trim')
-			->add_rule('required')
 			->add_rule('max_length', 255);
 
 			$shot_at = '';

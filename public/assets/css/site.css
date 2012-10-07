@@ -27,5 +27,12 @@
 }
 
 #album_album_detail .bar {
-    background: green;
+	background: green;
+}
+
+#album_album_edit_images table#album_image_list td {
+	vertical-align: middle;
+}
+#album_album_edit_images table#album_image_list .formParts {
+	text-align: center;
 }

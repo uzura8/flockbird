@@ -54,7 +54,7 @@ class Controller_Birds extends Controller_Site
 
 		$data = array();
 		$data['subtitle'] = '鳥の生活場所から探す';
-		$data['parent_list'] = Util_db::get_assoc(\Model\BLifePlace::get_result_array_all());
+		$data['parent_list'] = Util_db::conv_assoc(\Model\BLifePlace::get_result_array_all());
 		$data['bird_list'] = self::get_bird_list($data['parent_list'], 'b_life_place_id');
 		$this->template->content = View::forge('birds/index', $data);
 	}
@@ -77,7 +77,7 @@ class Controller_Birds extends Controller_Site
 
 		$data = array();
 		$data['subtitle'] = '鳥の見られる場所から探す';
-		$data['parent_list'] = Util_db::get_assoc(\Model\BWatchSpot::get_result_array_all());
+		$data['parent_list'] = Util_db::conv_assoc(\Model\BWatchSpot::get_result_array_all());
 		$data['bird_list'] = self::get_bird_list($data['parent_list'], 'b_watch_spot_id');
 		$this->template->content = View::forge('birds/index', $data);
 	}
@@ -100,7 +100,7 @@ class Controller_Birds extends Controller_Site
 
 		$data = array();
 		$data['subtitle'] = '鳥のサイズから探す';
-		$data['parent_list'] = Util_db::get_assoc(\Model\BSize::get_result_array_all());
+		$data['parent_list'] = Util_db::conv_assoc(\Model\BSize::get_result_array_all());
 		$data['bird_list'] = self::get_bird_list($data['parent_list'], 'b_size_id');
 		$this->template->content = View::forge('birds/index', $data);
 	}

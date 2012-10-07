@@ -1,7 +1,18 @@
 <?php
 class Util_db
 {
-	public static function get_assoc($rows)
+	public static function conv_col($rows)
+	{
+		$return = array();
+		foreach ($rows as $row)
+		{
+			$return[] = array_shift($row);
+		}
+
+		return $return;
+	}
+
+	public static function conv_assoc($rows)
 	{
 		$return = array();
 		foreach ($rows as $row)

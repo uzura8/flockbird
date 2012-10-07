@@ -2,8 +2,6 @@
 
 <hr />
 
-<h3 id="comments">Comments</h3>
-
 <?php if ($album_images): ?>
 <div id="myCarousel" class="carousel slide">
 	<div class="carousel-inner">
@@ -44,7 +42,8 @@
 </div>
 
 <div>
-<?php echo Html::anchor('album/manage_images/'.$album->id, '<i class="icon-th-list"></i> 写真管理', array('class' => 'btn')); ?>
+<?php echo Html::anchor('album/manage_images/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn')); ?>
+<?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('album.term.album_image')), array('class' => 'btn ml10')); ?>
 </div>
 <?php endif; ?>
 

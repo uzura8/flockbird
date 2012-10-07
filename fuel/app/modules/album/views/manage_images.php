@@ -2,7 +2,7 @@
 
 <hr />
 
-<h3 id="comments">Comments</h3>
+<h3 id="comments">写真をアップロード</h3>
 
 <div class="well">
 <!-- The file upload form used as target for the file upload widget -->

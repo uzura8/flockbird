@@ -107,6 +107,8 @@ class Validation extends Fuel\Core\Validation
 
 	public function _validation_datetime_except_second($val, $delimiter = '-')
 	{
+		if (empty($val)) return true;// if $val is empty, uncheck;
+
 		$dlt = '\\'.$delimiter;
 		$pattern = '#^([12]{1}[0-9]{3})'.$dlt.'([0-9]{2})'.$dlt.'([0-9]{2}) ([0-9]{2}):([0-9]{2})$#';
 		if (!preg_match($pattern, $val, $matches)) return false;
