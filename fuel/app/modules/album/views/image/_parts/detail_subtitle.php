@@ -8,7 +8,7 @@
 <?php if (!empty($album_image->file->shot_at)): ?>
 		<small>
 		撮影日時: <?php echo date('Y年n月j日 H:i', strtotime($album_image->file->shot_at)) ?>
-		(<?php echo Date::time_ago(strtotime($album_image->file->shot_at)) ?>)
+		(<?php echo site_get_time($album_image->file->shot_at); ?>)
 		</small>
 <?php endif; ?>
 	</div>

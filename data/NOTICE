@@ -11,3 +11,8 @@
 * jquery.jgrowl
 * jqueryfileupload
 * jQuery Masonry (MIT)
+* moment.js (MIT)
+  - http://momentjs.com/
+* Livestamp.js (MIT)
+  - http://mattbradley.github.com/livestampjs/
+* moment.lang_ja.js (MIT)

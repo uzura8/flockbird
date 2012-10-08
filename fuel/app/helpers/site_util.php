@@ -96,7 +96,7 @@ function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal
 	if (!$is_normal_timestamp) $time = strtotime($mysql_datetime);
 
 	$normal_time = date($format, $time);
-	$past_time   = Date::time_ago($time);
+	$past_time   = sprintf('<span data-livestamp="%s"></span>', date(DATE_ISO8601, $time));
 
 	$display = '';
 	if ($is_display_both)

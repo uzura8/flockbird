@@ -218,6 +218,9 @@
 <?php echo Asset::js('jquery.alerts/jquery.alerts.js');?>
 <?php echo Asset::js('jquery.autogrow-textarea.js');?>
 <?php echo Asset::js('jquery.jgrowl_minimized.js');?>
+<?php echo Asset::js('moment.min.js');?>
+<?php echo Asset::js('moment.lang_ja.js');?>
+<?php echo Asset::js('livestamp.min.js');?>
 <script type="text/javascript" charset="utf-8">
 $('textarea.autogrow').autogrow();
 </script>
