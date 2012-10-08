@@ -39,6 +39,25 @@ function check_is_checked() {
 	return is_checked;
 }
 
+$('table#album_image_list td:not(.image)').click(function() {
+	var c = $(this).parent('tr').children('td').children('input[type=checkbox]');
+	if (c.prop('checked')) {
+		c.prop('checked', '');
+	} else {
+		c.prop('checked', 'checked');
+	}
+});
+
+$('input.album_image_all').click(function() {
+	if (this.checked) {
+		$('input.album_image_ids').attr('checked', 'checked');
+		$('input.album_image_all').attr('checked', 'checked');
+	} else {
+		$('input.album_image_ids').removeAttr('checked');
+		$('input.album_image_all').removeAttr('checked');
+	}
+});
+
 $('#form_shot_at').datetimepicker({
 	dateFormat: 'yy-mm-dd',
 	changeYear: true,

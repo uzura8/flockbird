@@ -35,6 +35,8 @@
 </div>
 
 <?php if ($album_images): ?>
+<label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
+
 <table id="album_image_list" class="table">
 <tr>
 	<th class="formParts">対象選択</th>
@@ -45,12 +47,14 @@
 <?php foreach ($album_images as $album_image): ?>
 <tr>
 	<td class="formParts"><?php echo Form::checkbox('album_image_ids[]', $album_image->id, in_array($album_image->id, $album_image_ids), array('class' => 'album_image_ids')); ?></td>
-	<td><?php echo img($album_image->file->name, '80x80', 'album/image/detail/'.$album_image->id); ?></td>
+	<td class="image"><?php echo img($album_image->file->name, '80x80', 'album/image/detail/'.$album_image->id); ?></td>
 	<td><?php echo $album_image->name; ?></td>
 	<td><?php echo date('Y年n月j日 H:i', strtotime($album_image->file->shot_at)); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>
+
+<label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
 <?php endif; ?>
 
 <?php echo Form::close(); ?>
