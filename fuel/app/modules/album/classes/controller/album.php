@@ -630,14 +630,13 @@ class Controller_Album extends \Controller_Site
 		}
 		$upload_handler = new UploadHandler($options);
 
-		$response = \Request::active()->controller_instance->response;
-		$response->set_header('Pragma', 'no-cache');
-		$response->set_header('Cache-Control', 'no-store, no-cache, must-revalidate');
-		$response->set_header('Content-Disposition', 'inline; filename="files.json"');
-		$response->set_header('X-Content-Type-Options', 'nosniff');
-		$response->set_header('Access-Control-Allow-Origin', '*');
-		$response->set_header('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
-		$response->set_header('Access-Control-Allow-$response->set_headers', 'X-File-Name, X-File-Type, X-File-Size');
+		$this->response->set_header('Pragma', 'no-cache');
+		$this->response->set_header('Cache-Control', 'no-store, no-cache, must-revalidate');
+		$this->response->set_header('Content-Disposition', 'inline; filename="files.json"');
+		$this->response->set_header('X-Content-Type-Options', 'nosniff');
+		$this->response->set_header('Access-Control-Allow-Origin', '*');
+		$this->response->set_header('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
+		$this->response->set_header('Access-Control-Allow-$response->set_headers', 'X-File-Name, X-File-Type, X-File-Size');
 
 		$body = '';
 		switch (\Input::method()) {
@@ -646,7 +645,7 @@ class Controller_Album extends \Controller_Site
 			case 'HEAD':
 			case 'GET':
 				$body = $upload_handler->get($album_id);
-				$response->set_header('Content-type', 'application/json');
+				$this->response->set_header('Content-type', 'application/json');
 				break;
 			case 'POST':
 				$_method = \Input::post('_method');
@@ -666,23 +665,23 @@ class Controller_Album extends \Controller_Site
 					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
 					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))
 					{
-						$response->set_header('Content-type', 'application/json');
+						$this->response->set_header('Content-type', 'application/json');
 					}
 					else
 					{
-						$response->set_header('Content-type', 'text/plain');
+						$this->response->set_header('Content-type', 'text/plain');
 					}
 				}
 				break;
 			case 'DELETE':
 				$body = $upload_handler->delete($this->u->id);
-				$response->set_header('Content-type', 'application/json');
+				$this->response->set_header('Content-type', 'application/json');
 				break;
 			default:
 				header('HTTP/1.1 405 Method Not Allowed');
 		}
 
-		return $response->body($body);
+		return $this->response->body($body);
 	}
 
 	protected static function check_album_image_ids($target_album_image_ids, $album_id)

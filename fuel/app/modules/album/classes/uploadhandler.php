@@ -226,31 +226,9 @@ class UploadHandler extends \JqueryFileUpload
 		$deleted_filesize = Model_AlbumImage::delete_with_file($album_image_id);
 		\Model_Member::add_filesize($member_id, -$deleted_filesize);
 
-//		$album_image->file = \Model_File::find($album_image->file_id);
-//		$file_name = $album_image->file->name;
-//
-//		\Model_Member::add_filesize($album_image->album->member_id, -$album_image->file->filesize);
-//		$album_image->file->delete();
-//		$album_image->delete();
-//
-//		if (isset($file_name)) $file_name = basename(stripslashes($file_name));
-//		$file_path = $this->options['upload_dir'].$file_name;
-//		$success = is_file($file_path) && $file_name[0] !== '.' && unlink($file_path);
-//		if ($success)
-//		{
-//			foreach($this->options['image_versions'] as $version => $options)
-//			{
-//				$file = $options['upload_dir'].$file_name;
-//				if (is_file($file))
-//				{
-//					unlink($file);
-//				}
-//			}
-//		}
-
 		\DB::commit_transaction();
 
-		return json_encode($success);
+		return json_encode($deleted_filesize);
 	}
 
 	protected function save_file($upload, $album_id, $member_id, $extention = '', $prefix = '', $max_size = 0, $index = null)
