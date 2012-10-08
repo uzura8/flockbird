@@ -10,14 +10,15 @@ class UploadHandler extends \JqueryFileUpload
 	public $member_filesize_total = 0;
 	public $is_save_exif_data = false;
 
-	public function get($album_id)
+	public function get($album_id = 0)
 	{
 		$file_name = isset($_REQUEST['file']) ? basename(stripslashes($_REQUEST['file'])) : null;
+		$info = null;
 		if ($file_name)
 		{
 			$info = $this->get_file_object($file_name);
 		}
-		else
+		elseif ($album_id)
 		{
 			$info = $this->get_file_objects($album_id);
 		}
@@ -163,8 +164,10 @@ class UploadHandler extends \JqueryFileUpload
 		return $file;
 	}
 
-	public function post($album_id, $member_id, $max_size = 0)
+	public function post($album_id = 0, $member_id = 0, $max_size = 0)
 	{
+		if (!$album_id || !$member_id) return;
+
 		$_method = \Input::post('_method');
 		if (isset($_method) && $_method === 'DELETE')
 		{
