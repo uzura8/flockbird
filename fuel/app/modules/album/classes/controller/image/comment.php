@@ -83,7 +83,7 @@ class Controller_Image_comment extends \Controller_Site
 	public function action_list($album_image_id = null)
 	{
 		$album_image_id = (int)$album_image_id;
-		if (!$album_image_id || !$album_image = Model_Albumimage::check_authority($album_image_id))
+		if (!$album_image_id || !$album_image = Model_Albumimage::check_authority($album_image_id, $this->u->id))
 		{
 			return \View::forge('image/comment/list_error.php');
 		}

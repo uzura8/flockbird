@@ -6,14 +6,14 @@ $('.carousel').carousel({
 $(function(){
 	var baseUrl = '<?php echo Uri::base(false); ?>';
 
-	var basePath = '/upload/img/album/original/'; // 画像のベースパスを指定
+	var basePath = '/<?php echo Site_util::get_upload_uri_base_path('img', 'ai', $id); ?>/600x600/'; // 画像のベースパスを指定
 	var images = []; // 画像ファイル名格納用配列
 	var image_ids = []; // 画像id格納用配列
 	var slideNumber = 0;
 
 	$.get('/album/api/detail/<?php echo $id; ?>.json', function(json){
 			$.each(json, function(i, data){
-					images.push(basePath + data.image);
+					images.push(basePath + data.file.name);
 					image_ids.push(data.id);
 			});
 			

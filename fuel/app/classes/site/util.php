@@ -100,17 +100,23 @@ class Site_util
 		$parts = explode('_', $filename);
 		if (count($parts) < 3) return false;
 
-		$dirs = array(
-			PRJ_UPLOAD_DIRNAME,
-			$type,
-			$parts[0],
-			Site_util::get_middle_dir($parts[1]),
-		);
-		$dir_path = implode('/', $dirs);
+		$dir_path = self::get_upload_uri_base_path($type, $parts[0], $parts[1]);
 
 		if ($is_dir) return $dir_path;
 
 		return $dir_path.'/'.$filename;
+	}
+
+	public static function get_upload_uri_base_path($type, $identifer, $id)
+	{
+		$dirs = array(
+			PRJ_UPLOAD_DIRNAME,
+			$type,
+			$identifer,
+			Site_util::get_middle_dir($id),
+		);
+
+		return implode('/', $dirs);
 	}
 
 	public static function convert_sizes($size_string)

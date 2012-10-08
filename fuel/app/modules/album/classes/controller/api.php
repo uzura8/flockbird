@@ -26,7 +26,7 @@ class Controller_Api extends \Controller_Rest
 		{
 			throw new \HttpNotFoundException;
 		}
-		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->order_by('id')->get();
+		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->related('file')->order_by('id')->get();
 
 		$this->response($album_images);
 	}

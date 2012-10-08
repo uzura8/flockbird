@@ -54,12 +54,12 @@
 <?php foreach ($album_images as $album_image): ?>
 	<div class="ai_item">
 		<div><?php echo img($album_image->file->name, '200x200', 'album/image/detail/'.$album_image->id); ?></div>
-		<p>
+		<div>
 		<?php echo Html::anchor('album/image/detail/'.$album_image->id, ($album_image->name) ? $album_image->name : $album_image->file->original_filename); ?>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
 			<a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a>
 <?php endif; ?>
-		</p>
+		</div>
 	</div>
 <?php $i++; ?>
 <?php endforeach; ?>
