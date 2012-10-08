@@ -307,6 +307,7 @@ class UploadHandler extends \JqueryFileUpload
 				if (!empty($exif['DateTimeOriginal'])) $model_file->shot_at = date('Y-m-d H:i:s', strtotime($exif['DateTimeOriginal']));
 				$model_file->exif = serialize($exif);
 			}
+			if (empty($model_file->shot_at)) $model_file->shot_at = date('Y-m-d H:i:s');
 			$model_file->save();
 
 			// album_image の保存
