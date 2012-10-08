@@ -86,7 +86,7 @@ class Controller_Album extends \Controller_Site
 		$this->template->header_title = site_title($this->template->title);
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
 
-		$list = Model_Note::find()->where('member_id', $member_id)->order_by('created_at', 'desc')->get();
+		$list = Model_Album::find()->where('member_id', $member_id)->related('member')->order_by('created_at', 'desc')->get();
 
 		$this->template->content = \View::forge('_parts/list', array('member' => $member, 'list' => $list));
 	}

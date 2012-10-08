@@ -21,10 +21,9 @@ class Site_util
 	public static function check_filename_format($filename)
 	{
 		$ids = array_keys(Config::get('site.upload_files.img'));
-		$pattern = '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]{32}\.(jpg|png|gif)/i';
-		if (preg_match($pattern, $filename) === false) return false;
+		$pattern = '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]+\.(jpg|png|gif)/i';
 
-		return true;
+		return (bool)preg_match($pattern, $filename);
 	}
 
 	public static function get_upload_file_path($filename, $size)

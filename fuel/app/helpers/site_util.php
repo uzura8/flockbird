@@ -52,7 +52,12 @@ function site_get_screen_name($u)
 
 function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = false)
 {
-	$identify = Util_string::get_exploded($filename);
+	$identify = '';
+	if (Site_util::check_filename_format($filename))
+	{
+		$identify = Util_string::get_exploded($filename);
+	}
+
 	$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes');
 	if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
 	list($width, $height) = explode('x', $size);
@@ -64,7 +69,7 @@ function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = fal
 
 	if ($identify == 'm') $option = array('class' => 'profile_image');
 
-	if (!file_exists($file))
+	if (!$identify || !file_exists($file))
 	{
 		$option['alt'] = 'No image.';
 		if (!empty($width)) $option['width'] = $width;
