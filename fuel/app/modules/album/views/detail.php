@@ -24,6 +24,7 @@
 <?php endif; ?>
 
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
+<?php if (Config::get('album.display_setting.detail.display_upload_form')): ?>
 <div class="well">
 <?php echo Form::open(array('action' => 'album/upload_image', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
 <?php echo Form::hidden(Config::get('security.csrf_token_key'), Util_security::get_csrf()); ?>
@@ -40,32 +41,29 @@
 </div>
 <?php echo Form::close(); ?>
 </div>
-
+<?php endif; ?>
 <div>
 <?php echo Html::anchor('album/manage_images/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn')); ?>
 <?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('album.term.album_image')), array('class' => 'btn ml10')); ?>
 </div>
 <?php endif; ?>
 
-
 <?php if ($album_images): ?>
-<dl>
+<div id="ai_container">
 <?php $i = 0; ?>
 <?php foreach ($album_images as $album_image): ?>
-	<dt><?php echo img($album_image->file->name, '200x200', 'album/image/detail/'.$album_image->id); ?></dt>
-	<dd>
+	<div class="ai_item">
+		<div><?php echo img($album_image->file->name, '200x200', 'album/image/detail/'.$album_image->id); ?></div>
 		<p>
-<?php if (!empty($album_image->name)): ?>
-			<?php echo Html::anchor('album/image/detail/'.$album_image->id, $album_image->name); ?>
-<?php endif; ?>
+		<?php echo Html::anchor('album/image/detail/'.$album_image->id, ($album_image->name) ? $album_image->name : $album_image->file->original_filename); ?>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
 			<a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a>
 <?php endif; ?>
 		</p>
-	</dd>
+	</div>
 <?php $i++; ?>
 <?php endforeach; ?>
-</dl>
+</div>
 <?php endif; ?>
 
 <?php /*foreach ($comments as $comment): ?>
