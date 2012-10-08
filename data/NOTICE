@@ -1,0 +1,12 @@
+* fuelphp1.x
+
+* bootstrap
+* jquery
+* jquery-ui
+  - http://jqueryui.com/
+* jquery-ui-timepicker-addon
+* jquery-ui-sliderAccess
+* jquery.alerts
+* jquery.autogrow-textarea
+* jquery.jgrowl
+* jqueryfileupload
