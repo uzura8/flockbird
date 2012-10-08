@@ -121,7 +121,7 @@ class Site_util
 		return $sizes;
 	}
 
-	public function check_max_size_and_resize($file, $max_size, $width, $height, $resize_type = 'relative')
+	public static function check_max_size_and_resize($file, $max_size, $width, $height, $resize_type = 'relative')
 	{
 		$sizes = Image::sizes($file);
 
