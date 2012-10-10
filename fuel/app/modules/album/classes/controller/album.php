@@ -41,6 +41,7 @@ class Controller_Album extends \Controller_Site
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
 
 		$list = Model_Album::find()->related('member')->order_by('created_at', 'desc')->get();
+		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', array('list' => $list));
 	}
 

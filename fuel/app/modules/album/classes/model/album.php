@@ -12,15 +12,16 @@ class Model_Album extends \Orm\Model
 			'key_to' => 'id',
 		)
 	);
-/*
 	protected static $_has_many = array(
-		'note_comment' => array(
+		'album_image' => array(
 			'key_from' => 'id',
-			'model_to' => '\Note\Model_NoteComment',
-			'key_to' => 'note_id',
+			'model_to' => '\Album\Model_AlbumImage',
+			'key_to' => 'album_image_id',
+			'cascade_save' => true,
+			'cascade_delete' => false,
 		)
 	);
-*/
+
 	protected static $_properties = array(
 		'id',
 		'member_id',
@@ -31,6 +32,7 @@ class Model_Album extends \Orm\Model
 			'validation' => array('required', 'max_length' => array(1)),
 			'default' => 0,
 		),
+		'cover_album_image_id',
 		'created_at',
 		'updated_at',
 	);

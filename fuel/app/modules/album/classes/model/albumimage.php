@@ -10,6 +10,8 @@ class Model_AlbumImage extends \Orm\Model
 			'key_from' => 'album_id',
 			'model_to' => '\Album\Model_Album',
 			'key_to' => 'id',
+			'cascade_save' => false,
+			'cascade_delete' => false,
 		),
 	);
 	protected static $_has_one = array(
@@ -47,6 +49,8 @@ class Model_AlbumImage extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 	);
+
+	protected static $count_par_album_list = array();
 
 	public static function validate($factory)
 	{
@@ -90,5 +94,16 @@ class Model_AlbumImage extends \Orm\Model
 		\Site_util::remove_images('ai', $album_id, $file_name);
 
 		return $filesize;
+	}
+
+	public static function get_count4album_id($album_id)
+	{
+		if (!empty(self::$count_par_album_list[$album_id])) return self::$count_par_album_list[$album_id];
+
+		$query = self::find()->where('album_id', $album_id);
+		$count = $query->count();
+		self::$count_par_album_list[$album_id] = $count;
+
+		return $count;
 	}
 }

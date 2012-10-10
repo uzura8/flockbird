@@ -5,8 +5,7 @@
 			<b class="fullname"><?php echo Html::anchor('member/'.$album->member->id, $album->member->name); ?></b>
 		</div>
 		<small>
-		日時: <?php echo date('Y年n月j日 H:i', strtotime($album->created_at)) ?>
-		(<?php echo Date::time_ago(strtotime($album->created_at)) ?>)
+		日時: <?php echo site_get_time($album->created_at) ?>
 		</small>
 	</div>
 </div>

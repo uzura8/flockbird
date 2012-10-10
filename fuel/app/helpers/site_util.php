@@ -59,7 +59,7 @@ function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = fal
 	}
 
 	$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes');
-	if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
+	if (!$size || ($sizes && !in_array($size, $sizes))) $size = '50x50';
 	list($width, $height) = explode('x', $size);
 
 	$uri_basepath = Site_util::get_upload_path('img', $filename, true);
