@@ -15,7 +15,9 @@ class Controller_Site extends Controller_Base
 	{
 		parent::before();
 
+		$this->auth_check('site/login');
 		$this->set_current_user();
+
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
 	}

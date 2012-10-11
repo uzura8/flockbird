@@ -1,16 +1,15 @@
 <?php
 namespace Album;
 
-class Controller_Api extends \Controller_Rest
+class Controller_Api extends \Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
+		'get_detail',
 	);
 
 	public function before()
 	{
 		parent::before();
-
-		//$this->auth_check();
 	}
 
 	/**

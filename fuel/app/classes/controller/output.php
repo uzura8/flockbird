@@ -9,8 +9,6 @@ class Controller_Output extends Controller
 	public function before()
 	{
 		parent::before();
-
-		//$this->auth_check();
 	}
 
 	/**

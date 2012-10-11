@@ -8,8 +8,6 @@ class Controller_Image extends \Controller_Site
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check();
 	}
 
 	public function action_index($id = null)

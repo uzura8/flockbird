@@ -11,8 +11,6 @@ class Controller_Member_setting extends Controller_Member
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check();
 	}
 
 	/**

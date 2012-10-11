@@ -8,8 +8,6 @@ class Controller_Comment extends \Controller_Site
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check();
 	}
 
 	public function action_create($note_id = null)

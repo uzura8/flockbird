@@ -11,6 +11,7 @@ require COREPATH.'bootstrap.php';
 Autoloader::add_classes(array(
 	// Add classes you want to override here
 	// Example: 'View' => APPPATH.'classes/view.php',
+	'Controller' => APPPATH.'classes/controller.php',
 	//'DB' => APPPATH.'classes/db.php',
 	'Database_Query_Builder_Update' => APPPATH.'classes/database/query/builder/update.php',
 	'Validation' => APPPATH.'classes/validation.php',

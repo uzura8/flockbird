@@ -13,8 +13,6 @@ class Controller_Note extends \Controller_Site
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check();
 	}
 
 	/**

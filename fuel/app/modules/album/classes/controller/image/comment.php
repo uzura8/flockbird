@@ -8,8 +8,6 @@ class Controller_Image_comment extends \Controller_Site
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check();
 	}
 
 	public function action_create($album_image_id = null)

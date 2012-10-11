@@ -17,8 +17,6 @@ class Controller_Member extends Controller_Site
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check();
 	}
 
 	/**

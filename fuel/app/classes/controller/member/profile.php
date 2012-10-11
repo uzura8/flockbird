@@ -8,8 +8,6 @@ class Controller_Member_profile extends Controller_Member
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check();
 	}
 
 	/**
