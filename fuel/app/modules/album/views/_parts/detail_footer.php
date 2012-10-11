@@ -10,14 +10,18 @@ $('#ai_container').masonry({
 });
 
 function set_cover(album_image_id) {
-	$.post(
-		baseUrl + 'album/set_cover_ajax/' + album_image_id,
-		{
-			'<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>',
-		},
-		function(data) {
+	var baseUrl = '<?php echo Uri::base(false); ?>';
+	$.ajax({
+		url : baseUrl + 'album/image/api/set_cover.json',
+		dataType : 'text',
+		data : {'id': album_image_id, '<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>'},
+		type : 'POST',
+		success: function(status_after){
 			$.jGrowl('カバー写真を設定しました。');
+		},
+		error: function(){
+			$.jGrowl('カバー写真の設定に失敗しました。');
 		}
-	);
+	});
 }
 </script>

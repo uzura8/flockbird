@@ -6,13 +6,14 @@ class Controller_Site_Api extends Controller_Base_Api
 	{
 		parent::before();
 		$this->auth_check_api();
+		$this->set_current_user();
 	}
 
 	public function auth_check_api()
 	{
 		if ($this->auth_check()) return;
 
-		$this->response(array('error' => 'Not Authorized'), 401);
+		$this->response(array('status' => 'NG', 'error' => 'Not Authorized'), 401);
 	}
 
 	private function set_current_user()
