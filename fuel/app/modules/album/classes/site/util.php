@@ -20,9 +20,8 @@ class Site_util
 
 	public static function get_album_cover_filename($cover_album_image_id = 0, $album_id = 0)
 	{
-		if ($cover_album_image_id)
+		if ($cover_album_image_id && $album_image = Model_AlbumImage::find($cover_album_image_id)->related('file')->get_one())
 		{
-			$album_image = Model_AlbumImage::find($cover_album_image_id)->related('file')->get_one();
 		}
 		else
 		{

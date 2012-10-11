@@ -4,7 +4,7 @@
 <?php foreach ($list as $id => $album): ?>
 	<div class="a_item">
 		<?php echo img(\Album\Site_util::get_album_cover_filename($album->cover_album_image_id, $album->id), '200x200', 'album/detail/'.$id); ?>
-		<h4><?php echo Html::anchor('album/detail/'.$id, $album->name); ?></h4>
+		<h5><?php echo Html::anchor('album/detail/'.$id, $album->name); ?></h5>
 
 		<div class="member_img_box_s">
 			<?php echo img((!empty($album->member))? $album->member->get_image() : '', '30x30', 'member/'.$album->member_id); ?>

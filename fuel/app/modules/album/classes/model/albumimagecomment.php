@@ -38,6 +38,8 @@ class Model_AlbumImageComment extends \Orm\Model
 		),
 	);
 
+	protected static $count_par_album_image_list = array();
+
 	public static function validate($factory)
 	{
 		$val = \Validation::forge($factory);
@@ -58,5 +60,15 @@ class Model_AlbumImageComment extends \Orm\Model
 		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
 
 		return $obj;
+	}
+
+	public static function get_count4album_image_id($album_image_id)
+	{
+		if (!empty(self::$count_par_album_image_list[$album_image_id])) return self::$count_par_album_image_list[$album_image_id];
+
+		$query = self::find()->where('album_image_id', $album_image_id);
+		self::$count_par_album_image_list[$album_image_id] = $query->count();;
+
+		return self::$count_par_album_image_list[$album_image_id];
 	}
 }

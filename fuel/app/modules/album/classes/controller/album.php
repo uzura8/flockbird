@@ -401,8 +401,17 @@ class Controller_Album extends \Controller_Site
 				\DB::start_transaction();
 				if (\Input::post('clicked_btn') == 'delete')
 				{
+					// カバー写真が削除された場合の対応
+					if ($album->cover_album_image_id && in_array($album->cover_album_image_id, $album_image_ids))
+					{
+						$album->cover_album_image_id = null;
+						$album->save();
+					}
 					if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
 					if (!$result = \DB::delete('album_image')->where('id', 'in', $album_image_ids)->execute()) $is_db_error = true;
+
+					\Model_Member::recalculate_filesize_total($this->u->id);
+
 					$message = $result.'件削除しました';
 				}
 				elseif (\Input::post('clicked_btn') == 'post')

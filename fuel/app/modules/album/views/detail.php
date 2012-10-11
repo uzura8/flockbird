@@ -54,10 +54,18 @@
 <?php foreach ($album_images as $album_image): ?>
 	<div class="ai_item">
 		<div><?php echo img((!empty($album_image->file)) ? $album_image->file->name : '', '200x200', 'album/image/detail/'.$album_image->id); ?></div>
-		<div>
-		<?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?>
+		<h5><?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
+		<div class="article btn-toolbar">
+			<small><i class="icon-comment"></i> <?php echo $comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
-			<a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a>
+			<div class="btn-group">
+				<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
+				<ul class="dropdown-menu">
+					<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>
+					<li><a href="javascript:void(0);" onclick="set_cover(<?php echo $album_image->id; ?>);"><i class="icon-book"></i> カバーに指定</a></li>
+					<li><a href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i> 削除</a></li>
+				</ul>
+			</div><!-- /btn-group -->
 <?php endif; ?>
 		</div>
 	</div>

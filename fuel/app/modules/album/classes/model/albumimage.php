@@ -23,6 +23,15 @@ class Model_AlbumImage extends \Orm\Model
 			'cascade_delete' => true,
 		),
 	);
+	protected static $_has_many = array(
+		'album_image_comment' => array(
+			'key_from' => 'id',
+			'model_to' => '\Album\Model_AlbumImageComment',
+			'key_to' => 'album_image_id',
+			'cascade_save' => false,
+			'cascade_delete' => false,
+		)
+	);
 
 	protected static $_properties = array(
 		'id',
@@ -85,6 +94,13 @@ class Model_AlbumImage extends \Orm\Model
 		{
 			throw new \Exception('Invalid album_image id.');
 		}
+
+		if ($album_image->album->cover_album_image_id == $id)
+		{
+			$album_image->album->cover_album_image_id = null;
+			$album_image->album->save();
+		}
+
 		$album_id = $album_image->album_id;
 		$album_image->file = \Model_File::find($album_image->file_id);
 		$file_name = $album_image->file->name;
@@ -101,9 +117,8 @@ class Model_AlbumImage extends \Orm\Model
 		if (!empty(self::$count_par_album_list[$album_id])) return self::$count_par_album_list[$album_id];
 
 		$query = self::find()->where('album_id', $album_id);
-		$count = $query->count();
-		self::$count_par_album_list[$album_id] = $count;
+		self::$count_par_album_list[$album_id] = $query->count();
 
-		return $count;
+		return self::$count_par_album_list[$album_id];
 	}
 }

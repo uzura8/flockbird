@@ -110,9 +110,7 @@ $(function(){
 	});
 
 	$('#btn_album_image_comment_create').live("click", function(){
-		//$("#input_album_image_comment").val('hoge');
 		var body = $("#input_album_image_comment").val().trim();
-console.log(body);
 		if (body.length > 0) {
 			$.post(
 				baseUrl + 'album/image/comment/create_ajax/' + image_ids[slideNumber],
