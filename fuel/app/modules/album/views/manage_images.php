@@ -9,7 +9,7 @@
 <?php echo Form::open(array('action' => 'album/upload_images/'.$album->id, 'id' => 'fileupload', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
 		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 		<div class="row-fluid fileupload-buttonbar">
-				<div class="span5">
+				<div class="span8">
 						<!-- The fileinput-button span is used to style the file input field as button -->
 						<span class="btn btn-success fileinput-button">
 								<i class="icon-plus icon-white"></i>
@@ -24,11 +24,13 @@
 								<i class="icon-ban-circle icon-white"></i>
 								<span>Cancel upload</span>
 						</button>
+<?php if (Config::get('album.display_setting.manage_images.display_delete_button', false)): ?>
 						<button type="button" class="btn btn-danger delete">
 								<i class="icon-trash icon-white"></i>
 								<span>Delete</span>
 						</button>
 						<input type="checkbox" class="toggle">
+<?php endif; ?>
 				</div>
 				<!-- The global progress information -->
 				<div class="span4 fileupload-progress fade">

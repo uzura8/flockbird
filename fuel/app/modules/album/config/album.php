@@ -13,5 +13,8 @@ return array(
 		'detail' => array(
 			'display_upload_form' => false,
 		),
+		'manage_images' => array(
+			'display_delete_button' => false,
+		),
 	),
 );
