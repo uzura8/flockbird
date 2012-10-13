@@ -2,6 +2,7 @@
 <?php echo Form::hidden(Config::get('security.csrf_token_key'), Util_security::get_csrf()); ?>
 <?php echo Form::hidden('clicked_btn', '', array('id' => 'clicked_btn')); ?>
 
+<?php if ($album_images): ?>
 <div class="well">
 	<h4><?php echo \Config::get('album.term.album_image'); ?>一括操作</h4>
 	<div class="control-group">
@@ -34,7 +35,6 @@
 	</div>
 </div>
 
-<?php if ($album_images): ?>
 <label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
 
 <table id="album_image_list" class="table">
@@ -47,14 +47,16 @@
 <?php foreach ($album_images as $album_image): ?>
 <tr>
 	<td class="formParts"><?php echo Form::checkbox('album_image_ids[]', $album_image->id, in_array($album_image->id, $album_image_ids), array('class' => 'album_image_ids')); ?></td>
-	<td class="image"><?php echo img($album_image->file->name, '80x80', 'album/image/detail/'.$album_image->id); ?></td>
+	<td class="image"><?php echo img((isset($album_image->file->name)) ? $album_image->file->name : '', '80x80', 'album/image/detail/'.$album_image->id); ?></td>
 	<td><?php echo $album_image->name; ?></td>
-	<td><?php echo date('Y年n月j日 H:i', strtotime($album_image->file->shot_at)); ?></td>
+	<td><?php if (isset($album_image->file->shot_at)) echo date('Y年n月j日 H:i', strtotime($album_image->file->shot_at)); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>
 
 <label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
+<?php else: ?>
+	<p><?php echo \Config::get('album.term.album_image'); ?>がありません。</p>
 <?php endif; ?>
 
 <?php echo Form::close(); ?>

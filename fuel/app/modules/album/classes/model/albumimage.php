@@ -17,7 +17,7 @@ class Model_AlbumImage extends \Orm\Model
 	protected static $_has_one = array(
 		'file' => array(
 			'key_from' => 'file_id',
-			'model_to' => 'Model_File',
+			'model_to' => '\Model_File',
 			'key_to' => 'id',
 			'cascade_save' => false,
 			'cascade_delete' => true,

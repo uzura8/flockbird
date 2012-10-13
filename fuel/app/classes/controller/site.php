@@ -11,6 +11,10 @@
  */
 class Controller_Site extends Controller_Base
 {
+	protected $check_not_auth_action = array(
+		'login',
+	);
+
 	public function before()
 	{
 		parent::before();
