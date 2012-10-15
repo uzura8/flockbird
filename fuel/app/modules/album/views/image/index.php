@@ -2,7 +2,9 @@
 
 <hr />
 
+<?php if (Auth::check() || $comments): ?>
 <h3 id="comments">Comments</h3>
+<?php endif; ?>
 
 <?php foreach ($comments as $comment): ?>
 <div class="commentBox">

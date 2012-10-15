@@ -8,6 +8,7 @@ class Controller_Album extends \Controller_Site
 		'list',
 		'list_member',
 		'detail',
+		'image_list',
 	);
 
 	public function before()
@@ -103,7 +104,6 @@ class Controller_Album extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->related('file')->order_by('created_at')->get();
 
 		$this->template->title = trim($album->name);
 		$this->template->header_title = site_title(mb_strimwidth($this->template->title, 0, 50, '...'));
@@ -125,8 +125,29 @@ class Controller_Album extends \Controller_Site
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/detail_footer');
-		$this->template->content = \View::forge('detail', array('id' => $id, 'album' => $album, 'album_images' => $album_images));
-		//$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
+
+		$data = self::get_album_image_list($id, 1);
+		$data['album'] = $album;
+		$this->template->content = \View::forge('detail', $data);
+	}
+
+	/**
+	 * Album image list
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_image_list($id = 0)
+	{
+		if (!$album = Model_Album::check_authority($id))
+		{
+			throw new \HttpNotFoundException;
+		}
+		$data = self::get_album_image_list($id, (int)\Input::get('page', 1));
+
+		return \View::forge('image_list.php', $data);
 	}
 
 	/**
@@ -701,5 +722,26 @@ class Controller_Album extends \Controller_Site
 		}
 
 		return true;
+	}
+
+	protected static function get_album_image_list($id, $page)
+	{
+		$page = (int)$page;
+		if ($page < 1) $page = 1;
+
+		$limit  = \Config::get('album.article_list.limit');
+		$offset = $limit * ($page - 1);
+
+		$query = Model_AlbumImage::find()
+			->where('album_id', $id)
+			->related('album')->related('file')
+			->order_by('created_at');
+
+		$count = $query->count();
+		$album_images = $query->offset($offset)->limit($limit)->get();
+
+		$is_next = ($count > $offset + $limit) ? true : false;
+
+		return array('id' => $id, 'album_images' => $album_images, 'page' => $page, 'is_next' => $is_next);
 	}
 }

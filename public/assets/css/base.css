@@ -37,22 +37,38 @@ img.profile_image {
 	margin-left: 65px;
 }
 
-.member_img_box_s {
+.member_img_box_s,
+.member_img_box_ss
+{
 	position: relative;
+	text-align: left;
 }
-.member_img_box_s img.profile_image {
+.member_img_box_s img.profile_image,
+.member_img_box_ss img.profile_image
+{
 	position: absolute;
 	left: 0;
 	top: 3px;
 }
+
 .member_img_box_s div.content {
 	margin-left: 35px;
 }
+.member_img_box_ss div.content {
+	margin-left: 24px;
+}
+
 .member_img_box_s div.content .fullname,
 .member_img_box_s div.content small {
 	font-size: 12px;
 	line-height: 13px;
 }
+.member_img_box_ss div.content .fullname,
+.member_img_box_ss div.content small {
+	font-size: 11px;
+	line-height: 12px;
+}
+
 .member_img_box_s div.content div.main .fullname {
 	margin-right: 5px;
 }
@@ -87,6 +103,12 @@ img.profile_image {
 }
 .ml10 {
   margin-left: 10px;
+}
+.mr {
+  margin-right: 5px;
+}
+.mr10 {
+  margin-right: 10px;
 }
 
 div#popup_container.ui-draggable #popup_message {
@@ -126,8 +148,6 @@ div#popup_container.ui-draggable #popup_message {
 
 #a_container .a_item {
 	width: 216px;
-	/*width: 260px;*/
-	/*height: 300px;*/
 	margin: 0 5px 10px;
 	padding: 13px 0 10px;
 	text-align: center;
@@ -152,4 +172,31 @@ div#popup_container.ui-draggable #popup_message {
 }
 #a_container .a_item img {
 	margin: 0 0 5px;
+}
+
+#ai_container .ai_item .commentBox .btn_album_image_comment_delete {
+	display: none;
+}
+#ai_container .ai_item .imgBox .btn_album_image_edit {
+	display: none;
+}
+#ai_container .ai_item .commentBox {
+	padding: 5px 10px 5px 5px;
+}
+
+#infscr-loading {
+	margin-left: -100px;
+	width: 200px;
+	position: fixed;
+	left: 50%;
+	bottom: 10px;
+	text-align: center;
+}
+
+#btn_menu {
+	padding-left:  5px;
+	margin-bottom: 5px;
+}
+#btn_menu .btn {
+	margin-top: 5px;
 }

@@ -1,7 +1,6 @@
 <p><?php echo nl2br($album->body) ?></p>
 
-<hr />
-
+<?php if (Config::get('album.display_setting.detail.display_slide_image')): ?>
 <?php if ($album_images): ?>
 <div id="myCarousel" class="carousel slide">
 	<div class="carousel-inner">
@@ -22,9 +21,9 @@
 	<a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
 </div>
 <?php endif; ?>
+<?php endif; ?>
 
-<?php if (Auth::check() && $album->member_id == $u->id): ?>
-<?php if (Config::get('album.display_setting.detail.display_upload_form')): ?>
+<?php if (Config::get('album.display_setting.detail.display_upload_form') && Auth::check() && $album->member_id == $u->id): ?>
 <div class="well">
 <?php echo Form::open(array('action' => 'album/upload_image', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
 <?php echo Form::hidden(Config::get('security.csrf_token_key'), Util_security::get_csrf()); ?>
@@ -42,37 +41,16 @@
 <?php echo Form::close(); ?>
 </div>
 <?php endif; ?>
-<div>
-<?php echo Html::anchor('album/manage_images/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn')); ?>
-<?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('album.term.album_image')), array('class' => 'btn ml10')); ?>
-</div>
-<?php endif; ?>
 
-<?php if ($album_images): ?>
-<div id="ai_container">
-<?php $i = 0; ?>
-<?php foreach ($album_images as $album_image): ?>
-	<div class="ai_item">
-		<div><?php echo img((!empty($album_image->file)) ? $album_image->file->name : '', '200x200', 'album/image/detail/'.$album_image->id); ?></div>
-		<h5><?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
-		<div class="article btn-toolbar">
-			<small><i class="icon-comment"></i> <?php echo $comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
-<?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
-			<div class="btn-group">
-				<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
-				<ul class="dropdown-menu">
-					<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>
-					<li><a href="javascript:void(0);" onclick="set_cover(<?php echo $album_image->id; ?>);"><i class="icon-book"></i> カバーに指定</a></li>
-					<li><a href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i> 削除</a></li>
-				</ul>
-			</div><!-- /btn-group -->
+<div id="btn_menu">
+<?php echo Html::anchor('album/slide/'.$album->id, sprintf('<i class="icon-picture"></i> %sを見る', \Config::get('album.term.album_image')), array('class' => 'btn mr')); ?>
+<?php if (Auth::check() && $album->member_id == $u->id): ?>
+<?php echo Html::anchor('album/manage_images/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn mr')); ?>
+<?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('album.term.album_image')), array('class' => 'btn')); ?>
 <?php endif; ?>
-		</div>
-	</div>
-<?php $i++; ?>
-<?php endforeach; ?>
 </div>
-<?php endif; ?>
+
+<?php include('_parts/album_image_list.php'); ?>
 
 <?php /*foreach ($comments as $comment): ?>
 <div class="commentBox">

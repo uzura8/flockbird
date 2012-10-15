@@ -3,7 +3,10 @@ namespace Album;
 
 class Controller_Image extends \Controller_Site
 {
-	protected $check_not_auth_action = array();
+	protected $check_not_auth_action = array(
+		'index',
+		'detail',
+	);
 
 	public function before()
 	{
@@ -18,7 +21,7 @@ class Controller_Image extends \Controller_Site
 	public function action_detail($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album_image = Model_Albumimage::check_authority($id, $this->u->id))
+		if (!$id || !$album_image = Model_Albumimage::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -47,8 +50,8 @@ class Controller_Image extends \Controller_Site
 		else
 		{
 			$this->template->breadcrumbs[\Config::get('album.term.album')] = '/album/';
-			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/list/'.$album->member->id;
+			$key = $album_image->album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
+			$this->template->breadcrumbs[$key] =  '/album/list/'.$album_image->album->member->id;
 			$key = $album_image->album->name;
 			$this->template->breadcrumbs[$key] =  '/album/detail/'.$album_image->album_id;
 		}

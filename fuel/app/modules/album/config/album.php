@@ -12,6 +12,7 @@ return array(
 	'display_setting' => array(
 		'detail' => array(
 			'display_upload_form' => false,
+			'display_slide_image' => false,
 		),
 		'manage_images' => array(
 			'display_delete_button' => false,
