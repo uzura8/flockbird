@@ -8,6 +8,7 @@ class Controller_Album extends \Controller_Site
 		'list',
 		'list_member',
 		'detail',
+		'slide',
 		'image_list',
 	);
 
@@ -226,13 +227,12 @@ class Controller_Album extends \Controller_Site
 			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
 			$this->template->breadcrumbs[$key] =  '/album/list/'.$album->member->id;
 		}
-		$this->template->breadcrumbs[\Config::get('site.term.album').'詳細'] = '';
+		$this->template->breadcrumbs[$album->name] = '';
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/slide_footer', array('id' => $id));
 		$this->template->content = \View::forge('slide', array('album' => $album, 'album_images' => $album_images));
-		$this->template->subside_contents = \View::forge('_parts/subside_contents');
-		//$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
+		//$this->template->subside_contents = \View::forge('_parts/subside_contents');
 	}
 
 	/**

@@ -12,101 +12,113 @@ $(function(){
 	var slideNumber = 0;
 
 	$.get('/album/api/detail/<?php echo $id; ?>.json', function(json){
-			$.each(json, function(i, data){
-					images.push(basePath + data.file.name);
-					image_ids.push(data.id);
-			});
-			
-			if ( images.length < 2 ) {
-					return;
+		$.each(json, function(i, data){
+			images.push(basePath + data.file.name);
+			image_ids.push(data.id);
+		});
+
+		if ( images.length < 2 ) {
+			return;
+		}
+
+		// 最初の画像の設定
+		var position = {
+			prev : images.length - 1,
+			now  : 0,
+			next : 1
+		};
+
+		var html = "";
+		$.each(position, function(i, v){
+			if ( i == 'now' ) {
+				html += "<img class='item active' src='"+ images[v]+"' id='image_" + image_ids[v] + "'>";
 			}
-
-			// 最初の画像の設定
-			var position = {
-					prev : images.length - 1,
-					now  : 0,
-					next : 1
-			};
-
-			var html = "";
-			$.each(position, function(i, v){
-					if ( i == 'now' ) {
-							html += "<img class='item active' src='"+ images[v]+"' id='image_" + image_ids[v] + "'>";
-					}
-					else {
-							html += "<img class='item' src='"+ images[v]+"' id='image_" + image_ids[v] + "'>";
-					}
-			});
-
-			if ( html == "" ) {
-					return;
+			else {
+				html += "<img class='item' src='"+ images[v]+"' id='image_" + image_ids[v] + "'>";
 			}
-			
-			// 画像のDOMの追加
-			$('#myCarousel > .carousel-inner').html(html);
-			$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
-			$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '">詳細</a>');
+		});
 
-			show_list(baseUrl, image_ids[slideNumber], true);
+		if ( html == "" ) {
+			return;
+		}
+
+		// 画像のDOMの追加
+		$('#myCarousel > .carousel-inner').html(html);
+		//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
+		$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
+
+		show_list(baseUrl, image_ids[slideNumber], true);
 	},'json');
 	
-	var next = function(){
-			// 次のスライドへ移動
-			slideNumber++;
-			if (slideNumber > images.length - 1) {
-					slideNumber = 0;
-			}
+	var next = function() {
+		// 次のスライドへ移動
+		slideNumber++;
 
-			nextSlideNumber = slideNumber + 1;
-			if (nextSlideNumber > images.length - 1) {
-					nextSlideNumber = 0;
-			}
+		if (slideNumber > images.length - 1) {
+			slideNumber = 0;
+		}
+		nextSlideNumber = slideNumber + 1;
+		if (nextSlideNumber > images.length - 1) {
+			nextSlideNumber = 0;
+		}
+		prevSlideNumber = slideNumber - 1;
+		if (prevSlideNumber < 0) {
+			prevSlideNumber = images.length - 1;
+		}
 
-			$('#myCarousel > .carousel-inner > img:first').empty();
-			$('#myCarousel > .carousel-inner').append('<img class="item" src="'+ images[nextSlideNumber]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
-			$('#myCarousel').carousel('next');
-			show_list(baseUrl, image_ids[slideNumber], true);
+		$('#myCarousel > .carousel-inner > img:first').empty();
+		$('#myCarousel > .carousel-inner').append('<img class="item" src="'+ images[nextSlideNumber]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
+		$('#myCarousel').carousel('next');
+
+		show_list(baseUrl, image_ids[slideNumber], true);
 	}
 
-	var prev = function(){
-			// 前のスライドに移動
-			slideNumber--;
-			if (slideNumber < 0) {
-					slideNumber = images.length - 1;
-			}
-			prevSlideNumber = slideNumber - 1;
-			if (prevSlideNumber < 0) {
-					prevSlideNumber = images.length - 1;
-			}
-			$('#myCarousel > .carousel-inner > img:last').empty();
-			$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[prevSlideNumber]+'" id="image_'+ image_ids[prevSlideNumber] +'>');
-			$('#myCarousel').carousel('prev');
-			show_list(baseUrl, image_ids[slideNumber], true);
+	var prev = function() {
+		// 前のスライドに移動
+		slideNumber--;
+
+		if (slideNumber < 0) {
+			slideNumber = images.length - 1;
+		}
+		prevSlideNumber = slideNumber - 1;
+		if (prevSlideNumber < 0) {
+			prevSlideNumber = images.length - 1;
+		}
+		nextSlideNumber = slideNumber + 1;
+		if (nextSlideNumber > images.length - 1) {
+			nextSlideNumber = 0;
+		}
+
+		$('#myCarousel > .carousel-inner > img:last').empty();
+		$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[prevSlideNumber]+'" id="image_'+ image_ids[prevSlideNumber] +'>');
+		$('#myCarousel').carousel('prev');
+
+		show_list(baseUrl, image_ids[slideNumber], true);
 	}
 
 	var slide = function(type) {
-			// スライドの実行
-			if ( type == 'next' || type == 39 ) {
-					next();
-			}
-			else if ( type == 'prev' || type == 37 ) {
-					prev();
-			}
-			$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
-			$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '">詳細</a>');
+		// スライドの実行
+		if (type == 'next') {
+			next();
+		}
+		else if ( type == 'prev') {
+			prev();
+		}
+		//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
+		$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
 	}
 
 	$('.carousel-control').click(function(event) {
-			// 横ボタン動作
-			if ( images.length < 2 ) {
-					return;
-			}
-			slide($(this).attr('data-action'));
+		// 横ボタン動作
+		if ( images.length < 2 ) {
+			return;
+		}
+		slide($(this).attr('data-action'));
 	});
 
 	$("body").keydown(function(event){
-			// キーボード操作によるスライドの移動
-			slide(event.keyCode);
+		// キーボード操作によるスライドの移動
+		slide(event.keyCode);
 	});
 
 	$('#btn_album_image_comment_create').live("click", function(){
@@ -155,16 +167,13 @@ $(function(){
 
 function show_list(base_url, album_id, is_fadein) {
 	var url = base_url + 'album/image/comment/list/' + album_id;
-
-	//$.ajaxSetup({cache : false});
 	$("#loading_list").html('<img src="' + base_url + 'assets/img/loading.gif">');
-
 	$.get(url, {'nochache':(new Date()).getTime()}, function(data) {
 		if (data.length > 0) {
 			if (is_fadein) {
 				$("#comment_list").fadeOut('fast');
 			}
-			$("#comment_list").html(data).fadeIn('slow');
+			$("#comment_list").html(data).fadeIn('fast');
 		}
 	});
 	$("#loading_list").remove();

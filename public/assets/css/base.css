@@ -80,8 +80,8 @@ img.profile_image {
 }
 
 .commentBox {
-	margin-top: 3px;
-	padding: 5px 30px 5px 5px;
+	margin-bottom: 3px;
+	padding: 5px;
 	background-color: #F5F5F5;
 	position: relative;
 	word-wrap: break-word;
@@ -96,6 +96,10 @@ img.profile_image {
 
 .commentBox small {
 	color: #868686;
+}
+
+h4#comments {
+	margin-bottom: 3px;
 }
 
 .ml {
@@ -174,12 +178,6 @@ div#popup_container.ui-draggable #popup_message {
 	margin: 0 0 5px;
 }
 
-#ai_container .ai_item .commentBox .btn_album_image_comment_delete {
-	display: none;
-}
-#ai_container .ai_item .imgBox .btn_album_image_edit {
-	display: none;
-}
 #ai_container .ai_item .commentBox {
 	padding: 5px 10px 5px 5px;
 }
@@ -199,4 +197,33 @@ div#popup_container.ui-draggable #popup_message {
 }
 #btn_menu .btn {
 	margin-top: 5px;
+}
+
+.img_box {
+	text-align: center;
+	padding: 0 auto;
+	position: relative;
+}
+.img_box a.forward {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.img_box a.backward {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+#img_comment_box {
+	position: relative;
+}
+#img_comment_box a#slidetop {
+	position: absolute;
+	left: 0;
+	top: -60px;
+}
+
+#img_comment_box {
+	margin-bottom: 20px;
 }

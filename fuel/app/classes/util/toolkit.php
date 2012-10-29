@@ -97,4 +97,29 @@ class Util_toolkit
 			mt_srand($seed);
 		}
 	}
+
+	public static function get_neighboring_value_in_array($list, $target)
+	{
+		$list = (array)$list;
+
+		$hit    = null;
+		$before = null;
+		$after  = null;
+		foreach ($list as $value)
+		{
+			if ($value == $target)
+			{
+				$hit = $value;
+				continue;
+			}
+			if (isset($hit))
+			{
+				$after = $value;
+				break;
+			}
+			$before = $value;
+		}
+
+		return array($before, $after);
+	}
 }

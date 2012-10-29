@@ -26,4 +26,20 @@
 </div>
 
 </body>
+<script type="text/javascript">
+<?php if (!Agent::is_mobiledevice()): ?>
+	$('.commentBox').hover(
+		function() {
+			var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
+			var btn = '#btn_album_image_comment_delete_' + id;
+			$(btn).fadeIn('fast');
+		},
+		function() {
+			var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
+			var btn = '#btn_album_image_comment_delete_' + id;
+			$(btn).hide();
+		}
+	);
+<?php endif; ?>
+</script>
 </html>

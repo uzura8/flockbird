@@ -17,7 +17,13 @@
 		</div>
 		<div class="article">
 			<div class="body"><?php echo nl2br(mb_strimwidth($album->body, 0, \Config::get('album.article_list.trim_width'), '...')) ?></div>
-			<small><i class="icon-picture"></i> <?php echo \Album\Model_AlbumImage::get_count4album_id($album->id); ?> 枚</small>
+			<small>
+<?php if (\Album\Model_AlbumImage::get_count4album_id($album->id)): ?>
+				<?php echo Html::anchor('album/slide/'.$album->id.'#slidetop', '<i class="icon-picture"></i> '.\Album\Model_AlbumImage::get_count4album_id($album->id).' 枚'); ?>
+<?php else: ?>
+				<i class="icon-picture"></i> <?php echo \Album\Model_AlbumImage::get_count4album_id($album->id); ?> 枚
+<?php endif; ?>
+			</small>
 		</div>
 	</div>
 <?php endforeach; ?>

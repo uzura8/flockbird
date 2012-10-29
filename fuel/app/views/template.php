@@ -12,9 +12,14 @@
   <?php if (GOOGLE_SITE_VERIFICATION): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
 
   <?php echo Asset::css('bootstrap.min.css');?>
-  <?php echo Asset::css('base.css');?>
   <?php echo Asset::css('bootstrap-responsive.min.css');?>
   <?php echo Asset::css('jquery.jgrowl.css');?>
+  <?php echo Asset::css('base.css');?>
+<?php if (Agent::is_mobiledevice()): ?>
+  <?php echo Asset::css('base_mobile.css');?>
+<?php else: ?>
+  <?php echo Asset::css('base_pc.css');?>
+<?php endif; ?>
   <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>

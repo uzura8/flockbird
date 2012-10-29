@@ -3,7 +3,9 @@ namespace Album;
 
 class Controller_Image_comment extends \Controller_Site
 {
-	protected $check_not_auth_action = array();
+	protected $check_not_auth_action = array(
+		'list',
+	);
 
 	public function before()
 	{
@@ -81,13 +83,12 @@ class Controller_Image_comment extends \Controller_Site
 	public function action_list($album_image_id = null)
 	{
 		$album_image_id = (int)$album_image_id;
-		if (!$album_image_id || !$album_image = Model_Albumimage::check_authority($album_image_id, $this->u->id))
+		if (!$album_image_id || !$album_image = Model_Albumimage::check_authority($album_image_id))
 		{
 			return \View::forge('image/comment/list_error.php');
 		}
 		$comments = Model_AlbumImageComment::find()->where('album_image_id', $album_image_id)->related('member')->order_by('id')->get();
 
-		//$this->template->content = \View::forge('image/comment/list.php', array('comments' => $comments, 'album_image' => $album_image));
 		return \View::forge('image/comment/list.php', array('comments' => $comments, 'album_image' => $album_image));
 	}
 

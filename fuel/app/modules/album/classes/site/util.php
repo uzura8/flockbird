@@ -27,4 +27,9 @@ class Site_util
 
 		return (!empty($album_image->file->name)) ? $album_image->file->name : '';
 	}
+
+	public static function get_neighboring_album_image_ids($album_id, $album_image_id)
+	{
+		return \Util_toolkit::get_neighboring_value_in_array(Model_AlbumImage::get_ids4album_id($album_id), $album_image_id);
+	}
 }

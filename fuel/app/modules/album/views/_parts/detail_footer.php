@@ -6,6 +6,8 @@ $('.carousel').carousel({
 	interval: false
 })
 
+var baseUrl = '<?php echo Uri::base(false); ?>';
+
 $(function(){
 	var $container = $('#ai_container');
 	$container.imagesLoaded(function(){
@@ -29,35 +31,57 @@ $(function(){
 				$container.masonry( 'appended', $newElems, true );
 			});
 		});
-
 	});
 });
 
-$('.commentBox').hover(
-	function() {
+<?php if (!Agent::is_mobiledevice()): ?>
+$('.commentBox').live({
+	mouseenter:function() {
 		var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
 		var btn = '#btn_album_image_comment_delete_' + id;
-		$(btn).show();
+		$(btn).fadeIn('fast');
 	},
-	function() {
+	mouseleave:function() {
 		var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
 		var btn = '#btn_album_image_comment_delete_' + id;
 		$(btn).hide();
 	}
-);
+});
+$('.imgBox').live({
+	mouseenter:function() {
+		var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
+		var btn = '#btn_album_image_edit_' + id;
+		$(btn).fadeIn('fast');
+	},
+	mouseleave:function() {
+		var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
+		var btn = '#btn_album_image_edit_' + id;
+		$(btn).hide();
+	}
+});
+<?php endif; ?>
 
-$('.imgBox').hover(
-	function() {
-		var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
-		var btn = '#btn_album_image_edit_' + id;
-		$(btn).show();
-	},
-	function() {
-		var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
-		var btn = '#btn_album_image_edit_' + id;
-		$(btn).hide();
-	}
-);
+$('.btn_album_image_comment_delete').click(function(){
+	var id_value = $(this).attr("id");
+	var id = id_value.replace(/btn_album_image_comment_delete_/g, "");
+	jConfirm('削除しますか?', '削除確認', function(r) {
+		if (r == true) {
+			$.ajax({
+				url : baseUrl + 'album/image/comment/delete_ajax/' + id,
+				dataType : "text",
+				data : {'id': id, '<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>'},
+				type : 'POST',
+				success: function(status_after){
+					$('#commentBox_' + id).fadeOut();
+					$.jGrowl('No.' + id + 'のコメントを削除しました。');
+				},
+				error: function(){
+					$.jGrowl('No.' + id + 'のコメントを削除できませんでした。');
+				}
+			});
+		}
+	});
+});
 
 function set_cover(album_image_id) {
 	var baseUrl = '<?php echo Uri::base(false); ?>';

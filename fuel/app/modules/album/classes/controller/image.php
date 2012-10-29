@@ -57,8 +57,11 @@ class Controller_Image extends \Controller_Site
 		}
 		$this->template->breadcrumbs[$this->template->title] = '';
 
+		$data = array('album_image' => $album_image, 'comments' => $comments);
+		list($data['before_id'], $data['after_id']) =  \Album\Site_util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
+
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
-		$this->template->content = \View::forge('image/index.php', array('album_image' => $album_image, 'comments' => $comments));
+		$this->template->content = \View::forge('image/index.php', $data);
 	}
 
 	public function action_create($note_id = null)

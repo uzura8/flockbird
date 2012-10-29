@@ -1,6 +1,6 @@
 <div id="album_image_comment"></div>
 
-<h3 id="comments">Comments</h3>
+<h4 id="comments">Comments</h4>
 
 <div id="loading_list"></div>
 <div id="comment_list"></div>
