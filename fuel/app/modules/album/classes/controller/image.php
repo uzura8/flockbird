@@ -25,7 +25,7 @@ class Controller_Image extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		$comments = Model_AlbumImageComment::find()->where('album_image_id', $id)->related('member')->order_by('id')->get();
+		//$comments = Model_AlbumImageComment::find()->where('album_image_id', $id)->related('member')->order_by('id')->get();
 
 		$this->template->title = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
 		if ($album_image->name)
@@ -57,10 +57,11 @@ class Controller_Image extends \Controller_Site
 		}
 		$this->template->breadcrumbs[$this->template->title] = '';
 
-		$data = array('album_image' => $album_image, 'comments' => $comments);
+		$data = array('album_image' => $album_image);
 		list($data['before_id'], $data['after_id']) =  \Album\Site_util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
 
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
+		$this->template->post_footer = \View::forge('image/_parts/detail_footer', array('album_image_id' => $album_image->id));
 		$this->template->content = \View::forge('image/index.php', $data);
 	}
 
