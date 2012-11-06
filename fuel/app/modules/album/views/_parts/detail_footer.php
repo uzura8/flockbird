@@ -34,7 +34,7 @@ $(function(){
 	});
 });
 
-<?php if (!Agent::is_mobiledevice()): ?>
+<?php if (!Agent::is_smartphone()): ?>
 $('.commentBox').live({
 	mouseenter:function() {
 		var id = $(this).attr('id').replace($(this).attr('class') + '_', '');

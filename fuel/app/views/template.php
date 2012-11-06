@@ -15,7 +15,7 @@
   <?php echo Asset::css('bootstrap-responsive.min.css');?>
   <?php echo Asset::css('jquery.jgrowl.css');?>
   <?php echo Asset::css('base.css');?>
-<?php if (Agent::is_mobiledevice()): ?>
+<?php if (Agent::is_smartphone()): ?>
   <?php echo Asset::css('base_mobile.css');?>
 <?php else: ?>
   <?php echo Asset::css('base_pc.css');?>
