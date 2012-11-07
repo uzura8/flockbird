@@ -79,7 +79,9 @@ img.profile_image {
 	top: 0;
 }
 
-.commentBox {
+.commentBox,
+.commentPostBox
+{
 	margin-bottom: 3px;
 	padding: 5px;
 	background-color: #F5F5F5;

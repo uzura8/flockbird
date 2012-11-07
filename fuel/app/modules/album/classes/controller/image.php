@@ -25,7 +25,6 @@ class Controller_Image extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		//$comments = Model_AlbumImageComment::find()->where('album_image_id', $id)->related('member')->order_by('id')->get();
 
 		$this->template->title = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
 		if ($album_image->name)

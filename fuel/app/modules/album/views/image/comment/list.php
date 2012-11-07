@@ -27,7 +27,7 @@
 
 </body>
 <script type="text/javascript">
-<?php if (!Agent::is_mobiledevice()): ?>
+<?php if (!Agent::is_smartphone()): ?>
 	$('.commentBox').hover(
 		function() {
 			var id = $(this).attr('id').replace($(this).attr('class') + '_', '');

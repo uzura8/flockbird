@@ -2,9 +2,9 @@
 $(function(){
 	var album_image_id = <?php echo $album_image_id; ?>;
 	var baseUrl = '<?php echo Uri::base(false); ?>';
-	show_list(baseUrl, album_image_id);
+	show_list(baseUrl, album_image_id, false);
 
-	$('#btn_album_image_comment_create').live("click", function(){
+	$('#btn_album_image_comment_create').click(function(){
 		var body = $("#input_album_image_comment").val().trim();
 		if (body.length > 0) {
 			$.post(
@@ -15,7 +15,7 @@ $(function(){
 				},
 				function(data){
 					$.jGrowl('コメントを投稿しました。');
-					show_list(baseUrl, album_image_id);
+					show_list(baseUrl, album_image_id, false);
 					$("#input_album_image_comment").val('');
 					$("textarea#input_album_image_comment").css("height", "33px");;
 				}
@@ -46,7 +46,7 @@ $(function(){
 	});
 });
 
-function show_list(base_url, album_image_id, is_fadein = false) {
+function show_list(base_url, album_image_id, is_fadein) {
 	var url = base_url + 'album/image/comment/list/' + album_image_id;
 	$("#loading_list").html('<img src="' + base_url + 'assets/img/loading.gif">');
 	$.get(url, {'nochache':(new Date()).getTime()}, function(data) {
