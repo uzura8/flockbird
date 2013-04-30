@@ -718,7 +718,6 @@ END;
 	private function send_register_mail($data)
 	{
 		if (!is_array($data)) $data = (array)$data;
-		$register_url = sprintf('%s?token=%s', Uri::create('member/change_email'), $data['token']);
 
 		$data['body'] = <<< END
 メンバー登録が完了しました。
