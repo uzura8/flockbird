@@ -1,6 +1,11 @@
 body {
 	padding-top: 60px;
-	padding-bottom: 40px;
+}
+/* browser width is under 980px */
+@media (max-width: 980px) {
+  body {
+    padding-top: 0;
+  }
 }
 
 .sidebar-nav {
