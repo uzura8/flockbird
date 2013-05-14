@@ -36,3 +36,17 @@
 #album_album_edit_images table#album_image_list .formParts {
 	text-align: center;
 }
+
+/* browser width is over 480px */
+@media (min-width: 480px) {
+	#controller_member_setting_password .form-horizontal .control-label,
+	#controller_member_setting_email .form-horizontal .control-label
+	{
+		width: 180px;
+	}
+	#controller_member_setting_password .form-horizontal .controls,
+	#controller_member_setting_email .form-horizontal .controls
+	{
+		margin-left: 200px;
+	}
+}

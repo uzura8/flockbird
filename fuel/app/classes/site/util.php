@@ -141,4 +141,12 @@ class Site_util
 
 		return false;
 	}
+
+	public static function get_form_instance($name = 'default')
+	{
+		$form = Fieldset::forge($name);
+		$form->set_config('form_attributes', array('class' => 'form-horizontal'));
+
+		return $form;
+	}
 }

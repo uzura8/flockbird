@@ -311,16 +311,16 @@ END;
 
 	public function form_setting_password()
 	{
-		$form = Fieldset::forge('setting_password');
+		$form = Site_util::get_form_instance('setting_password');
 
-		$form->add('old_password', '現在のパスワード', array('type'=>'password'))
+		$form->add('old_password', '現在のパスワード', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('no_controll')
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20);
 
-		$form->add('password', '新しいパスワード', array('type'=>'password'))
+		$form->add('password', '新しいパスワード', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('no_controll')
@@ -328,7 +328,7 @@ END;
 			->add_rule('max_length', 20)
 			->add_rule('unmatch_field', 'old_password');
 
-		$form->add('password_confirm', '新しいパスワード(確認用)', array('type'=>'password'))
+		$form->add('password_confirm', '新しいパスワード(確認用)', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('match_field', 'password');
@@ -341,15 +341,15 @@ END;
 
 	public function form_setting_email()
 	{
-		$form = Fieldset::forge('setting_email', array('class' => 'form-horizontal'));
+		$form = Site_util::get_form_instance('setting_email');
 
-		$form->add('email', 'メールアドレス')
+		$form->add('email', 'メールアドレス', array('class' => 'span7'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('no_controll')
 			->add_rule('valid_email');
 
-		$form->add('email_confirm', 'メールアドレス(確認用)')
+		$form->add('email_confirm', 'メールアドレス(確認用)', array('class' => 'span7'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('match_field', 'email');

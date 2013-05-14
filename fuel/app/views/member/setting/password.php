@@ -4,6 +4,6 @@
 	<li><?php echo Html::anchor('member/leave', Config::get('site.term.member_leave')); ?></li>
 </ul>
 <div class="well">
-	<h3>パスワード変更</h3>
+<?php include_partial('_parts/form_description', array('exists_required_fields' => true)); ?>
 <?php echo $html_form; ?>
 </div>

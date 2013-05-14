@@ -595,9 +595,9 @@ END;
 
 	public function form_leave()
 	{
-		$form = Fieldset::forge('leave');
+		$form = Site_util::get_form_instance('leave');
 
-		$form->add('password', 'パスワード', array('type'=>'password'))
+		$form->add('password', 'パスワード', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
 			->add_rule('required')
 			->add_rule('no_controll')
