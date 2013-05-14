@@ -270,7 +270,7 @@ class Controller_Note extends \Controller_Site
 
 	protected function form()
 	{
-		$form = \Fieldset::forge('', array('class' => 'form-horizontal'));
+		$form = \Site_util::get_form_instance();
 
 		$form->add('title', 'タイトル', array('class' => 'input-xlarge'))
 			->add_rule('trim')

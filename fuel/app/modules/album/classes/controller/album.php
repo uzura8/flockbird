@@ -515,7 +515,7 @@ class Controller_Album extends \Controller_Site
 
 	protected function form()
 	{
-		$form = \Fieldset::forge('', array('class' => 'form-horizontal'));
+		$form = \Site_util::get_form_instance();
 
 		$form->add('name', \Config::get('album.term.album').'名', array('class' => 'input-xlarge'))
 			->add_rule('trim')

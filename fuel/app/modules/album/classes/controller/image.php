@@ -226,7 +226,7 @@ class Controller_Image extends \Controller_Site
 
 	protected function form($album_image = null)
 	{
-		$form = \Fieldset::forge('', array('class' => 'form-horizontal'));
+		$form = \Site_util::get_form_instance();
 
 		$form->add('name', \Config::get('album.term.album_image').'タイトル', array('class' => 'input-xlarge'))
 			->add_rule('trim')
