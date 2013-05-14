@@ -16,6 +16,7 @@ Autoloader::add_classes(array(
 	'Database_Query_Builder_Update' => APPPATH.'classes/database/query/builder/update.php',
 	'Validation' => APPPATH.'classes/validation.php',
 	'Agent' => APPPATH.'classes/agent.php',
+	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 ));
 
 // Register the autoloader
