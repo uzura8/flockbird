@@ -63,9 +63,9 @@ class Controller_Album extends \Controller_Site
 		);
 
 		$list = Model_Album::find()->where('member_id', $this->u->id)->order_by('created_at', 'desc')->get();
-		// paging 未実装, limit数:  Config::get('note.article_list.limit')
 
 		$this->template->subtitle = \View::forge('_parts/member_subtitle');
+		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', array('member' => $this->u, 'list' => $list));
 	}
 
@@ -211,7 +211,7 @@ class Controller_Album extends \Controller_Site
 		}
 		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->order_by('created_at')->get();
 
-		$this->template->title = trim($album->name);
+		$this->template->title = sprintf('%sの%sを見る', trim($album->name), \Config::get('album.term.album_image'));
 		$this->template->header_title = site_title(mb_strimwidth($this->template->title, 0, 50, '...'));
 
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
@@ -227,7 +227,8 @@ class Controller_Album extends \Controller_Site
 			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
 			$this->template->breadcrumbs[$key] =  '/album/list/'.$album->member->id;
 		}
-		$this->template->breadcrumbs[$album->name] = '';
+		$this->template->breadcrumbs[$album->name] =  '/album/detail/'.$id;
+		$this->template->breadcrumbs[\Config::get('album.term.album_image').'を見る'] = '';
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/slide_footer', array('id' => $id));
