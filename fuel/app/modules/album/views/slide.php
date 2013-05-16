@@ -25,7 +25,7 @@
 				<div class="content">
 					<div class="main">
 						<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>
-						<div class="input"><?php echo Form::textarea('body', null, array('rows' => 1, 'class' => 'span12 autogrow', 'id' => 'input_album_image_comment')); ?></div>
+						<div class="input"><?php echo Form::textarea('body', null, array('rows' => 1, 'class' => 'w90 autogrow', 'id' => 'input_album_image_comment')); ?></div>
 						<div class="input"><a href="javaScript:void(0);" class="btn btn-mini" id="btn_album_image_comment_create">送信</a></div>
 					</div>
 				</div>
