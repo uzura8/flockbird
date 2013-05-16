@@ -52,6 +52,8 @@ function site_get_screen_name($u)
 
 function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = false)
 {
+	if (empty($filename)) $filename = '';
+
 	$identify = '';
 	if (Site_util::check_filename_format($filename))
 	{
@@ -93,6 +95,11 @@ function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = fal
 	}
 
 	return $image_tag;
+}
+
+function img_size($kind, $size)
+{
+	return Config::get(sprintf('site.upload_files.img.%s.sizes.%s', $kind, $size));
 }
 
 function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal_timestamp = false, $is_display_both = false)
