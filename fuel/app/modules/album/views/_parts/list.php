@@ -3,7 +3,10 @@
 <div id="a_container" class="span12">
 <?php foreach ($list as $id => $album): ?>
 	<div class="a_item">
-		<?php echo img(\Album\Site_util::get_album_cover_filename($album->cover_album_image_id, $album->id), '200x200', 'album/detail/'.$id); ?>
+<?php
+
+?>
+		<?php echo img(\Album\Site_util::get_album_cover_filename($album->cover_album_image_id, $album->id), \Config::get('site.upload_files.img.ai.sizes.M'), 'album/detail/'.$id); ?>
 		<h5><?php echo Html::anchor('album/detail/'.$id, $album->name); ?></h5>
 
 		<div class="member_img_box_s">

@@ -4,7 +4,7 @@
 <?php foreach ($album_images as $album_image): ?>
 	<div class="ai_item">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>">
-			<div><?php echo img((!empty($album_image->file)) ? $album_image->file->name : '', '200x200', 'album/image/detail/'.$album_image->id); ?></div>
+			<div><?php echo img((!empty($album_image->file)) ? $album_image->file->name : '', \Config::get('site.upload_files.img.ai.sizes.M'), 'album/image/detail/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
 			<div class="article btn-toolbar">
 				<small><i class="icon-comment"></i> <?php echo $comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
