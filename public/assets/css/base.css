@@ -128,7 +128,7 @@ div#popup_container.ui-draggable #popup_message {
 }
 
 #ai_container .ai_item {
-	width: 216px;
+	width: 250px;
 	/*height: 300px;*/
 	margin: 5px;
 	padding: 8px 0 5px;
@@ -159,7 +159,7 @@ div#popup_container.ui-draggable #popup_message {
 }
 
 #a_container .a_item {
-	width: 216px;
+	width: 250px;
 	margin: 0 5px 10px;
 	padding: 13px 0 10px;
 	text-align: center;
