@@ -11,7 +11,7 @@ define('PRJ_ENVIRONMENT', 'DEVELOPMENT');
 
 // BASE_URL
 define('PRJ_HOSTNAME', 'torilife.info');
-define('PRJ_BASE_PATH', '/');
+define('PRJ_URI_PATH', '/');
 
 // DBサーバ接続設定
 $GLOBALS['DSN']['development'] = array(

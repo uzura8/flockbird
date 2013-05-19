@@ -20,16 +20,19 @@ class Site_util
 
 	public static function check_filename_format($filename)
 	{
-		$ids = array_keys(Config::get('site.upload_files.img'));
-		$pattern = '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]+\.(jpg|png|gif)/i';
+		return (bool)preg_match(self::get_filename_format(), $filename);
+	}
 
-		return (bool)preg_match($pattern, $filename);
+	public static function get_filename_format()
+	{
+		$ids = array_keys(Config::get('site.upload_files.img'));
+		return '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]+\.(jpg|png|gif)/i';
 	}
 
 	public static function get_upload_file_path($filename, $size)
 	{
-		$identify = Util_string::get_exploded($filename);
-		$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes');
+		$identifier = Util_string::get_exploded($filename);
+		$sizes = Config::get('site.upload_files.img.'.$identifier.'.sizes');
 		if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
 
 		$uri_basepath = Site_util::get_upload_path('img', $filename, true);
@@ -38,16 +41,16 @@ class Site_util
 		return sprintf('%s/%s', PRJ_UPLOAD_DIR, $uri_path);
 	}
 
-	public static function upload($identify, $id, $member_id = 0, $member_filesize_total = 0, $old_filename = '', $file_id = 0)
+	public static function upload($identifier, $id, $member_id = 0, $member_filesize_total = 0, $old_filename = '', $file_id = 0)
 	{
 		$file = ($file_id) ? Model_File::find()->where('id', $file_id)->get_one() : new Model_File;
 
 		$config = array(
-			'base_path'   => sprintf('img/%s/%d', $identify, Site_util::get_middle_dir($id)),
-			'prefix'      => sprintf('%s_%d_', $identify, $id),
-			'sizes'       => Config::get('site.upload_files.img.'.$identify.'.sizes', array()),
-			'max_size'    => Config::get('site.upload_files.img.'.$identify.'.max_size', 0),
-			'resize_type' => Config::get('site.upload_files.img.'.$identify.'.resize_type', 'relative'),
+			'base_path'   => sprintf('img/%s/%d', $identifier, Site_util::get_middle_dir($id)),
+			'prefix'      => sprintf('%s_%d_', $identifier, $id),
+			'sizes'       => Config::get('site.upload_files.img.'.$identifier.'.sizes', array()),
+			'max_size'    => Config::get('site.upload_files.img.'.$identifier.'.max_size', 0),
+			'resize_type' => Config::get('site.upload_files.img.'.$identifier.'.resize_type', 'relative'),
 		);
 		if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE && $member_id)
 		{
@@ -81,10 +84,10 @@ class Site_util
 		return $file->id;
 	}
 
-	public static function remove_images($identify, $id, $file_name = '')
+	public static function remove_images($identifier, $id, $file_name = '')
 	{
-		$base_path = sprintf('%s/img/%s/%d', PRJ_UPLOAD_DIR, $identify, Site_util::get_middle_dir($id));
-		$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes', array());
+		$base_path = sprintf('%s/img/%s/%d', PRJ_UPLOAD_DIR, $identifier, Site_util::get_middle_dir($id));
+		$sizes = Config::get('site.upload_files.img.'.$identifier.'.sizes', array());
 		foreach ($sizes as $size)
 		{
 			$file = sprintf('%s/%s/%s', $base_path, $size, $file_name);
@@ -140,6 +143,29 @@ class Site_util
 		}
 
 		return false;
+	}
+
+	public static function get_image_resize_type($identifier)
+	{
+		$resize_type = Config::get('site.upload_files.img'.$identifier.'resize_type');
+		if (empty($resize_type)) return 'relative';
+
+		return $resize_type;
+	}
+
+	public static function get_uploaded_file_uri_path($filename, $size = 'raw', $type = 'img')
+	{
+		$uri_basepath = self::get_upload_path($type, $filename, true);
+
+		return sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
+	}
+
+	public static function check_uploaded_file_exists($filename, $size = 'raw', $type = 'img')
+	{
+		$uri_path = self::get_uploaded_file_uri_path($filename, $size, $type);
+		$file = sprintf('%s/%s', PRJ_PUBLIC_DIR, $uri_path);
+
+		return file_exists($file);
 	}
 
 	public static function get_form_instance($name = 'default')

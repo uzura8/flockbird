@@ -9,17 +9,24 @@ $config = array(
 		'member_leave'  => '退会',
 		'guest'   => 'Guest',
 		'note'    => 'Note',
+		'left_member'  => '退会メンバー',
 	),
 	'upload_files' => array(
 		'img' => array(
 			// member profile image
+			'default_size' => '50x50',
+			'accept_format' => array(
+				'gif',
+				'jpg',
+				'png',
+			),
 			'm' => array(
 				'sizes' => array(
-					'raw',
-					'20x20',
-					'30x30',
-					'50x50',
-					'180x180',
+					'RAW' => 'raw',
+					'SS' => '20x20',
+					'S' => '30x30',
+					'M' => '50x50',
+					'L' => '180x180',
 				),
 				'max_size' => '600x600',
 				'resize_type' => 'crop',

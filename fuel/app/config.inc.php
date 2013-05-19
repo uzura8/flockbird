@@ -3,10 +3,8 @@
 // config.php の読み込み
 require PRJ_BASEPATH.'config.php';
 
-
-
 // BASE_URL
-$PRJ_BASE_URL = sprintf('http://%s%s', PRJ_HOSTNAME, PRJ_BASE_PATH);
+$PRJ_BASE_URL = sprintf('http://%s%s', PRJ_HOSTNAME, PRJ_URI_PATH);
 if (PRJ_ENVIRONMENT == 'STAGE') $PRJ_BASE_URL = str_replace('http://', 'http://stg.', $PRJ_BASE_URL);
 define('PRJ_BASE_URL', $PRJ_BASE_URL);
 

@@ -20,6 +20,6 @@ public_html
 
 /fuel/app/config/crypt.php
 
-public/media/img/m/*/*
-public/media/img/ai/*/*
+public/media/img/m/*
+public/media/img/ai/*
 public/media/img/general/*

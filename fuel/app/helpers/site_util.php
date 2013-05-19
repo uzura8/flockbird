@@ -50,47 +50,50 @@ function site_get_screen_name($u)
 	return (!empty($u->name)) ? $u->name : 'メンバーID:'.$u->id;
 }
 
-function img($filename = '', $size = '50x50', $uri = '', $is_link2raw_file = false)
+function img($filename = '', $size = '50x50', $link_uri = '', $is_link2raw_file = false)
 {
-	if (empty($filename)) $filename = '';
-
-	$identify = '';
-	if (Site_util::check_filename_format($filename))
-	{
-		$identify = Util_string::get_exploded($filename);
-	}
-
-	$sizes = Config::get('site.upload_files.img.'.$identify.'.sizes');
-	if (!$size || ($sizes && !in_array($size, $sizes))) $size = '50x50';
-	list($width, $height) = explode('x', $size);
-
-	$uri_basepath = Site_util::get_upload_path('img', $filename, true);
-	$uri_path = sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
-	$file = sprintf('%s/%s', PRJ_PUBLIC_DIR, $uri_path);
 	$option = array();
 
-	if ($identify == 'm') $option = array('class' => 'profile_image');
+	$is_noimage = false;
+	if (empty($filename)) $is_noimage = true;
+	if (!Site_util::check_filename_format($filename)) $is_noimage = true;
 
-	if (!$identify || !file_exists($file))
+	$identifier = Util_string::get_exploded($filename);
+	if ($identifier == 'm') $option['class'] = 'profile_image';
+
+	if ($is_noimage)
 	{
 		$option['alt'] = 'No image.';
-		if (!empty($width)) $option['width'] = $width;
 
-		$noimage_filename = 'noimage.gif';
-		if ($identify) $noimage_filename = $identify.'_noimage.gif';
-		$noimage_tag = Asset::img('site/'.$noimage_filename, $option);
+		$noimage_tag = Asset::img('site/noimage.gif', $option);
+		if ($identifier)
+		{
+			$noimage_tag = Html::img(sprintf('%s/img/%s/%s_noimage.gif', PRJ_UPLOAD_DIRNAME, $identifier, $size), $option);
+		}
 
-		if ($uri) return Html::anchor($uri, $noimage_tag);
+		if ($link_uri) return Html::anchor($link_uri, $noimage_tag);
 
 		return $noimage_tag;
 	}
 
+	$sizes = Config::get('site.upload_files.img.'.$identifier.'.sizes');
+	if (!$size || ($sizes && !in_array($size, $sizes))) $size = '50x50';
+	list($width, $height) = explode('x', $size);
+
+	$uri_path = Site_util::get_uploaded_file_uri_path($filename, $size);
+
 	$image_tag = Html::img($uri_path, $option);
-	if ($uri) return Html::anchor($uri, $image_tag);
+	if ($link_uri) return Html::anchor($link_uri, $image_tag);
 
 	if ($is_link2raw_file)
 	{
+		if (!Site_util::check_uploaded_file_exists($filename))
+		{
+			return $image_tag;
+		}
+		$uri_basepath = Site_util::get_upload_path('img', $filename, true);
 		$image_uri = sprintf('%s/%s/%s', $uri_basepath, 'raw', $filename);
+
 		return Html::anchor($image_uri, $image_tag);
 	}
 
