@@ -63,14 +63,19 @@
 <?php echo asset::js('jqueryfileupload/vendor/jquery.ui.widget.js');?>
 
 <!-- The Templates plugin is included to render the upload/download listings -->
-<script src="http://blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script>
+<!-- <script src="http://blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script> -->
+<?php echo Asset::js('JavaScript-Templates/tmpl.min.js');?>
 <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
+<!-- <script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script> -->
+<?php echo Asset::js('JavaScript-Load-Image/load-image.min.js');?>
 <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script>
+<!-- <script src="http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script> -->
+<?php echo Asset::js('JavaScript-Canvas-to-Blob/canvas-to-blob.min.js');?>
 <!-- Bootstrap JS and Bootstrap Image Gallery are not required, but included for the demo -->
-<script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
-<script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script>
+<!-- <script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script> -->
+<?php echo Asset::js('bootstrap.min.js');?>
+<!-- <script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script> -->
+<?php echo Asset::js('Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js');?>
 
 <?php echo asset::js('jqueryfileupload/jquery.iframe-transport.js');?>
 <?php echo asset::js('jqueryfileupload/jquery.fileupload.js');?>
