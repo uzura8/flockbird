@@ -64,7 +64,7 @@ class Site_image
 			return;
 		}
 
-		$sizes = Config::get('site.upload_files.img.'.$this->identifier.'.sizes');
+		$sizes = Config::get('site.upload_files.img.type.'.$this->identifier.'.sizes');
 		if (empty($sizes))
 		{
 			$this->size = $default_size;

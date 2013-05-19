@@ -76,7 +76,7 @@ function img($filename = '', $size = '50x50', $link_uri = '', $is_link2raw_file 
 		return $noimage_tag;
 	}
 
-	$sizes = Config::get('site.upload_files.img.'.$identifier.'.sizes');
+	$sizes = Config::get('site.upload_files.img.type.'.$identifier.'.sizes');
 	if (!$size || ($sizes && !in_array($size, $sizes))) $size = '50x50';
 	list($width, $height) = explode('x', $size);
 
@@ -100,9 +100,9 @@ function img($filename = '', $size = '50x50', $link_uri = '', $is_link2raw_file 
 	return $image_tag;
 }
 
-function img_size($kind, $size)
+function img_size($identifier, $size)
 {
-	return Config::get(sprintf('site.upload_files.img.%s.sizes.%s', $kind, $size));
+	return Config::get(sprintf('site.upload_files.img.type.%s.sizes.%s', $identifier, $size));
 }
 
 function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal_timestamp = false, $is_display_both = false)

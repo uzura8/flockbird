@@ -25,14 +25,14 @@ class Site_util
 
 	public static function get_filename_format()
 	{
-		$ids = array_keys(Config::get('site.upload_files.img'));
+		$ids = array_keys(Config::get('site.upload_files.img.type'));
 		return '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]+\.(jpg|png|gif)/i';
 	}
 
 	public static function get_upload_file_path($filename, $size)
 	{
 		$identifier = Util_string::get_exploded($filename);
-		$sizes = Config::get('site.upload_files.img.'.$identifier.'.sizes');
+		$sizes = Config::get('site.upload_files.img.type.'.$identifier.'.sizes');
 		if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
 
 		$uri_basepath = Site_util::get_upload_path('img', $filename, true);
@@ -48,9 +48,9 @@ class Site_util
 		$config = array(
 			'base_path'   => sprintf('img/%s/%d', $identifier, Site_util::get_middle_dir($id)),
 			'prefix'      => sprintf('%s_%d_', $identifier, $id),
-			'sizes'       => Config::get('site.upload_files.img.'.$identifier.'.sizes', array()),
-			'max_size'    => Config::get('site.upload_files.img.'.$identifier.'.max_size', 0),
-			'resize_type' => Config::get('site.upload_files.img.'.$identifier.'.resize_type', 'relative'),
+			'sizes'       => Config::get('site.upload_files.img.type.'.$identifier.'.sizes', array()),
+			'max_size'    => Config::get('site.upload_files.img.type.'.$identifier.'.max_size', 0),
+			'resize_type' => Config::get('site.upload_files.img.type.'.$identifier.'.resize_type', 'relative'),
 		);
 		if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE && $member_id)
 		{
@@ -87,7 +87,7 @@ class Site_util
 	public static function remove_images($identifier, $id, $file_name = '')
 	{
 		$base_path = sprintf('%s/img/%s/%d', PRJ_UPLOAD_DIR, $identifier, Site_util::get_middle_dir($id));
-		$sizes = Config::get('site.upload_files.img.'.$identifier.'.sizes', array());
+		$sizes = Config::get('site.upload_files.img.type.'.$identifier.'.sizes', array());
 		foreach ($sizes as $size)
 		{
 			$file = sprintf('%s/%s/%s', $base_path, $size, $file_name);
@@ -147,7 +147,7 @@ class Site_util
 
 	public static function get_image_resize_type($identifier)
 	{
-		$resize_type = Config::get('site.upload_files.img'.$identifier.'resize_type');
+		$resize_type = Config::get('site.upload_files.img.type'.$identifier.'resize_type');
 		if (empty($resize_type)) return 'relative';
 
 		return $resize_type;

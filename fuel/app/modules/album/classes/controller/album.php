@@ -168,7 +168,7 @@ class Controller_Album extends \Controller_Site
 
 		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_util::get_middle_dir($id));
 		$base_path_full = PRJ_PUBLIC_DIR.'/'.$base_path;
-		$sizes = \Config::get('site.upload_files.img.ai.sizes');
+		$sizes = \Config::get('site.upload_files.img.type.ai.sizes');
 		// 保存ディレクトリの確認&作成
 		foreach ($sizes as $size)
 		{
@@ -582,7 +582,7 @@ class Controller_Album extends \Controller_Site
 			$config = array(
 				'base_path' => sprintf('img/m/%d', Site_util::get_middle_dir($this->u->id)),
 				'prefix'    => sprintf('m_%d_', $this->u->id),
-				'sizes'     => \Config::get('site.upload_files.img.ai.sizes'),
+				'sizes'     => \Config::get('site.upload_files.img.type.ai.sizes'),
 				'max_file_size' => PRJ_UPLOAD_MAX_FILESIZE,
 			);
 			if ($this->u->get_image()) $config['old_filename'] = $this->u->get_image();
@@ -641,7 +641,7 @@ class Controller_Album extends \Controller_Site
 		$options['max_file_size'] = PRJ_UPLOAD_MAX_FILESIZE;
 		$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
 
-		$config_upload_files = \Config::get('site.upload_files.img.ai');
+		$config_upload_files = \Config::get('site.upload_files.img.type.ai');
 		$sizes = $config_upload_files['sizes'];
 		$thumbnail_size = $config_upload_files['thumbnail_size'];
 		$options['image_versions'] = array();

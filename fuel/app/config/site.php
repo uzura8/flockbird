@@ -20,16 +20,18 @@ $config = array(
 				'jpg',
 				'png',
 			),
-			'm' => array(
-				'sizes' => array(
-					'RAW' => 'raw',
-					'SS' => '20x20',
-					'S' => '30x30',
-					'M' => '50x50',
-					'L' => '180x180',
+			'type' => array(
+				'm' => array(
+					'sizes' => array(
+						'RAW' => 'raw',
+						'SS' => '20x20',
+						'S' => '30x30',
+						'M' => '50x50',
+						'L' => '180x180',
+					),
+					'max_size' => '600x600',
+					'resize_type' => 'crop',
 				),
-				'max_size' => '600x600',
-				'resize_type' => 'crop',
 			),
 		),
 	),
