@@ -16,10 +16,10 @@
 <?php foreach ($album_image->album_image_comment as $comment): ?>
 	<div class="commentBox">
 		<div class="member_img_box_s">
-			<?php echo img($comment->member->get_image(), '30x30', 'member/'.$comment->member_id); ?>
+			<?php echo (empty($comment->member))? img('m', '30x30') : img($comment->member->get_image(), '30x30', 'member/'.$comment->member_id); ?>
 			<div class="content">
 				<div class="main">
-					<b class="fullname"><?php echo Html::anchor('member/'.$comment->member_id, $comment->member->name); ?></b>
+					<b class="fullname"><?php echo (empty($comment->member))? Config::get('site.term.left_member') : Html::anchor('member/'.$comment->member_id, $comment->member->name); ?></b>
 					<?php echo $comment->body ?>
 				</div>
 				<small><?php echo site_get_time($comment->created_at); ?></small>

@@ -25,7 +25,7 @@ class Site_util
 			$album_image = Model_AlbumImage::find()->where('album_id', $album_id)->related('file')->order_by('created_at', 'asc')->get_one();
 		}
 
-		return (!empty($album_image->file->name)) ? $album_image->file->name : '';
+		return (!empty($album_image->file->name)) ? $album_image->file->name : 'ai';
 	}
 
 	public static function get_neighboring_album_image_ids($album_id, $album_image_id)

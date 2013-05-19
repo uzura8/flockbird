@@ -83,7 +83,7 @@ class Model_AlbumImage extends \Orm\Model
 
 	public function get_image()
 	{
-		if (empty($this->file_id)) return '';
+		if (empty($this->file_id)) return 'ai';
 
 		return \Model_File::get_name($this->file_id);
 	}
