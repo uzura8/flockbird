@@ -1,8 +1,8 @@
 <?php if ($album_images): ?>
-<div id="ai_container">
+<div id="main_container">
 <?php $i = 0; ?>
 <?php foreach ($album_images as $album_image): ?>
-	<div class="ai_item">
+	<div class="main_item">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>">
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/detail/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>

@@ -1,8 +1,8 @@
 <?php if ($list): ?>
 <div class="row-fluid">
-<div id="a_container" class="span12">
+<div id="main_container" class="span12">
 <?php foreach ($list as $id => $album): ?>
-	<div class="a_item">
+	<div class="main_item">
 <?php
 
 ?>

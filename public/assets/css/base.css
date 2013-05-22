@@ -129,9 +129,8 @@ div#popup_container.ui-draggable #popup_message {
 	color: #000;
 }
 
-#ai_container .ai_item {
+#main_container .main_item {
 	width: 250px;
-	/*height: 300px;*/
 	margin: 5px;
 	padding: 8px 0 5px;
 	text-align: center;
@@ -140,56 +139,35 @@ div#popup_container.ui-draggable #popup_message {
 	background: #eee;
 	box-shadow: 0 2px 1px #eee;
 }
-#ai_container .ai_item img {
-	margin: 0 0 5px;
-}
-#ai_container .ai_item div.article {
+#main_container .main_item div.article {
 	text-align: left;
 	padding: 0 8px;
 	margin: 0;
 	position: relative;
 }
-#ai_container .ai_item div.article .btn-group {
+#main_container .main_item img {
+	margin: 0 0 5px;
+}
+#main_container .main_item div.article .btn-group {
 	position: absolute;
 	right: 8px;
 	bottom: 0;
 }
-#ai_container .ai_item div.article .dropdown-menu {
+#main_container .main_item div.article .dropdown-menu {
 	max-width: 170px;
 	min-width: 100px;
 	font-size: 11px;
 }
-
-#a_container .a_item {
-	width: 250px;
-	margin: 0 5px 10px;
-	padding: 13px 0 10px;
-	text-align: center;
-	float: left;
-	border: 1px solid #ccc;
-	background: #eee;
-	box-shadow: 0 2px 1px #eee;
+#main_container .main_item .commentBox {
+	padding: 5px 10px 5px 5px;
 }
-#a_container .article {
-	text-align: left;
-	font-size: 12px;
-	padding: 0 10px;
-	margin: 5px 0 0;
-}
-#a_container .a_item .member_img_box_s {
+#main_container .main_item .member_img_box_s {
 	margin-top: 5px;
 	padding: 0 10px;
 	text-align: left;
 }
-#a_container .a_item .member_img_box_s img.profile_image {
+#main_container .main_item .member_img_box_s img.profile_image {
 	left: 9px;
-}
-#a_container .a_item img {
-	margin: 0 0 5px;
-}
-
-#ai_container .ai_item .commentBox {
-	padding: 5px 10px 5px 5px;
 }
 
 #infscr-loading {

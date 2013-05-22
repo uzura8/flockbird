@@ -4,16 +4,16 @@
 //	itemSelector : '.article'
 //});
 $(function(){
-	var $container = $('#a_container');
+	var $container = $('#main_container');
 	$container.imagesLoaded(function(){
 		$container.masonry({
-			itemSelector : '.a_item'
+			itemSelector : '.main_item'
 		});
 
 		$container.infinitescroll({
 			navSelector  : '#page-nav',   // ページのナビゲーションを選択
 			nextSelector : '#page-nav a', // 次ページへのリンク
-			itemSelector : '.a_item',    // 持ってくる要素のclass
+			itemSelector : '.main_item',    // 持ってくる要素のclass
 			loading: {
 				finishedMsg: '<?php echo \Config::get('album.term.album'); ?>がありません。', //次のページがない場合に表示するテキスト
 				img: '<?php echo \Uri::create('assets/img/site/loading_l.gif'); ?>' //ローディング画像のパス

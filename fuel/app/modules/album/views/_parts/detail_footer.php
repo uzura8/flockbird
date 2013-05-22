@@ -9,16 +9,16 @@ $('.carousel').carousel({
 var baseUrl = '<?php echo Uri::base(false); ?>';
 
 $(function(){
-	var $container = $('#ai_container');
+	var $container = $('#main_container');
 	$container.imagesLoaded(function(){
 		$container.masonry({
-			itemSelector : '.ai_item'
+			itemSelector : '.main_item'
 		});
 
 		$container.infinitescroll({
 			navSelector  : '#page-nav',   // ページのナビゲーションを選択
 			nextSelector : '#page-nav a', // 次ページへのリンク
-			itemSelector : '.ai_item',    // 持ってくる要素のclass
+			itemSelector : '.main_item',    // 持ってくる要素のclass
 			loading: {
 				finishedMsg: '<?php echo \Config::get('album.term.album_image'); ?>がありません。', //次のページがない場合に表示するテキスト
 				img: '<?php echo \Uri::create('assets/img/site/loading_l.gif'); ?>' //ローディング画像のパス
