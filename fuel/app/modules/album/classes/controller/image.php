@@ -58,7 +58,7 @@ class Controller_Image extends \Controller_Site
 
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->post_footer = \View::forge('image/_parts/detail_footer', array('album_image_id' => $album_image->id));
-		$this->template->content = \View::forge('image/index.php', $data);
+		$this->template->content = \View::forge('image/detail.php', $data);
 	}
 
 	public function action_create($note_id = null)
