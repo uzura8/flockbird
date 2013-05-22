@@ -226,7 +226,12 @@
 <?php echo Asset::js('moment.min.js');?>
 <?php echo Asset::js('moment.lang_ja.js');?>
 <?php echo Asset::js('livestamp.min.js');?>
+<?php echo Asset::js('js-url/js-url.min.js');?>
+<?php echo Asset::js('site.js');?>
 <script type="text/javascript" charset="utf-8">
+function get_baseUrl() {return '<?php echo Uri::base(false); ?>';}
+function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
+function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
 $('textarea.autogrow').autogrow();
 </script>
 <?php if (isset($post_footer)): ?>

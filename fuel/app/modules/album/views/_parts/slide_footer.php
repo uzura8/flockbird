@@ -4,14 +4,15 @@ $('.carousel').carousel({
 });
 
 $(function(){
-	var baseUrl = '<?php echo Uri::base(false); ?>';
+	var baseUrl = get_baseUrl();
+	var album_id = get_id_from_url();
 
 	var basePath = '/<?php echo Site_util::get_upload_uri_base_path('img', 'ai', $id); ?>/600x600/'; // 画像のベースパスを指定
 	var images = []; // 画像ファイル名格納用配列
 	var image_ids = []; // 画像id格納用配列
 	var slideNumber = 0;
 
-	$.get('/album/api/detail/<?php echo $id; ?>.json', function(json){
+	$.get('/album/api/detail/' + album_id + '.json', function(json){
 		$.each(json, function(i, data){
 			images.push(basePath + data.file.name);
 			image_ids.push(data.id);
@@ -47,7 +48,7 @@ $(function(){
 		//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
 		$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
 
-		show_list(baseUrl, image_ids[slideNumber], true);
+		show_list('album/image/comment/list/' + image_ids[slideNumber], '#comment_list');
 	},'json');
 	
 	var next = function() {
@@ -70,7 +71,7 @@ $(function(){
 		$('#myCarousel > .carousel-inner').append('<img class="item" src="'+ images[nextSlideNumber]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
 		$('#myCarousel').carousel('next');
 
-		show_list(baseUrl, image_ids[slideNumber], true);
+		show_list('album/image/comment/list/' + image_ids[slideNumber], '#comment_list');
 	}
 
 	var prev = function() {
@@ -93,7 +94,7 @@ $(function(){
 		$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[prevSlideNumber]+'" id="image_'+ image_ids[prevSlideNumber] +'>');
 		$('#myCarousel').carousel('prev');
 
-		show_list(baseUrl, image_ids[slideNumber], true);
+		show_list('album/image/comment/list/' + image_ids[slideNumber], '#comment_list');
 	}
 
 	var slide = function(type) {
@@ -121,61 +122,12 @@ $(function(){
 		slide(event.keyCode);
 	});
 
-	$('#btn_album_image_comment_create').live("click", function(){
-		var body = $("#input_album_image_comment").val().trim();
-		if (body.length > 0) {
-			$.post(
-				baseUrl + 'album/image/comment/create_ajax/' + image_ids[slideNumber],
-				{
-					'body': body,
-					'<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>',
-				},
-				function(data){
-					$.jGrowl('コメントを投稿しました。');
-					show_list(baseUrl, image_ids[slideNumber]);
-					$("#input_album_image_comment").val('');
-					$("textarea#input_album_image_comment").css("height", "33px");;
-				}
-			);
-		}
+	$('#btn_album_image_comment_create').click(function(){
+		create_comment('#input_album_image_comment', image_ids[slideNumber], 'album/image/comment/api/create.json', 'album/image/comment/list/' + image_ids[slideNumber], '#comment_list')
 	});
 
 	$('.btn_album_image_comment_delete').live("click", function(){
-		var id_value = $(this).attr("id");
-		var id = id_value.replace(/btn_album_image_comment_delete_/g, "");
-		jConfirm('削除しますか?', '削除確認', function(r) {
-			if (r == true) {
-				$.ajax({
-					url : baseUrl + 'album/image/comment/delete_ajax/' + id,
-					dataType : "text",
-					data : {'id': id, '<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>'},
-					type : 'POST',
-					success: function(status_after){
-						$('#commentBox_' + id).fadeOut();
-						$.jGrowl('No.' + id + 'のコメントを削除しました。');
-					},
-					error: function(){
-						$.jGrowl('No.' + id + 'のコメントを削除できませんでした。');
-					}
-				});
-			}
-		});
+		delete_comment('album/image/comment/api/delete.json', get_id_num(($(this).attr("id"))), '#commentBox');
 	});
-
 });
-
-
-function show_list(base_url, album_id, is_fadein) {
-	var url = base_url + 'album/image/comment/list/' + album_id;
-	$("#loading_list").html('<img src="' + base_url + 'assets/img/loading.gif">');
-	$.get(url, {'nochache':(new Date()).getTime()}, function(data) {
-		if (data.length > 0) {
-			if (is_fadein) {
-				$("#comment_list").fadeOut('fast');
-			}
-			$("#comment_list").html(data).fadeIn('fast');
-		}
-	});
-	$("#loading_list").remove();
-}
 </script>

@@ -188,7 +188,7 @@ class Controller_Image extends \Controller_Site
 	}
 
 	/**
-	 * Album delete
+	 * Album_image delete
 	 * 
 	 * @access  public
 	 * @params  integer

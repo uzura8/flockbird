@@ -9,10 +9,16 @@
 * jquery.alerts
 * jquery.autogrow-textarea
 * jquery.jgrowl
-* jqueryfileupload
 * jQuery Masonry (MIT)
 * moment.js (MIT)
   - http://momentjs.com/
 * Livestamp.js (MIT)
   - http://mattbradley.github.com/livestampjs/
 * moment.lang_ja.js (MIT)
+* jqueryfileupload
+* Bootstrap-Image-Gallery
+* JavaScript-Canvas-to-Blob
+* JavaScript-Load-Image
+* JavaScript-Templates
+* js-url (dual licensed under the MIT and GPL licenses.)
+  - https://github.com/websanova/js-url
