@@ -6,32 +6,14 @@ $('.carousel').carousel({
 	interval: false
 })
 
-var baseUrl = '<?php echo Uri::base(false); ?>';
 
 $(function(){
-	var $container = $('#main_container');
-	$container.imagesLoaded(function(){
-		$container.masonry({
-			itemSelector : '.main_item'
-		});
-
-		$container.infinitescroll({
-			navSelector  : '#page-nav',   // ページのナビゲーションを選択
-			nextSelector : '#page-nav a', // 次ページへのリンク
-			itemSelector : '.main_item',    // 持ってくる要素のclass
-			loading: {
-				finishedMsg: '<?php echo \Config::get('album.term.album_image'); ?>がありません。', //次のページがない場合に表示するテキスト
-				img: '<?php echo \Uri::create('assets/img/site/loading_l.gif'); ?>' //ローディング画像のパス
-			}
-		},
-		function( newElements ) {
-			var $newElems = $( newElements ).css({ opacity: 0 });
-			$newElems.imagesLoaded(function(){
-				$newElems.animate({ opacity: 1 });
-				$container.masonry( 'appended', $newElems, true );
-			});
-		});
-	});
+	load_masonry_item(
+		'#main_container',
+		'.main_item',
+		'<?php echo \Config::get('album.term.album_image'); ?>がありません。',
+		'<?php echo \Uri::create('assets/img/site/loading_l.gif'); ?>'
+	);
 });
 
 <?php if (!Agent::is_smartphone()): ?>
@@ -67,7 +49,7 @@ $('.btn_album_image_comment_delete').click(function(){
 	jConfirm('削除しますか?', '削除確認', function(r) {
 		if (r == true) {
 			$.ajax({
-				url : baseUrl + 'album/image/comment/delete_ajax/' + id,
+				url : get_baseUrl() + 'album/image/comment/delete_ajax/' + id,
 				dataType : "text",
 				data : {'id': id, '<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>'},
 				type : 'POST',
@@ -84,9 +66,8 @@ $('.btn_album_image_comment_delete').click(function(){
 });
 
 function set_cover(album_image_id) {
-	var baseUrl = '<?php echo Uri::base(false); ?>';
 	$.ajax({
-		url : baseUrl + 'album/image/api/set_cover.json',
+		url : get_baseUrl() + 'album/image/api/set_cover.json',
 		dataType : 'text',
 		data : {'id': album_image_id, '<?php echo Config::get('security.csrf_token_key'); ?>': '<?php echo Util_security::get_csrf(); ?>'},
 		type : 'POST',

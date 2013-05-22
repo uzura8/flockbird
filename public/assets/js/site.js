@@ -105,3 +105,30 @@ function delete_comment_execute(post_uri, id, target_attribute_prefix)
 		}
 	});
 }
+
+function load_masonry_item(container_attribute, item_attribute, item_name, loading_image_url)
+{
+	var $container = $(container_attribute);
+	$container.imagesLoaded(function(){
+		$container.masonry({
+			itemSelector : item_attribute
+		});
+
+		$container.infinitescroll({
+			navSelector  : '#page-nav',   // ページのナビゲーションを選択
+			nextSelector : '#page-nav a', // 次ページへのリンク
+			itemSelector : '.main_item',    // 持ってくる要素のclass
+			loading: {
+				finishedMsg: item_name + 'がありません。', //次のページがない場合に表示するテキスト
+				img: loading_image_url //ローディング画像のパス
+			}
+		},
+		function( newElements ) {
+			var $newElems = $( newElements ).css({ opacity: 0 });
+			$newElems.imagesLoaded(function(){
+				$newElems.animate({ opacity: 1 });
+				$container.masonry( 'appended', $newElems, true );
+			});
+		});
+	});
+}
