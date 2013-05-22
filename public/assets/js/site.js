@@ -37,18 +37,16 @@ function get_error_message(status, default_message = '')
 
 function show_list(uri, list_attribute) {
 	var is_fadein = (arguments.length > 2) ? arguments[2] : true;
-	var loading_image_attribute = (arguments.length > 3) ? arguments[3] : '#loading_list';
 
 	var baseUrl = get_baseUrl();
 	var get_url = baseUrl + uri;
-	$(loading_image_attribute).html('<img src="' + baseUrl + 'assets/img/loading.gif">');
+	$(list_attribute).html('<div class="loading_image"><img src="' + baseUrl + 'assets/img/loading.gif"></div>');
 	$.get(get_url, {'nochache':(new Date()).getTime()}, function(data) {
 		if (data.length > 0) {
 			if (is_fadein) $(list_attribute).fadeOut('fast');
 			$(list_attribute).html(data).fadeIn('fast');
 		}
 	});
-	$(loading_image_attribute).remove();
 }
 
 function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_attribute)

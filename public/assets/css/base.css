@@ -238,6 +238,11 @@ div#popup_container.ui-draggable #popup_message {
 	margin-bottom: 20px;
 }
 
+div.loading_image {
+	padding: 0 auto;
+	text-align: center;
+}
+
 /* form */
 /* browser width is over 480px */
 @media (min-width: 480px) {

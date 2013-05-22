@@ -11,7 +11,6 @@
 <h3 id="comments">Comments</h3>
 <?php endif; ?>
 
-<div id="loading_list"></div>
 <div id="comment_list">
 <?php foreach ($album_image->album_image_comment as $comment): ?>
 	<div class="commentBox">

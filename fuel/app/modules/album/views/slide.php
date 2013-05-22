@@ -15,7 +15,6 @@
 	<div class="span4">
 		<div id="album_image_comment"></div>
 		<h4 id="comments">Comments</h4>
-		<div id="loading_list"></div>
 		<div id="comment_list"></div>
 
 <?php if (Auth::check()): ?>
