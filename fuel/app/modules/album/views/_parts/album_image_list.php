@@ -2,7 +2,7 @@
 <div id="main_container">
 <?php $i = 0; ?>
 <?php foreach ($album_images as $album_image): ?>
-	<div class="main_item">
+	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>">
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/detail/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
@@ -13,8 +13,8 @@
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
 					<ul class="dropdown-menu">
 						<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>
-						<li><a href="javascript:void(0);" onclick="set_cover(<?php echo $album_image->id; ?>);"><i class="icon-book"></i> カバーに指定</a></li>
-						<li><a href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image/delete/%d?%s=%s', $album_image->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i> 削除</a></li>
+						<li><a href="#" class="link_album_image_set_cover" id="link_album_image_set_cover_<?php echo $album_image->id; ?>"><i class="icon-book"></i> カバーに指定</a></li>
+						<li><a href="#" class="link_album_image_delete" id="link_album_image_delete_<?php echo $album_image->id; ?>"><i class="icon-trash"></i> 削除</a></li>
 					</ul>
 				</div><!-- /btn-group -->
 <?php endif; ?>

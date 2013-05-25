@@ -42,7 +42,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			);
 
 			$comment = new Model_AlbumImageComment($values);
-			if (!$comment->save()) throw new \HttpServerErrorException;
+			$comment->save();
 
 			$response['status'] = 1;
 			$response['id'] = $comment->id;
@@ -51,10 +51,6 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 		catch(\SiteApiNotAuthorizedException $e)
 		{
 			$status_code = 401;
-		}
-		catch(\HttpServerErrorException $e)
-		{
-			$status_code = 500;
 		}
 		catch(\Exception $e)
 		{
@@ -84,19 +80,14 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 				throw new \HttpNotFoundException;
 			}
 
-			if (!$album_image_comment->delete()) throw new \HttpServerErrorException;
+			$album_image_comment->delete();
 
 			$response['status'] = 1;
-			$response['id'] = $album_image_comment->id;
 			$status_code = 200;
 		}
 		catch(\SiteApiNotAuthorizedException $e)
 		{
 			$status_code = 401;
-		}
-		catch(\HttpServerErrorException $e)
-		{
-			$status_code = 500;
 		}
 		catch(\Exception $e)
 		{

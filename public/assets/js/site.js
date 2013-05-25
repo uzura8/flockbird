@@ -16,6 +16,11 @@ function get_id_num(id_string)
 	return false;
 }
 
+function get_url(uri)
+{
+	return get_baseUrl() + uri;
+}
+
 function set_token(obj)
 {
 	var token_key = get_token_key();
@@ -24,8 +29,10 @@ function set_token(obj)
 	return obj;
 }
 
-function get_error_message(status, default_message = '')
+function get_error_message(status)
 {
+	var default_message = (arguments.length > 2) ? arguments[2] : '';
+
 	switch (status)
 	{
 		case 401:
@@ -36,7 +43,7 @@ function get_error_message(status, default_message = '')
 }
 
 function show_list(uri, list_attribute) {
-	var is_fadein = (arguments.length > 2) ? arguments[2] : true;
+	var is_fadein = (arguments.length > 3) ? arguments[3] : true;
 
 	var baseUrl = get_baseUrl();
 	var get_url = baseUrl + uri;
@@ -77,20 +84,27 @@ function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_a
 	});
 }
 
-function delete_comment(post_uri, id, target_attribute_prefix)
+function delete_item(post_uri, id, target_attribute_prefix)
 {
+	var item_term = (arguments.length > 4) ? arguments[4] : '';
+
 	jConfirm('削除しますか?', '削除確認', function(r) {
-		if (r == true) delete_comment_execute(post_uri, id, target_attribute_prefix);
+		if (r == true) delete_item_execute(post_uri, id, target_attribute_prefix, item_term);
 	});
 }
 
-function delete_comment_execute(post_uri, id, target_attribute_prefix)
+function delete_item_execute(post_uri, id, target_attribute_prefix, item_term)
 {
 	var baseUrl = get_baseUrl();
+
 	var token_key = get_token_key();
 	var post_data = {};
 	post_data['id'] = id;
 	post_data[token_key] = get_token();
+
+	var msg_prefix = '';
+	if (item_term.length > 0) msg_prefix = item_term + 'を';
+
 	$.ajax({
 		url : baseUrl + post_uri,
 		dataType : "text",
@@ -98,16 +112,18 @@ function delete_comment_execute(post_uri, id, target_attribute_prefix)
 		type : 'POST',
 		success: function(data){
 			$(target_attribute_prefix + '_' + id).fadeOut();
-			$.jGrowl('コメントを削除しました。');
+			$.jGrowl(msg_prefix + '削除しました。');
 		},
 		error: function(data){
-			$.jGrowl(get_error_message(data['status'], 'コメントを削除できませんでした。'));
+			$.jGrowl(get_error_message(data['status'], msg_prefix + '削除できませんでした。'));
 		}
 	});
 }
 
-function load_masonry_item(container_attribute, item_attribute, item_name, loading_image_url)
+function load_masonry_item(container_attribute, item_attribute, item_name)
 {
+	var loading_image_url = (arguments.length > 4) ? arguments[4] : get_url('assets/img/site/loading_l.gif');
+
 	var $container = $(container_attribute);
 	$container.imagesLoaded(function(){
 		$container.masonry({

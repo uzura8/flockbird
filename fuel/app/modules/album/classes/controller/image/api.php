@@ -38,11 +38,12 @@ class Controller_Image_api extends \Controller_Site_Api
 	 */
 	public function post_set_cover()
 	{
-		$response = array();
-		$status_code = 200;
+		$response = array('status' => 0);
 		try
 		{
+			$this->auth_check_api();
 			\Util_security::check_csrf();
+
 			$id = (int)\Input::post('id');
 
 			if (!$id || !$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
@@ -51,13 +52,63 @@ class Controller_Image_api extends \Controller_Site_Api
 			}
 			$album_image->album->cover_album_image_id = $id;
 			$album_image->album->save();
+			if (!$album_image->album_id) throw new \HttpServerErrorException;
 
-			$response['status'] = 'OK';
+			$response['status'] = 1;
 			$response['album_id'] = $album_image->album_id;
+			$status_code = 200;
 		}
-		catch(Exception $e)
+		catch(\SiteApiNotAuthorizedException $e)
 		{
-			$response['status'] = 'NG';
+			$status_code = 401;
+		}
+		catch(\HttpServerErrorException $e)
+		{
+			$status_code = 500;
+		}
+		catch(\Exception $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
+	 * Album image delete
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function post_delete()
+	{
+		$response = array('status' => 0);
+		try
+		{
+			$this->auth_check_api();
+			\Util_security::check_csrf();
+
+			$id = (int)\Input::post('id');
+			if (!$id || !$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
+			{
+				throw new \HttpNotFoundException;
+			}
+
+			\DB::start_transaction();
+			$deleted_filesize = Model_AlbumImage::delete_with_file($id);
+			\Model_Member::add_filesize($this->u->id, -$deleted_filesize);
+			\DB::commit_transaction();
+
+			$response['status'] = 1;
+			$status_code = 200;
+		}
+		catch(\SiteApiNotAuthorizedException $e)
+		{
+			$status_code = 401;
+		}
+		catch(\Exception $e)
+		{
+			\DB::rollback_transaction();
 			$status_code = 400;
 		}
 

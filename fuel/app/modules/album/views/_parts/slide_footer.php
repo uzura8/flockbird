@@ -127,7 +127,7 @@ $(function(){
 	});
 
 	$('.btn_album_image_comment_delete').live("click", function(){
-		delete_comment('album/image/comment/api/delete.json', get_id_num(($(this).attr("id"))), '#commentBox');
+		delete_item('album/image/comment/api/delete.json', get_id_num(($(this).attr("id"))), '#commentBox');
 	});
 });
 </script>

@@ -232,6 +232,12 @@
 function get_baseUrl() {return '<?php echo Uri::base(false); ?>';}
 function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
 function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
+function is_sp() {return <?php echo (Agent::is_smartphone())? 'true' : 'false'; ?>;}
+function get_term(key) {
+	var terms = {};
+	terms['album_image'] = '<?php echo \Config::get('album.term.album_image'); ?>';
+	return terms[key];
+}
 $('textarea.autogrow').autogrow();
 </script>
 <?php if (isset($post_footer)): ?>
