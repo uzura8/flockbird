@@ -1,6 +1,23 @@
 <?php
 class Site_util
 {
+	public static function get_module_name()
+	{
+		return (isset(Request::main()->route->module))? Request::main()->route->module : '';
+	}
+
+	public static function get_controller_name()
+	{
+		if (!isset(Request::main()->route->controller)) return '';
+
+		return Str::lower(preg_replace('/^[a-zA-Z0-9_]+\\\Controller_/', '', Request::main()->route->controller));
+	}
+
+	public static function get_action_name()
+	{
+		return (isset(Request::main()->route->action))? Request::main()->route->action : '';
+	}
+
 	public static function check_is_admin_request()
 	{
 		if (Module::loaded('admin') && Request::main()->route->module == 'admin')

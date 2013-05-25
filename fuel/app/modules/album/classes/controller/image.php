@@ -57,7 +57,6 @@ class Controller_Image extends \Controller_Site
 		list($data['before_id'], $data['after_id']) =  \Album\Site_util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
 
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
-		$this->template->post_footer = \View::forge('image/_parts/detail_footer', array('album_image_id' => $album_image->id));
 		$this->template->content = \View::forge('image/detail.php', $data);
 	}
 

@@ -238,11 +238,10 @@ function get_term(key) {
 	terms['album_image'] = '<?php echo \Config::get('album.term.album_image'); ?>';
 	return terms[key];
 }
-$('textarea.autogrow').autogrow();
 </script>
-<?php if (isset($post_footer)): ?>
-<?php echo $post_footer; ?>
-<?php endif; ?>
+<?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
+<?php echo site_htmltag_include_js_module();?>
+<?php echo site_htmltag_include_js_action();?>
 <!--
   <script src="../assets/js/bootstrap-transition.js"></script>
   <script src="../assets/js/bootstrap-alert.js"></script>

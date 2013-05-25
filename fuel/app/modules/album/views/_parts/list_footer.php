@@ -7,6 +7,4 @@ $(function(){
 		get_term('album_image') + 'がありません。'
 	);
 });
-
-
 </script>

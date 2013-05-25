@@ -1,4 +1,3 @@
-<script type="text/javascript">
 $(function(){
 	var parent_id = get_id_from_url();
 	show_list('album/image/comment/list/' + parent_id, '#comment_list', false);
@@ -11,4 +10,3 @@ $(function(){
 		delete_item('album/image/comment/api/delete.json', get_id_num(($(this).attr("id"))), '#commentBox');
 	});
 });
-</script>

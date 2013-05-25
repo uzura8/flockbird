@@ -2,15 +2,30 @@
 
 function site_get_current_page_id($delimitter = '_')
 {
-	$items = array();
-	if (isset(Request::main()->route->module)) $items[] = Request::main()->route->module;
-
-	$controller = (isset(Request::main()->route->controller)) ?  Request::main()->route->controller : '';
-	if ($controller) $items[] = Str::lower(preg_replace('/^[a-zA-Z0-9_]+\\\Controller_/', '', $controller));
-
-	if (isset(Request::main()->route->action)) $items[] = Request::main()->route->action;
+	$items = array(
+		Site_util::get_module_name(),
+		Site_util::get_controller_name(),
+		Site_util::get_action_name(),
+	);
 
 	return implode($delimitter, $items);
+}
+
+function site_htmltag_include_js_module()
+{
+	$assets_uri = sprintf('modules/%s/site.js', Site_util::get_module_name());
+	$public_uri = 'assets/js/'.$assets_uri;
+	if (!file_exists(PRJ_PUBLIC_DIR.'/'.$public_uri)) return '';
+
+	return Asset::js($assets_uri);
+}
+function site_htmltag_include_js_action()
+{
+	$assets_uri = sprintf('modules/%s/%s_%s.js', Site_util::get_module_name(), Site_util::get_controller_name(), Site_util::get_action_name());
+	$public_uri = 'assets/js/'.$assets_uri;
+	if (!file_exists(PRJ_PUBLIC_DIR.'/'.$public_uri)) return '';
+
+	return Asset::js($assets_uri);
 }
 
 function site_title($title = '', $subtitle = '')
