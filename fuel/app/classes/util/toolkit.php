@@ -122,4 +122,14 @@ class Util_toolkit
 
 		return array($before, $after);
 	}
+
+	public static function get_past_time($time, $unit = 3600, $base_time = '')
+	{
+		if (!$base_time) $base_time = time();
+
+		if ($base_time < $time) return false;
+		if (!$unit) return false;
+
+		return ceil(($base_time - $time) / $unit);
+	}
 }

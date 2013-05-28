@@ -139,6 +139,11 @@ function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal
 		{
 			$display = $normal_time;
 		}
+		elseif ($time >= strtotime('-1 day') && $time < strtotime('-1 hour'))
+		{
+			$past_hours = Util_toolkit::get_past_time($time);
+			$display = sprintf('約%d時間前', $past_hours);
+		}
 		else
 		{
 			$display = $past_time;
