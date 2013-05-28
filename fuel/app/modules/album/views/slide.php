@@ -18,7 +18,7 @@
 		<div id="comment_list"></div>
 
 <?php if (Auth::check()): ?>
-		<div class="commentBox">
+		<div class="commentPostBox">
 			<div class="member_img_box_s">
 				<?php echo img($u->get_image(), '30x30', 'member/'.$u->id); ?>
 				<div class="content">

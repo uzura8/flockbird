@@ -3,32 +3,14 @@
 	<?php echo img($album_image->get_image(), '600x600', '', true); ?>
 	<?php echo ($after_id) ? Html::anchor('album/image/detail/'.$after_id, '<i class="icon-forward"></i><br>次へ', array('class' => 'btn btn-mini forward')) : ''; ?>
 </div>
+<hr>
 
-<hr />
-
-<div id="album_image_comment"></div>
 <?php if (Auth::check() || $album_image->album_image_comment): ?>
 <h3 id="comments">Comments</h3>
 <?php endif; ?>
 
 <div id="comment_list">
-<?php foreach ($album_image->album_image_comment as $comment): ?>
-	<div class="commentBox">
-		<div class="member_img_box_s">
-			<?php echo (empty($comment->member))? img('m', '30x30') : img($comment->member->get_image(), '30x30', 'member/'.$comment->member_id); ?>
-			<div class="content">
-				<div class="main">
-					<b class="fullname"><?php echo (empty($comment->member))? Config::get('site.term.left_member') : Html::anchor('member/'.$comment->member_id, $comment->member->name); ?></b>
-					<?php echo $comment->body ?>
-				</div>
-				<small><?php echo site_get_time($comment->created_at); ?></small>
-			</div>
-		</div>
-<?php if (isset($u) && in_array($u->id, array($comment->member_id, $album_image->album->member_id))): ?>
-		<a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/image_comment/delete/%d?%s=%s', $comment->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a>
-<?php endif ; ?>
-	</div>
-<?php endforeach; ?>
+<?php include_partial('image/comment/_parts/list', array('u' => $u, 'album_image' => $album_image, 'comments' => $comments), 'album'); ?>
 </div>
 
 <?php if (Auth::check()): ?>

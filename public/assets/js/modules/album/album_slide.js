@@ -46,7 +46,7 @@ $.get('/album/api/detail/' + album_id + '.json', function(json){
 	//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
 	$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
 
-	show_list('album/image/comment/list/' + image_ids[slideNumber], '#comment_list');
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list');
 },'json');
 
 var next = function() {
@@ -69,7 +69,7 @@ var next = function() {
 	$('#myCarousel > .carousel-inner').append('<img class="item" src="'+ images[nextSlideNumber]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
 	$('#myCarousel').carousel('next');
 
-	show_list('album/image/comment/list/' + image_ids[slideNumber], '#comment_list');
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list');
 }
 
 var prev = function() {
@@ -92,7 +92,7 @@ var prev = function() {
 	$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[prevSlideNumber]+'" id="image_'+ image_ids[prevSlideNumber] +'>');
 	$('#myCarousel').carousel('prev');
 
-	show_list('album/image/comment/list/' + image_ids[slideNumber], '#comment_list');
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list');
 }
 
 var slide = function(type) {
@@ -121,9 +121,32 @@ $("body").keydown(function(event){
 });
 
 $('#btn_album_image_comment_create').click(function(){
-	create_comment('#input_album_image_comment', image_ids[slideNumber], 'album/image/comment/api/create.json', 'album/image/comment/list/' + image_ids[slideNumber], '#comment_list')
+	create_comment(
+		'#input_album_image_comment',
+		image_ids[slideNumber],
+		'album/image/comment/api/create.json',
+		'album/image/comment/api/list/' + image_ids[slideNumber] + '.html',
+		'#comment_list',
+		$('.commentBox:last').attr("id")
+	)
 });
 
 $('.btn_album_image_comment_delete').live("click", function(){
 	delete_item('album/image/comment/api/delete.json', get_id_num(($(this).attr("id"))), '#commentBox');
+	return false;
 });
+
+if (is_sp() == false) {
+	$('.commentBox').live({
+		mouseenter:function() {
+			var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
+			var btn = '#btn_album_image_comment_delete_' + id;
+			$(btn).fadeIn('fast');
+		},
+		mouseleave:function() {
+			var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
+			var btn = '#btn_album_image_comment_delete_' + id;
+			$(btn).hide();
+		}
+	});
+}

@@ -12,6 +12,8 @@ function get_id_from_url()
 
 function get_id_num(id_string)
 {
+	if (typeof id_string === "undefined") return false;
+
 	var matches = id_string.match(/^[a-z0-9_]+_(\d+)$/i);
 	if (matches) return matches[1];
 
@@ -44,18 +46,29 @@ function get_error_message(status)
 	}
 }
 
-function show_list(uri, list_attribute) {
-	var is_fadein = (arguments.length > 3) ? arguments[3] : true;
+function show_list(uri, list_block_id) {
+	var before_element_id_name = (arguments.length > 2 && arguments[2]) ? arguments[2] : '';
+	var before_element_id_num = (before_element_id_name.length > 0) ? get_id_num(before_element_id_name) : 0;
 
+	$(list_block_id).append('<div class="loading_image" id="list_loading_image"><img src="' + baseUrl + 'assets/img/loading.gif"></div>');
 	var baseUrl = get_baseUrl();
 	var get_url = baseUrl + uri;
-	$(list_attribute).html('<div class="loading_image"><img src="' + baseUrl + 'assets/img/loading.gif"></div>');
-	$.get(get_url, {'nochache':(new Date()).getTime()}, function(data) {
-		if (data.length > 0) {
-			if (is_fadein) $(list_attribute).fadeOut('fast');
-			$(list_attribute).html(data).fadeIn('fast');
+	var get_data = {};
+	get_data['nochache'] = (new Date()).getTime();
+	if (before_element_id_num) get_data['before_id'] = before_element_id_num;
+
+	$.get(
+		get_url,
+		get_data,
+		function(data) {
+			if (before_element_id_num) {
+				$(list_block_id).append(data);
+			} else {
+				$(list_block_id).html(data).fadeIn('fast');
+			}
 		}
-	});
+	);
+	$('div#list_loading_image').remove();
 }
 
 function delete_item(post_uri, id, target_attribute_prefix)

@@ -87,9 +87,8 @@ class Controller_Image_comment extends \Controller_Site
 		{
 			return \View::forge('image/comment/list_error.php');
 		}
-		$comments = Model_AlbumImageComment::find()->where('album_image_id', $album_image_id)->related('member')->order_by('id')->get();
 
-		return \View::forge('image/comment/list.php', array('comments' => $comments, 'album_image' => $album_image));
+		return \View::forge('image/comment/_parts/list.php', array('album_image' => $album_image));
 	}
 
 	/**

@@ -26,6 +26,11 @@ class Controller_Image extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
+		$query = Model_AlbumImageComment::find()->where('album_image_id', $id)->related('member');
+		//if ($before_id) $query = $query->where('id', '>', $before_id);
+		//if ($limit)     $query = $query->limit($limit);
+		$comments = $query->order_by('id')->get();
+
 		$this->template->title = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
 		if ($album_image->name)
 		{
@@ -53,7 +58,7 @@ class Controller_Image extends \Controller_Site
 		$this->template->breadcrumbs[$album_image->album->name] =  '/album/detail/'.$album_image->album_id;
 		$this->template->breadcrumbs[$this->template->title] = '';
 
-		$data = array('album_image' => $album_image);
+		$data = array('album_image' => $album_image, 'comments' => $comments);
 		list($data['before_id'], $data['after_id']) =  \Album\Site_util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
 
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));

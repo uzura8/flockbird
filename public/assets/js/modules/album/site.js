@@ -16,9 +16,8 @@ function set_cover(album_image_id) {
 	});	
 }
 
-function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_attribute)
+function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_block_id, before_element_id_name)
 {
-	var list_fadein = (arguments.length > 5) ? arguments[5] : true;
 	var textarea_height  = (arguments.length > 6) ? arguments[6] : '33px';
 
 	var body = $(textarea_attribute).val().trim();
@@ -26,7 +25,6 @@ function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_a
 
 	var data = {'id':parent_id, 'body':body};
 	data = set_token(data);
-
 	$.ajax({
 		url : get_baseUrl() + post_uri,
 		dataType : 'text',
@@ -34,9 +32,9 @@ function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_a
 		type : 'POST',
 		success: function(result){
 			$.jGrowl('コメントを投稿しました。');
-			show_list(get_uri, list_attribute, list_fadein);
+			show_list(get_uri, list_block_id, before_element_id_name);
 			$(textarea_attribute).val('');
-			$('textarea'.textarea_attribute).css('height', textarea_height);
+			$('textarea' + textarea_attribute).css('height', textarea_height);
 		},
 		error: function(data){
 			$.jGrowl(get_error_message(data['status'], 'コメントを投稿できませんでした。'));

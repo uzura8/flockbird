@@ -5,12 +5,12 @@ class Controller_Site_Api extends Controller_Base_Api
 	public function before()
 	{
 		parent::before();
+		$this->set_current_user();
 	}
 
 	public function auth_check_api()
 	{
 		if (!$this->auth_check()) throw new \SiteApiNotAuthorizedException;
-		$this->set_current_user();
 	}
 
 	private function set_current_user()
