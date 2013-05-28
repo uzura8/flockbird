@@ -1,3 +1,3 @@
-<?php include_partial('member/_submenu'); ?>
+<?php echo render('member/_submenu'); ?>
 
 <p>マイホームです</p>

@@ -10,7 +10,7 @@
 <?php endif; ?>
 
 <div id="comment_list">
-<?php include_partial('image/comment/_parts/list', array('u' => $u, 'album_image' => $album_image, 'comments' => $comments), 'album'); ?>
+<?php echo render('image/comment/_parts/list', array('u' => $u, 'album_image' => $album_image, 'comments' => $comments)); ?>
 </div>
 
 <?php if (Auth::check()): ?>
