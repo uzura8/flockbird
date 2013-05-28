@@ -11,6 +11,15 @@ $config = array(
 		'note'    => 'Note',
 		'left_member'  => '退会メンバー',
 	),
+	'record_limit' => array(
+		'default' => array(
+			'comment' => array(
+				'l' => 20,
+				'm' => 10,
+				's' => 5,
+			),
+		),
+	),
 	'upload_files' => array(
 		'img' => array(
 			// member profile image

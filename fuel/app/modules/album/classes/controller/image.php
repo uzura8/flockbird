@@ -27,9 +27,9 @@ class Controller_Image extends \Controller_Site
 		}
 
 		$query = Model_AlbumImageComment::find()->where('album_image_id', $id)->related('member');
-		//if ($before_id) $query = $query->where('id', '>', $before_id);
-		//if ($limit)     $query = $query->limit($limit);
-		$comments = $query->order_by('id')->get();
+		$query = $query->limit(\Config::get('site.record_limit.default.comment.s'));
+		$comments = $query->order_by('id', 'desc')->get();
+		$comments = array_reverse($comments);
 
 		$this->template->title = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
 		if ($album_image->name)
