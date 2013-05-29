@@ -142,17 +142,9 @@ $('.btn_album_image_comment_delete').live("click", function(){
 	return false;
 });
 
-if (is_sp() == false) {
+if (!is_sp()) {
 	$('.commentBox').live({
-		mouseenter:function() {
-			var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
-			var btn = '#btn_album_image_comment_delete_' + id;
-			$(btn).fadeIn('fast');
-		},
-		mouseleave:function() {
-			var id = $(this).attr('id').replace($(this).attr('class') + '_', '');
-			var btn = '#btn_album_image_comment_delete_' + id;
-			$(btn).hide();
-		}
+		mouseenter:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
+		mouseleave:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
 	});
 }

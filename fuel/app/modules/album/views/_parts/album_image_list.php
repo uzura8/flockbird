@@ -7,7 +7,7 @@
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/detail/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
 			<div class="article btn-toolbar">
-				<small><i class="icon-comment"></i> <?php echo $comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
+				<small><i class="icon-comment"></i> <?php echo $all_comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
 				<div class="btn-group btn_album_image_edit" id="btn_album_image_edit_<?php echo $album_image->id ?>">
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
@@ -37,17 +37,15 @@
 					</div>
 				</div>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $album_image->album->member_id))): ?>
-				<a class="btn btn-mini boxBtn btn_album_image_comment_delete" id="btn_album_image_comment_delete_<?php echo $comment->id ?>" href="javascript:void(0);"><i class="icon-trash"></i></a>
+				<a class="btn btn-mini boxBtn btn_album_image_comment_delete" id="btn_album_image_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
 <?php endif; ?>
 			</div>
 <?php endforeach; ?>
-<?php if (count($album_image_comment) < \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id)): ?>
-			<div class="listMoreBox"><a href="<?php echo Uri::create('album/image/detail/:id', array('id' => $album_image->id, 'and' => 1), array('all_comment' => ':and')); ?>#comments">もっと見る</a></div>
-
+<?php if (count($album_image_comment) < $all_comment_count): ?>
+			<div class="listMoreBox"><a href="<?php echo Uri::create(sprintf('album/image/detail/%d?all_comment=1#comments', $album_image->id)); ?>">もっと見る</a></div>
 <?php endif; ?>
 		</div>
 <?php endif; ?>
-
 	</div>
 <?php $i++; ?>
 <?php endforeach; ?>
