@@ -4,6 +4,7 @@ $('.carousel').carousel({
 
 var baseUrl = get_baseUrl();
 var album_id = get_id_from_url();
+var comment_limit_default = get_comment_limit_default();
 
 var basePath = get_upload_uri_base_path(); // 画像のベースパスを指定
 var images = []; // 画像ファイル名格納用配列
@@ -46,7 +47,7 @@ $.get('/album/api/detail/' + album_id + '.json', function(json){
 	//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
 	$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
 
-	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list');
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 },'json');
 
 var next = function() {
@@ -69,7 +70,7 @@ var next = function() {
 	$('#myCarousel > .carousel-inner').append('<img class="item" src="'+ images[nextSlideNumber]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
 	$('#myCarousel').carousel('next');
 
-	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list');
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 }
 
 var prev = function() {
@@ -92,7 +93,7 @@ var prev = function() {
 	$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[prevSlideNumber]+'" id="image_'+ image_ids[prevSlideNumber] +'>');
 	$('#myCarousel').carousel('prev');
 
-	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list');
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 }
 
 var slide = function(type) {
@@ -118,6 +119,11 @@ $('.carousel-control').click(function(event) {
 $("body").keydown(function(event){
 	// キーボード操作によるスライドの移動
 	slide(event.keyCode);
+});
+
+$('#listMoreBox_comment').live("click", function(){
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', 0, $('.commentBox:first').attr("id"), true, '#' + $(this).attr("id"));
+	return false;
 });
 
 $('#btn_album_image_comment_create').click(function(){

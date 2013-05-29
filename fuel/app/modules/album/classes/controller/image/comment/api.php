@@ -25,19 +25,23 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 		{
 			$album_image_id = (int)$parent_id;
 			$before_id      = (int)\Input::get('before_id', 0);
+			$after_id       = (int)\Input::get('after_id', 0);
 			$limit          = (int)\Input::get('limit', 0);
+			$is_desc        = (bool)\Input::get('is_desc', false);
 
 			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
 			{
 				throw new \HttpNotFoundException;
 			}
 
-			$query = Model_AlbumImageComment::find()->where('album_image_id', $album_image_id)->related('member');
-			if ($before_id) $query = $query->where('id', '>', $before_id);
-			if ($limit)     $query = $query->limit($limit);
-			$comments = $query->order_by('id')->get();
+			$params = array();
+			if ($before_id) $params[] = array('id', '>', $before_id);
+			if ($after_id)  $params[] = array('id', '<', $after_id);
+			$comments = Model_AlbumImageComment::get_comments($album_image_id, $limit, $params, $is_desc);
 
-			$response = \View::forge('image/comment/_parts/list.php', array('comments' => $comments, 'album_image' => $album_image));
+			$data = array('comments' => $comments, 'album_image' => $album_image);
+			if ($limit) $data['show_more_link'] = true;
+			$response = \View::forge('image/comment/_parts/list.php', $data);
 			$status_code = 200;
 		}
 		catch(\Exception $e)

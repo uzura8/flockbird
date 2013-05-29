@@ -1,3 +1,7 @@
+<?php if (!empty($show_more_link) && count($comments) < count($album_image->album_image_comment)): ?>
+<div class="listMoreBox" id="listMoreBox_comment"><a href="#" id="link_list_more">全てみる</a></div>
+<?php endif; ?>
+
 <?php foreach ($comments as $comment): ?>
 	<div class="commentBox" id="commentBox_<?php echo $comment->id; ?>">
 		<div class="member_img_box_s">

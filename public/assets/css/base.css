@@ -86,13 +86,18 @@ img.profile_image {
 }
 
 .commentBox,
-.commentPostBox
+.commentPostBox,
+.listMoreBox
 {
 	margin-bottom: 3px;
 	padding: 5px;
 	background-color: #F5F5F5;
 	position: relative;
 	word-wrap: break-word;
+}
+.listMoreBox
+{
+	text-align: center;
 }
 
 .commentBox .boxBtn {

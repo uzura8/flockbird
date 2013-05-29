@@ -10,7 +10,7 @@
 <?php endif; ?>
 
 <div id="comment_list">
-<?php echo render('image/comment/_parts/list', array('u' => $u, 'album_image' => $album_image, 'comments' => $comments)); ?>
+<?php echo render('image/comment/_parts/list', array('u' => $u, 'album_image' => $album_image, 'comments' => $comments, 'show_more_link' => true)); ?>
 </div>
 
 <?php if (Auth::check()): ?>
@@ -21,7 +21,7 @@
 			<div class="main">
 				<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>
 				<div class="input"><?php echo Form::textarea('body', null, array('rows' => 1, 'class' => 'span12 autogrow', 'id' => 'input_album_image_comment')); ?></div>
-				<div class="input"><a href="javaScript:void(0);" class="btn btn-mini" id="btn_album_image_comment_create">送信</a></div>
+				<div class="input"><a href="#" class="btn btn-mini" id="btn_album_image_comment_create">送信</a></div>
 			</div>
 		</div>
 	</div>

@@ -47,22 +47,36 @@ function get_error_message(status)
 }
 
 function show_list(uri, list_block_id) {
-	var before_element_id_name = (arguments.length > 2 && arguments[2]) ? arguments[2] : '';
-	var before_element_id_num = (before_element_id_name.length > 0) ? get_id_num(before_element_id_name) : 0;
-
+	var record_limit            = (arguments.length > 2 && arguments[2]) ? arguments[2] : 0;
+	var next_element_id_name    = (arguments.length > 3 && arguments[3]) ? arguments[3] : '';
+	var is_insert_before        = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
+	var replace_element_id_name = (arguments.length > 5 && arguments[5]) ? arguments[5] : '';
 	$(list_block_id).append('<div class="loading_image" id="list_loading_image"><img src="' + baseUrl + 'assets/img/loading.gif"></div>');
 	var baseUrl = get_baseUrl();
 	var get_url = baseUrl + uri;
 	var get_data = {};
 	get_data['nochache'] = (new Date()).getTime();
-	if (before_element_id_num) get_data['before_id'] = before_element_id_num;
+	if (record_limit > 0) get_data['limit'] = record_limit;
+
+	var next_element_id_num  = (next_element_id_name.length > 0) ? get_id_num(next_element_id_name) : 0;
+	if (next_element_id_num) {
+		var key = (is_insert_before)? 'after_id' : 'before_id';
+		get_data[key] = next_element_id_num;
+	}
 
 	$.get(
 		get_url,
 		get_data,
 		function(data) {
-			if (before_element_id_num) {
-				$(list_block_id).append(data);
+			if (replace_element_id_name) {
+				$(replace_element_id_name).remove();
+			}
+			if (next_element_id_num) {
+				if (is_insert_before) {
+					$(list_block_id).prepend(data).fadeIn('fast');
+				} else {
+					$(list_block_id).append(data).fadeIn('fast');
+				}
 			} else {
 				$(list_block_id).html(data).fadeIn('fast');
 			}

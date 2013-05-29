@@ -71,4 +71,19 @@ class Model_AlbumImageComment extends \Orm\Model
 
 		return self::$count_par_album_image_list[$album_image_id];
 	}
+
+	public static function get_comments($album_image_id, $record_limit = 0, $params = array(), $is_desc = false)
+	{
+		$params = array_merge(array(array('album_image_id', '=', $album_image_id)), $params);;
+		$query = self::find()->where($params)->related('member');
+		if (!$record_limit || $record_limit >=$query->count())
+		{
+			return $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
+		}
+
+		$comments = $query->limit($record_limit)->order_by('id', 'desc')->get();
+		if (!$is_desc) $comments = array_reverse($comments);
+
+		return $comments;
+	}
 }

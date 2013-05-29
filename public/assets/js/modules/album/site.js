@@ -32,7 +32,7 @@ function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_b
 		type : 'POST',
 		success: function(result){
 			$.jGrowl('コメントを投稿しました。');
-			show_list(get_uri, list_block_id, before_element_id_name);
+			show_list(get_uri, list_block_id, 0, before_element_id_name);
 			$(textarea_attribute).val('');
 			$('textarea' + textarea_attribute).css('height', textarea_height);
 		},
