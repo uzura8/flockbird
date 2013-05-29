@@ -21,9 +21,10 @@
 			</div>
 		</div>
 
-<?php if (isset($album_image->album_image_comment)): ?>
+<?php $album_image_comment = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('site.record_limit.default.comment.s')); ?>
+<?php if ($album_image_comment): ?>
 		<div class="list_album_image_comment">
-<?php foreach ($album_image->album_image_comment as $comment): ?>
+<?php foreach ($album_image_comment as $comment): ?>
 			<div class="commentBox" id="commentBox_<?php echo $comment->id ?>">
 				<div class="member_img_box_ss">
 				<?php echo (empty($comment->member))? img('m', '20x20') : img($comment->member->get_image(), '20x20', 'member/'.$comment->member_id); ?>
@@ -40,6 +41,10 @@
 <?php endif; ?>
 			</div>
 <?php endforeach; ?>
+<?php if (count($album_image_comment) < \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id)): ?>
+			<div class="listMoreBox"><a href="<?php echo Uri::create('album/image/detail/:id', array('id' => $album_image->id, 'and' => 1), array('all_comment' => ':and')); ?>#comments">もっと見る</a></div>
+
+<?php endif; ?>
 		</div>
 <?php endif; ?>
 

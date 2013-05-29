@@ -26,7 +26,7 @@ class Controller_Image extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$record_limit = (intval(\Input::get('all_comment', 0)))? 0 : \Config::get('site.record_limit.default.comment.m');
+		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
 		$comments = Model_AlbumImageComment::get_comments($id, $record_limit);
 
 		$this->template->title = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));

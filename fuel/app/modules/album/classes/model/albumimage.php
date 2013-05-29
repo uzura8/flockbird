@@ -23,15 +23,15 @@ class Model_AlbumImage extends \Orm\Model
 			'cascade_delete' => true,
 		),
 	);
-	protected static $_has_many = array(
-		'album_image_comment' => array(
-			'key_from' => 'id',
-			'model_to' => '\Album\Model_AlbumImageComment',
-			'key_to' => 'album_image_id',
-			'cascade_save' => false,
-			'cascade_delete' => false,
-		)
-	);
+//	protected static $_has_many = array(
+//		'album_image_comment' => array(
+//			'key_from' => 'id',
+//			'model_to' => '\Album\Model_AlbumImageComment',
+//			'key_to' => 'album_image_id',
+//			'cascade_save' => false,
+//			'cascade_delete' => false,
+//		)
+//	);
 
 	protected static $_properties = array(
 		'id',

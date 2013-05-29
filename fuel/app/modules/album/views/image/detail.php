@@ -5,7 +5,7 @@
 </div>
 <hr>
 
-<?php if (Auth::check() || $album_image->album_image_comment): ?>
+<?php if (Auth::check() || $comments): ?>
 <h3 id="comments">Comments</h3>
 <?php endif; ?>
 

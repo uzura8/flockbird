@@ -78,11 +78,13 @@ class Model_AlbumImageComment extends \Orm\Model
 		$query = self::find()->where($params)->related('member');
 		if (!$record_limit || $record_limit >=$query->count())
 		{
-			return $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
+			$comments = $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
 		}
-
-		$comments = $query->limit($record_limit)->order_by('id', 'desc')->get();
-		if (!$is_desc) $comments = array_reverse($comments);
+		else
+		{
+			$comments = $query->limit($record_limit)->order_by('id', 'desc')->get();
+			if (!$is_desc) $comments = array_reverse($comments);
+		}
 
 		return $comments;
 	}
