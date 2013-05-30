@@ -121,7 +121,7 @@ $("body").keydown(function(event){
 	slide(event.keyCode);
 });
 
-$('#listMoreBox_comment').live("click", function(){
+$('#listMoreBox_comment').on("click", function(){
 	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', 0, $('.commentBox:first').attr("id"), true, '#' + $(this).attr("id"));
 	return false;
 });
@@ -137,13 +137,13 @@ $('#btn_album_image_comment_create').click(function(){
 	)
 });
 
-$('.btn_album_image_comment_delete').live("click", function(){
+$('.btn_album_image_comment_delete').on("click", function(){
 	delete_item('album/image/comment/api/delete.json', get_id_num(($(this).attr("id"))), '#commentBox');
 	return false;
 });
 
 if (!is_sp()) {
-	$('.commentBox').live({
+	$('.commentBox').on({
 		mouseenter:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
 		mouseleave:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
 	});

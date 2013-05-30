@@ -18,13 +18,13 @@ $(function(){
 		return false;
 	});
 
-	$('.btn_album_image_comment_delete').live("click", function(){
+	$('.btn_album_image_comment_delete').on("click", function(){
 		delete_item('album/image/comment/api/delete.json', get_id_num($(this).attr("id")), '#commentBox');
 		return false;
 	});
 
 	if (!is_sp()) {
-		$('.commentBox').live({
+		$('.commentBox').on({
 			mouseenter:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
 			mouseleave:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
 		});
