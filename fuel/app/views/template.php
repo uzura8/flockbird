@@ -13,6 +13,7 @@
 
   <?php echo Asset::css('bootstrap.min.css');?>
   <?php echo Asset::css('bootstrap-responsive.min.css');?>
+  <?php echo Asset::css('apprise.min.css');?>
   <?php echo Asset::css('jquery.jgrowl.css');?>
   <?php echo Asset::css('base.css');?>
 <?php if (Agent::is_smartphone()): ?>
@@ -220,7 +221,7 @@
 
 <?php echo Asset::js('jquery.min.js');?>
 <?php echo Asset::js('bootstrap.min.js');?>
-<?php echo Asset::js('jquery.alerts/jquery.alerts.js');?>
+<?php echo Asset::js('apprise-1.5.min.js');?>
 <?php echo Asset::js('jquery.autogrow-textarea.js');?>
 <?php echo Asset::js('jquery.jgrowl_minimized.js');?>
 <?php echo Asset::js('moment.min.js');?>

@@ -25,12 +25,17 @@ function get_url(uri)
 	return get_baseUrl() + uri;
 }
 
-function set_token(obj)
+function set_token()
 {
+	var obj = (arguments.length > 0) ? arguments[0] : false;
 	var token_key = get_token_key();
-	obj[token_key] = get_token();
 
-	return obj;
+	if (obj == false) {
+		return token_key + '=' + get_token();
+	} else {
+		obj[token_key] = get_token();
+		return obj;
+	}
 }
 
 function get_error_message(status)
@@ -85,16 +90,28 @@ function show_list(uri, list_block_id) {
 	$('div#list_loading_image').remove();
 }
 
-function delete_item(post_uri, id, target_attribute_prefix)
+function delete_item(uri)
 {
-	var item_term = (arguments.length > 4) ? arguments[4] : '';
+	var id = (arguments.length > 1) ? arguments[1] : 0;
+	var target_attribute_prefix = (arguments.length > 2) ? arguments[2] : '';
+	var item_term = (arguments.length > 3) ? arguments[3] : '';
 
-	jConfirm('削除しますか?', '削除確認', function(r) {
-		if (r == true) delete_item_execute(post_uri, id, target_attribute_prefix, item_term);
+	apprise('削除しますか?', {'confirm':true}, function(r) {
+		if (id > 0 && target_attribute_prefix.length > 0) {
+			if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, item_term);
+		} else {
+			if (r == true) delete_item_execute(uri);
+		}
 	});
 }
 
-function delete_item_execute(post_uri, id, target_attribute_prefix, item_term)
+function delete_item_execute(uri)
+{
+	var url = get_url(uri) + '?' + set_token();
+	location.href = url;
+}
+
+function delete_item_execute_ajax(post_uri, id, target_attribute_prefix, item_term)
 {
 	var baseUrl = get_baseUrl();
 

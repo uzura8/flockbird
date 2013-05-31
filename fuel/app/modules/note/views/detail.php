@@ -17,7 +17,7 @@
 		</div>
 	</div>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $note->member_id))): ?>
-	<a class="btn btn-mini boxBtn" href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('note/comment/delete/%d?%s=%s', $comment->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i></a>
+	<a class="btn btn-mini boxBtn" href="#" onclick="delete_item('note/comment/delete/<?php echo $comment->id; ?>');return false;"><i class="icon-trash"></i></a>
 <?php endif ; ?>
 </div>
 <?php endforeach; ?>

@@ -15,8 +15,8 @@ function submit_after_confirm(action) {
 			jAlert('入力してください');
 			return false;
 		} else {
-			jConfirm('一括' + action_name + 'しますか？', action_name + '確認', function(result) {
-				if (result) $("form#form_edit_images").submit();
+			apprise('一括' + action_name + 'しますか？', {'confirm':true}, function(r) {
+				if (r == true) $("form#form_edit_images").submit();
 			});
 		}
 	} else {

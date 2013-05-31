@@ -15,7 +15,7 @@
 	<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-edit"></i> edit <span class="caret"/></button>
 	<ul class="dropdown-menu">
 		<li><?php echo Html::anchor('album/edit/'.$album->id, '<i class="icon-pencil"></i> 編集'); ?></li>
-		<li><a href="javascript:void(0);" onclick="jConfirm('削除しますか？', 'Confirmation', function(r){if(r) location.href='<?php echo Uri::create(sprintf('album/delete/%d?%s=%s', $album->id, Config::get('security.csrf_token_key'), Util_security::get_csrf())); ?>';});"><i class="icon-trash"></i> 削除</a></li>
+		<li><a href="#" onclick="delete_item('album/delete/<?php echo $album->id; ?>');return false;"><i class="icon-trash"></i> 削除</a></li>
 	</ul>
 </div><!-- /btn-group -->
 <?php endif; ?>
