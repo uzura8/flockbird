@@ -14,7 +14,7 @@
   <?php echo Asset::css('bootstrap.min.css');?>
   <?php echo Asset::css('bootstrap-responsive.min.css');?>
   <?php echo Asset::css('apprise.min.css');?>
-  <?php echo Asset::css('jquery.jgrowl.css');?>
+  <?php echo Asset::css('jquery.jgrowl.min.css');?>
   <?php echo Asset::css('base.css');?>
 <?php if (Agent::is_smartphone()): ?>
   <?php echo Asset::css('base_mobile.css');?>
@@ -223,7 +223,7 @@
 <?php echo Asset::js('bootstrap.min.js');?>
 <?php echo Asset::js('apprise-1.5.min.js');?>
 <?php echo Asset::js('jquery.autogrow-textarea.js');?>
-<?php echo Asset::js('jquery.jgrowl_minimized.js');?>
+<?php echo Asset::js('jquery.jgrowl.min.js');?>
 <?php echo Asset::js('moment.min.js');?>
 <?php echo Asset::js('moment.lang_ja.js');?>
 <?php echo Asset::js('livestamp.min.js');?>
