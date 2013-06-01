@@ -50,3 +50,8 @@
 		margin-left: 200px;
 	}
 }
+
+@media (min-width: 480px) {
+	#album_album_manage_images table {table-layout: fixed;}
+	#album_album_manage_images td {word-wrap: break-word;}
+}
