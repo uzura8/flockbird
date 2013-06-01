@@ -1,3 +1,9 @@
-<?php echo Asset::js('jquery-ui-1.8.24.custom.min.js');?>
+<?php echo Asset::js('jquery-ui-1.10.3.custom.min.js');?>
+<?php echo Asset::js('i18n/jquery.ui.datepicker-ja.js');?>
 <?php echo Asset::js('jquery-ui-timepicker-addon.js');?>
 <?php echo Asset::js('jquery-ui-sliderAccess.js');?>
+<script type="text/javascript">
+$(function(){
+	set_datetimepicker('#form_shot_at');
+});
+</script>

@@ -52,16 +52,3 @@ $('input.album_image_all').click(function() {
 		$('input.album_image_all').removeAttr('checked');
 	}
 });
-
-$('#form_shot_at').datetimepicker({
-	dateFormat: 'yy-mm-dd',
-	changeYear: true,
-	changeMonth: true,
-	prevText: '&#x3c;前',
-	nextText: '次&#x3e;',
-	timeFormat: 'hh:mm',
-	hourGrid: 6,
-	minuteGrid: 15,
-	addSliderAccess: true,
-	sliderAccessArgs: { touchonly: false }
-});

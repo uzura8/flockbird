@@ -137,3 +137,19 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix, item_te
 		}
 	});
 }
+
+function set_datetimepicker(attribute)
+{
+	$(attribute).datetimepicker({
+		dateFormat: 'yy-mm-dd',
+		changeYear: true,
+		changeMonth: true,
+		prevText: '&#x3c;前',
+		nextText: '次&#x3e;',
+		timeFormat: 'hh:mm',
+		hourGrid: 6,
+		minuteGrid: 15,
+		addSliderAccess: true,
+		sliderAccessArgs: { touchonly: false }
+	});
+}
