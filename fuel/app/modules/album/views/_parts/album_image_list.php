@@ -6,7 +6,7 @@
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>">
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/detail/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
-			<div class="article btn-toolbar">
+			<div class="article">
 				<small><i class="icon-comment"></i> <?php echo $all_comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
 				<div class="btn-group btn_album_image_edit" id="btn_album_image_edit_<?php echo $album_image->id ?>">

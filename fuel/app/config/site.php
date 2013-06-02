@@ -14,9 +14,9 @@ $config = array(
 	'record_limit' => array(
 		'default' => array(
 			'comment' => array(
-				'l' => 20,
-				'm' => 10,
-				's' => 5,
+				'l' => 10,
+				'm' => 5,
+				's' => 3,
 			),
 		),
 	),

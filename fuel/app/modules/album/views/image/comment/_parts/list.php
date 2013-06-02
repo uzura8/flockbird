@@ -1,4 +1,4 @@
-<?php if (!empty($show_more_link) && count($comments) < count(\Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id))): ?>
+<?php if ($show_more_link && count($comments) < \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id)): ?>
 <div class="listMoreBox" id="listMoreBox_comment"><a href="#" id="link_list_more">全てみる</a></div>
 <?php endif; ?>
 

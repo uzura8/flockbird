@@ -28,6 +28,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$after_id       = (int)\Input::get('after_id', 0);
 			$limit          = (int)\Input::get('limit', 0);
 			$is_desc        = (bool)\Input::get('is_desc', false);
+			$show_more_link = (bool)\Input::get('disp_more', 1);
 
 			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
 			{
@@ -39,7 +40,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			if ($after_id)  $params[] = array('id', '<', $after_id);
 			$comments = Model_AlbumImageComment::get_comments($album_image_id, $limit, $params, $is_desc);
 
-			$data = array('comments' => $comments, 'album_image' => $album_image);
+			$data = array('comments' => $comments, 'album_image' => $album_image, 'show_more_link' => $show_more_link);
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('image/comment/_parts/list.php', $data);
 			$status_code = 200;
