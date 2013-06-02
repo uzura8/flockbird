@@ -25,7 +25,6 @@
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <link href="<?php echo Uri::create('assets/js/jquery.alerts/jquery.alerts.css'); ?>" rel="stylesheet" type="text/css" media="screen">
   <?php echo Asset::css('site.css');?>
 
     <!-- Le fav and touch icons -->
