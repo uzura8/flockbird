@@ -116,35 +116,38 @@ $('.carousel-control').click(function(event) {
 	slide($(this).attr('data-action'));
 });
 
-$("body").keydown(function(event){
+$('body').keydown(function(event){
 	// キーボード操作によるスライドの移動
 	slide(event.keyCode);
 });
 
-$('#listMoreBox_comment').on("click", function(){
-	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', 0, $('.commentBox:first').attr("id"), true, '#' + $(this).attr("id"));
+$(document).on('click', '#listMoreBox_comment', function(){
+	//show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', 0, $('.commentBox:first').attr('id'), true, '#' + $(this).attr('id'));
+	var uri = 'album/image/detail/' + image_ids[slideNumber] + '?all_comment=1#comments';
+	redirect(uri);
 	return false;
 });
 
-$('#btn_album_image_comment_create').click(function(){
+$(document).on('click', '#btn_album_image_comment_create', function(){
 	create_comment(
 		'#input_album_image_comment',
 		image_ids[slideNumber],
 		'album/image/comment/api/create.json',
 		'album/image/comment/api/list/' + image_ids[slideNumber] + '.html',
 		'#comment_list',
-		$('.commentBox:last').attr("id")
+		$('.commentBox:last').attr('id')
 	)
+	return false;
 });
 
-$('.btn_album_image_comment_delete').on("click", function(){
-	delete_item('album/image/comment/api/delete.json', get_id_num(($(this).attr("id"))), '#commentBox');
+$(document).on('click', '.btn_album_image_comment_delete', function(){
+	delete_item('album/image/comment/api/delete.json', get_id_num(($(this).attr('id'))), '#commentBox');
 	return false;
 });
 
 if (!is_sp()) {
-	$('.commentBox').on({
+	$(document).on({
 		mouseenter:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
 		mouseleave:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
-	});
+	}, '.commentBox');
 }

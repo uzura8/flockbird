@@ -38,6 +38,11 @@ function set_token()
 	}
 }
 
+function redirect(uri)
+{
+	location.href = get_url(uri);
+}
+
 function get_error_message(status)
 {
 	var default_message = (arguments.length > 2) ? arguments[2] : '';
