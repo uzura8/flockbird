@@ -218,7 +218,7 @@
 
 </div><!--/.fluid-container-->
 
-<?php echo Asset::js('jquery.min.js');?>
+<?php echo Asset::js('jquery-1.8.3.min.js');?>
 <?php echo Asset::js('bootstrap.min.js');?>
 <?php echo Asset::js('apprise-1.5.min.js');?>
 <?php echo Asset::js('jquery.autogrow-textarea.js');?>

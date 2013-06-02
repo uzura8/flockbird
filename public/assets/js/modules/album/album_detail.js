@@ -1,13 +1,5 @@
-$('.carousel').carousel({
-	interval: false
-})
-
 $(function(){
-	load_masonry_item(
-		'#main_container',
-		'.main_item',
-		get_term('album_image') + 'がありません。'
-	);
+	load_masonry_item('#main_container', '.main_item');
 });
 
 $('.link_album_image_delete').on('click', function(){
