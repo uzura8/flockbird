@@ -1,5 +1,16 @@
 <?php
 /**
+ * Fuel is a fast, lightweight, community driven PHP5 framework.
+ *
+ * @package    Fuel
+ * @version    1.5
+ * @author     Fuel Development Team
+ * @license    MIT License
+ * @copyright  2010 - 2013 Fuel Development Team
+ * @link       http://fuelphp.com
+ */
+
+/**
  * Path to the project base directory.
  */
 define('PRJ_BASEPATH', realpath(__DIR__.'/../').DIRECTORY_SEPARATOR);
@@ -52,7 +63,7 @@ catch (HttpNotFoundException $e)
 	if($route instanceof Closure)
 	{
 		$response = $route();
-		
+
 		if( ! $response instanceof Response)
 		{
 			$response = Response::forge($response);
