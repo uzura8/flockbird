@@ -15,7 +15,7 @@ build
 nbproject/
 .idea
 
-config.php
+/config.php
 public_html
 
 /fuel/app/config/crypt.php
