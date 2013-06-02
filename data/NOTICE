@@ -1,24 +1,46 @@
 * fuelphp1.x
 
 * bootstrap
+  - version: 2.3.2
+  - license: Apache License, Version 2.0
 * jquery
+  - version: 1.8.3
+  - license: MIT
 * jquery-ui
+  - version: 1.10.3
+  - license: MIT
   - http://jqueryui.com/
 * jquery-ui-timepicker-addon
-* jquery-ui-sliderAccess
-* jquery.alerts
+  - version: 1.3
+  - license: MIT
+  - https://github.com/trentrichardson/jQuery-Timepicker-Addon
 * jquery.autogrow-textarea
 * jquery.jgrowl
-* jQuery Masonry (MIT)
-* moment.js (MIT)
-  - http://momentjs.com/
-* Livestamp.js (MIT)
+  - version: 1.2.12
+  - license: MIT
+  - url: https://github.com/stanlemon/jGrowl
+* jQuery Masonry
+  - version: 2.1.08
+  - license: MIT
+  - url: http://masonry.desandro.com
+* Apprise
+  - version: 1.5
+  - license: MIT
+  - url: https://github.com/ThrivingKings/Apprise
+* js-url
+  - version: 1.7.6
+  - license: MIT
+  - url: https://github.com/websanova/js-url
+* Livestamp.js
+  - license: MIT
   - http://mattbradley.github.com/livestampjs/
-* moment.lang_ja.js (MIT)
+* moment.js
+  - license: MIT
+  - url: http://momentjs.com/
+* moment.lang_ja.js
+  - license: MIT
 * jqueryfileupload
 * Bootstrap-Image-Gallery
 * JavaScript-Canvas-to-Blob
 * JavaScript-Load-Image
 * JavaScript-Templates
-* js-url (dual licensed under the MIT and GPL licenses.)
-  - https://github.com/websanova/js-url
