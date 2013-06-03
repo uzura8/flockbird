@@ -3,6 +3,10 @@ $(function(){
 	//show_list('album/image/comment/api/list/' + parent_id + '.html', '#comment_list', 5);
 
 	$('#btn_album_image_comment_create').click(function(){
+		var double_clicked = false;
+		$(this).click(function(){double_clicked = true;});
+		if (double_clicked) return false;
+
 		create_comment(
 			'#input_album_image_comment',
 			parent_id,
