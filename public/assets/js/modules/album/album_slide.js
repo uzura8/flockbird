@@ -66,11 +66,12 @@ var next = function() {
 		prevSlideNumber = images.length - 1;
 	}
 
+	$('#input_album_image_comment').val('');
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
+
 	$('#myCarousel > .carousel-inner > img:first').empty();
 	$('#myCarousel > .carousel-inner').append('<img class="item" src="'+ images[nextSlideNumber]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
 	$('#myCarousel').carousel('next');
-
-	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 }
 
 var prev = function() {
@@ -89,11 +90,11 @@ var prev = function() {
 		nextSlideNumber = 0;
 	}
 
+	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
+
 	$('#myCarousel > .carousel-inner > img:last').empty();
 	$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[prevSlideNumber]+'" id="image_'+ image_ids[prevSlideNumber] +'>');
 	$('#myCarousel').carousel('prev');
-
-	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 }
 
 var slide = function(type) {
