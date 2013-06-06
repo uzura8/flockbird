@@ -7,6 +7,8 @@ desktop.ini
 .project
 .settings
 *.tmproj
+/tags
+/fuel/tags
 fuel/app/logs/*/*/*
 fuel/app/cache/*/*
 fuel/app/cache/default_config_setting
