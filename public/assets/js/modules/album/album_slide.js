@@ -130,13 +130,16 @@ $(document).on('click', '#listMoreBox_comment', function(){
 });
 
 $(document).on('click', '#btn_album_image_comment_create', function(){
+	if (GL.execute_flg) return false;
+
 	create_comment(
 		'#input_album_image_comment',
 		image_ids[slideNumber],
 		'album/image/comment/api/create.json',
 		'album/image/comment/api/list/' + image_ids[slideNumber] + '.html',
 		'#comment_list',
-		$('.commentBox:last').attr('id')
+		$('.commentBox:last').attr('id'),
+		this
 	)
 	return false;
 });
