@@ -16,7 +16,47 @@ function set_cover(album_image_id) {
 	});	
 }
 
-function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_block_id, before_element_id_name)
+function create_comment(selfElement, textarea_attribute, parent_id, post_uri, get_uri, list_block_id, before_element_id_name)
+{
+	var textarea_height  = (arguments.length > 9) ? arguments[9] : '33px';
+
+	if (GL.execute_flg) return;
+
+	var body = $(textarea_attribute).val().trim();
+	if (body.length <= 0) return;
+
+	var html = $(selfElement).html();
+	var data = {'id':parent_id, 'body':body};
+	data = set_token(data);
+	$.ajax({
+		url : get_baseUrl() + post_uri,
+		type : 'POST',
+		dataType : 'text',
+		data : data,
+		timeout: 10000,
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			$(selfElement).attr('disabled', true);
+			$(selfElement).html('<img src="' + get_baseUrl() + 'assets/img/loading.gif' + '">');
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			$(selfElement).attr('disabled', false);
+			$(selfElement).html(html);
+		},
+		success: function(result){
+			$.jGrowl('コメントを投稿しました。');
+			show_list(get_uri, list_block_id, 0, before_element_id_name);
+			$(textarea_attribute).val('');
+			$('textarea' + textarea_attribute).css('height', textarea_height);
+		},
+		error: function(data){
+			$.jGrowl(get_error_message(data['status'], 'コメントを投稿できませんでした。'));
+		}
+	});
+}
+
+function create_comment_old(textarea_attribute, parent_id, post_uri, get_uri, list_block_id, before_element_id_name)
 {
 	var textarea_height  = (arguments.length > 6) ? arguments[6] : '33px';
 

@@ -227,8 +227,8 @@
 <?php echo Asset::js('moment.lang_ja.js');?>
 <?php echo Asset::js('livestamp.min.js');?>
 <?php echo Asset::js('js-url/js-url.min.js');?>
-<?php echo Asset::js('site.js');?>
 <script type="text/javascript" charset="utf-8">
+var GL = {};
 function get_baseUrl() {return '<?php echo Uri::base(false); ?>';}
 function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
 function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
@@ -239,6 +239,7 @@ function get_term(key) {
 	return terms[key];
 }
 </script>
+<?php echo Asset::js('site.js');?>
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
 <?php echo site_htmltag_include_js_module();?>
 <?php echo site_htmltag_include_js_action();?>
