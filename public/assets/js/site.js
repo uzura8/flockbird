@@ -45,7 +45,7 @@ function redirect(uri)
 
 function get_error_message(status)
 {
-	var default_message = (arguments.length > 2) ? arguments[2] : '';
+	var default_message = (arguments.length > 1) ? arguments[1] : '';
 
 	switch (status)
 	{
@@ -61,12 +61,11 @@ function show_list(uri, list_block_id) {
 	var next_element_id_name    = (arguments.length > 3 && arguments[3]) ? arguments[3] : '';
 	var is_insert_before        = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
 	var replace_element_id_name = (arguments.length > 5 && arguments[5]) ? arguments[5] : '';
-	$(list_block_id).append('<div class="loading_image" id="list_loading_image"><img src="' + baseUrl + 'assets/img/loading.gif"></div>');
 	var baseUrl = get_baseUrl();
+	$(list_block_id).append('<div class="loading_image" id="list_loading_image"><img src="' + baseUrl + 'assets/img/loading.gif"></div>');
 	var get_url = baseUrl + uri;
 	var get_data = {};
 	get_data['nochache'] = (new Date()).getTime();
-
 	
 	get_data['disp_more'] = 0;
 	if (record_limit > 0) {
