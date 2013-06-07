@@ -240,6 +240,7 @@ function get_term(key) {
 }
 </script>
 <?php echo Asset::js('site.js');?>
+<?php echo Asset::js('util.js');?>
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
 <?php echo site_htmltag_include_js_module();?>
 <?php echo site_htmltag_include_js_action();?>
