@@ -99,6 +99,10 @@ img.profile_image {
 {
 	text-align: center;
 }
+a.listMoreBox
+{
+	display: block;
+}
 
 .commentBox .boxBtn {
 	position: absolute;

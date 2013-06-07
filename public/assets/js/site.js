@@ -38,6 +38,11 @@ function set_token()
 	}
 }
 
+function get_loading_image_tag()
+{
+	return '<img src="' + get_baseUrl() + 'assets/img/loading.gif' + '">';
+}
+
 function redirect(uri)
 {
 	location.href = get_url(uri);
@@ -57,16 +62,19 @@ function get_error_message(status)
 }
 
 function show_list(uri, list_block_id) {
-	var record_limit            = (arguments.length > 2 && arguments[2]) ? arguments[2] : 0;
-	var next_element_id_name    = (arguments.length > 3 && arguments[3]) ? arguments[3] : '';
-	var is_insert_before        = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
-	var replace_element_id_name = (arguments.length > 5 && arguments[5]) ? arguments[5] : '';
+	var record_limit         = (arguments.length > 2 && arguments[2]) ? arguments[2] : 0;
+	var next_element_id_name = (arguments.length > 3 && arguments[3]) ? arguments[3] : '';
+	var is_insert_before     = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
+	var selfDomElement       = (arguments.length > 5) ? arguments[5] : false;
+
+	if (!selfDomElement) {
+		$(list_block_id).append('<div class="loading_image" id="list_loading_image">' + get_loading_image_tag() + '</div>');
+	}
+
 	var baseUrl = get_baseUrl();
-	$(list_block_id).append('<div class="loading_image" id="list_loading_image"><img src="' + baseUrl + 'assets/img/loading.gif"></div>');
 	var get_url = baseUrl + uri;
 	var get_data = {};
-	get_data['nochache'] = (new Date()).getTime();
-	
+	get_data['nochache']  = (new Date()).getTime();
 	get_data['disp_more'] = 0;
 	if (record_limit > 0) {
 		get_data['limit'] = record_limit;
@@ -79,25 +87,39 @@ function show_list(uri, list_block_id) {
 		get_data[key] = next_element_id_num;
 	}
 
-	$.get(
-		get_url,
-		get_data,
-		function(data) {
-			if (replace_element_id_name) {
-				$(replace_element_id_name).remove();
+	$.ajax({
+		url : get_url,
+		type : 'GET',
+		dataType : 'text',
+		data : get_data,
+		timeout: 10000,
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			if (selfDomElement) {
+				$(selfDomElement).html(get_loading_image_tag());
 			}
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+		},
+		success: function(result){
+			if (selfDomElement) $(selfDomElement).remove();
 			if (next_element_id_num) {
 				if (is_insert_before) {
-					$(list_block_id).prepend(data).fadeIn('fast');
+					$(list_block_id).prepend(result).fadeIn('fast');
 				} else {
-					$(list_block_id).append(data).fadeIn('fast');
+					$(list_block_id).append(result).fadeIn('fast');
 				}
 			} else {
-				$(list_block_id).html(data).fadeIn('fast');
+				$(list_block_id).html(result).fadeIn('fast');
 			}
+		},
+		error: function(result) {
+			$.jGrowl(get_error_message(result['status'], '読み込みに失敗しました。'));
 		}
-	);
-	$('div#list_loading_image').remove();
+	});
+
+	if (!selfDomElement) $('#list_loading_image').remove();
 }
 
 function delete_item(uri)
@@ -153,8 +175,6 @@ function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_b
 	var selfDomElement     = (arguments.length > 6) ? arguments[6] : false;
 	var textarea_height = (arguments.length > 7) ? arguments[7] : '33px';
 
-	if (GL.execute_flg) return;
-
 	var body = $(textarea_attribute).val().trim();
 	if (body.length <= 0) return;
 
@@ -171,7 +191,7 @@ function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_b
 			GL.execute_flg = true;
 			if (selfDomElement) {
 				$(selfDomElement).attr('disabled', true);
-				$(selfDomElement).html('<img src="' + get_baseUrl() + 'assets/img/loading.gif' + '">');
+				$(selfDomElement).html(get_loading_image_tag());
 			}
 		},
 		complete: function(xhr, textStatus) {

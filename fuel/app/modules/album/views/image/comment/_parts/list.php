@@ -1,6 +1,6 @@
 <?php echo Html::doctype('html5'); ?>
 <?php if ($show_more_link && count($comments) < \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id)): ?>
-<div class="listMoreBox" id="listMoreBox_comment"><a href="#" id="link_list_more">全てみる</a></div>
+<a href="#" class="listMoreBox" id="listMoreBox_comment">全てみる</a>
 <?php endif; ?>
 
 <?php foreach ($comments as $comment): ?>

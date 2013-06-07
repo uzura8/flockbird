@@ -3,8 +3,6 @@ $(function(){
 	//show_list('album/image/comment/api/list/' + parent_id + '.html', '#comment_list', 5);
 
 	$('#btn_album_image_comment_create').click(function(){
-		if (GL.execute_flg) return false;
-
 		create_comment(
 			'#input_album_image_comment',
 			parent_id,
@@ -19,7 +17,15 @@ $(function(){
 	});
 
 	$('#listMoreBox_comment').click(function(){
-		show_list('album/image/comment/api/list/' + parent_id + '.html', '#comment_list', 0, $('.commentBox').first().attr('id'), true, '#' + $(this).attr('id'));
+		show_list(
+			'album/image/comment/api/list/' + parent_id + '.html',
+			'#comment_list',
+			0,
+			$('.commentBox').first().attr('id'),
+			true,
+			this
+		);
+
 		return false;
 	});
 
