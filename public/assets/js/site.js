@@ -2,7 +2,7 @@ $('textarea.autogrow').autogrow();
 
 function get_id_from_url()
 {
-	var is_parseInt = (arguments.length > 1) ? arguments[1] : true;
+	var is_parseInt = (arguments.length > 0) ? arguments[0] : true;
 
 	var id = url('-1');
 	if (is_parseInt) id = parseInt(id);
@@ -144,6 +144,51 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix, item_te
 		},
 		error: function(data){
 			$.jGrowl(get_error_message(data['status'], msg_prefix + '削除できませんでした。'));
+		}
+	});
+}
+
+function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_block_id, before_element_id_name)
+{
+	var selfDomElement     = (arguments.length > 6) ? arguments[6] : false;
+	var textarea_height = (arguments.length > 7) ? arguments[7] : '33px';
+
+	if (GL.execute_flg) return;
+
+	var body = $(textarea_attribute).val().trim();
+	if (body.length <= 0) return;
+
+	var selfDomElement_html = (selfDomElement) ? $(selfDomElement).html() : '';
+	var data = {'id':parent_id, 'body':body};
+	data = set_token(data);
+	$.ajax({
+		url : get_baseUrl() + post_uri,
+		type : 'POST',
+		dataType : 'text',
+		data : data,
+		timeout: 10000,
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			if (selfDomElement) {
+				$(selfDomElement).attr('disabled', true);
+				$(selfDomElement).html('<img src="' + get_baseUrl() + 'assets/img/loading.gif' + '">');
+			}
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			if (selfDomElement) {
+				$(selfDomElement).attr('disabled', false);
+				$(selfDomElement).html(selfDomElement_html);
+			}
+		},
+		success: function(result){
+			$.jGrowl('コメントを投稿しました。');
+			show_list(get_uri, list_block_id, 0, before_element_id_name);
+			$(textarea_attribute).val('');
+			$('textarea' + textarea_attribute).css('height', textarea_height);
+		},
+		error: function(data){
+			$.jGrowl(get_error_message(data['status'], 'コメントを投稿できませんでした。'));
 		}
 	});
 }

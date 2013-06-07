@@ -229,6 +229,7 @@
 <?php echo Asset::js('js-url/js-url.min.js');?>
 <script type="text/javascript" charset="utf-8">
 var GL = {};
+GL.execute_flg = false;
 function get_baseUrl() {return '<?php echo Uri::base(false); ?>';}
 function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
 function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
