@@ -45,7 +45,7 @@ $.get('/album/api/detail/' + album_id + '.json', function(json){
 	// 画像のDOMの追加
 	$('#myCarousel > .carousel-inner').html(html);
 	//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
-	$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
+	$('#link2detail').html('<a href="' + baseUrl + 'album/image/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
 
 	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 },'json');
@@ -106,7 +106,7 @@ var slide = function(type) {
 		prev();
 	}
 	//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
-	$('#link2detail').html('<a href="' + baseUrl + 'album/image/detail/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
+	$('#link2detail').html('<a href="' + baseUrl + 'album/image/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
 }
 
 $('.carousel-control').click(function(event) {
@@ -124,7 +124,7 @@ $('body').keydown(function(event){
 
 $(document).on('click', '#listMoreBox_comment', function(){
 	//show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', 0, $('.commentBox:first').attr('id'), true, '#' + $(this).attr('id'));
-	var uri = 'album/image/detail/' + image_ids[slideNumber] + '?all_comment=1#comments';
+	var uri = 'album/image/' + image_ids[slideNumber] + '?all_comment=1#comments';
 	redirect(uri);
 	return false;
 });

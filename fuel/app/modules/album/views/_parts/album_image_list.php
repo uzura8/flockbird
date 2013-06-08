@@ -4,8 +4,8 @@
 <?php foreach ($album_images as $album_image): ?>
 	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>">
-			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/detail/'.$album_image->id); ?></div>
-			<h5><?php echo Html::anchor('album/image/detail/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
+			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
+			<h5><?php echo Html::anchor('album/image/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
 			<div class="article">
 				<small><i class="icon-comment"></i> <?php echo $all_comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
@@ -42,7 +42,7 @@
 			</div>
 <?php endforeach; ?>
 <?php if (count($album_image_comment) < $all_comment_count): ?>
-			<div class="listMoreBox"><a href="<?php echo Uri::create(sprintf('album/image/detail/%d?all_comment=1#comments', $album_image->id)); ?>">もっと見る</a></div>
+			<div class="listMoreBox"><a href="<?php echo Uri::create(sprintf('album/image/%d?all_comment=1#comments', $album_image->id)); ?>">もっと見る</a></div>
 <?php endif; ?>
 		</div>
 <?php endif; ?>

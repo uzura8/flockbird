@@ -53,7 +53,7 @@ class Controller_Image extends \Controller_Site
 			$key = $album_image->album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
 			$this->template->breadcrumbs[$key] =  '/album/list/'.$album_image->album->member->id;
 		}
-		$this->template->breadcrumbs[$album_image->album->name] =  '/album/detail/'.$album_image->album_id;
+		$this->template->breadcrumbs[$album_image->album->name] =  '/album/'.$album_image->album_id;
 		$this->template->breadcrumbs[$this->template->title] = '';
 
 		$data = array('album_image' => $album_image, 'comments' => $comments);
@@ -141,7 +141,7 @@ class Controller_Image extends \Controller_Site
 					\DB::commit_transaction();
 
 					\Session::set_flash('message', \Config::get('album.term.album_image').'を編集をしました。');
-					\Response::redirect('album/image/detail/'.$album_image->id);
+					\Response::redirect('album/image/'.$album_image->id);
 				}
 				catch(Exception $e)
 				{
@@ -170,7 +170,7 @@ class Controller_Image extends \Controller_Site
 		$key = '自分の'.\Config::get('album.term.album').'一覧';
 		$this->template->breadcrumbs[$key] =  '/member/album/';
 		$key = $album_image->album->name;
-		$this->template->breadcrumbs[$key] =  '/album/detail/'.$album_image->album_id;
+		$this->template->breadcrumbs[$key] =  '/album/'.$album_image->album_id;
 
 		$key = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
 		if ($album_image->name)
@@ -181,7 +181,7 @@ class Controller_Image extends \Controller_Site
 		{
 			$key = $album_image->file->original_filename;
 		}
-		$this->template->breadcrumbs[$key] = '/album/image/detail/'.$album_image->id;
+		$this->template->breadcrumbs[$key] = '/album/image/'.$album_image->id;
 		$this->template->breadcrumbs[$this->template->title] = '';
 
 		$data = array('form' => $form);
@@ -220,7 +220,7 @@ class Controller_Image extends \Controller_Site
 			\DB::rollback_transaction();
 		}
 
-		\Response::redirect('album/detail/'.$album_id);
+		\Response::redirect('album/'.$album_id);
 	}
 
 	protected function form($album_image = null)

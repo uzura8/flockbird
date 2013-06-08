@@ -7,7 +7,7 @@
 <?php $i = 0; ?>
 <?php foreach ($album_images as $album_image): ?>
 		<div class="item<?php if (!$i): ?> active<?php endif; ?>">
-			<?php echo img((!empty($album_image->file)) ? $album_image->file->name : '', '600x600', 'album/image/detail/'.$album_image->id); ?>
+			<?php echo img((!empty($album_image->file)) ? $album_image->file->name : '', '600x600', 'album/image/'.$album_image->id); ?>
 <?php if (!empty($album_image->name)): ?>
 			<div class="carousel-caption">
 				<p><?php echo $album_image->name; ?></p>

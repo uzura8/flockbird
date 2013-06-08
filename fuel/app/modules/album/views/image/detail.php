@@ -1,7 +1,7 @@
 <div class="img_box">
-	<?php echo ($before_id) ? Html::anchor('album/image/detail/'.$before_id, '<i class="icon-backward"></i><br>前へ', array('class' => 'btn btn-mini backward')) : ''; ?>
+	<?php echo ($before_id) ? Html::anchor('album/image/'.$before_id, '<i class="icon-backward"></i><br>前へ', array('class' => 'btn btn-mini backward')) : ''; ?>
 	<?php echo img($album_image->get_image(), '600x600', '', true); ?>
-	<?php echo ($after_id) ? Html::anchor('album/image/detail/'.$after_id, '<i class="icon-forward"></i><br>次へ', array('class' => 'btn btn-mini forward')) : ''; ?>
+	<?php echo ($after_id) ? Html::anchor('album/image/'.$after_id, '<i class="icon-forward"></i><br>次へ', array('class' => 'btn btn-mini forward')) : ''; ?>
 </div>
 <hr>
 

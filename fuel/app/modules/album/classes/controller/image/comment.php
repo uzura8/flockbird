@@ -41,7 +41,7 @@ class Controller_Image_comment extends \Controller_Site
 				\Session::set_flash('error', 'コメントに失敗しました。');
 			}
 
-			\Response::redirect('album/image/detail/'.$album_image_id);
+			\Response::redirect('album/image/'.$album_image_id);
 		}
 		else
 		{
@@ -111,7 +111,7 @@ class Controller_Image_comment extends \Controller_Site
 		$album_image_comment->delete();
 
 		\Session::set_flash('message', \Config::get('site.term.note').'を削除しました。');
-		\Response::redirect('album/image/detail/'.$album_image_id);
+		\Response::redirect('album/image/'.$album_image_id);
 	}
 
 	/**

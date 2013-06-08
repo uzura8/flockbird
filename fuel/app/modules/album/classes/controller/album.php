@@ -186,7 +186,7 @@ class Controller_Album extends \Controller_Site
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
 		$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
 		$this->template->breadcrumbs['自分の'.\Config::get('album.term.album').'一覧'] =  '/member/album/';
-		$this->template->breadcrumbs[$album->name] = '/album/detail/'.$id;
+		$this->template->breadcrumbs[$album->name] = '/album/'.$id;
 		$this->template->breadcrumbs[\Config::get('site.term.album').'写真をアップロード'] = '';
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
@@ -227,7 +227,7 @@ class Controller_Album extends \Controller_Site
 			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
 			$this->template->breadcrumbs[$key] =  '/album/list/'.$album->member->id;
 		}
-		$this->template->breadcrumbs[$album->name] =  '/album/detail/'.$id;
+		$this->template->breadcrumbs[$album->name] =  '/album/'.$id;
 		$this->template->breadcrumbs[\Config::get('album.term.album_image').'を見る'] = '';
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
@@ -263,7 +263,7 @@ class Controller_Album extends \Controller_Site
 				if ($album and $album->save())
 				{
 					\Session::set_flash('message', \Config::get('album.term.album').'を作成しました。');
-					\Response::redirect('album/detail/'.$album->id);
+					\Response::redirect('album/'.$album->id);
 				}
 				else
 				{
@@ -318,7 +318,7 @@ class Controller_Album extends \Controller_Site
 				if ($album and $album->save())
 				{
 					\Session::set_flash('message', \Config::get('album.term.album').'を編集をしました。');
-					\Response::redirect('album/detail/'.$album->id);
+					\Response::redirect('album/'.$album->id);
 				}
 				else
 				{
@@ -342,7 +342,7 @@ class Controller_Album extends \Controller_Site
 			\Config::get('site.term.toppage') => '/',
 			\Config::get('site.term.myhome') => '/member/',
 			'自分の'.\Config::get('album.term.album').'一覧' => '/member/album/',
-			\Config::get('album.term.album').'詳細' => '/album/detail/'.$id,
+			\Config::get('album.term.album').'詳細' => '/album/'.$id,
 			$this->template->title => '',
 		);
 
@@ -471,7 +471,7 @@ class Controller_Album extends \Controller_Site
 			\Config::get('site.term.toppage') => '/',
 			\Config::get('site.term.myhome')  => '/member/',
 			'自分の'.\Config::get('album.term.album').'一覧' => '/member/album/',
-			$album->name => '/album/detail/'.$id,
+			$album->name => '/album/'.$id,
 			$this->template->title => '',
 		);
 		$this->template->post_header = \View::forge('_parts/edit_header');
@@ -569,7 +569,7 @@ class Controller_Album extends \Controller_Site
 			\Session::set_flash('error', $e->getMessage());
 		}
 
-		\Response::redirect('album/detail/'.$album_id);
+		\Response::redirect('album/'.$album_id);
 	}
 
 	public function action_edit_image()
