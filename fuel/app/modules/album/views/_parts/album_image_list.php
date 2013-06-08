@@ -14,7 +14,7 @@
 					<ul class="dropdown-menu">
 						<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>
 						<li><a href="#" class="link_album_image_set_cover" id="link_album_image_set_cover_<?php echo $album_image->id; ?>"><i class="icon-book"></i> カバーに指定</a></li>
-						<li><a href="#" class="link_album_image_delete" id="link_album_image_delete_<?php echo $album_image->id; ?>"><i class="icon-trash"></i> 削除</a></li>
+						<li><a href="#" onclick="delete_item('album/image/api/delete.json', <?php echo $album_image->id; ?>, '#main_item');return false;"><i class="icon-trash"></i> 削除</a></li>
 					</ul>
 				</div><!-- /btn-group -->
 <?php endif; ?>

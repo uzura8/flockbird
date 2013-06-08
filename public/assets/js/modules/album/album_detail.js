@@ -2,11 +2,6 @@ $(function(){
 	load_masonry_item('#main_container', '.main_item');
 });
 
-$('.link_album_image_delete').on('click', function(){
-	delete_item('album/image/api/delete.json', get_id_num($(this).attr('id')), '#main_item');
-	return false;
-});
-
 $(document).on('click','.link_album_image_set_cover', function(){
 	if (GL.execute_flg) return false;
 	set_cover(this);

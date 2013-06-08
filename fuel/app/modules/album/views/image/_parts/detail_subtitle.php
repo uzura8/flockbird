@@ -1,4 +1,3 @@
-
 <div class="member_img_box_s">
 	<?php echo img($album_image->album->member->get_image(), '30x30', 'member/'.$album_image->album->member_id); ?>
 	<div class="content">
