@@ -14,16 +14,5 @@
 </div>
 
 <?php if (Auth::check()): ?>
-<div class="commentPostBox">
-	<div class="member_img_box_s">
-		<?php echo img($u->get_image(), '30x30', 'member/'.$u->id); ?>
-		<div class="content">
-			<div class="main">
-				<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>
-				<div class="input"><?php echo Form::textarea('body', null, array('rows' => 1, 'class' => 'span12 autogrow', 'id' => 'input_album_image_comment')); ?></div>
-				<button class="btn btn-mini" id="btn_album_image_comment_create">送信</button>
-			</div>
-		</div>
-	</div>
-</div>
+<?php echo render('_parts/post_comment', array('u' => $u, 'textarea_attrs' => array('class' => 'span12 autogrow'))); ?>
 <?php endif; ?>

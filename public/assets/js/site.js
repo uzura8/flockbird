@@ -170,10 +170,12 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix, item_te
 	});
 }
 
-function create_comment(textarea_attribute, parent_id, post_uri, get_uri, list_block_id, before_element_id_name)
+function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 {
-	var selfDomElement     = (arguments.length > 6) ? arguments[6] : false;
-	var textarea_height = (arguments.length > 7) ? arguments[7] : '33px';
+	var selfDomElement     = (arguments.length > 4) ? arguments[4] : false;
+	var textarea_attribute = (arguments.length > 5) ? arguments[5] : '#textarea_comment';
+	var list_block_id      = (arguments.length > 6) ? arguments[6] : '#comment_list';
+	var textarea_height    = (arguments.length > 7) ? arguments[7] : '33px';
 
 	var body = $(textarea_attribute).val().trim();
 	if (body.length <= 0) return;

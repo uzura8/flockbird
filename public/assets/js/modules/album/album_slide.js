@@ -129,16 +129,14 @@ $(document).on('click', '#listMoreBox_comment', function(){
 	return false;
 });
 
-$(document).on('click', '#btn_album_image_comment_create', function(){
+$(document).on('click', '#btn_comment', function(){
 	create_comment(
-		'#input_album_image_comment',
 		image_ids[slideNumber],
 		'album/image/comment/api/create.json',
 		'album/image/comment/api/list/' + image_ids[slideNumber] + '.html',
-		'#comment_list',
-		$('.commentBox:last').attr('id'),
+		$('.commentBox').last().attr('id'),
 		this
-	)
+	);
 
 	return false;
 });

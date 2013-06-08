@@ -2,13 +2,11 @@ $(function(){
 	var parent_id = get_id_from_url();
 	//show_list('album/image/comment/api/list/' + parent_id + '.html', '#comment_list', 5);
 
-	$('#btn_album_image_comment_create').click(function(){
+	$('#btn_comment').click(function(){
 		create_comment(
-			'#input_album_image_comment',
 			parent_id,
 			'album/image/comment/api/create.json',
 			'album/image/comment/api/list/' + parent_id + '.html',
-			'#comment_list',
 			$('.commentBox').last().attr('id'),
 			this
 		);

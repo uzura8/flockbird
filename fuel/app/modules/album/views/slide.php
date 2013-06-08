@@ -18,19 +18,9 @@
 		<div id="comment_list"></div>
 
 <?php if (Auth::check()): ?>
-		<div class="commentPostBox">
-			<div class="member_img_box_s">
-				<?php echo img($u->get_image(), '30x30', 'member/'.$u->id); ?>
-				<div class="content">
-					<div class="main">
-						<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>
-						<div class="input"><?php echo Form::textarea('body', null, array('rows' => 1, 'class' => 'w90 autogrow', 'id' => 'input_album_image_comment')); ?></div>
-						<div class="input"><a href="#" class="btn btn-mini" id="btn_album_image_comment_create">送信</a></div>
-					</div>
-				</div>
-			</div>
-		</div>
+<?php echo render('_parts/post_comment', array('u' => $u, 'attributes' => array('class' => 'w90 autogrow'))); ?>
 <?php endif; ?>
+
 	</div>
 </div>
 <?php endif; ?>

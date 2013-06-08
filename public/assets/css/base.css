@@ -103,7 +103,14 @@ a.listMoreBox
 {
 	display: block;
 }
-
+div.btnBox {
+	overflow: auto;
+}
+div.btnBox button {
+	float: right;
+	padding-left: 20px;
+	padding-right: 20px;
+}
 .commentBox .boxBtn {
 	position: absolute;
 	right: 5px;
