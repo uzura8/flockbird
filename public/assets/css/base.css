@@ -237,6 +237,20 @@ div.loading_image {
 	text-align: center;
 }
 
+.dropdown-menu li span {
+	clear: both;
+	color: #333333;
+	display: block;
+	font-weight: normal;
+	line-height: 20px;
+	padding: 3px 20px;
+	white-space: nowrap;
+}
+
+.dropdown-menu li span.disabled {
+	color: #7A7A7A;
+}
+
 /* form */
 /* browser width is over 480px */
 @media (min-width: 480px) {

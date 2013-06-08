@@ -6,8 +6,10 @@ $('.link_album_image_delete').on('click', function(){
 	delete_item('album/image/api/delete.json', get_id_num($(this).attr('id')), '#main_item');
 	return false;
 });
-$('.link_album_image_set_cover').on('click', function(){
-	set_cover(get_id_num($(this).attr('id')));
+
+$(document).on('click','.link_album_image_set_cover', function(){
+	if (GL.execute_flg) return false;
+	set_cover(this);
 	return false;
 });
 
