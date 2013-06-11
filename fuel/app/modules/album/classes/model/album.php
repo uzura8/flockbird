@@ -61,7 +61,7 @@ class Model_Album extends \Orm\Model
 	{
 		if (!$id) return false;
 
-		$obj = self::find()->where('id', $id)->related('member')->get_one();
+		$obj = self::find($id, array('rows_limit' => 1, 'related' => 'member'))? : null;
 		if (!$obj) return false;
 
 		if ($target_member_id && $obj->member_id != $target_member_id) return false;

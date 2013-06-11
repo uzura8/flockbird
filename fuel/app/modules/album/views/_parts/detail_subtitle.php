@@ -1,8 +1,8 @@
 <div class="member_img_box_s">
-	<?php echo img($album->member->get_image(), '30x30', 'member/'.$album->member->id); ?>
+	<?php echo img($album->member->get_image(), '30x30', 'member/'.$album->member_id); ?>
 	<div class="content">
 		<div class="main">
-			<b class="fullname"><?php echo Html::anchor('member/'.$album->member->id, $album->member->name); ?></b>
+			<b class="fullname"><?php echo Html::anchor('member/'.$album->member_id, $album->member->name); ?></b>
 		</div>
 		<small>
 		日時: <?php echo site_get_time($album->created_at) ?>

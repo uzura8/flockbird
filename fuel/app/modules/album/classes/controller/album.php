@@ -40,7 +40,10 @@ class Controller_Album extends \Controller_Site
 		$this->template->header_title = site_title($this->template->title);
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
 
-		$list = Model_Album::find()->related('member')->order_by('created_at', 'desc')->get();
+		$list = Model_Album::find('all', array(
+			'related'  => 'member',
+			'order_by' => array('created_at' => 'desc'),
+		));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', array('list' => $list));
 	}
@@ -62,7 +65,11 @@ class Controller_Album extends \Controller_Site
 			$this->template->title => '',
 		);
 
-		$list = Model_Album::find()->where('member_id', $this->u->id)->order_by('created_at', 'desc')->get();
+		$list = Model_Album::find('all', array(
+			'where'    => array('member_id' => $this->u->id),
+			'related'  => 'member',
+			'order_by' => array('created_at' => 'desc'),
+		));
 
 		$this->template->subtitle = \View::forge('_parts/member_subtitle');
 		$this->template->post_footer = \View::forge('_parts/list_footer');
@@ -739,7 +746,7 @@ class Controller_Album extends \Controller_Site
 			->order_by('created_at');
 
 		$count = $query->count();
-		$album_images = $query->offset($offset)->limit($limit)->get();
+		$album_images = $query->offset($offset)->rows_limit($limit)->get();
 
 		$is_next = ($count > $offset + $limit) ? true : false;
 

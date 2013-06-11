@@ -18,10 +18,10 @@
 		<div class="article">
 			<div class="body"><?php echo nl2br(mb_strimwidth($album->body, 0, \Config::get('album.article_list.trim_width'), '...')) ?></div>
 			<small>
-<?php if (\Album\Model_AlbumImage::get_count4album_id($album->id)): ?>
-				<?php echo Html::anchor('album/slide/'.$album->id.'#slidetop', '<i class="icon-picture"></i> '.\Album\Model_AlbumImage::get_count4album_id($album->id).' 枚'); ?>
+<?php if ($album_image_count = \Album\Model_AlbumImage::get_count4album_id($album->id)): ?>
+				<?php echo Html::anchor('album/slide/'.$album->id.'#slidetop', '<i class="icon-picture"></i> '.$album_image_count.' 枚'); ?>
 <?php else: ?>
-				<i class="icon-picture"></i> <?php echo \Album\Model_AlbumImage::get_count4album_id($album->id); ?> 枚
+				<i class="icon-picture"></i> 0 枚
 <?php endif; ?>
 			</small>
 		</div>
