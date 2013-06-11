@@ -75,14 +75,15 @@ class Model_AlbumImageComment extends \Orm\Model
 	public static function get_comments($album_image_id, $record_limit = 0, $params = array(), $is_desc = false)
 	{
 		$params = array_merge(array(array('album_image_id', '=', $album_image_id)), $params);;
-		$query = self::find()->where($params);
+
+		$query = self::find()->where($params)->related('member');
 		if (!$record_limit || $record_limit >=$query->count())
 		{
 			$comments = $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
 		}
 		else
 		{
-			$comments = $query->order_by('id', 'desc')->limit($record_limit)->get();
+			$comments = $query->order_by('id', 'desc')->rows_limit($record_limit)->get();
 			if (!$is_desc) $comments = array_reverse($comments);
 		}
 
