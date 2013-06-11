@@ -68,15 +68,13 @@ class Model_AlbumImage extends \Orm\Model
 		return $val;
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $with_file = true)
+	public static function check_authority($id, $target_member_id = 0)
 	{
 		if (!$id) return false;
 
-		$obj = self::find()->where('id', $id)->related('album')->get_one();
+		$obj = self::find($id, array('rows_limit' => 1, 'related' => array('album', 'file')))? : null;
 		if (!$obj) return false;
 		if ($target_member_id && $target_member_id != $obj->album->member_id) return false;
-
-		if ($with_file) $obj->file = \Model_File::find($obj->file_id);
 
 		return $obj;
 	}

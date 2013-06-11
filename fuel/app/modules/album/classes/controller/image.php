@@ -29,7 +29,7 @@ class Controller_Image extends \Controller_Site
 		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
 		$comments = Model_AlbumImageComment::get_comments($id, $record_limit);
 
-		$this->template->title = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
+		$this->template->title = \Config::get('album.term.album_image');
 		if ($album_image->name)
 		{
 			$this->template->title = $album_image->name;

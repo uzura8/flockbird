@@ -74,7 +74,7 @@ class Model_File extends \Orm\Model
 	{
 		if (!empty(self::$name_list[$id])) return self::$name_list[$id];
 
-		$file = self::find()->where('id', $id)->get_one();
+		$file = self::query()->select('name')->where('id', $id)->get_one();
 		if (!$file) return '';
 
 		self::$name_list[$id] = $file->name;
