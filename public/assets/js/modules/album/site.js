@@ -28,9 +28,11 @@ function set_cover(selfDomElement) {
 			}
 			$.jGrowl('カバー写真を設定しました。');
 		},
-		error: function(data){
+		error: function(result){
 			$(parentElement).html(selfDomElement);
-			$.jGrowl('カバー写真の設定に失敗しました。');
+			var resData = $.parseJSON(result.responseText);
+			var message = resData.message ? resData.message : 'カバー写真の設定に失敗しました。';
+			$.jGrowl(get_error_message(resData.status, resData.message));
 		}
 	});
 }

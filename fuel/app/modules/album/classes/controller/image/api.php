@@ -1,6 +1,8 @@
 <?php
 namespace Album;
 
+class AlreadySetToCoverException extends \FuelException {}
+
 class Controller_Image_api extends \Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
@@ -10,6 +12,33 @@ class Controller_Image_api extends \Controller_Site_Api
 	public function before()
 	{
 		parent::before();
+	}
+
+	/**
+	 * Api list
+	 * 
+	 * @access  public
+	 * @return  Response (html)
+	 */
+	public function get_list($parent_id = null)
+	{
+		$response = '';
+		try
+		{
+			if (!$album = Model_Album::check_authority($parent_id))
+			{
+				throw new \HttpNotFoundException;
+			}
+			$data = Site_Album::get_album_image_list($parent_id, (int)\Input::get('page', 1));
+			$response = \View::forge('image/_parts/list.php', $data);
+			$status_code = 200;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
 	}
 
 	/**
@@ -38,7 +67,7 @@ class Controller_Image_api extends \Controller_Site_Api
 	 */
 	public function post_set_cover()
 	{
-		$response = array('status' => 0);
+		$response = array('status' => 0, 'message' => '');
 		try
 		{
 			$this->auth_check_api();
@@ -49,6 +78,10 @@ class Controller_Image_api extends \Controller_Site_Api
 			if (!$id || !$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
 			{
 				throw new \HttpNotFoundException;
+			}
+			if ($album_image->album->cover_album_image_id == $id)
+			{
+				throw new AlreadySetToCoverException;
 			}
 			$album_image->album->cover_album_image_id = $id;
 			$album_image->album->save();
@@ -61,6 +94,11 @@ class Controller_Image_api extends \Controller_Site_Api
 		catch(\SiteApiNotAuthorizedException $e)
 		{
 			$status_code = 401;
+		}
+		catch(AlreadySetToCoverException $e)
+		{
+			$response['message'] = 'カバー写真に既に登録済みです。';
+			$status_code = 409;
 		}
 		catch(\HttpServerErrorException $e)
 		{

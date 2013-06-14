@@ -6,7 +6,7 @@ class Controller_Album extends \Controller_Site
 	protected $check_not_auth_action = array(
 		'index',
 		'list',
-		'list_member',
+		'member',
 		'detail',
 		'slide',
 		'image_list',
@@ -36,16 +36,13 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
+		$data = Site_Album::get_album_list(1);
+
 		$this->template->title = sprintf('最新の%s一覧', \Config::get('album.term.album'));
 		$this->template->header_title = site_title($this->template->title);
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
-
-		$list = Model_Album::find('all', array(
-			'related'  => 'member',
-			'order_by' => array('created_at' => 'desc'),
-		));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
-		$this->template->content = \View::forge('_parts/list', array('list' => $list));
+		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
 	/**
@@ -55,48 +52,46 @@ class Controller_Album extends \Controller_Site
 	 * @params  integer
 	 * @return  Response
 	 */
-	public function action_member()
+	public function action_member($member_id = null)
 	{
-		$this->template->title = sprintf('自分の%s一覧', \Config::get('album.term.album'));
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(
-			\Config::get('site.term.toppage') => '/',
-			\Config::get('site.term.myhome') => '/member/',
-			$this->template->title => '',
-		);
+		$member_id = (int)$member_id;
 
-		$list = Model_Album::find('all', array(
-			'where'    => array('member_id' => $this->u->id),
-			'related'  => 'member',
-			'order_by' => array('created_at' => 'desc'),
-		));
-
-		$this->template->subtitle = \View::forge('_parts/member_subtitle');
-		$this->template->post_footer = \View::forge('_parts/list_footer');
-		$this->template->content = \View::forge('_parts/list', array('member' => $this->u, 'list' => $list));
-	}
-
-	/**
-	 * Album list_member
-	 * 
-	 * @access  public
-	 * @params  integer
-	 * @return  Response
-	 */
-	public function action_list_member($member_id = null)
-	{
-		if (!$member = \Model_Member::check_authority($member_id))
+		$is_mypage = false;
+		if (!$member_id)
 		{
-			throw new \HttpNotFoundException;
+			$this->auth_check();
+
+			$is_mypage = true;
+			$member = $this->u;
+		}
+		elseif (\Auth::check() && $member_id == $this->u->id)
+		{
+			$is_mypage = true;
+			$member = $this->u;
+		}
+		else
+		{
+			if (!$member = \Model_Member::check_authority($member_id)) throw new \HttpNotFoundException;
 		}
 
-		$this->template->title = sprintf('%sさんの%s一覧', $member->name, \Config::get('album.term.album'));
+		$this->template->title = sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('album.term.album'));
 		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
+		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
+		if ($is_mypage)
+		{
+			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member';
+		}
+		else
+		{
+			$key = sprintf('%sさんの%s', $member->name, \Config::get('site.term.profile'));
+			$this->template->breadcrumbs[$key] = '/member/'.$member->id;
+		}
+		$this->template->breadcrumbs[$this->template->title] = '';
 
-		$list = Model_Album::find()->where('member_id', $member_id)->related('member')->order_by('created_at', 'desc')->get();
-
-		$this->template->content = \View::forge('_parts/list', array('member' => $member, 'list' => $list));
+		$data = Site_Album::get_album_list(1, $member->id);
+		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
+		$this->template->post_footer = \View::forge('_parts/list_footer');
+		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
 	/**
@@ -120,42 +115,26 @@ class Controller_Album extends \Controller_Site
 		if (\Auth::check() && $album->member_id == $this->u->id)
 		{
 			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
+
 			$key = '自分の'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/member/album/';
+			$this->template->breadcrumbs[$key] =  '/album/member/';
 		}
 		else
 		{
-			$this->template->breadcrumbs[\Config::get('album.term.album')] = '/album/';
+			$key = sprintf('%sさんの%s', $album->member->name, \Config::get('site.term.profile'));
+			$this->template->breadcrumbs[$key] = '/member/'.$album->member->id;
+
 			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/list/'.$album->member->id;
+			$this->template->breadcrumbs[$key] =  '/album/member/'.$album->member->id;
 		}
-		$this->template->breadcrumbs[$album->name] = '';
+		$this->template->breadcrumbs[$this->template->title] = '';
 
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/detail_footer');
 
-		$data = self::get_album_image_list($id, 1);
+		$data = Site_Album::get_album_image_list($id, 1);
 		$data['album'] = $album;
 		$this->template->content = \View::forge('detail', $data);
-	}
-
-	/**
-	 * Album image list
-	 * 
-	 * @access  public
-	 * @params  integer
-	 * @params  integer
-	 * @return  Response
-	 */
-	public function action_image_list($id = 0)
-	{
-		if (!$album = Model_Album::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
-		$data = self::get_album_image_list($id, (int)\Input::get('page', 1));
-
-		return \View::forge('image_list.php', $data);
 	}
 
 	/**
@@ -200,7 +179,6 @@ class Controller_Album extends \Controller_Site
 		$this->template->post_header = \View::forge('_parts/manage_images_header');
 		$this->template->post_footer = \View::forge('_parts/manage_images_footer');
 		$this->template->content = \View::forge('manage_images', array('id' => $id, 'album' => $album));
-		//$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
 	}
 
 	/**
@@ -240,7 +218,6 @@ class Controller_Album extends \Controller_Site
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/slide_footer', array('id' => $id));
 		$this->template->content = \View::forge('slide', array('album' => $album, 'album_images' => $album_images));
-		//$this->template->subside_contents = \View::forge('_parts/subside_contents');
 	}
 
 	/**
@@ -730,26 +707,5 @@ class Controller_Album extends \Controller_Site
 		}
 
 		return true;
-	}
-
-	protected static function get_album_image_list($id, $page)
-	{
-		$page = (int)$page;
-		if ($page < 1) $page = 1;
-
-		$limit  = \Config::get('album.article_list.limit');
-		$offset = $limit * ($page - 1);
-
-		$query = Model_AlbumImage::find()
-			->where('album_id', $id)
-			->related('album')->related('file')
-			->order_by('created_at');
-
-		$count = $query->count();
-		$album_images = $query->offset($offset)->rows_limit($limit)->get();
-
-		$is_next = ($count > $offset + $limit) ? true : false;
-
-		return array('id' => $id, 'album_images' => $album_images, 'page' => $page, 'is_next' => $is_next);
 	}
 }

@@ -1,4 +1,8 @@
-<?php if ($album_images): ?>
+<?php $is_api_request = Site_util::check_is_api_request(); ?>
+<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
+<?php if (!$album_images): ?>
+<?php if (!$is_api_request): ?><?php echo \Config::get('album.term.album_image'); ?>がありません。<?php endif; ?>
+<?php else: ?>
 <div id="main_container">
 <?php $i = 0; ?>
 <?php foreach ($album_images as $album_image): ?>
@@ -54,6 +58,9 @@
 
 <?php if ($is_next): ?>
 <nav id="page-nav">
-	<a href="<?php echo Uri::create(sprintf('album/image_list/%d?page=%d', $id, $page + 1)); ?>"><?php if (\Agent::is_robot()): ?>もっと見る<?php endif; ?></a>
+	<a href="<?php echo Uri::create(sprintf('album/image/api/list/%d.html?page=%d', $id, $page + 1)); ?>"></a>
 </nav>
 <?php endif; ?>
+<?php /*
+	<a href="<?php echo Uri::create(sprintf('album/image_list/%d?page=%d', $id, $page + 1)); ?>"><?php if (\Agent::is_robot()): ?>もっと見る<?php endif; ?></a>
+*/?>

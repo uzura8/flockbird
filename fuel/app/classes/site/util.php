@@ -192,4 +192,9 @@ class Site_util
 
 		return $form;
 	}
+
+	public static function check_is_api_request()
+	{
+		return strpos(Site_util::get_controller_name(), 'api') !== false;
+	}
 }

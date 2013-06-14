@@ -4,7 +4,7 @@ namespace Album;
 class Controller_Api extends \Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
-		'get_detail',
+		'get_list'
 	);
 
 	public function before()
@@ -13,20 +13,28 @@ class Controller_Api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Api index
+	 * Api list
 	 * 
 	 * @access  public
 	 * @return  Response
 	 */
-	public function get_detail($id = null)
+	public function get_list()
 	{
-		$id = (int)$id;
-		if (!$id || !$album = Model_Album::check_authority($id))
+		$page      = (int)\Input::get('page', 1);
+		$member_id = (int)\Input::get('member_id', 0);
+		$response = '';
+		try
 		{
-			throw new \HttpNotFoundException;
+			$data = Site_Album::get_album_list($page, $member_id);
+			$response = \View::forge('_parts/list.php', $data);
+			//$response = 'fuga';
+			$status_code = 200;
 		}
-		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->related('file')->order_by('id')->get();
+		catch(\Exception $e)
+		{
+			$status_code = 400;
+		}
 
-		$this->response($album_images);
+		$this->response($response, $status_code);
 	}
 }

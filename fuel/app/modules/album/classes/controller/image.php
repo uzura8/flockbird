@@ -45,13 +45,13 @@ class Controller_Image extends \Controller_Site
 		{
 			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
 			$key = '自分の'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/member/album/';
+			$this->template->breadcrumbs[$key] =  '/album/member/';
 		}
 		else
 		{
 			$this->template->breadcrumbs[\Config::get('album.term.album')] = '/album/';
 			$key = $album_image->album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/list/'.$album_image->album->member->id;
+			$this->template->breadcrumbs[$key] =  '/album/member/'.$album_image->album->member->id;
 		}
 		$this->template->breadcrumbs[$album_image->album->name] =  '/album/'.$album_image->album_id;
 		$this->template->breadcrumbs[$this->template->title] = '';
@@ -168,7 +168,7 @@ class Controller_Image extends \Controller_Site
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
 		$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
 		$key = '自分の'.\Config::get('album.term.album').'一覧';
-		$this->template->breadcrumbs[$key] =  '/member/album/';
+		$this->template->breadcrumbs[$key] =  '/album/member/';
 		$key = $album_image->album->name;
 		$this->template->breadcrumbs[$key] =  '/album/'.$album_image->album_id;
 

@@ -41,7 +41,7 @@ return array(
 			Config::get('site.term.myhome') => 'member/',
 			Config::get('site.term.profile') => 'member/profile/',
 			Config::get('note.term.note') => 'member/note/',
-			Config::get('album.term.album') => 'member/album/',
+			Config::get('album.term.album') => 'album/member/',
 			'Settings' => 'member/setting/',
 			'Sign out' => 'site/logout/',
 		),
