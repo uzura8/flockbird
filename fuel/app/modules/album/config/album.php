@@ -10,11 +10,14 @@ return array(
 		'trim_width' => 2000,
 	),
 	'display_setting' => array(
+		'member' => array(
+			'display_delete_link' => false,
+		),
 		'detail' => array(
 			'display_upload_form' => false,
 			'display_slide_image' => false,
 		),
-		'manage_images' => array(
+		'upload' => array(
 			'display_delete_button' => false,
 		),
 	),

@@ -12,15 +12,15 @@ class Model_Album extends \Orm\Model
 			'key_to' => 'id',
 		)
 	);
-	protected static $_has_many = array(
-		'album_image' => array(
-			'key_from' => 'id',
-			'model_to' => '\Album\Model_AlbumImage',
-			'key_to' => 'album_image_id',
-			'cascade_save' => true,
-			'cascade_delete' => false,
-		)
-	);
+//	protected static $_has_many = array(
+//		'album_image' => array(
+//			'key_from' => 'id',
+//			'model_to' => '\Album\Model_AlbumImage',
+//			'key_to' => 'album_image_id',
+//			'cascade_save' => true,
+//			'cascade_delete' => false,
+//		)
+//	);
 
 	protected static $_properties = array(
 		'id',
@@ -90,7 +90,7 @@ class Model_Album extends \Orm\Model
 		}
 
 		// Delete table file data.
-		\DB::delete('file')->where('id', 'in', $file_ids)->execute();
+		if ($file_ids) \DB::delete('file')->where('id', 'in', $file_ids)->execute();
 
 		// Delete album.
 		$album->delete();

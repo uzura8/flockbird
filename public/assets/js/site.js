@@ -170,6 +170,15 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix, item_te
 	});
 }
 
+function reset_textarea()
+{
+	var textarea_attribute = (arguments.length > 0) ? arguments[0] : 'textarea';
+	var textarea_height    = (arguments.length > 1) ? arguments[1] : '33px';
+
+	$(textarea_attribute).val('');
+	$(textarea_attribute).css('height', textarea_height);
+}
+
 function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 {
 	var selfDomElement     = (arguments.length > 4) ? arguments[4] : false;
@@ -207,7 +216,7 @@ function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 			$.jGrowl('コメントを投稿しました。');
 			show_list(get_uri, list_block_id, 0, before_element_id_name);
 			$(textarea_attribute).val('');
-			$('textarea' + textarea_attribute).css('height', textarea_height);
+			$(textarea_attribute).css('height', textarea_height);
 		},
 		error: function(data){
 			$.jGrowl(get_error_message(data['status'], 'コメントを投稿できませんでした。'));

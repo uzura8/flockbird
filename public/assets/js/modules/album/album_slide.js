@@ -11,7 +11,7 @@ var images = []; // 画像ファイル名格納用配列
 var image_ids = []; // 画像id格納用配列
 var slideNumber = 0;
 
-$.get('/album/api/detail/' + album_id + '.json', function(json){
+$.get('/album/image/api/id_list/' + album_id + '.json', function(json){
 	$.each(json, function(i, data){
 		images.push(basePath + data.file.name);
 		image_ids.push(data.id);
@@ -51,6 +51,8 @@ $.get('/album/api/detail/' + album_id + '.json', function(json){
 },'json');
 
 var next = function() {
+	reset_textarea('#textarea_comment');
+
 	// 次のスライドへ移動
 	slideNumber++;
 
@@ -66,7 +68,6 @@ var next = function() {
 		prevSlideNumber = images.length - 1;
 	}
 
-	$('#input_album_image_comment').val('');
 	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 
 	$('#myCarousel > .carousel-inner > img:first').empty();
@@ -75,6 +76,8 @@ var next = function() {
 }
 
 var prev = function() {
+	reset_textarea('#textarea_comment');
+
 	// 前のスライドに移動
 	slideNumber--;
 

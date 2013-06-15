@@ -12,13 +12,14 @@
 	margin-bottom: 5px;
 }
 
-#album_album_detail .carousel .item > img {
+#album_album_detail .carousel .item img {
 	display: inline;
 }
 
 #album_album_detail .carousel .item {
 	text-align : center;
 }
+
 #album_album_slide .carousel .active {
 	display: inline;
 }
@@ -52,6 +53,6 @@
 }
 
 @media (min-width: 480px) {
-	#album_album_manage_images table {table-layout: fixed;}
-	#album_album_manage_images td {word-wrap: break-word;}
+	#album_album_upload table {table-layout: fixed;}
+	#album_album_upload td {word-wrap: break-word;}
 }

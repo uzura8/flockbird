@@ -138,6 +138,14 @@ h4#comments {
 .mr10 {
   margin-right: 10px;
 }
+.mrlr5 {
+	margin-left:  5px;
+	margin-right: 5px;
+}
+.mrlr10 {
+	margin-left:  10px;
+	margin-right: 10px;
+}
 
 .w90 {width: 90%;}
 
@@ -184,6 +192,13 @@ div#popup_container.ui-draggable #popup_message {
 }
 #main_container .main_item .member_img_box_s img.profile_image {
 	left: 9px;
+}
+
+#main_container .main_item h5 {
+	padding: 0 10px;
+	word-break:break-all;
+	word-wrap:break-word;
+	overflow:hidden;
 }
 
 #infscr-loading {
@@ -274,4 +289,10 @@ span.required {
 .form_description li span.required {
 	margin-left: 0;
 	margin-right: 3px;
+}
+
+.page-header h2 {
+	word-break:break-all;
+	word-wrap:break-word;
+	overflow:hidden;
 }

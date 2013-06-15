@@ -1,3 +1,6 @@
+.main_item .btn_album_edit {
+	display: none;
+}
 .commentBox .btn_album_image_comment_delete {
 	display: none;
 }

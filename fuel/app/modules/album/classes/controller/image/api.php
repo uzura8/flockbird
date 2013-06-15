@@ -42,7 +42,33 @@ class Controller_Image_api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Api index
+	 * Api id_list
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function get_id_list($parent_id = null)
+	{
+		$response = array();
+		try
+		{
+			if (!$album = Model_Album::check_authority($parent_id))
+			{
+				throw new \HttpNotFoundException;
+			}
+			$response = Model_AlbumImage::find('all', array('where' => array('album_id' => $parent_id), 'related' => 'file', 'order_by_rows' => 'created_at'));
+			$status_code = 200;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
+	 * Api comments
 	 * 
 	 * @access  public
 	 * @return  Response

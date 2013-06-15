@@ -24,7 +24,7 @@
 								<i class="icon-ban-circle icon-white"></i>
 								<span>Cancel upload</span>
 						</button>
-<?php if (Config::get('album.display_setting.manage_images.display_delete_button', false)): ?>
+<?php if (Config::get('album.display_setting.upload.display_delete_button', false)): ?>
 						<button type="button" class="btn btn-danger delete">
 								<i class="icon-trash icon-white"></i>
 								<span>Delete</span>

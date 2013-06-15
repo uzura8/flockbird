@@ -16,7 +16,7 @@ class Controller_Api extends \Controller_Site_Api
 	 * Api list
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @return  Response (html)
 	 */
 	public function get_list()
 	{
@@ -27,11 +27,51 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$data = Site_Album::get_album_list($page, $member_id);
 			$response = \View::forge('_parts/list.php', $data);
-			//$response = 'fuga';
 			$status_code = 200;
 		}
 		catch(\Exception $e)
 		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
+	 * Album delete
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function post_delete()
+	{
+		$response = array('status' => 0);
+		try
+		{
+			$this->auth_check_api();
+			\Util_security::check_csrf();
+
+			$id = (int)\Input::post('id');
+			if (!$id || !$album = Model_Album::check_authority($id, $this->u->id))
+			{
+				throw new \HttpNotFoundException;
+			}
+
+			\DB::start_transaction();
+			Model_Album::delete_all($id);
+			\Model_Member::recalculate_filesize_total($this->u->id);
+			\DB::commit_transaction();
+
+			$response['status'] = 1;
+			$status_code = 200;
+		}
+		catch(\SiteApiNotAuthorizedException $e)
+		{
+			$status_code = 401;
+		}
+		catch(\FuelException $e)
+		{
+			\DB::rollback_transaction();
 			$status_code = 400;
 		}
 

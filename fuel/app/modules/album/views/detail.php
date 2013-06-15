@@ -45,7 +45,7 @@
 <div id="btn_menu">
 <?php echo Html::anchor('album/slide/'.$album->id, sprintf('<i class="icon-picture"></i> %sを見る', \Config::get('album.term.album_image')), array('class' => 'btn mr')); ?>
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
-<?php echo Html::anchor('album/manage_images/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn mr')); ?>
+<?php echo Html::anchor('album/upload/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn mr')); ?>
 <?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('album.term.album_image')), array('class' => 'btn')); ?>
 <?php endif; ?>
 </div>
