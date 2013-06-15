@@ -111,7 +111,7 @@ class Controller_Note extends \Controller_Site
 		$comments = Model_NoteComment::find()->where('note_id', $id)->related('member')->order_by('created_at')->get();
 
 		$this->template->title = trim($note->title);
-		$this->template->header_title = site_title(mb_strimwidth($this->template->title, 0, 50, '...'));
+		$this->template->header_title = site_title(strim($this->template->title, 50));
 
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
 		if (\Auth::check() && $note->member_id == $this->u->id)

@@ -17,7 +17,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="body"><?php echo nl2br(mb_strimwidth($note->body, 0, Config::get('note.article_list.trim_width'), '...')) ?></div>
+		<div class="body"><?php echo nl2br(strim($note->body, Config::get('note.article_list.trim_width'))); ?></div>
 	</div>
 <?php endforeach; ?>
 </div>
