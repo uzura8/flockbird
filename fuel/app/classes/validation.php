@@ -8,6 +8,17 @@ class Validation extends Fuel\Core\Validation
 	}
 
 	/**
+	 * Filter space char (within double byte space)
+	 *
+	 * @param   string
+	 * @return  string
+	 */
+	public static function _validation_trim($val)
+	{
+		return trim(trim($val, '　'));
+	}
+
+	/**
 	 * Validate if there is no controll char
 	 *
 	 * @param   string
@@ -67,7 +78,7 @@ class Validation extends Fuel\Core\Validation
 	 *
 	 * @param   null|array
 	 * @param   array  valid options
-	 * @return  true|Exception
+	 * @return  true|array
 	 */
 	public static function _validation_not_required_array($val)
 	{
@@ -85,7 +96,7 @@ class Validation extends Fuel\Core\Validation
 	 * Validate if there is alpha_numeric small character
 	 *
 	 * @param   string
-	 * @return  true|Exception
+	 * @return  bool
 	 */
 	public static function _validation_alpha_small_char_numeric($val)
 	{
@@ -122,6 +133,51 @@ class Validation extends Fuel\Core\Validation
 		$minute = (int)$matches[5];
 		if ($hour < 0 || $hour > 23)     return false;
 		if ($minute < 0 || $minute > 60) return false;
+
+		return true;
+	}
+
+	public function _validation_datetime_range($val, $time_range = array())
+	{
+		if (empty($val)) return true;// if $val is empty, uncheck;
+
+		if (!$time = strtotime($val)) return false;
+
+		$min_time = (empty($time_range['min'])) ? Config::get('site.posted_value_rule_default.time.default.min', strtotime('- 120 years')) : strtotime($time_range['min']);
+		if ($time < $min_time) return false;
+
+		$max_time = (empty($time_range['max'])) ? Config::get('site.posted_value_rule_default.time.default.max', strtotime('+ 50 years')) : strtotime($time_range['max']);
+		if ($time > $max_time) return false;
+
+		return true;
+	}
+
+	public function _validation_datetime_is_past($val, $base = '', $min = '')
+	{
+		if (empty($val)) return true;// if $val is empty, uncheck;
+
+		if (!$time = strtotime($val)) return false;
+
+		$base_time = empty($base) ? time() : strtotime($base);
+		if ($time > $base_time) return false;
+
+		$min_time = empty($min) ? Config::get('site.posted_value_rule_default.time.default.min', strtotime('- 120 years')) : strtotime($min);
+		if ($time < $min_time) return false;
+
+		return true;
+	}
+
+	public function _validation_datetime_is_futer($val, $base = '', $max = '')
+	{
+		if (empty($val)) return true;// if $val is empty, uncheck;
+
+		if (!$time = strtotime($val)) return false;
+
+		$base_time = empty($base) ? time() : strtotime($base);
+		if ($time < $base_time) return false;
+
+		$max_time = empty($max) ? Config::get('site.posted_value_rule_default.time.default.max', strtotime('+ 50 years')) : strtotime($max);
+		if ($time > $max_time) return false;
 
 		return true;
 	}

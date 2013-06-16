@@ -228,6 +228,7 @@ function set_datetimepicker(attribute)
 {
 	$(attribute).datetimepicker({
 		dateFormat: 'yy-mm-dd',
+		maxDate: 0,
 		changeYear: true,
 		changeMonth: true,
 		prevText: '&#x3c;前',

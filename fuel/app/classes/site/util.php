@@ -197,4 +197,11 @@ class Site_util
 	{
 		return strpos(Site_util::get_controller_name(), 'api') !== false;
 	}
+
+	public static function check_ids_in_model_objects($target_ids, $model_objects)
+	{
+		$ids = Util_db::get_ids_from_model_objects($model_objects);
+
+		return Util_Array::array_in_array($target_ids, $ids);
+	}
 }

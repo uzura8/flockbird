@@ -55,4 +55,12 @@ class Util_string
 
 		return $val;
 	}
+
+	public static function check_int($target, $is_accept_string = true)
+	{
+		if (is_int($target)) return true;
+		if (intval($target) > 0) return true;
+
+		return false;
+	}
 }

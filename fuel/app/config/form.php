@@ -31,7 +31,7 @@ return array(
 	'field_template' => "\t\t<div class=\"control-group\">\n\t\t\t{label}\n\t\t\t<div class=\"controls\">{field} {description} {error_msg}</div></div>\n\t\t\n",
 	//'multi_field_template' => "\t\t<div class=\"control-group\">\n\t\t\t<div class=\"control-label\">{group_label}{required}</div>\n\t\t\t<div class=\"{error_class}\">{fields}\n\t\t\t\t{field} {label}<br />\n<div class=\"controls\">{fields}</div>{description}\t\t\t{error_msg}\n\t\t\t\n\t\t\n",
 	'multi_field_template' => "\t\t<div class=\"control-group\">\n\t\t\t<div class=\"control-label\">{group_label}</div>\n\t\t\t<div class=\"{error_class}\">{fields}\n\t\t\t\t{field} {label}<br />\n<div class=\"controls\">{fields}</div>{description}\t\t\t{error_msg}\n\t\t\t\n\t\t\n",
-	'error_template' => '<span>{error_msg}</span>',
+	'error_template' => '<span class="error_msg">{error_msg}</span>',
 	'required_mark' => "<span class=\"required\">*</span>",
 	'inline_errors' => true,
 	'error_class' => 'validation_error',

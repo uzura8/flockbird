@@ -122,8 +122,20 @@ class Controller_Image extends \Controller_Site
 		{
 			\Util_security::check_csrf();
 
+			$post = array();
+			$error = '';
 			$val = $form->validation();
 			if ($val->run())
+			{
+				$post = $val->validated();
+				if (empty($post['name']) && empty($post['shot_at'])) $error = '入力してください';
+			}
+			else
+			{
+				$error = $val->show_errors();
+			}
+
+			if (!$error)
 			{
 				try
 				{
@@ -151,7 +163,7 @@ class Controller_Image extends \Controller_Site
 			}
 			else
 			{
-				\Session::set_flash('error', $val->error());
+				\Session::set_flash('error', $error);
 			}
 			$form->repopulate();
 		}
@@ -229,6 +241,7 @@ class Controller_Image extends \Controller_Site
 
 		$form->add('name', \Config::get('album.term.album_image').'タイトル', array('class' => 'input-xlarge'))
 			->add_rule('trim')
+			->add_rule('no_controll')
 			->add_rule('max_length', 255);
 
 			$shot_at = '';
@@ -243,7 +256,8 @@ class Controller_Image extends \Controller_Site
 			$form->add('shot_at', '撮影日時', array('value' => $shot_at, 'class' => 'input-medium'))
 				->add_rule('trim')
 				->add_rule('max_length', 16)
-				->add_rule('datetime_except_second');
+				->add_rule('datetime_except_second')
+				->add_rule('datetime_is_past');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
 		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));

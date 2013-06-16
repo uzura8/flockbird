@@ -10,4 +10,7 @@ return array(
   'match_field' => ':label が一致しません。',
   'unmatch_field' => ':label は異なる値にしてください。',
   'datetime_except_second' => ':label の日時が正しくありません。',
+  'datetime_range'         => ':label の日時が正しくありません。',
+  'datetime_is_past'       => ':label は過去の日時でなければなりません。',
+  'datetime_is_futer'      => ':label は未来の日時でなければなりません。',
 );

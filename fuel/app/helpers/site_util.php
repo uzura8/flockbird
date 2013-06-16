@@ -19,6 +19,7 @@ function site_htmltag_include_js_module()
 
 	return Asset::js($assets_uri);
 }
+
 function site_htmltag_include_js_action()
 {
 	$assets_uri = sprintf('modules/%s/%s_%s.js', Site_util::get_module_name(), Site_util::get_controller_name(), Site_util::get_action_name());

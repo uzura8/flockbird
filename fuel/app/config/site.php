@@ -49,6 +49,12 @@ $config = array(
 			'limit_size' => '256M',
 		),
 	),
+	'posted_value_rule_default' => array(
+		'time' => array(
+			'min' => strtotime('- 120 years'),
+			'max' => strtotime('+ 50 years'),
+		),
+	),
 	'member_setting_common' => array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
 		'from_mail_address' => PRJ_ADMIN_MAIL,

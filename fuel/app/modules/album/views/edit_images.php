@@ -10,7 +10,7 @@
 		<div class="controls">
 			<?php echo Form::input('name', Input::post('name'), array('id' => 'form_name', 'class' => 'span8')); ?>
 			<?php if ($val->error('name')): ?>
-			<span class="help-inline"><?php echo $val->error('shot_at')->get_message(); ?></span>
+			<span class="help-inline error_msg"><?php echo $val->error('name')->get_message(); ?></span>
 			<?php endif; ?>
 		</div>
 	</div>
@@ -19,7 +19,7 @@
 		<div class="controls">
 			<?php echo Form::input('shot_at', Input::post('shot_at'), array('id' => 'form_shot_at', 'class' => 'span4')); ?>
 			<?php if ($val->error('shot_at')): ?>
-			<span class="help-inline"><?php echo $val->error('shot_at')->get_message(':label が正しくありません'); ?></span>
+			<span class="help-inline error_msg"><?php echo $val->error('shot_at')->get_message(); ?></span>
 			<?php endif; ?>
 		</div>
 	</div>
@@ -37,7 +37,7 @@
 
 <label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
 
-<table id="album_image_list" class="table">
+<table id="album_image_list" class="table table-striped">
 <tr>
 	<th class="formParts">対象選択</th>
 	<th><?php echo \Config::get('album.term.album_image'); ?></th>

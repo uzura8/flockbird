@@ -47,4 +47,12 @@ class Util_db
 
 		return $model::find()->where($field, $value)->count() > 0;
 	}
+
+	public static function get_ids_from_model_objects($model_objects, $id_column_name = 'id')
+	{
+		$ids = array();
+		foreach ($model_objects as $model_object) $ids[] = (int)$model_object->$id_column_name;
+
+		return $ids;
+	}
 }

@@ -296,3 +296,10 @@ span.required {
 	word-wrap:break-word;
 	overflow:hidden;
 }
+
+div.alert ul {
+	margin-bottom: 0;
+}
+.error_msg {
+	color: #B94A48;
+}

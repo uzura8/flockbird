@@ -56,3 +56,9 @@
 	#album_album_upload table {table-layout: fixed;}
 	#album_album_upload td {word-wrap: break-word;}
 }
+
+body .ui-datepicker select.ui-datepicker-month,
+body .ui-datepicker select.ui-datepicker-year
+{
+	width: 43%;
+}

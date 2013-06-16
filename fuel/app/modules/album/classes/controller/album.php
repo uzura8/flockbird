@@ -348,29 +348,34 @@ class Controller_Album extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		$album_images = Model_AlbumImage::find()->where('album_id', $id)->related('album')->related('file')->order_by('created_at')->get();
+		$album_images = Model_AlbumImage::find('all', array(
+			'related'  => array('file'),
+			'where'    => array(array('album_id' => $id)),
+			'order_by' => array('created_at' => 'asc')
+		));
 
 		$val = \Validation::forge();
 
 		$shot_at = '';
-		$album_image_ids = array();
+		$posted_album_image_ids = array();
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
 
-			$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
+			$val->add('name', 'タイトル')->add_rule('trim')->add_rule('no_controll')->add_rule('max_length', 255);
 			$val->add('shot_at', '撮影日時')
 				->add_rule('trim')
 				->add_rule('max_length', 16)
-				->add_rule('datetime_except_second');
+				->add_rule('datetime_except_second')
+				->add_rule('datetime_is_past');
 
 			$error = '';
-			$album_image_ids = array_map('intval', \Input::post('album_image_ids', array()));
-			if (empty($album_image_ids))
+			$posted_album_image_ids = array_map('intval', \Input::post('album_image_ids', array()));
+			if (empty($posted_album_image_ids))
 			{
 				$error =  '実施対象が選択されていません';
 			}
-			if (!$error && !self::check_album_image_ids($album_image_ids, $id))
+			if (!$error && !\Site_util::check_ids_in_model_objects($posted_album_image_ids, $album_images))
 			{
 				$error =  '実施対象が正しく選択されていません';
 			}
@@ -397,7 +402,7 @@ class Controller_Album extends \Controller_Site
 				$file_ids = array();
 				if (!(\Input::post('post') && empty($post['shot_at'])))
 				{
-					$file_ids =\Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $album_image_ids)->execute()->as_array());
+					$file_ids =\Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $posted_album_image_ids)->execute()->as_array());
 				}
 
 				$is_db_error = false;
@@ -406,13 +411,13 @@ class Controller_Album extends \Controller_Site
 				if (\Input::post('clicked_btn') == 'delete')
 				{
 					// カバー写真が削除された場合の対応
-					if ($album->cover_album_image_id && in_array($album->cover_album_image_id, $album_image_ids))
+					if ($album->cover_album_image_id && in_array($album->cover_album_image_id, $posted_album_image_ids))
 					{
 						$album->cover_album_image_id = null;
 						$album->save();
 					}
 					if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
-					if (!$result = \DB::delete('album_image')->where('id', 'in', $album_image_ids)->execute()) $is_db_error = true;
+					if (!$result = \DB::delete('album_image')->where('id', 'in', $posted_album_image_ids)->execute()) $is_db_error = true;
 
 					\Model_Member::recalculate_filesize_total($this->u->id);
 
@@ -424,7 +429,7 @@ class Controller_Album extends \Controller_Site
 					if (!empty($post['name']))
 					{
 						$values = array('name' => $post['name'], 'updated_at' => $updated_at);
-						if (!$result = \DB::update('album_image')->set($values)->where('id', 'in', $album_image_ids)->execute()) $is_db_error = true;
+						if (!$result = \DB::update('album_image')->set($values)->where('id', 'in', $posted_album_image_ids)->execute()) $is_db_error = true;
 					}
 					if (!empty($post['shot_at']))
 					{
@@ -461,7 +466,7 @@ class Controller_Album extends \Controller_Site
 		$this->template->post_header = \View::forge('_parts/edit_header');
 		$this->template->post_footer = \View::forge('_parts/edit_footer');
 
-		$data = array('id' => $id, 'album' => $album, 'album_images' => $album_images, 'val' => $val, 'album_image_ids' => $album_image_ids);
+		$data = array('id' => $id, 'album' => $album, 'album_images' => $album_images, 'val' => $val, 'album_image_ids' => $posted_album_image_ids);
 		$this->template->content = \View::forge('edit_images', $data);
 	}
 
@@ -504,10 +509,13 @@ class Controller_Album extends \Controller_Site
 
 		$form->add('name', \Config::get('album.term.album').'名', array('class' => 'input-xlarge'))
 			->add_rule('trim')
+			->add_rule('no_controll')
 			->add_rule('required')
 			->add_rule('max_length', 255);
 
 		$form->add('body', '説明', array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'))
+			->add_rule('trim')
+			->add_rule('no_controll')
 			->add_rule('required');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
@@ -696,16 +704,5 @@ class Controller_Album extends \Controller_Site
 		}
 
 		return $this->response->body($body);
-	}
-
-	protected static function check_album_image_ids($target_album_image_ids, $album_id)
-	{
-		$album_image_ids =\Util_db::conv_col(\DB::select('id')->from('album_image')->where('album_id', '=', $album_id)->execute()->as_array());
-		foreach ($target_album_image_ids as $target_album_image_id)
-		{
-			if (!in_array($target_album_image_id, $album_image_ids)) return false;
-		}
-
-		return true;
 	}
 }
