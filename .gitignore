@@ -1,3 +1,4 @@
+/composer.lock
 *~
 *.bak
 Thumbs.db
@@ -9,18 +10,18 @@ desktop.ini
 *.tmproj
 /tags
 /fuel/tags
-fuel/app/logs/*/*/*
-fuel/app/cache/*/*
-fuel/app/cache/default_config_setting
-fuel/app/tmp/*
-build
+/fuel/app/logs/*/*/*
+/fuel/app/cache/*/*
+/fuel/app/cache/default_config_setting
+/fuel/app/tmp/*
+/fuel/vendor
+/fuel/app/config/crypt.php
 nbproject/
+build
 .idea
 
 /config.php
 public_html
-
-/fuel/app/config/crypt.php
 
 public/media/img/m/*
 public/media/img/ai/*

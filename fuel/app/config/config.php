@@ -1,14 +1,15 @@
 <?php
 /**
- * Fuel is a fast, lightweight, community driven PHP5 framework.
+ * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.5
+ * @version    1.6
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
  * @link       http://fuelphp.com
  */
+
 
 return array(
 
@@ -43,7 +44,7 @@ return array(
 	 */
 	// 'index_file' => false,
 
-	 'profiling'  => PRJ_PROFILING,
+	'profiling'  => PRJ_PROFILING,
 
 	/**
 	 * Default location for the file cache
@@ -70,6 +71,8 @@ return array(
 		// 'throttle'     => 10,
 		// Should notices from Error::notice() be shown?
 		// 'notices'      => true,
+		// Render previous contents or show it as HTML?
+		// 'render_prior' => false,
 	// ),
 
 	/**
@@ -164,7 +167,7 @@ return array(
 			'Fuel\\Core\\ViewModel',
 			'Fuel\\Core\\Validation',
 			'Closure',
-		)
+		),
 	),
 
 	/**
@@ -223,7 +226,6 @@ return array(
 	 * Paths MUST end with a directory separator (the DS constant)!
 	 */
 	'module_paths' => array(
-		//APPPATH.'modules'.DS
 		APPPATH.'modules'.DS
 	),
 
@@ -235,9 +237,9 @@ return array(
 	 *
 	 * Paths MUST end with a directory separator (the DS constant)!
 	 */
-	// 'package_paths' => array(
-	// 	//PKGPATH
-	// ),
+	'package_paths' => array(
+		PKGPATH
+	),
 
 
 	/**************************************************************************/
