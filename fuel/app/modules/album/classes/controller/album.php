@@ -228,8 +228,7 @@ class Controller_Album extends \Controller_Site
 	public function action_create()
 	{
 		$album = Model_Album::forge();
-		$form = $this->form($album);
-
+		$form = \Site_util::get_form_instance('album', $album, true);
 		if (\Input::method() == 'POST')
 		{
 			$val = $form->validation();
@@ -286,7 +285,7 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$form = $this->form($album);
+		$form = \Site_util::get_form_instance('album', $album, true);
 
 		if (\Input::method() == 'POST')
 		{
@@ -683,14 +682,5 @@ class Controller_Album extends \Controller_Site
 		}
 
 		return $this->response->body($body);
-	}
-
-	protected function form($obj_album)
-	{
-		$form = \Site_util::get_form_instance($obj_album);
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
-
-		return $form;
 	}
 }

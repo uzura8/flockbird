@@ -237,7 +237,7 @@ class Controller_Image extends \Controller_Site
 
 	protected function form($album_image)
 	{
-		$form = \Site_util::get_form_instance($album_image);
+		$form = \Site_util::get_form_instance('album_image', $album_image);
 
 		$shot_at = '';
 		if (\Input::post('shot_at'))
@@ -253,7 +253,6 @@ class Controller_Image extends \Controller_Site
 			->add_rule('max_length', 16)
 			->add_rule('datetime_except_second')
 			->add_rule('datetime_is_past');
-
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
 
 		return $form;

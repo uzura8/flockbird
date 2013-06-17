@@ -596,7 +596,6 @@ END;
 	public function form_leave()
 	{
 		$form = Site_util::get_form_instance('leave');
-
 		$form->add('password', 'パスワード', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
 			->add_rule('required')
