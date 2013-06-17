@@ -1,4 +1,4 @@
-<?php $is_api_request = Site_util::check_is_api_request(); ?>
+<?php $is_api_request = Site_Util::check_is_api_request(); ?>
 <?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
 <?php if (!$albums): ?>
 <?php if (!$is_api_request): ?><?php echo \Config::get('album.term.album'); ?>がありません。<?php endif; ?>
@@ -8,7 +8,7 @@
 <?php $i = 0; ?>
 <?php foreach ($albums as $album): ?>
 	<div class="main_item" id="main_item_<?php echo $album->id ?>">
-		<?php echo img(\Album\Site_util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
+		<?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
 		<h5><?php echo Html::anchor('album/'.$album->id, $album->name); ?></h5>
 
 		<div class="member_img_box_s">

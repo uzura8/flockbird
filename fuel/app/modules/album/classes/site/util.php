@@ -1,7 +1,7 @@
 <?php
 namespace Album;
 
-class Site_util
+class Site_Util
 {
 	public static function get_album_image_display_name($obj_album_image, $default = '')
 	{

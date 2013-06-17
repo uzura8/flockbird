@@ -1,5 +1,5 @@
 <?php
-class Site_util
+class Site_Util
 {
 	public static function get_module_name()
 	{
@@ -42,7 +42,7 @@ class Site_util
 
 	public static function check_is_api_request()
 	{
-		return strpos(Site_util::get_controller_name(), 'api') !== false;
+		return strpos(Site_Util::get_controller_name(), 'api') !== false;
 	}
 
 	public static function check_ids_in_model_objects($target_ids, $model_objects)

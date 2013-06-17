@@ -57,7 +57,7 @@ class Controller_Image extends \Controller_Site
 		$this->template->breadcrumbs[$this->template->title] = '';
 
 		$data = array('album_image' => $album_image, 'comments' => $comments);
-		list($data['before_id'], $data['after_id']) =  \Album\Site_util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
+		list($data['before_id'], $data['after_id']) =  \Album\Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
 
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->content = \View::forge('image/detail.php', $data);
@@ -237,7 +237,7 @@ class Controller_Image extends \Controller_Site
 
 	protected function form($album_image)
 	{
-		$form = \Site_util::get_form_instance('album_image', $album_image);
+		$form = \Site_Util::get_form_instance('album_image', $album_image);
 
 		$shot_at = '';
 		if (\Input::post('shot_at'))

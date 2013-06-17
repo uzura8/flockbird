@@ -311,7 +311,7 @@ END;
 
 	public function form_setting_password()
 	{
-		$form = Site_util::get_form_instance('setting_password');
+		$form = Site_Util::get_form_instance('setting_password');
 
 		$form->add('old_password', '現在のパスワード', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
@@ -340,7 +340,7 @@ END;
 
 	public function form_setting_email()
 	{
-		$form = Site_util::get_form_instance('setting_email');
+		$form = Site_Util::get_form_instance('setting_email');
 
 		$form->add('email', 'メールアドレス', array('class' => 'span7'))
 			->add_rule('trim')

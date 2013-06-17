@@ -1,4 +1,4 @@
-<?php $is_api_request = Site_util::check_is_api_request(); ?>
+<?php $is_api_request = Site_Util::check_is_api_request(); ?>
 <?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
 <?php if (!$album_images): ?>
 <?php if (!$is_api_request): ?><?php echo \Config::get('album.term.album_image'); ?>がありません。<?php endif; ?>
@@ -9,7 +9,7 @@
 	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>">
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
-			<h5><?php echo Html::anchor('album/image/'.$album_image->id, \Album\Site_util::get_album_image_display_name($album_image)); ?></h5>
+			<h5><?php echo Html::anchor('album/image/'.$album_image->id, \Album\Site_Util::get_album_image_display_name($album_image)); ?></h5>
 			<div class="article">
 				<small><i class="icon-comment"></i> <?php echo $all_comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
 <?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>

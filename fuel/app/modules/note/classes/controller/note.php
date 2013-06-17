@@ -270,7 +270,7 @@ class Controller_Note extends \Controller_Site
 
 	protected function form()
 	{
-		$form = \Site_util::get_form_instance();
+		$form = \Site_Util::get_form_instance();
 
 		$form->add('title', 'タイトル', array('class' => 'input-xlarge'))
 			->add_rule('trim')

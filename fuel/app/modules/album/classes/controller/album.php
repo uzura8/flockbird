@@ -228,7 +228,7 @@ class Controller_Album extends \Controller_Site
 	public function action_create()
 	{
 		$album = Model_Album::forge();
-		$form = \Site_util::get_form_instance('album', $album, true);
+		$form = \Site_Util::get_form_instance('album', $album, true);
 		if (\Input::method() == 'POST')
 		{
 			$val = $form->validation();
@@ -285,7 +285,7 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$form = \Site_util::get_form_instance('album', $album, true);
+		$form = \Site_Util::get_form_instance('album', $album, true);
 
 		if (\Input::method() == 'POST')
 		{
@@ -374,7 +374,7 @@ class Controller_Album extends \Controller_Site
 			{
 				$error =  '実施対象が選択されていません';
 			}
-			if (!$error && !\Site_util::check_ids_in_model_objects($posted_album_image_ids, $album_images))
+			if (!$error && !\Site_Util::check_ids_in_model_objects($posted_album_image_ids, $album_images))
 			{
 				$error =  '実施対象が正しく選択されていません';
 			}
