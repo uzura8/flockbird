@@ -133,7 +133,7 @@ class UploadHandler extends \JqueryFileUpload
 				$file->url = $this->options['upload_url'].rawurlencode($file->name);
 
 				$sizes = \Image::sizes($file_path);
-				$file->size = \Site_util::check_max_size_and_resize($file_path, $max_size, $sizes->width, $sizes->height);
+				$file->size = \Site_Upload::check_max_size_and_resize($file_path, $max_size, $sizes->width, $sizes->height);
 
 				foreach($this->options['image_versions'] as $version => $options)
 				{

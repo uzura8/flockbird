@@ -109,7 +109,7 @@ class Model_AlbumImage extends \Orm\Model
 		$filesize = $album_image->file->filesize;
 		$album_image->file->delete();
 		$album_image->delete();
-		\Site_util::remove_images('ai', $album_id, $file_name);
+		\Site_Upload::remove_images('ai', $album_id, $file_name);
 
 		return $filesize;
 	}

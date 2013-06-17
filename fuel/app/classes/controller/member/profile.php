@@ -65,7 +65,7 @@ class Controller_Member_profile extends Controller_Member
 		try
 		{
 			DB::start_transaction();
-			$file_id = Site_util::upload('m', $this->u->id, $this->u->id, $this->u->filesize_total, $this->u->get_image(), $this->u->file_id);
+			$file_id = Site_Upload::upload('m', $this->u->id, $this->u->id, $this->u->filesize_total, $this->u->get_image(), $this->u->file_id);
 
 			$this->u->file_id = $file_id;
 			$this->u->save();
@@ -75,9 +75,9 @@ class Controller_Member_profile extends Controller_Member
 
 			Session::set_flash('message', '写真を更新しました。');
 		}
-		catch(Exception $e)
+		catch(FuelException $e)
 		{
-			\DB::rollback_transaction();
+			DB::rollback_transaction();
 			Session::set_flash('error', $e->getMessage());
 		}
 
@@ -105,7 +105,7 @@ class Controller_Member_profile extends Controller_Member
 			$this->u->file_id = null;
 			$this->u->save();
 
-			Site_util::remove_images('m', $this->u->id, $file_name);
+			Site_Upload::remove_images('m', $this->u->id, $file_name);
 			DB::commit_transaction();
 
 			Session::set_flash('message', '写真を削除しました。');

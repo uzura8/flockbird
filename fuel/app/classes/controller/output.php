@@ -20,7 +20,7 @@ class Controller_Output extends Controller
 	public function action_image($filename = null, $extention = null, $size = 'raw')
 	{
 		$filename .= '.'.$extention;
-		if (empty($filename) || !Site_util::check_filename_format($filename) || !$file = Site_util::get_upload_file_path($filename, $size))
+		if (empty($filename) || !Site_Upload::check_filename_format($filename) || !$file = Site_Upload::get_upload_file_path($filename, $size))
 		{
 			throw new HttpNotFoundException;
 		}

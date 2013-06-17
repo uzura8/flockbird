@@ -151,7 +151,7 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_util::get_middle_dir($id));
+		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_Upload::get_middle_dir($id));
 		$base_path_full = PRJ_PUBLIC_DIR.'/'.$base_path;
 		$sizes = \Config::get('site.upload_files.img.type.ai.sizes');
 		// 保存ディレクトリの確認&作成
@@ -521,7 +521,7 @@ class Controller_Album extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			$file_id = \Site_util::upload('ai', $album_id, $this->u->id, $this->u->filesize_total);
+			$file_id = \Site_Upload::upload('ai', $album_id, $this->u->id, $this->u->filesize_total);
 
 			$album_image = new Model_AlbumImage;
 			$album_image->album_id = $album_id;
@@ -550,7 +550,7 @@ class Controller_Album extends \Controller_Site
 		try
 		{
 			$config = array(
-				'base_path' => sprintf('img/m/%d', Site_util::get_middle_dir($this->u->id)),
+				'base_path' => sprintf('img/m/%d', \Site_Upload::get_middle_dir($this->u->id)),
 				'prefix'    => sprintf('m_%d_', $this->u->id),
 				'sizes'     => \Config::get('site.upload_files.img.type.ai.sizes'),
 				'max_file_size' => PRJ_UPLOAD_MAX_FILESIZE,
@@ -600,7 +600,7 @@ class Controller_Album extends \Controller_Site
 		}
 		//\Util_security::check_csrf();
 
-		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_util::get_middle_dir($album_id));
+		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_Upload::get_middle_dir($album_id));
 		$base_path_full = PRJ_PUBLIC_DIR.'/'.$base_path;
 		$base_url = \Uri::create($base_path);
 

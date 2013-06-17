@@ -68,7 +68,7 @@ class Site_uploader
 		Upload::process($options);
 		$this->validate();
 
-		$file = Upload::get_files(0);
+		//$file = Upload::get_files(0);
 		if ($this->member_id && $this->file_size_limit)
 		{
 			$this->check_filesize_per_member($file['size']);
@@ -122,7 +122,7 @@ class Site_uploader
 		$file = $this->saved_raw_image_dir_path.$filename;
 		$sizes = Image::sizes($file);
 
-		return Site_util::check_max_size_and_resize($file, $this->max_size, $sizes->width, $sizes->height, $this->resize_type);
+		return Site_Upload::check_max_size_and_resize($file, $this->max_size, $sizes->width, $sizes->height, $this->resize_type);
 	}
 
 	private function save_raw_file($original_file_dir, $original_filename, $new_filename)

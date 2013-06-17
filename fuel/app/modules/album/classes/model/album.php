@@ -100,7 +100,7 @@ class Model_Album extends \Orm\Model
 		$file_ids = array();
 		foreach ($files as $file)
 		{
-			\Site_util::remove_images('ai', $id, $file['name']);
+			\Site_Upload::remove_images('ai', $id, $file['name']);
 			$file_ids[] = $file['id'];
 		}
 

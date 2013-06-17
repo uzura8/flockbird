@@ -72,7 +72,7 @@ function img($filename = '', $size = '50x50', $link_uri = '', $is_link2raw_file 
 
 	$is_noimage = false;
 	if (empty($filename)) $is_noimage = true;
-	if (!Site_util::check_filename_format($filename)) $is_noimage = true;
+	if (!Site_Upload::check_filename_format($filename)) $is_noimage = true;
 
 	$identifier = Util_string::get_exploded($filename);
 	if ($identifier == 'm') $option['class'] = 'profile_image';
@@ -96,18 +96,18 @@ function img($filename = '', $size = '50x50', $link_uri = '', $is_link2raw_file 
 	if (!$size || ($sizes && !in_array($size, $sizes))) $size = '50x50';
 	list($width, $height) = explode('x', $size);
 
-	$uri_path = Site_util::get_uploaded_file_uri_path($filename, $size);
+	$uri_path = Site_Upload::get_uploaded_file_uri_path($filename, $size);
 
 	$image_tag = Html::img($uri_path, $option);
 	if ($link_uri) return Html::anchor($link_uri, $image_tag);
 
 	if ($is_link2raw_file)
 	{
-		if (!Site_util::check_uploaded_file_exists($filename))
+		if (!Site_Upload::check_uploaded_file_exists($filename))
 		{
 			return $image_tag;
 		}
-		$uri_basepath = Site_util::get_upload_path('img', $filename, true);
+		$uri_basepath = Site_Upload::get_upload_path('img', $filename, true);
 		$image_uri = sprintf('%s/%s/%s', $uri_basepath, 'raw', $filename);
 
 		return Html::anchor($image_uri, $image_tag);

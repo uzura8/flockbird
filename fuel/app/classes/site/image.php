@@ -83,7 +83,7 @@ class Site_image
 		if (empty($this->filename)) return false;
 
 		// '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]+\.(jpg|png|gif)/i';
-		if (!preg_match(Site_util::get_filename_format(), $this->filename, $matches)) return false;
+		if (!preg_match(Site_Upload::get_filename_format(), $this->filename, $matches)) return false;
 		if ($this->identifier != $matches[1]) return false;
 
 		$accept_formats = Config::get('site.upload_files.img.accept_format');
@@ -142,7 +142,7 @@ class Site_image
 			Util_file::make_dir_recursive($target_file_dir);
 			Util_file::chmod_recursive($target_path, 0777);
 		}
-		$resize_type = Site_util::get_image_resize_type($this->identifier);
+		$resize_type = Site_Upload::get_image_resize_type($this->identifier);
 		Util_file::resize($original_file_path, $target_file_path, $this->width, $this->height, $resize_type);
 	}
 
