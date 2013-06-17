@@ -227,7 +227,8 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_create()
 	{
-		$form = $this->form();
+		$album = Model_Album::forge();
+		$form = $this->form($album);
 
 		if (\Input::method() == 'POST')
 		{
@@ -237,11 +238,9 @@ class Controller_Album extends \Controller_Site
 				\Util_security::check_csrf();
 
 				$post = $val->validated();
-				$album = Model_Album::forge(array(
-					'name' => $post['name'],
-					'body'  => $post['body'],
-					'member_id' => $this->u->id,
-				));
+				$album->name = $post['name'];
+				$album->body = $post['body'];
+				$album->member_id = $this->u->id;
 
 				if ($album and $album->save())
 				{
@@ -250,14 +249,15 @@ class Controller_Album extends \Controller_Site
 				}
 				else
 				{
-					Session::set_flash('error', 'Could not save post.');
+					\Session::set_flash('error', 'Could not save post.');
 				}
 			}
 			else
 			{
-				Session::set_flash('error', $val->show_errors());
+				\Session::set_flash('error', $val->show_errors());
 			}
 		}
+		$form->populate($album, true);
 
 		$this->template->title = \Config::get('album.term.album')."を書く";
 		$this->template->header_title = site_title($this->template->title);
@@ -286,7 +286,7 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$form = $this->form();
+		$form = $this->form($album);
 
 		if (\Input::method() == 'POST')
 		{
@@ -306,12 +306,12 @@ class Controller_Album extends \Controller_Site
 				}
 				else
 				{
-					Session::set_flash('error', 'Could not save.');
+					\Session::set_flash('error', 'Could not save.');
 				}
 			}
 			else
 			{
-				Session::set_flash('error', $val->show_errors());
+				\Session::set_flash('error', $val->show_errors());
 			}
 			$form->repopulate();
 		}
@@ -503,27 +503,6 @@ class Controller_Album extends \Controller_Site
 		\Response::redirect('album/member');
 	}
 
-	protected function form()
-	{
-		$form = \Site_util::get_form_instance();
-
-		$form->add('name', \Config::get('album.term.album').'名', array('class' => 'input-xlarge'))
-			->add_rule('trim')
-			->add_rule('no_controll')
-			->add_rule('required')
-			->add_rule('max_length', 255);
-
-		$form->add('body', '説明', array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'))
-			->add_rule('trim')
-			->add_rule('no_controll')
-			->add_rule('required');
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
-		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
-
-		return $form;
-	}
-
 	/**
 	 * Album upload image
 	 * 
@@ -704,5 +683,14 @@ class Controller_Album extends \Controller_Site
 		}
 
 		return $this->response->body($body);
+	}
+
+	protected function form($obj_album)
+	{
+		$form = \Site_util::get_form_instance($obj_album);
+
+		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
+
+		return $form;
 	}
 }

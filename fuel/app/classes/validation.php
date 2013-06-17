@@ -24,9 +24,11 @@ class Validation extends Fuel\Core\Validation
 	 * @param   string
 	 * @return  true|Exception
 	 */
-	public static function _validation_no_controll($val)
+	public static function _validation_no_controll($val, $is_accept_line_and_tab = false)
 	{
-		if (preg_match('/\A[[:^cntrl:]]*\z/u', $val) === 1)
+		$accept_char = '[:^cntrl:]';
+		if ($is_accept_line_and_tab) $accept_char .= '\r\n\t';
+		if (preg_match('/\A['.$accept_char.']*\z/u', $val) === 1)
 		{
 			return true;
 		}

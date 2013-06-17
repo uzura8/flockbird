@@ -35,17 +35,22 @@ class Model_AlbumImage extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'album_id',
-		'file_id' => array(
-			'validation' => array(
-				'trim',
-				'required',
-				'valid_string' => array('integer'),
-			),
+		'album_id' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
 		),
-		'name',
-		'created_at',
-		'updated_at',
+		'file_id' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
+		'name' => array(
+			'data_type' => 'varchar',
+			'label' => '名前',
+			'validation' => array('trim', 'no_controll', 'max_length' => array(255)),
+			'form' => array('type' => 'text', 'class' => 'input-xlarge'),
+		),
+		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
@@ -57,15 +62,14 @@ class Model_AlbumImage extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'Orm\\Observer_Validation',
 	);
 
 	protected static $count_par_album_list = array();
 
-	public static function validate($factory)
+	public static function _init()
 	{
-		$val = \Validation::forge($factory);
-
-		return $val;
+		static::$_properties['name']['label'] = \Config::get('album.term.album_image').'タイトル';
 	}
 
 	public static function check_authority($id, $target_member_id = 0)

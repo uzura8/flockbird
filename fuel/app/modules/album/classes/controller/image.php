@@ -235,32 +235,26 @@ class Controller_Image extends \Controller_Site
 		\Response::redirect('album/'.$album_id);
 	}
 
-	protected function form($album_image = null)
+	protected function form($album_image)
 	{
-		$form = \Site_util::get_form_instance();
+		$form = \Site_util::get_form_instance($album_image);
 
-		$form->add('name', \Config::get('album.term.album_image').'タイトル', array('class' => 'input-xlarge'))
+		$shot_at = '';
+		if (\Input::post('shot_at'))
+		{
+			$shot_at = \Input::post('shot_at');
+		}
+		elseif (!empty($album_image->file->shot_at))
+		{
+			$shot_at = substr($album_image->file->shot_at, 0, 16);
+		}
+		$form->add('shot_at', '撮影日時', array('value' => $shot_at, 'class' => 'input-medium'))
 			->add_rule('trim')
-			->add_rule('no_controll')
-			->add_rule('max_length', 255);
-
-			$shot_at = '';
-			if (\Input::post('shot_at'))
-			{
-				$shot_at = \Input::post('shot_at');
-			}
-			elseif (!empty($album_image->file->shot_at))
-			{
-				$shot_at = substr($album_image->file->shot_at, 0, 16);
-			}
-			$form->add('shot_at', '撮影日時', array('value' => $shot_at, 'class' => 'input-medium'))
-				->add_rule('trim')
-				->add_rule('max_length', 16)
-				->add_rule('datetime_except_second')
-				->add_rule('datetime_is_past');
+			->add_rule('max_length', 16)
+			->add_rule('datetime_except_second')
+			->add_rule('datetime_is_past');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
-		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
 
 		return $form;
 	}

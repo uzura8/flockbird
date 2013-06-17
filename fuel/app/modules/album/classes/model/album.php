@@ -24,17 +24,35 @@ class Model_Album extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'member_id',
-		'name',
-		'body',
+		'member_id' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
+		'name' => array(
+			'data_type' => 'varchar',
+			'label' => '名前',
+			'validation' => array('trim', 'no_controll', 'required', 'max_length' => array(255)),
+			'form' => array('type' => 'text', 'class' => 'input-xlarge'),
+		),
+		'body' => array(
+			'data_type' => 'text',
+			'label' => '説明',
+			'validation' => array('trim', 'no_controll' => array(true), 'required'),
+			'form' => array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'),
+		),
 		'public_flag' => array(
 			'data_type' => 'integer',
-			'validation' => array('required', 'max_length' => array(1)),
+			'validation' => array('max_length' => array(1)),
+			//'validation' => array('required', 'max_length' => array(1)),
 			'default' => 0,
+			'form' => array('type' => false),
 		),
-		'cover_album_image_id',
-		'created_at',
-		'updated_at',
+		'cover_album_image_id' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
+		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
@@ -46,15 +64,12 @@ class Model_Album extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'Orm\\Observer_Validation',
 	);
 
-	public static function validate($factory)
+	public static function _init()
 	{
-		$val = Validation::forge($factory);
-		$val->add_field('name', \Config::get('album.term.album').'名', 'trim|required|max_length[255]');
-		$val->add_field('body', '本文', 'required');
-
-		return $val;
+		static::$_properties['name']['label'] = \Config::get('album.term.album').'名';
 	}
 
 	public static function check_authority($id, $target_member_id = 0)

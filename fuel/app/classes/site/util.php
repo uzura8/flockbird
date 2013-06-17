@@ -185,10 +185,13 @@ class Site_util
 		return file_exists($file);
 	}
 
-	public static function get_form_instance($name = 'default')
+	public static function get_form_instance($model_obj = null, $name = 'default')
 	{
 		$form = Fieldset::forge($name);
+		if ($model_obj) $form->add_model($model_obj);
+
 		$form->set_config('form_attributes', array('class' => 'form-horizontal'));
+		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
 
 		return $form;
 	}
