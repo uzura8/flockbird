@@ -59,7 +59,7 @@ class Site_Upload
 
 		$file->name = $uploaded_file['new_filename'];
 		$file->filesize = $uploaded_file['size'];
-		$file->original_filename = $uploaded_file['filename'].'.'.$uploaded_file['extension'];
+		$file->original_filename = $uploaded_file['name'];
 		$file->type = $uploaded_file['type'];
 		if ($member_id) $file->member_id = $member_id;
 		if ($uploaded_file['exif'])
