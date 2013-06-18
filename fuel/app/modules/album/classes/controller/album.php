@@ -36,7 +36,11 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$data = Site_Album::get_album_list(1);
+		$data = \Site_Model::get_simple_pager_list('album', 1, array(
+			'related' => 'member',
+			'order_by' => array('created_at' => 'desc'),
+			'limit' => \Config::get('album.article_list.limit'),
+		), 'Album');
 
 		$this->template->title = sprintf('最新の%s一覧', \Config::get('album.term.album'));
 		$this->template->header_title = site_title($this->template->title);
@@ -55,24 +59,7 @@ class Controller_Album extends \Controller_Site
 	public function action_member($member_id = null)
 	{
 		$member_id = (int)$member_id;
-
-		$is_mypage = false;
-		if (!$member_id)
-		{
-			$this->auth_check();
-
-			$is_mypage = true;
-			$member = $this->u;
-		}
-		elseif (\Auth::check() && $member_id == $this->u->id)
-		{
-			$is_mypage = true;
-			$member = $this->u;
-		}
-		else
-		{
-			if (!$member = \Model_Member::check_authority($member_id)) throw new \HttpNotFoundException;
-		}
+		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 
 		$this->template->title = sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('album.term.album'));
 		$this->template->header_title = site_title($this->template->title);
@@ -88,7 +75,12 @@ class Controller_Album extends \Controller_Site
 		}
 		$this->template->breadcrumbs[$this->template->title] = '';
 
-		$data = Site_Album::get_album_list(1, $member->id);
+		$data = \Site_Model::get_simple_pager_list('album', 1, array(
+			'where' => array('member_id', $member->id),
+			'limit' => \Config::get('album.article_list.limit'),
+			'order_by' => array('created_at' => 'desc'),
+		), 'Album');
+		$data['member'] = $member;
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -132,7 +124,13 @@ class Controller_Album extends \Controller_Site
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/detail_footer');
 
-		$data = Site_Album::get_album_image_list($id, 1);
+		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
+			'related' => 'file',
+			'where' => array('album_id', $id),
+			'limit' => \Config::get('album.article_list.limit'),
+			'order_by' => array('created_at' => 'desc'),
+		), 'Album');
+		$data['id'] = $id;
 		$data['album'] = $album;
 		$this->template->content = \View::forge('detail', $data);
 	}

@@ -25,7 +25,14 @@ class Controller_Api extends \Controller_Site_Api
 		$response = '';
 		try
 		{
-			$data = Site_Album::get_album_list($page, $member_id);
+			$params = array(
+				'related' => 'member',
+				'limit' => \Config::get('album.article_list.limit'),
+				'order_by' => array('created_at' => 'desc'),
+			);
+			if ($member_id) $params['where'] = array('member_id', $member_id);
+			$data = \Site_Model::get_simple_pager_list('album', $page, $params, 'Album');
+
 			$response = \View::forge('_parts/list.php', $data);
 			$status_code = 200;
 		}

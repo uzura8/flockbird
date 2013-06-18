@@ -1,12 +1,12 @@
 <?php $is_api_request = Site_Util::check_is_api_request(); ?>
 <?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
-<?php if (!$albums): ?>
+<?php if (!$list): ?>
 <?php if (!$is_api_request): ?><?php echo \Config::get('album.term.album'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div class="row-fluid">
 <div id="main_container" class="span12">
 <?php $i = 0; ?>
-<?php foreach ($albums as $album): ?>
+<?php foreach ($list as $album): ?>
 	<div class="main_item" id="main_item_<?php echo $album->id ?>">
 		<?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
 		<h5><?php echo Html::anchor('album/'.$album->id, $album->name); ?></h5>
@@ -53,7 +53,7 @@
 <nav id="page-nav">
 <?php
 $uri = sprintf('album/api/list.html?page=%d&amp;nocache=%s', $page + 1, time());
-if ($member_id) $uri .= '&amp;member_id='.$member_id;
+if (!empty($member_id)) $uri .= '&amp;member_id='.$member_id;
 ?>
 	<a href="<?php echo Uri::create($uri); ?>"></a>
 </nav>

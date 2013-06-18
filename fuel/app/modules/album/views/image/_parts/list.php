@@ -1,18 +1,18 @@
 <?php $is_api_request = Site_Util::check_is_api_request(); ?>
 <?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
-<?php if (!$album_images): ?>
+<?php if (!$list): ?>
 <?php if (!$is_api_request): ?><?php echo \Config::get('album.term.album_image'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div id="main_container">
 <?php $i = 0; ?>
-<?php foreach ($album_images as $album_image): ?>
+<?php foreach ($list as $album_image): ?>
 	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>">
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/'.$album_image->id, \Album\Site_Util::get_album_image_display_name($album_image)); ?></h5>
 			<div class="article">
 				<small><i class="icon-comment"></i> <?php echo $all_comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
-<?php if (Auth::check() && $album_image->album->member_id == $u->id): ?>
+<?php if (Auth::check() && $album->member_id == $u->id): ?>
 				<div class="btn-group btn_album_image_edit" id="btn_album_image_edit_<?php echo $album_image->id ?>">
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
 					<ul class="dropdown-menu">
@@ -58,9 +58,6 @@
 
 <?php if ($is_next): ?>
 <nav id="page-nav">
-	<a href="<?php echo Uri::create(sprintf('album/image/api/list/%d.html?page=%d', $id, $page + 1)); ?>"></a>
+	<a href="<?php echo Uri::create(sprintf('album/image/api/list/%d.html?page=%d', $album->id, $page + 1)); ?>"></a>
 </nav>
 <?php endif; ?>
-<?php /*
-	<a href="<?php echo Uri::create(sprintf('album/image_list/%d?page=%d', $id, $page + 1)); ?>"><?php if (\Agent::is_robot()): ?>もっと見る<?php endif; ?></a>
-*/?>

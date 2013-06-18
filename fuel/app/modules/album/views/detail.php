@@ -50,4 +50,4 @@
 <?php endif; ?>
 </div>
 
-<?php echo render('image/_parts/list.php', array('id' => $id, 'album_images' => $album_images, 'page' => $page, 'is_next' => $is_next)); ?>
+<?php echo render('image/_parts/list.php', array('id' => $id, 'album' => $album, 'list' => $list, 'page' => $page, 'is_next' => $is_next)); ?>

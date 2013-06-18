@@ -19,7 +19,7 @@ class Controller_Site extends Controller_Base
 	{
 		parent::before();
 
-		$this->auth_check('site/login');
+		$this->auth_check();
 		$this->set_current_user();
 
 		$this->template->header_keywords = '';
@@ -116,5 +116,30 @@ class Controller_Site extends Controller_Base
 		Auth::logout();
 		Session::set_flash('message', 'ログアウトしました');
 		Response::redirect('site/login');
+	}
+
+	protected function check_auth_and_is_mypage($member_id = 0)
+	{
+		$is_mypage = false;
+		$member    = null;
+
+		if (!$member_id)
+		{
+			$this->auth_check(true, '', false);
+
+			$is_mypage = true;
+			$member = $this->u;
+		}
+		elseif (Auth::check() && $member_id == $this->u->id)
+		{
+			$is_mypage = true;
+			$member = $this->u;
+		}
+		elseif (!$member = Model_Member::check_authority($member_id))
+		{
+			throw new \HttpNotFoundException;
+		}
+
+		return array($is_mypage, $member);
 	}
 }

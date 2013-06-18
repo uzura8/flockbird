@@ -22,6 +22,7 @@ class Controller_Image_api extends \Controller_Site_Api
 	 */
 	public function get_list($parent_id = null)
 	{
+		$page = (int)\Input::get('page', 1);
 		$response = '';
 		try
 		{
@@ -29,7 +30,15 @@ class Controller_Image_api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			$data = Site_Album::get_album_image_list($parent_id, (int)\Input::get('page', 1));
+			$params = array(
+				'where' => array('album_id', $parent_id),
+				'related' => 'file',
+				'limit' => \Config::get('album.article_list.limit'),
+				'order_by' => array('created_at' => 'desc'),
+			);
+			$data = \Site_Model::get_simple_pager_list('album_image', $page, $params, 'Album');
+			$data['album'] = $album;
+
 			$response = \View::forge('image/_parts/list.php', $data);
 			$status_code = 200;
 		}

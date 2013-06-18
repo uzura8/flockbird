@@ -40,7 +40,7 @@ return array(
 		'secure_side' => array(
 			Config::get('site.term.myhome') => 'member/',
 			Config::get('site.term.profile') => 'member/profile/',
-			Config::get('note.term.note') => 'member/note/',
+			Config::get('note.term.note') => 'note/member/',
 			Config::get('album.term.album') => 'album/member/',
 			'Settings' => 'member/setting/',
 			'Sign out' => 'site/logout/',

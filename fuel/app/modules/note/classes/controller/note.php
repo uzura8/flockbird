@@ -6,7 +6,7 @@ class Controller_Note extends \Controller_Site
 	protected $check_not_auth_action = array(
 		'index',
 		'list',
-		'list_member',
+		'member',
 		'detail',
 	);
 
@@ -24,11 +24,6 @@ class Controller_Note extends \Controller_Site
 	public function action_index()
 	{
 		$this->action_list();
-//		$this->template->title = \Config::get('site.term.note');
-//		$this->template->header_title = site_title();
-//		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', \Config::get('site.term.note') => '');
-//
-//		$this->template->content = \View::forge('index');
 	}
 
 	/**
@@ -39,13 +34,17 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_list()
 	{
+		$data = \Site_Model::get_simple_pager_list('note', 1, array(
+			'related' => 'member',
+			'order_by' => array('created_at' => 'desc'),
+			'limit' => \Config::get('note.article_list.limit'),
+		), 'Note');
+
 		$this->template->title = sprintf('最新の%s一覧', \Config::get('site.term.note'));
 		$this->template->header_title = site_title($this->template->title);
 		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
 
-		$list = Model_Note::find()->related('member')->order_by('created_at', 'desc')->get();
-
-		$this->template->content = \View::forge('_parts/list', array('list' => $list));
+		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
 	/**
@@ -55,21 +54,34 @@ class Controller_Note extends \Controller_Site
 	 * @params  integer
 	 * @return  Response
 	 */
-	public function action_member()
+	public function action_member($member_id = null)
 	{
-		$this->template->title = sprintf('自分の%s一覧', \Config::get('site.term.note'));
+		$member_id = (int)$member_id;
+		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
+
+		$this->template->title = sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('note.term.note'));
 		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(
-			\Config::get('site.term.toppage') => '/',
-			\Config::get('site.term.myhome') => '/member/',
-			$this->template->title => '',
-		);
+		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
+		if ($is_mypage)
+		{
+			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member';
+		}
+		else
+		{
+			$key = sprintf('%sさんの%s', $member->name, \Config::get('site.term.profile'));
+			$this->template->breadcrumbs[$key] = '/member/'.$member->id;
+		}
+		$this->template->breadcrumbs[$this->template->title] = '';
 
-		$list = Model_Note::find()->where('member_id', $this->u->id)->order_by('created_at', 'desc')->get();
-		// paging 未実装, limit数:  Config::get('note.article_list.limit')
-
-		$this->template->subtitle = \View::forge('_parts/member_subtitle');
-		$this->template->content = \View::forge('_parts/list', array('member' => $this->u, 'list' => $list));
+		$data = \Site_Model::get_simple_pager_list('note', 1, array(
+			//'related' => 'member',
+			'where' => array('member_id', $member->id),
+			'limit' => \Config::get('note.article_list.limit'),
+			'order_by' => array('created_at' => 'desc'),
+		), 'Note');
+		$data['member'] = $member;
+		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
+		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
 	/**
@@ -140,7 +152,8 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_create()
 	{
-		$form = $this->form();
+		$note = Model_Note::forge();
+		$form = \Site_Util::get_form_instance('note', $note, true);
 
 		if (\Input::method() == 'POST')
 		{
@@ -150,11 +163,9 @@ class Controller_Note extends \Controller_Site
 				\Util_security::check_csrf();
 
 				$post = $val->validated();
-				$note = Model_Note::forge(array(
-					'title' => $post['title'],
-					'body'  => $post['body'],
-					'member_id' => $this->u->id,
-				));
+				$note->title = $post['title'];
+				$note->body = $post['body'];
+				$note->member_id = $this->u->id;
 
 				if ($note and $note->save())
 				{
@@ -198,7 +209,7 @@ class Controller_Note extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$form = $this->form();
+		$form = \Site_Util::get_form_instance('note', $note, true);
 
 		if (\Input::method() == 'POST')
 		{
