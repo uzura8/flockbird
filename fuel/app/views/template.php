@@ -125,7 +125,7 @@
 <?php if (isset($breadcrumbs)): ?>
 			<ul class="breadcrumb">
 <?php foreach ($breadcrumbs as $name => $path): ?>
-				<li><?php echo $path ? Html::anchor($path, strim($name, 20)).'<span class="divider">/</span>' : sprintf('<li class="active">%s</li>', strim($name, 20));?></li>
+				<li><?php echo $path ? Html::anchor($path, strim($name, 30)).'<span class="divider">/</span>' : sprintf('<li class="active">%s</li>', strim($name, 30));?></li>
 <?php endforeach; ?>
 			</ul>
 <?php endif; ?>
