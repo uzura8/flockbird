@@ -51,4 +51,11 @@ class Site_Util
 
 		return Util_Array::array_in_array($target_ids, $ids);
 	}
+
+	public static function get_login_page_uri()
+	{
+		if (Site_Util::check_is_admin_request()) return Config::get('site.login_uri.admin');
+
+		return Config::get('site.login_uri.site');
+	}
 }

@@ -12,7 +12,7 @@ class Controller_Admin extends \Controller_Base {
 	{
 		parent::before();
 
-		$this->auth_check('admin/login');
+		$this->auth_check();
 		$this->set_current_user();
 
 		$this->template->header_keywords = '';

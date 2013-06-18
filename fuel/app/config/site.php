@@ -1,6 +1,10 @@
 <?php
 
 $config = array(
+	'login_uri' => array(
+		'site'  => 'site/login',
+		'admin' => 'admin/login',
+	),
 	'term' => array(
 		'toppage' => 'Top',
 		'myhome'  => 'Home',

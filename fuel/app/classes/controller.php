@@ -18,21 +18,15 @@ class Controller extends Fuel\Core\Controller
 		return in_array(Request::active()->action, $this->check_not_auth_action);
 	}
 
-	protected function auth_check($redirect_uri = '')
+	protected function auth_check($is_redirect_no_auth = true, $redirect_uri = '', $is_check_not_auth_action = true)
 	{
-		if ($this->check_not_auth_action()) return;
+		if ($is_check_not_auth_action && $this->check_not_auth_action()) return;
 
-		if (!Auth::check())
-		{
-			if ($redirect_uri)
-			{
-				Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
-				Response::redirect($redirect_uri);
-			}
+		if (Auth::check()) return true;
+		if (!$is_redirect_no_auth) return false;
 
-			return false;
-		}
-
-		return true;
+		if (!$redirect_uri) $redirect_uri = Site_Util::get_login_page_uri();
+		Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
+		Response::redirect($redirect_uri);
 	}
 }

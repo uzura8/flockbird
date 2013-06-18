@@ -10,7 +10,7 @@ class Controller_Site_Api extends Controller_Base_Api
 
 	public function auth_check_api()
 	{
-		if (!$this->auth_check()) throw new \SiteApiNotAuthorizedException;
+		if (!$this->auth_check(false)) throw new \SiteApiNotAuthorizedException;
 	}
 
 	private function set_current_user()
