@@ -36,16 +36,13 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
+		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('album.term.album')));
+		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related' => 'member',
 			'order_by' => array('created_at' => 'desc'),
 			'limit' => \Config::get('album.article_list.limit'),
 		), 'Album');
-
-		$this->template->title = sprintf('最新の%s一覧', \Config::get('album.term.album'));
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
-		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
@@ -61,19 +58,9 @@ class Controller_Album extends \Controller_Site
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 
-		$this->template->title = sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('album.term.album'));
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		if ($is_mypage)
-		{
-			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member';
-		}
-		else
-		{
-			$key = sprintf('%sさんの%s', $member->name, \Config::get('site.term.profile'));
-			$this->template->breadcrumbs[$key] = '/member/'.$member->id;
-		}
-		$this->template->breadcrumbs[$this->template->title] = '';
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('album.term.album')), null, $member);
+		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
+		$this->template->post_footer = \View::forge('_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'where' => array('member_id', $member->id),
@@ -81,8 +68,6 @@ class Controller_Album extends \Controller_Site
 			'order_by' => array('created_at' => 'desc'),
 		), 'Album');
 		$data['member'] = $member;
-		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
-		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
@@ -95,32 +80,9 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_detail($id = null)
 	{
-		if (!$album = Model_Album::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		if (!$album = Model_Album::check_authority($id)) throw new \HttpNotFoundException;
 
-		$this->template->title = trim($album->name);
-		$this->template->header_title = site_title($this->template->title);
-
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		if (\Auth::check() && $album->member_id == $this->u->id)
-		{
-			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
-
-			$key = '自分の'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/member/';
-		}
-		else
-		{
-			$key = sprintf('%sさんの%s', $album->member->name, \Config::get('site.term.profile'));
-			$this->template->breadcrumbs[$key] = '/member/'.$album->member->id;
-
-			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/member/'.$album->member->id;
-		}
-		$this->template->breadcrumbs[$this->template->title] = '';
-
+		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/detail_footer');
 
@@ -163,15 +125,7 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->template->title = trim($album->name);
-		$this->template->header_title = site_title($this->template->title);
-
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
-		$this->template->breadcrumbs['自分の'.\Config::get('album.term.album').'一覧'] =  '/album/member/';
-		$this->template->breadcrumbs[$album->name] = '/album/'.$id;
-		$this->template->breadcrumbs[\Config::get('site.term.album').'写真をアップロード'] = '';
-
+		$this->set_title_and_breadcrumbs(\Config::get('site.term.album_image').'アップロード', array($album->name => '/album/'.$id), $album->member, 'album');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_header = \View::forge('_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/upload_footer');
@@ -193,25 +147,12 @@ class Controller_Album extends \Controller_Site
 		}
 		$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => 'created_at'));
 
-		$this->template->title = sprintf('%sの%sを見る', trim($album->name), \Config::get('album.term.album_image'));
-		$this->template->header_title = site_title($this->template->title);
-
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		if (\Auth::check() && $album->member_id == $this->u->id)
-		{
-			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
-			$key = '自分の'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/member/';
-		}
-		else
-		{
-			$this->template->breadcrumbs[\Config::get('album.term.album')] = '/album/';
-			$key = $album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/member/'.$album->member->id;
-		}
-		$this->template->breadcrumbs[$album->name] =  '/album/'.$id;
-		$this->template->breadcrumbs[\Config::get('album.term.album_image').'を見る'] = '';
-
+		$this->set_title_and_breadcrumbs(
+			sprintf('%sの%s', $album->name, \Config::get('album.term.album_image')),
+			array($album->name => '/album/'.$id),
+			$album->member,
+			'album'
+		);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/slide_footer', array('id' => $id));
 		$this->template->content = \View::forge('slide', array('album' => $album, 'album_images' => $album_images));
@@ -254,18 +195,10 @@ class Controller_Album extends \Controller_Site
 				\Session::set_flash('error', $val->show_errors());
 			}
 		}
-		$form->populate($album, true);
+		$this->set_title_and_breadcrumbs(\Config::get('album.term.album').'を書く', null, $this->u, 'album');
 
-		$this->template->title = \Config::get('album.term.album')."を書く";
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(
-			\Config::get('site.term.toppage') => '/',
-			\Config::get('site.term.myhome')  => '/member/',
-			'自分の'.\Config::get('album.term.album').'一覧' => '/album/member/',
-			$this->template->title => '',
-		);
-		$data = array('form' => $form);
-		$this->template->content = \View::forge('create', $data);
+		$form->populate($album, true);
+		$this->template->content = \View::forge('create', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('album/create'));// form の action に入る
 	}
 
@@ -317,18 +250,8 @@ class Controller_Album extends \Controller_Site
 			$form->populate($album);
 		}
 
-		$this->template->title = \Config::get('album.term.album').'を編集する';
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(
-			\Config::get('site.term.toppage') => '/',
-			\Config::get('site.term.myhome') => '/member/',
-			'自分の'.\Config::get('album.term.album').'一覧' => '/album/member/',
-			\Config::get('album.term.album').'詳細' => '/album/'.$id,
-			$this->template->title => '',
-		);
-
-		$data = array('form' => $form);
-		$this->template->content = \View::forge('edit', $data);
+		$this->set_title_and_breadcrumbs(\Config::get('album.term.album').'を編集する', array($album->name => '/album/'.$id), $album->member, 'album');
+		$this->template->content = \View::forge('edit', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('album/edit/'.$id));// form の action に入る
 	}
 
@@ -451,15 +374,7 @@ class Controller_Album extends \Controller_Site
 			if ($error) \Session::set_flash('error', $error);
 		}
 
-		$this->template->title = \Config::get('album.term.album_image').'管理';
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(
-			\Config::get('site.term.toppage') => '/',
-			\Config::get('site.term.myhome')  => '/member/',
-			'自分の'.\Config::get('album.term.album').'一覧' => '/album/member/',
-			$album->name => '/album/'.$id,
-			$this->template->title => '',
-		);
+		$this->set_title_and_breadcrumbs(\Config::get('album.term.album_image').'管理', array($album->name => '/album/'.$id), $album->member, 'album');
 		$this->template->post_header = \View::forge('_parts/edit_header');
 		$this->template->post_footer = \View::forge('_parts/edit_footer');
 

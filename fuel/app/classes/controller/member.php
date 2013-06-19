@@ -27,10 +27,7 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_index()
 	{
-		$this->template->title = 'マイホーム';
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', Config::get('site.term.myhome') => '');
-
+		$this->set_title_and_breadcrumbs(Config::get('site.term.myhome'));
 		$this->template->content = View::forge('member/index');
 	}
 
@@ -54,13 +51,10 @@ class Controller_Member extends Controller_Site
 			$member = $this->u;
 		}
 
-		$this->template->title = $member->name.' さんのページ';
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', $this->template->title => '');
+		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
+		$this->template->subtitle = View::forge('_parts/home_subtitle', array('member' => $member));
 
 		$list = \Note\Model_Note::find()->where('member_id', $id)->order_by('created_at', 'desc')->get();
-
-		$this->template->subtitle = View::forge('_parts/home_subtitle', array('member' => $member));
 		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list));
 	}
 
@@ -81,11 +75,8 @@ class Controller_Member extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->template->title = PRJ_SITE_NAME.'　メンバー登録';
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', Config::get('site.term.signup') => '');
-		$data = array('form' => $form);
-		$this->template->content = View::forge('member/signup', $data);
+		$this->set_title_and_breadcrumbs(Config::get('site.term.signup'));
+		$this->template->content = View::forge('member/signup', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('/member/confirm_register'));// form の action に入る
 	}
 
@@ -249,9 +240,7 @@ class Controller_Member extends Controller_Site
 			}
 		}
 
-		$this->template->title = 'メンバー登録確認';
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', 'メンバー登録確認' => '');
+		$this->set_title_and_breadcrumbs('メンバー登録確認', array(Config::get('site.term.signup') => 'member/signup'));
 		$data = array('val' => $val, 'member_pre' => $member_pre);
 		$this->template->content = View::forge('member/register', $data);
 	}
@@ -272,15 +261,7 @@ class Controller_Member extends Controller_Site
 		{
 			$form->repopulate();
 		}
-
-		$title = Config::get('site.term.member_leave');
-		$this->template->title = $title;
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(
-			Config::get('site.term.toppage') => '/',
-			Config::get('site.term.myhome') => '/member/',
-			$title => '',
-		);
+		$this->set_title_and_breadcrumbs(Config::get('site.term.member_leave'), array('設定変更' => '/member/setting/'), $this->u);
 		$this->template->content = View::forge('member/leave');
 		$this->template->content->set_safe('html_form', $form->build('/member/leave_confirm'));// form の action に入る
 	}
@@ -299,16 +280,12 @@ class Controller_Member extends Controller_Site
 		$auth = Auth::instance();
 		if ($val->run() && $auth->check_password())
 		{
-			$data = array('input' => $val->validated());
-			$title = Config::get('site.term.member_leave').'確認';
-			$this->template->content = View::forge('member/leave_confirm', $data);
-			$this->template->title = $title;
-			$this->template->header_title = site_title();
-			$this->template->breadcrumbs = array(
-				Config::get('site.term.toppage') => '/',
-				Config::get('site.term.myhome') => '/member/',
-				$title => '',
+			$this->set_title_and_breadcrumbs(
+				Config::get('site.term.member_leave').'確認',
+				array('設定変更' => '/member/setting/', Config::get('site.term.member_leave') => '/member/leave/'),
+				$this->u
 			);
+			$this->template->content = View::forge('member/leave_confirm', array('input' => $val->validated()));
 		}
 		else
 		{
@@ -400,13 +377,7 @@ END;
 		{
 			$form->repopulate();
 		}
-		$title = 'パスワードの再設定(アカウントの確認)';
-		$this->template->title = $title;
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(
-			Config::get('site.term.toppage') => '/',
-			$title => '',
-		);
+		$this->set_title_and_breadcrumbs('パスワードの再設定');
 		$this->template->content = View::forge('member/resend_password');
 		$this->template->content->set_safe('html_form', $form->build('/member/confirm_reset_password'));// form の action に入る
 	}
@@ -552,13 +523,7 @@ END;
 			}
 		}
 
-		$this->template->title = 'パスワードの再登録';
-		$this->template->header_title = site_title();
-
-		$this->template->breadcrumbs = array(
-			Config::get('site.term.toppage') => '/',
-			$this->template->title => '',
-		);
+		$this->set_title_and_breadcrumbs('パスワードの再登録');
 		$data = array('val' => $val, 'member_password_pre' => $member_password_pre);
 		$this->template->content = View::forge('member/reset_password', $data);
 		$this->template->content->set_safe('html_form', $form->build('/member/reset_password'));// form の action に入る

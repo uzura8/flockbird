@@ -54,7 +54,6 @@ class Controller_Site extends Controller_Base
 	{
 		$this->template->title = PRJ_SITE_NAME.'メインメニュー';
 		$this->template->header_title = site_title();
-		//$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '');
 
 		$this->template->content = View::forge('site/index');
 	}
@@ -92,14 +91,8 @@ class Controller_Site extends Controller_Base
 			}
 		}
 
-		$title = 'ログイン';
-		$this->template->title = $title;
-		$this->template->header_title = site_title($title);
-		$this->template->breadcrumbs = array(Config::get('site.term.toppage') => '/', $title => '');
-
-		$destination = '';
-		$destination = (Input::post('destination')) ? Input::post('destination') : null;
-		$destination = (Session::get_flash('destination')) ? Session::get_flash('destination') : null;
+		$this->set_title_and_breadcrumbs('ログイン');
+		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
 		$this->template->content = View::forge('site/login', array('val' => $val, 'destination' => $destination));
 	}
 
@@ -130,7 +123,7 @@ class Controller_Site extends Controller_Base
 			$is_mypage = true;
 			$member = $this->u;
 		}
-		elseif (Auth::check() && $member_id == $this->u->id)
+		elseif ($this->check_is_mypage($member_id))
 		{
 			$is_mypage = true;
 			$member = $this->u;
@@ -141,5 +134,44 @@ class Controller_Site extends Controller_Base
 		}
 
 		return array($is_mypage, $member);
+	}
+
+	protected function set_title_and_breadcrumbs($title = '', $middle_breadcrumbs = array(), $member_obj = null, $module = null)
+	{
+		$this->template->title = $title ?: PRJ_SITE_NAME;
+		$this->template->header_title = site_title($title);
+
+		$breadcrumbs = array(Config::get('site.term.toppage') => '/');
+		if ($member_obj)
+		{
+			if ($this->check_is_mypage($member_obj->id))
+			{
+				$breadcrumbs[Config::get('site.term.myhome')] = '/member';
+				if ($module)
+				{
+					$key = '自分の'.\Config::get($module.'.term.'.$module).'一覧';
+					$breadcrumbs[$key] =  sprintf('/%s/member/', $module);
+				}
+			}
+			else
+			{
+				$prefix = $member_obj->name.'さんの';
+				$key = $prefix.Config::get('site.term.profile');
+				$breadcrumbs[$key] = '/member/'.$member_obj->id;
+				if ($module)
+				{
+					$key = $prefix.\Config::get($module.'.term.'.$module).'一覧';
+					$breadcrumbs[$key] =  sprintf('/%s/member/%d', $module, $member_obj->id);
+				}
+			}
+		}
+		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
+		$breadcrumbs[$title] = '';
+		$this->template->breadcrumbs = $breadcrumbs;
+	}
+
+	protected function check_is_mypage($member_id)
+	{
+		return (Auth::check() && $member_id == $this->u->id);
 	}
 }

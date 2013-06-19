@@ -34,16 +34,12 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_list()
 	{
+		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('note.term.note')));
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
 			'related' => 'member',
 			'order_by' => array('created_at' => 'desc'),
 			'limit' => \Config::get('note.article_list.limit'),
 		), 'Note');
-
-		$this->template->title = sprintf('最新の%s一覧', \Config::get('site.term.note'));
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
-
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
@@ -58,20 +54,8 @@ class Controller_Note extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
-
-		$this->template->title = sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('note.term.note'));
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		if ($is_mypage)
-		{
-			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member';
-		}
-		else
-		{
-			$key = sprintf('%sさんの%s', $member->name, \Config::get('site.term.profile'));
-			$this->template->breadcrumbs[$key] = '/member/'.$member->id;
-		}
-		$this->template->breadcrumbs[$this->template->title] = '';
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('note.term.note')), null, $member);
+		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
 			//'related' => 'member',
@@ -80,31 +64,7 @@ class Controller_Note extends \Controller_Site
 			'order_by' => array('created_at' => 'desc'),
 		), 'Note');
 		$data['member'] = $member;
-		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 		$this->template->content = \View::forge('_parts/list', $data);
-	}
-
-	/**
-	 * Note list_member
-	 * 
-	 * @access  public
-	 * @params  integer
-	 * @return  Response
-	 */
-	public function action_list_member($member_id = null)
-	{
-		if (!$member = \Model_Member::check_authority($member_id))
-		{
-			throw new \HttpNotFoundException;
-		}
-
-		$this->template->title = sprintf('%sさんの%s一覧', $member->name, \Config::get('site.term.note'));
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/', $this->template->title => '');
-
-		$list = Model_Note::find()->where('member_id', $member_id)->order_by('created_at', 'desc')->get();
-
-		$this->template->content = \View::forge('_parts/list', array('member' => $member, 'list' => $list));
 	}
 
 	/**
@@ -120,27 +80,10 @@ class Controller_Note extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		$comments = Model_NoteComment::find()->where('note_id', $id)->related('member')->order_by('created_at')->get();
-
-		$this->template->title = trim($note->title);
-		$this->template->header_title = site_title(strim($this->template->title, 50));
-
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		if (\Auth::check() && $note->member_id == $this->u->id)
-		{
-			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
-			$key = '自分の'.\Config::get('site.term.note').'一覧';
-			$this->template->breadcrumbs[$key] =  '/member/note/';
-		}
-		else
-		{
-			$this->template->breadcrumbs[\Config::get('site.term.note')] = '/note/';
-			$key = $note->member->name.'さんの'.\Config::get('site.term.note').'一覧';
-			$this->template->breadcrumbs[$key] =  '/note/list/'.$note->member->id;
-		}
-		$this->template->breadcrumbs[\Config::get('site.term.note').'詳細'] = '';
-
+		$this->set_title_and_breadcrumbs($note->title, null, $note->member, 'note');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
+
+		$comments = Model_NoteComment::find()->where('note_id', $id)->related('member')->order_by('created_at')->get();
 		$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
 	}
 
@@ -183,15 +126,8 @@ class Controller_Note extends \Controller_Site
 			}
 		}
 
-		$this->template->title = \Config::get('site.term.note')."を書く";
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(
-			\Config::get('site.term.toppage') => '/',
-			\Config::get('site.term.note') => '/note/',
-			$this->template->title => '',
-		);
-		$data = array('form' => $form);
-		$this->template->content = \View::forge('create', $data);
+		$this->set_title_and_breadcrumbs(\Config::get('site.term.note').'を書く', null, $this->u, 'note');
+		$this->template->content = \View::forge('create', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('note/create'));// form の action に入る
 	}
 
@@ -243,18 +179,8 @@ class Controller_Note extends \Controller_Site
 			$form->populate($note);
 		}
 
-		$this->template->title = \Config::get('site.term.note').'を編集する';
-		$this->template->header_title = site_title($this->template->title);
-		$this->template->breadcrumbs = array(
-			\Config::get('site.term.toppage') => '/',
-			\Config::get('site.term.myhome') => '/member/',
-			'自分の'.\Config::get('site.term.note').'一覧' => '/member/note/',
-			\Config::get('site.term.note').'詳細' => '/note/detail/'.$id,
-			$this->template->title => '',
-		);
-
-		$data = array('form' => $form);
-		$this->template->content = \View::forge('edit', $data);
+		$this->set_title_and_breadcrumbs(\Config::get('site.term.note').'を編集する', array($note->title => '/note/'.$id), $note->member, 'note');
+		$this->template->content = \View::forge('edit', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('note/edit/'.$id));// form の action に入る
 	}
 

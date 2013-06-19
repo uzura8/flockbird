@@ -25,41 +25,15 @@ class Controller_Image extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-
 		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
 		$comments = Model_AlbumImageComment::get_comments($id, $record_limit);
 
-		$this->template->title = \Config::get('album.term.album_image');
-		if ($album_image->name)
-		{
-			$this->template->title = $album_image->name;
-		}
-		elseif ($album_image->file->original_filename)
-		{
-			$this->template->title = $album_image->file->original_filename;
-		}
-		$this->template->header_title = site_title($this->template->title);
-
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		if (\Auth::check() && $album_image->album->member_id == $this->u->id)
-		{
-			$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
-			$key = '自分の'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/member/';
-		}
-		else
-		{
-			$this->template->breadcrumbs[\Config::get('album.term.album')] = '/album/';
-			$key = $album_image->album->member->name.'さんの'.\Config::get('album.term.album').'一覧';
-			$this->template->breadcrumbs[$key] =  '/album/member/'.$album_image->album->member->id;
-		}
-		$this->template->breadcrumbs[$album_image->album->name] =  '/album/'.$album_image->album_id;
-		$this->template->breadcrumbs[$this->template->title] = '';
+		$title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
+		$this->set_title_and_breadcrumbs($title, array($album_image->album->name => '/album/'.$album_image->album_id), $album_image->album->member, 'album');
+		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 
 		$data = array('album_image' => $album_image, 'comments' => $comments);
 		list($data['before_id'], $data['after_id']) =  \Album\Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
-
-		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->content = \View::forge('image/detail.php', $data);
 	}
 
@@ -172,32 +146,17 @@ class Controller_Image extends \Controller_Site
 			$form->populate($album_image);
 		}
 
-		$this->template->title = \Config::get('album.term.album_image').'を編集する';
-		$this->template->header_title = site_title($this->template->title);
+		$album_image_page_title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
+		$this->set_title_and_breadcrumbs(
+			\Config::get('album.term.album_image').'を編集する',
+			array($album_image->album->name => '/album/'.$album_image->album_id, $album_image_page_title => '/album/image/'.$id),
+			$album_image->album->member,
+			'album'
+		);
 		$this->template->post_header = \View::forge('_parts/edit_header');
 		$this->template->post_footer = \View::forge('_parts/edit_footer');
 
-		$this->template->breadcrumbs = array(\Config::get('site.term.toppage') => '/');
-		$this->template->breadcrumbs[\Config::get('site.term.myhome')] = '/member/';
-		$key = '自分の'.\Config::get('album.term.album').'一覧';
-		$this->template->breadcrumbs[$key] =  '/album/member/';
-		$key = $album_image->album->name;
-		$this->template->breadcrumbs[$key] =  '/album/'.$album_image->album_id;
-
-		$key = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
-		if ($album_image->name)
-		{
-			$key = $album_image->name;
-		}
-		elseif ($album_image->file->original_filename)
-		{
-			$key = $album_image->file->original_filename;
-		}
-		$this->template->breadcrumbs[$key] = '/album/image/'.$album_image->id;
-		$this->template->breadcrumbs[$this->template->title] = '';
-
-		$data = array('form' => $form);
-		$this->template->content = \View::forge('edit', $data);
+		$this->template->content = \View::forge('edit', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('album/image/edit/'.$id));// form の action に入る
 	}
 

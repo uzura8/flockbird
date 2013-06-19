@@ -21,15 +21,7 @@ class Controller_Member_setting extends Controller_Member
 	 */
 	public function action_index()
 	{
-		$title = '設定変更';
-		$this->template->title = $title;
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(
-			Config::get('site.term.toppage') => '/',
-			Config::get('site.term.myhome') => '/member/',
-			$title => '',
-		);
-
+		$this->set_title_and_breadcrumbs('設定変更', null, $this->u);
 		$this->template->content = View::forge('member/setting/index');
 	}
 
@@ -50,16 +42,7 @@ class Controller_Member_setting extends Controller_Member
 		{
 			$form->repopulate();
 		}
-
-		$title = 'パスワード変更';
-		$this->template->title = $title;
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(
-			Config::get('site.term.toppage') => '/',
-			Config::get('site.term.myhome') => '/member/',
-			'設定変更' => '/member/setting/',
-			$title => '',
-		);
+		$this->set_title_and_breadcrumbs('パスワード変更', array('設定変更' => '/member/setting/'), $this->u);
 		$this->template->content = View::forge('member/setting/password');
 		$this->template->content->set_safe('html_form', $form->build('/member/setting/change_password'));// form の action に入る
 	}
@@ -138,15 +121,7 @@ END;
 		{
 			$form->repopulate();
 		}
-		$title = 'メールアドレス変更';
-		$this->template->title = $title;
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(
-			Config::get('site.term.toppage') => '/',
-			Config::get('site.term.myhome') => '/member/',
-			'設定変更' => '/member/setting/',
-			$title => '',
-		);
+		$this->set_title_and_breadcrumbs('メールアドレス変更', array('設定変更' => '/member/setting/'), $this->u);
 		$this->template->content = View::forge('member/setting/email');
 		$this->template->content->set_safe('html_form', $form->build('/member/setting/confirm_change_email'));// form の action に入る
 	}
@@ -286,27 +261,15 @@ END;
 			}
 		}
 
-		$this->template->title = 'メールアドレス変更確認';
-		$this->template->header_title = site_title();
-
 		if (Auth::check())
 		{
-			$this->template->breadcrumbs = array(
-				Config::get('site.term.toppage') => '/',
-				Config::get('site.term.myhome') => '/member/',
-				'設定変更' => '/member/setting/',
-				$this->template->title => '',
-			);
+			$this->set_title_and_breadcrumbs('メールアドレス変更確認', array('設定変更' => '/member/setting/', 'メールアドレス変更' => '/member/setting/email'), $this->u);
 		}
 		else
 		{
-			$this->template->breadcrumbs = array(
-				Config::get('site.term.toppage') => '/',
-				$this->template->title => '',
-			);
+			$this->set_title_and_breadcrumbs('メールアドレス変更確認');
 		}
-		$data = array('val' => $val, 'member_email_pre' => $member_email_pre);
-		$this->template->content = View::forge('member/setting/change_email', $data);
+		$this->template->content = View::forge('member/setting/change_email', array('val' => $val, 'member_email_pre' => $member_email_pre));
 	}
 
 	public function form_setting_password()

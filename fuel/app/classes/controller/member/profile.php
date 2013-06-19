@@ -18,16 +18,7 @@ class Controller_Member_profile extends Controller_Member
 	 */
 	public function action_index()
 	{
-
-		$member = $this->u;
-		$this->template->title = $member->name.' さんのページ';
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(
-			Config::get('site.term.toppage') => '/',
-			Config::get('site.term.myhome') => '/member/',
-			Config::get('site.term.profile') => '',
-		);
-
+		$this->set_title_and_breadcrumbs(Config::get('site.term.profile'), null, $this->u);
 		$this->template->content = View::forge('member/profile/index');
 	}
 
@@ -39,15 +30,7 @@ class Controller_Member_profile extends Controller_Member
 	 */
 	public function action_setting_image()
 	{
-		$this->template->title = Config::get('site.term.profile').'写真設定';
-		$this->template->header_title = site_title();
-		$this->template->breadcrumbs = array(
-			Config::get('site.term.toppage') => '/',
-			Config::get('site.term.myhome') => '/member/',
-			Config::get('site.term.profile') => '/member/profile/',
-			Config::get('site.term.profile').'写真設定' => '',
-		);
-
+		$this->set_title_and_breadcrumbs(Config::get('site.term.profile').'写真設定', array(Config::get('site.term.profile') => '/member/profile/'), $this->u);
 		$this->template->content = View::forge('member/profile/setting_image');
 	}
 

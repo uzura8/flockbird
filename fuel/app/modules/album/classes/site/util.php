@@ -44,4 +44,19 @@ class Site_Util
 
 		return array($prev_id, $next_id);
 	}
+
+	public static function get_album_image_page_title($album_image_name, $original_filename)
+	{
+		$title = sprintf(\Config::get('album.term.album_image'), \Config::get('album.term.album_image'));
+		if ($album_image_name)
+		{
+			$title = $album_image_name;
+		}
+		elseif ($original_filename)
+		{
+			$title = $original_filename;
+		}
+
+		return $title;
+	}
 }
