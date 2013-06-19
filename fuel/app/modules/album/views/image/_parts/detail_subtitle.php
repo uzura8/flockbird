@@ -1,14 +1,7 @@
-<div class="member_img_box_s">
-	<?php echo img($album_image->album->member->get_image(), '30x30', 'member/'.$album_image->album->member_id); ?>
-	<div class="content">
-		<div class="main">
-			<b class="fullname"><?php echo Html::anchor('member/'.$album_image->album->member_id, $album_image->album->member->name); ?></b>
-		</div>
-<?php if (!empty($album_image->file->shot_at)): ?>
-		<small>撮影日時: <?php echo site_get_time($album_image->file->shot_at) ?></small>
-<?php endif; ?>
-	</div>
-</div>
+<?php
+$date = isset($album_image->file->shot_at) ? $album_image->file->shot_at : $album_image->created_at;
+echo render('_parts/member_contents_box', array('member' => $album_image->album->member, 'date' => array('datetime' => $date, 'label' => '撮影日時')));
+?>
 <?php if (isset($u) && $u->id == $album_image->album->member_id): ?>
 <div class="btn-group">
 	<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-edit"></i> edit <span class="caret"/></button>

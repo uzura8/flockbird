@@ -1,16 +1,4 @@
-<div class="member_img_box_s">
-	<?php echo img($note->member->get_image(), '30x30', 'member/'.$note->member->id); ?>
-	<div class="content">
-		<div class="main">
-			<b class="fullname"><?php echo Html::anchor('member/'.$note->member->id, $note->member->name); ?></b>
-		</div>
-		<small>
-		日時: <?php echo date('Y年n月j日 H:i', strtotime($note->created_at)) ?>
-		(<?php echo Date::time_ago(strtotime($note->created_at)) ?>)
-		</small>
-	</div>
-</div>
-
+<?php echo render('_parts/member_contents_box', array('member' => $note->member, 'date' => array('datetime' => $note->created_at, 'label' => '日時'))); ?>
 <?php if (isset($u) && $u->id == $note->member_id): ?>
 <div class="btn-group">
 	<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-edit"></i> edit <span class="caret"/></button>

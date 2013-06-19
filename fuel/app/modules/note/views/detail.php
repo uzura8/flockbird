@@ -1,9 +1,8 @@
 <p><?php echo nl2br($note->body) ?></p>
-
 <hr />
 
+<?php if ($comments): ?>
 <h3 id="comments">Comments</h3>
-
 <?php foreach ($comments as $comment): ?>
 <div class="commentBox">
 	<div class="member_img_box_s">
@@ -21,6 +20,7 @@
 <?php endif ; ?>
 </div>
 <?php endforeach; ?>
+<?php endif ; ?>
 
 <?php if (Auth::check()): ?>
 
