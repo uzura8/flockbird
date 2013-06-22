@@ -282,7 +282,7 @@ class Controller_Album extends \Controller_Site
 		{
 			\Util_security::check_csrf();
 
-			$val->add('name', 'タイトル')->add_rule('trim')->add_rule('no_controll')->add_rule('max_length', 255);
+			$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
 			$val->add('shot_at', '撮影日時')
 				->add_rule('trim')
 				->add_rule('max_length', 16)

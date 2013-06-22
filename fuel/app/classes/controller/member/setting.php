@@ -201,12 +201,10 @@ END;
 			$val->add('password', 'パスワード', array('type'=>'password'))
 				->add_rule('trim')
 				->add_rule('required')
-				->add_rule('no_controll')
 				->add_rule('min_length', 6)
 				->add_rule('max_length', 20);
 			$val->add('token', '', array('type'=>'hidden'))
-				->add_rule('required')
-				->add_rule('no_controll');
+				->add_rule('required');
 
 			$auth = Auth::instance();
 			if ($val->run() && $auth->check_password())
@@ -279,14 +277,12 @@ END;
 		$form->add('old_password', '現在のパスワード', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20);
 
 		$form->add('password', '新しいパスワード', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20)
 			->add_rule('unmatch_field', 'old_password');
@@ -308,7 +304,6 @@ END;
 		$form->add('email', 'メールアドレス', array('class' => 'span7'))
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('valid_email');
 
 		$form->add('email_confirm', 'メールアドレス(確認用)', array('class' => 'span7'))

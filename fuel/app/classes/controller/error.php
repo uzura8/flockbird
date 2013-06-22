@@ -2,6 +2,11 @@
 
 class Controller_Error extends Controller_Site
 {
+	protected $check_not_auth_action = array(
+		'404',
+		'500',
+		'invalid',
+	);
 	
 	/**
 	 * The 404 action for the application.

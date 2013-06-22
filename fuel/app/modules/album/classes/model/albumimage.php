@@ -46,7 +46,7 @@ class Model_AlbumImage extends \Orm\Model
 		'name' => array(
 			'data_type' => 'varchar',
 			'label' => '名前',
-			'validation' => array('trim', 'no_controll', 'max_length' => array(255)),
+			'validation' => array('trim', 'max_length' => array(255)),
 			'form' => array('type' => 'text', 'class' => 'input-xlarge'),
 		),
 		'created_at' => array('form' => array('type' => false)),

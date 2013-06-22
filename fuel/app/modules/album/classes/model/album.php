@@ -31,13 +31,13 @@ class Model_Album extends \Orm\Model
 		'name' => array(
 			'data_type' => 'varchar',
 			'label' => '名前',
-			'validation' => array('trim', 'no_controll', 'required', 'max_length' => array(255)),
+			'validation' => array('trim', 'required', 'max_length' => array(255)),
 			'form' => array('type' => 'text', 'class' => 'input-xlarge'),
 		),
 		'body' => array(
 			'data_type' => 'text',
 			'label' => '説明',
-			'validation' => array('trim', 'no_controll' => array(true), 'required'),
+			'validation' => array('trim', 'required'),
 			'form' => array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'),
 		),
 		'public_flag' => array(

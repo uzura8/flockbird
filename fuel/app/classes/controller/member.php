@@ -172,14 +172,12 @@ class Controller_Member extends Controller_Site
 			$val->add('password', 'パスワード', array('type'=>'password'))
 				->add_rule('trim')
 				->add_rule('required')
-				->add_rule('no_controll')
 				->add_rule('min_length', 6)
 				->add_rule('max_length', 20)
 				->add_rule('match_value', $member_pre->password);
 			$val->set_message('match_value', 'パスワードが正しくありません。');
 			$val->add('token', '', array('type'=>'hidden'))
-				->add_rule('required')
-				->add_rule('no_controll');
+				->add_rule('required');
 
 			if ($val->run())
 			{
@@ -536,19 +534,16 @@ END;
 		$form->add('name', '名前')
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('max_length', 50);
 
 		$form->add('email', 'メールアドレス')
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('valid_email');
 
 		$form->add('password', 'パスワード', array('type'=>'password'))
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20);
 
@@ -564,7 +559,6 @@ END;
 		$form->add('password', 'パスワード', array('type'=>'password', 'class' => 'span6'))
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20);
 
@@ -580,7 +574,6 @@ END;
 		$form->add('email', 'メールアドレス')
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('valid_email');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
@@ -596,7 +589,6 @@ END;
 		$form->add('password', '新しいパスワード', array('type'=>'password'))
 			->add_rule('trim')
 			->add_rule('required')
-			->add_rule('no_controll')
 			->add_rule('min_length', 6)
 			->add_rule('max_length', 20);
 
@@ -606,8 +598,7 @@ END;
 			->add_rule('match_field', 'password');
 
 		$form->add('token', '', array('type'=>'hidden', 'value' => Input::param('token')))
-			->add_rule('required')
-			->add_rule('no_controll');
+			->add_rule('required');
 
 		$form->add('submit', '', array('type'=>'submit', 'value' => '変更', 'class' => 'btn'));
 		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Util_security::get_csrf()));
