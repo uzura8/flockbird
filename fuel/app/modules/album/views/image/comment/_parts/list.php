@@ -1,4 +1,4 @@
-<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
+<?php if (Site_Util::check_is_api_request()): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
 <?php if ($show_more_link && count($comments) < \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id)): ?>
 <a href="#" class="listMoreBox" id="listMoreBox_comment">全てみる</a>
 <?php endif; ?>
