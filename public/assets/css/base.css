@@ -79,7 +79,12 @@ img.profile_image {
 	margin-right: 5px;
 }
 
-#subtitle .btn-group {
+.list_subtitle {
+	position: relative;
+}
+#subtitle .btn-group,
+.list_subtitle .btn-group
+{
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -291,7 +296,9 @@ span.required {
 	margin-right: 3px;
 }
 
-.page-header h2 {
+.page-header h2,
+.header h4
+{
 	word-break:break-all;
 	word-wrap:break-word;
 	overflow:hidden;

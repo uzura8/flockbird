@@ -77,7 +77,8 @@ class Model_NoteComment extends \Orm\Model
 		$is_all_records = false;
 		$params = array_merge(array(array('note_id', '=', $note_id)), $params);;
 		$query = self::query()->where($params)->related('member');
-		if (!$record_limit || $record_limit >=$query->count())
+		$all_records_count = $query->count();
+		if (!$record_limit || $record_limit >= $all_records_count)
 		{
 			$is_all_records = true;
 			$comments = $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
@@ -88,6 +89,6 @@ class Model_NoteComment extends \Orm\Model
 			if (!$is_desc) $comments = array_reverse($comments);
 		}
 
-		return array($comments, $is_all_records);
+		return array($comments, $is_all_records, $all_records_count);
 	}
 }

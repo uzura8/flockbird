@@ -167,12 +167,12 @@ class Controller_Note extends \Controller_Site
 				}
 				else
 				{
-					Session::set_flash('error', 'Could not save.');
+					\Session::set_flash('error', 'Could not save.');
 				}
 			}
 			else
 			{
-				Session::set_flash('error', $val->show_errors());
+				\Session::set_flash('error', $val->show_errors());
 			}
 			$form->repopulate();
 		}
