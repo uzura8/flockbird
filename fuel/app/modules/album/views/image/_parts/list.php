@@ -16,7 +16,7 @@
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
 				<div class="btn-group btn_album_image_edit" id="btn_album_image_edit_<?php echo $album_image->id ?>">
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu pull-right">
 						<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>
 						<li><a href="#" class="link_album_image_set_cover" id="link_album_image_set_cover_<?php echo $album_image->id; ?>"><i class="icon-book"></i> カバーに指定</a></li>
 						<li><a href="#" onclick="delete_item('album/image/api/delete.json', <?php echo $album_image->id; ?>, '#main_item');return false;"><i class="icon-trash"></i> 削除</a></li>
@@ -26,21 +26,11 @@
 			</div>
 		</div>
 
-<?php list($album_image_comment, $is_all_records) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('site.record_limit.default.comment.s')); ?>
 <?php if ($album_image_comment): ?>
 		<div class="list_album_image_comment">
 <?php foreach ($album_image_comment as $comment): ?>
 			<div class="commentBox" id="commentBox_<?php echo $comment->id ?>">
-				<div class="member_img_box_ss">
-				<?php echo (empty($comment->member))? img('m', '20x20') : img($comment->member->get_image(), '20x20', 'member/'.$comment->member_id); ?>
-					<div class="content">
-						<div class="main">
-							<b class="fullname"><?php echo (empty($comment->member))? Config::get('site.term.left_member') : Html::anchor('member/'.$comment->member_id, $comment->member->name); ?></b>
-							<?php echo $comment->body ?>
-						</div>
-						<small><?php echo site_get_time($comment->created_at); ?></small>
-					</div>
-				</div>
+				<?php echo render('_parts/member_contents_box', array('member' => $comment->member, 'size' => 'ss', 'content' => $comment->body, 'date' => array('datetime' => $comment->created_at))); ?>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $album_image->album->member_id))): ?>
 				<a class="btn btn-mini boxBtn btn_album_image_comment_delete" id="btn_album_image_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
 <?php endif; ?>
