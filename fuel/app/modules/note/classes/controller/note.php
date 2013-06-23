@@ -80,11 +80,13 @@ class Controller_Note extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
+		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
+
 		$this->set_title_and_breadcrumbs($note->title, null, $note->member, 'note');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
 
-		$comments = Model_NoteComment::find()->where('note_id', $id)->related('member')->order_by('created_at')->get();
-		$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments));
+		list($comments, $is_all_records) = Model_NoteComment::get_comments($id, $record_limit);
+		$this->template->content = \View::forge('detail', array('note' => $note, 'comments' => $comments, 'is_all_records' => $is_all_records));
 	}
 
 	/**

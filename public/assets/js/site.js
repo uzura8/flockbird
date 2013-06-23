@@ -75,11 +75,7 @@ function show_list(uri, list_block_id) {
 	var get_url = baseUrl + uri;
 	var get_data = {};
 	get_data['nochache']  = (new Date()).getTime();
-	get_data['disp_more'] = 0;
-	if (record_limit > 0) {
-		get_data['limit'] = record_limit;
-		get_data['disp_more'] = 1;
-	}
+	get_data['limit'] = record_limit;
 
 	var next_element_id_num  = (next_element_id_name.length > 0) ? get_id_num(next_element_id_name) : 0;
 	if (next_element_id_num) {

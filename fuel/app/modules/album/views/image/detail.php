@@ -10,9 +10,9 @@
 <?php endif; ?>
 
 <div id="comment_list">
-<?php echo render('image/comment/_parts/list', array('u' => $u, 'album_image' => $album_image, 'comments' => $comments, 'show_more_link' => true)); ?>
+<?php echo render('_parts/comment/list', array('parent' => $album_image->album, 'comments' => $comments, 'is_all_records' => $is_all_records)); ?>
 </div>
 
 <?php if (Auth::check()): ?>
-<?php echo render('_parts/post_comment', array('u' => $u, 'textarea_attrs' => array('class' => 'span12 autogrow'))); ?>
+<?php echo render('_parts/post_comment', array('textarea_attrs' => array('class' => 'span12 autogrow'))); ?>
 <?php endif; ?>

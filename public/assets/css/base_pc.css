@@ -1,9 +1,9 @@
 .main_item .btn_album_edit {
 	display: none;
 }
-.commentBox .btn_album_image_comment_delete {
+.imgBox .btn_album_image_edit {
 	display: none;
 }
-.imgBox .btn_album_image_edit {
+.commentBox .btn_comment_delete {
 	display: none;
 }

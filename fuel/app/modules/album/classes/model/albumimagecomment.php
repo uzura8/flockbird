@@ -38,7 +38,7 @@ class Model_AlbumImageComment extends \Orm\Model
 		),
 	);
 
-	protected static $count_par_album_image_list = array();
+	protected static $count_per_album_image_list = array();
 
 	public static function validate($factory)
 	{
@@ -52,7 +52,7 @@ class Model_AlbumImageComment extends \Orm\Model
 	{
 		if (!$id) return false;
 
-		$obj = self::find()->where('id', $id)->related('album_image')->related('member')->get_one();
+		$obj = self::find($id, array('rows_limit' => 1, 'related' => array('album_image', 'member')))? : null;
 		if (!$obj) return false;
 
 		$accept_member_ids[] = $obj->member_id;
@@ -64,21 +64,24 @@ class Model_AlbumImageComment extends \Orm\Model
 
 	public static function get_count4album_image_id($album_image_id)
 	{
-		if (!empty(self::$count_par_album_image_list[$album_image_id])) return self::$count_par_album_image_list[$album_image_id];
+		if (!empty(self::$count_per_album_image_list[$album_image_id])) return self::$count_per_album_image_list[$album_image_id];
 
 		$query = self::query()->select('id')->where('album_image_id', $album_image_id);
-		self::$count_par_album_image_list[$album_image_id] = $query->count();
+		self::$count_per_album_image_list[$album_image_id] = $query->count();
 
-		return self::$count_par_album_image_list[$album_image_id];
+		return self::$count_per_album_image_list[$album_image_id];
 	}
 
 	public static function get_comments($album_image_id, $record_limit = 0, $params = array(), $is_desc = false)
 	{
 		$params = array_merge(array(array('album_image_id', '=', $album_image_id)), $params);;
+		$query = self::query()->where($params)->related('member');
 
-		$query = self::find()->where($params)->related('member');
-		if (!$record_limit || $record_limit >=$query->count())
+		$is_all_records = false;
+		$all_records_count = $query->count();
+		if (!$record_limit || $record_limit >= $all_records_count)
 		{
+			$is_all_records = true;
 			$comments = $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
 		}
 		else
@@ -87,6 +90,6 @@ class Model_AlbumImageComment extends \Orm\Model
 			if (!$is_desc) $comments = array_reverse($comments);
 		}
 
-		return $comments;
+		return array($comments, $is_all_records, $all_records_count);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
-namespace Album;
+namespace Note;
 
-class Controller_Image_Comment_Api extends \Controller_Site_Api
+class Controller_Comment_Api extends \Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
 		'get_list',
@@ -23,14 +23,13 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 		$response = '';
 		try
 		{
-			$album_image_id = (int)$parent_id;
+			$note_id = (int)$parent_id;
 			$before_id      = (int)\Input::get('before_id', 0);
 			$after_id       = (int)\Input::get('after_id', 0);
 			$limit          = (int)\Input::get('limit', 0);
 			$is_desc        = (bool)\Input::get('is_desc', false);
-			$show_more_link = (bool)\Input::get('disp_more', 1);
 
-			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
+			if (!$note_id || !$note = Model_Note::check_authority($note_id))
 			{
 				throw new \HttpNotFoundException;
 			}
@@ -38,9 +37,9 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$params = array();
 			if ($before_id) $params[] = array('id', '>', $before_id);
 			if ($after_id)  $params[] = array('id', '<', $after_id);
-			list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($album_image_id, $limit, $params, $is_desc);
+			list($comments, $is_all_records) = Model_NoteComment::get_comments($note_id, $limit, $params, $is_desc);
 
-			$data = array('comments' => $comments, 'parent' => $album_image->album, 'is_all_records' => $is_all_records);
+			$data = array('comments' => $comments, 'parent' => $note, 'is_all_records' => $is_all_records);
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('_parts/comment/list.php', $data);
 			$status_code = 200;
@@ -67,8 +66,8 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$this->auth_check_api();
 			\Util_security::check_csrf();
 
-			$album_image_id = (int)\Input::post('id');
-			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
+			$note_id = (int)\Input::post('id');
+			if (!$note_id || !$note = Model_Note::check_authority($note_id))
 			{
 				throw new \HttpNotFoundException;
 			}
@@ -79,11 +78,11 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			// Create a new comment
 			$values = array(
 				'body' => \Input::post('body'),
-				'album_image_id' => $album_image_id,
+				'note_id' => $note_id,
 				'member_id' => $this->u->id,
 			);
 
-			$comment = new Model_AlbumImageComment($values);
+			$comment = new Model_NoteComment($values);
 			$comment->save();
 
 			$response['status'] = 1;
@@ -117,12 +116,12 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
-			if (!$id || !$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->u->id))
+			if (!$id || !$note_comment = Model_NoteComment::check_authority($id, $this->u->id))
 			{
 				throw new \HttpNotFoundException;
 			}
 
-			$album_image_comment->delete();
+			$note_comment->delete();
 
 			$response['status'] = 1;
 			$status_code = 200;

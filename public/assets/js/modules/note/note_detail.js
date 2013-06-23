@@ -1,19 +1,13 @@
 $(function(){
 	var parent_id = get_id_from_url();
-	//show_list('album/image/comment/api/list/' + parent_id + '.html', '#comment_list', 5);
-
-	$(document).on('click','.link_album_image_set_cover', function(){
-		if (GL.execute_flg) return false;
-		set_cover(this, true);
-		return false;
-	});
+	//show_list('note/comment/api/list/' + parent_id + '.html', '#comment_list', 5);
 
 	$('#btn_comment').click(function(){
 		if (GL.execute_flg) return false;
 		create_comment(
 			parent_id,
-			'album/image/comment/api/create.json',
-			'album/image/comment/api/list/' + parent_id + '.html',
+			'note/comment/api/create.json',
+			'note/comment/api/list/' + parent_id + '.html',
 			$('.commentBox').last().attr('id'),
 			this
 		);
@@ -24,7 +18,7 @@ $(function(){
 	$('#listMoreBox_comment').click(function(){
 		if (GL.execute_flg) return false;
 		show_list(
-			'album/image/comment/api/list/' + parent_id + '.html',
+			'note/comment/api/list/' + parent_id + '.html',
 			'#comment_list',
 			0,
 			$('.commentBox').first().attr('id'),
@@ -36,7 +30,7 @@ $(function(){
 	});
 
 	$(document).on('click','.btn_comment_delete', function(){
-		delete_item('album/image/comment/api/delete.json', get_id_num($(this).attr('id')), '#commentBox');
+		delete_item('note/comment/api/delete.json', get_id_num($(this).attr('id')), '#commentBox');
 		return false;
 	});
 

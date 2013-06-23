@@ -26,14 +26,14 @@ class Controller_Image extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
-		$comments = Model_AlbumImageComment::get_comments($id, $record_limit);
+		list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($id, $record_limit);
 
 		$title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
 		$this->set_title_and_breadcrumbs($title, array($album_image->album->name => '/album/'.$album_image->album_id), $album_image->album->member, 'album');
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 
-		$data = array('album_image' => $album_image, 'comments' => $comments);
-		list($data['before_id'], $data['after_id']) =  \Album\Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
+		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
+		list($data['before_id'], $data['after_id']) =  Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
 		$this->template->content = \View::forge('image/detail.php', $data);
 	}
 

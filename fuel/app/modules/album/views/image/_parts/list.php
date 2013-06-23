@@ -11,7 +11,8 @@
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/'.$album_image->id, \Album\Site_Util::get_album_image_display_name($album_image)); ?></h5>
 			<div class="article">
-				<small><i class="icon-comment"></i> <?php echo $all_comment_count = \Album\Model_AlbumImageComment::get_count4album_image_id($album_image->id); ?></small>
+<?php list($album_image_comment, $is_all_records, $all_comment_count) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('site.record_limit.default.comment.s')); ?>
+				<small><i class="icon-comment"></i> <?php echo $all_comment_count; ?></small>
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
 				<div class="btn-group btn_album_image_edit" id="btn_album_image_edit_<?php echo $album_image->id ?>">
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
@@ -25,7 +26,7 @@
 			</div>
 		</div>
 
-<?php $album_image_comment = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('site.record_limit.default.comment.s')); ?>
+<?php list($album_image_comment, $is_all_records) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('site.record_limit.default.comment.s')); ?>
 <?php if ($album_image_comment): ?>
 		<div class="list_album_image_comment">
 <?php foreach ($album_image_comment as $comment): ?>
@@ -45,7 +46,7 @@
 <?php endif; ?>
 			</div>
 <?php endforeach; ?>
-<?php if (count($album_image_comment) < $all_comment_count): ?>
+<?php if (!$is_all_records): ?>
 			<div class="listMoreBox"><a href="<?php echo Uri::create(sprintf('album/image/%d?all_comment=1#comments', $album_image->id)); ?>">もっと見る</a></div>
 <?php endif; ?>
 		</div>

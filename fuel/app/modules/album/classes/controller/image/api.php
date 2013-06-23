@@ -89,7 +89,7 @@ class Controller_Image_api extends \Controller_Site_Api
 		{
 			throw new \HttpNotFoundException;
 		}
-		$comments = Model_AlbumImageComment::find()->where('album_image_id', $id)->related('member')->order_by('id')->get();
+		$comments = Model_AlbumImageComment::find('all', array('where' => array('album_image_id' => $id), 'related' => 'member', 'order_by_rows' => 'id'));
 
 		$this->response($comments);
 	}
