@@ -40,4 +40,6 @@ $(function(){
 			mouseleave:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
 		},'#comment_list .commentBox');
 	}
+
+	if (url('?write_comment')) $('#textarea_comment').focus();
 });
