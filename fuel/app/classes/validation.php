@@ -15,7 +15,10 @@ class Validation extends Fuel\Core\Validation
 	 */
 	public static function _validation_trim($val)
 	{
-		return trim(trim($val, '　'));
+		$val = preg_replace('/^[\s　]+/u', '', $val);
+		$val = preg_replace('/[\s　]+$/u', '', $val);
+
+		return $val;
 	}
 
 	/**
