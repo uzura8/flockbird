@@ -154,6 +154,11 @@ h4#comments {
 
 .w90 {width: 90%;}
 
+.article .body {
+	padding-top: 5px;
+	padding-bottom: 10px;
+}
+
 div#popup_container.ui-draggable #popup_message {
 	color: #000;
 }

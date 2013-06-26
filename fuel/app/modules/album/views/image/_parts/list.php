@@ -31,14 +31,7 @@
 
 <?php if ($album_image_comment): ?>
 		<div class="list_album_image_comment">
-<?php foreach ($album_image_comment as $comment): ?>
-			<div class="commentBox" id="commentBox_<?php echo $comment->id ?>">
-				<?php echo render('_parts/member_contents_box', array('member' => $comment->member, 'size' => 'ss', 'content' => $comment->body, 'date' => array('datetime' => $comment->created_at))); ?>
-<?php if (isset($u) && in_array($u->id, array($comment->member_id, $album_image->album->member_id))): ?>
-				<a class="btn btn-mini boxBtn btn_album_image_comment_delete" id="btn_album_image_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
-<?php endif; ?>
-			</div>
-<?php endforeach; ?>
+		<?php echo render('_parts/comment/list', array('parent' => $album, 'comments' => $album_image_comment, 'is_all_records' => $is_all_records)); ?>
 <?php if (!$is_all_records): ?>
 			<div class="listMoreBox"><a href="<?php echo Uri::create(sprintf('album/image/%d?all_comment=1#comments', $album_image->id)); ?>">もっと見る</a></div>
 <?php endif; ?>

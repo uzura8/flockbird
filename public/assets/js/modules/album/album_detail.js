@@ -15,8 +15,8 @@ $('.btn_album_image_comment_delete').click(function(){
 
 if (!is_sp()) {
 	$('.commentBox').on({
-		mouseenter:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
-		mouseleave:function() {$('#btn_album_image_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
+		mouseenter:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
+		mouseleave:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
 	});
 	$('.imgBox').on({
 		mouseenter:function() {$('#btn_album_image_edit_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
