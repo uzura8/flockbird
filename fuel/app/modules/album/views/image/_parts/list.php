@@ -7,7 +7,7 @@
 <?php $i = 0; ?>
 <?php foreach ($list as $album_image): ?>
 	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
-		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>">
+		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/'.$album_image->id, \Album\Site_Util::get_album_image_display_name($album_image)); ?></h5>
 			<div class="article">
@@ -18,7 +18,7 @@
 			</div>
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
 				<div class="btn-group btn_album_image_edit" id="btn_album_image_edit_<?php echo $album_image->id ?>">
-					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
+					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i></button>
 					<ul class="dropdown-menu pull-right">
 						<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>
 						<li><a href="#" class="link_album_image_set_cover" id="link_album_image_set_cover_<?php echo $album_image->id; ?>"><i class="icon-book"></i> カバーに指定</a></li>

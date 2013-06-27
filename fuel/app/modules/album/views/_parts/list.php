@@ -7,7 +7,7 @@
 <div id="main_container" class="span12">
 <?php $i = 0; ?>
 <?php foreach ($list as $album): ?>
-	<div class="main_item" id="main_item_<?php echo $album->id ?>">
+	<div class="main_item" id="main_item_<?php echo $album->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_edit_<?php echo $album->id ?>').show();" onmouseout="$('#btn_album_edit_<?php echo $album->id ?>').hide();"<?php endif; ?>>
 		<?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
 		<h5><?php echo Html::anchor('album/'.$album->id, $album->name); ?></h5>
 
