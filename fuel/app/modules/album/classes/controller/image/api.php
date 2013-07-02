@@ -22,6 +22,8 @@ class Controller_Image_api extends \Controller_Site_Api
 	 */
 	public function get_list($parent_id = null)
 	{
+		if ($this->format != 'html') throw new \HttpNotFoundException();
+
 		$page = (int)\Input::get('page', 1);
 		$response = '';
 		try
@@ -41,6 +43,7 @@ class Controller_Image_api extends \Controller_Site_Api
 
 			$response = \View::forge('image/_parts/list.php', $data);
 			$status_code = 200;
+			return \Response::forge($response, $status_code);
 		}
 		catch(\FuelException $e)
 		{

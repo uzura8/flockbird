@@ -32,7 +32,7 @@ class Site_Util
 			);
 		}
 
-		return (!empty($album_image->file->name)) ? $album_image->file->name : 'ai';
+		return (!empty($album_image)) ? $album_image->get_image() : 'ai';
 	}
 
 	public static function get_neighboring_album_image_ids($album_id, $album_image_id, $sort = 'id')

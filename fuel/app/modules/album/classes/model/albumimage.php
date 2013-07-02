@@ -118,7 +118,7 @@ class Model_AlbumImage extends \Orm\Model
 	{
 		if (!empty(self::$count_par_album_list[$album_id])) return self::$count_par_album_list[$album_id];
 
-		$query = self::find()->where('album_id', $album_id);
+		$query = self::query()->where('album_id', $album_id);
 		self::$count_par_album_list[$album_id] = $query->count();
 
 		return self::$count_par_album_list[$album_id];

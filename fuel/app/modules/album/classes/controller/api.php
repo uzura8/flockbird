@@ -20,6 +20,8 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function get_list()
 	{
+		if ($this->format != 'html') throw new \HttpNotFoundException();
+
 		$page      = (int)\Input::get('page', 1);
 		$member_id = (int)\Input::get('member_id', 0);
 		$response = '';
@@ -35,6 +37,7 @@ class Controller_Api extends \Controller_Site_Api
 
 			$response = \View::forge('_parts/list.php', $data);
 			$status_code = 200;
+			return \Response::forge($response, $status_code);
 		}
 		catch(\Exception $e)
 		{

@@ -63,6 +63,7 @@ class Controller_Album extends \Controller_Site
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
+			'related' => 'member',
 			'where' => array('member_id', $member->id),
 			'limit' => \Config::get('album.article_list.limit'),
 			'order_by' => array('created_at' => 'desc'),

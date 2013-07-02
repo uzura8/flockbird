@@ -20,6 +20,8 @@ class Controller_Comment_Api extends \Controller_Site_Api
 	 */
 	public function get_list($parent_id = null)
 	{
+		if ($this->format != 'html') throw new \HttpNotFoundException();
+
 		$response = '';
 		try
 		{
@@ -43,6 +45,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('_parts/comment/list.php', $data);
 			$status_code = 200;
+			return \Response::forge($response, $status_code);
 		}
 		catch(\Exception $e)
 		{
