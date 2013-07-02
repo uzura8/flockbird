@@ -1,11 +1,10 @@
 <?php $is_api_request = Site_Util::check_is_api_request(); ?>
-<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
+<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
 <?php if (!$is_api_request): ?><?php echo \Config::get('album.term.album'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div class="row-fluid">
 <div id="main_container" class="span12">
-<?php $i = 0; ?>
 <?php foreach ($list as $album): ?>
 	<div class="main_item" id="main_item_<?php echo $album->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_edit_<?php echo $album->id ?>').show();" onmouseout="$('#btn_album_edit_<?php echo $album->id ?>').hide();"<?php endif; ?>>
 		<?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
@@ -36,18 +35,18 @@
 <?php endif; ?>
 		</div>
 	</div>
-<?php $i++; ?>
 <?php endforeach; ?>
 </div>
 </div>
+<?php endif; ?>
 
-<?php if ($is_next): ?>
+<?php if (!$is_api_request && $is_next): ?>
 <nav id="page-nav">
 <?php
-$uri = sprintf('album/api/list.html?page=%d&amp;nocache=%s', $page + 1, time());
-if (!empty($member_id)) $uri .= '&amp;member_id='.$member_id;
+$uri = sprintf('album/api/list.html?hoge=%d', $page + 1);
+if (!empty($member)) $uri .= '&member_id='.$member->id;
+echo Html::anchor($uri, '');
 ?>
-	<a href="<?php echo Uri::create($uri); ?>"></a>
 </nav>
 <?php endif; ?>
-<?php endif; ?>
+<?php if ($is_api_request): ?></body></html><?php endif; ?>

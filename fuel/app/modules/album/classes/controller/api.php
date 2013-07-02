@@ -22,7 +22,7 @@ class Controller_Api extends \Controller_Site_Api
 	{
 		if ($this->format != 'html') throw new \HttpNotFoundException();
 
-		$page      = (int)\Input::get('page', 1);
+		$page      = (int)\Input::get('hoge', 1);
 		$member_id = (int)\Input::get('member_id', 0);
 		$response = '';
 		try

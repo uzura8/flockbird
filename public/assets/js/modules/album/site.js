@@ -51,7 +51,7 @@ function load_masonry_item(container_attribute, item_attribute)
 	$container.infinitescroll({
 		navSelector  : '#page-nav',   // ページのナビゲーションを選択
 		nextSelector : '#page-nav a', // 次ページへのリンク
-		itemSelector : '.main_item',    // 持ってくる要素のclass
+		itemSelector : item_attribute,    // 持ってくる要素のclass
 		loading: {
 				finishedMsg: finished_msg, //次のページがない場合に表示するテキスト
 				img: loading_image_url //ローディング画像のパス
