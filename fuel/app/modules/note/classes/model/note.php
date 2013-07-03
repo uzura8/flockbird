@@ -64,7 +64,7 @@ class Model_Note extends \Orm\Model
 	{
 		if (!$id) return false;
 
-		$obj = self::find()->where('id', $id)->related('member')->get_one();
+		$obj = self::find($id);
 		if (!$obj) return false;
 
 		if ($target_member_id && $obj->member_id != $target_member_id) return false;

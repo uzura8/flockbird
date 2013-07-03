@@ -41,6 +41,7 @@ class Controller_Note extends \Controller_Site
 			'limit' => \Config::get('note.article_list.limit'),
 		), 'Note');
 		$this->template->content = \View::forge('_parts/list', $data);
+		$this->template->post_footer = \View::forge('_parts/list_footer');
 	}
 
 	/**
@@ -65,6 +66,7 @@ class Controller_Note extends \Controller_Site
 		), 'Note');
 		$data['member'] = $member;
 		$this->template->content = \View::forge('_parts/list', $data);
+		$this->template->post_footer = \View::forge('_parts/list_footer');
 	}
 
 	/**

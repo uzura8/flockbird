@@ -43,10 +43,11 @@
 <?php if (!$is_api_request && $is_next): ?>
 <nav id="page-nav">
 <?php
-$uri = sprintf('album/api/list.html?hoge=%d', $page + 1);
+$uri = sprintf('album/api/list.html?page=%d', $page + 1);
 if (!empty($member)) $uri .= '&member_id='.$member->id;
 echo Html::anchor($uri, '');
 ?>
 </nav>
 <?php endif; ?>
+
 <?php if ($is_api_request): ?></body></html><?php endif; ?>

@@ -86,7 +86,7 @@ class Model_Album extends \Orm\Model
 
 	public static function delete_all($id)
 	{
-		if (!$id || !$album = self::find()->where('id', $id)->get_one())
+		if (!$id || !$album = self::find($id))
 		{
 			throw new \Exception('Invalid album id.');
 		}

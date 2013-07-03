@@ -1,9 +1,11 @@
+<?php $is_api_request = Site_Util::check_is_api_request(); ?>
+<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
 <?php echo \Config::get('site.term.note'); ?>がありません。
 <?php else: ?>
 <div id="article_list">
 <?php foreach ($list as $id => $note): ?>
-	<div class="article">
+	<div class="article" id="article_<?php echo $id; ?>">
 		<div class="header">
 			<h4><?php echo Html::anchor('note/'.$id, $note->title); ?></h4>
 			<div class="list_subtitle">
@@ -13,7 +15,7 @@
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
 					<ul class="dropdown-menu pull-right">
 						<li><?php echo Html::anchor('note/edit/'.$id, '<i class="icon-pencil"></i> 編集'); ?></li>
-						<li><a href="#" onclick="delete_item('note/api/delete.json', <?php echo $id; ?>, '#main_item');return false;"><i class="icon-trash"></i> 削除</a></li>
+						<li><a href="#" onclick="delete_item('note/api/delete.json', <?php echo $id; ?>, '#article');return false;"><i class="icon-trash"></i> 削除</a></li>
 					</ul>
 				</div><!-- /btn-group -->
 <?php endif; ?>
@@ -54,6 +56,12 @@
 
 <?php if ($is_next): ?>
 <nav id="page-nav">
-	<a href="<?php echo Uri::create(sprintf('note/api/list.html?page=%d', $page + 1)); ?>"></a>
+<?php
+$uri = sprintf('note/api/list.html?page=%d', $page + 1);
+if (!empty($member)) $uri .= '&member_id='.$member->id;
+echo Html::anchor($uri, '');
+?>
 </nav>
 <?php endif; ?>
+
+<?php if ($is_api_request): ?></body></html><?php endif; ?>

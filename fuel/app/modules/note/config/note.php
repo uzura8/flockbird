@@ -5,7 +5,7 @@ return array(
 	'note' => '日記',
 	),
 	'article_list' => array(
-		'limit' => 20,
+		'limit' => 10,
 		'trim_width' => 2000,
 	),
 );

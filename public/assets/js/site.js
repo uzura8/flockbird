@@ -236,3 +236,17 @@ function set_datetimepicker(attribute)
 		sliderAccessArgs: { touchonly: false }
 	});
 }
+
+function load_item(container_attribute, item_attribute)
+{
+	var finished_msg = (arguments.length > 3) ? arguments[3] : '';
+	var loading_image_url = (arguments.length > 4) ? arguments[4] : get_url('assets/img/site/loading_l.gif');
+
+	var $container = $(container_attribute);
+	$container.infinitescroll({
+		navSelector  : '#page-nav',   // ページのナビゲーションを選択
+		nextSelector : '#page-nav a', // 次ページへのリンク
+		itemSelector : item_attribute,    // 持ってくる要素のclass
+		loadingImg   : loading_image_url,
+	});
+}

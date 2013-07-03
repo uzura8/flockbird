@@ -1,5 +1,5 @@
 <?php
-namespace Album;
+namespace Note;
 
 class Controller_Api extends \Controller_Site_Api
 {
@@ -29,14 +29,15 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$params = array(
 				'related' => 'member',
-				'limit' => \Config::get('album.article_list.limit'),
+				'limit' => \Config::get('note.article_list.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			);
 			if ($member_id) $params['where'] = array('member_id', $member_id);
-			$data = \Site_Model::get_simple_pager_list('album', $page, $params, 'Album');
+			$data = \Site_Model::get_simple_pager_list('note', $page, $params, 'Note');
 
 			$response = \View::forge('_parts/list.php', $data);
 			$status_code = 200;
+
 			return \Response::forge($response, $status_code);
 		}
 		catch(\Exception $e)
@@ -48,7 +49,7 @@ class Controller_Api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Album delete
+	 * Note delete
 	 * 
 	 * @access  public
 	 * @return  Response
@@ -62,14 +63,13 @@ class Controller_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
-			if (!$id || !$album = Model_Album::check_authority($id, $this->u->id))
+			if (!$id || !$note = Model_Note::check_authority($id, $this->u->id))
 			{
 				throw new \HttpNotFoundException;
 			}
 
 			\DB::start_transaction();
-			Model_Album::delete_all($id);
-			\Model_Member::recalculate_filesize_total($this->u->id);
+			$note->delete();
 			\DB::commit_transaction();
 
 			$response['status'] = 1;
