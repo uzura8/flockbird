@@ -45,7 +45,12 @@ function load_masonry_item(container_attribute, item_attribute)
 	var $container = $(container_attribute);
 	$container.imagesLoaded(function(){
 		$container.masonry({
-			itemSelector : item_attribute
+			itemSelector : item_attribute,
+			isFitWidth: true,
+			isAnimated: true,
+			animationOptions: {
+					duration: 400
+			}
 		});
 	});
 	$container.infinitescroll({

@@ -8,6 +8,10 @@ body {
   }
 }
 
+div#main div.row-fluid div#main_container {
+	margin: 0 auto;
+}
+
 .sidebar-nav {
 	padding: 9px 0;
 }
