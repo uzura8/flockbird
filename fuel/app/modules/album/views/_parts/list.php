@@ -4,7 +4,7 @@
 <?php if (!$is_api_request): ?><?php echo \Config::get('album.term.album'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div class="row-fluid">
-<div id="main_container" class="span12">
+<div id="main_container">
 <?php foreach ($list as $album): ?>
 	<div class="main_item" id="main_item_<?php echo $album->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_edit_<?php echo $album->id ?>').show();" onmouseout="$('#btn_album_edit_<?php echo $album->id ?>').hide();"<?php endif; ?>>
 		<?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
@@ -40,7 +40,7 @@
 </div>
 <?php endif; ?>
 
-<?php if (!$is_api_request && $is_next): ?>
+<?php if ($is_next): ?>
 <nav id="page-nav">
 <?php
 $uri = sprintf('album/api/list.html?page=%d', $page + 1);

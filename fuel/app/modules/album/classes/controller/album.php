@@ -59,7 +59,7 @@ class Controller_Album extends \Controller_Site
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('album.term.album')), null, $member);
-		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
+		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(

@@ -215,6 +215,14 @@ div#popup_container.ui-draggable #popup_message {
 	overflow:hidden;
 }
 
+#main_container .main_item .subinfo {
+	word-break:break-all;
+	word-wrap:break-word;
+	overflow:hidden;
+	line-height: 10px;
+	margin-bottom: 10px;
+}
+
 #infscr-loading {
 	margin-left: -100px;
 	width: 200px;

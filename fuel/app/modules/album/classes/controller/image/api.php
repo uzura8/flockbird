@@ -6,6 +6,8 @@ class AlreadySetToCoverException extends \FuelException {}
 class Controller_Image_api extends \Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
+		'get_list',
+		'get_member',
 		'get_comments',
 	);
 
@@ -20,29 +22,86 @@ class Controller_Image_api extends \Controller_Site_Api
 	 * @access  public
 	 * @return  Response (html)
 	 */
-	public function get_list($parent_id = null)
+	public function get_list()
 	{
 		if ($this->format != 'html') throw new \HttpNotFoundException();
 
-		$page = (int)\Input::get('page', 1);
+		$page      = (int)\Input::get('page', 1);
+		$album_id  = (int)\Input::get('album_id', 0);
+		$member_id = (int)\Input::get('member_id', 0);
+
+		$album  = null;
+		$member = null;
 		$response = '';
+
 		try
 		{
-			if (!$album = Model_Album::check_authority($parent_id))
+			if ($album_id && !$album = Model_Album::check_authority($album_id))
 			{
 				throw new \HttpNotFoundException;
 			}
+			if ($member_id) list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id);
+			if ($album && $member) $member = null;
+
+			$data = array('album' => null, 'member' => null);
 			$params = array(
-				'where' => array('album_id', $parent_id),
-				'related' => 'file',
-				'limit' => \Config::get('album.article_list.limit'),
+				'related'  => array('file'),
+				'limit'    => \Config::get('album.article_list.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			);
+			if ($album)
+			{
+				$params['where'] = array('album_id', $album_id);
+			}
+			elseif ($member)
+			{
+				$params['related'] = array('file', 'album');
+				$params['where']   = array('t2.member_id', $member_id);
+			}
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, $params, 'Album');
-			$data['album'] = $album;
+			if (!empty($album))  $data['album']  = $album;
+			if (!empty($member)) $data['member'] = $member;
 
 			$response = \View::forge('image/_parts/list.php', $data);
 			$status_code = 200;
+
+			return \Response::forge($response, $status_code);
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
+	 * Api member
+	 * 
+	 * @access  public
+	 * @return  Response (html)
+	 */
+	public function get_member()
+	{
+		if ($this->format != 'html') throw new \HttpNotFoundException();
+
+		$page      = (int)\Input::get('page', 1);
+		$member_id = (int)\Input::get('member_id', 0);
+
+		$response = '';
+		try
+		{
+			list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id);
+			$data = \Site_Model::get_simple_pager_list('album_image', $page, array(
+				'related' => array('file', 'album'),
+				'where' => array('t2.member_id', $member_id),
+				'limit' => \Config::get('album.article_list.limit'),
+				'order_by' => array('created_at' => 'desc'),
+			), 'Album');
+			$data['member'] = $member;
+			$response = \View::forge('image/_parts/list.php', $data);
+			$status_code = 200;
+
 			return \Response::forge($response, $status_code);
 		}
 		catch(\FuelException $e)

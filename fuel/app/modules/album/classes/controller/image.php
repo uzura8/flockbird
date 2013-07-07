@@ -5,7 +5,9 @@ class Controller_Image extends \Controller_Site
 {
 	protected $check_not_auth_action = array(
 		'index',
+		'list',
 		'detail',
+		'member',
 	);
 
 	public function before()
@@ -15,9 +17,35 @@ class Controller_Image extends \Controller_Site
 
 	public function action_index($id = null)
 	{
-		$this->action_detail();
+		$this->action_list();
 	}
 
+	/**
+	 * Album image list
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_list()
+	{
+		$this->set_title_and_breadcrumbs(sprintf('%s一覧', \Config::get('album.term.album_image')), array(sprintf('%s一覧', \Config::get('album.term.album')) => 'album'));
+		$this->template->post_footer = \View::forge('_parts/list_footer');
+
+		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
+			'related' => array('file', 'album'),
+			'limit' => \Config::get('album.article_list.limit'),
+			'order_by' => array('created_at' => 'desc'),
+		), 'Album');
+		$this->template->content = \View::forge('image/_parts/list', $data);
+	}
+
+	/**
+	 * Album image detail
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
 	public function action_detail($id = null)
 	{
 		$id = (int)$id;
@@ -35,6 +63,32 @@ class Controller_Image extends \Controller_Site
 		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
 		list($data['before_id'], $data['after_id']) =  Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
 		$this->template->content = \View::forge('image/detail.php', $data);
+	}
+
+	/**
+	 * Album image member
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_member($member_id = null)
+	{
+		$member_id = (int)$member_id;
+		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
+
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('album.term.album_image')), null, $member);
+		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
+		$this->template->post_footer = \View::forge('_parts/list_footer');
+
+		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
+			'related' => array('file', 'album'),
+			'where' => array('t2.member_id', $member_id),
+			'limit' => \Config::get('album.article_list.limit'),
+			'order_by' => array('created_at' => 'desc'),
+		), 'Album');
+		$data['member'] = $member;
+		$this->template->content = \View::forge('image/_parts/list', $data);
 	}
 
 	public function action_create($note_id = null)
