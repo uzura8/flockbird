@@ -45,6 +45,11 @@ class Controller_Welcome extends Controller
 		return Response::forge(ViewModel::forge('welcome/hello'));
 	}
 
+	public function action_test()
+	{
+		return Response::forge(View::forge('welcome/test'));
+	}
+
 	/**
 	 * The 404 action for the application.
 	 *
