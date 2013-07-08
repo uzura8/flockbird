@@ -28,10 +28,11 @@ class Site_Util
 		return false;
 	}
 
-	public static function get_form_instance($name = 'default', $model_obj = null, $with_submit_button = false)
+	public static function get_form_instance($name = 'default', $model_obj = null, $with_submit_button = false, $is_horizontal = true)
 	{
 		$form = Fieldset::forge($name);
-		$form->set_config('form_attributes', array('class' => 'form-horizontal'));
+		$attributes = $is_horizontal ? array('class' => 'form-horizontal') : array();
+		$form->set_config('form_attributes', $attributes);
 		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
 
 		if ($model_obj) $form->add_model($model_obj);

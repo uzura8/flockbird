@@ -50,6 +50,36 @@ class Controller_Site_Api extends Controller_Base_Api
 	{
 		return (Auth::check() && $member_id == $this->u->id);
 	}
+
+	/**
+	 * Api login
+	 * 
+	 * @access  public
+	 * @return  Response (html)
+	 */
+	public function get_login()
+	{
+		if ($this->format != 'html') throw new HttpNotFoundException();
+
+		$destination = Input::get('destination', '');
+
+		$response = '';
+		try
+		{
+			$form = Site_Form::login($destination, 'login-popover', false, 'input-xlarge');
+			$response = View::forge('site/_parts/login');
+			$response->set_safe('html_form', $form->build('site/login'));
+			$status_code = 200;
+
+			return Response::forge($response, $status_code);
+		}
+		catch(Exception $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
 }
 
 class SiteApiNotAuthorizedException extends \FuelException {}

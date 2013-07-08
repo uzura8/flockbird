@@ -81,17 +81,9 @@
 				</ul>
 			</div><!--/.nav-collapse -->
 <?php else: ?>
-			<div class="btn-group pull-right">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
-					<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-<?php foreach (Config::get('navigation.site.insecure_user_dropdown') as $name => $path): ?>
-					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
-<?php endforeach; ?>
-				</ul>
-			</div>
+			<a href="#" id="insecure_user_menu" class="btn pull-right" data-content="<div id='insecure_user_popover'></div>" data-placement="bottom">
+				<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
+			</a>
 			<div class="nav-collapse">
 				<ul class="nav">
 <?php	$i = 1; ?>
@@ -106,7 +98,7 @@
 						</ul>
 						</li>
 <?php 	else: ?>
-					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($value, $name); ?></li>
+					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($value, $name); ?></li>
 <?php 	endif; ?>
 <?php		$i++; ?>
 <?php endforeach; ?>
@@ -240,6 +232,17 @@ function get_term(key) {
 	return terms[key];
 }
 </script>
+<?php if (!Auth::check()): ?>
+<?php echo Asset::js('bootstrap-popover.js');?>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+	$('#insecure_user_menu').popover({html: true})
+	$('#insecure_user_menu').click(function(){
+			$('#insecure_user_popover').load('<?php echo Uri::create('site/api/login').'?destination='.urlencode(Input::server('REQUEST_URI')); ?>');
+	})
+});
+</script>
+<?php endif; ?>
 <?php echo Asset::js('util.js');?>
 <?php echo Asset::js('site.js');?>
 <?php echo site_htmltag_include_js_module();?>

@@ -25,10 +25,6 @@ return array(
 			'Settings' => 'member/setting/',
 			'Sign out' => 'site/logout/',
 		),
-		'insecure_user_dropdown' => array(
-			'Sign in' => 'site/login/',
-			'Sign up' => 'member/signup/',
-		),
 		'global_side' => array(
 			'Top' => '/',
 			Config::get('note.term.note') => 'note/',

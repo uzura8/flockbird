@@ -12,6 +12,7 @@
 class Controller_Site extends Controller_Base
 {
 	protected $check_not_auth_action = array(
+		'index',
 		'login',
 	);
 
@@ -58,21 +59,26 @@ class Controller_Site extends Controller_Base
 		$this->template->content = View::forge('site/index');
 	}
 
+	/**
+	 * The login.
+	 * 
+	 * @access  public
+	 * @return  Response or void
+	 */
 	public function action_login()
 	{
 		// Already logged in
 		Auth::check() and Response::redirect('member');
 
-		$val = Validation::forge();
+		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
+		$form = Site_Form::login($destination);
 
 		if (Input::method() == 'POST')
 		{
-			$val->add('email', 'メールアドレス')->add_rule('required');
-			$val->add('password', 'パスワード')->add_rule('required');
-			$val->add('destination');
-
+			$val = $form->validation();
 			if ($val->run())
 			{
+				Util_security::check_csrf();
 				$auth = Auth::instance();
 
 				// check the credentials. This assumes that you have the previous table created
@@ -92,8 +98,8 @@ class Controller_Site extends Controller_Base
 		}
 
 		$this->set_title_and_breadcrumbs('ログイン');
-		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
-		$this->template->content = View::forge('site/login', array('val' => $val, 'destination' => $destination));
+		$this->template->content = View::forge('site/_parts/login');
+		$this->template->content->set_safe('html_form', $form->build('site/login'));
 	}
 
 	/**
