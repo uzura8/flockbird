@@ -35,7 +35,7 @@ class Controller_Api extends \Controller_Site_Api
 			if ($member_id) $params['where'] = array('member_id', $member_id);
 			$data = \Site_Model::get_simple_pager_list('album', $page, $params, 'Album');
 
-			$response = \View::forge('_parts/list.php', $data);
+			$response = \View::forge('_parts/list', $data);
 			$status_code = 200;
 			return \Response::forge($response, $status_code);
 		}

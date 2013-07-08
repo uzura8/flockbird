@@ -43,7 +43,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 
 			$data = array('comments' => $comments, 'parent' => $note, 'is_all_records' => $is_all_records);
 			if ($limit) $data['show_more_link'] = true;
-			$response = \View::forge('_parts/comment/list.php', $data);
+			$response = \View::forge('_parts/comment/list', $data);
 			$status_code = 200;
 			return \Response::forge($response, $status_code);
 		}

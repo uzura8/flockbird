@@ -62,7 +62,7 @@ class Controller_Image extends \Controller_Site
 
 		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
 		list($data['before_id'], $data['after_id']) =  Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
-		$this->template->content = \View::forge('image/detail.php', $data);
+		$this->template->content = \View::forge('image/detail', $data);
 	}
 
 	/**
