@@ -234,11 +234,12 @@ function get_term(key) {
 </script>
 <?php if (!Auth::check()): ?>
 <?php echo Asset::js('bootstrap-popover.js');?>
+<?php $destination = Session::get_flash('destination') ?: urlencode(Input::server('REQUEST_URI'));?>
 <script type="text/javascript" charset="utf-8">
 $(function(){
 	$('#insecure_user_menu').popover({html: true})
 	$('#insecure_user_menu').click(function(){
-			$('#insecure_user_popover').load('<?php echo Uri::create('site/api/login').'?destination='.urlencode(Input::server('REQUEST_URI')); ?>');
+			$('#insecure_user_popover').load('<?php echo Uri::create('site/api/login').'?destination='.$destination; ?>');
 	})
 });
 </script>

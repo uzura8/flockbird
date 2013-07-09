@@ -87,7 +87,11 @@ class Controller_Site extends Controller_Base
 					// credentials ok, go right in
 					Session::set_flash('message', 'ログインしました');
 
-					if (Input::post('destination')) Response::redirect(urldecode(Input::post('destination')));
+					$redirect_uri = urldecode($destination);
+					if ($redirect_uri && Util_string::check_uri_for_redilrect($redirect_uri))
+					{
+						Response::redirect($redirect_uri);
+					}
 					Response::redirect('member');
 				}
 				else

@@ -10,7 +10,7 @@
 define('PRJ_ENVIRONMENT', 'DEVELOPMENT');
 
 // BASE_URL
-define('PRJ_HOSTNAME', 'torilife.info');
+define('PRJ_DOMAIN', 'torilife.info');
 define('PRJ_URI_PATH', '/');
 
 // DBサーバ接続設定

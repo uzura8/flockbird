@@ -63,4 +63,18 @@ class Util_string
 
 		return false;
 	}
+
+	public static function check_uri_for_redilrect($target_uri, $domain = '')
+	{
+		// URLとして許可されている文字以外は許可しない
+		if (!mb_ereg('\A[-_.!~*\'();\/?:@&=+\$,%#a-zA-Z0-9]*\z', $target_uri)) return false;
+
+		// ドメイン未指定時に外部のドメインの指定は許可しない
+		if (!$domain && preg_match('`^(https?:)?//`', $target_uri)) return false;
+
+		// ドメイン指定時に指定したドメイン以外は許可しない
+		if ($domain && !preg_match('`^(https?:)?//'.str_replace('.', '\.', $domain).'`', $target_uri)) return false;
+
+		return true;
+	}
 }
