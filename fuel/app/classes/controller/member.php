@@ -238,7 +238,7 @@ class Controller_Member extends Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs('メンバー登録確認', array(Config::get('site.term.signup') => 'member/signup'));
+		$this->set_title_and_breadcrumbs('メンバー登録確認', array('member/signup' => Config::get('site.term.signup')));
 		$data = array('val' => $val, 'member_pre' => $member_pre);
 		$this->template->content = View::forge('member/register', $data);
 	}
@@ -259,7 +259,7 @@ class Controller_Member extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(Config::get('site.term.member_leave'), array('設定変更' => '/member/setting/'), $this->u);
+		$this->set_title_and_breadcrumbs(Config::get('site.term.member_leave'), array('/member/setting/' => '設定変更'), $this->u);
 		$this->template->content = View::forge('member/leave');
 		$this->template->content->set_safe('html_form', $form->build('/member/leave_confirm'));// form の action に入る
 	}
@@ -280,7 +280,7 @@ class Controller_Member extends Controller_Site
 		{
 			$this->set_title_and_breadcrumbs(
 				Config::get('site.term.member_leave').'確認',
-				array('設定変更' => '/member/setting/', Config::get('site.term.member_leave') => '/member/leave/'),
+				array('/member/setting/' => '設定変更', '/member/leave/' => Config::get('site.term.member_leave')),
 				$this->u
 			);
 			$this->template->content = View::forge('member/leave_confirm', array('input' => $val->validated()));

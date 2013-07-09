@@ -183,7 +183,7 @@ class Controller_Note extends \Controller_Site
 			$form->populate($note);
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('site.term.note').'を編集する', array($note->title => '/note/'.$id), $note->member, 'note');
+		$this->set_title_and_breadcrumbs(\Config::get('site.term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
 		$this->template->content = \View::forge('edit', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('note/edit/'.$id));// form の action に入る
 	}

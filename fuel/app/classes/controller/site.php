@@ -163,32 +163,31 @@ class Controller_Site extends Controller_Base
 		$this->template->title = $title ?: PRJ_SITE_NAME;
 		$this->template->header_title = site_title($title);
 
-		$breadcrumbs = array(Config::get('site.term.toppage') => '/');
+		$breadcrumbs = array('/' => Config::get('site.term.toppage'));
 		if ($member_obj)
 		{
 			if ($this->check_is_mypage($member_obj->id))
 			{
-				$breadcrumbs[Config::get('site.term.myhome')] = '/member';
+				$breadcrumbs['/member'] = Config::get('site.term.myhome');
 				if ($module)
 				{
-					$key = '自分の'.\Config::get($module.'.term.'.$module).'一覧';
-					$breadcrumbs[$key] =  sprintf('/%s/member/', $module);
+					$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get($module.'.term.'.$module).'一覧';
 				}
 			}
 			else
 			{
 				$prefix = $member_obj->name.'さんの';
-				$key = $prefix.Config::get('site.term.profile');
-				$breadcrumbs[$key] = '/member/'.$member_obj->id;
+				$name = $prefix.Config::get('site.term.profile');
+				$breadcrumbs['/member/'.$member_obj->id] = $name;
 				if ($module)
 				{
-					$key = $prefix.\Config::get($module.'.term.'.$module).'一覧';
-					$breadcrumbs[$key] =  sprintf('/%s/member/%d', $module, $member_obj->id);
+					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
+					$breadcrumbs[$key] = $prefix.\Config::get($module.'.term.'.$module).'一覧';
 				}
 			}
 		}
 		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
-		$breadcrumbs[$title] = '';
+		$breadcrumbs[''] = $title;
 		$this->template->breadcrumbs = $breadcrumbs;
 	}
 

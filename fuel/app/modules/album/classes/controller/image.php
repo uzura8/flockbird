@@ -28,7 +28,7 @@ class Controller_Image extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(sprintf('%s一覧', \Config::get('album.term.album_image')), array(sprintf('%s一覧', \Config::get('album.term.album')) => 'album'));
+		$this->set_title_and_breadcrumbs(sprintf('%s一覧', \Config::get('album.term.album_image')), array('album' => sprintf('%s一覧', \Config::get('album.term.album'))));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
@@ -57,7 +57,7 @@ class Controller_Image extends \Controller_Site
 		list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($id, $record_limit);
 
 		$title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
-		$this->set_title_and_breadcrumbs($title, array($album_image->album->name => '/album/'.$album_image->album_id), $album_image->album->member, 'album');
+		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 
 		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
@@ -203,7 +203,7 @@ class Controller_Image extends \Controller_Site
 		$album_image_page_title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
 		$this->set_title_and_breadcrumbs(
 			\Config::get('album.term.album_image').'を編集する',
-			array($album_image->album->name => '/album/'.$album_image->album_id, $album_image_page_title => '/album/image/'.$id),
+			array('/album/'.$album_image->album_id => $album_image->album->name, '/album/image/'.$id => $album_image_page_title),
 			$album_image->album->member,
 			'album'
 		);

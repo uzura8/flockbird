@@ -42,7 +42,7 @@ class Controller_Member_setting extends Controller_Member
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs('パスワード変更', array('設定変更' => '/member/setting/'), $this->u);
+		$this->set_title_and_breadcrumbs('パスワード変更', array('/member/setting/' => '設定変更'), $this->u);
 		$this->template->content = View::forge('member/setting/password');
 		$this->template->content->set_safe('html_form', $form->build('/member/setting/change_password'));// form の action に入る
 	}
@@ -121,7 +121,7 @@ END;
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs('メールアドレス変更', array('設定変更' => '/member/setting/'), $this->u);
+		$this->set_title_and_breadcrumbs('メールアドレス変更', array('/member/setting/' => '設定変更'), $this->u);
 		$this->template->content = View::forge('member/setting/email');
 		$this->template->content->set_safe('html_form', $form->build('/member/setting/confirm_change_email'));// form の action に入る
 	}
@@ -261,7 +261,7 @@ END;
 
 		if (Auth::check())
 		{
-			$this->set_title_and_breadcrumbs('メールアドレス変更確認', array('設定変更' => '/member/setting/', 'メールアドレス変更' => '/member/setting/email'), $this->u);
+			$this->set_title_and_breadcrumbs('メールアドレス変更確認', array('/member/setting/' => '設定変更', '/member/setting/email' => 'メールアドレス変更'), $this->u);
 		}
 		else
 		{

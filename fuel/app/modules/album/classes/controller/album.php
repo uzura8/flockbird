@@ -126,7 +126,7 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('site.term.album_image').'アップロード', array($album->name => '/album/'.$id), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(\Config::get('site.term.album_image').'アップロード', array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_header = \View::forge('_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/upload_footer');
@@ -150,7 +150,7 @@ class Controller_Album extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs(
 			sprintf('%sの%s', $album->name, \Config::get('album.term.album_image')),
-			array($album->name => '/album/'.$id),
+			array('/album/'.$id => $album->name),
 			$album->member,
 			'album'
 		);
@@ -251,7 +251,7 @@ class Controller_Album extends \Controller_Site
 			$form->populate($album);
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('album.term.album').'を編集する', array($album->name => '/album/'.$id), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(\Config::get('album.term.album').'を編集する', array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->content = \View::forge('edit', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('album/edit/'.$id));// form の action に入る
 	}
@@ -375,7 +375,7 @@ class Controller_Album extends \Controller_Site
 			if ($error) \Session::set_flash('error', $error);
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('album.term.album_image').'管理', array($album->name => '/album/'.$id), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(\Config::get('album.term.album_image').'管理', array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->post_header = \View::forge('_parts/edit_header');
 		$this->template->post_footer = \View::forge('_parts/edit_footer');
 
