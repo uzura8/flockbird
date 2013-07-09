@@ -84,6 +84,18 @@ class Controller_Site extends Controller_Base
 				// check the credentials. This assumes that you have the previous table created
 				if (Auth::check() or $auth->login(Input::post('email'), Input::post('password')))
 				{
+					// does the user want to be remembered?
+					if (Input::param('rememberme', false))
+					{
+						// create the remember-me cookie
+						Auth::remember_me();
+					}
+					else
+					{
+						// delete the remember-me cookie if present
+						Auth::dont_remember_me();
+					}
+
 					// credentials ok, go right in
 					Session::set_flash('message', 'ログインしました');
 

@@ -10,10 +10,11 @@ $config = array(
 		'myhome'  => 'Home',
 		'profile' => 'Profile',
 		'signup'  => 'Sign Up',
-		'member_leave'  => '退会',
+		'member_leave' => '退会',
 		'guest'   => 'Guest',
 		'note'    => 'Note',
 		'left_member'  => '退会メンバー',
+		'remember_me'  => '次回から自動的にログイン',
 	),
 	'record_limit' => array(
 		'default' => array(

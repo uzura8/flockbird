@@ -335,8 +335,10 @@ div.navbar-inner .popover {
 div.navbar-inner .popover.bottom .arrow {
 	margin-left: 70px;
 }
-/*
-div.navbar-inner .popover.bottom .arrow:after {
-	margin-left: 70px;
+
+.controls input[type="checkbox"] {
+	margin: 0;
 }
-*/
+.controls label {
+	display: inline;
+}
