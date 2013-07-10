@@ -26,3 +26,5 @@ public_html
 public/media/img/m/*
 public/media/img/ai/*
 public/media/img/general/*
+
+fuel/app/views/welcome/*
