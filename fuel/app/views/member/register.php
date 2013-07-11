@@ -18,7 +18,7 @@
 		<div class="controls">
 		<?php echo Form::password('password', '', array('class' => 'span4')); ?>
 		<?php if ($val->error('password')): ?>
-		<span class="help-inline"><?php echo $val->error('password')->get_message(':label を入力してください'); ?></span>
+		<span class="help-inline error_msg"><?php echo $val->error('password')->get_message(); ?></span>
 		<?php endif; ?>
 		</div>
 	</div>

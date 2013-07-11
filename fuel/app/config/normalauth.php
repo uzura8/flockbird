@@ -3,11 +3,6 @@
 return array(
 
 	/**
-	 * DB connection, leave null to use default
-	 */
-	'db_connection' => null,
-
-	/**
 	 * This will allow the same user to be logged in multiple times.
 	 *
 	 * Note that this is less secure, as session hijacking countermeasures have to

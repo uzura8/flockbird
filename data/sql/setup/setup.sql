@@ -516,9 +516,9 @@ DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
-  `last_login` datetime NOT NULL,
-  `login_hash` varchar(255) NOT NULL DEFAULT '',
-  `file_id` varchar(255) NULL,
+  `last_login` datetime DEFAULT NULL,
+  `login_hash` varchar(255) DEFAULT NULL,
+  `file_id` varchar(255) DEFAULT NULL,
   `filesize_total` int(11) NOT NULL DEFAULT '0' COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook',
   `created_at` datetime NOT NULL,

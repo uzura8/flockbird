@@ -61,7 +61,7 @@ class Controller_Member_setting extends Controller_Member
 
 			$data = array();
 			$data['to_name']      = $this->u->name;
-			$data['to_address']   = $this->u->memberauth->email;
+			$data['to_address']   = $this->u->member_auth->email;
 			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
 			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
 			$data['subject']      = \Config::get('site.member_setting_password.subject');
@@ -241,7 +241,7 @@ END;
 					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 					return;
 				}
-				catch(Auth\NormalUserUpdateException $e)
+				catch(Auth\SimpleUserUpdateException $e)
 				{
 					Session::set_flash('error', 'そのアドレスは登録できません');
 				}
@@ -351,7 +351,7 @@ END;
 
 まだメールアドレスの変更は完了しておりません。
 
-以下のアドレスをクリックすることにより、{$site_name}メールアドレスの変更が完了します。
+以下のアドレスをクリックすることにより、メールアドレスの変更が完了します。
 {$register_url}
 
 END;

@@ -16,7 +16,7 @@ class Controller_Site_Api extends Controller_Base_Api
 	private function set_current_user()
 	{
 		$auth = Auth::instance();
-		$this->u = Auth::check() ? Model_Member::find()->where('id', $auth->get_member_id())->related('memberauth')->get_one() : null;
+		$this->u = Auth::check() ? $auth->get_member() : null;
 
 		View::set_global('u', $this->u);
 	}

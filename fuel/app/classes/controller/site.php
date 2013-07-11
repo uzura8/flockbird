@@ -30,7 +30,7 @@ class Controller_Site extends Controller_Base
 	private function set_current_user()
 	{
 		$auth = Auth::instance();
-		$this->u = Auth::check() ? Model_Member::find($auth->get_member_id(), array('rows_limit' => 1, 'related' => 'memberauth')) : null;
+		$this->u = Auth::check() ? $auth->get_member() : null;
 
 		View::set_global('u', $this->u);
 	}

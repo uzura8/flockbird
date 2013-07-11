@@ -223,7 +223,7 @@ class Controller_Member extends Controller_Site
 					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 					return;
 				}
-				catch(Auth\NormalUserUpdateException $e)
+				catch(Auth\SimpleUserUpdateException $e)
 				{
 					Session::set_flash('error', 'そのアドレスは登録できません');
 				}
@@ -312,7 +312,7 @@ class Controller_Member extends Controller_Site
 		{
 			$data = array();
 			$data['to_name']      = $this->u->name;
-			$data['to_address']   = $this->u->memberauth->email;
+			$data['to_address']   = $this->u->member_auth->email;
 			$data['from_name']    = \Config::get('site.member_leave_mail.from_name');
 			$data['from_address'] = \Config::get('site.member_leave_mail.from_mail_address');
 			$data['subject']      = \Config::get('site.member_leave_mail.subject');
@@ -503,7 +503,7 @@ END;
 					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 					return;
 				}
-				catch(Auth\NormalUserUpdateException $e)
+				catch(Auth\SimpleUserUpdateException $e)
 				{
 					Session::set_flash('error', 'パスワードの登録に失敗しました。');
 				}
