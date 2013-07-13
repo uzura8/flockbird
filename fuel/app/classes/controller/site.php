@@ -78,8 +78,6 @@ class Controller_Site extends Controller_Base
 			$val->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
 			$val->add('email', 'メールアドレス', array('type' => 'email'))->add_rule('required');
 			$val->add('password', 'パスワード')->add_rule('required');
-
-			$val = $form->validation();
 			if ($val->run())
 			{
 				Util_security::check_csrf();

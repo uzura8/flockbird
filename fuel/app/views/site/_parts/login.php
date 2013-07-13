@@ -3,8 +3,9 @@
 
 <?php if (!$is_api_request): ?><div class="well"><?php endif; ?>
 <?php
-$form_attributes = ($is_api_request) ? array() : array('class' => 'form-horizontal');
-$input_class     = ($is_api_request) ? 'input-medium' : '';
+$form_attributes = array('action' => 'site/login');
+if (!$is_api_request) $form_attributes['class'] = 'form-horizontal';
+$input_class = ($is_api_request) ? 'input-medium' : '';
 ?>
 <?php echo Form::open($form_attributes); ?>
 
