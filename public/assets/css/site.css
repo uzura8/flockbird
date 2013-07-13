@@ -62,3 +62,24 @@ body .ui-datepicker select.ui-datepicker-year
 {
 	width: 43%;
 }
+
+div.navbar-inner .popover {
+	right: 5px !important;
+}
+div.navbar-inner .popover.bottom .arrow {
+	margin-left: 10%;
+}
+
+.checkbox {
+	padding-left: 5px;
+}
+.controls input[type="checkbox"] {
+	margin: 0;
+}
+.controls label {
+	display: inline;
+}
+
+#insecure_user_popover label.checkbox {
+	font-size: 85%;
+}

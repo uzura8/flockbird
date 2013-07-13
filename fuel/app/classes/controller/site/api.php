@@ -61,14 +61,13 @@ class Controller_Site_Api extends Controller_Base_Api
 	{
 		if ($this->format != 'html') throw new HttpNotFoundException();
 
-		$destination = Input::get('destination', '');
-
 		$response = '';
 		try
 		{
-			$form = Site_Form::login($destination, 'login-popover', false, 'input-xlarge');
-			$response = View::forge('site/_parts/login');
-			$response->set_safe('html_form', $form->build('site/login'));
+			$destination = Input::get('destination', '');
+
+			$val = Validation::forge();
+			$response = View::forge('site/_parts/login', array('val' => $val, 'destination' => $destination));
 			$status_code = 200;
 
 			return Response::forge($response, $status_code);

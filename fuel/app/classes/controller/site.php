@@ -71,10 +71,14 @@ class Controller_Site extends Controller_Base
 		Auth::check() and Response::redirect('member');
 
 		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
-		$form = Site_Form::login($destination);
+		$val = Validation::forge();
 
 		if (Input::method() == 'POST')
 		{
+			$val->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
+			$val->add('email', 'メールアドレス', array('type' => 'email'))->add_rule('required');
+			$val->add('password', 'パスワード')->add_rule('required');
+
 			$val = $form->validation();
 			if ($val->run())
 			{
@@ -114,8 +118,7 @@ class Controller_Site extends Controller_Base
 		}
 
 		$this->set_title_and_breadcrumbs('ログイン');
-		$this->template->content = View::forge('site/_parts/login');
-		$this->template->content->set_safe('html_form', $form->build('site/login'));
+		$this->template->content = View::forge('site/_parts/login', array('val' => $val, 'destination' => $destination));
 	}
 
 	/**

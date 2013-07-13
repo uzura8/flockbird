@@ -8,6 +8,10 @@ body {
   }
 }
 
+.container-fluid {
+	min-width: 360px;
+}
+
 div#main div.row-fluid div#main_container {
 	margin: 0 auto;
 }
@@ -326,19 +330,4 @@ div.alert ul {
 }
 .error_msg {
 	color: #B94A48;
-}
-
-div.navbar-inner .popover {
-	right: 5px !important;
-	max-width: 340px !important;
-}
-div.navbar-inner .popover.bottom .arrow {
-	margin-left: 70px;
-}
-
-.controls input[type="checkbox"] {
-	margin: 0;
-}
-.controls label {
-	display: inline;
 }

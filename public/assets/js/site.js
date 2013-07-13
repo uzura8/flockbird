@@ -250,3 +250,28 @@ function load_item(container_attribute, item_attribute)
 		loadingImg   : loading_image_url,
 	});
 }
+
+function load_popover(link_attribute, content_attribute, content_url) {
+	$(link_attribute).popover({html: true})
+	$(link_attribute).click(function(){
+			$(content_attribute).load(content_url);
+	})
+	$(':not(body)').click(function(e){
+		e.preventDefault()
+		$(link_attribute).each(function (){
+			if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('a[data-toggle=popover]').has(e.target).length === 0){
+				$(this).popover('hide');
+				return;
+			}
+		});
+	});
+	$(window).resize(function(e) {
+		e.preventDefault()
+		$(link_attribute).each(function (){
+			if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('a[data-toggle=popover]').has(e.target).length === 0){
+				$(this).popover('hide');
+				return;
+			}
+		});
+	});
+}

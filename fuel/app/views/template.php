@@ -232,20 +232,15 @@ function get_term(key) {
 	return terms[key];
 }
 </script>
+<?php echo Asset::js('util.js');?>
+<?php echo Asset::js('site.js');?>
 <?php if (!Auth::check()): ?>
 <?php echo Asset::js('bootstrap-popover.js');?>
 <?php $destination = Session::get_flash('destination') ?: urlencode(Input::server('REQUEST_URI'));?>
 <script type="text/javascript" charset="utf-8">
-$(function(){
-	$('#insecure_user_menu').popover({html: true})
-	$('#insecure_user_menu').click(function(){
-			$('#insecure_user_popover').load('<?php echo Uri::create('site/api/login').'?destination='.$destination; ?>');
-	})
-});
+	load_popover('#insecure_user_menu', '#insecure_user_popover', '<?php echo Uri::create('site/api/login').'?destination='.$destination; ?>');
 </script>
 <?php endif; ?>
-<?php echo Asset::js('util.js');?>
-<?php echo Asset::js('site.js');?>
 <?php echo site_htmltag_include_js_module();?>
 <?php echo site_htmltag_include_js_action();?>
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
@@ -257,7 +252,6 @@ $(function(){
   <script src="../assets/js/bootstrap-scrollspy.js"></script>
   <script src="../assets/js/bootstrap-tab.js"></script>
   <script src="../assets/js/bootstrap-tooltip.js"></script>
-  <script src="../assets/js/bootstrap-popover.js"></script>
   <script src="../assets/js/bootstrap-button.js"></script>
   <script src="../assets/js/bootstrap-collapse.js"></script>
   <script src="../assets/js/bootstrap-carousel.js"></script>
