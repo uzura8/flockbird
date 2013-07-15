@@ -25,6 +25,8 @@ class Controller_Site extends Controller_Base
 
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
+		$this->template->title = PRJ_SITE_NAME;
+		$this->template->breadcrumbs = array();
 	}
 
 	private function set_current_user()
@@ -161,7 +163,7 @@ class Controller_Site extends Controller_Base
 
 	protected function set_title_and_breadcrumbs($title = '', $middle_breadcrumbs = array(), $member_obj = null, $module = null)
 	{
-		$this->template->title = $title ?: PRJ_SITE_NAME;
+		if ($title) $this->template->title = $title;
 		$this->template->header_title = site_title($title);
 
 		$breadcrumbs = array('/' => Config::get('site.term.toppage'));
