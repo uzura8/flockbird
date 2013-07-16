@@ -7,7 +7,7 @@
 <?php foreach ($list as $id => $note): ?>
 	<div class="article" id="article_<?php echo $id; ?>">
 		<div class="header">
-			<h4><?php echo Html::anchor('note/'.$id, $note->title); ?></h4>
+			<h4><?php echo Html::anchor('note/'.$id, strim($note->title, Config::get('note.articles.trim_width.title'))); ?></h4>
 			<div class="list_subtitle">
 				<?php echo render('_parts/member_contents_box', array('member' => $note->member, 'date' => array('datetime' => $note->created_at))); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>
@@ -22,8 +22,8 @@
 			</div>
 		</div>
 		<div class="body">
-			<div><?php echo nl2br(strim($note->body, Config::get('note.articles.trim_width'))) ?></div>
-<?php if (mb_strlen($note->body) > Config::get('note.articles.trim_width')): ?>
+			<div><?php echo nl2br(strim($note->body, Config::get('note.articles.trim_width.body'))) ?></div>
+<?php if (mb_strlen($note->body) > Config::get('note.articles.trim_width.body')): ?>
 			<div class="bodyMore"><?php echo Html::anchor('note/'.$id, 'もっとみる'); ?></div>
 <?php endif; ?>
 		</div>
@@ -39,7 +39,12 @@
 		<div class="list_comment">
 <?php foreach ($comments as $comment): ?>
 			<div class="commentBox" id="commentBox_<?php echo $comment->id ?>">
-				<?php echo render('_parts/member_contents_box', array('member' => $comment->member, 'content' => $comment->body, 'date' => array('datetime' => $comment->created_at))); ?>
+<?php echo render('_parts/member_contents_box', array(
+	'member' => $comment->member,
+	'content' => $comment->body,
+	'trim_width' => Config::get('note.articles.comment.trim_width'),
+	'date' => array('datetime' => $comment->created_at)
+)); ?>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $note->member_id))): ?>
 				<a class="btn btn-mini boxBtn btn_comment_delete" id="btn_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
 <?php endif; ?>

@@ -6,6 +6,13 @@ return array(
 	),
 	'articles' => array(
 		'limit' => 10,
-		'trim_width' => 2000,
+		'trim_width' => array(
+			'title' => 200,
+			'body'  => 500,
+		),
+		'comment' => array(
+			'limit' => 5,
+			'trim_width' => 200,
+		),
 	),
 );
