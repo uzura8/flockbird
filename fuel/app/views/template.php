@@ -241,9 +241,9 @@ function get_term(key) {
 	load_popover('#insecure_user_menu', '#insecure_user_popover', '<?php echo Uri::create('site/api/login').'?destination='.$destination; ?>');
 </script>
 <?php endif; ?>
+<?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
 <?php echo site_htmltag_include_js_module();?>
 <?php echo site_htmltag_include_js_action();?>
-<?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
 <!--
   <script src="../assets/js/bootstrap-transition.js"></script>
   <script src="../assets/js/bootstrap-alert.js"></script>
