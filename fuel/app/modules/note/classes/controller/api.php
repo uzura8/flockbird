@@ -29,7 +29,7 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$params = array(
 				'related' => 'member',
-				'limit' => \Config::get('note.article_list.limit'),
+				'limit' => \Config::get('note.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			);
 			if ($member_id) $params['where'] = array('member_id', $member_id);

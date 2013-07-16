@@ -5,7 +5,7 @@ return array(
 		'album'       => 'アルバム',
 		'album_image' => 'アルバム写真',
 	),
-	'article_list' => array(
+	'articles' => array(
 		'limit' => 20,
 		'trim_width' => array(
 			'name' => 100,

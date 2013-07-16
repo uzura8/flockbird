@@ -22,8 +22,8 @@
 			</div>
 		</div>
 		<div class="body">
-			<div><?php echo nl2br(strim($note->body, Config::get('note.article_list.trim_width'))) ?></div>
-<?php if (mb_strlen($note->body) > Config::get('note.article_list.trim_width')): ?>
+			<div><?php echo nl2br(strim($note->body, Config::get('note.articles.trim_width'))) ?></div>
+<?php if (mb_strlen($note->body) > Config::get('note.articles.trim_width')): ?>
 			<div class="bodyMore"><?php echo Html::anchor('note/'.$id, 'もっとみる'); ?></div>
 <?php endif; ?>
 		</div>

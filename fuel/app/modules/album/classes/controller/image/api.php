@@ -46,7 +46,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$data = array('album' => null, 'member' => null);
 			$params = array(
 				'related'  => array('file', 'album'),
-				'limit'    => \Config::get('album.article_list.limit'),
+				'limit'    => \Config::get('album.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			);
 			if ($album)
@@ -95,7 +95,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, array(
 				'related' => array('file', 'album'),
 				'where' => array('t2.member_id', $member_id),
-				'limit' => \Config::get('album.article_list.limit'),
+				'limit' => \Config::get('album.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			), 'Album');
 			$data['member'] = $member;

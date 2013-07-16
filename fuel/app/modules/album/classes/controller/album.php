@@ -41,7 +41,7 @@ class Controller_Album extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related' => 'member',
 			'order_by' => array('created_at' => 'desc'),
-			'limit' => \Config::get('album.article_list.limit'),
+			'limit' => \Config::get('album.articles.limit'),
 		), 'Album');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
@@ -65,7 +65,7 @@ class Controller_Album extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related' => 'member',
 			'where' => array('member_id', $member->id),
-			'limit' => \Config::get('album.article_list.limit'),
+			'limit' => \Config::get('album.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Album');
 		$data['member'] = $member;
@@ -90,7 +90,7 @@ class Controller_Album extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related' => 'file',
 			'where' => array('album_id', $id),
-			'limit' => \Config::get('album.article_list.limit'),
+			'limit' => \Config::get('album.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Album');
 		$data['id'] = $id;

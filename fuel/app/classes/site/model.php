@@ -6,7 +6,7 @@ class Site_Model
 		$page = (int)$page;
 		if ($page < 1) $page = 1;
 
-		$limit  = empty($params['limit']) ? \Config::get($table.'.article_list.limit', 5) : $params['limit'];
+		$limit  = empty($params['limit']) ? \Config::get($table.'.articles.limit', 5) : $params['limit'];
 		$offset = $limit * ($page - 1);
 
 		$model = 'Model_'.Util_string::camelize($table);

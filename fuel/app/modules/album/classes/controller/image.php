@@ -33,7 +33,7 @@ class Controller_Image extends \Controller_Site
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related' => array('file', 'album'),
-			'limit' => \Config::get('album.article_list.limit'),
+			'limit' => \Config::get('album.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Album');
 		$this->template->content = \View::forge('image/_parts/list', $data);
@@ -84,7 +84,7 @@ class Controller_Image extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related' => array('file', 'album'),
 			'where' => array('t2.member_id', $member_id),
-			'limit' => \Config::get('album.article_list.limit'),
+			'limit' => \Config::get('album.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Album');
 		$data['member'] = $member;

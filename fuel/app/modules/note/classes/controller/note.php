@@ -38,7 +38,7 @@ class Controller_Note extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
 			'related' => 'member',
 			'order_by' => array('created_at' => 'desc'),
-			'limit' => \Config::get('note.article_list.limit'),
+			'limit' => \Config::get('note.articles.limit'),
 		), 'Note');
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->post_footer = \View::forge('_parts/list_footer');
@@ -61,7 +61,7 @@ class Controller_Note extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
 			//'related' => 'member',
 			'where' => array('member_id', $member->id),
-			'limit' => \Config::get('note.article_list.limit'),
+			'limit' => \Config::get('note.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Note');
 		$data['member'] = $member;
