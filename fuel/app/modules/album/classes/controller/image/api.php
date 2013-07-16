@@ -45,7 +45,7 @@ class Controller_Image_api extends \Controller_Site_Api
 
 			$data = array('album' => null, 'member' => null);
 			$params = array(
-				'related'  => array('file'),
+				'related'  => array('file', 'album'),
 				'limit'    => \Config::get('album.article_list.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			);
