@@ -154,7 +154,9 @@ function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal
 	return $display;
 }
 
-function strim($string, $width, $trimmarker = '...')
+function strim($string, $width = 0, $trimmarker = '...')
 {
+	if (!$width) return $string;
+
 	return mb_strimwidth($string, 0, $width, $trimmarker);
 }

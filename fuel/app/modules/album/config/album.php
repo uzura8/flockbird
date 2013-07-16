@@ -7,7 +7,15 @@ return array(
 	),
 	'article_list' => array(
 		'limit' => 20,
-		'trim_width' => 2000,
+		'trim_width' => array(
+			'name' => 100,
+			'body'  => 500,
+			'subinfo'  => 50,
+		),
+		'comment' => array(
+			'limit' => 5,
+			'trim_width' => 200,
+		),
 	),
 	'display_setting' => array(
 		'member' => array(

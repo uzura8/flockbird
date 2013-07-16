@@ -9,12 +9,12 @@
 	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
-			<h5><?php echo Html::anchor('album/image/'.$album_image->id, \Album\Site_Util::get_album_image_display_name($album_image)); ?></h5>
+			<h5><?php echo Html::anchor('album/image/'.$album_image->id, strim(\Album\Site_Util::get_album_image_display_name($album_image), Config::get('album.article_list.trim_width.name'))); ?></h5>
 			<div class="article">
 <?php if (empty($album)): ?>
-			<div class="subinfo"><small><?php echo Config::get('album.term.album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, 30)); ?></small></div>
+			<div class="subinfo"><small><?php echo Config::get('album.term.album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.article_list.trim_width.subinfo'))); ?></small></div>
 <?php endif; ?>
-<?php list($album_image_comment, $is_all_records, $all_comment_count) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('site.record_limit.default.comment.s')); ?>
+<?php list($album_image_comment, $is_all_records, $all_comment_count) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('album.article_list.comment.limit')); ?>
 			<div class="comment_info">
 				<small><i class="icon-comment"></i> <?php echo $all_comment_count; ?></small>
 <?php if (Auth::check()): ?>
@@ -39,7 +39,8 @@
 <?php echo render('_parts/comment/list', array(
 	'parent' => (!empty($album)) ? $album : $album_image->album,
 	'comments' => $album_image_comment,
-	'is_all_records' => $is_all_records
+	'is_all_records' => $is_all_records,
+	'trim_width' => Config::get('album.article_list.comment.trim_width'),
 )); ?>
 <?php if (!$is_all_records): ?>
 			<div class="listMoreBox"><a href="<?php echo Uri::create(sprintf('album/image/%d?all_comment=1#comments', $album_image->id)); ?>">もっと見る</a></div>

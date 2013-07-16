@@ -8,11 +8,11 @@
 <?php foreach ($list as $album): ?>
 	<div class="main_item" id="main_item_<?php echo $album->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_edit_<?php echo $album->id ?>').show();" onmouseout="$('#btn_album_edit_<?php echo $album->id ?>').hide();"<?php endif; ?>>
 		<?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
-		<h5><?php echo Html::anchor('album/'.$album->id, $album->name); ?></h5>
+		<h5><?php echo Html::anchor('album/'.$album->id, strim($album->name, \Config::get('album.article_list.trim_width.name'))); ?></h5>
 
 		<?php echo render('_parts/member_contents_box', array('member' => $album->member, 'date' => array('datetime' => $album->created_at))); ?>
 		<div class="article">
-			<div class="body"><?php echo nl2br(strim($album->body, \Config::get('album.article_list.trim_width'))) ?></div>
+			<div class="body"><?php echo nl2br(strim($album->body, \Config::get('album.article_list.trim_width.body'))) ?></div>
 			<small>
 <?php if ($album_image_count = \Album\Model_AlbumImage::get_count4album_id($album->id)): ?>
 				<?php echo Html::anchor('album/slide/'.$album->id.'#slidetop', '<i class="icon-picture"></i> '.$album_image_count.' 枚'); ?>
