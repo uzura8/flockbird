@@ -41,6 +41,7 @@ Util_toolkit::include_php_files(APPPATH.'helpers');
 
 // Config load.
 Config::load('site', 'site');
+Config::load('term', 'term');
 // Config of each module load.
 $modules = Module::loaded();
 foreach ($modules as $module => $path)

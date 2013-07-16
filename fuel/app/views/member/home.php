@@ -1,4 +1,4 @@
-<h3><?php echo \Config::get('site.term.note'); ?>一覧</h3>
+<h3><?php echo \Config::get('term.note'); ?>一覧</h3>
 
 <?php if ($list): ?>
 <div id="article_list">
@@ -22,5 +22,5 @@
 <?php endforeach; ?>
 </div>
 <?php else: ?>
-<?php echo \Config::get('site.term.note'); ?>がありません。
+<?php echo \Config::get('term.note'); ?>がありません。
 <?php endif; ?>

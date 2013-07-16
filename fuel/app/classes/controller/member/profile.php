@@ -18,7 +18,7 @@ class Controller_Member_profile extends Controller_Member
 	 */
 	public function action_index()
 	{
-		$this->set_title_and_breadcrumbs(Config::get('site.term.profile'), null, $this->u);
+		$this->set_title_and_breadcrumbs(Config::get('term.profile'), null, $this->u);
 		$this->template->content = View::forge('member/profile/index');
 	}
 
@@ -30,7 +30,7 @@ class Controller_Member_profile extends Controller_Member
 	 */
 	public function action_setting_image()
 	{
-		$this->set_title_and_breadcrumbs(Config::get('site.term.profile').'写真設定', array('/member/profile/' => Config::get('site.term.profile')), $this->u);
+		$this->set_title_and_breadcrumbs(Config::get('term.profile').'写真設定', array('/member/profile/' => Config::get('term.profile')), $this->u);
 		$this->template->content = View::forge('member/profile/setting_image');
 	}
 

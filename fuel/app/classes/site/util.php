@@ -59,4 +59,17 @@ class Site_Util
 
 		return Config::get('site.login_uri.site');
 	}
+
+	public static function merge_module_configs($config, $config_name)
+	{
+		$modules = Module::loaded();
+		foreach ($modules as $module => $path)
+		{
+			Config::load($module.'::'.$config_name, $module.'_'.$config_name);
+			$module_config = Config::get($module.'_'.$config_name);
+			if (!empty($module_config)) $config = array_merge_recursive($config, $module_config);
+		}
+
+		return $config;
+	}
 }

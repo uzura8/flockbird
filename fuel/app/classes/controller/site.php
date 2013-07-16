@@ -166,12 +166,12 @@ class Controller_Site extends Controller_Base
 		if ($title) $this->template->title = $title;
 		$this->template->header_title = site_title($title);
 
-		$breadcrumbs = array('/' => Config::get('site.term.toppage'));
+		$breadcrumbs = array('/' => Config::get('term.toppage'));
 		if ($member_obj)
 		{
 			if ($this->check_is_mypage($member_obj->id))
 			{
-				$breadcrumbs['/member'] = Config::get('site.term.myhome');
+				$breadcrumbs['/member'] = Config::get('term.myhome');
 				if ($module)
 				{
 					$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get($module.'.term.'.$module).'一覧';
@@ -180,7 +180,7 @@ class Controller_Site extends Controller_Base
 			else
 			{
 				$prefix = $member_obj->name.'さんの';
-				$name = $prefix.Config::get('site.term.profile');
+				$name = $prefix.Config::get('term.profile');
 				$breadcrumbs['/member/'.$member_obj->id] = $name;
 				if ($module)
 				{

@@ -5,17 +5,6 @@ $config = array(
 		'site'  => 'site/login',
 		'admin' => 'admin/login',
 	),
-	'term' => array(
-		'toppage' => 'Top',
-		'myhome'  => 'Home',
-		'profile' => 'Profile',
-		'signup'  => 'Sign Up',
-		'member_leave' => '退会',
-		'guest'   => 'Guest',
-		'note'    => 'Note',
-		'left_member'  => '退会メンバー',
-		'remember_me'  => '次回から自動的にログイン',
-	),
 	'record_limit' => array(
 		'default' => array(
 			'comment' => array(
@@ -92,13 +81,4 @@ $config = array(
 	),
 );
 
-
-$modules = Module::loaded();
-foreach ($modules as $module => $path)
-{
-	Config::load($module.'::site', $module.'_site');
-	$module_site = Config::get($module.'_site');
-	if (!empty($module_site)) $config = array_merge_recursive($config, $module_site);
-}
-
-return $config;
+return Site_Util::merge_module_configs($config, 'site');

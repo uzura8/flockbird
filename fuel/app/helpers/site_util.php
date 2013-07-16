@@ -61,7 +61,7 @@ function site_header_keywords($keywords = '')
 
 function site_get_screen_name($u)
 {
-	if (!$u) return Config::get('site.term.guest');
+	if (!$u) return Config::get('term.guest');
 
 	return (!empty($u->name)) ? $u->name : 'メンバーID:'.$u->id;
 }

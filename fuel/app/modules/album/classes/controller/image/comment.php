@@ -68,7 +68,7 @@ class Controller_Image_comment extends \Controller_Site
 		$album_image_id = $album_image_comment->album_image_id;
 		$album_image_comment->delete();
 
-		\Session::set_flash('message', \Config::get('site.term.note').'を削除しました。');
+		\Session::set_flash('message', 'コメントを削除しました。');
 		\Response::redirect('album/image/'.$album_image_id);
 	}
 }

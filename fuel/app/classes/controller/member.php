@@ -27,7 +27,7 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_index()
 	{
-		$this->set_title_and_breadcrumbs(Config::get('site.term.myhome'));
+		$this->set_title_and_breadcrumbs(Config::get('term.myhome'));
 		$this->template->content = View::forge('member/index');
 	}
 
@@ -75,7 +75,7 @@ class Controller_Member extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(Config::get('site.term.signup'));
+		$this->set_title_and_breadcrumbs(Config::get('term.signup'));
 		$this->template->content = View::forge('member/signup', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('/member/confirm_register'));// form の action に入る
 	}
@@ -238,7 +238,7 @@ class Controller_Member extends Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs('メンバー登録確認', array('member/signup' => Config::get('site.term.signup')));
+		$this->set_title_and_breadcrumbs('メンバー登録確認', array('member/signup' => Config::get('term.signup')));
 		$data = array('val' => $val, 'member_pre' => $member_pre);
 		$this->template->content = View::forge('member/register', $data);
 	}
@@ -259,7 +259,7 @@ class Controller_Member extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(Config::get('site.term.member_leave'), array('/member/setting/' => '設定変更'), $this->u);
+		$this->set_title_and_breadcrumbs(Config::get('term.member_leave'), array('/member/setting/' => '設定変更'), $this->u);
 		$this->template->content = View::forge('member/leave');
 		$this->template->content->set_safe('html_form', $form->build('/member/leave_confirm'));// form の action に入る
 	}
@@ -279,8 +279,8 @@ class Controller_Member extends Controller_Site
 		if ($val->run() && $auth->check_password())
 		{
 			$this->set_title_and_breadcrumbs(
-				Config::get('site.term.member_leave').'確認',
-				array('/member/setting/' => '設定変更', '/member/leave/' => Config::get('site.term.member_leave')),
+				Config::get('term.member_leave').'確認',
+				array('/member/setting/' => '設定変更', '/member/leave/' => Config::get('term.member_leave')),
 				$this->u
 			);
 			$this->template->content = View::forge('member/leave_confirm', array('input' => $val->validated()));

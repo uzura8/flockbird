@@ -36,7 +36,7 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('album.term.album')));
+		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.album')));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related' => 'member',
@@ -58,7 +58,7 @@ class Controller_Album extends \Controller_Site
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('album.term.album')), null, $member);
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.album')), null, $member);
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 
@@ -126,7 +126,7 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('site.term.album_image').'アップロード', array('/album/'.$id => $album->name), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(\Config::get('term.album_image').'アップロード', array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_header = \View::forge('_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/upload_footer');
@@ -149,7 +149,7 @@ class Controller_Album extends \Controller_Site
 		$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => 'created_at'));
 
 		$this->set_title_and_breadcrumbs(
-			sprintf('%sの%s', $album->name, \Config::get('album.term.album_image')),
+			sprintf('%sの%s', $album->name, \Config::get('term.album_image')),
 			array('/album/'.$id => $album->name),
 			$album->member,
 			'album'
@@ -183,7 +183,7 @@ class Controller_Album extends \Controller_Site
 
 				if ($album and $album->save())
 				{
-					\Session::set_flash('message', \Config::get('album.term.album').'を作成しました。');
+					\Session::set_flash('message', \Config::get('term.album').'を作成しました。');
 					\Response::redirect('album/'.$album->id);
 				}
 				else
@@ -196,7 +196,7 @@ class Controller_Album extends \Controller_Site
 				\Session::set_flash('error', $val->show_errors());
 			}
 		}
-		$this->set_title_and_breadcrumbs(\Config::get('album.term.album').'を書く', null, $this->u, 'album');
+		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を書く', null, $this->u, 'album');
 
 		$form->populate($album, true);
 		$this->template->content = \View::forge('create', array('form' => $form));
@@ -232,7 +232,7 @@ class Controller_Album extends \Controller_Site
 
 				if ($album and $album->save())
 				{
-					\Session::set_flash('message', \Config::get('album.term.album').'を編集をしました。');
+					\Session::set_flash('message', \Config::get('term.album').'を編集をしました。');
 					\Response::redirect('album/'.$album->id);
 				}
 				else
@@ -251,7 +251,7 @@ class Controller_Album extends \Controller_Site
 			$form->populate($album);
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('album.term.album').'を編集する', array('/album/'.$id => $album->name), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を編集する', array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->content = \View::forge('edit', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('album/edit/'.$id));// form の action に入る
 	}
@@ -375,7 +375,7 @@ class Controller_Album extends \Controller_Site
 			if ($error) \Session::set_flash('error', $error);
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('album.term.album_image').'管理', array('/album/'.$id => $album->name), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(\Config::get('term.album_image').'管理', array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->post_header = \View::forge('_parts/edit_header');
 		$this->template->post_footer = \View::forge('_parts/edit_footer');
 
@@ -405,7 +405,7 @@ class Controller_Album extends \Controller_Site
 			Model_Album::delete_all($id);
 			\Model_Member::recalculate_filesize_total($this->u->id);
 			\DB::commit_transaction();
-			\Session::set_flash('message', \Config::get('album.term.album').'を削除しました。');
+			\Session::set_flash('message', \Config::get('term.album').'を削除しました。');
 		}
 		catch(Exception $e)
 		{

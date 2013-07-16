@@ -228,7 +228,7 @@ function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
 function is_sp() {return <?php echo (Agent::is_smartphone())? 'true' : 'false'; ?>;}
 function get_term(key) {
 	var terms = {};
-	terms['album_image'] = '<?php echo \Config::get('album.term.album_image'); ?>';
+	terms['album_image'] = '<?php echo \Config::get('term.album_image'); ?>';
 	return terms[key];
 }
 </script>

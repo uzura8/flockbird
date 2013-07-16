@@ -11,7 +11,7 @@ if (isset($size) && $size == 'ss')
 	<?php echo empty($member) ? img('m', $img_size) : img($member->get_image(), $img_size, 'member/'.$member->id); ?>
 	<div class="content">
 		<div class="main">
-			<b class="fullname"><?php echo empty($member) ? Config::get('site.term.left_member') : Html::anchor('member/'.$member->id, $member->name); ?></b>
+			<b class="fullname"><?php echo empty($member) ? Config::get('term.left_member') : Html::anchor('member/'.$member->id, $member->name); ?></b>
 <?php if (!empty($content)): ?><?php echo empty($trim_width) ? $content : strim($content, $trim_width); ?><?php endif; ?>
 		</div>
 <?php if ($date): ?>

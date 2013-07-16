@@ -28,7 +28,7 @@ class Controller_Image extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(sprintf('%s一覧', \Config::get('album.term.album_image')), array('album' => sprintf('%s一覧', \Config::get('album.term.album'))));
+		$this->set_title_and_breadcrumbs(sprintf('%s一覧', \Config::get('term.album_image')), array('album' => sprintf('%s一覧', \Config::get('term.album'))));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
@@ -77,7 +77,7 @@ class Controller_Image extends \Controller_Site
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('album.term.album_image')), null, $member);
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.album_image')), null, $member);
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 
@@ -180,7 +180,7 @@ class Controller_Image extends \Controller_Site
 					}
 					\DB::commit_transaction();
 
-					\Session::set_flash('message', \Config::get('album.term.album_image').'を編集をしました。');
+					\Session::set_flash('message', \Config::get('term.album_image').'を編集をしました。');
 					\Response::redirect('album/image/'.$album_image->id);
 				}
 				catch(Exception $e)
@@ -202,7 +202,7 @@ class Controller_Image extends \Controller_Site
 
 		$album_image_page_title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
 		$this->set_title_and_breadcrumbs(
-			\Config::get('album.term.album_image').'を編集する',
+			\Config::get('term.album_image').'を編集する',
 			array('/album/'.$album_image->album_id => $album_image->album->name, '/album/image/'.$id => $album_image_page_title),
 			$album_image->album->member,
 			'album'
@@ -237,7 +237,7 @@ class Controller_Image extends \Controller_Site
 			\Model_Member::add_filesize($this->u->id, -$deleted_filesize);
 			\DB::commit_transaction();
 
-			\Session::set_flash('message', \Config::get('album.term.album_image').'を削除しました。');
+			\Session::set_flash('message', \Config::get('term.album_image').'を削除しました。');
 		}
 		catch (Exception $e)
 		{

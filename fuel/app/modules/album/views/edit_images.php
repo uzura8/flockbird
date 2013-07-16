@@ -4,7 +4,7 @@
 
 <?php if ($album_images): ?>
 <div class="well">
-	<h4><?php echo \Config::get('album.term.album_image'); ?>一括操作</h4>
+	<h4><?php echo \Config::get('term.album_image'); ?>一括操作</h4>
 	<div class="control-group">
 		<label class="control-label">タイトル</label>
 		<div class="controls">
@@ -40,7 +40,7 @@
 <table id="album_image_list" class="table table-striped">
 <tr>
 	<th class="formParts">対象選択</th>
-	<th><?php echo \Config::get('album.term.album_image'); ?></th>
+	<th><?php echo \Config::get('term.album_image'); ?></th>
 	<th>タイトル</th>
 	<th>撮影日時</th>
 </tr>
@@ -56,7 +56,7 @@
 
 <label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
 <?php else: ?>
-	<p><?php echo \Config::get('album.term.album_image'); ?>がありません。</p>
+	<p><?php echo \Config::get('term.album_image'); ?>がありません。</p>
 <?php endif; ?>
 
 <?php echo Form::close(); ?>

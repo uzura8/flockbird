@@ -34,7 +34,7 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('note.term.note')));
+		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.note')));
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
 			'related' => 'member',
 			'order_by' => array('created_at' => 'desc'),
@@ -55,7 +55,7 @@ class Controller_Note extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('note.term.note')), null, $member);
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.note')), null, $member);
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
@@ -116,7 +116,7 @@ class Controller_Note extends \Controller_Site
 
 				if ($note and $note->save())
 				{
-					\Session::set_flash('message', \Config::get('site.term.note').'を作成しました。');
+					\Session::set_flash('message', \Config::get('term.note').'を作成しました。');
 					\Response::redirect('note/detail/'.$note->id);
 				}
 				else
@@ -130,7 +130,7 @@ class Controller_Note extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('site.term.note').'を書く', null, $this->u, 'note');
+		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を書く', null, $this->u, 'note');
 		$this->template->content = \View::forge('create', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('note/create'));// form の action に入る
 	}
@@ -164,7 +164,7 @@ class Controller_Note extends \Controller_Site
 
 				if ($note and $note->save())
 				{
-					\Session::set_flash('message', \Config::get('site.term.note').'を編集をしました。');
+					\Session::set_flash('message', \Config::get('term.note').'を編集をしました。');
 					\Response::redirect('note/detail/'.$note->id);
 				}
 				else
@@ -183,7 +183,7 @@ class Controller_Note extends \Controller_Site
 			$form->populate($note);
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('site.term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
+		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
 		$this->template->content = \View::forge('edit', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('note/edit/'.$id));// form の action に入る
 	}
@@ -205,7 +205,7 @@ class Controller_Note extends \Controller_Site
 		}
 		$note->delete();
 
-		\Session::set_flash('message', \Config::get('site.term.note').'を削除しました。');
+		\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
 		\Response::redirect('note/member');
 	}
 

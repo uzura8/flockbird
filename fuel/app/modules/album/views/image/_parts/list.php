@@ -1,7 +1,7 @@
 <?php $is_api_request = Site_Util::check_is_api_request(); ?>
 <?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php if (!$is_api_request): ?><?php echo Config::get('album.term.album_image'); ?>がありません。<?php endif; ?>
+<?php if (!$is_api_request): ?><?php echo Config::get('term.album_image'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div class="row-fluid">
 <div id="main_container">
@@ -12,7 +12,7 @@
 			<h5><?php echo Html::anchor('album/image/'.$album_image->id, strim(\Album\Site_Util::get_album_image_display_name($album_image), Config::get('album.articles.trim_width.name'))); ?></h5>
 			<div class="article">
 <?php if (empty($album)): ?>
-			<div class="subinfo"><small><?php echo Config::get('album.term.album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.articles.trim_width.subinfo'))); ?></small></div>
+			<div class="subinfo"><small><?php echo Config::get('term.album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.articles.trim_width.subinfo'))); ?></small></div>
 <?php endif; ?>
 <?php list($album_image_comment, $is_all_records, $all_comment_count) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('album.articles.comment.limit')); ?>
 			<div class="comment_info">

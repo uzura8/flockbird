@@ -1,10 +1,6 @@
 <?php
 
 return array(
-	'term' => array(
-		'album'       => 'アルバム',
-		'album_image' => 'アルバム写真',
-	),
 	'articles' => array(
 		'limit' => 20,
 		'trim_width' => array(

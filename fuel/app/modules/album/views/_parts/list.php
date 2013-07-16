@@ -1,7 +1,7 @@
 <?php $is_api_request = Site_Util::check_is_api_request(); ?>
 <?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php if (!$is_api_request): ?><?php echo \Config::get('album.term.album'); ?>がありません。<?php endif; ?>
+<?php if (!$is_api_request): ?><?php echo \Config::get('term.album'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div class="row-fluid">
 <div id="main_container">

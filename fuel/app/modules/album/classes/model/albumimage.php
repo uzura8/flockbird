@@ -69,7 +69,7 @@ class Model_AlbumImage extends \Orm\Model
 
 	public static function _init()
 	{
-		static::$_properties['name']['label'] = \Config::get('album.term.album_image').'タイトル';
+		static::$_properties['name']['label'] = \Config::get('term.album_image').'タイトル';
 	}
 
 	public static function check_authority($id, $target_member_id = 0)

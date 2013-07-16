@@ -1,7 +1,7 @@
 <?php $is_api_request = Site_Util::check_is_api_request(); ?>
 <?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php echo \Config::get('site.term.note'); ?>がありません。
+<?php echo \Config::get('term.note'); ?>がありません。
 <?php else: ?>
 <div id="article_list">
 <?php foreach ($list as $id => $note): ?>
