@@ -22,7 +22,7 @@ return array(
 			'display_delete_link' => false,
 		),
 		'detail' => array(
-			'display_upload_form' => true,
+			'display_upload_form' => false,
 			'display_slide_image' => false,
 		),
 		'upload' => array(
