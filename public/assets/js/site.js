@@ -264,5 +264,6 @@ function load_popover(link_attribute, content_attribute, content_url) {
 				}
 			});
 		});
+		return false;
 	})
 }
