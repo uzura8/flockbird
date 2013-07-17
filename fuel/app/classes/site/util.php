@@ -72,4 +72,12 @@ class Site_Util
 
 		return $config;
 	}
+
+	public static function html_entity_decode($value, $flags = null, $encoding = null)
+	{
+		is_null($flags) and $flags = \Config::get('security.htmlentities_flags', ENT_QUOTES);
+		is_null($encoding) and $encoding = \Fuel::$encoding;
+
+		return html_entity_decode($value, $flags, $encoding);
+	}
 }

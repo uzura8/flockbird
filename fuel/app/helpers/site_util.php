@@ -154,9 +154,17 @@ function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal
 	return $display;
 }
 
-function strim($string, $width = 0, $trimmarker = '...')
+function strim($string, $width = 0, $trimmarker = '...', $is_html = true)
 {
 	if (!$width) return $string;
 
-	return mb_strimwidth($string, 0, $width, $trimmarker);
+	$original_width = mb_strlen($string);
+
+	if ($is_html) $string = Site_Util::html_entity_decode($string);
+	$string = mb_strimwidth($string, 0, $width, $trimmarker);
+	if ($is_html) $string = e($string);
+
+	return $string;
 }
+
+
