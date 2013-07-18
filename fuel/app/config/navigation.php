@@ -27,7 +27,7 @@ return array(
 		),
 		'global_side' => array(
 			'Top' => '/',
-			Config::get('term.note.note') => 'note/',
+			Config::get('term.note') => 'note/',
 			Config::get('term.album') => 'album/',
 			'Sitemap' => 'sitemap/',
 			'About' => 'about/',
