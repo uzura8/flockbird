@@ -27,13 +27,12 @@ class Controller_Api extends \Controller_Site_Api
 		$response = '';
 		try
 		{
-			$params = array(
-				'related' => 'member',
-				'limit' => \Config::get('note.articles.limit'),
+			$data = \Site_Model::get_simple_pager_list('note', $page, array(
+				'related'  => 'member',
+				'where'    => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0),
+				'limit'    => \Config::get('note.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
-			);
-			if ($member_id) $params['where'] = array('member_id', $member_id);
-			$data = \Site_Model::get_simple_pager_list('note', $page, $params, 'Note');
+			), 'Note');
 
 			$response = \View::forge('_parts/list', $data);
 			$status_code = 200;

@@ -16,6 +16,7 @@ class Controller_Comment extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
+		$this->check_public_flag($note->public_flag, $note->member_id);
 
 		// Lazy validation
 		if (\Input::post('body'))

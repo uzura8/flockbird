@@ -167,4 +167,26 @@ function strim($string, $width = 0, $trimmarker = '...', $is_html = true)
 	return $string;
 }
 
+function get_public_flag_label($public_flag)
+{
+	switch ($public_flag)
+	{
+		case PRJ_PUBLIC_FLAG_ALL:
+			$label_type = ' label-info';
+			$icon       = '<i class="icon-globe icon-white"></i> ';
+			$name       = \Config::get('term.public_flag.options.all');
+			break;
+		case PRJ_PUBLIC_FLAG_MEMBER:
+			$label_type = ' label-info';
+			$icon       = '';
+			$name       = \Config::get('term.public_flag.options.member');
+			break;
+		default :
+			$label_type = ' label-important';
+			$icon       = '<i class="icon-lock icon-white"></i> ';
+			$name       = \Config::get('term.public_flag.options.private');
+			break;
+	}
 
+	return sprintf('<span class="label%s">%s%s</span>', $label_type, $icon, $name);
+}

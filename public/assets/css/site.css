@@ -83,3 +83,6 @@ div.navbar-inner .popover.bottom .arrow {
 #insecure_user_popover label.checkbox {
 	font-size: 85%;
 }
+.member_img_box_s .content span.label {
+	margin-left: 5px;
+}

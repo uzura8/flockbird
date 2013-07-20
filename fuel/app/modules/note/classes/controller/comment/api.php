@@ -35,6 +35,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
+			$this->check_public_flag($note->public_flag, $note->member_id);
 
 			$params = array();
 			if ($before_id) $params[] = array('id', '>', $before_id);
@@ -74,6 +75,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
+			$this->check_public_flag($note->public_flag, $note->member_id);
 
 			// Lazy validation
 			if (!\Input::post('body')) throw new \HttpNotFoundException;

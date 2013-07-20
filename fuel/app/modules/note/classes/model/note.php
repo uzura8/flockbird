@@ -40,10 +40,8 @@ class Model_Note extends \Orm\Model
 		),
 		'public_flag' => array(
 			'data_type' => 'integer',
-			'validation' => array('max_length' => array(1)),
-			//'validation' => array('required', 'max_length' => array(1)),
-			'default' => 0,
-			'form' => array('type' => false),
+			'validation' => array('required', 'max_length' => array(1)),
+			'form' => array('type' => 'radio', 'options' => array()),
 		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
@@ -60,11 +58,20 @@ class Model_Note extends \Orm\Model
 		),
 	);
 
+	public static function _init()
+	{
+		static::$_properties['public_flag']['form']['label'] = \Config::get('term.public_flag.label');
+		static::$_properties['public_flag']['form']['options'][PRJ_PUBLIC_FLAG_ALL]     = \Config::get('term.public_flag.options.all');
+		static::$_properties['public_flag']['form']['options'][PRJ_PUBLIC_FLAG_MEMBER]  = \Config::get('term.public_flag.options.member');
+		static::$_properties['public_flag']['form']['options'][PRJ_PUBLIC_FLAG_PRIVATE] = \Config::get('term.public_flag.options.private');
+		static::$_properties['public_flag']['form']['value'] = PRJ_PUBLIC_FLAG_ALL;
+	}
+
 	public static function check_authority($id, $target_member_id = 0)
 	{
 		if (!$id) return false;
 
-		$obj = self::find($id);
+		$obj = self::find($id, array('related' => 'member'));
 		if (!$obj) return false;
 
 		if ($target_member_id && $obj->member_id != $target_member_id) return false;

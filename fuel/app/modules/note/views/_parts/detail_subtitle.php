@@ -1,4 +1,8 @@
-<?php echo render('_parts/member_contents_box', array('member' => $note->member, 'date' => array('datetime' => $note->created_at, 'label' => '日時'))); ?>
+<?php echo render('_parts/member_contents_box', array(
+	'member' => $note->member,
+	'public_flag' => $note->public_flag,
+	'date' => array('datetime' => $note->created_at, 'label' => '日時')
+)); ?>
 <?php if (isset($u) && $u->id == $note->member_id): ?>
 <div class="btn-group">
 	<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-edit"></i> edit <span class="caret"/></button>

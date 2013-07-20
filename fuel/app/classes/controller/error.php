@@ -3,10 +3,25 @@
 class Controller_Error extends Controller_Site
 {
 	protected $check_not_auth_action = array(
+		'403',
 		'404',
 		'500',
 		'invalid',
 	);
+	
+	/**
+	 * The 403 action for the application.
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_403()
+	{
+		$this->template->title = '403 Forbidden';
+		$this->template->header_title = site_title($this->template->title);
+		$this->template->content = View::forge('error/403');
+		$this->response->status = 403;
+	}
 	
 	/**
 	 * The 404 action for the application.

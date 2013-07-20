@@ -198,4 +198,25 @@ class Controller_Site extends Controller_Base
 	{
 		return (Auth::check() && $member_id == $this->u->id);
 	}
+
+	protected function check_public_flag($public_flag, $member_id)
+	{
+		switch ($public_flag)
+		{
+			case PRJ_PUBLIC_FLAG_ALL:
+				return true;
+				break;
+			case PRJ_PUBLIC_FLAG_MEMBER:
+				if (Auth::check()) return true;
+				break;
+			//case PRJ_PUBLIC_FLAG_FRIEND:
+			//	break;
+			case PRJ_PUBLIC_FLAG_PRIVATE:
+			default :
+				if (Auth::check() && $member_id == $this->u->id) return true;
+				break;
+		}
+
+		throw new \HttpForbiddenException;
+	}
 }

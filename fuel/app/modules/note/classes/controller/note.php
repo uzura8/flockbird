@@ -36,9 +36,10 @@ class Controller_Note extends \Controller_Site
 	{
 		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.note')));
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
-			'related' => 'member',
+			'related'  => 'member',
+			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
 			'order_by' => array('created_at' => 'desc'),
-			'limit' => \Config::get('note.articles.limit'),
+			'limit'    => \Config::get('note.articles.limit')
 		), 'Note');
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->post_footer = \View::forge('_parts/list_footer');
@@ -59,9 +60,8 @@ class Controller_Note extends \Controller_Site
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
-			//'related' => 'member',
-			'where' => array('member_id', $member->id),
-			'limit' => \Config::get('note.articles.limit'),
+			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0),
+			'limit'    => \Config::get('note.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Note');
 		$data['member'] = $member;
@@ -78,10 +78,9 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_detail($id = null)
 	{
-		if (!$note = Model_Note::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		if (!$note = Model_Note::check_authority($id)) throw new \HttpNotFoundException;
+		$this->check_public_flag($note->public_flag, $note->member_id);
+
 		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
 
 		$this->set_title_and_breadcrumbs($note->title, null, $note->member, 'note');
@@ -110,9 +109,10 @@ class Controller_Note extends \Controller_Site
 				\Util_security::check_csrf();
 
 				$post = $val->validated();
-				$note->title = $post['title'];
-				$note->body = $post['body'];
-				$note->member_id = $this->u->id;
+				$note->title       = $post['title'];
+				$note->body        = $post['body'];
+				$note->public_flag = $post['public_flag'];
+				$note->member_id   = $this->u->id;
 
 				if ($note and $note->save())
 				{
@@ -159,8 +159,9 @@ class Controller_Note extends \Controller_Site
 				\Util_security::check_csrf();
 
 				$post = $val->validated();
-				$note->title = $post['title'];
-				$note->body  = $post['body'];
+				$note->title       = $post['title'];
+				$note->body        = $post['body'];
+				$note->public_flag = $post['public_flag'];
 
 				if ($note and $note->save())
 				{

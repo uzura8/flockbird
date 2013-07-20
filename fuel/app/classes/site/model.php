@@ -20,7 +20,7 @@ class Site_Model
 
 		if (!empty($params['where']))
 		{
-			if (Arr::is_multi($params['where']))
+			if (Arr::is_multi($params['where'], true))
 			{
 				foreach ($params['where'] as $where)
 				{
@@ -47,6 +47,7 @@ class Site_Model
 				}
 			}
 		}
+
 		if (!empty($params['order_by']))
 		{
 			foreach ($params['order_by'] as $key => $value)
@@ -61,5 +62,26 @@ class Site_Model
 		$is_next = ($count > $offset + $limit) ? true : false;
 
 		return array('list' => $list, 'page' => $page, 'is_next' => $is_next);
+	}
+
+	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0)
+	{
+		$where = array();
+		if ($target_member_id) $where[] = array('member_id', $target_member_id);
+
+		$is_mypage = $target_member_id && $self_member_id && $self_member_id == $target_member_id;
+		if ($self_member_id)
+		{
+			if ($self_member_id != $target_member_id)
+			{
+				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
+			}
+		}
+		else
+		{
+			$where[] = array('public_flag', PRJ_PUBLIC_FLAG_ALL);
+		}
+
+		return $where;
 	}
 }

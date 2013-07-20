@@ -46,6 +46,11 @@ switch (PRJ_ENVIRONMENT)
 		break;
 }
 
+// public_flag 定義
+define('PRJ_PUBLIC_FLAG_PRIVATE', 0);
+define('PRJ_PUBLIC_FLAG_ALL',     1);
+define('PRJ_PUBLIC_FLAG_MEMBER',  2);
+//define('PRJ_PUBLIC_FLAG_FRIEND',  3);
 
 // define default configs.
 define('PRJ_DEFAULT_CONFIG_SETTING_FILE', PRJ_BASEPATH.'config.php.sample');
