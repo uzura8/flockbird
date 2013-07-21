@@ -80,4 +80,34 @@ class Site_Util
 
 		return html_entity_decode($value, $flags, $encoding);
 	}
+
+	public static function get_public_flags()
+	{
+		$public_flags = array();
+		if (defined('PRJ_PUBLIC_FLAG_PRIVATE')) $public_flags[] = PRJ_PUBLIC_FLAG_PRIVATE;
+		if (defined('PRJ_PUBLIC_FLAG_ALL'))     $public_flags[] = PRJ_PUBLIC_FLAG_ALL;
+		if (defined('PRJ_PUBLIC_FLAG_MEMBER'))  $public_flags[] = PRJ_PUBLIC_FLAG_MEMBER;
+		//if (defined('PRJ_PUBLIC_FLAG_FRIEND'))  $public_flags[] = PRJ_PUBLIC_FLAG_FRIEND;
+
+		return $public_flags;
+	}
+
+	public static function get_have_public_flags_models()
+	{
+		return array('note', 'album_image');
+	}
+
+	public static function validate_params_public_flag($current_public_flag)
+	{
+		$public_flag = \Input::post('public_flag', null);
+		if ($public_flag === null) throw new \HttpInvalidInputException('Invalid input data');
+		$public_flag = (int)$public_flag;
+		if (!in_array($public_flag, self::get_public_flags())) throw new \HttpInvalidInputException('Invalid input data');
+		if ($current_public_flag == $public_flag) throw new \HttpInvalidInputException('Invalid input data');
+
+		$model = \Input::post('model', null);
+		if ($model === null || !in_array($model, self::get_have_public_flags_models())) throw new \HttpInvalidInputException('Invalid input data');
+
+		return array($public_flag, $model);
+	}
 }

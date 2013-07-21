@@ -90,8 +90,8 @@ img.profile_image {
 .list_subtitle {
 	position: relative;
 }
-#subtitle .btn-group,
-.list_subtitle .btn-group
+#subtitle .edit,
+.list_subtitle .edit
 {
 	position: absolute;
 	right: 0;

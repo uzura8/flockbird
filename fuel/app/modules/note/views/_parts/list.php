@@ -9,9 +9,15 @@
 		<div class="header">
 			<h4><?php echo Html::anchor('note/'.$id, strim($note->title, Config::get('note.articles.trim_width.title'))); ?></h4>
 			<div class="list_subtitle">
-				<?php echo render('_parts/member_contents_box', array('member' => $note->member, 'public_flag' => $note->public_flag, 'date' => array('datetime' => $note->created_at))); ?>
+<?php echo render('_parts/member_contents_box', array(
+	'member' => $note->member,
+	'model' => 'note',
+	'id' => $note->id,
+	'public_flag' => $note->public_flag,
+	'date' => array('datetime' => $note->created_at)
+)); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>
-				<div class="btn-group" id="btn_edit_<?php echo $id ?>">
+				<div class="btn-group edit" id="btn_edit_<?php echo $id ?>">
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
 					<ul class="dropdown-menu pull-right">
 						<li><?php echo Html::anchor('note/edit/'.$id, '<i class="icon-pencil"></i> 編集'); ?></li>

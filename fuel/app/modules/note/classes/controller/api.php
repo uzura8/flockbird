@@ -86,4 +86,53 @@ class Controller_Api extends \Controller_Site_Api
 
 		$this->response($response, $status_code);
 	}
+
+	/**
+	 * Note update public_flag
+	 * 
+	 * @access  public
+	 * @return  Response (html)
+	 */
+	public function post_update_public_flag()
+	{
+		if ($this->format != 'html') throw new \HttpNotFoundException();
+		$response = '0';
+		try
+		{
+			$this->auth_check_api();
+			\Util_security::check_csrf();
+
+			$id = (int)\Input::post('id');
+			if (!$id || !$note = Model_Note::check_authority($id, $this->u->id))
+			{
+				throw new \HttpNotFoundException;
+			}
+			list($public_flag, $model) = \Site_Util::validate_params_public_flag($note->public_flag);
+
+			\DB::start_transaction();
+			$note->public_flag = $public_flag;
+			$note->save();
+			\DB::commit_transaction();
+
+			$response = \View::forge('_parts/public_flag_selecter', array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true));
+			$status_code = 200;
+
+			return \Response::forge($response, $status_code);
+		}
+		catch(\SiteApiNotAuthorizedException $e)
+		{
+			$status_code = 401;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
+		catch(\FuelException $e)
+		{
+			\DB::rollback_transaction();
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
 }

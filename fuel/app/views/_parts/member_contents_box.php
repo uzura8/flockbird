@@ -17,6 +17,10 @@ if (isset($size) && $size == 'ss')
 <?php if ($date): ?>
 		<small><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>
 <?php endif; ?>
-<?php if (isset($public_flag)) echo get_public_flag_label($public_flag); ?>
+<?php if (isset($public_flag, $model, $id)): ?>
+<?php $is_mycontents = Auth::check() && $u->id == $member->id; ?>
+<?php echo render('_parts/public_flag_selecter', array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => $is_mycontents)); ?>
+<?php endif; ?>
+
 	</div>
 </div>

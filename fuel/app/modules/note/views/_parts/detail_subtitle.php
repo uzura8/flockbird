@@ -1,10 +1,12 @@
 <?php echo render('_parts/member_contents_box', array(
-	'member' => $note->member,
+	'member'      => $note->member,
+	'id'          => $note->id,
 	'public_flag' => $note->public_flag,
-	'date' => array('datetime' => $note->created_at, 'label' => '日時')
+	'model'       => 'note',
+	'date'        => array('datetime' => $note->created_at, 'label' => '日時')
 )); ?>
 <?php if (isset($u) && $u->id == $note->member_id): ?>
-<div class="btn-group">
+<div class="btn-group edit">
 	<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-edit"></i> edit <span class="caret"/></button>
 	<ul class="dropdown-menu pull-right">
 		<li><?php echo Html::anchor('note/edit/'.$note->id, '<i class="icon-pencil"></i> 編集'); ?></li>

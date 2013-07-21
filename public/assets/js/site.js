@@ -239,8 +239,8 @@ function set_datetimepicker(attribute)
 
 function load_item(container_attribute, item_attribute)
 {
-	var finished_msg = (arguments.length > 3) ? arguments[3] : '';
-	var loading_image_url = (arguments.length > 4) ? arguments[4] : get_url('assets/img/site/loading_l.gif');
+	var finished_msg = (arguments.length > 2) ? arguments[2] : '';
+	var loading_image_url = (arguments.length > 3) ? arguments[3] : get_url('assets/img/site/loading_l.gif');
 
 	var $container = $(container_attribute);
 	$container.infinitescroll({
@@ -266,4 +266,39 @@ function load_popover(link_attribute, content_attribute, content_url) {
 		});
 		return false;
 	})
+}
+
+function update_public_flag(selfDomElement) {
+	var id          = $(selfDomElement).data('id');
+	var model       = $(selfDomElement).data('model');
+	var public_flag = $(selfDomElement).data('public_flag');
+
+	var parentElement = $(selfDomElement).parent('li');
+	var text = $(selfDomElement).html();
+	var buttonDomElement = $('#public_flag_' + model + '_' + id).parent('.btn-group');
+
+	var post_data = {'id':id, 'public_flag':public_flag, 'model':model};
+	post_data = set_token(post_data);
+	$.ajax({
+		url : get_baseUrl() + model+'/api/update_public_flag.html',
+		type : 'POST',
+		dataType : 'text',
+		data : post_data,
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			$(selfDomElement).remove();
+			$(parentElement).html('<span>' + get_loading_image_tag( + '</span>'));
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+		},
+		success: function(result, status, xhr){
+			$(buttonDomElement).html(result);
+			$.jGrowl(get_term('public_flag') + 'を変更しました。');
+		},
+		error: function(result){
+			$(parentElement).html(selfDomElement);
+			$.jGrowl(get_term('public_flag') + 'の変更に失敗しました。');
+		}
+	});
 }

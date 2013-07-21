@@ -49,6 +49,9 @@ $config = array(
 			'max' => strtotime('+ 50 years'),
 		),
 	),
+	'public_flag' => array(
+		'default' => PRJ_PUBLIC_FLAG_PRIVATE,
+	),
 	'member_setting_common' => array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
 		'from_mail_address' => PRJ_ADMIN_MAIL,

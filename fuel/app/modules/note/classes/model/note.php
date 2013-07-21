@@ -61,10 +61,12 @@ class Model_Note extends \Orm\Model
 	public static function _init()
 	{
 		static::$_properties['public_flag']['form']['label'] = \Config::get('term.public_flag.label');
-		static::$_properties['public_flag']['form']['options'][PRJ_PUBLIC_FLAG_ALL]     = \Config::get('term.public_flag.options.all');
-		static::$_properties['public_flag']['form']['options'][PRJ_PUBLIC_FLAG_MEMBER]  = \Config::get('term.public_flag.options.member');
-		static::$_properties['public_flag']['form']['options'][PRJ_PUBLIC_FLAG_PRIVATE] = \Config::get('term.public_flag.options.private');
-		static::$_properties['public_flag']['form']['value'] = PRJ_PUBLIC_FLAG_ALL;
+		$public_flags = \Site_Util::get_public_flags();
+		foreach ($public_flags as $get_public_flag)
+		{
+			static::$_properties['public_flag']['form']['options'][$get_public_flag] = \Config::get('term.public_flag.options.'.$get_public_flag);
+		}
+		static::$_properties['public_flag']['form']['value'] = \Config::get('public_flag.default');
 	}
 
 	public static function check_authority($id, $target_member_id = 0)

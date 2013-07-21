@@ -12,9 +12,9 @@ $config = array(
 	'public_flag' => array(
 		'label' => '公開範囲',
 		'options' => array(
-			'private' => '非公開',
-			'all' => '全公開',
-			'member' => 'SNS内でのみ公開',
+			PRJ_PUBLIC_FLAG_PRIVATE => '非公開',
+			PRJ_PUBLIC_FLAG_ALL => '全公開',
+			PRJ_PUBLIC_FLAG_MEMBER => 'SNS内でのみ公開',
 			//'friend'  => 'フレンドまで公開',
 		),
 	),
