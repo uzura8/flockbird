@@ -30,10 +30,11 @@ class Controller_Image_api extends \Controller_Site_Api
 		$album_id  = (int)\Input::get('album_id', 0);
 		$member_id = (int)\Input::get('member_id', 0);
 
-		$album  = null;
-		$member = null;
-		$response = '';
+		$album     = null;
+		$member    = null;
+		$is_mypage = false;
 
+		$response  = '';
 		try
 		{
 			if ($album_id && !$album = Model_Album::check_authority($album_id))
@@ -41,23 +42,32 @@ class Controller_Image_api extends \Controller_Site_Api
 				throw new \HttpNotFoundException;
 			}
 			if ($member_id) list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id);
-			if ($album && $member) $member = null;
+			if ($album && $member)
+			{
+				$member = null;
+				$is_mypage = false;
+			}
+			if (!$is_mypage && $album) $is_mypage = $this->check_is_mypage($album->member_id);
 
 			$data = array('album' => null, 'member' => null);
 			$params = array(
 				'related'  => array('file', 'album'),
-				'limit'    => \Config::get('album.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
+				'limit'    => \Config::get('album.articles.limit'),
 			);
-			if ($album)
+
+			$target_member_id = 0;
+			$self_member_id   = \Auth::check() ? $this->u->id : 0;
+			$member_id_colmn  = null;
+			$where            = array();
+			if ($album) $where = array(array('album_id', $album_id));
+			if ($member)
 			{
-				$params['where'] = array('album_id', $album_id);
+				$target_member_id = $member->id;
+				$member_id_colmn  = 't2.member_id';
 			}
-			elseif ($member)
-			{
-				$params['related'] = array('file', 'album');
-				$params['where']   = array('t2.member_id', $member_id);
-			}
+			$params['where'] = \Site_Model::get_where_params4list($target_member_id, $self_member_id, $is_mypage, $member_id_colmn, $where);
+
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, $params, 'Album');
 			if (!empty($album))  $data['album']  = $album;
 			if (!empty($member)) $data['member'] = $member;
@@ -242,6 +252,55 @@ class Controller_Image_api extends \Controller_Site_Api
 			$status_code = 401;
 		}
 		catch(\Exception $e)
+		{
+			\DB::rollback_transaction();
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
+	 * Album image update public_flag
+	 * 
+	 * @access  public
+	 * @return  Response (html)
+	 */
+	public function post_update_public_flag()
+	{
+		if ($this->format != 'html') throw new \HttpNotFoundException();
+		$response = '0';
+		try
+		{
+			$this->auth_check_api();
+			\Util_security::check_csrf();
+
+			$id = (int)\Input::post('id');
+			if (!$id || !$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
+			{
+				throw new \HttpNotFoundException;
+			}
+			list($public_flag, $model) = \Site_Util::validate_params_public_flag($album_image->public_flag);
+
+			\DB::start_transaction();
+			$album_image->public_flag = $public_flag;
+			$album_image->save();
+			\DB::commit_transaction();
+
+			$response = \View::forge('_parts/public_flag_selecter', array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true));
+			$status_code = 200;
+
+			return \Response::forge($response, $status_code);
+		}
+		catch(\SiteApiNotAuthorizedException $e)
+		{
+			$status_code = 401;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
+		catch(\FuelException $e)
 		{
 			\DB::rollback_transaction();
 			$status_code = 400;

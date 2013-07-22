@@ -29,7 +29,7 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$data = \Site_Model::get_simple_pager_list('note', $page, array(
 				'related'  => 'member',
-				'where'    => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0),
+				'where'    => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id)),
 				'limit'    => \Config::get('note.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			), 'Note');

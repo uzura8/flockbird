@@ -271,6 +271,7 @@ function load_popover(link_attribute, content_attribute, content_url) {
 function update_public_flag(selfDomElement) {
 	var id          = $(selfDomElement).data('id');
 	var model       = $(selfDomElement).data('model');
+	var model_uri   = $(selfDomElement).data('model_uri');
 	var public_flag = $(selfDomElement).data('public_flag');
 
 	var parentElement = $(selfDomElement).parent('li');
@@ -280,7 +281,7 @@ function update_public_flag(selfDomElement) {
 	var post_data = {'id':id, 'public_flag':public_flag, 'model':model};
 	post_data = set_token(post_data);
 	$.ajax({
-		url : get_baseUrl() + model+'/api/update_public_flag.html',
+		url : get_baseUrl() + model_uri +'/api/update_public_flag.html',
 		type : 'POST',
 		dataType : 'text',
 		data : post_data,

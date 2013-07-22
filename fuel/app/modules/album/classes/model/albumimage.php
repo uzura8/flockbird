@@ -49,6 +49,11 @@ class Model_AlbumImage extends \Orm\Model
 			'validation' => array('trim', 'max_length' => array(255)),
 			'form' => array('type' => 'text', 'class' => 'input-xlarge'),
 		),
+		'public_flag' => array(
+			'data_type' => 'integer',
+			'validation' => array('required', 'max_length' => array(1)),
+			'form' => array('type' => 'radio', 'options' => array()),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
@@ -70,6 +75,14 @@ class Model_AlbumImage extends \Orm\Model
 	public static function _init()
 	{
 		static::$_properties['name']['label'] = \Config::get('term.album_image').'タイトル';
+
+		static::$_properties['public_flag']['form']['label'] = \Config::get('term.public_flag.label');
+		$public_flags = \Site_Util::get_public_flags();
+		foreach ($public_flags as $get_public_flag)
+		{
+			static::$_properties['public_flag']['form']['options'][$get_public_flag] = \Config::get('term.public_flag.options.'.$get_public_flag);
+		}
+		static::$_properties['public_flag']['form']['value'] = \Config::get('public_flag.default');
 	}
 
 	public static function check_authority($id, $target_member_id = 0)

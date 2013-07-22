@@ -94,7 +94,7 @@ class Site_Util
 
 	public static function get_have_public_flags_models()
 	{
-		return array('note', 'album_image');
+		return array('note', 'album', 'album_image');
 	}
 
 	public static function validate_params_public_flag($current_public_flag)

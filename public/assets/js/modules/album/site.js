@@ -1,3 +1,11 @@
+$(function(){
+	$(document).on('click','.update_public_flag', function(){
+		if (GL.execute_flg) return false;
+		update_public_flag(this);
+		return false;
+	});
+});
+
 function set_cover(selfDomElement) {
 	var is_disabled_after_execute = (arguments.length > 1) ? arguments[1] : false;
 

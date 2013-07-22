@@ -10,10 +10,20 @@
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/'.$album_image->id, strim(\Album\Site_Util::get_album_image_display_name($album_image), Config::get('album.articles.trim_width.name'))); ?></h5>
+			<div class="public_flag">
+<?php $is_mycontents = Auth::check() && $u->id == $album_image->album->member_id; ?>
+<?php echo render('_parts/public_flag_selecter', array(
+	'model' => 'album_image',
+	'id' => $album_image->id,
+	'public_flag' => $album_image->public_flag,
+	'is_mycontents' => $is_mycontents
+)); ?>
+			</div>
 			<div class="article">
 <?php if (empty($album)): ?>
 			<div class="subinfo"><small><?php echo Config::get('term.album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.articles.trim_width.subinfo'))); ?></small></div>
 <?php endif; ?>
+
 <?php list($album_image_comment, $is_all_records, $all_comment_count) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('album.articles.comment.limit')); ?>
 			<div class="comment_info">
 				<small><i class="icon-comment"></i> <?php echo $all_comment_count; ?></small>

@@ -32,9 +32,10 @@ class Controller_Image extends \Controller_Site
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
-			'related' => array('file', 'album'),
-			'limit' => \Config::get('album.articles.limit'),
+			'related'  => array('file', 'album'),
+			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
 			'order_by' => array('created_at' => 'desc'),
+			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$this->template->content = \View::forge('image/_parts/list', $data);
 	}
@@ -49,10 +50,9 @@ class Controller_Image extends \Controller_Site
 	public function action_detail($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album_image = Model_Albumimage::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		if (!$id || !$album_image = Model_Albumimage::check_authority($id)) throw new \HttpNotFoundException;
+		$this->check_public_flag($album_image->public_flag, $album_image->album->member_id);
+
 		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
 		list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($id, $record_limit);
 
@@ -83,7 +83,7 @@ class Controller_Image extends \Controller_Site
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related' => array('file', 'album'),
-			'where' => array('t2.member_id', $member_id),
+			'where' => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id), 't2.member_id'),
 			'limit' => \Config::get('album.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Album');

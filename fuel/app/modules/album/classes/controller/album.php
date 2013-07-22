@@ -88,10 +88,16 @@ class Controller_Album extends \Controller_Site
 		$this->template->post_footer = \View::forge('_parts/detail_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
-			'related' => 'file',
-			'where' => array('album_id', $id),
-			'limit' => \Config::get('album.articles.limit'),
+			'related'  => array('file', 'album'),
+			'where'    => \Site_Model::get_where_params4list(
+				0,
+				\Auth::check() ? $this->u->id : 0,
+				$this->check_is_mypage($album->member_id),
+				null,
+				array(array('album_id', $id))
+			),
 			'order_by' => array('created_at' => 'desc'),
+			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$data['id'] = $id;
 		$data['album'] = $album;
