@@ -114,7 +114,7 @@
 	<div class="row-fluid">
 		<div class="span9">
 
-<?php if (isset($breadcrumbs)): ?>
+<?php if (!empty($breadcrumbs)): ?>
 			<ul class="breadcrumb">
 <?php foreach ($breadcrumbs as $path => $name): ?>
 				<li><?php echo $path ? Html::anchor($path, strim($name, 30)).'<span class="divider">/</span>' : sprintf('<li class="active">%s</li>', strim($name, 30));?></li>
