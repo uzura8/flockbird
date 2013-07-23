@@ -20,6 +20,11 @@ class Controller_Media extends Controller
 			$size = $matches[1];
 		}
 
+		if (!Site_Upload::check_uploaded_file_exists($filename))
+		{
+			return new Response(null, 404);
+		}
+
 		$config = array(
 			'identifier'   => $identifier,
 			'group_number' => $group_number,
