@@ -17,7 +17,7 @@
 	<div class="control-group">
 		<?php echo Form::label(Config::get('term.public_flag.label'), 'public_flag', array('class' => 'control-label')); ?>
 		<div class="controls">
-			<?php echo Form::radio('public_flag', 99, is_null(Input::post('public_flag')), array('id' => 'form_public_flag_99')); ?>
+			<?php echo Form::radio('public_flag', 99, is_null(Input::post('public_flag')) || Input::post('public_flag') == 99, array('id' => 'form_public_flag_99')); ?>
 			<?php echo Form::label('変更しない', 'public_flag_99'); ?>
 		</div>
 <?php $public_flags = Site_Form::get_public_flag_options() ; ?>
