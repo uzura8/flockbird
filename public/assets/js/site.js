@@ -224,12 +224,12 @@ function set_datetimepicker(attribute)
 {
 	$(attribute).datetimepicker({
 		dateFormat: 'yy-mm-dd',
-		maxDate: 0,
+		hourMax: 23,
 		changeYear: true,
 		changeMonth: true,
 		prevText: '&#x3c;前',
 		nextText: '次&#x3e;',
-		timeFormat: 'hh:mm',
+		timeFormat: 'HH:mm',
 		hourGrid: 6,
 		minuteGrid: 15,
 		addSliderAccess: true,
