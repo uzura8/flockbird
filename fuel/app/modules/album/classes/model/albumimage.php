@@ -75,14 +75,8 @@ class Model_AlbumImage extends \Orm\Model
 	public static function _init()
 	{
 		static::$_properties['name']['label'] = \Config::get('term.album_image').'タイトル';
-
-		static::$_properties['public_flag']['form']['label'] = \Config::get('term.public_flag.label');
-		$public_flags = \Site_Util::get_public_flags();
-		foreach ($public_flags as $get_public_flag)
-		{
-			static::$_properties['public_flag']['form']['options'][$get_public_flag] = \Config::get('term.public_flag.options.'.$get_public_flag);
-		}
-		static::$_properties['public_flag']['form']['value'] = \Config::get('public_flag.default');
+		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
+		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 	}
 
 	public static function check_authority($id, $target_member_id = 0)

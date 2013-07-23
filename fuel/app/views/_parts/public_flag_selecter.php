@@ -1,25 +1,10 @@
 <?php
-switch ($public_flag)
-{
-	case PRJ_PUBLIC_FLAG_ALL:
-		$type = ' btn-info';
-		$icon = '<i class="icon-globe icon-white"></i> ';
-		break;
-	case PRJ_PUBLIC_FLAG_MEMBER:
-		$type = ' btn-success';
-		$icon = '';
-		break;
-	default :
-		$type = ' btn-danger';
-		$icon = '<i class="icon-lock icon-white"></i> ';
-		break;
-}
-$name = \Config::get('term.public_flag.options.'.$public_flag);
+list($name, $icon, $btn_color) = get_public_flag_label($public_flag);
 $model_uri = str_replace('_', '/', $model);
 ?>
 <?php if (isset($is_mycontents) && $is_mycontents): ?>
 <div class="btn-group">
-	<button class="btn dropdown-toggle btn-mini<?php echo $type; ?>" id="public_flag_<?php echo $model; ?>_<?php echo $id; ?>" data-toggle="dropdown">
+	<button class="btn dropdown-toggle btn-mini<?php echo $btn_color; ?>" id="public_flag_<?php echo $model; ?>_<?php echo $id; ?>" data-toggle="dropdown">
 		<?php echo $icon.$name; ?><span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu pull-right">
@@ -35,5 +20,5 @@ $model_uri = str_replace('_', '/', $model);
 	</ul>
 </div>
 <?php else: ?>
-<span class="btn btn-mini<?php echo $type; ?>"><?php echo $icon.$name; ?></span>
+<span class="btn btn-mini<?php echo $btn_color; ?>"><?php echo $icon.$name; ?></span>
 <?php endif; ?>

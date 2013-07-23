@@ -318,6 +318,13 @@ span.required {
 	margin-right: 3px;
 }
 
+.controls input[type="radio"],
+.controls input[type="checkbox"]
+{
+	position: relative;
+	top: -0.2em;
+}
+
 .page-header h2,
 .header h4
 {

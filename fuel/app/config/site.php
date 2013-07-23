@@ -50,7 +50,7 @@ $config = array(
 		),
 	),
 	'public_flag' => array(
-		'default' => PRJ_PUBLIC_FLAG_PRIVATE,
+		'default' => PRJ_PUBLIC_FLAG_ALL,
 	),
 	'member_setting_common' => array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,

@@ -288,8 +288,16 @@ class Controller_Album extends \Controller_Site
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
+			$is_delete = \Input::post('clicked_btn') == 'delete';
 
 			$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
+
+			$options = \Site_Util::get_public_flags();
+			$options[] = 99;
+			$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
+				->add_rule('required')
+				->add_rule('in_array', $options);
+
 			$val->add('shot_at', '撮影日時')
 				->add_rule('trim')
 				->add_rule('max_length', 16)
@@ -300,20 +308,20 @@ class Controller_Album extends \Controller_Site
 			$posted_album_image_ids = array_map('intval', \Input::post('album_image_ids', array()));
 			if (empty($posted_album_image_ids))
 			{
-				$error =  '実施対象が選択されていません';
+				$error = '実施対象が選択されていません';
 			}
 			if (!$error && !\Site_Util::check_ids_in_model_objects($posted_album_image_ids, $album_images))
 			{
-				$error =  '実施対象が正しく選択されていません';
+				$error = '実施対象が正しく選択されていません';
 			}
 
 			$post = array();
-			if (!$error && \Input::post('clicked_btn') == 'post')
+			if (!$error && !$is_delete)
 			{
 				if ($val->run())
 				{
 					$post = $val->validated();
-					if (empty($post['name']) && empty($post['shot_at']))
+					if (!strlen($post['name']) && !strlen($post['shot_at']) && $post['public_flag'] == 99)
 					{
 						$error =  '入力してください';
 					}
@@ -326,16 +334,21 @@ class Controller_Album extends \Controller_Site
 
 			if (!$error)
 			{
-				$file_ids = array();
-				if (!(\Input::post('post') && empty($post['shot_at'])))
+				$file_ids   = array();
+				$file_names = array();
+				if ($is_delete || (!$is_delete && strlen($post['shot_at'])))
 				{
-					$file_ids =\Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $posted_album_image_ids)->execute()->as_array());
+					$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $posted_album_image_ids)->execute()->as_array());
+					if ($is_delete)
+					{
+						$file_names = \Util_db::conv_col(\DB::select('name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array());
+					}
 				}
 
 				$is_db_error = false;
 				$message     = '';
 				\DB::start_transaction();
-				if (\Input::post('clicked_btn') == 'delete')
+				if ($is_delete)
 				{
 					// カバー写真が削除された場合の対応
 					if ($album->cover_album_image_id && in_array($album->cover_album_image_id, $posted_album_image_ids))
@@ -350,15 +363,18 @@ class Controller_Album extends \Controller_Site
 
 					$message = $result.'件削除しました';
 				}
-				elseif (\Input::post('clicked_btn') == 'post')
+				else
 				{
 					$updated_at = date('Y-m-d H:i:s');
-					if (!empty($post['name']))
+					$values = array();
+					if (strlen($post['name']))      $values['name']        = $post['name'];
+					if ($post['public_flag'] != 99) $values['public_flag'] = $post['public_flag'];
+					if (!empty($values))
 					{
-						$values = array('name' => $post['name'], 'updated_at' => $updated_at);
+						$values['updated_at'] = $updated_at;
 						if (!$result = \DB::update('album_image')->set($values)->where('id', 'in', $posted_album_image_ids)->execute()) $is_db_error = true;
 					}
-					if (!empty($post['shot_at']))
+					if (strlen($post['shot_at']))
 					{
 						$values = array('shot_at' => $post['shot_at'], 'updated_at' => $updated_at);
 						if (!$result = \DB::update('file')->set($values)->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
@@ -373,11 +389,15 @@ class Controller_Album extends \Controller_Site
 				else
 				{
 					\DB::commit_transaction();
+					if ($is_delete && !empty($file_names))
+					{
+						foreach ($file_names as $file_name) \Site_Upload::remove_images('ai', $id, $file_name);
+					}
+
 					\Session::set_flash('message', $message);
 					\Response::redirect('album/edit_images/'.$id);
 				}
 			}
-
 			if ($error) \Session::set_flash('error', $error);
 		}
 

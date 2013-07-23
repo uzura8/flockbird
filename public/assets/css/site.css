@@ -69,10 +69,6 @@ div.navbar-inner .popover {
 div.navbar-inner .popover.bottom .arrow {
 	margin-left: 10%;
 }
-
-.checkbox {
-	padding-left: 5px;
-}
 .controls input[type="checkbox"] {
 	margin: 0;
 }
@@ -91,4 +87,3 @@ div.navbar-inner .popover.bottom .arrow {
 	text-align: right;
 	padding: 0 8px 3px;
 }
-
