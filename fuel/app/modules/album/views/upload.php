@@ -6,7 +6,22 @@
 
 <div class="well">
 <!-- The file upload form used as target for the file upload widget -->
-<?php echo Form::open(array('action' => 'album/upload_images/'.$album->id, 'id' => 'fileupload', 'class' => 'form-stacked', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
+<?php echo Form::open(array('action' => 'album/upload_images/'.$album->id, 'id' => 'fileupload', 'class' => 'form-stacked form-horizontal', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
+
+	<div class="control-group">
+		<?php echo Form::label(Config::get('term.public_flag.label'), 'public_flag', array('class' => 'control-label')); ?>
+<?php $public_flags = Site_Form::get_public_flag_options() ; ?>
+<?php foreach ($public_flags as $public_flag => $label): ?>
+		<div class="controls">
+			<?php echo Form::radio('public_flag', $public_flag, Input::post('public_flag', Config::get('site.public_flag.default')) === $public_flag, array('id' => 'form_public_flag_'.$public_flag)); ?>
+			<?php echo Form::label($label, 'public_flag_'.$public_flag); ?>
+		</div>
+<?php endforeach; ?>
+<?php /*if ($val->error('public_flag')): ?>
+		<span class="help-inline error_msg"><?php echo $val->error('public_flag')->get_message(); ?></span>
+<?php endif;*/ ?>
+	</div>
+
 		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 		<div class="row-fluid fileupload-buttonbar">
 				<div class="span8">
