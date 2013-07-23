@@ -174,7 +174,7 @@ class Controller_Site extends Controller_Base
 				$breadcrumbs['/member'] = Config::get('term.myhome');
 				if ($module)
 				{
-					$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get($module.'.term.'.$module).'一覧';
+					$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
 				}
 			}
 			else
@@ -185,7 +185,7 @@ class Controller_Site extends Controller_Base
 				if ($module)
 				{
 					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
-					$breadcrumbs[$key] = $prefix.\Config::get($module.'.term.'.$module).'一覧';
+					$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
 				}
 			}
 		}
