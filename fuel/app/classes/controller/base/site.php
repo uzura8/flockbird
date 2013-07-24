@@ -47,7 +47,7 @@ class Controller_Base_Site extends Controller_Base
 			}
 			else
 			{
-				$this->auth_check(true, '', false);
+				$this->auth_check(false, '', false);
 			}
 			$is_mypage = true;
 			$member = $this->u;
