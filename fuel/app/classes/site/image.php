@@ -18,6 +18,8 @@ class Site_image
 	private function setup($config)
 	{
 		if (!$this->check_configs($config)) $this->is_noimage = true;
+		if (!Site_Upload::check_uploaded_file_exists($this->filename)) $this->is_noimage = true;
+
 		if (!$this->check_filename()) $this->is_noimage = true;
 		$this->set_size();
 	}
