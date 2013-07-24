@@ -48,7 +48,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$status_code = 200;
 			return \Response::forge($response, $status_code);
 		}
-		catch(\Exception $e)
+		catch(\FuelException $e)
 		{
 			$status_code = 400;
 		}
@@ -67,7 +67,6 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 		$response = array('status' => 0);
 		try
 		{
-			$this->auth_check_api();
 			\Util_security::check_csrf();
 
 			$album_image_id = (int)\Input::post('id');
@@ -93,11 +92,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$response['id'] = $comment->id;
 			$status_code = 200;
 		}
-		catch(\SiteApiNotAuthorizedException $e)
-		{
-			$status_code = 401;
-		}
-		catch(\Exception $e)
+		catch(\FuelException $e)
 		{
 			$status_code = 400;
 		}
@@ -116,7 +111,6 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 		$response = array('status' => 0);
 		try
 		{
-			$this->auth_check_api();
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
@@ -130,11 +124,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$response['status'] = 1;
 			$status_code = 200;
 		}
-		catch(\SiteApiNotAuthorizedException $e)
-		{
-			$status_code = 401;
-		}
-		catch(\Exception $e)
+		catch(\FuelException $e)
 		{
 			$status_code = 400;
 		}

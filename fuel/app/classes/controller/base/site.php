@@ -8,17 +8,18 @@ class Controller_Base_Site extends Controller_Base
 		parent::before();
 	}
 
-	protected function check_not_auth_action()
+	protected function check_not_auth_action($is_api = false)
 	{
-		return in_array(Request::active()->action, $this->check_not_auth_action);
+		$action = $is_api ? sprintf('%s_%s', Str::lower(Request::main()->get_method()), Request::active()->action) : Request::active()->action;
+		return in_array($action, $this->check_not_auth_action);
 	}
 
-	protected function auth_check($is_redirect_no_auth = true, $redirect_uri = '', $is_check_not_auth_action = true)
+	protected function auth_check($is_api = false, $redirect_uri = '', $is_check_not_auth_action = true)
 	{
-		if ($is_check_not_auth_action && $this->check_not_auth_action()) return;
-
+		if ($is_check_not_auth_action && $this->check_not_auth_action($is_api)) return true;
 		if (Auth::check()) return true;
-		if (!$is_redirect_no_auth) return false;
+
+		if ($is_api) return false;
 
 		if (!$redirect_uri) $redirect_uri = Site_Util::get_login_page_uri();
 		Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
@@ -69,37 +70,14 @@ class Controller_Base_Site extends Controller_Base
 		return (Auth::check() && $member_id == $this->u->id);
 	}
 
-	protected function set_title_and_breadcrumbs($title = '', $middle_breadcrumbs = array(), $member_obj = null, $module = null)
+	protected function add_member_filesize_total($size)
 	{
-		if ($title) $this->template->title = $title;
-		$this->template->header_title = site_title($title);
+		if (!$this->u) throw new Exception('Not authenticated.');
 
-		$breadcrumbs = array('/' => Config::get('term.toppage'));
-		if ($member_obj)
-		{
-			if ($this->check_is_mypage($member_obj->id))
-			{
-				$breadcrumbs['/member'] = Config::get('term.myhome');
-				if ($module)
-				{
-					$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
-				}
-			}
-			else
-			{
-				$prefix = $member_obj->name.'さんの';
-				$name = $prefix.Config::get('term.profile');
-				$breadcrumbs['/member/'.$member_obj->id] = $name;
-				if ($module)
-				{
-					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
-					$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
-				}
-			}
-		}
-		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
-		$breadcrumbs[''] = $title;
-		$this->template->breadcrumbs = $breadcrumbs;
+		$this->u->filesize_total += $size;
+		$this->u->save();
+
+		return $this->u->filesize_total;
 	}
 
 	protected function check_public_flag($public_flag, $member_id)

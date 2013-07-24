@@ -32,14 +32,46 @@ class Controller_Site extends Controller_Base_Site
 		}
 	}
 
-	protected function add_member_filesize_total($size)
+	protected function display_error($message_display = '', $messsage_log = '', $action = 'error/500', $status = 500)
 	{
-		if (!$this->u) throw new Exception('Not authenticated.');
+		if ($messsage_log) \Log::error($messsage_log);
+		$this->template->title = ($message_display) ? $message_display : 'Error';
+		$this->template->header_title = site_title($this->template->title);
+		$this->template->content = View::forge($action);
+		if ($status) $this->response->status = $status;
+	}
 
-		$this->u->filesize_total += $size;
-		$this->u->save();
+	protected function set_title_and_breadcrumbs($title = '', $middle_breadcrumbs = array(), $member_obj = null, $module = null)
+	{
+		if ($title) $this->template->title = $title;
+		$this->template->header_title = site_title($title);
 
-		return $this->u->filesize_total;
+		$breadcrumbs = array('/' => Config::get('term.toppage'));
+		if ($member_obj)
+		{
+			if ($this->check_is_mypage($member_obj->id))
+			{
+				$breadcrumbs['/member'] = Config::get('term.myhome');
+				if ($module)
+				{
+					$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
+				}
+			}
+			else
+			{
+				$prefix = $member_obj->name.'さんの';
+				$name = $prefix.Config::get('term.profile');
+				$breadcrumbs['/member/'.$member_obj->id] = $name;
+				if ($module)
+				{
+					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
+					$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
+				}
+			}
+		}
+		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
+		$breadcrumbs[''] = $title;
+		$this->template->breadcrumbs = $breadcrumbs;
 	}
 
 	/**

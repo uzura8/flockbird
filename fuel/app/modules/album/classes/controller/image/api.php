@@ -41,7 +41,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			if ($member_id) list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id, true);
+			if ($member_id) list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
 			if ($album && $member)
 			{
 				$member = null;
@@ -101,7 +101,7 @@ class Controller_Image_api extends \Controller_Site_Api
 		$response = '';
 		try
 		{
-			list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id, true);
+			list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, array(
 				'related' => array('file', 'album'),
 				'where' => array('t2.member_id', $member_id),
@@ -177,7 +177,6 @@ class Controller_Image_api extends \Controller_Site_Api
 		$response = array('status' => 0, 'message' => '');
 		try
 		{
-			$this->auth_check_api();
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
@@ -197,10 +196,6 @@ class Controller_Image_api extends \Controller_Site_Api
 			$response['status'] = 1;
 			$response['album_id'] = $album_image->album_id;
 			$status_code = 200;
-		}
-		catch(\SiteApiNotAuthorizedException $e)
-		{
-			$status_code = 401;
 		}
 		catch(AlreadySetToCoverException $e)
 		{
@@ -230,7 +225,6 @@ class Controller_Image_api extends \Controller_Site_Api
 		$response = array('status' => 0);
 		try
 		{
-			$this->auth_check_api();
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
@@ -247,11 +241,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$response['status'] = 1;
 			$status_code = 200;
 		}
-		catch(\SiteApiNotAuthorizedException $e)
-		{
-			$status_code = 401;
-		}
-		catch(\Exception $e)
+		catch(\FuelException $e)
 		{
 			\DB::rollback_transaction();
 			$status_code = 400;
@@ -272,7 +262,6 @@ class Controller_Image_api extends \Controller_Site_Api
 		$response = '0';
 		try
 		{
-			$this->auth_check_api();
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
@@ -291,10 +280,6 @@ class Controller_Image_api extends \Controller_Site_Api
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);
-		}
-		catch(\SiteApiNotAuthorizedException $e)
-		{
-			$status_code = 401;
 		}
 		catch(\HttpInvalidInputException $e)
 		{

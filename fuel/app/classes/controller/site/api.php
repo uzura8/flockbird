@@ -2,9 +2,15 @@
 
 class Controller_Site_Api extends Controller_Base_Site_Api
 {
+	protected $check_not_auth_action = array(
+		'get_login',
+	);
+
 	public function before()
 	{
 		parent::before();
+
+		$this->auth_check_api(true);
 		$this->set_current_user();
 	}
 
@@ -29,7 +35,7 @@ class Controller_Site_Api extends Controller_Base_Site_Api
 
 			return Response::forge($response, $status_code);
 		}
-		catch(Exception $e)
+		catch(FuelException $e)
 		{
 			$status_code = 400;
 		}

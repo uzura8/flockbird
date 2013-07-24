@@ -9,8 +9,18 @@ class Controller_Base_Site_Api extends Controller_Base_Site
 		parent::before();
 	}
 
-	public function auth_check_api()
+	public function auth_check_api($is_force_response = false)
 	{
-		if (!$this->auth_check(false)) throw new \SiteApiNotAuthorizedException;
+		if (!$this->auth_check(true))
+		{
+			if ($is_force_response)
+			{
+				$this->force_response(0, 401);
+			}
+			else
+			{
+				throw new SiteApiNotAuthorizedException;
+			}
+		}
 	}
 }
