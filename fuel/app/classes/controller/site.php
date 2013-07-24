@@ -9,7 +9,7 @@
  * @package  app
  * @extends  Controller
  */
-class Controller_Site extends Controller_Base
+class Controller_Site extends Controller_Base_Site
 {
 	protected $check_not_auth_action = array(
 		'index',
@@ -23,18 +23,13 @@ class Controller_Site extends Controller_Base
 		$this->auth_check();
 		$this->set_current_user();
 
-		$this->template->header_keywords = '';
-		$this->template->header_description = '';
-		$this->template->title = PRJ_SITE_NAME;
-		$this->template->breadcrumbs = array();
-	}
-
-	private function set_current_user()
-	{
-		$auth = Auth::instance();
-		$this->u = Auth::check() ? $auth->get_member() : null;
-
-		View::set_global('u', $this->u);
+		if (!Input::is_ajax())
+		{
+			$this->template->header_keywords = '';
+			$this->template->header_description = '';
+			$this->template->title = PRJ_SITE_NAME;
+			$this->template->breadcrumbs = array();
+		}
 	}
 
 	protected function add_member_filesize_total($size)
@@ -134,89 +129,5 @@ class Controller_Site extends Controller_Base
 		Auth::logout();
 		Session::set_flash('message', 'ログアウトしました');
 		Response::redirect('site/login');
-	}
-
-	protected function check_auth_and_is_mypage($member_id = 0)
-	{
-		$is_mypage = false;
-		$member    = null;
-
-		if (!$member_id)
-		{
-			$this->auth_check(true, '', false);
-
-			$is_mypage = true;
-			$member = $this->u;
-		}
-		elseif ($this->check_is_mypage($member_id))
-		{
-			$is_mypage = true;
-			$member = $this->u;
-		}
-		elseif (!$member = Model_Member::check_authority($member_id))
-		{
-			throw new \HttpNotFoundException;
-		}
-
-		return array($is_mypage, $member);
-	}
-
-	protected function set_title_and_breadcrumbs($title = '', $middle_breadcrumbs = array(), $member_obj = null, $module = null)
-	{
-		if ($title) $this->template->title = $title;
-		$this->template->header_title = site_title($title);
-
-		$breadcrumbs = array('/' => Config::get('term.toppage'));
-		if ($member_obj)
-		{
-			if ($this->check_is_mypage($member_obj->id))
-			{
-				$breadcrumbs['/member'] = Config::get('term.myhome');
-				if ($module)
-				{
-					$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
-				}
-			}
-			else
-			{
-				$prefix = $member_obj->name.'さんの';
-				$name = $prefix.Config::get('term.profile');
-				$breadcrumbs['/member/'.$member_obj->id] = $name;
-				if ($module)
-				{
-					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
-					$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
-				}
-			}
-		}
-		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
-		$breadcrumbs[''] = $title;
-		$this->template->breadcrumbs = $breadcrumbs;
-	}
-
-	protected function check_is_mypage($member_id)
-	{
-		return (Auth::check() && $member_id == $this->u->id);
-	}
-
-	protected function check_public_flag($public_flag, $member_id)
-	{
-		switch ($public_flag)
-		{
-			case PRJ_PUBLIC_FLAG_ALL:
-				return true;
-				break;
-			case PRJ_PUBLIC_FLAG_MEMBER:
-				if (Auth::check()) return true;
-				break;
-			//case PRJ_PUBLIC_FLAG_FRIEND:
-			//	break;
-			case PRJ_PUBLIC_FLAG_PRIVATE:
-			default :
-				if (Auth::check() && $member_id == $this->u->id) return true;
-				break;
-		}
-
-		throw new \HttpForbiddenException;
 	}
 }

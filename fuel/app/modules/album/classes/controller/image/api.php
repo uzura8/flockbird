@@ -41,7 +41,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			if ($member_id) list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id);
+			if ($member_id) list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id, true);
 			if ($album && $member)
 			{
 				$member = null;
@@ -101,7 +101,7 @@ class Controller_Image_api extends \Controller_Site_Api
 		$response = '';
 		try
 		{
-			list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id);
+			list($is_mypage, $member) = $this->check_auth_api_and_is_mypage($member_id, true);
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, array(
 				'related' => array('file', 'album'),
 				'where' => array('t2.member_id', $member_id),

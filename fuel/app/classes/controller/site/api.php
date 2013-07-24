@@ -1,75 +1,11 @@
 <?php
 
-class Controller_Site_Api extends Controller_Base_Api
+class Controller_Site_Api extends Controller_Base_Site_Api
 {
 	public function before()
 	{
 		parent::before();
 		$this->set_current_user();
-	}
-
-	public function auth_check_api()
-	{
-		if (!$this->auth_check(false)) throw new \SiteApiNotAuthorizedException;
-	}
-
-	private function set_current_user()
-	{
-		$auth = Auth::instance();
-		$this->u = Auth::check() ? $auth->get_member() : null;
-
-		View::set_global('u', $this->u);
-	}
-
-	protected function check_auth_api_and_is_mypage($member_id = 0)
-	{
-		$is_mypage = false;
-		$member    = null;
-
-		if (!$member_id)
-		{
-			$this->auth_check_api();
-
-			$is_mypage = true;
-			$member = $this->u;
-		}
-		elseif ($this->check_is_mypage($member_id))
-		{
-			$is_mypage = true;
-			$member = $this->u;
-		}
-		elseif (!$member = Model_Member::check_authority($member_id))
-		{
-			throw new \HttpNotFoundException;
-		}
-
-		return array($is_mypage, $member);
-	}
-
-	protected function check_is_mypage($member_id)
-	{
-		return (Auth::check() && $member_id == $this->u->id);
-	}
-
-	protected function check_public_flag($public_flag, $member_id)
-	{
-		switch ($public_flag)
-		{
-			case PRJ_PUBLIC_FLAG_ALL:
-				return true;
-				break;
-			case PRJ_PUBLIC_FLAG_MEMBER:
-				if (Auth::check()) return true;
-				break;
-			//case PRJ_PUBLIC_FLAG_FRIEND:
-			//	break;
-			case PRJ_PUBLIC_FLAG_PRIVATE:
-			default :
-				if (Auth::check() && $member_id == $this->u->id) return true;
-				break;
-		}
-
-		throw new \HttpForbiddenException;
 	}
 
 	/**
@@ -101,5 +37,3 @@ class Controller_Site_Api extends Controller_Base_Api
 		$this->response($response, $status_code);
 	}
 }
-
-class SiteApiNotAuthorizedException extends \FuelException {}
