@@ -51,7 +51,7 @@ class Model_AlbumImage extends \Orm\Model
 		),
 		'public_flag' => array(
 			'data_type' => 'integer',
-			'validation' => array('required', 'max_length' => array(1)),
+			'validation' => array('required'),
 			'form' => array('type' => 'radio', 'options' => array()),
 		),
 		'created_at' => array('form' => array('type' => false)),

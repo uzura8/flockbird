@@ -91,7 +91,11 @@ div.navbar-inner .popover.bottom .arrow {
 	margin-left: 5px;
 }
 
-.imgBox .public_flag {
+.main_item .public_flag {
 	text-align: right;
 	padding: 0 8px 3px;
+}
+
+.member_img_box_s .public_flag {
+	margin-left: 4px;
 }

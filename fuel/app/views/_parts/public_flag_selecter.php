@@ -3,7 +3,7 @@ list($name, $icon, $btn_color) = get_public_flag_label($public_flag);
 $model_uri = str_replace('_', '/', $model);
 ?>
 <?php if (isset($is_mycontents) && $is_mycontents): ?>
-<div class="btn-group">
+<div class="btn-group public_flag">
 	<button class="btn dropdown-toggle btn-mini<?php echo $btn_color; ?>" id="public_flag_<?php echo $model; ?>_<?php echo $id; ?>" data-toggle="dropdown">
 		<?php echo $icon.$name; ?><span class="caret"></span>
 	</button>

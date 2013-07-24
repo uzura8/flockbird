@@ -39,9 +39,10 @@ class Controller_Album extends \Controller_Site
 		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.album')));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
-			'related' => 'member',
+			'related'  => 'member',
+			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
 			'order_by' => array('created_at' => 'desc'),
-			'limit' => \Config::get('album.articles.limit'),
+			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
@@ -63,10 +64,10 @@ class Controller_Album extends \Controller_Site
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
-			'related' => 'member',
-			'where' => array('member_id', $member->id),
-			'limit' => \Config::get('album.articles.limit'),
+			'related'  => 'member',
+			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id)),
 			'order_by' => array('created_at' => 'desc'),
+			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$data['member'] = $member;
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -82,6 +83,7 @@ class Controller_Album extends \Controller_Site
 	public function action_detail($id = null)
 	{
 		if (!$album = Model_Album::check_authority($id)) throw new \HttpNotFoundException;
+		$this->check_public_flag($album->public_flag, $album->member_id);
 
 		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
@@ -185,6 +187,7 @@ class Controller_Album extends \Controller_Site
 				$post = $val->validated();
 				$album->name = $post['name'];
 				$album->body = $post['body'];
+				$album->public_flag = $post['public_flag'];
 				$album->member_id = $this->u->id;
 
 				if ($album and $album->save())
@@ -235,6 +238,7 @@ class Controller_Album extends \Controller_Site
 				$post = $val->validated();
 				$album->name = $post['name'];
 				$album->body  = $post['body'];
+				$album->public_flag = $post['public_flag'];
 
 				if ($album and $album->save())
 				{

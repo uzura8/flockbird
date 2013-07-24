@@ -42,10 +42,8 @@ class Model_Album extends \Orm\Model
 		),
 		'public_flag' => array(
 			'data_type' => 'integer',
-			'validation' => array('max_length' => array(1)),
-			//'validation' => array('required', 'max_length' => array(1)),
-			'default' => 0,
-			'form' => array('type' => false),
+			'validation' => array('required'),
+			'form' => array('type' => 'radio', 'options' => array()),
 		),
 		'cover_album_image_id' => array(
 			'data_type' => 'integer',
@@ -70,6 +68,8 @@ class Model_Album extends \Orm\Model
 	public static function _init()
 	{
 		static::$_properties['name']['label'] = \Config::get('term.album').'名';
+		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
+		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
