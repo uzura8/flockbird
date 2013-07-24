@@ -91,44 +91,6 @@ class Controller_Image extends \Controller_Site
 		$this->template->content = \View::forge('image/_parts/list', $data);
 	}
 
-	public function action_create($note_id = null)
-	{
-		$note_id = (int)$note_id;
-		if (!$note_id || !$note = Model_Note::find($note_id))
-		{
-			throw new \HttpNotFoundException;
-		}
-
-		// Lazy validation
-		if (\Input::post('body'))
-		{
-			\Util_security::check_csrf();
-
-			// Create a new comment
-			$comment = new Model_NoteComment(array(
-				'body' => \Input::post('body'),
-				'note_id' => $note_id,
-				'member_id' => $this->u->id,
-			));
-
-			// Save the post and the comment will save too
-			if ($comment->save())
-			{
-				\Session::set_flash('message', 'コメントしました。');
-			}
-			else
-			{
-				\Session::set_flash('error', 'コメントに失敗しました。');
-			}
-
-			\Response::redirect('note/detail/'.$note_id);
-		}
-		else
-		{
-			Controller_Note::action_detail($note_id);
-		}
-	}
-
 	/**
 	 * Album_image edit
 	 * 
