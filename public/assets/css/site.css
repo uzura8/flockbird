@@ -78,6 +78,12 @@ div.navbar-inner .popover.bottom .arrow {
 	display: inline;
 }
 
+.popover-content .radio,
+.popover-content .checkbox
+{
+	padding-left: 5px;
+}
+
 #insecure_user_popover label.checkbox {
 	font-size: 85%;
 }
