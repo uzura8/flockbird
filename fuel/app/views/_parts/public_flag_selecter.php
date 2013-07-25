@@ -14,7 +14,7 @@ $model_uri = str_replace('_', '/', $model);
 <?php if ($public_flag == $public_flag_value): ?>
 		<li><span class="disabled"><?php echo $term_public_flags[$public_flag_value]; ?></span></li>
 <?php else: ?>
-		<li><a href="#" class="update_public_flag" data-id="<?php echo $id; ?>" data-public_flag="<?php echo $public_flag_value; ?>" data-model="<?php echo $model; ?>" data-model_uri="<?php echo $model_uri; ?>"><?php echo $term_public_flags[$public_flag_value]; ?></a></li>
+		<li><a href="#" class="update_public_flag" data-id="<?php echo $id; ?>" data-public_flag="<?php echo $public_flag_value; ?>" data-public_flag_original="<?php echo $public_flag; ?>" data-model="<?php echo $model; ?>" data-model_uri="<?php echo $model_uri; ?>"><?php echo $term_public_flags[$public_flag_value]; ?></a></li>
 <?php endif; ?>
 <?php endforeach; ?>
 	</ul>

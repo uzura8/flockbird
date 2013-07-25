@@ -269,6 +269,21 @@ function load_popover(link_attribute, content_attribute, content_url) {
 }
 
 function update_public_flag(selfDomElement) {
+	var public_flag          = $(selfDomElement).data('public_flag');
+	var public_flag_original = $(selfDomElement).data('public_flag_original');
+
+	if (is_expanded_public_range(public_flag_original, public_flag)) {
+		apprise('公開範囲が広がります。実行しますか？', {'confirm':true}, function(r) {
+			if (r == true) update_public_flag_execute(selfDomElement);
+		});
+	} else {
+		update_public_flag_execute(selfDomElement);
+	}
+
+	return false;
+}
+
+function update_public_flag_execute(selfDomElement) {
 	var id          = $(selfDomElement).data('id');
 	var model       = $(selfDomElement).data('model');
 	var model_uri   = $(selfDomElement).data('model_uri');
@@ -299,7 +314,16 @@ function update_public_flag(selfDomElement) {
 		},
 		error: function(result){
 			$(parentElement).html(selfDomElement);
-			$.jGrowl(get_term('public_flag') + 'の変更に失敗しました。');
+			$.jGrowl(get_error_message(result['status'], get_term('public_flag') + 'の変更に失敗しました。'));
 		}
 	});
+}
+
+function is_expanded_public_range(original_public_flag, changed_public_flag) {
+	if (original_public_flag == changed_public_flag) return false;
+	if (original_public_flag == 0) return true;
+	if (changed_public_flag == 0) return false;
+	if (original_public_flag > changed_public_flag) return true;
+
+	return false;
 }

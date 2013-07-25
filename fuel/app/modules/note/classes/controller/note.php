@@ -99,7 +99,7 @@ class Controller_Note extends \Controller_Site
 	public function action_create()
 	{
 		$note = Model_Note::forge();
-		$form = \Site_Util::get_form_instance('note', $note, true);
+		$form = \Site_Util::get_form_instance('note', $note, true, true);
 
 		if (\Input::method() == 'POST')
 		{
@@ -149,7 +149,7 @@ class Controller_Note extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$form = \Site_Util::get_form_instance('note', $note, true);
+		$form = \Site_Util::get_form_instance('note', $note, true, true);
 
 		if (\Input::method() == 'POST')
 		{

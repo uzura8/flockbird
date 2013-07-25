@@ -28,15 +28,58 @@ class Site_Util
 		return false;
 	}
 
-	public static function get_form_instance($name = 'default', $model_obj = null, $with_submit_button = false, $is_horizontal = true)
+	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_type = '', $form_attr = array(), $btn_attr = array())
 	{
 		$form = Fieldset::forge($name);
-		$attributes = $is_horizontal ? array('class' => 'form-horizontal') : array();
-		$form->set_config('form_attributes', $attributes);
+		if ($is_horizontal)
+		{
+			if (empty($form_attr['class']))
+			{
+				$form_attr['class'] = 'form-horizontal';
+			}
+			else
+			{
+				$form_attr['class'] .= ' form-horizontal';
+			}
+		}
+		$form->set_config('form_attributes', $form_attr);
 		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
 
+		if (!empty($add_fields['pre']))
+		{
+			foreach ($add_fields['pre'] as $name => $item)
+			{
+				$form->add(
+					$name,
+					isset($item['label']) ? $item['label'] : '',
+					isset($item['attributes']) ? $item['attributes'] : '',
+					isset($item['rules']) ? $item['rules'] : ''
+				);
+			}
+			unset($add_fields['pre']);
+		}
+
 		if ($model_obj) $form->add_model($model_obj);
-		if ($with_submit_button) $form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
+
+		if (!empty($add_fields['post']) || !empty($add_fields))
+		{
+			$add_fields_post = !empty($add_fields['post']) ? $add_fields['post'] : $add_fields;
+			foreach ($add_fields_post as $name => $item)
+			{
+				$form->add(
+					$name,
+					isset($item['label']) ?      $item['label']      : '',
+					isset($item['attributes']) ? $item['attributes'] : array(),
+					isset($item['rules']) ?      $item['rules']      : array()
+				);
+			}
+		}
+
+		if (!empty($btn_type))
+		{
+			if (empty($btn_attr)) $btn_attr = array('type'=> $btn_type, 'value' => '送信', 'class' => 'btn');
+			$form->add($btn_type, '', $btn_attr);
+		}
 
 		return $form;
 	}

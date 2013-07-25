@@ -100,7 +100,7 @@ class Controller_Image extends \Controller_Site
 	 */
 	public function action_edit($id = null)
 	{
-		$with_file = (\Input::method() == 'POST')? false : true;
+		$with_file = (\Input::method() == 'POST') ? false : true;
 		if (!$album_image = Model_AlbumImage::check_authority($id, $this->u->id, $with_file))
 		{
 			throw new \HttpNotFoundException;
@@ -132,7 +132,8 @@ class Controller_Image extends \Controller_Site
 					$post = $val->validated();
 
 					\DB::start_transaction();
-					$album_image->name = $post['name'];
+					$album_image->name        = $post['name'];
+					$album_image->public_flag = $post['public_flag'];
 					$album_image->save();
 					if (!empty($post['shot_at']))
 					{
@@ -172,7 +173,7 @@ class Controller_Image extends \Controller_Site
 		$this->template->post_header = \View::forge('_parts/edit_header');
 		$this->template->post_footer = \View::forge('_parts/edit_footer');
 
-		$this->template->content = \View::forge('edit', array('form' => $form));
+		$this->template->content = \View::forge('edit', array('form' => $form, 'original_public_flag' => $album_image->public_flag));
 		$this->template->content->set_safe('html_form', $form->build('album/image/edit/'.$id));// form の action に入る
 	}
 
@@ -212,8 +213,6 @@ class Controller_Image extends \Controller_Site
 
 	protected function form($album_image)
 	{
-		$form = \Site_Util::get_form_instance('album_image', $album_image);
-
 		$shot_at = '';
 		if (\Input::post('shot_at'))
 		{
@@ -223,12 +222,18 @@ class Controller_Image extends \Controller_Site
 		{
 			$shot_at = substr($album_image->file->shot_at, 0, 16);
 		}
-		$form->add('shot_at', '撮影日時', array('value' => $shot_at, 'class' => 'input-medium'))
-			->add_rule('trim')
-			->add_rule('max_length', 16)
-			->add_rule('datetime_except_second')
-			->add_rule('datetime_is_past');
-		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
+		$add_fields = array(
+			'shot_at' => array(
+				'label' => '撮影日時',
+				'attributes' => array('value' => $shot_at, 'class' => 'input-medium'),
+				'rules' => array('datetime_except_second', 'datetime_is_past'),
+			),
+			'original_public_flag' => array(
+				'attributes' => array('type' => 'hidden', 'value' => $album_image->public_flag, 'id' => 'original_public_flag'),
+				'rules' => array(array('in_array', \Site_Util::get_public_flags())),
+			),
+		);
+		$form = \Site_Util::get_form_instance('album_image', $album_image, true, $add_fields, 'button');
 
 		return $form;
 	}

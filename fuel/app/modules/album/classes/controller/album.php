@@ -176,7 +176,7 @@ class Controller_Album extends \Controller_Site
 	public function action_create()
 	{
 		$album = Model_Album::forge();
-		$form = \Site_Util::get_form_instance('album', $album, true);
+		$form = \Site_Util::get_form_instance('album', $album, true, true);
 		if (\Input::method() == 'POST')
 		{
 			$val = $form->validation();
@@ -226,27 +226,50 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$form = \Site_Util::get_form_instance('album', $album, true);
+		$add_fields = array(
+			'original_public_flag' => array(
+				'attributes' => array('type' => 'hidden', 'value' => $album->public_flag, 'id' => 'original_public_flag'),
+				'rules' => array(array('in_array', \Site_Util::get_public_flags())),
+			),
+			'is_update_children_public_flag' => array(
+				'attributes' => array('type' => 'hidden', 'value' => 0, 'id' => 'is_update_children_public_flag'),
+				'rules' => array(array('in_array', array(0, 1))),
+			),
+		);
+		$form = \Site_Util::get_form_instance('album', $album, true, $add_fields, 'button', array('class' => 'edit_album'));
 
 		if (\Input::method() == 'POST')
 		{
+			\Util_security::check_csrf();
+
 			$val = $form->validation();
 			if ($val->run())
 			{
-				\Util_security::check_csrf();
-
-				$post = $val->validated();
-				$album->name = $post['name'];
-				$album->body  = $post['body'];
-				$album->public_flag = $post['public_flag'];
-
-				if ($album and $album->save())
+				try
 				{
+					$post = $val->validated();
+
+					\DB::start_transaction();
+					// update album
+					$album->name = $post['name'];
+					$album->body = $post['body'];
+					$album->public_flag = $post['public_flag'];
+					$album->save();
+
+					// update album_image public_flag
+					if (!empty($post['is_update_children_public_flag']))
+					{
+						$values = array('public_flag' => $post['public_flag'], 'updated_at' => date('Y-m-d H:i:s'));
+						\DB::update('album_image')->set($values)->where('album_id', $album->id)->execute();
+					}
+					\DB::commit_transaction();
+
 					\Session::set_flash('message', \Config::get('term.album').'を編集をしました。');
 					\Response::redirect('album/'.$album->id);
 				}
-				else
+				catch(Exception $e)
 				{
+					\DB::rollback_transaction();
 					\Session::set_flash('error', 'Could not save.');
 				}
 			}
@@ -262,7 +285,7 @@ class Controller_Album extends \Controller_Site
 		}
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を編集する', array('/album/'.$id => $album->name), $album->member, 'album');
-		$this->template->content = \View::forge('edit', array('form' => $form));
+		$this->template->content = \View::forge('edit', array('form' => $form, 'original_public_flag' => $album->public_flag));
 		$this->template->content->set_safe('html_form', $form->build('album/edit/'.$id));// form の action に入る
 	}
 

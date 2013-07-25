@@ -13,7 +13,7 @@
 <?php $public_flags = Site_Form::get_public_flag_options() ; ?>
 <?php foreach ($public_flags as $public_flag => $label): ?>
 		<div class="controls">
-			<?php echo Form::radio('public_flag', $public_flag, Input::post('public_flag', Config::get('site.public_flag.default')) === $public_flag, array('id' => 'form_public_flag_'.$public_flag)); ?>
+			<?php echo Form::radio('public_flag', $public_flag, Input::post('public_flag', $album->public_flag) == $public_flag, array('id' => 'form_public_flag_'.$public_flag)); ?>
 			<?php echo Form::label($label, 'public_flag_'.$public_flag); ?>
 		</div>
 <?php endforeach; ?>

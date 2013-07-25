@@ -47,6 +47,8 @@ switch (PRJ_ENVIRONMENT)
 }
 
 // public_flag 定義
+//  非公開は 0, 他は値が大きいほど公開範囲が狭くなるように定義する
+//  上記ルールに反する場合は js の is_expanded_public_range() を改修する必要がある。
 define('PRJ_PUBLIC_FLAG_PRIVATE', 0);
 define('PRJ_PUBLIC_FLAG_ALL',     1);
 define('PRJ_PUBLIC_FLAG_MEMBER',  2);
