@@ -156,7 +156,7 @@
 			</div><!--/row-->
 <?php else: ?>
 			<div id="main">
-<?php echo $content; ?>
+<?php if (isset($content)) echo $content; ?>
 			</div>
 <?php endif; ?>
 		</div><!--/span-->
