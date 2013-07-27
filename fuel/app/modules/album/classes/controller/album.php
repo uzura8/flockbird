@@ -135,7 +135,6 @@ class Controller_Album extends \Controller_Site
 		}
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.album_image').'アップロード', array('/album/'.$id => $album->name), $album->member, 'album');
-		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_header = \View::forge('_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/upload_footer');
 		$this->template->content = \View::forge('upload', array('id' => $id, 'album' => $album));
@@ -176,7 +175,7 @@ class Controller_Album extends \Controller_Site
 	public function action_create()
 	{
 		$album = Model_Album::forge();
-		$form = \Site_Util::get_form_instance('album', $album, true, true);
+		$form = \Site_Util::get_form_instance('album', $album, true, array(), 'submit');
 		if (\Input::method() == 'POST')
 		{
 			$val = $form->validation();
@@ -236,7 +235,7 @@ class Controller_Album extends \Controller_Site
 				'rules' => array(array('in_array', array(0, 1))),
 			),
 		);
-		$form = \Site_Util::get_form_instance('album', $album, true, $add_fields, 'button', array('class' => 'edit_album'));
+		$form = \Site_Util::get_form_instance('album', $album, true, $add_fields, 'button');
 
 		if (\Input::method() == 'POST')
 		{

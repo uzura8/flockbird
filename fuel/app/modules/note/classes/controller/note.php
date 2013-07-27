@@ -99,7 +99,7 @@ class Controller_Note extends \Controller_Site
 	public function action_create()
 	{
 		$note = Model_Note::forge();
-		$form = \Site_Util::get_form_instance('note', $note, true, true);
+		$form = \Site_Util::get_form_instance('note', $note, true, array(), 'submit');
 
 		if (\Input::method() == 'POST')
 		{
@@ -149,7 +149,13 @@ class Controller_Note extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$form = \Site_Util::get_form_instance('note', $note, true, true);
+		$add_fields = array(
+			'original_public_flag' => array(
+				'attributes' => array('type' => 'hidden', 'value' => $note->public_flag, 'id' => 'original_public_flag'),
+				'rules' => array(array('in_array', \Site_Util::get_public_flags())),
+			),
+		);
+		$form = \Site_Util::get_form_instance('note', $note, true, $add_fields, 'button');
 
 		if (\Input::method() == 'POST')
 		{
@@ -208,23 +214,5 @@ class Controller_Note extends \Controller_Site
 
 		\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
 		\Response::redirect('note/member');
-	}
-
-	protected function form()
-	{
-		$form = \Site_Util::get_form_instance();
-
-		$form->add('title', 'タイトル', array('class' => 'input-xlarge'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('max_length', 255);
-
-		$form->add('body', '本文', array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'))
-			->add_rule('required');
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn'));
-		$form->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
-
-		return $form;
 	}
 }

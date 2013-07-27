@@ -555,14 +555,14 @@ END;
 
 	public function form_leave()
 	{
-		$form = Site_Util::get_form_instance('leave');
-		$form->add('password', 'パスワード', array('type'=>'password', 'class' => 'span6'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('min_length', 6)
-			->add_rule('max_length', 20);
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '確認', 'class' => 'btn'));
+		$add_fields = array(
+			'password' => array(
+				'label' => 'パスワード',
+				'attributes' => array('type'=>'password', 'class' => 'span6'),
+				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20)),
+			),
+		);
+		$form = \Site_Util::get_form_instance('leave', null, true, $add_fields, array('value' => '確認'));
 
 		return $form;
 	}

@@ -272,46 +272,43 @@ END;
 
 	public function form_setting_password()
 	{
-		$form = Site_Util::get_form_instance('setting_password');
-
-		$form->add('old_password', '現在のパスワード', array('type'=>'password', 'class' => 'span6'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('min_length', 6)
-			->add_rule('max_length', 20);
-
-		$form->add('password', '新しいパスワード', array('type'=>'password', 'class' => 'span6'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('min_length', 6)
-			->add_rule('max_length', 20)
-			->add_rule('unmatch_field', 'old_password');
-
-		$form->add('password_confirm', '新しいパスワード(確認用)', array('type'=>'password', 'class' => 'span6'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('match_field', 'password');
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '変更', 'class' => 'btn'));
+		$add_fields = array(
+			'old_password' => array(
+				'label' => '現在のパスワード',
+				'attributes' => array('type'=>'password', 'class' => 'span6'),
+				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20)),
+			),
+			'password' => array(
+				'label' => '新しいパスワード',
+				'attributes' => array('type'=>'password', 'class' => 'span6'),
+				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20), array('unmatch_field', 'old_password')),
+			),
+			'password_confirm' => array(
+				'label' => '新しいパスワード(確認)',
+				'attributes' => array('type'=>'password', 'class' => 'span6'),
+				'rules' => array('trim', 'required', array('match_field', 'password')),
+			),
+		);
+		$form = \Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => '変更'));
 
 		return $form;
 	}
 
 	public function form_setting_email()
 	{
-		$form = Site_Util::get_form_instance('setting_email');
-
-		$form->add('email', 'メールアドレス', array('class' => 'span7'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('valid_email');
-
-		$form->add('email_confirm', 'メールアドレス(確認用)', array('class' => 'span7'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('match_field', 'email');
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '変更', 'class' => 'btn'));
+		$add_fields = array(
+			'email' => array(
+				'label' => 'メールアドレス',
+				'attributes' => array('type'=>'email', 'class' => 'span7'),
+				'rules' => array('trim', 'required', 'valid_email'),
+			),
+			'email_confirm' => array(
+				'label' => 'メールアドレス(確認)',
+				'attributes' => array('type'=>'email', 'class' => 'span7'),
+				'rules' => array('trim', 'required', array('match_field', 'email')),
+			),
+		);
+		$form = \Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => '変更'));
 
 		return $form;
 	}

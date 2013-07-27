@@ -28,7 +28,7 @@ class Site_Util
 		return false;
 	}
 
-	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_type = '', $form_attr = array(), $btn_attr = array())
+	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array())
 	{
 		$form = Fieldset::forge($name);
 		if ($is_horizontal)
@@ -75,10 +75,34 @@ class Site_Util
 			}
 		}
 
-		if (!empty($btn_type))
+		if (!empty($btn_field))
 		{
-			if (empty($btn_attr)) $btn_attr = array('type'=> $btn_type, 'value' => '送信', 'class' => 'btn');
-			$form->add($btn_type, '', $btn_attr);
+			$btn_name = '';
+			$btn_attr = array();
+			if (!is_array($btn_field))
+			{
+				if (in_array($btn_field, array('submit', 'button')))
+				{
+					$btn_name = $btn_field;
+					$btn_attr = array('type'=> $btn_field, 'value' => '送信', 'class' => 'btn');
+				}
+			}
+			else
+			{
+				if (!isset($btn_field['attributes']))
+				{
+					$tmp = $btn_field;
+					unset($btn_field);
+					$btn_field = array('attributes' => $tmp);
+				}
+				if (!isset($btn_field['attributes']['type'])) $btn_field['attributes']['type'] = 'submit';
+				if (!isset($btn_field['attributes']['value'])) $btn_field['attributes']['value'] = '送信';
+				if (!isset($btn_field['attributes']['class'])) $btn_field['attributes']['class'] = 'btn';
+				$btn_attr = $btn_field['attributes'];
+
+				$btn_name = isset($btn_field['name']) ? $btn_field['name'] : $btn_field['attributes']['type'];
+			}
+			if (!empty($btn_name)) $form->add($btn_name, '', $btn_attr);
 		}
 
 		return $form;

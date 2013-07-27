@@ -1,9 +1,3 @@
-<p><?php echo nl2br($album->body) ?></p>
-
-<hr />
-
-<h3 id="comments">写真をアップロード</h3>
-
 <div class="well">
 <!-- The file upload form used as target for the file upload widget -->
 <?php echo Form::open(array('action' => 'album/upload_images/'.$album->id, 'id' => 'fileupload', 'class' => 'form-stacked form-horizontal', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
