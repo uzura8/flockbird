@@ -173,15 +173,15 @@ function get_public_flag_label($public_flag)
 	{
 		case PRJ_PUBLIC_FLAG_ALL:
 			$btn_color = ' btn-info';
-			$icon      = '<i class="icon-globe icon-white"></i> ';
+			$icon      = '<i class="ls-icon-globe"></i> ';
 			break;
 		case PRJ_PUBLIC_FLAG_MEMBER:
 			$btn_color = ' btn-success';
-			$icon      = '';
+			$icon      = '<i class="ls-icon-group"></i> ';
 			break;
 		default :
 			$btn_color = ' btn-danger';
-			$icon      = '<i class="icon-lock icon-white"></i> ';
+			$icon      = '<i class="ls-icon-lock"></i> ';
 			break;
 	}
 	$name = \Config::get('term.public_flag.options.'.$public_flag);

@@ -15,6 +15,7 @@
   <?php echo Asset::css('bootstrap-responsive.min.css');?>
   <?php echo Asset::css('apprise.min.css');?>
   <?php echo Asset::css('jquery.jgrowl.min.css');?>
+  <?php echo Asset::css('ligature-symbols.min.css');?>
   <?php echo Asset::css('base.css');?>
 <?php if (Agent::is_smartphone()): ?>
   <?php echo Asset::css('base_mobile.css');?>
