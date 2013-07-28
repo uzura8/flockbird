@@ -167,7 +167,7 @@ function strim($string, $width = 0, $trimmarker = '...', $is_html = true)
 	return $string;
 }
 
-function get_public_flag_label($public_flag)
+function get_public_flag_label($public_flag, $view_icon_only = false, $is_return_string = false)
 {
 	switch ($public_flag)
 	{
@@ -184,7 +184,9 @@ function get_public_flag_label($public_flag)
 			$icon      = '<i class="ls-icon-lock"></i> ';
 			break;
 	}
-	$name = \Config::get('term.public_flag.options.'.$public_flag);
+	$name = $view_icon_only ? '' : \Config::get('term.public_flag.options.'.$public_flag);
+
+	if ($is_return_string) return $icon.$name;
 
 	return array($name, $icon, $btn_color);
 }

@@ -70,6 +70,7 @@ class Controller_Album extends \Controller_Site
 			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$data['member'] = $member;
+		$data['is_member_page'] = true;
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
@@ -103,6 +104,7 @@ class Controller_Album extends \Controller_Site
 		), 'Album');
 		$data['id'] = $id;
 		$data['album'] = $album;
+		$data['is_member_page'] = true;
 		$this->template->content = \View::forge('detail', $data);
 	}
 
@@ -258,8 +260,7 @@ class Controller_Album extends \Controller_Site
 					// update album_image public_flag
 					if (!empty($post['is_update_children_public_flag']))
 					{
-						$values = array('public_flag' => $post['public_flag'], 'updated_at' => date('Y-m-d H:i:s'));
-						\DB::update('album_image')->set($values)->where('album_id', $album->id)->execute();
+						Model_AlbumImage::update_public_flag4album_id($album->id, $post['public_flag']);
 					}
 					\DB::commit_transaction();
 

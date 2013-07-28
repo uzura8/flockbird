@@ -87,15 +87,9 @@ div.navbar-inner .popover.bottom .arrow {
 #insecure_user_popover label.checkbox {
 	font-size: 85%;
 }
-.member_img_box_s .content span.label {
-	margin-left: 5px;
-}
 
-.main_item .public_flag {
-	text-align: right;
-	padding: 0 8px 3px;
-}
-
-.member_img_box_s .public_flag {
-	margin-left: 4px;
+.main_item .member_img_box_s .public_flag {
+	position: absolute;
+	top: 0;
+	right: 8px;
 }

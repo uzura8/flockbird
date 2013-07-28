@@ -86,6 +86,24 @@ img.profile_image {
 .member_img_box_s div.content div.main .fullname {
 	margin-right: 5px;
 }
+.member_img_box_s .content span.label {
+	margin-left: 5px;
+}
+
+.date_box {
+	position: relative;
+	text-align: left;
+	padding: 5px 8px;
+}
+.date_box .public_flag {
+	position: absolute;
+	top: 0;
+	right: 8px;
+}
+
+#subtitle div.member_img_box_s .public_flag {
+	margin-left: 5px;
+}
 
 .list_subtitle {
 	position: relative;

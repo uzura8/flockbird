@@ -29,6 +29,7 @@ class Controller_Image_api extends \Controller_Site_Api
 		$page      = (int)\Input::get('page', 1);
 		$album_id  = (int)\Input::get('album_id', 0);
 		$member_id = (int)\Input::get('member_id', 0);
+		$is_member_page = (int)\Input::get('is_member_page', 0);
 
 		$album     = null;
 		$member    = null;
@@ -69,6 +70,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$params['where'] = \Site_Model::get_where_params4list($target_member_id, $self_member_id, $is_mypage, $member_id_colmn, $where);
 
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, $params, 'Album');
+			$data['is_member_page'] = $is_member_page;
 			if (!empty($album))  $data['album']  = $album;
 			if (!empty($member)) $data['member'] = $member;
 
@@ -265,6 +267,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
+			$icon_only_flag = (int)\Input::post('icon_only_flag', 0);
 			if (!$id || !$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
 			{
 				throw new \HttpNotFoundException;
@@ -276,7 +279,14 @@ class Controller_Image_api extends \Controller_Site_Api
 			$album_image->save();
 			\DB::commit_transaction();
 
-			$response = \View::forge('_parts/public_flag_selecter', array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true));
+			$response = \View::forge('_parts/public_flag_selecter', array(
+				'model' => $model,
+				'id' => $id,
+				'public_flag' => $public_flag,
+				'is_mycontents' => true,
+				'without_parent_box' => 'true',
+				'view_icon_only' => $icon_only_flag,
+			));
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);

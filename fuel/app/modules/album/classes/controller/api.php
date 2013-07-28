@@ -24,6 +24,7 @@ class Controller_Api extends \Controller_Site_Api
 
 		$page      = (int)\Input::get('page', 1);
 		$member_id = (int)\Input::get('member_id', 0);
+		$is_member_page = (int)\Input::get('is_member_page', 0);
 		$response = '';
 		try
 		{
@@ -33,6 +34,7 @@ class Controller_Api extends \Controller_Site_Api
 				'limit'    => \Config::get('album.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			), 'Album');
+			$data['is_member_page'] = $is_member_page;
 
 			$response = \View::forge('_parts/list', $data);
 			$status_code = 200;
@@ -96,7 +98,10 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			\Util_security::check_csrf();
 
-			$id = (int)\Input::post('id');
+			$id             = (int)\Input::post('id');
+			$icon_only_flag = (int)\Input::post('icon_only_flag', 0);
+			$have_children_public_flag      = (int)\Input::post('have_children_public_flag', 0);
+			$is_update_children_public_flag = (int)\Input::post('is_update_children_public_flag', 0);
 			if (!$id || !$album = Model_Album::check_authority($id, $this->u->id))
 			{
 				throw new \HttpNotFoundException;
@@ -106,9 +111,23 @@ class Controller_Api extends \Controller_Site_Api
 			\DB::start_transaction();
 			$album->public_flag = $public_flag;
 			$album->save();
+			// update album_image public_flag
+			if (!empty($is_update_children_public_flag))
+			{
+				Model_AlbumImage::update_public_flag4album_id($id, $public_flag);
+			}
 			\DB::commit_transaction();
 
-			$response = \View::forge('_parts/public_flag_selecter', array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true));
+			$response = \View::forge('_parts/public_flag_selecter', array(
+				'model'              => $model,
+				'id'                 => $id,
+				'public_flag'        => $public_flag,
+				'is_mycontents'      => true,
+				'without_parent_box' => true,
+				'view_icon_only'     => $icon_only_flag,
+				'have_children_public_flag' => $have_children_public_flag,
+				'child_model'        => 'album_image',
+			));
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);

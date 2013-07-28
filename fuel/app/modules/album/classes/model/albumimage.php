@@ -137,4 +137,11 @@ class Model_AlbumImage extends \Orm\Model
 
 		return \Util_db::conv_col($result);
 	}
+
+	public static function update_public_flag4album_id($album_id, $public_flag)
+	{
+		$values = array('public_flag' => $public_flag, 'updated_at' => date('Y-m-d H:i:s'));
+
+		return \DB::update('album_image')->set($values)->where('album_id', $album_id)->execute();
+	}
 }

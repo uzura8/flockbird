@@ -10,15 +10,30 @@
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
 			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/'.$album_image->id, strim(\Album\Site_Util::get_album_image_display_name($album_image), Config::get('album.articles.trim_width.name'))); ?></h5>
-			<div class="public_flag">
+
+<?php if (!empty($is_member_page)): ?>
+		<div class="date_box">
+			<small><?php echo site_get_time($album_image->created_at) ?></small>
 <?php $is_mycontents = Auth::check() && $u->id == $album_image->album->member_id; ?>
 <?php echo render('_parts/public_flag_selecter', array(
-	'model' => 'album_image',
-	'id' => $album_image->id,
-	'public_flag' => $album_image->public_flag,
-	'is_mycontents' => $is_mycontents
+	'model'          => 'album_image',
+	'id'             => $album_image->id,
+	'public_flag'    => $album_image->public_flag,
+	'is_mycontents'  => $is_mycontents,
+	'view_icon_only' => true,
 )); ?>
-			</div>
+		</div>
+<?php else: ?>
+<?php echo render('_parts/member_contents_box', array(
+	'member'      => $album_image->album->member,
+	'id'          => $album_image->id,
+	'public_flag' => $album_image->public_flag,
+	'public_flag_view_icon_only' => true,
+	'model'       => 'album_image',
+	'date'        => array('datetime' => $album_image->album->created_at)
+)); ?>
+<?php endif; ?>
+
 			<div class="article">
 <?php if (empty($album)): ?>
 			<div class="subinfo"><small><?php echo Config::get('term.album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.articles.trim_width.subinfo'))); ?></small></div>
@@ -74,6 +89,10 @@ if (!empty($album))
 elseif (!empty($member))
 {
 	$uri .= '&member_id='.$member->id;
+}
+if (!empty($is_member_page))
+{
+	$uri .= '&is_member_page='.$is_member_page;
 }
 echo Html::anchor($uri, '');
 ?>

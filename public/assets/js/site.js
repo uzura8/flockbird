@@ -274,7 +274,28 @@ function update_public_flag(selfDomElement) {
 
 	if (is_expanded_public_range(public_flag_original, public_flag)) {
 		apprise('公開範囲が広がります。実行しますか？', {'confirm':true}, function(r) {
-			if (r == true) update_public_flag_execute(selfDomElement);
+			if (r == true) check_is_update_children_public_flag_before_update(selfDomElement);
+		});
+	} else {
+		check_is_update_children_public_flag_before_update(selfDomElement);
+	}
+
+	return false;
+}
+
+function check_is_update_children_public_flag_before_update(selfDomElement) {
+	var model = $(selfDomElement).data('model');
+	var model = $(selfDomElement).data('child_model');
+	var have_children_public_flag = $(selfDomElement).data('have_children_public_flag') ? $(selfDomElement).data('have_children_public_flag') : 0;
+	var child_model = $(selfDomElement).data('child_model') ? $(selfDomElement).data('child_model') : '';
+
+	if (have_children_public_flag) {
+		apprise(get_term(child_model) + 'の' + get_term('public_flag') + 'も変更しますか？', {'verify':true}, function(r) {
+			if (r == true) {
+				update_public_flag_execute(selfDomElement, 1);
+			} else {
+				update_public_flag_execute(selfDomElement);
+			}
 		});
 	} else {
 		update_public_flag_execute(selfDomElement);
@@ -284,16 +305,27 @@ function update_public_flag(selfDomElement) {
 }
 
 function update_public_flag_execute(selfDomElement) {
+	var is_update_children_public_flag = (arguments.length > 1) ? arguments[1] : 0;
 	var id          = $(selfDomElement).data('id');
 	var model       = $(selfDomElement).data('model');
 	var model_uri   = $(selfDomElement).data('model_uri');
 	var public_flag = $(selfDomElement).data('public_flag');
+	var icon_only_flag = $(selfDomElement).data('icon_only') ? $(selfDomElement).data('icon_only') : 0;
+	var have_children_public_flag = $(selfDomElement).data('have_children_public_flag') ? $(selfDomElement).data('have_children_public_flag') : 0;
+	var child_model    = $(selfDomElement).data('child_model') ? $(selfDomElement).data('child_model') : '';
 
 	var parentElement = $(selfDomElement).parent('li');
 	var text = $(selfDomElement).html();
 	var buttonDomElement = $('#public_flag_' + model + '_' + id).parent('.btn-group');
 
-	var post_data = {'id':id, 'public_flag':public_flag, 'model':model};
+	var post_data = {
+		'id'             : id,
+		'public_flag'    : public_flag,
+		'model'          : model,
+		'icon_only_flag' : icon_only_flag,
+		'have_children_public_flag'      : have_children_public_flag,
+		'is_update_children_public_flag' : is_update_children_public_flag,
+	};
 	post_data = set_token(post_data);
 	$.ajax({
 		url : get_baseUrl() + model_uri +'/api/update_public_flag.html',

@@ -2,7 +2,7 @@
 
 return array(
 	'articles' => array(
-		'limit' => 12,
+		'limit' => 3,
 		'trim_width' => array(
 			'name' => 70,
 			'body'  => 500,
