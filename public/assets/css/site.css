@@ -88,6 +88,15 @@ div.navbar-inner .popover.bottom .arrow {
 	font-size: 85%;
 }
 
+form .popover {
+	background-color: #DFDFDF;
+	font-size: 11px;
+}
+form .popover.bottom .arrow:after {
+	border-bottom-color: #DFDFDF;
+}
+
+
 .main_item .member_img_box_s .public_flag {
 	position: absolute;
 	top: 0;

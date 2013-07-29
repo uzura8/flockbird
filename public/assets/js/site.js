@@ -359,3 +359,24 @@ function is_expanded_public_range(original_public_flag, changed_public_flag) {
 
 	return false;
 }
+
+function setup_simple_validation_required_popover(input_atter) {
+	$(input_atter).popover({
+		placement: 'bottom',
+		content: 'このフィールドは必須入力です。',
+		trigger: 'manual',
+		animation: true,
+		delay: { show: 500, hide: 100 }
+	});
+}
+
+function simple_validation_required(input_atter) {
+	var input_val = $(input_atter).val().trim();
+
+	if (input_val.length == 0) {
+		$(input_atter).popover('show');
+		isPopover = true;
+		return false;
+	}
+	return true;
+}
