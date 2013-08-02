@@ -2,12 +2,14 @@
 
 class Site_image
 {
-	private $identifier = '';
-	private $filename = '';
-	private $extension = 'gif';//noimage 画像の拡張子をデフォルト値とする
-	private $size = '';
-	private $widtn = '';
-	private $height = '';
+	private $file_cate  = '';
+	private $split_num  = '';
+	private $filename   = '';
+	private $filepath   = '';
+	private $extension  = 'gif';//noimage 画像の拡張子をデフォルト値とする
+	private $size       = '';
+	private $widtn      = '';
+	private $height     = '';
 	private $is_noimage = false;
 
 	public function __construct($config = array())
@@ -17,19 +19,19 @@ class Site_image
 
 	private function setup($config)
 	{
+		if (!$this->set_configs($config))   $this->is_noimage = true;
 		if (!$this->check_configs($config)) $this->is_noimage = true;
-		if (!Site_Upload::check_uploaded_file_exists($this->filename)) $this->is_noimage = true;
-
-		if (!$this->check_filename()) $this->is_noimage = true;
+		$this->filepath = sprintf('%s/%s/', $this->file_cate, $this->split_num);
+		if (!$this->check_file()) $this->is_noimage = true;
 		$this->set_size();
 	}
 
-	private function check_configs($config)
+	private function set_configs($config)
 	{
 		$result = true;
 		$necessary_keys = array(
-			'identifier',
-			'group_number',
+			'file_cate',
+			'split_num',
 			'size',
 			'filename',
 		);
@@ -46,27 +48,58 @@ class Site_image
 		return $result;
 	}
 
+	private function check_configs()
+	{
+		return $this->check_file_cate() && $this->check_split_num();
+	}
+
+	private function check_file_cate()
+	{
+		if (!$is_correct = in_array($this->file_cate, array_keys(Config::get('site.upload.types.img.types'))))
+		{
+			$this->file_cate = null;
+		}
+
+		return $is_correct;
+	}
+
+	private function check_split_num()
+	{
+		if (!$is_correct = $this->split_num == 'all' || is_numeric($this->split_num))
+		{
+			$this->split_num = 'all';
+		}
+
+		return $is_correct;
+	}
+
+	private function check_file()
+	{
+		if (!$this->filename == Config::get('site.upload.types.img.noimage_filename'))  return false;
+		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename)) return false;
+		if (!$this->check_filename()) return false;
+
+		return true;
+	}
+
 	private function set_size()
 	{
 		$this->check_size();
-		if ($this->size == 'raw')
-		{
-			$this->size = Config::get('site.upload_files.img.default_size');
-			return;
-		}
+		if ($this->size == 'raw') return;
 
 		list($this->width, $this->height) = explode('x', $this->size);
 	}
 
 	private function check_size()
 	{
-		if ($this->is_noimage && empty($this->identifier))
+		$default_size = Config::get('site.upload.types.img.default_size');
+		if (!$this->size)
 		{
-			$this->size = Config::get('site.upload_files.img.default_size');
+			$this->size = Config::get('site.upload.types.img.default_size');
 			return;
 		}
 
-		$sizes = Config::get('site.upload_files.img.type.'.$this->identifier.'.sizes');
+		$sizes = Config::get('site.upload.types.img.types.'.$this->file_cate.'.sizes');
 		if (empty($sizes))
 		{
 			$this->size = $default_size;
@@ -84,14 +117,11 @@ class Site_image
 	{
 		if (empty($this->filename)) return false;
 
-		// '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]+\.(jpg|png|gif)/i';
-		if (!preg_match(Site_Upload::get_filename_format(), $this->filename, $matches)) return false;
-		if ($this->identifier != $matches[1]) return false;
+		$ext = Util_file::get_extension_from_filename($this->filename);
+		$accept_formats = Config::get('site.upload.types.img.accept_format');
+		if (!$accept_formats || !in_array($ext, $accept_formats)) return false;
 
-		$accept_formats = Config::get('site.upload_files.img.accept_format');
-		if (!$accept_formats || !in_array($matches[2], $accept_formats)) return false;
-
-		$this->extension = $matches[2];
+		$this->extension = $ext;
 
 		return true;
 	}
@@ -103,13 +133,15 @@ class Site_image
 
 	private function get_noimage_file_path()
 	{
-		$original_noimage_filename  = 'noimage.gif';
-		$original_noimage_file_path = sprintf('%s/assets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
-		if (!$this->identifier) return $original_noimage_file_path;
+		$original_noimage_filename  = Config::get('site.upload.types.img.noimage_filename');
+		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
+		if (!$this->file_cate) return $original_noimage_file_path;
 
-		$noimage_file_dir  = sprintf('%s/img/%s', PRJ_UPLOAD_DIR, $this->identifier);
-		$noimage_filename  = sprintf('%s_%s', $this->size, $original_noimage_filename);
-		$noimage_file_path = sprintf('%s/%s', $noimage_file_dir, $noimage_filename);
+		$noimage_filename  = $this->file_cate.'_'.$original_noimage_filename;
+		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
+
+		$noimage_file_dir  = sprintf('%simg/%s/%s/all', PRJ_UPLOAD_DIR, $this->size, $this->file_cate);
+		$noimage_file_path = $noimage_file_dir.'/'.$noimage_filename;
 		if (!file_exists($noimage_file_path))
 		{
 			$this->make_image($original_noimage_file_path, $noimage_file_dir, $noimage_filename);
@@ -122,14 +154,12 @@ class Site_image
 	{
 		if ($this->is_noimage) return $this->get_noimage();
 
-		$common_path = sprintf('%s/img/%s/%s', PRJ_UPLOAD_DIR, $this->identifier, $this->group_number);
-		$target_file_dir = sprintf('%s/%s', $common_path, $this->size);
-		$target_file_path = sprintf('%s/%s', $target_file_dir, $this->filename);
+		$base_path = PRJ_UPLOAD_DIR.'img/';
+		$target_file_dir = sprintf('%s%s/%s', $base_path, $this->size, $this->filepath);
+		$target_file_path = $target_file_dir.$this->filename;
 		if (!file_exists($target_file_path))
 		{
-			$original_file_path = sprintf('%s/raw/%s', $common_path, $this->filename);
-			if (!file_exists($original_file_path)) return $this->get_noimage();
-
+			$original_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename);
 			$this->make_image($original_file_path, $target_file_dir, $this->filename);
 		}
 
@@ -139,12 +169,12 @@ class Site_image
 	private function make_image($original_file_path, $target_file_dir, $target_filename)
 	{
 		$target_file_path = sprintf('%s/%s', $target_file_dir, $target_filename);
-		if (!file_exists($target_file_dir) && $target_path = Util_file::check_exists_file_path($target_file_dir, 4))
+		if (!file_exists($target_file_dir) && $target_path = Util_file::check_exists_file_path($target_file_dir, 5))
 		{
 			Util_file::make_dir_recursive($target_file_dir);
 			Util_file::chmod_recursive($target_path, 0777);
 		}
-		$resize_type = Site_Upload::get_image_resize_type($this->identifier);
+		$resize_type = Site_Upload::get_image_resize_type($this->file_cate);
 		Util_file::resize($original_file_path, $target_file_path, $this->width, $this->height, $resize_type);
 	}
 

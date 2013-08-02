@@ -82,7 +82,7 @@ class Model_Member extends \Orm\Model
 	{
 		if (empty($this->file_id)) return 'm';
 
-		return Model_File::get_name($this->file_id);
+		return Model_File::get_name($this->file_id) ?: 'm';
 	}
 
 	/**

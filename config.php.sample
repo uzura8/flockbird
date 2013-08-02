@@ -32,9 +32,6 @@ define('PRJ_PROFILING', false);
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
 
-// ファイルをアップロードするディレクトリ
-define('PRJ_UPLOAD_DIRNAME', 'media');
-
 // アップロードされた画像の Exif データを利用するかどうか
 define('PRJ_USE_EXIF_DATA', true);
 

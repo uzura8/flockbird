@@ -2,62 +2,79 @@
 
 class Site_Upload
 {
-	public static function get_middle_dir($id)
+	public static function get_upload_split_dir_name($id)
 	{
 		if (!strlen($id)) return '';
 
-		return substr($id, -1);
+		$cut_num = (strlen(Config::get('site.upload.num_of_split_dirs')) - 1) * -1;
+
+		return substr($id, $cut_num);
 	}
 
-	public static function check_filename_format($filename)
+	public static function split_file_object2vars($file)
 	{
-		return (bool)preg_match(self::get_filename_format(), $filename);
+		if (empty($file)) return false;
+
+		$filename = '';
+		$filepath = '';
+		if (is_object($file))
+		{
+			if (!empty($file->name)) $filename = $file->name;
+			if (!empty($file->path)) $filepath = $file->path;
+		}
+		elseif (is_array($file))
+		{
+			if (!empty($file['name'])) $filename = $file['name'];
+			if (!empty($file['path'])) $filepath = $file['path'];
+		}
+		else
+		{
+			$filepath = $file;
+		}
+
+		return array($filepath, $filename);
 	}
 
-	public static function get_filename_format()
+	public static function check_filepath_format($filepath)
 	{
-		$ids = array_keys(Config::get('site.upload_files.img.type'));
-		return '/('.implode('|', $ids).')_[0-9]+_[0-9a-f]+\.(jpg|png|gif)/i';
+		if (empty($filepath)) return false;
+		return (bool)preg_match(self::get_filepath_format(), $filepath);
 	}
 
-	public static function get_upload_file_path($filename, $size)
+	public static function get_filepath_format()
 	{
-		$identifier = Util_string::get_exploded($filename);
-		$sizes = Config::get('site.upload_files.img.type.'.$identifier.'.sizes');
-		if (empty($sizes) || !in_array($size, $sizes)) $size = '50x50';
-
-		$uri_basepath = self::get_upload_path('img', $filename, true);
-		$uri_path = sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
-
-		return sprintf('%s/%s', PRJ_UPLOAD_DIR, $uri_path);
+		$ids = array_keys(Config::get('site.upload.types.img.types'));
+		return '#('.implode('|', $ids).')/[0-9]+#i';
 	}
 
-	public static function upload($identifier, $id, $member_id = 0, $member_filesize_total = 0, $old_filename = '', $file_id = 0)
+	public static function upload($file_cate, $split_criterion_id, $member_id = 0, $member_filesize_total = 0, $old_file = array(), $file_id = 0)
 	{
-		$file = ($file_id) ? Model_File::find()->where('id', $file_id)->get_one() : new Model_File;
+		$file = ($file_id) ? Model_File::find($file_id) : new Model_File;
+		if (empty($file)) $file = new Model_File;
 
+		$filepath = sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
 		$config = array(
-			'base_path'   => sprintf('img/%s/%d', $identifier, self::get_middle_dir($id)),
-			'prefix'      => sprintf('%s_%d_', $identifier, $id),
-			'sizes'       => Config::get('site.upload_files.img.type.'.$identifier.'.sizes', array()),
-			'max_size'    => Config::get('site.upload_files.img.type.'.$identifier.'.max_size', 0),
-			'resize_type' => Config::get('site.upload_files.img.type.'.$identifier.'.resize_type', 'relative'),
+			'file_type'   => 'img',
+			'filepath'    => $filepath,
+			'sizes'       => Config::get('site.upload.types.img.types.'.$file_cate.'.sizes', array()),
+			'max_size'    => Config::get('site.upload.types.img.types.'.$file_cate.'.max_size', 0),
+			'resize_type' => Config::get('site.upload.types.img.types.'.$file_cate.'.resize_type', 0),
 		);
 		if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE && $member_id)
 		{
 			$config['member_id'] = $member_id;
 
-			$accepted_upload_filesize_type = 'small';// default
-			$config['file_size_limit'] = Config::get('site.accepted_upload_filesize_type.'.$accepted_upload_filesize_type.'.limit_size');
+			$config['file_size_limit'] = Config::get('site.upload.accepted_filesize.small.limit');// default
 			$config['member_filesize_total'] = $member_filesize_total;
 			if ($file_id) $config['old_file_size'] = $file->filesize;
 		}
-
-		if ($old_filename) $config['old_filename'] = $old_filename;
+		list($old_filepath, $old_filename) = Site_Upload::split_file_object2vars($old_file);
+		if (!empty($filepath) && !empty($filename)) $config['old_filepath_name'] = $old_filepath.$old_filename;
 		$uploader = new Site_uploader($config);
 		$uploaded_file = $uploader->upload();
 
 		$file->name = $uploaded_file['new_filename'];
+		$file->path = $filepath;
 		$file->filesize = $uploaded_file['size'];
 		$file->original_filename = $uploaded_file['name'];
 		$file->type = $uploaded_file['type'];
@@ -75,29 +92,28 @@ class Site_Upload
 		return $file->id;
 	}
 
-	public static function remove_images($identifier, $id, $file_name = '')
+	public static function remove_images($filepath, $filename)
 	{
-		$base_path = sprintf('%s/img/%s/%d', PRJ_UPLOAD_DIR, $identifier, self::get_middle_dir($id));
-		$sizes = Config::get('site.upload_files.img.type.'.$identifier.'.sizes', array());
+		$file = self::get_uploaded_file_real_path($filepath, $filename);
+		Util_file::remove($file);
+
+		$file_cate = self::get_file_cate_from_filepath($filepath);
+		$sizes = Config::get('site.upload.img.type.'.$file_cate.'.sizes', array());
 		foreach ($sizes as $size)
 		{
-			$file = sprintf('%s/%s/%s', $base_path, $size, $file_name);
+			$file = self::get_uploaded_file_real_path($filepath, $filename, $size);
 			Util_file::remove($file);
 		}
 
 		return true;
 	}
 
-	public static function get_upload_path($type, $filename, $is_dir = false)
+	public static function get_file_cate_from_filepath($filepath)
 	{
-		$parts = explode('_', $filename);
-		if (count($parts) < 3) return false;
+		$parts = explode('/', $filepath);
+		if (count($parts) < 1) return false;
 
-		$dir_path = self::get_upload_uri_base_path($type, $parts[0], $parts[1]);
-
-		if ($is_dir) return $dir_path;
-
-		return $dir_path.'/'.$filename;
+		return $parts[0];
 	}
 
 	public static function get_upload_uri_base_path($type, $identifer, $id)
@@ -112,7 +128,7 @@ class Site_Upload
 		return implode('/', $dirs);
 	}
 
-	public static function convert_sizes($size_string)
+	public static function conv_size_str_to_array($size_string)
 	{
 		list($width, $height) = explode('x', $size_string);
 		$sizes = array();
@@ -126,7 +142,7 @@ class Site_Upload
 	{
 		$sizes = Image::sizes($file);
 
-		$max = self::convert_sizes($max_size);
+		$max = self::conv_size_str_to_array($max_size);
 		if ($width > $max['width'] || $height > $max['height'])
 		{
 			Util_file::resize($file, $file, $max['width'], $max['width'], $resize_type);
@@ -136,26 +152,47 @@ class Site_Upload
 		return false;
 	}
 
-	public static function get_image_resize_type($identifier)
+	public static function get_image_resize_type($file_cate)
 	{
-		$resize_type = Config::get('site.upload_files.img.type'.$identifier.'resize_type');
+		$resize_type = Config::get('site.upload.types.img.types.'.$file_cate.'.resize_type');
 		if (empty($resize_type)) return 'relative';
 
 		return $resize_type;
 	}
 
-	public static function get_uploaded_file_uri_path($filename, $size = 'raw', $type = 'img')
+	public static function get_uploaded_file_uri_path($filepath, $filename, $size = 'raw', $file_type = 'img')
 	{
-		$uri_basepath = self::get_upload_path($type, $filename, true);
+		if ($size == 'row')
+		{
+			$base_path = Config::get('site.upload.types.'.$file_type.'.root_path.raw_dir');
+		}
+		else
+		{
+			$base_path = Config::get('site.upload.types.'.$file_type.'.root_path.cache_dir').$size.'/';
+		}
 
-		return sprintf('%s/%s/%s', $uri_basepath, $size, $filename);
+		return $base_path.$filepath.$filename;
 	}
 
-	public static function check_uploaded_file_exists($filename, $size = 'raw', $type = 'img')
+	public static function get_uploaded_file_real_path($filepath, $filename, $size = 'raw', $file_type = 'img')
 	{
-		$uri_path = self::get_uploaded_file_uri_path($filename, $size, $type);
-		$file = sprintf('%s/%s', PRJ_PUBLIC_DIR, $uri_path);
+		if ($size == 'row')
+		{
+			$path = Config::get('site.upload.types.'.$file_type.'.raw_file_path').$filepath.$filename;
+		}
+		else
+		{
+			$path = PRJ_PUBLIC_DIR.Config::get('site.upload.types.'.$file_type.'.root_path.cache_dir').$size.'/'.$filepath.$filename;
+		}
 
-		return file_exists($file);
+		return $path;
+	}
+
+	public static function check_uploaded_file_exists($filepath, $filename, $size = 'raw', $type = 'img')
+	{
+		$uri_path  = self::get_uploaded_file_uri_path($filepath, $filename, $size, $type);
+		$file_path = PRJ_PUBLIC_DIR.$uri_path;
+
+		return file_exists($file_path);
 	}
 }

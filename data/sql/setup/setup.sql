@@ -382,6 +382,7 @@ DROP TABLE IF EXISTS `file`;
 CREATE TABLE `file` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
+  `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File path',
   `type` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
   `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',

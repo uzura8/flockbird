@@ -36,7 +36,7 @@ class Util_file
 		if (!file_exists($file)) return;
 		if (!$return = unlink($file))
 		{
-			throw new Exception('Remove image error.');
+			throw new FuelException('Remove image error.');
 		}
 
 		return $return;
@@ -57,6 +57,11 @@ class Util_file
 		$info = pathinfo($file_path);
 
 		return $info['extension'];
+	}
+
+	public static function get_extension_from_filename($filename)
+	{
+		return substr($filename, strrpos($filename, '.') + 1);
 	}
 
 	public static function get_image_type($file_path)
@@ -181,13 +186,13 @@ class Util_file
 	{
 		if (file_exists($path))
 		{
-			if ($is_output_exception) throw new Exception('target directory is already exists.');
+			if ($is_output_exception) throw new FuelException('Target directory is already exists.');
 
 			return;
 		}
 		if (!mkdir($path, $mode, true))
 		{
-			throw new Exception('mkdir error.');
+			throw new FuelException('Mkdir error.');
 		}
 
 		return true;

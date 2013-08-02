@@ -14,33 +14,42 @@ $config = array(
 			),
 		),
 	),
-	'upload_files' => array(
-		'img' => array(
-			// member profile image
-			'default_size' => '50x50',
-			'accept_format' => array(
-				'gif',
-				'jpg',
-				'png',
-			),
-			'type' => array(
-				'm' => array(
-					'sizes' => array(
-						'RAW' => 'raw',
-						'SS' => '20x20',
-						'S' => '30x30',
-						'M' => '50x50',
-						'L' => '180x180',
-					),
-					'max_size' => '600x600',
-					'resize_type' => 'crop',
-				),
+	'upload' => array(
+		'num_of_split_dirs' => 10,
+		'accepted_filesize' => array(
+			'small' => array(
+				'limit' => '256M',
 			),
 		),
-	),
-	'accepted_upload_filesize_type' => array(
-		'small' => array(
-			'limit_size' => '256M',
+		'types' => array(
+			'img' => array(
+				'root_path' => array(
+					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img/',
+					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img/raw/',
+				),
+				'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img/raw/',
+				// member profile image
+				'noimage_filename' => 'noimage.gif',
+				'default_size' => '50x50',
+				'accept_format' => array(
+					'gif',
+					'jpg',
+					'png',
+				),
+				'types' => array(
+					'm' => array(
+						'sizes' => array(
+							'SS' => '20x20',
+							'S' => '30x30',
+							'M' => '50x50',
+							'L' => '180x180',
+						),
+						'default_saize' => '50x50',
+						'max_size' => '600x600',
+						'resize_type' => 'crop',
+					),
+				),
+			),
 		),
 	),
 	'posted_value_rule_default' => array(

@@ -79,16 +79,16 @@ class Controller_Member_profile extends Controller_Member
 
 		try
 		{
-			if (empty($this->u->file_id)) throw new Exception('No profile image.');
+			if (empty($this->u->file_id)) throw new FuelException('No profile image.');
 
-			$file_name = $this->u->get_image();
 			DB::start_transaction();
 			$this->u->filesize_total -= $this->u->file->filesize;
 			$this->u->file->delete();
 			$this->u->file_id = null;
 			$this->u->save();
 
-			Site_Upload::remove_images('m', $this->u->id, $file_name);
+			list($filepath, $filename) = Site_Upload::split_file_object2vars($this->u->file);
+			Site_Upload::remove_images($filepath, $filename);
 			DB::commit_transaction();
 
 			Session::set_flash('message', '写真を削除しました。');

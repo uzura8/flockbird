@@ -9,10 +9,11 @@ if (PRJ_ENVIRONMENT == 'STAGE') $PRJ_BASE_URL = str_replace('http://', 'http://s
 define('PRJ_BASE_URL', $PRJ_BASE_URL);
 
 // 公開ディレクトリ
-if (!defined('PRJ_PUBLIC_DIR')) define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public');
+if (!defined('PRJ_PUBLIC_DIR')) define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public/');
 
 // ファイルをアップロードするディレクトリ
-if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.'/'.PRJ_UPLOAD_DIRNAME);
+if (!defined('PRJ_UPLOAD_DIRNAME')) define('PRJ_UPLOAD_DIRNAME', 'media');
+if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/');
 //// Controller で Response する場合
 //if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_BASEPATH.'fuel/app/cache');
 

@@ -10,6 +10,12 @@ class Model_File extends \Orm\Model
 				'max_length' => array(64),
 			),
 		),
+		'path' => array(
+			'validation' => array(
+				'trim',
+				'max_length' => array(64),
+			),
+		),
 		'type' => array(
 			'validation' => array(
 				'trim',
@@ -74,11 +80,12 @@ class Model_File extends \Orm\Model
 	{
 		if (!empty(self::$name_list[$id])) return self::$name_list[$id];
 
-		$file = self::query()->select('name')->where('id', $id)->get_one();
-		if (!$file) return '';
+		self::$name_list[$id] = '';
+		if ($file = self::query()->select('name', 'path')->where('id', $id)->get_one())
+		{
+			self::$name_list[$id] = array('name' => $file->name, 'path' => $file->path);
+		}
 
-		self::$name_list[$id] = $file->name;
-
-		return $file->name;
+		return self::$name_list[$id];
 	}
 }
