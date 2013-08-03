@@ -78,7 +78,6 @@
 </div>
 <?php endif; ?>
 
-<?php if ($is_next): ?>
 <nav id="page-nav">
 <?php
 $uri = sprintf('album/image/api/list.html?page=%d', $page + 1);
@@ -97,6 +96,5 @@ if (!empty($is_member_page))
 echo Html::anchor($uri, '');
 ?>
 </nav>
-<?php endif; ?>
 
 <?php if ($is_api_request): ?></body></html><?php endif; ?>
