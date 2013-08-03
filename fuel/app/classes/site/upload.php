@@ -125,18 +125,6 @@ class Site_Upload
 		return $parts[0];
 	}
 
-	public static function get_upload_uri_base_path($type, $identifer, $id)
-	{
-		$dirs = array(
-			PRJ_UPLOAD_DIRNAME,
-			$type,
-			$identifer,
-			self::get_middle_dir($id),
-		);
-
-		return implode('/', $dirs);
-	}
-
 	public static function conv_size_str_to_array($size_string)
 	{
 		list($width, $height) = explode('x', $size_string);
@@ -169,18 +157,20 @@ class Site_Upload
 		return $resize_type;
 	}
 
-	public static function get_uploaded_file_uri_path($filepath, $filename, $size = 'raw', $file_type = 'img')
+	public static function get_uploaded_file_uri_path($filepath = '', $filename = '', $size = 'raw', $file_type = 'img')
 	{
 		if ($size == 'row')
 		{
-			$base_path = Config::get('site.upload.types.'.$file_type.'.root_path.raw_dir');
+			$uri_path = Config::get('site.upload.types.'.$file_type.'.root_path.raw_dir');
 		}
 		else
 		{
-			$base_path = Config::get('site.upload.types.'.$file_type.'.root_path.cache_dir').$size.'/';
+			$uri_path = Config::get('site.upload.types.'.$file_type.'.root_path.cache_dir').$size.'/';
 		}
+		if ($filepath) $uri_path .= $filepath;
+		if ($filepath && $filename) $uri_path .= $filename;
 
-		return $base_path.$filepath.$filename;
+		return $uri_path;
 	}
 
 	public static function get_uploaded_file_real_path($filepath, $filename, $size = 'raw', $file_type = 'img')

@@ -6,14 +6,14 @@ var baseUrl = get_baseUrl();
 var album_id = get_id_from_url();
 var comment_limit_default = get_comment_limit_default();
 
-var basePath = get_upload_uri_base_path(); // 画像のベースパスを指定
+var basePath = '/' + get_upload_uri_base_path(); // 画像のベースパスを指定
 var images = []; // 画像ファイル名格納用配列
 var image_ids = []; // 画像id格納用配列
 var slideNumber = 0;
 
 $.get('/album/image/api/id_list/' + album_id + '.json', function(json){
 	$.each(json, function(i, data){
-		images.push(basePath + data.file.name);
+		images.push(basePath + data.file.path + data.file.name);
 		image_ids.push(data.id);
 	});
 

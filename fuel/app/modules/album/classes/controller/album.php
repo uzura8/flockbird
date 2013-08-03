@@ -105,6 +105,13 @@ class Controller_Album extends \Controller_Site
 		$data['id'] = $id;
 		$data['album'] = $album;
 		$data['is_member_page'] = true;
+
+		if (\Config::get('album.display_setting.detail.display_slide_image'))
+		{
+			$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => 'created_at'));
+			$data['album_images'] = $album_images;
+		}
+
 		$this->template->content = \View::forge('detail', $data);
 	}
 
