@@ -27,6 +27,7 @@ $config = array(
 					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img/',
 					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img/raw/',
 				),
+				//'raw_file_path' => APPPATH.'cache/media/img/raw/',// raw ファイルを非公開領域に置く場合
 				'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img/raw/',
 				// member profile image
 				'noimage_filename' => 'noimage.gif',

@@ -75,7 +75,7 @@ class Site_image
 
 	private function check_file()
 	{
-		if (!$this->filename == Config::get('site.upload.types.img.noimage_filename'))  return false;
+		if ($this->filename == Config::get('site.upload.types.img.noimage_filename'))   return false;
 		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename)) return false;
 		if (!$this->check_filename()) return false;
 
@@ -84,8 +84,8 @@ class Site_image
 
 	private function set_size()
 	{
-		$this->check_size();
 		if ($this->size == 'raw') return;
+		$this->check_size();
 
 		list($this->width, $this->height) = explode('x', $this->size);
 	}
@@ -154,12 +154,17 @@ class Site_image
 	{
 		if ($this->is_noimage) return $this->get_noimage();
 
+		$original_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename);
+		if ($this->size == 'raw')
+		{
+			return file_get_contents($original_file_path);
+		}
+
 		$base_path = PRJ_UPLOAD_DIR.'img/';
 		$target_file_dir = sprintf('%s%s/%s', $base_path, $this->size, $this->filepath);
 		$target_file_path = $target_file_dir.$this->filename;
 		if (!file_exists($target_file_path))
 		{
-			$original_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename);
 			$this->make_image($original_file_path, $target_file_dir, $this->filename);
 		}
 

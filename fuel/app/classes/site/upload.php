@@ -4,11 +4,20 @@ class Site_Upload
 {
 	public static function get_upload_split_dir_name($id)
 	{
-		if (!strlen($id)) return '';
+		if (!strlen($id)) return 'all';
 
-		$cut_num = (strlen(Config::get('site.upload.num_of_split_dirs')) - 1) * -1;
+		$num_of_digits = strlen(Config::get('site.upload.num_of_split_dirs') - 1);
+		if ($num_of_digits < 1) return 'all';
 
-		return substr($id, $cut_num);
+		$cut_num = ($num_of_digits) * -1;
+		$sprit_id = substr($id, $cut_num);
+
+		if (strlen($sprit_id) < $num_of_digits)
+		{
+			$sprit_id = sprintf('%0'.$num_of_digits.'d', $sprit_id);
+		}
+
+		return $sprit_id;
 	}
 
 	public static function split_file_object2vars($file)
@@ -176,7 +185,7 @@ class Site_Upload
 
 	public static function get_uploaded_file_real_path($filepath, $filename, $size = 'raw', $file_type = 'img')
 	{
-		if ($size == 'row')
+		if ($size == 'raw')
 		{
 			$path = Config::get('site.upload.types.'.$file_type.'.raw_file_path').$filepath.$filename;
 		}
@@ -190,9 +199,8 @@ class Site_Upload
 
 	public static function check_uploaded_file_exists($filepath, $filename, $size = 'raw', $type = 'img')
 	{
-		$uri_path  = self::get_uploaded_file_uri_path($filepath, $filename, $size, $type);
-		$file_path = PRJ_PUBLIC_DIR.$uri_path;
+		$real_path = self::get_uploaded_file_real_path($filepath, $filename, $size, $type);
 
-		return file_exists($file_path);
+		return file_exists($real_path);
 	}
 }

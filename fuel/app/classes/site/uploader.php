@@ -109,7 +109,7 @@ class Site_uploader
 		{
 			throw new FuelException('File not found.');
 		}
-		if (!file_exists($this->raw_image_dir_path) && $target_path = Util_file::check_exists_file_path($this->raw_image_dir_path, 5))
+		if (!file_exists($this->raw_image_dir_path) && $target_path = Util_file::check_exists_file_path($this->raw_image_dir_path, 7))
 		{
 			Util_file::make_dir_recursive($this->raw_image_dir_path);
 			Util_file::chmod_recursive($target_path, 0777);

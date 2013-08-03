@@ -177,4 +177,20 @@ class Site_Util
 
 		return array($public_flag, $model);
 	}
+
+	public static function get_uri_last_real_segment($check_string = '', $extends = array())
+	{
+		$last_real_segment = Util_string::get_exploded_last(Input::server('REQUEST_URI'), '/');
+		if ($check_string)
+		{
+			$ext_pattern = '[^\.]+';
+			if ($extends)
+			{
+				$ext_pattern = implode('|', $extends);
+			}
+			if (!preg_match('/^'.$check_string.'\.('.$ext_pattern.')$/', $last_real_segment)) return false;
+		}
+
+		return $last_real_segment;
+	}
 }
