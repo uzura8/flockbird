@@ -68,25 +68,9 @@ function site_get_screen_name($u)
 
 function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false)
 {
+	$option = array();
 	$is_raw = $size == 'raw';
 	list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
-	if (!empty($file))
-	{
-		if (is_object($file))
-		{
-			if (!empty($file->name)) $filename = $file->name;
-			if (!empty($file->path)) $filepath = $file->path;
-		}
-		elseif (is_array($file))
-		{
-			if (!empty($file['name'])) $filename = $file['name'];
-			if (!empty($file['path'])) $filepath = $file['path'];
-		}
-		else
-		{
-			$filepath = $file;
-		}
-	}
 
 	$file_cate  = Util_string::get_exploded($filepath, 0, '/');
 	if ($file_cate == 'm') $option['class'] = 'profile_image';
@@ -126,9 +110,9 @@ function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = fa
 	return $image_tag;
 }
 
-function img_size($identifier, $size)
+function img_size($file_cate, $size)
 {
-	return Config::get(sprintf('site.upload_files.img.type.%s.sizes.%s', $identifier, $size));
+	return Config::get(sprintf('site.upload.types.img.types.%s.sizes.%s', $file_cate, $size));
 }
 
 function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal_timestamp = false, $is_display_both = false)

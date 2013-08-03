@@ -124,7 +124,7 @@ class Controller_Album extends \Controller_Site
 
 		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_Upload::get_middle_dir($id));
 		$base_path_full = PRJ_PUBLIC_DIR.'/'.$base_path;
-		$sizes = \Config::get('site.upload_files.img.type.ai.sizes');
+		$sizes = \Config::get('site.upload.types.img.types.ai.sizes');
 		// 保存ディレクトリの確認&作成
 		foreach ($sizes as $size)
 		{
@@ -485,24 +485,40 @@ class Controller_Album extends \Controller_Site
 		}
 		\Util_security::check_csrf();
 
+		$is_start_transaction = false;
 		try
 		{
-			\DB::start_transaction();
+			$val = \Validation::forge();
+			$options = \Site_Util::get_public_flags();
+			$options[] = 99;
+			$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
+				->add_rule('required')
+				->add_rule('in_array', $options);
+			if (!$val->run())
+			{
+				throw new \FuelException($val->show_errors());
+			}
+			$post = $val->validated();
+
 			$file_id = \Site_Upload::upload('ai', $album_id, $this->u->id, $this->u->filesize_total);
 
+			\DB::start_transaction();
+			$is_start_transaction = true;
 			$album_image = new Model_AlbumImage;
 			$album_image->album_id = $album_id;
 			$album_image->file_id = $file_id;
+			$album_image->public_flag = $post['public_flag'];
 			$album_image->save();
 
 			\Model_Member::recalculate_filesize_total($this->u->id);
 			\DB::commit_transaction();
+			$is_start_transaction = false;
 
 			\Session::set_flash('message', '写真を投稿しました。');
 		}
-		catch(\Exception $e)
+		catch(\FuelException $e)
 		{
-			\DB::rollback_transaction();
+			if ($is_start_transaction) \DB::rollback_transaction();
 			\Session::set_flash('error', $e->getMessage());
 		}
 
@@ -519,7 +535,7 @@ class Controller_Album extends \Controller_Site
 			$config = array(
 				'base_path' => sprintf('img/m/%d', \Site_Upload::get_middle_dir($this->u->id)),
 				'prefix'    => sprintf('m_%d_', $this->u->id),
-				'sizes'     => \Config::get('site.upload_files.img.type.ai.sizes'),
+				'sizes'     => \Config::get('site.upload.types.img.types.ai.sizes'),
 				'max_file_size' => PRJ_UPLOAD_MAX_FILESIZE,
 			);
 			if ($this->u->get_image()) $config['old_filename'] = $this->u->get_image();
@@ -578,7 +594,7 @@ class Controller_Album extends \Controller_Site
 		$options['max_file_size'] = PRJ_UPLOAD_MAX_FILESIZE;
 		$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
 
-		$config_upload_files = \Config::get('site.upload_files.img.type.ai');
+		$config_upload_files = \Config::get('site.upload.types.img.types.ai');
 		$sizes = $config_upload_files['sizes'];
 		$thumbnail_size = $config_upload_files['thumbnail_size'];
 		$options['image_versions'] = array();

@@ -8,7 +8,7 @@
 <?php foreach ($list as $album_image): ?>
 	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
-			<div><?php echo img($album_image->file->name, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
+			<div><?php echo img($album_image->file, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
 			<h5><?php echo Html::anchor('album/image/'.$album_image->id, strim(\Album\Site_Util::get_album_image_display_name($album_image), Config::get('album.articles.trim_width.name'))); ?></h5>
 
 <?php if (!empty($is_member_page)): ?>
