@@ -22,6 +22,7 @@ return array(
 			'display_slide_image' => false,
 		),
 		'upload' => array(
+			'display_uploaded_files' => false,
 			'display_delete_button' => false,
 		),
 	),
