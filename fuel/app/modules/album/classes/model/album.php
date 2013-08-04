@@ -92,7 +92,7 @@ class Model_Album extends \Orm\Model
 		}
 
 		// Delete album_image file.
-		$files = \DB::select('file.id', 'file.name')
+		$files = \DB::select('file.id', 'file.path', 'file.name')
 			->from('file')
 			->join('album_image', 'LEFT')->on('album_image.file_id', '=', 'file.id')
 			->where('album_image.album_id', $id)
@@ -100,7 +100,7 @@ class Model_Album extends \Orm\Model
 		$file_ids = array();
 		foreach ($files as $file)
 		{
-			\Site_Upload::remove_images('ai', $id, $file['name']);
+			\Site_Upload::remove_images($file['path'], $file['name']);
 			$file_ids[] = $file['id'];
 		}
 

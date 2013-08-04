@@ -137,7 +137,7 @@ class UploadHandler extends \JqueryFileUpload
 
 				foreach($this->options['image_versions'] as $version => $options)
 				{
-					if ($this->make_thumbnail($file_path, $options['upload_dir'], $options['size'], $file->path, rawurlencode($file->name)))
+					if ($this->make_thumbnail($file_path, $this->options['upload_dir_cache'], $options['size'], $file->path, rawurlencode($file->name)))
 					{
 						if ($this->options['upload_dir'] !== $options['upload_dir'])
 						{
@@ -228,7 +228,6 @@ class UploadHandler extends \JqueryFileUpload
 		\DB::start_transaction();
 		$deleted_filesize = Model_AlbumImage::delete_with_file($album_image_id);
 		\Model_Member::add_filesize($member_id, -$deleted_filesize);
-
 		\DB::commit_transaction();
 
 		return json_encode($deleted_filesize);

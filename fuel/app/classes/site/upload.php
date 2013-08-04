@@ -117,7 +117,7 @@ class Site_Upload
 		Util_file::remove($file);
 
 		$file_cate = self::get_file_cate_from_filepath($filepath);
-		$sizes = Config::get('site.upload.img.type.'.$file_cate.'.sizes', array());
+		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.sizes', array());
 		foreach ($sizes as $size)
 		{
 			$file = self::get_uploaded_file_real_path($filepath, $filename, $size);

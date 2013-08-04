@@ -367,13 +367,13 @@ class Controller_Album extends \Controller_Site
 			if (!$error)
 			{
 				$file_ids   = array();
-				$file_names = array();
+				$deleted_files = array();
 				if ($is_delete || (!$is_delete && strlen($post['shot_at'])))
 				{
 					$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $posted_album_image_ids)->execute()->as_array());
 					if ($is_delete)
 					{
-						$file_names = \Util_db::conv_col(\DB::select('name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array());
+						$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
 					}
 				}
 
@@ -421,9 +421,9 @@ class Controller_Album extends \Controller_Site
 				else
 				{
 					\DB::commit_transaction();
-					if ($is_delete && !empty($file_names))
+					if ($is_delete && !empty($deleted_files))
 					{
-						foreach ($file_names as $file_name) \Site_Upload::remove_images('ai', $id, $file_name);
+						foreach ($deleted_files as $deleted_file) \Site_Upload::remove_images($deleted_file['path'], $deleted_file['name']);
 					}
 
 					\Session::set_flash('message', $message);
