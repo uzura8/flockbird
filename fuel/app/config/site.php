@@ -33,9 +33,10 @@ $config = array(
 				'noimage_filename' => 'noimage.gif',
 				'default_size' => '50x50',
 				'accept_format' => array(
-					'gif',
-					'jpg',
-					'png',
+					'gif' => 'image/gif',
+					'jpg' => 'image/jpeg',
+					'jpeg'=> 'image/jpeg',
+					'png' => 'image/png',
 				),
 				'types' => array(
 					'm' => array(

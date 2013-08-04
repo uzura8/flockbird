@@ -81,8 +81,10 @@ class Util_file
 		return false;
 	}
 
-	public static function check_image_type($file_path, $arrow_extentions = array('jpeg', 'jpg', 'png', 'gif'), $type = '')
+	public static function check_image_type($file_path, $arrow_extentions = array(), $type = '')
 	{
+		if (empty($arrow_extentions)) $arrow_extentions = Site_Upload::get_accept_format();
+
 		if ($type)
 		{
 			if (!preg_match('#^image/(jpeg|gif|ping)$#i', $type, $matches)) return false;
@@ -184,18 +186,9 @@ class Util_file
 
 	public static function make_dir_recursive($path, $mode = 0777, $is_output_exception = false)
 	{
-		if (file_exists($path))
-		{
-			if ($is_output_exception) throw new FuelException('Target directory is already exists.');
+		if (file_exists($path)) return true;
 
-			return;
-		}
-		if (!mkdir($path, $mode, true))
-		{
-			throw new FuelException('Mkdir error.');
-		}
-
-		return true;
+		return mkdir($path, $mode, true);
 	}
 
 	public static function check_exists_file_path($path, $check_level = 0)

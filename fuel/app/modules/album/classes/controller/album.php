@@ -129,18 +129,16 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_Upload::get_middle_dir($id));
-		$base_path_full = PRJ_PUBLIC_DIR.'/'.$base_path;
+		$filepath = \Site_Upload::get_filepath('ai', $id);
+		$real_path_raw = \Config::get('site.upload.types.img.raw_file_path');
+		\Site_Upload::check_and_make_uploaded_dir($real_path_raw.$filepath);
+
+		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get('site.upload.types.img.root_path.cache_dir');
 		$sizes = \Config::get('site.upload.types.img.types.ai.sizes');
-		// 保存ディレクトリの確認&作成
 		foreach ($sizes as $size)
 		{
-			$dir = sprintf('%s/%s', $base_path_full, $size);
-			if (!file_exists($dir) && $target_path = \Util_file::check_exists_file_path($dir, 4))
-			{
-				\Util_file::make_dir_recursive($dir);
-				\Util_file::chmod_recursive($target_path, 0777);
-			}
+			$dir = sprintf('%s%s/%s', $real_path_cache, $size, $filepath);
+			\Site_Upload::check_and_make_uploaded_dir($dir);
 		}
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.album_image').'アップロード', array('/album/'.$id => $album->name), $album->member, 'album');
@@ -590,30 +588,32 @@ class Controller_Album extends \Controller_Site
 		}
 		//\Util_security::check_csrf();
 
-		$base_path = sprintf('%s/img/ai/%d', PRJ_UPLOAD_DIRNAME, \Site_Upload::get_middle_dir($album_id));
-		$base_path_full = PRJ_PUBLIC_DIR.'/'.$base_path;
-		$base_url = \Uri::create($base_path);
+		$filepath = \Site_Upload::get_filepath('ai', $album_id);
+
+		$real_path_raw   = \Config::get('site.upload.types.img.raw_file_path');
+		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get('site.upload.types.img.root_path.cache_dir');
+		$uri_path_cache  = '/'.\Config::get('site.upload.types.img.root_path.cache_dir');
 
 		$options = array();
 		$options['script_url'] = \Uri::create('album/upload_images/'.$album_id);
-		$options['upload_dir'] = $base_path_full.'/raw/';
-		$options['upload_url'] = $base_url.'/raw/';
-		$options['max_file_size'] = PRJ_UPLOAD_MAX_FILESIZE;
+		$options['upload_dir']       = $real_path_raw;
+		$options['upload_dir_cache'] = $real_path_cache;
+		$options['upload_url']       = $uri_path_cache;
+		$options['max_file_size']       = PRJ_UPLOAD_MAX_FILESIZE;
 		$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
 
 		$config_upload_files = \Config::get('site.upload.types.img.types.ai');
 		$sizes = $config_upload_files['sizes'];
-		$thumbnail_size = $config_upload_files['thumbnail_size'];
+		$thumbnail_size = $config_upload_files['default_saize'];
 		$options['image_versions'] = array();
 		foreach ($sizes as $size)
 		{
-			if ($size == 'raw') continue;
-
 			$key = ($size == $thumbnail_size)? 'thumbnail' : $size;
 			list($width, $height) = explode('x', $size);
 			$options['image_versions'][$key] = array(
-				'upload_dir' => sprintf('%s/%s/', $base_path_full, $size),
-				'upload_url' => sprintf('%s/%s/', $base_url, $size),
+				'size' => $size,
+				'upload_dir' => sprintf('%s%s/%s', $real_path_cache, $size, $filepath),
+				'upload_url' => sprintf('%s%s/%s', $uri_path_cache, $size, $filepath),
 				'max_width'  => $width,
 				'max_height' => $height,
 			);
@@ -647,7 +647,7 @@ class Controller_Album extends \Controller_Site
 					if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE)
 					{
 						$accepted_upload_filesize_type = 'small';// default
-						$upload_handler->accepted_upload_filesize = (int)\Util_string::convert2bytes(\Config::get('site.accepted_upload_filesize_type.'.$accepted_upload_filesize_type.'.limit_size'));
+						$upload_handler->accepted_upload_filesize = (int)\Util_string::convert2bytes(\Config::get('site.upload.accepted_filesize.'.$accepted_upload_filesize_type.'.limit'));
 						$upload_handler->member_filesize_total    = $this->u->filesize_total;
 					}
 					$upload_handler->is_save_exif_data = PRJ_USE_EXIF_DATA;

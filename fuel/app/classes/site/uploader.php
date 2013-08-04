@@ -109,11 +109,7 @@ class Site_uploader
 		{
 			throw new FuelException('File not found.');
 		}
-		if (!file_exists($this->raw_image_dir_path) && $target_path = Util_file::check_exists_file_path($this->raw_image_dir_path, 7))
-		{
-			Util_file::make_dir_recursive($this->raw_image_dir_path);
-			Util_file::chmod_recursive($target_path, 0777);
-		}
+		Site_Upload::check_and_make_uploaded_dir($this->raw_image_dir_path);
 
 		$to = $this->raw_image_dir_path.$new_filename;
 		if (file_exists($to)) return;
@@ -148,11 +144,7 @@ class Site_uploader
 		foreach ($this->sizes as $size)
 		{
 			$dir = sprintf('%s%s/%s', $this->cache_image_base_dir_path, $size, $this->filepath);
-			if (!file_exists($dir) && $target_path = Util_file::check_exists_file_path($dir, 5))
-			{
-				Util_file::make_dir_recursive($dir);
-				Util_file::chmod_recursive($target_path, 0777);
-			}
+			Site_Upload::check_and_make_uploaded_dir($dir);
 
 			$new_file = $dir.$this->filename;
 			list($width, $height) = explode('x', $size);

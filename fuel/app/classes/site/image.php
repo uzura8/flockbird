@@ -118,7 +118,7 @@ class Site_image
 		if (empty($this->filename)) return false;
 
 		$ext = Util_file::get_extension_from_filename($this->filename);
-		$accept_formats = Config::get('site.upload.types.img.accept_format');
+		$accept_formats = Site_Upload::get_accept_format();
 		if (!$accept_formats || !in_array($ext, $accept_formats)) return false;
 
 		$this->extension = $ext;
@@ -136,6 +136,7 @@ class Site_image
 		$original_noimage_filename  = Config::get('site.upload.types.img.noimage_filename');
 		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
 		if (!$this->file_cate) return $original_noimage_file_path;
+		if ($this->size == 'raw') return $original_noimage_file_path;
 
 		$noimage_filename  = $this->file_cate.'_'.$original_noimage_filename;
 		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
@@ -174,11 +175,7 @@ class Site_image
 	private function make_image($original_file_path, $target_file_dir, $target_filename)
 	{
 		$target_file_path = sprintf('%s/%s', $target_file_dir, $target_filename);
-		if (!file_exists($target_file_dir) && $target_path = Util_file::check_exists_file_path($target_file_dir, 5))
-		{
-			Util_file::make_dir_recursive($target_file_dir);
-			Util_file::chmod_recursive($target_path, 0777);
-		}
+		Site_Upload::check_and_make_uploaded_dir($target_file_dir);
 		$resize_type = Site_Upload::get_image_resize_type($this->file_cate);
 		Util_file::resize($original_file_path, $target_file_path, $this->width, $this->height, $resize_type);
 	}

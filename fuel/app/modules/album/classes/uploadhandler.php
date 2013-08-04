@@ -36,7 +36,7 @@ class UploadHandler extends \JqueryFileUpload
 			{
 				if (empty($album_image->file)) continue;
 
-				$info[] = $this->get_file_object($album_image->file->name, $album_image->id, $album_image->file->original_filename);
+				$info[] = $this->get_file_object($album_image->file->name, $album_image->id, $album_image->file->original_filename, $album_image->file->path);
 			}
 
 			return $info;
@@ -49,22 +49,21 @@ class UploadHandler extends \JqueryFileUpload
 
 	}
 
-	protected function get_file_object($file_name, $album_image_id = 0, $original_filename = '')
+	protected function get_file_object($file_name, $album_image_id = 0, $original_filename = '', $filepath = '')
 	{
-		$file_path = $this->options['upload_dir'].$file_name;
+		$file_path = $this->options['upload_dir'].$filepath.$file_name;
 		if (is_file($file_path) && $file_name[0] !== '.')
 		{
 			$file = new \stdClass();
-			$file->name = ($original_filename)? $original_filename : $file_name;
+			$file->name = $original_filename ?: $file_name;
 			$file->size = filesize($file_path);
-			$file->url = $this->options['upload_url'].rawurlencode($file_name);
+			$file->url = sprintf('%sraw/%s%s', $this->options['upload_url'], $filepath, rawurlencode($file_name));
 
 			foreach($this->options['image_versions'] as $version => $options)
 			{
-				if (is_file($options['upload_dir'].$file_name))
-				{
-					$file->{$version.'_url'} = $options['upload_url'].rawurlencode($file_name);
-				}
+				$file_path_version = sprintf('%s%s/%s%s', $this->options['upload_dir_cache'], $options['size'], $filepath, rawurlencode($file_name));
+				$file_url_version  = sprintf('%s%s/%s%s', $this->options['upload_url'], $options['size'], $filepath, rawurlencode($file_name));
+				if (is_file($file_path_version)) $file->{$version.'_url'} = $file_url_version;
 			}
 
 			if ($album_image_id) $file->album_image_id = $album_image_id;
@@ -86,16 +85,17 @@ class UploadHandler extends \JqueryFileUpload
 		}
 	}
 
-	protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null, $album_image_id = 0, $original_filename = '', $max_size = 0)
+	protected function handle_file_upload_site($uploaded_file, $name, $filepath, $size, $type, $error, $index = null, $album_image_id = 0, $original_filename = '', $max_size = 0)
 	{
 		$file = new \stdClass();
 		$file->name = $this->trim_file_name($name, $type, $index);
+		$file->path = $filepath;
 		$file->size = intval($size);
 		$file->type = $type;
 		if ($this->validate($uploaded_file, $file, $error, $index))
 		{
 			$this->handle_form_data($file, $index);
-			$file_path = $this->options['upload_dir'].$file->name;
+			$file_path = $this->options['upload_dir'].$file->path.$file->name;
 			$append_file = !$this->options['discard_aborted_uploads'] && is_file($file_path) && $file->size > filesize($file_path);
 			clearstatcache();
 			if ($uploaded_file && is_uploaded_file($uploaded_file))
@@ -130,18 +130,18 @@ class UploadHandler extends \JqueryFileUpload
 				{
 					$this->orient_image($file_path);
 				}
-				$file->url = $this->options['upload_url'].rawurlencode($file->name);
+				$file->url = $this->options['upload_url'].'raw/'.$file->path.rawurlencode($file->name);
 
 				$sizes = \Image::sizes($file_path);
 				$file->size = \Site_Upload::check_max_size_and_resize($file_path, $max_size, $sizes->width, $sizes->height);
 
 				foreach($this->options['image_versions'] as $version => $options)
 				{
-					if ($this->create_scaled_image($file->name, $options))
+					if ($this->make_thumbnail($file_path, $options['upload_dir'], $options['size'], $file->path, rawurlencode($file->name)))
 					{
 						if ($this->options['upload_dir'] !== $options['upload_dir'])
 						{
-							$file->{$version.'_url'} = $options['upload_url'].rawurlencode($file->name);
+							$file->{$version.'_url'} = sprintf('%s%s/%s%s', $this->options['upload_url'], $options['size'], $file->path, rawurlencode($file->name));
 						}
 						else
 						{
@@ -179,7 +179,7 @@ class UploadHandler extends \JqueryFileUpload
 		$upload = \Input::file($this->options['param_name'], null);
 
 		$HTTP_X_FILE_NAME = \Input::server('HTTP_X_FILE_NAME');
-		$prefix = 'ai_'.$album_id;
+		$prefix = '';
 		$info = array();
 		if ($upload && is_array($upload['tmp_name']))
 		{
@@ -187,7 +187,7 @@ class UploadHandler extends \JqueryFileUpload
 			// $_FILES is a multi-dimensional array:
 			foreach ($upload['tmp_name'] as $index => $value)
 			{
-				if (!$extention = \Util_file::check_image_type($upload['tmp_name'][$index], array('jpeg', 'jpg', 'png', 'gif'), $upload['type'][$index]))
+				if (!$extention = \Util_file::check_image_type($upload['tmp_name'][$index], \Site_Upload::get_accept_format(), $upload['type'][$index]))
 				{
 					continue;
 				}
@@ -196,7 +196,7 @@ class UploadHandler extends \JqueryFileUpload
 		}
 		elseif ($upload || isset($HTTP_X_FILE_NAME))
 		{
-			if (!$extention = \Util_file::check_image_type($upload['tmp_name'], array('jpeg', 'jpg', 'png', 'gif'), $upload['type']))
+			if (!$extention = \Util_file::check_image_type($upload['tmp_name'], \Site_Upload::get_accept_format(), $upload['type']))
 			{
 				return;
 			}
@@ -248,6 +248,7 @@ class UploadHandler extends \JqueryFileUpload
 				'public_flag' => $public_flag,
 			));
 			$album_image->save();
+			$filepath = \Site_Upload::get_filepath('ai', $album_id);
 
 			// param_name is a single object identifier like "file",
 			// $_FILES is a one-dimensional array:
@@ -262,9 +263,10 @@ class UploadHandler extends \JqueryFileUpload
 				$exif = ($this->is_save_exif_data) ? exif_read_data($upload['tmp_name'][$index]) : array();
 
 				$this->check_filesize_per_member($filesize);
-				$result = $this->handle_file_upload(
+				$result = $this->handle_file_upload_site(
 					isset($upload['tmp_name'][$index]) ? $upload['tmp_name'][$index] : null,
 					$filename,
+					$filepath,
 					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'][$index])? $upload['size'][$index] : null),
 					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'][$index])? $upload['type'][$index] : null),
 					isset($upload['error'][$index]) ? $upload['error'][$index] : null,
@@ -285,9 +287,10 @@ class UploadHandler extends \JqueryFileUpload
 				$exif = ($this->is_save_exif_data) ? exif_read_data($upload['tmp_name']) : array();
 
 				$this->check_filesize_per_member($filesize);
-				$result = $this->handle_file_upload(
+				$result = $this->handle_file_upload_site(
 					isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
 					$filename,
+					$filepath,
 					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'])? $upload['size'] : null),
 					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'])? $upload['type'] : null),
 					isset($upload['error']) ? $upload['error'] : null,
@@ -303,6 +306,7 @@ class UploadHandler extends \JqueryFileUpload
 			// file の保存
 			$model_file = new \Model_File;
 			$model_file->name = $filename;
+			$model_file->path = $filepath;
 			$model_file->filesize = $result->size;
 			$model_file->type = $file_type;
 			$model_file->original_filename = $original_filename;
@@ -326,13 +330,13 @@ class UploadHandler extends \JqueryFileUpload
 		catch(LimitUploadFileSizeException $e)
 		{
 			\DB::rollback_transaction();
-			$result->name = $original_filename;
+			if (!empty($result)) $result->name = $original_filename;
 			$result->error = $e->getMessage();
 		}
-		catch(\Exception $e)
+		catch(\FuelException $e)
 		{
 			\DB::rollback_transaction();
-			$result->name = $original_filename;
+			if (!empty($result)) $result->name = $original_filename;
 		}
 
 		return $result;
@@ -344,5 +348,17 @@ class UploadHandler extends \JqueryFileUpload
 
 		$accept_size = $this->accepted_upload_filesize - $this->member_filesize_total;
 		if ($size > $accept_size) throw new LimitUploadFileSizeException('File size is over the limit of the member.');
+	}
+
+	private function make_thumbnail($from_file, $to_base_dir, $size, $filepath, $filename)
+	{
+		if (!file_exists($from_file)) return false;
+
+		$to_dir = sprintf('%s%s/%s', $to_base_dir, $size, $filepath);
+		if (!file_exists($to_dir)) \Site_Upload::check_and_make_uploaded_dir($to_dir);
+		$new_file = $to_dir.$filename;
+		list($width, $height) = explode('x', $size);
+
+		return \Util_file::resize($from_file, $new_file, $width, $height);
 	}
 }

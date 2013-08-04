@@ -20,6 +20,11 @@ class Site_Upload
 		return $sprit_id;
 	}
 
+	public static function get_accept_format($type = 'img')
+	{
+		return array_keys(Config::get('site.upload.types.'.$type.'.accept_format'));
+	}
+
 	public static function split_file_object2vars($file)
 	{
 		if (empty($file)) return false;
@@ -56,12 +61,17 @@ class Site_Upload
 		return '#('.implode('|', $ids).')/[0-9]+#i';
 	}
 
+	public static function get_filepath($file_cate, $split_criterion_id)
+	{
+		return sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
+	}
+
 	public static function upload($file_cate, $split_criterion_id, $member_id = 0, $member_filesize_total = 0, $old_file = array(), $file_id = 0)
 	{
 		$file = ($file_id) ? Model_File::find($file_id) : new Model_File;
 		if (empty($file)) $file = new Model_File;
 
-		$filepath = sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
+		$filepath = self::get_filepath($file_cate, $split_criterion_id);
 		$config = array(
 			'file_type'   => 'img',
 			'filepath'    => $filepath,
@@ -192,5 +202,16 @@ class Site_Upload
 		$real_path = self::get_uploaded_file_real_path($filepath, $filename, $size, $type);
 
 		return file_exists($real_path);
+	}
+
+	public static function check_and_make_uploaded_dir($dir, $check_dir_level = 7)
+	{
+		if ($target_path = Util_file::check_exists_file_path($dir, $check_dir_level))
+		{
+			Util_file::make_dir_recursive($dir);
+			Util_file::chmod_recursive($target_path, 0777);
+		}
+
+		return true;
 	}
 }
