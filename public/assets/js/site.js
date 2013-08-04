@@ -313,6 +313,7 @@ function update_public_flag_execute(selfDomElement) {
 	var icon_only_flag = $(selfDomElement).data('icon_only') ? $(selfDomElement).data('icon_only') : 0;
 	var have_children_public_flag = $(selfDomElement).data('have_children_public_flag') ? $(selfDomElement).data('have_children_public_flag') : 0;
 	var child_model    = $(selfDomElement).data('child_model') ? $(selfDomElement).data('child_model') : '';
+	var is_refresh     = $(selfDomElement).data('is_refresh') ? $(selfDomElement).data('is_refresh') : 0;
 
 	var parentElement = $(selfDomElement).parent('li');
 	var text = $(selfDomElement).html();
@@ -342,7 +343,13 @@ function update_public_flag_execute(selfDomElement) {
 		},
 		success: function(result, status, xhr){
 			$(buttonDomElement).html(result);
-			$.jGrowl(get_term('public_flag') + 'を変更しました。');
+			var msg = get_term('public_flag') + 'を変更しました。';
+			if (is_refresh) {
+				var delimitter = (url('?').length > 0) ? '&' : '?';
+				location.href=url() + delimitter + 'msg=' + msg;
+			} else {
+				$.jGrowl(msg);
+			}
 		},
 		error: function(result){
 			$(parentElement).html(selfDomElement);

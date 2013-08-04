@@ -56,7 +56,7 @@ class Util_file
 		if (file_exists($file_path)) return false;
 		$info = pathinfo($file_path);
 
-		return $info['extension'];
+		return isset($info['extension']) ? $info['extension'] : false;
 	}
 
 	public static function get_extension_from_filename($filename)

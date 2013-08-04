@@ -14,7 +14,7 @@ $model_uri = str_replace('_', '/', $model);
 <?php if ($public_flag == $public_flag_value): ?>
 		<li><span class="disabled"><?php echo $label; ?></span></li>
 <?php else: ?>
-		<li><a href="#" class="update_public_flag" data-id="<?php echo $id; ?>" data-public_flag="<?php echo $public_flag_value; ?>" data-public_flag_original="<?php echo $public_flag; ?>" data-model="<?php echo $model; ?>" data-model_uri="<?php echo $model_uri; ?>"<?php if (!empty($view_icon_only)): ?> data-icon_only="1"<?php endif; ?><?php if (!empty($have_children_public_flag)): ?> data-have_children_public_flag="1"<?php endif; ?><?php if (!empty($child_model)): ?> data-child_model="<?php echo $child_model; ?>"<?php endif; ?>><?php echo $label; ?></a></li>
+		<li><a href="#" class="update_public_flag" data-id="<?php echo $id; ?>" data-public_flag="<?php echo $public_flag_value; ?>" data-public_flag_original="<?php echo $public_flag; ?>" data-model="<?php echo $model; ?>" data-model_uri="<?php echo $model_uri; ?>"<?php if (!empty($view_icon_only)): ?> data-icon_only="1"<?php endif; ?><?php if (!empty($have_children_public_flag)): ?> data-have_children_public_flag="1"<?php endif; ?><?php if (!empty($is_refresh_after_update_public_flag)): ?> data-is_refresh="1"<?php endif; ?><?php if (!empty($child_model)): ?> data-child_model="<?php echo $child_model; ?>"<?php endif; ?>><?php echo $label; ?></a></li>
 <?php endif; ?>
 <?php endforeach; ?>
 	</ul>

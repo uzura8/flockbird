@@ -122,19 +122,23 @@
 <?php endforeach; ?>
 			</ul>
 <?php endif; ?>
-
-			<?php if ($message = Session::get_flash('message')): ?>
+<?php
+$message = '';
+if (Session::get_flash('message')) $message = Session::get_flash('message');
+if (Input::get('msg')) $message = e(Input::get('msg'));
+?>
+<?php if ($message): ?>
 				<div class="alert alert-success">
 					<a class="close" data-dismiss="alert">x</a>
 					<?php echo $message; ?>
 				</div>
-			<?php endif; ?>
-			<?php if ($error = Session::get_flash('error')): ?>
+<?php endif; ?>
+<?php if ($error = Session::get_flash('error')): ?>
 				<div class="alert alert-error">
 					<a class="close" data-dismiss="alert">x</a>
 					<?php echo view_convert_list($error); ?>
 				</div>
-			<?php endif; ?>
+<?php endif; ?>
 
 			<!-- title -->
 <?php if (isset($title) || isset($subtitle)): ?>
