@@ -26,8 +26,6 @@ if (!defined('PRJ_MAX_FILE_UPLOADS')) define('PRJ_MAX_FILE_UPLOADS', ini_get('ma
 // ImageMagick のパス(ImageMagick を使用する場合のみ)
 if (!defined('PRJ_IMAGE_IMGMAGICK_PATH')) define('PRJ_IMAGE_IMGMAGICK_PATH', '');
 
-
-
 // error level 設定
 switch (PRJ_ENVIRONMENT)
 {

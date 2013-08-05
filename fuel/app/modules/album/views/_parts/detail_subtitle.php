@@ -2,16 +2,16 @@
 	'member'      => $album->member,
 	'id'          => $album->id,
 	'public_flag' => $album->public_flag,
-	'have_children_public_flag' => true,
+	'have_children_public_flag'  => true,
+	'public_flag_view_icon_only' => IS_SP,
 	'is_refresh_after_update_public_flag' => true,
 	'model'       => 'album',
 	'child_model' => 'album_image',
 	'date'        => array('datetime' => $album->created_at, 'label' => '日時')
 )); ?>
-
 <?php if (isset($u) && $u->id == $album->member_id): ?>
 <div class="btn-group edit">
-	<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-edit"></i> edit <span class="caret"/></button>
+	<?php echo render('_parts/button_edit'); ?>
 	<ul class="dropdown-menu pull-right">
 		<li><?php echo Html::anchor('album/edit/'.$album->id, '<i class="icon-pencil"></i> 編集'); ?></li>
 		<li><a href="#" onclick="delete_item('album/delete/<?php echo $album->id; ?>');return false;"><i class="icon-trash"></i> 削除</a></li>

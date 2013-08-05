@@ -49,13 +49,13 @@
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
 				<div class="btn-group btn_album_edit" id="btn_album_edit_<?php echo $album->id ?>">
 <?php if (\Config::get('album.display_setting.member.display_delete_link')): ?>
-					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
+					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
 					<ul class="dropdown-menu">
 						<li><?php echo Html::anchor('album/edit/'.$album->id, '<i class="icon-pencil"></i> 編集'); ?></li>
 						<li><a href="#" onclick="delete_item('album/api/delete.json', <?php echo $album->id; ?>, '#main_item');return false;"><i class="icon-trash"></i> 削除</a></li>
 					</ul>
 <?php else: ?>
-					<?php echo Html::anchor('album/edit/'.$album->id, '<i class="icon-edit mrlr10"></i>', array('class' => 'btn btn-mini')); ?>
+					<?php echo Html::anchor('album/edit/'.$album->id, '<i class="ls-icon-edit mrlr10"></i>', array('class' => 'btn btn-mini')); ?>
 <?php endif; ?>
 				</div><!-- /btn-group -->
 <?php endif; ?>

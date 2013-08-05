@@ -4,13 +4,14 @@ echo render('_parts/member_contents_box', array(
 	'member'      => $album_image->album->member,
 	'id'          => $album_image->id,
 	'public_flag' => $album_image->public_flag,
+	'public_flag_view_icon_only' => IS_SP,
 	'model'       => 'album_image',
-	'date'        => array('datetime' => $date, 'label' => '撮影日時')
+	'date'        => array('datetime' => $date, 'label' => '撮影')
 )); ?>
 <?php if (isset($u) && $u->id == $album_image->album->member_id): ?>
 <div class="btn-group edit">
-	<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-edit"></i> edit <span class="caret"/></button>
-	<ul class="dropdown-menu">
+	<?php echo render('_parts/button_edit'); ?>
+	<ul class="dropdown-menu pull-right">
 		<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>
 <?php if ($album_image->album->cover_album_image_id == $album_image->id): ?>
 		<li><span class="disabled"><i class="icon-book"></i> カバーに設定済み</span></li>

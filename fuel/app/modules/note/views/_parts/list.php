@@ -14,11 +14,12 @@
 	'model' => 'note',
 	'id' => $note->id,
 	'public_flag' => $note->public_flag,
+	'public_flag_view_icon_only' => IS_SP,
 	'date' => array('datetime' => $note->created_at)
 )); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>
 				<div class="btn-group edit" id="btn_edit_<?php echo $id ?>">
-					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="icon-edit"></i><span class="caret"/></button>
+					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
 					<ul class="dropdown-menu pull-right">
 						<li><?php echo Html::anchor('note/edit/'.$id, '<i class="icon-pencil"></i> 編集'); ?></li>
 						<li><a href="#" onclick="delete_item('note/api/delete.json', <?php echo $id; ?>, '#article');return false;"><i class="icon-trash"></i> 削除</a></li>

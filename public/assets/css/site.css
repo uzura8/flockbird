@@ -61,6 +61,12 @@
 	#album_album_upload #fileupload .btn_box {padding-left: 19px;}
 }
 
+#album_album_edit_images td {
+	word-break: break-all;
+	word-wrap: break-word;
+	overflow: hidden;
+}
+
 body .ui-datepicker select.ui-datepicker-month,
 body .ui-datepicker select.ui-datepicker-year
 {

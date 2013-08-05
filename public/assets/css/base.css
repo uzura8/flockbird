@@ -1,5 +1,6 @@
 body {
 	padding-top: 60px;
+	min-width: 280px;
 }
 /* browser width is under 980px */
 @media (max-width: 980px) {
@@ -7,9 +8,13 @@ body {
     padding-top: 0;
   }
 }
-
-.container-fluid {
-	min-width: 360px;
+@media  (max-width: 767px) {
+	body {
+		margin: 0px;
+	}
+	body .navbar .brand {
+		margin-left: 5px;
+	}
 }
 
 div#main div.row-fluid div#main_container {
@@ -113,7 +118,7 @@ img.profile_image {
 {
 	position: absolute;
 	right: 0;
-	top: 0;
+	bottom: 0;
 }
 
 .commentBox,
@@ -145,7 +150,7 @@ div.btnBox button {
 .commentBox .boxBtn {
 	position: absolute;
 	right: 5px;
-	top: 5px;
+	bottom: 5px;
 	color: #949494;
 }
 

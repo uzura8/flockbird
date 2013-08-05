@@ -43,7 +43,7 @@
 	</div>
 	<div class="control-group">
 		<div class="controls">
-		<?php echo Form::button('post', '<i class="icon-edit icon-white"></i> 一括編集', array('id' => 'submit_post', 'class' => 'btn btn-primary', 'type' => 'button')); ?>
+		<?php echo Form::button('post', '<i class="ls-icon-edit icon-white"></i> 一括編集', array('id' => 'submit_post', 'class' => 'btn btn-primary', 'type' => 'button')); ?>
 		</div>
 	</div>
 	<div class="control-group">
@@ -57,11 +57,11 @@
 
 <table id="album_image_list" class="table table-striped">
 <tr>
-	<th class="formParts">対象選択</th>
-	<th><?php echo \Config::get('term.album_image'); ?></th>
+	<th class="formParts span2">対象選択</th>
+	<th class="span3"><?php echo \Config::get('term.album_image'); ?></th>
 	<th>タイトル</th>
-	<th>公開範囲</th>
-	<th>撮影日時</th>
+	<th class="span2">公開範囲</th>
+	<th class="span3">撮影日時</th>
 </tr>
 <?php foreach ($album_images as $album_image): ?>
 <tr>
@@ -69,7 +69,7 @@
 	<td class="image"><?php echo img((isset($album_image->file)) ? $album_image->file : '', '80x80', 'album/image/'.$album_image->id); ?></td>
 	<td class="span5"><?php echo $album_image->name; ?></td>
 <?php list($name, $icon, $btn_color) = get_public_flag_label($album_image->public_flag); ?>
-	<td><span class="btn btn-mini<?php echo $btn_color; ?>"><?php echo $icon.$name; ?></span></td>
+	<td><span class="btn btn-mini<?php echo $btn_color; ?>"><?php echo sprintf('%s%s', $icon, IS_SP ? '' : $name); ?></span></td>
 	<td><?php if (isset($album_image->file->shot_at)) echo date('Y年n月j日 H:i', strtotime($album_image->file->shot_at)); ?></td>
 </tr>
 <?php endforeach; ?>
