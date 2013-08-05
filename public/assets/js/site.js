@@ -252,13 +252,16 @@ function load_item(container_attribute, item_attribute)
 }
 
 function load_popover(link_attribute, content_attribute, content_url) {
+	var input_attrs = (arguments.length > 3) ? arguments[3] : '';
+
 	$(link_attribute).popover({html: true})
 	$(link_attribute).click(function(){
 		$(content_attribute).load(content_url);
+		//if (input_attribute.length > 0) $(input_attribute).focus();
 		$(window).resize(function(e) {
 			e.preventDefault()
 			$(link_attribute).each(function (){
-				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('a[data-toggle=popover]').has(e.target).length === 0){
+				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('a[data-toggle=popover]').has(e.target).length === 0 && check_is_input(input_attrs) === false) {
 					$(this).popover('hide');
 					return;
 				}
@@ -386,4 +389,14 @@ function simple_validation_required(input_atter) {
 		return false;
 	}
 	return true;
+}
+
+function check_is_input(input_attrs) {
+	var is_input = false;
+	for (i = 0; i < input_attrs.length; i++) {
+		var val = $(input_attrs[i]).val();
+		if(val && val.length > 0) is_input = true;
+	}
+
+	return is_input;
 }
