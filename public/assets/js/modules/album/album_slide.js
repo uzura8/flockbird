@@ -7,23 +7,25 @@ var album_id = get_id_from_url();
 var comment_limit_default = get_comment_limit_default();
 
 var basePath = '/' + get_upload_uri_base_path(); // 画像のベースパスを指定
-var images = []; // 画像ファイル名格納用配列
+var images = {}; // 画像ファイル名格納用配列
 var image_ids = []; // 画像id格納用配列
 var slideNumber = 0;
+var slideNumber_max = 0;
 
-$.get('/album/image/api/id_list/' + album_id + '.json', function(json){
+$.get('/album/image/api/list.json', {'album_id':album_id, 'limit':0}, function(json){
 	$.each(json, function(i, data){
-		images.push(basePath + data.file.path + data.file.name);
+		images[data.id] = basePath + data.file.path + data.file.name;
 		image_ids.push(data.id);
 	});
+	slideNumber_max = image_ids.length;
 
-	if ( images.length < 2 ) {
+	if ( slideNumber_max < 2 ) {
 		return;
 	}
 
 	// 最初の画像の設定
 	var position = {
-		prev : images.length - 1,
+		prev : slideNumber_max - 1,
 		now  : 0,
 		next : 1
 	};
@@ -31,10 +33,9 @@ $.get('/album/image/api/id_list/' + album_id + '.json', function(json){
 	var html = "";
 	$.each(position, function(i, v){
 		if ( i == 'now' ) {
-			html += "<img class='item active' src='"+ images[v]+"' id='image_" + image_ids[v] + "'>";
-		}
-		else {
-			html += "<img class='item' src='"+ images[v]+"' id='image_" + image_ids[v] + "'>";
+			html += "<img class='item active' src='"+ images[image_ids[v]]+"' id='image_" + image_ids[v] + "'>";
+		} else {
+			html += "<img class='item' src='"+ images[image_ids[v]]+"' id='image_" + image_ids[v] + "'>";
 		}
 	});
 
@@ -51,52 +52,40 @@ $.get('/album/image/api/id_list/' + album_id + '.json', function(json){
 },'json');
 
 var next = function() {
-	reset_textarea('#textarea_comment');
-
 	// 次のスライドへ移動
 	slideNumber++;
 
-	if (slideNumber > images.length - 1) {
+	if (slideNumber > slideNumber_max - 1) {
 		slideNumber = 0;
 	}
 	nextSlideNumber = slideNumber + 1;
-	if (nextSlideNumber > images.length - 1) {
+	if (nextSlideNumber > slideNumber_max - 1) {
 		nextSlideNumber = 0;
-	}
-	prevSlideNumber = slideNumber - 1;
-	if (prevSlideNumber < 0) {
-		prevSlideNumber = images.length - 1;
 	}
 
 	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 
-	$('#myCarousel > .carousel-inner > img:first').empty();
-	$('#myCarousel > .carousel-inner').append('<img class="item" src="'+ images[nextSlideNumber]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
+	$('#myCarousel > .carousel-inner > img:first').remove();
+	$('#myCarousel .carousel-inner').prepend('<img class="item" src="'+ images[image_ids[nextSlideNumber]]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
 	$('#myCarousel').carousel('next');
 }
 
 var prev = function() {
-	reset_textarea('#textarea_comment');
-
 	// 前のスライドに移動
 	slideNumber--;
 
 	if (slideNumber < 0) {
-		slideNumber = images.length - 1;
+		slideNumber = slideNumber_max - 1;
 	}
 	prevSlideNumber = slideNumber - 1;
 	if (prevSlideNumber < 0) {
-		prevSlideNumber = images.length - 1;
-	}
-	nextSlideNumber = slideNumber + 1;
-	if (nextSlideNumber > images.length - 1) {
-		nextSlideNumber = 0;
+		prevSlideNumber = slideNumber_max - 1;
 	}
 
 	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 
-	$('#myCarousel > .carousel-inner > img:last').empty();
-	$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[prevSlideNumber]+'" id="image_'+ image_ids[prevSlideNumber] +'>');
+	$('#myCarousel > .carousel-inner > img:last').remove();
+	$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[image_ids[prevSlideNumber]]+'" id="image_'+ image_ids[prevSlideNumber] +'">');
 	$('#myCarousel').carousel('prev');
 }
 
@@ -104,8 +93,7 @@ var slide = function(type) {
 	// スライドの実行
 	if (type == 'next') {
 		next();
-	}
-	else if ( type == 'prev') {
+	} else if ( type == 'prev') {
 		prev();
 	}
 	//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
@@ -114,10 +102,12 @@ var slide = function(type) {
 
 $('.carousel-control').click(function(event) {
 	// 横ボタン動作
-	if ( images.length < 2 ) {
+	if ( slideNumber_max < 2 ) {
 		return;
 	}
+	reset_textarea('#textarea_comment');
 	slide($(this).attr('data-action'));
+	return false;
 });
 
 $('body').keydown(function(event){

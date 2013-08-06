@@ -7,7 +7,6 @@ class Controller_Image_api extends \Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
 		'get_list',
-		'get_id_list',
 		'get_member',
 		'get_comments',
 	);
@@ -25,12 +24,13 @@ class Controller_Image_api extends \Controller_Site_Api
 	 */
 	public function get_list()
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
+		if (!in_array($this->format, array('html', 'json'))) throw new \HttpNotFoundException();
 
 		$page      = (int)\Input::get('page', 1);
 		$album_id  = (int)\Input::get('album_id', 0);
 		$member_id = (int)\Input::get('member_id', 0);
 		$is_member_page = (int)\Input::get('is_member_page', 0);
+		$limit = (int)\Input::get('limit', \Config::get('album.articles.limit'));
 
 		$album     = null;
 		$member    = null;
@@ -55,8 +55,8 @@ class Controller_Image_api extends \Controller_Site_Api
 			$params = array(
 				'related'  => array('file', 'album'),
 				'order_by' => array('created_at' => 'desc'),
-				'limit'    => \Config::get('album.articles.limit'),
 			);
+			if ($limit) $params['limit'] = $limit;
 
 			$target_member_id = 0;
 			$self_member_id   = \Auth::check() ? $this->u->id : 0;
@@ -69,16 +69,22 @@ class Controller_Image_api extends \Controller_Site_Api
 				$member_id_colmn  = 't2.member_id';
 			}
 			$params['where'] = \Site_Model::get_where_params4list($target_member_id, $self_member_id, $is_mypage, $member_id_colmn, $where);
-
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, $params, 'Album');
-			$data['is_member_page'] = $is_member_page;
-			if (!empty($album))  $data['album']  = $album;
-			if (!empty($member)) $data['member'] = $member;
 
-			$response = \View::forge('image/_parts/list', $data);
+			if ($this->format == 'html')
+			{
+				$data['is_member_page'] = $is_member_page;
+				if (!empty($album))  $data['album']  = $album;
+				if (!empty($member)) $data['member'] = $member;
+
+				$response = \View::forge('image/_parts/list', $data);
+				$status_code = 200;
+
+				return \Response::forge($response, $status_code);
+			}
+
+			$response = $data['list'];
 			$status_code = 200;
-
-			return \Response::forge($response, $status_code);
 		}
 		catch(\FuelException $e)
 		{
@@ -116,32 +122,6 @@ class Controller_Image_api extends \Controller_Site_Api
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
-	}
-
-	/**
-	 * Api id_list
-	 * 
-	 * @access  public
-	 * @return  Response
-	 */
-	public function get_id_list($parent_id = null)
-	{
-		$response = array();
-		try
-		{
-			if (!$album = Model_Album::check_authority($parent_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$response = Model_AlbumImage::find('all', array('where' => array('album_id' => $parent_id), 'related' => 'file', 'order_by_rows' => 'created_at'));
-			$status_code = 200;
 		}
 		catch(\FuelException $e)
 		{

@@ -1,6 +1,6 @@
 <p><?php echo nl2br($album->body) ?></p>
 
-<?php if ($album_images): ?>
+<?php if ($list): ?>
 <div class="row-fluid" id="img_comment_box">
 	<div class="span8">
 		<a name="slidetop" id="slidetop"></a>

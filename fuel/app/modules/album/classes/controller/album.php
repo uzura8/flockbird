@@ -100,17 +100,17 @@ class Controller_Album extends \Controller_Site
 				array(array('album_id', $id))
 			),
 			'order_by' => array('created_at' => 'desc'),
-			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
+
+		$data['album_images'] = array();
+		if (\Config::get('album.display_setting.detail.display_slide_image'))
+		{
+			$data['album_images'] = $data['list'];
+		}
+		$data['list'] = array_slice($data['list'], 0, \Config::get('album.articles.limit'));
 		$data['id'] = $id;
 		$data['album'] = $album;
 		$data['is_member_page'] = true;
-
-		if (\Config::get('album.display_setting.detail.display_slide_image'))
-		{
-			$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => 'created_at'));
-			$data['album_images'] = $album_images;
-		}
 
 		$this->template->content = \View::forge('detail', $data);
 	}
@@ -162,6 +162,19 @@ class Controller_Album extends \Controller_Site
 		}
 		$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => 'created_at'));
 
+		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
+			'related'  => array('file', 'album'),
+			'where'    => \Site_Model::get_where_params4list(
+				0,
+				\Auth::check() ? $this->u->id : 0,
+				$this->check_is_mypage($album->member_id),
+				null,
+				array(array('album_id', $id))
+			),
+			'order_by' => array('created_at' => 'desc'),
+		), 'Album');
+		$data['album'] = $album;
+
 		$this->set_title_and_breadcrumbs(
 			sprintf('%sの%s', $album->name, \Config::get('term.album_image')),
 			array('/album/'.$id => $album->name),
@@ -170,7 +183,7 @@ class Controller_Album extends \Controller_Site
 		);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
 		$this->template->post_footer = \View::forge('_parts/slide_footer', array('id' => $id));
-		$this->template->content = \View::forge('slide', array('album' => $album, 'album_images' => $album_images));
+		$this->template->content = \View::forge('slide', $data);
 	}
 
 	/**

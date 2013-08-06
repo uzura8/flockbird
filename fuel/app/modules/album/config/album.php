@@ -19,7 +19,7 @@ return array(
 		),
 		'detail' => array(
 			'display_upload_form' => false,
-			'display_slide_image' => false,
+			'display_slide_image' => true,
 		),
 		'upload' => array(
 			'display_uploaded_files' => false,

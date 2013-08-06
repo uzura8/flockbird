@@ -3,21 +3,17 @@ class Site_Model
 {
 	public static function get_simple_pager_list($table, $page = 1, $params = array(), $namespace = '')
 	{
-		$page = (int)$page;
-		if ($page < 1) $page = 1;
-
-		$limit  = empty($params['limit']) ? \Config::get($table.'.articles.limit', 5) : $params['limit'];
-		$offset = $limit * ($page - 1);
-
 		$model = 'Model_'.Util_string::camelize($table);
 		if ($namespace) $model = sprintf('\%s\%s', $namespace, $model);
 		$query = $model::query();
 
+		// related
 		if (!empty($params['related']))
 		{
 			$query = $query->related($params['related']);
 		}
 
+		// where
 		if (!empty($params['where']))
 		{
 			if (Arr::is_multi($params['where'], true))
@@ -47,7 +43,9 @@ class Site_Model
 				}
 			}
 		}
+		$count = $query->count();
 
+		// order by
 		if (!empty($params['order_by']))
 		{
 			foreach ($params['order_by'] as $key => $value)
@@ -56,10 +54,23 @@ class Site_Model
 			}
 		}
 
-		$count = $query->count();
-		$list = $query->rows_offset($offset)->rows_limit($limit)->get();
+		// limit, offset
+		$page = (int)$page;
+		if ($page < 1) $page = 1;
 
-		$is_next = ($count > $offset + $limit) ? true : false;
+		$limit  = 0;
+		$offset = 0;
+		if (!empty($params['limit']))
+		{
+			$limit  = $params['limit'];
+			$offset = $limit * ($page - 1);
+
+			$query = $query->rows_limit($limit);
+			$query = $query->rows_offset($offset);
+		}
+		$is_next = ($limit && $count > $offset + $limit) ? true : false;
+
+		$list = $query->get();
 
 		return array('list' => $list, 'page' => $page, 'is_next' => $is_next);
 	}
