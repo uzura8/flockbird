@@ -4,6 +4,6 @@
 <?php echo Asset::js('jquery-ui-sliderAccess.js');?>
 <script type="text/javascript">
 $(function(){
-	set_datetimepicker('#form_shot_at');
+	set_datetimepicker('<?php echo isset($attr_shot_at) ? $attr_shot_at : '#form_shot_at'; ?>');
 });
 </script>

@@ -104,11 +104,11 @@ class Site_Upload
 			if (!empty($exif['DateTimeOriginal'])) $file->shot_at = date('Y-m-d H:i:s', strtotime($exif['DateTimeOriginal']));
 			$file->exif = serialize($exif);
 		}
-		if (empty($file->shot_at)) $file->shot_at = date('Y-m-d H:i:s');
+		//if (empty($file->shot_at)) $file->shot_at = date('Y-m-d H:i:s');
 
 		$file->save();
 
-		return $file->id;
+		return $file;
 	}
 
 	public static function remove_images($filepath, $filename)

@@ -244,6 +244,7 @@ class UploadHandler extends \JqueryFileUpload
 			$album_image = Model_AlbumImage::forge(array(
 				'album_id'    => (int)$album_id,
 				'file_id'     => 0,
+				'shot_at'     => date('Y-m-d H:i:s'),
 				'public_flag' => $public_flag,
 			));
 			$album_image->save();
@@ -315,11 +316,12 @@ class UploadHandler extends \JqueryFileUpload
 				if (!empty($exif['DateTimeOriginal'])) $model_file->shot_at = date('Y-m-d H:i:s', strtotime($exif['DateTimeOriginal']));
 				$model_file->exif = serialize($exif);
 			}
-			if (empty($model_file->shot_at)) $model_file->shot_at = date('Y-m-d H:i:s');
+			//if (empty($model_file->shot_at)) $model_file->shot_at = date('Y-m-d H:i:s');
 			$model_file->save();
 
 			// album_image の保存
 			$album_image->file_id = $model_file->id;
+			$album_image->shot_at = isset($model_file->shot_at) ? $model_file->shot_at : date('Y-m-d H:i:s');
 			$album_image->save();
 
 			$this->member_filesize_total += $result->size;

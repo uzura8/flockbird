@@ -18,7 +18,7 @@ return array(
 			'display_delete_link' => false,
 		),
 		'detail' => array(
-			'display_upload_form' => false,
+			'display_upload_form' => true,
 			'display_slide_image' => true,
 		),
 		'upload' => array(

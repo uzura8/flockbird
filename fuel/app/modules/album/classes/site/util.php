@@ -35,11 +35,22 @@ class Site_Util
 		return (!empty($album_image)) ? $album_image->get_image() : 'ai';
 	}
 
-	public static function get_neighboring_album_image_ids($album_id, $album_image_id, $sort = 'id')
+	public static function get_neighboring_album_image_ids($album_id, $album_image_id, $sort = 'id', $where = array())
 	{
-		$album_image = Model_AlbumImage::query()->select('id')->where('album_id', $album_id)->order_by($sort)->where('id', '<', $album_image_id)->get_one();	
+		$query = Model_AlbumImage::query()->select('id')
+			->where('album_id', $album_id)
+			->where('id', '<', $album_image_id)	
+			->order_by($sort);
+		if ($where) $query = $query->where($where);
+		$album_image = $query->get_one();
 		$prev_id = (isset($album_image->id))? $album_image->id : null;
-		$album_image = Model_AlbumImage::query()->select('id')->where('album_id', $album_id)->order_by($sort)->where('id', '>', $album_image_id)->get_one();	
+
+		$query = Model_AlbumImage::query()->select('id')
+			->where('album_id', $album_id)
+			->where('id', '>', $album_image_id)	
+			->order_by($sort);
+		if ($where) $query = $query->where($where);
+		$album_image = $query->get_one();
 		$next_id = (isset($album_image->id))? $album_image->id : null;
 
 		return array($prev_id, $next_id);

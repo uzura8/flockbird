@@ -34,7 +34,7 @@ class Controller_Image extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related'  => array('file', 'album'),
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
-			'order_by' => array('created_at' => 'desc'),
+			'order_by' => array('shot_at' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$this->template->content = \View::forge('image/_parts/list', $data);
@@ -55,13 +55,14 @@ class Controller_Image extends \Controller_Site
 
 		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
 		list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($id, $record_limit);
+		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
+
+		$where = \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($album_image->album->member_id));
+		list($data['before_id'], $data['after_id']) =  Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'shot_at', $where);
 
 		$title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
 		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
-
-		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
-		list($data['before_id'], $data['after_id']) =  Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'created_at');
 		$this->template->content = \View::forge('image/detail', $data);
 	}
 
@@ -85,7 +86,7 @@ class Controller_Image extends \Controller_Site
 			'related' => array('file', 'album'),
 			'where' => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id), 't2.member_id'),
 			'limit' => \Config::get('album.articles.limit'),
-			'order_by' => array('created_at' => 'desc'),
+			'order_by' => array('shot_at' => 'desc'),
 		), 'Album');
 		$data['member'] = $member;
 		$this->template->content = \View::forge('image/_parts/list', $data);
@@ -118,7 +119,7 @@ class Controller_Image extends \Controller_Site
 			if ($val->run())
 			{
 				$post = $val->validated();
-				if (empty($post['name']) && empty($post['shot_at'])) $error = '入力してください';
+				if (empty($post['name']) && empty($post['shot_at_time'])) $error = '入力してください';
 			}
 			else
 			{
@@ -132,15 +133,13 @@ class Controller_Image extends \Controller_Site
 					$post = $val->validated();
 
 					\DB::start_transaction();
-					$album_image->name        = $post['name'];
+					$album_image->name = strlen($post['name']) ? $post['name'] : null;
 					$album_image->public_flag = $post['public_flag'];
-					$album_image->save();
-					if (!empty($post['shot_at']))
+					if (!\Util_Date::check_is_same_minute($post['shot_at_time'], $album_image->shot_at))
 					{
-						$file = \Model_File::find($album_image->file_id);
-						$file->shot_at = $post['shot_at'].':00';
-						$file->save();
+						$album_image->shot_at = $post['shot_at_time'].':'.'00';
 					}
+					$album_image->save();
 					\DB::commit_transaction();
 
 					\Session::set_flash('message', \Config::get('term.album_image').'を編集をしました。');
@@ -171,7 +170,7 @@ class Controller_Image extends \Controller_Site
 			'album'
 		);
 		$this->template->post_header = \View::forge('_parts/edit_header');
-		$this->template->post_footer = \View::forge('_parts/edit_footer');
+		$this->template->post_footer = \View::forge('_parts/edit_footer', array('attr_shot_at' => '#form_shot_at_time'));
 
 		$this->template->content = \View::forge('edit', array('form' => $form, 'original_public_flag' => $album_image->public_flag));
 		$this->template->content->set_safe('html_form', $form->build('album/image/edit/'.$id));// form の action に入る
@@ -213,20 +212,16 @@ class Controller_Image extends \Controller_Site
 
 	protected function form($album_image)
 	{
-		$shot_at = '';
-		if (\Input::post('shot_at'))
+		$shot_at = \Input::post('shot_at', '');
+		if (empty($shot_at))
 		{
-			$shot_at = \Input::post('shot_at');
-		}
-		elseif (!empty($album_image->file->shot_at))
-		{
-			$shot_at = substr($album_image->file->shot_at, 0, 16);
+			$shot_at = substr($album_image->shot_at, 0, 16);
 		}
 		$add_fields = array(
-			'shot_at' => array(
+			'shot_at_time' => array(
 				'label' => '撮影日時',
 				'attributes' => array('value' => $shot_at, 'class' => 'input-medium'),
-				'rules' => array('datetime_except_second', 'datetime_is_past'),
+				'rules' => array('required', 'datetime_except_second', 'datetime_is_past'),
 			),
 			'original_public_flag' => array(
 				'attributes' => array('type' => 'hidden', 'value' => $album_image->public_flag, 'id' => 'original_public_flag'),

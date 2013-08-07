@@ -412,17 +412,13 @@ class Controller_Album extends \Controller_Site
 				{
 					$updated_at = date('Y-m-d H:i:s');
 					$values = array();
-					if (strlen($post['name']))      $values['name']        = $post['name'];
+					$values['name'] = strlen($post['name']) ? $post['name'] : null;
 					if ($post['public_flag'] != 99) $values['public_flag'] = $post['public_flag'];
+					if ($post['shot_at']) $values['shot_at'] = $post['shot_at'];
 					if (!empty($values))
 					{
 						$values['updated_at'] = $updated_at;
 						if (!$result = \DB::update('album_image')->set($values)->where('id', 'in', $posted_album_image_ids)->execute()) $is_db_error = true;
-					}
-					if (strlen($post['shot_at']))
-					{
-						$values = array('shot_at' => $post['shot_at'], 'updated_at' => $updated_at);
-						if (!$result = \DB::update('file')->set($values)->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
 					}
 					$message = $result.'件更新しました';
 				}
@@ -518,14 +514,15 @@ class Controller_Album extends \Controller_Site
 			}
 			$post = $val->validated();
 
-			$file_id = \Site_Upload::upload('ai', $album_id, $this->u->id, $this->u->filesize_total);
+			$file = \Site_Upload::upload('ai', $album_id, $this->u->id, $this->u->filesize_total);
 
 			\DB::start_transaction();
 			$is_start_transaction = true;
 			$album_image = new Model_AlbumImage;
 			$album_image->album_id = $album_id;
-			$album_image->file_id = $file_id;
+			$album_image->file_id = $file->id;
 			$album_image->public_flag = $post['public_flag'];
+			$album_image->shot_at = isset($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
 			$album_image->save();
 
 			\Model_Member::recalculate_filesize_total($this->u->id);

@@ -54,6 +54,7 @@ class Model_AlbumImage extends \Orm\Model
 			'validation' => array('required'),
 			'form' => array('type' => 'radio', 'options' => array()),
 		),
+		'shot_at'    => array('form' => array('type' => false)),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
