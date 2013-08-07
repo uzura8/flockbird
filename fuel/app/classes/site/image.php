@@ -92,10 +92,10 @@ class Site_image
 
 	private function check_size()
 	{
-		$default_size = Config::get('site.upload.types.img.default_size');
+		$default_size = Config::get('site.upload.types.img.defaults.default_size');
 		if (!$this->size)
 		{
-			$this->size = Config::get('site.upload.types.img.default_size');
+			$this->size = $default_size;
 			return;
 		}
 

@@ -254,9 +254,9 @@ class UploadHandler extends \JqueryFileUpload
 			if (isset($index))
 			{
 				$original_filename = $upload['name'][$index];
-				$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name'][$index]), $extention, $prefix);
-				$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size'][$index]);
-				$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type'][$index]);
+				$filename  = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name'][$index]), $extention, $prefix);
+				$filesize  = \Input::server('HTTP_X_FILE_SIZE', isset($upload['size'][$index])? $upload['size'][$index] : null);
+				$file_type = \Input::server('HTTP_X_FILE_TYPE', isset($upload['type'][$index])? $upload['type'][$index] : null);
 
 				// Exif データの取得
 				$exif = ($this->is_save_exif_data) ? exif_read_data($upload['tmp_name'][$index]) : array();
@@ -266,8 +266,8 @@ class UploadHandler extends \JqueryFileUpload
 					isset($upload['tmp_name'][$index]) ? $upload['tmp_name'][$index] : null,
 					$filename,
 					$filepath,
-					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'][$index])? $upload['size'][$index] : null),
-					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'][$index])? $upload['type'][$index] : null),
+					$filesize,
+					$file_type,
 					isset($upload['error'][$index]) ? $upload['error'][$index] : null,
 					$index,
 					$album_image->id,
@@ -279,8 +279,8 @@ class UploadHandler extends \JqueryFileUpload
 			{
 				$original_filename = $upload['name'];
 				$filename = \Util_file::make_filename(\Input::server('HTTP_X_FILE_NAME', $upload['name']), $extention, $prefix);
-				$filesize  = \Input::server('HTTP_X_FILE_SIZE', $upload['size']);
-				$file_type = \Input::server('HTTP_X_FILE_TYPE', $upload['type']);
+				$filesize  = \Input::server('HTTP_X_FILE_SIZE', isset($upload['size'])? $upload['size'] : null);
+				$file_type = \Input::server('HTTP_X_FILE_TYPE', isset($upload['type'])? $upload['type'] : null);
 
 				// Exif データの取得
 				$exif = ($this->is_save_exif_data) ? exif_read_data($upload['tmp_name']) : array();
@@ -290,8 +290,8 @@ class UploadHandler extends \JqueryFileUpload
 					isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
 					$filename,
 					$filepath,
-					\Input::server('HTTP_X_FILE_SIZE', isset($upload['size'])? $upload['size'] : null),
-					\Input::server('HTTP_X_FILE_TYPE', isset($upload['type'])? $upload['type'] : null),
+					$filesize,
+					$file_type,
 					isset($upload['error']) ? $upload['error'] : null,
 					null,
 					$album_image->id,
@@ -300,7 +300,7 @@ class UploadHandler extends \JqueryFileUpload
 				);
 			}
 
-			if (isset($result->error)) throw new \Exception($result->error);
+			if (isset($result->error)) throw new \FuelException($result->error);
 
 			// file の保存
 			$model_file = new \Model_File;
@@ -322,7 +322,7 @@ class UploadHandler extends \JqueryFileUpload
 			$album_image->file_id = $model_file->id;
 			$album_image->save();
 
-			$this->member_filesize_total += $filesize;
+			$this->member_filesize_total += $result->size;
 
 			\DB::commit_transaction();
 		}

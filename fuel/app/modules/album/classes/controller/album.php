@@ -552,8 +552,8 @@ class Controller_Album extends \Controller_Site
 		{
 			$config = array(
 				'base_path' => sprintf('img/m/%d', \Site_Upload::get_middle_dir($this->u->id)),
-				'prefix'    => sprintf('m_%d_', $this->u->id),
 				'sizes'     => \Config::get('site.upload.types.img.types.ai.sizes'),
+				'max_size'  => \Config::get('site.upload.types.img.ai.max_size', \Config::get('site.upload.types.img.defaults.max_size')),
 				'max_file_size' => PRJ_UPLOAD_MAX_FILESIZE,
 			);
 			if ($this->u->get_image()) $config['old_filename'] = $this->u->get_image();
@@ -612,12 +612,13 @@ class Controller_Album extends \Controller_Site
 		$options['upload_dir']       = $real_path_raw;
 		$options['upload_dir_cache'] = $real_path_cache;
 		$options['upload_url']       = $uri_path_cache;
+		$options['max_size']         = \Config::get('site.upload.types.img.ai.max_size', \Config::get('site.upload.types.img.defaults.max_size'));
 		$options['max_file_size']       = PRJ_UPLOAD_MAX_FILESIZE;
 		$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
 
 		$config_upload_files = \Config::get('site.upload.types.img.types.ai');
 		$sizes = $config_upload_files['sizes'];
-		$thumbnail_size = $config_upload_files['default_saize'];
+		$thumbnail_size = $config_upload_files['default_size'];
 		$options['image_versions'] = array();
 		foreach ($sizes as $size)
 		{

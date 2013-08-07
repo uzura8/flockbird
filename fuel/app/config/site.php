@@ -31,12 +31,15 @@ $config = array(
 				'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img/raw/',
 				// member profile image
 				'noimage_filename' => 'noimage.gif',
-				'default_size' => '50x50',
 				'accept_format' => array(
 					'gif' => 'image/gif',
 					'jpg' => 'image/jpeg',
 					'jpeg'=> 'image/jpeg',
 					'png' => 'image/png',
+				),
+				'defaults' => array(
+					'default_size' => '50x50',
+					'max_size' => '600x600',
 				),
 				'types' => array(
 					'm' => array(
@@ -46,7 +49,7 @@ $config = array(
 							'M' => '50x50',
 							'L' => '180x180',
 						),
-						'default_saize' => '50x50',
+						'default_size' => '50x50',
 						'max_size' => '600x600',
 						'resize_type' => 'crop',
 					),

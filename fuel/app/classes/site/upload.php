@@ -148,15 +148,14 @@ class Site_Upload
 	public static function check_max_size_and_resize($file, $max_size, $width, $height, $resize_type = 'relative')
 	{
 		$sizes = Image::sizes($file);
+		$size  = filesize($file);
 
 		$max = self::conv_size_str_to_array($max_size);
-		if ($width > $max['width'] || $height > $max['height'])
-		{
-			Util_file::resize($file, $file, $max['width'], $max['width'], $resize_type);
-			return filesize($file);
-		}
+		if ($width <= $max['width'] && $height <= $max['height']) return $size;
 
-		return false;
+		Util_file::resize($file, $file, $max['width'], $max['width'], $resize_type);
+
+		return filesize($file);
 	}
 
 	public static function get_image_resize_type($file_cate)
