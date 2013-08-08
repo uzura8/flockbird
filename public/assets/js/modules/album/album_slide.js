@@ -66,7 +66,7 @@ var next = function() {
 	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 
 	$('#myCarousel > .carousel-inner > img:first').remove();
-	$('#myCarousel .carousel-inner').prepend('<img class="item" src="'+ images[image_ids[nextSlideNumber]]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
+	$('#myCarousel .carousel-inner').append('<img class="item" src="'+ images[image_ids[nextSlideNumber]]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
 	$('#myCarousel').carousel('next');
 }
 
