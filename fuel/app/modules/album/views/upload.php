@@ -55,3 +55,5 @@
 	<table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
 <?php echo Form::close(); ?>
 </div>
+
+<?php echo render('_parts/main_link', array('href' => 'album/'.$id, 'text' => Config::get('term.album').'を見る')); ?>

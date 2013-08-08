@@ -211,8 +211,8 @@ class Controller_Album extends \Controller_Site
 
 				if ($album and $album->save())
 				{
-					\Session::set_flash('message', \Config::get('term.album').'を作成しました。');
-					\Response::redirect('album/'.$album->id);
+					\Session::set_flash('message', \Config::get('term.album_image').'を追加してください。');
+					\Response::redirect('album/upload/'.$album->id);
 				}
 				else
 				{
