@@ -11,6 +11,17 @@ function site_get_current_page_id($delimitter = '_')
 	return implode($delimitter, $items);
 }
 
+function site_get_form_id($delimitter = '_')
+{
+	$items = array(
+		'form',
+		Site_Util::get_controller_name(),
+		Site_Util::get_action_name(),
+	);
+
+	return implode($delimitter, $items);
+}
+
 function site_htmltag_include_js_module()
 {
 	$assets_uri = sprintf('modules/%s/site.js', Site_Util::get_module_name());

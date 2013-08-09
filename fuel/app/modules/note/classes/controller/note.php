@@ -99,15 +99,13 @@ class Controller_Note extends \Controller_Site
 	public function action_create()
 	{
 		$note = Model_Note::forge();
-		$form = \Site_Util::get_form_instance('note', $note, true, array(), 'submit');
-
+		$val = \Validation::forge();
+		$val->add_model($note);
 		if (\Input::method() == 'POST')
 		{
-			$val = $form->validation();
+			\Util_security::check_csrf();
 			if ($val->run())
 			{
-				\Util_security::check_csrf();
-
 				$post = $val->validated();
 				$note->title       = $post['title'];
 				$note->body        = $post['body'];
@@ -121,18 +119,17 @@ class Controller_Note extends \Controller_Site
 				}
 				else
 				{
-					Session::set_flash('error', 'Could not save post.');
+					\Session::set_flash('error', 'Could not save post.');
 				}
 			}
 			else
 			{
-				Session::set_flash('error', $val->show_errors());
+				\Session::set_flash('error', $val->show_errors());
 			}
 		}
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を書く', null, $this->u, 'note');
-		$this->template->content = \View::forge('create', array('form' => $form));
-		$this->template->content->set_safe('html_form', $form->build('note/create'));// form の action に入る
+		$this->template->content = \View::forge('_parts/form', array('val' => $val));
 	}
 
 	/**
@@ -149,21 +146,16 @@ class Controller_Note extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$add_fields = array(
-			'original_public_flag' => array(
-				'attributes' => array('type' => 'hidden', 'value' => $note->public_flag, 'id' => 'original_public_flag'),
-				'rules' => array(array('in_array', \Site_Util::get_public_flags())),
-			),
-		);
-		$form = \Site_Util::get_form_instance('note', $note, true, $add_fields, 'button');
+		$val = \Validation::forge();
+		$val->add_model($note);
+		$val->add('original_public_flag')
+				->add_rule('in_array', \Site_Util::get_public_flags());
 
 		if (\Input::method() == 'POST')
 		{
-			$val = $form->validation();
+			\Util_security::check_csrf();
 			if ($val->run())
 			{
-				\Util_security::check_csrf();
-
 				$post = $val->validated();
 				$note->title       = $post['title'];
 				$note->body        = $post['body'];
@@ -183,16 +175,10 @@ class Controller_Note extends \Controller_Site
 			{
 				\Session::set_flash('error', $val->show_errors());
 			}
-			$form->repopulate();
-		}
-		else
-		{
-			$form->populate($note);
 		}
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
-		$this->template->content = \View::forge('edit', array('form' => $form));
-		$this->template->content->set_safe('html_form', $form->build('note/edit/'.$id));// form の action に入る
+		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'note' => $note));
 	}
 
 	/**
