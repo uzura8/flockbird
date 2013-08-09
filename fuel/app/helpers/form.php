@@ -1,6 +1,6 @@
 <?php
 
-function form_open($exists_required_fields = false, $atter = array(), $hidden = array(), $form_title = '')
+function form_open($exists_required_fields = false, $atter = array(), $hidden = array(), $form_title = '', $wiht_outside_box = true)
 {
 	$atter_default = array(
 		'class'  => 'form-stacked form-horizontal',
@@ -17,12 +17,13 @@ function form_open($exists_required_fields = false, $atter = array(), $hidden = 
 		'atter' => $atter,
 		'hidden' => $hidden,
 		'title' => $form_title,
+		'wiht_outside_box' => $wiht_outside_box,
 	));
 }
 
-function form_close()
+function form_close($wiht_outside_box = true)
 {
-	return render('_parts/form/close');
+	return render('_parts/form/close', array('wiht_outside_box' => $wiht_outside_box));
 }
 
 function form_input($val_obj, $name, $label = '', $default_value = '', $is_required = false, $input_class = 'span8', $type = 'text')
@@ -79,11 +80,12 @@ function form_button($label = '送信', $type = 'submit', $name = '', $atter = a
 
 	$data = array(
 		'name'  => $name,
-		'label' => $label,
 		'atter' => $atter,
 	);
+	$view = \View::forge('_parts/form/button', $data);
+	$view->set_safe('label', $label);
 
-	return render('_parts/form/button', $data);
+	return $view;
 }
 
 function form_radio_public_flag($val_obj, $default_value = null, $with_no_change_option = false)

@@ -20,7 +20,7 @@ function submit_after_confirm(action) {
 		}
 
 		apprise('一括' + action_name + 'しますか？', {'confirm':true}, function(r) {
-			if (r == true) $("form#form_edit_images").submit();
+			if (r == true) $("form#form_album_edit_images").submit();
 		});
 	} else {
 		apprise('実施対象が選択されていません');
