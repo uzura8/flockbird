@@ -87,6 +87,19 @@ function form_button($label = '送信', $type = 'submit', $name = '', $atter = a
 	return $view;
 }
 
+function form_anchor($href, $label, $atter = array(), $secure = null, $is_enclose_small_tag = false)
+{
+	$data = array(
+		'href'   => $href,
+		'label'  => $label,
+		'atter'  => $atter,
+		'secure' => $secure,
+		'is_enclose_small_tag' => $is_enclose_small_tag,
+	);
+
+	return render('_parts/form/anchor', $data);
+}
+
 function form_radio_public_flag($val_obj, $default_value = null, $with_no_change_option = false)
 {
 	$data = array(
