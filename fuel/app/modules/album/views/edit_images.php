@@ -37,4 +37,4 @@
 	<p><?php echo \Config::get('term.album_image'); ?>がありません。</p>
 <?php endif; ?>
 
-<?php echo form_close(false); ?>
+<?php echo form_close(); ?>

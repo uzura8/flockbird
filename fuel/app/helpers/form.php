@@ -1,6 +1,6 @@
 <?php
 
-function form_open($exists_required_fields = false, $atter = array(), $hidden = array(), $form_title = '', $wiht_outside_box = true)
+function form_open($exists_required_fields = false, $atter = array(), $hidden = array(), $form_title = '')
 {
 	$atter_default = array(
 		'class'  => 'form-stacked form-horizontal',
@@ -17,13 +17,12 @@ function form_open($exists_required_fields = false, $atter = array(), $hidden = 
 		'atter' => $atter,
 		'hidden' => $hidden,
 		'title' => $form_title,
-		'wiht_outside_box' => $wiht_outside_box,
 	));
 }
 
-function form_close($wiht_outside_box = true)
+function form_close()
 {
-	return render('_parts/form/close', array('wiht_outside_box' => $wiht_outside_box));
+	return render('_parts/form/close');
 }
 
 function form_input($val_obj, $name, $label = '', $default_value = '', $is_required = false, $input_class = 'span8', $type = 'text')
