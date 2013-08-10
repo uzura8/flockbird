@@ -242,7 +242,6 @@ function get_term(key) {
 <?php echo Asset::js('util.js');?>
 <?php echo Asset::js('site.js');?>
 <?php if (!Auth::check()): ?>
-<?php echo Asset::js('bootstrap-popover.js');?>
 <?php $destination = Session::get_flash('destination') ?: urlencode(Input::server('REQUEST_URI'));?>
 <script type="text/javascript" charset="utf-8">
 	var inputs = new Array('#form_email', '#form_password');
@@ -252,18 +251,5 @@ function get_term(key) {
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
 <?php echo site_htmltag_include_js_module();?>
 <?php echo site_htmltag_include_js_action();?>
-<!--
-  <script src="../assets/js/bootstrap-transition.js"></script>
-  <script src="../assets/js/bootstrap-alert.js"></script>
-  <script src="../assets/js/bootstrap-modal.js"></script>
-  <script src="../assets/js/bootstrap-dropdown.js"></script>
-  <script src="../assets/js/bootstrap-scrollspy.js"></script>
-  <script src="../assets/js/bootstrap-tab.js"></script>
-  <script src="../assets/js/bootstrap-tooltip.js"></script>
-  <script src="../assets/js/bootstrap-button.js"></script>
-  <script src="../assets/js/bootstrap-collapse.js"></script>
-  <script src="../assets/js/bootstrap-carousel.js"></script>
-  <script src="../assets/js/bootstrap-typeahead.js"></script>
--->
 </body>
 </html>
