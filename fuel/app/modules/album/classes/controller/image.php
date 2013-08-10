@@ -232,4 +232,20 @@ class Controller_Image extends \Controller_Site
 
 		return $form;
 	}
+
+	/**
+	 * Album_image upload
+	 * 
+	 * @access  public
+	 * @params string 
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_upload($contents = null)
+	{
+		if (empty($contents) || !in_array($contents, array('note'))) throw new \HttpNotFoundException;
+		//if (!$note = \Note\Model_Note::check_authority($id)) throw new \HttpNotFoundException;
+
+		return \Response::forge(\View::forge('image/upload'));
+	}
 }

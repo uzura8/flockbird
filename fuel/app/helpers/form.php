@@ -44,6 +44,25 @@ function form_input($val_obj, $name, $label = '', $default_value = '', $is_requi
 	return render('_parts/form/input', $data);
 }
 
+function form_file($name, $label = null, $is_required = false, $input_class = 'input-file', $default_value = null, $val_obj = null)
+{
+	$input_atter = array(
+		'type'  => 'file',
+		'id'    => 'form_'.$name,
+		'class' => $input_class,
+	);
+	$data = array(
+		'name'  => $name,
+		'label' => $label,
+		'is_required'   => $is_required,
+		'input_atter'   => $input_atter,
+		'default_value' => $default_value,
+		'val' => $val_obj,
+	);
+
+	return render('_parts/form/file', $data);
+}
+
 function form_textarea($val_obj, $name, $label = '', $default_value = '', $is_required = false, $atter = array())
 {
 	$atter_default = array(
@@ -91,16 +110,17 @@ function form_anchor($href, $label, $atter = array(), $secure = null, $is_enclos
 {
 	$data = array(
 		'href'   => $href,
-		'label'  => $label,
 		'atter'  => $atter,
 		'secure' => $secure,
 		'is_enclose_small_tag' => $is_enclose_small_tag,
 	);
+	$view = \View::forge('_parts/form/anchor', $data);
+	$view->set_safe('label', $label);
 
-	return render('_parts/form/anchor', $data);
+	return $view;
 }
 
-function form_radio_public_flag($val_obj, $default_value = null, $with_no_change_option = false)
+function form_radio_public_flag($val_obj = null, $default_value = null, $with_no_change_option = false)
 {
 	$data = array(
 		'val' => $val_obj,
