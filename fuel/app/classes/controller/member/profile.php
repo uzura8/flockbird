@@ -52,7 +52,7 @@ class Controller_Member_profile extends Controller_Member
 
 			$this->u->file_id = $file->id;
 			$this->u->save();
-			Model_Member::recalculate_filesize_total($this->u->id);
+			Model_Member::add_filesize($this->u->id, $file->filesize);
 
 			DB::commit_transaction();
 

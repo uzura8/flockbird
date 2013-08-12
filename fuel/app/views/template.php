@@ -13,6 +13,7 @@
 
   <?php echo Asset::css('bootstrap.min.css');?>
   <?php echo Asset::css('bootstrap-responsive.min.css');?>
+  <?php echo Asset::css('bootstrap-modal.css');?>
   <?php echo Asset::css('apprise.min.css');?>
   <?php echo Asset::css('jquery.jgrowl.min.css');?>
   <?php echo Asset::css('ligature-symbols.min.css');?>
@@ -218,6 +219,8 @@ if (Input::get('msg')) $message = e(Input::get('msg'));
 
 <?php echo Asset::js('jquery-1.8.3.min.js');?>
 <?php echo Asset::js('bootstrap.min.js');?>
+<?php echo Asset::js('bootstrap-modal.js');?>
+<?php echo Asset::js('bootstrap-modalmanager.js');?>
 <?php echo Asset::js('apprise-1.5.min.js');?>
 <?php echo Asset::js('jquery.autogrow-textarea.js');?>
 <?php echo Asset::js('jquery.jgrowl.min.js');?>

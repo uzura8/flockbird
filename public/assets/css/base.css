@@ -366,3 +366,18 @@ div.alert ul {
 .main_link {
 	margin-bottom: 20px;
 }
+
+#uploaded_images .row-fluid {
+	margin-bottom: 15px;
+}
+
+#uploaded_images .row-fluid .item {
+	margin-bottom: 5px;
+}
+
+#uploaded_images .row-fluid h6 {
+	margin: 0 3px;
+}
+#uploaded_images .row-fluid button {
+	margin-bottom: 3px;
+}

@@ -1,6 +1,6 @@
 <?php
 
-function form_open($exists_required_fields = false, $atter = array(), $hidden = array(), $form_title = '')
+function form_open($exists_required_fields = false, $is_upload = false, $atter = array(), $hidden = array(), $form_title = '')
 {
 	$atter_default = array(
 		'class'  => 'form-stacked form-horizontal',
@@ -8,6 +8,7 @@ function form_open($exists_required_fields = false, $atter = array(), $hidden = 
 		'id'     => site_get_form_id(),
 	);
 	$atter = array_merge($atter_default, $atter);
+	if ($is_upload) $atter['enctype'] = 'multipart/form-data';
 
 	$hidden_default = array(Config::get('security.csrf_token_key') => Util_security::get_csrf());
 	$hidden = array_merge($hidden_default, $hidden);

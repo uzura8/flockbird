@@ -108,12 +108,14 @@ CREATE TABLE `album` (
   `body` text NULL,
   `public_flag` tinyint(4) NOT NULL DEFAULT '0',
   `cover_album_image_id` int(11) DEFAULT NULL,
+  `foreign_table` varchar(10) NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `created_at_idx` (`created_at`),
   KEY `member_id_created_at_idx` (`member_id`,`created_at`),
   KEY `public_flag_craeted_at_idx` (`public_flag`,`created_at`),
+  KEY `member_id_foreign_table_idx` (`member_id`,`foreign_table`),
   KEY `member_id_idx` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -397,6 +399,34 @@ CREATE TABLE `file` (
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
   KEY `member_id_idx` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of files uploaded';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `file_tmp`
+--
+
+DROP TABLE IF EXISTS `file_tmp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `file_tmp` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
+  `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File path',
+  `type` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
+  `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
+  `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
+  `member_id` int(11) DEFAULT NULL,
+  `exif` text NULL,
+  `contents` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File refered from this contents',
+  `hash` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Hash to recognize contents',
+  `shot_at` datetime NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`),
+  KEY `member_id_contents_hash_created_at_idx` (`member_id`,`contents`,`hash`,`created_at`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of temporary files uploaded';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
@@ -732,6 +762,27 @@ CREATE TABLE `note_comment` (
   KEY `note_id_idx` (`note_id`),
   KEY `member_id_idx` (`member_id`),
   CONSTRAINT `note_comment_note_id_note_id` FOREIGN KEY (`note_id`) REFERENCES `note` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `note_album_image`
+--
+
+DROP TABLE IF EXISTS `note_album_image`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `note_album_image` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `note_id` int(11) NOT NULL,
+  `album_image_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `note_id_idx` (`note_id`),
+  CONSTRAINT `note_album_image_note_id_note_id` FOREIGN KEY (`note_id`) REFERENCES `note` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `note_album_image_album_image_id_album_image_id` FOREIGN KEY (`album_image_id`) REFERENCES `album_image` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

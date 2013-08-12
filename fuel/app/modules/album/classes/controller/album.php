@@ -129,21 +129,10 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$filepath = \Site_Upload::get_filepath('ai', $id);
-		$real_path_raw = \Config::get('site.upload.types.img.raw_file_path');
-		\Site_Upload::check_and_make_uploaded_dir($real_path_raw.$filepath);
+		\Site_Upload::setup_uploaded_dir('ai', $album->id);
 
-		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get('site.upload.types.img.root_path.cache_dir');
-		$sizes = \Config::get('site.upload.types.img.types.ai.sizes');
-		foreach ($sizes as $size)
-		{
-			$dir = sprintf('%s%s/%s', $real_path_cache, $size, $filepath);
-			\Site_Upload::check_and_make_uploaded_dir($dir);
-		}
-
-		$this->set_title_and_breadcrumbs(\Config::get('term.album_image').'アップロード', array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->post_header = \View::forge('_parts/upload_header');
-		$this->template->post_footer = \View::forge('_parts/upload_footer');
+		$this->template->post_footer = \View::forge('_parts/upload_footer', array('display_delete_button' => Config::get('album.display_setting.upload.display_delete_button')));
 		$this->template->content = \View::forge('upload', array('id' => $id, 'album' => $album));
 	}
 
@@ -513,27 +502,14 @@ class Controller_Album extends \Controller_Site
 				throw new \FuelException($val->show_errors());
 			}
 			$post = $val->validated();
-
-			$file = \Site_Upload::upload('ai', $album_id, $this->u->id, $this->u->filesize_total);
-
 			\DB::start_transaction();
-			$is_start_transaction = true;
-			$album_image = new Model_AlbumImage;
-			$album_image->album_id = $album_id;
-			$album_image->file_id = $file->id;
-			$album_image->public_flag = $post['public_flag'];
-			$album_image->shot_at = isset($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
-			$album_image->save();
-
-			\Model_Member::recalculate_filesize_total($this->u->id);
+			Model_AlbumImage::save_with_file($album_id, $this->u, $post['public_flag']);
 			\DB::commit_transaction();
-			$is_start_transaction = false;
-
 			\Session::set_flash('message', '写真を投稿しました。');
 		}
 		catch(\FuelException $e)
 		{
-			if ($is_start_transaction) \DB::rollback_transaction();
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			\Session::set_flash('error', $e->getMessage());
 		}
 
@@ -598,37 +574,10 @@ class Controller_Album extends \Controller_Site
 		}
 		//\Util_security::check_csrf();
 
-		$filepath = \Site_Upload::get_filepath('ai', $album_id);
-
-		$real_path_raw   = \Config::get('site.upload.types.img.raw_file_path');
-		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get('site.upload.types.img.root_path.cache_dir');
-		$uri_path_cache  = '/'.\Config::get('site.upload.types.img.root_path.cache_dir');
-
-		$options = array();
-		$options['script_url'] = \Uri::create('album/upload_images/'.$album_id);
-		$options['upload_dir']       = $real_path_raw;
-		$options['upload_dir_cache'] = $real_path_cache;
-		$options['upload_url']       = $uri_path_cache;
-		$options['max_size']         = \Config::get('site.upload.types.img.ai.max_size', \Config::get('site.upload.types.img.defaults.max_size'));
-		$options['max_file_size']       = PRJ_UPLOAD_MAX_FILESIZE;
-		$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
-
-		$config_upload_files = \Config::get('site.upload.types.img.types.ai');
-		$sizes = $config_upload_files['sizes'];
-		$thumbnail_size = $config_upload_files['default_size'];
-		$options['image_versions'] = array();
-		foreach ($sizes as $size)
-		{
-			$key = ($size == $thumbnail_size)? 'thumbnail' : $size;
-			list($width, $height) = explode('x', $size);
-			$options['image_versions'][$key] = array(
-				'size' => $size,
-				'upload_dir' => sprintf('%s%s/%s', $real_path_cache, $size, $filepath),
-				'upload_url' => sprintf('%s%s/%s', $uri_path_cache, $size, $filepath),
-				'max_width'  => $width,
-				'max_height' => $height,
-			);
-		}
+		$file_cate = 'ai';
+		$filepath = \Site_Upload::get_filepath($file_cate, $album_id);
+		$script_url = \Uri::create('album/upload_images/'.$album_id);
+		$options = \Site_Upload::get_upload_handler_options($filepath, $script_url, $file_cate, 'tmp_hash_upload');
 		$upload_handler = new UploadHandler($options);
 
 		$this->response->set_header('Pragma', 'no-cache');
@@ -655,6 +604,7 @@ class Controller_Album extends \Controller_Site
 				}
 				else
 				{
+					\Site_Upload::setup_uploaded_dir($file_cate, $album_id, $options['is_tmp']);
 					if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE)
 					{
 						$accepted_upload_filesize_type = 'small';// default
@@ -662,7 +612,7 @@ class Controller_Album extends \Controller_Site
 						$upload_handler->member_filesize_total    = $this->u->filesize_total;
 					}
 					$upload_handler->is_save_exif_data = PRJ_USE_EXIF_DATA;
-					$body = $upload_handler->post($album_id, $this->u->id, $config_upload_files['max_size']);
+					$body = $upload_handler->post($album_id, $this->u->id, $options['max_size']);
 					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
 					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))
 					{

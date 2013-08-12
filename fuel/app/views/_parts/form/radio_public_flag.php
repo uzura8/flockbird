@@ -17,7 +17,7 @@
 		<?php echo Form::label($label, 'public_flag_'.$public_flag); ?>
 	</div>
 <?php endforeach; ?>
-<?php if ($val->error('public_flag')): ?>
+<?php if (!empty($val) && $val->error('public_flag')): ?>
 	<div class="controls">
 		<span class="help-inline error_msg"><?php echo $val->error('public_flag')->get_message(); ?></span>
 	</div>

@@ -40,7 +40,12 @@ function set_token()
 
 function get_loading_image_tag()
 {
-	return '<img src="' + get_baseUrl() + 'assets/img/loading.gif' + '">';
+	var is_enclose_block = (arguments.length > 0) ? arguments[0] : false;
+
+	var tag = '<img src="' + get_baseUrl() + 'assets/img/loading.gif' + '">';
+	if (is_enclose_block) tag = '<div class="loading_image">' + tag + '</div>';
+
+	return tag;
 }
 
 function redirect(uri)
@@ -92,7 +97,7 @@ function show_list(uri, list_block_id) {
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
 			if (selfDomElement) {
-				$(selfDomElement).html(get_loading_image_tag());
+				$(selfDomElement).html(get_loading_image_tag(true));
 			}
 		},
 		complete: function(xhr, textStatus) {

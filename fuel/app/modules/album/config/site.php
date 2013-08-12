@@ -12,6 +12,9 @@ return array(
 							'M' => '220x220',
 							'L' => '600x600',
 						),
+						'sizes_tmp' => array(
+							'S' => '80x80',
+						),
 						'default_size' => '80x80',
 						'max_size' => '720x720',
 						//'resize_type' => 'crop',

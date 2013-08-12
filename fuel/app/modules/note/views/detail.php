@@ -1,6 +1,10 @@
 <p><?php echo nl2br($note->body) ?></p>
 <hr />
 
+<?php foreach ($images as $album_image): ?>
+	<div><?php echo img($album_image->file, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
+<?php endforeach; ?>
+
 <?php if (Auth::check() || $comments): ?>
 <h3 id="comments">Comments</h3>
 <?php endif; ?>

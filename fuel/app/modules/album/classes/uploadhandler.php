@@ -83,9 +83,11 @@ class UploadHandler extends \JqueryFileUpload
 		if ($file->delete_type !== 'DELETE') {
 			$file->delete_url .= '&_method=DELETE';
 		}
+
+		return $file;
 	}
 
-	protected function handle_file_upload_site($uploaded_file, $name, $filepath, $size, $type, $error, $index = null, $album_image_id = 0, $original_filename = '', $max_size = 0)
+	protected function handle_file_upload_site($uploaded_file, $name, $filepath, $size, $type, $error, $index = null, $original_filename = '', $max_size = 0)
 	{
 		$file = new \stdClass();
 		$file->name = $this->trim_file_name($name, $type, $index);
@@ -158,9 +160,6 @@ class UploadHandler extends \JqueryFileUpload
 			}
 
 			if ($original_filename) $file->name = $original_filename;
-
-			$file->album_image_id = $album_image_id;
-			$this->set_file_delete_url($file);
 		}
 
 		return $file;
@@ -172,6 +171,15 @@ class UploadHandler extends \JqueryFileUpload
 
 		$_method     = \Input::post('_method');
 		$public_flag = \Input::post('public_flag', \Config::get('site.public_flag.default'));
+
+		$contents = \Input::post('contents');
+		$tmp_hash = \Input::post($this->options['tmp_hash_key']);
+		if (!$this->is_tmp = \Site_Upload::check_is_temp_upload($this->options['tmp_hash_key']))
+		{
+			$contents = '';
+			$tmp_hash = '';
+		}
+
 		if (isset($_method) && $_method === 'DELETE')
 		{
 			return $this->delete();
@@ -191,7 +199,7 @@ class UploadHandler extends \JqueryFileUpload
 				{
 					continue;
 				}
-				$info[] = $this->save_file($upload, $album_id, $member_id, $extention, $prefix, $max_size, $index, $public_flag);
+				$info[] = $this->save_file($upload, $album_id, $member_id, $extention, $prefix, $max_size, $index, $public_flag, $contents, $tmp_hash);
 			}
 		}
 		elseif ($upload || isset($HTTP_X_FILE_NAME))
@@ -200,10 +208,10 @@ class UploadHandler extends \JqueryFileUpload
 			{
 				return;
 			}
-			$info[] = $this->save_file($upload, $album_id, $member_id, $extention, $prefix, $max_size, null, $public_flag);
+			$info[] = $this->save_file($upload, $album_id, $member_id, $extention, $prefix, $max_size, null, $public_flag, $contents, $tmp_hash);
 		}
 
-		\Model_Member::recalculate_filesize_total($member_id);
+		if (!$this->is_tmp) \Model_Member::recalculate_filesize_total($member_id);
 
 		header('Vary: Accept');
 		$json = json_encode($info);
@@ -233,22 +241,25 @@ class UploadHandler extends \JqueryFileUpload
 		return json_encode($deleted_filesize);
 	}
 
-	protected function save_file($upload, $album_id, $member_id, $extention = '', $prefix = '', $max_size = 0, $index = null, $public_flag = null)
+	protected function save_file($upload, $album_id, $member_id, $extention = '', $prefix = '', $max_size = 0, $index = null, $public_flag = null, $contents = '', $tmp_hash = '')
 	{
 		try
 		{
 			\DB::start_transaction();
 			if (is_null($public_flag)) $public_flag = \Config::get('site.public_flag.default');
-
-			// album_image の保存
-			$album_image = Model_AlbumImage::forge(array(
-				'album_id'    => (int)$album_id,
-				'file_id'     => 0,
-				'shot_at'     => date('Y-m-d H:i:s'),
-				'public_flag' => $public_flag,
-			));
-			$album_image->save();
 			$filepath = \Site_Upload::get_filepath('ai', $album_id);
+
+			if (!$this->is_tmp)
+			{
+				// album_image の保存
+				$album_image = Model_AlbumImage::forge(array(
+					'album_id'    => (int)$album_id,
+					'file_id'     => 0,
+					'shot_at'     => date('Y-m-d H:i:s'),
+					'public_flag' => $public_flag,
+				));
+				$album_image->save();
+			}
 
 			// param_name is a single object identifier like "file",
 			// $_FILES is a one-dimensional array:
@@ -271,7 +282,6 @@ class UploadHandler extends \JqueryFileUpload
 					$file_type,
 					isset($upload['error'][$index]) ? $upload['error'][$index] : null,
 					$index,
-					$album_image->id,
 					$original_filename,
 					$max_size
 				);
@@ -295,7 +305,6 @@ class UploadHandler extends \JqueryFileUpload
 					$file_type,
 					isset($upload['error']) ? $upload['error'] : null,
 					null,
-					$album_image->id,
 					$original_filename,
 					$max_size
 				);
@@ -304,7 +313,7 @@ class UploadHandler extends \JqueryFileUpload
 			if (isset($result->error)) throw new \FuelException($result->error);
 
 			// file の保存
-			$model_file = new \Model_File;
+			$model_file = $this->is_tmp ? new \Model_FileTmp : new \Model_File;
 			$model_file->name = $filename;
 			$model_file->path = $filepath;
 			$model_file->filesize = $result->size;
@@ -317,16 +326,26 @@ class UploadHandler extends \JqueryFileUpload
 				$model_file->exif = serialize($exif);
 			}
 			//if (empty($model_file->shot_at)) $model_file->shot_at = date('Y-m-d H:i:s');
+			if ($this->is_tmp)
+			{
+				$model_file->hash     = $tmp_hash;
+				$model_file->contents = $contents;
+			}
 			$model_file->save();
 
-			// album_image の保存
-			$album_image->file_id = $model_file->id;
-			$album_image->shot_at = isset($model_file->shot_at) ? $model_file->shot_at : date('Y-m-d H:i:s');
-			$album_image->save();
+			if (!$this->is_tmp)
+			{
+				// album_image の保存
+				$album_image->file_id = $model_file->id;
+				$album_image->shot_at = isset($model_file->shot_at) ? $model_file->shot_at : date('Y-m-d H:i:s');
+				$album_image->save();
 
-			$this->member_filesize_total += $result->size;
+				$this->member_filesize_total += $result->size;
 
+				$result->album_image_id = $album_image->id;
+			}
 			\DB::commit_transaction();
+			$result = $this->set_file_delete_url($result);
 		}
 		catch(LimitUploadFileSizeException $e)
 		{

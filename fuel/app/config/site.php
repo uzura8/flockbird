@@ -21,6 +21,13 @@ $config = array(
 				'limit' => '256M',
 			),
 		),
+		'tmp_file' => array(
+			'accepted_contents' => array(
+					'note',
+				),
+			'lifetime' => 60 * 60 * 6,
+			'is_delete_olds_when_display' => true,
+		),
 		'types' => array(
 			'img' => array(
 				'root_path' => array(
@@ -29,6 +36,14 @@ $config = array(
 				),
 				//'raw_file_path' => APPPATH.'cache/media/img/raw/',// raw ファイルを非公開領域に置く場合
 				'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img/raw/',
+				'tmp' => array(
+					'root_path' => array(
+						'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img_tmp/',
+						'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img_tmp/raw/',
+					),
+					//'raw_file_path' => APPPATH.'cache/media/img_tmp/raw/',// raw ファイルを非公開領域に置く場合
+					'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img_tmp/raw/',
+				),
 				// member profile image
 				'noimage_filename' => 'noimage.gif',
 				'accept_format' => array(

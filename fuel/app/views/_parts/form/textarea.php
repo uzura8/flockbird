@@ -2,7 +2,7 @@
 if ($is_required)
 {
 	$label .= '<span class="required">*</span>';
-	$input_atter['required'] = 'required';
+	$atter['required'] = 'required';
 }
 ?>
 <div class="control-group">

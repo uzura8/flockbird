@@ -7,7 +7,7 @@ $form_attributes = array('action' => 'site/login');
 if ($is_api_request) $form_attributes['class'] = '';
 $input_class = ($is_api_request) ? 'input-medium' : '';
 ?>
-<?php echo form_open(false, $form_attributes, array('destination' => $destination)); ?>
+<?php echo form_open(false, false, $form_attributes, array('destination' => $destination)); ?>
 	<?php echo form_input($val, 'email', 'メールアドレス', '', true, $input_class, 'email'); ?>
 	<?php echo form_input($val, 'password', 'パスワード', '', true, $input_class, 'password'); ?>
 

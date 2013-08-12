@@ -48,7 +48,7 @@
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
             <td colspan="2"></td>
         {% } %}
-<?php if (Config::get('album.display_setting.upload.display_delete_button', false)): ?>
+<?php if (isset($display_delete_button) && $display_delete_button === true): ?>
         <td class="delete">
             <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
                 <i class="icon-trash icon-white"></i>

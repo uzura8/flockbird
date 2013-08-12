@@ -87,7 +87,7 @@ class Site_Upload
 			$config['member_filesize_total'] = $member_filesize_total;
 			if ($file_id) $config['old_file_size'] = $file->filesize;
 		}
-		list($old_filepath, $old_filename) = Site_Upload::split_file_object2vars($old_file);
+		list($old_filepath, $old_filename) = self::split_file_object2vars($old_file);
 		if (!empty($filepath) && !empty($filename)) $config['old_filepath_name'] = $old_filepath.$old_filename;
 		$uploader = new Site_uploader($config);
 		$uploaded_file = $uploader->upload();
@@ -212,5 +212,92 @@ class Site_Upload
 		}
 
 		return true;
+	}
+
+	public static function setup_uploaded_dir($file_cate, $split_criterion_id, $is_tmp = false)
+	{
+		$filepath = self::get_filepath($file_cate, $split_criterion_id);
+
+		$key = $is_tmp ? 'site.upload.types.img.tmp.raw_file_path' : 'site.upload.types.img.raw_file_path';
+		$real_path_raw = \Config::get($key);
+
+		self::check_and_make_uploaded_dir($real_path_raw.$filepath);
+
+		$key = $is_tmp ? 'site.upload.types.img.tmp.root_path.cache_dir' : 'site.upload.types.img.root_path.cache_dir';
+		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get($key);
+
+		$key = $is_tmp ? 'site.upload.types.img.types.'.$file_cate.'.sizes_tmp' : 'site.upload.types.img.types.'.$file_cate.'.sizes';
+		$sizes = \Config::get($key);
+		foreach ($sizes as $size)
+		{
+			$dir = sprintf('%s%s/%s', $real_path_cache, $size, $filepath);
+			self::check_and_make_uploaded_dir($dir);
+		}
+
+		return true;
+	}
+
+	public static function get_upload_handler_options($filepath, $script_url, $file_cate, $tmp_hash_key = 'tmp_hash')
+	{
+		$tmp_hash = Input::post_get($tmp_hash_key, '');
+		$contents = Input::post_get('contents', '');
+		$is_tmp = self::check_is_temp_upload($tmp_hash_key);
+
+		$real_path_raw   = Config::get('site.upload.types.img.raw_file_path');
+		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get('site.upload.types.img.root_path.cache_dir');
+		$uri_path_cache  = '/'.Config::get('site.upload.types.img.root_path.cache_dir');
+		if ($is_tmp)
+		{
+			$real_path_raw   = Config::get('site.upload.types.img.tmp.raw_file_path');
+			$real_path_cache = PRJ_PUBLIC_DIR.Config::get('site.upload.types.img.tmp.root_path.cache_dir');
+			$uri_path_cache  = '/'.Config::get('site.upload.types.img.tmp.root_path.cache_dir');
+		}
+
+		$options = array();
+		$options['is_tmp']       = $is_tmp;
+		$options['tmp_hash_key'] = $tmp_hash_key;
+		$options['script_url']   = $script_url;
+		$options['upload_dir']   = $real_path_raw;
+		$options['upload_dir_cache'] = $real_path_cache;
+		$options['upload_url']       = $uri_path_cache;
+		$options['max_size']         = Config::get('site.upload.types.img.'.$file_cate.'.max_size', Config::get('site.upload.types.img.defaults.max_size'));
+		$options['max_file_size']    = PRJ_UPLOAD_MAX_FILESIZE;
+		$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
+
+		$config_upload_files = Config::get('site.upload.types.img.types.'.$file_cate);
+		$sizes = $is_tmp ? $config_upload_files['sizes_tmp'] : $config_upload_files['sizes'];
+		$thumbnail_size = $config_upload_files['default_size'];
+		$options['image_versions'] = array();
+		foreach ($sizes as $size)
+		{
+			$key = ($size == $thumbnail_size)? 'thumbnail' : $size;
+			list($width, $height) = explode('x', $size);
+			$options['image_versions'][$key] = array(
+				'size' => $size,
+				'upload_dir' => sprintf('%s%s/%s', $real_path_cache, $size, $filepath),
+				'upload_url' => sprintf('%s%s/%s', $uri_path_cache, $size, $filepath),
+				'max_width'  => $width,
+				'max_height' => $height,
+			);
+		}
+
+		return $options;
+	}
+
+	public static function check_is_temp_upload($key = 'tmp_hash')
+	{
+		if (!\Input::post_get($key, '')) return false;
+
+		if (!$contents = \Input::post_get('contents', '')) return false;
+		if (!in_array($contents, array('note'))) return false;
+
+		return true;
+	}
+
+	public static function check_is_temp_accepted_contents($target)
+	{
+		if (empty($target)) return false;
+
+		return in_array($target, Config::get('site.upload.tmp_file.accepted_contents'));
 	}
 }

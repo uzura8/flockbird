@@ -49,6 +49,12 @@ class Model_Album extends \Orm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
+		'foreign_table' => array(
+			'data_type' => 'text',
+			//'validation' => array('trim', array('in_array', array('note'))),
+			'validation' => array('trim'),
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
@@ -70,6 +76,7 @@ class Model_Album extends \Orm\Model
 		static::$_properties['name']['label'] = \Config::get('term.album').'名';
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
+		static::$_properties['foreign_table']['validation']['in_array'][] = array('note');
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
@@ -109,5 +116,30 @@ class Model_Album extends \Orm\Model
 
 		// Delete album.
 		$album->delete();
+	}
+
+	public static function get_album_for_note($member_id, $public_flag = null)
+	{
+		$album = self::find('first', array(
+			'where' => array(array('member_id', $member_id), array('foreign_table', 'note')),
+			'order_by' => array('id' => 'asc'),
+		));
+		if ($album) return $album;
+
+		$self = self::forge();
+		$self->name          = sprintf('%s用%s', \Config::get('term.note'), \Config::get('term.album'));
+		$self->member_id     = $member_id;
+		$self->public_flag   = !is_null($public_flag) ? $public_flag : \Config::get('public_flag.default');
+		$self->foreign_table = 'note';
+		$self->save();
+
+		return $self;
+	}
+
+	public static function get_id_for_note($member_id, $public_flag = null)
+	{
+		$album = self::get_album_for_note($member_id, $public_flag);
+
+		return $album->id;
 	}
 }

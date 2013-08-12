@@ -3,6 +3,10 @@
 * bootstrap
   - version: 2.3.2
   - license: Apache License, Version 2.0
+* bootstrap-modal
+  - version: 2.1.0
+  - license: Apache License, Version 2.0
+  - url: https://github.com/jschr/bootstrap-modal
 * jquery
   - version: 1.8.3
   - license: MIT

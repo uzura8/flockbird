@@ -1,5 +1,5 @@
 <?php if ($album_images): ?>
-<?php echo form_open(false, array(), array(), '', false); ?>
+<?php echo form_open(false, false, array(), array(), '', false); ?>
 <div class="well">
 	<h4><?php echo \Config::get('term.album_image'); ?>一括操作</h4>
 	<?php echo Form::hidden('clicked_btn', '', array('id' => 'clicked_btn')); ?>

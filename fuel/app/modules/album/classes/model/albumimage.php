@@ -146,4 +146,25 @@ class Model_AlbumImage extends \Orm\Model
 
 		return \DB::update('album_image')->set($values)->where('album_id', $album_id)->execute();
 	}
+
+	public static function save_with_file($album_id, $member = null, $public_flag = null)
+	{
+		if (empty($member))
+		{
+			$album = \Model_Album::find($album_id, array('related' => 'member'));
+			$member = $album->member;
+		}
+		if (is_null($public_flag)) $public_flag = \Config::get('site.public_flag.default');
+
+		$file = \Site_Upload::upload('ai', $album_id, $member->id, $member->filesize_total);
+		$self = new self;
+		$self->album_id = $album_id;
+		$self->file_id = $file->id;
+		$self->public_flag = $public_flag;
+		$self->shot_at = isset($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
+		$self->save();
+		\Model_Member::add_filesize($member->id, $file->filesize);
+
+		return $self;
+	}
 }

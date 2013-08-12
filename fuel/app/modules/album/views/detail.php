@@ -26,31 +26,13 @@
 <?php if (Config::get('album.display_setting.detail.display_upload_form') && Auth::check() && $album->member_id == $u->id): ?>
 <div class="well">
 <h5><?php echo Config::get('term.album_image'); ?>アップロード</h5>
-<?php echo Form::open(array('action' => 'album/upload_image', 'class' => 'form-stacked form-horizontal', 'enctype' => 'multipart/form-data', 'method' => 'post')); ?>
-<?php echo Form::hidden(Config::get('security.csrf_token_key'), Util_security::get_csrf()); ?>
-<?php echo Form::hidden('id', $id); ?>
-<div class="control-group">
-	<div class="controls">
-	<?php echo Form::input('image', '写真', array('type' => 'file', 'class' => 'input-file')); ?>
-	</div>
-</div>
-<div class="control-group">
-	<?php echo Form::label(Config::get('term.public_flag.label'), 'public_flag', array('class' => 'control-label')); ?>
-<?php $public_flags = Site_Form::get_public_flag_options() ; ?>
-<?php foreach ($public_flags as $public_flag => $label): ?>
-	<div class="controls">
-		<?php echo Form::radio('public_flag', $public_flag, Config::get('site.public_flag.default') == $public_flag, array('id' => 'form_public_flag_'.$public_flag)); ?>
-		<?php echo Form::label($label, 'public_flag_'.$public_flag); ?>
-	</div>
-<?php endforeach; ?>
-</div>
-<div class="control-group">
-	<div class="controls">
-	<?php echo Form::input('submit', '送信', array('type' => 'submit', 'class' => 'btn')); ?>
-	</div>
-</div>
+<?php echo form_open(false, true, array('action' => 'album/upload_image'), array('id' => $id)); ?>
+<?php echo form_file('image'); ?>
+<?php echo form_radio_public_flag(); ?>
+<?php echo form_button(); ?>
+<?php echo form_close(); ?>
 <?php echo Form::close(); ?>
-</div>
+</div><!-- well -->
 <?php endif; ?>
 
 <div id="btn_menu">
