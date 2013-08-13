@@ -25,7 +25,7 @@ $config = array(
 			'accepted_contents' => array(
 					'note',
 				),
-			'lifetime' => 60 * 60 * 6,
+			'lifetime' => 60 * 60 * 50,
 			'is_delete_olds_when_display' => true,
 		),
 		'types' => array(

@@ -9,11 +9,11 @@
 	'tmp_hash' => $tmp_hash,
 	'contents' => $contents,
 	'is_hide_form_public_flag' => true,
-	'display_delete_button' => Config::get('note.display_setting.form.modal.display_delete_button'),
+	'display_delete_button' => true,
 )); ?>
 </div>
 <div class="modal-footer">
 <button type="button" data-dismiss="modal" class="btn">Close</button>
 <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
 </div>
-<?php echo render('_parts/upload_footer', array('display_delete_button' => Config::get('note.display_setting.form.modal.display_delete_button'))); ?>
+<?php echo render('_parts/upload_footer', array('display_delete_button' => true)); ?>

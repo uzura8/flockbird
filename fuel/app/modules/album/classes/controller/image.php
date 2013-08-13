@@ -244,14 +244,13 @@ class Controller_Image extends \Controller_Site
 	public function action_upload($contents = null)
 	{
 		if (!\Site_Upload::check_is_temp_accepted_contents($contents)) throw new \HttpNotFoundException;
-		$tmp_hash = \Input::get_post('tmp_hash', '');
-		//if (!$note = \Note\Model_Note::check_authority($id)) throw new \HttpNotFoundException;
+		$tmp_hash = \Input::get('tmp_hash', '');
 
 		if ($contents == 'note')
 		{
 			$album = Model_Album::get_album_for_note($this->u->id);
 		}
-		\Site_Upload::setup_uploaded_dir('ai', $album->id, true);
+		//\Site_Upload::setup_uploaded_dir('ai', $album->id, true);
 
 		return \Response::forge(\View::forge('image/upload', array('id' => $album->id, 'album' => $album, 'contents' => $contents, 'tmp_hash' => $tmp_hash)));
 	}

@@ -62,13 +62,8 @@ class Controller_Site_Api extends Controller_Base_Site_Api
 			if (Config::get('site.upload.tmp_file.is_delete_olds_when_display'))
 			{
 			}
-			$file_tmps = Model_FileTmp::query()
-				->where('member_id', $this->u->id)
-				->where('contents', $contents)
-				->where('hash', $tmp_hash)
-				->where('created_at', '>', date('Y-m-d H:i:s', time() - Config::get('site.upload.tmp_file.lifetime')))
-				->order_by('id')
-				->get();
+
+			$file_tmps = Model_FileTmp::get_enables($this->u->id, $contents, $tmp_hash);
 			$response = View::forge('site/_parts/tmp_images', array('file_tmps' => $file_tmps));
 			$status_code = 200;
 

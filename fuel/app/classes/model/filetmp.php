@@ -47,4 +47,15 @@ class Model_FileTmp extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 	);
+
+	public static function get_enables($member_id, $contents, $hash)
+	{
+		return self::query()
+			->where('member_id', $member_id)
+			->where('contents', $contents)
+			->where('hash', $hash)
+			->where('created_at', '>', date('Y-m-d H:i:s', time() - Config::get('site.upload.tmp_file.lifetime')))
+			->order_by('id')
+			->get();
+	}
 }

@@ -21,9 +21,6 @@ return array(
 			'tmp_images' => array(
 				'image_position_radio_button' => false,
 			),
-			'modal' => array(
-				'display_delete_button' => true,
-			),
 		),
 	),
 );

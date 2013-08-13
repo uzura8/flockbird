@@ -13,7 +13,6 @@
 		'id' => 'upload_images_btn',
 		'class' => 'btn',
 		'data-toggle' => 'modal',
-//		'data-tmp_hash' => $tmp_hash,
 	)); ?>
 	<div id="upload_images" class="modal container hide fade" tabindex="-1"></div>
 	<div id="uploaded_images"></div>
