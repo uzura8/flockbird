@@ -83,6 +83,7 @@ class Controller_Member_profile extends Controller_Member
 
 			DB::start_transaction();
 			$this->u->filesize_total -= $this->u->file->filesize;
+			if ($this->u->filesize_total < 0) $this->u->filesize_total = 0;
 			$this->u->file->delete();
 			$this->u->file_id = null;
 			$this->u->save();

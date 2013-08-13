@@ -141,10 +141,11 @@ class Model_Member extends \Orm\Model
 
 	public static function add_filesize($member_id, $size = 0)
 	{
-		$member = self::find($member_id);
-		$member->filesize_total += $size;
-		$member->save();
+		$expr = DB::expr(sprintf('CASE WHEN `filesize_total` < 0 THEN 0 ELSE `filesize_total` + %d END', $size));
 
-		return $member->filesize_total;
+		return DB::update('member')
+			->value('filesize_total', $expr)
+			->where('id', intval($member_id))
+			->execute();
 	}
 }
