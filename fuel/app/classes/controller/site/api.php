@@ -76,4 +76,35 @@ class Controller_Site_Api extends Controller_Base_Site_Api
 
 		$this->response($response, $status_code);
 	}
+
+	/**
+	 * Api delete tmp_image
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function post_delte_tmp_image()
+	{
+		$response = array('status' => 0);
+		try
+		{
+			\Util_security::check_csrf();
+
+			$id = (int)\Input::post('id');
+			if (!$id || !$file_tmp = Model_FileTmp::check_authority($id, $this->u->id))
+			{
+				throw new \HttpNotFoundException;
+			}
+			$file_tmp->delete();
+
+			$response['status'] = 1;
+			$status_code = 200;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
 }
