@@ -161,7 +161,7 @@ class Model_AlbumImage extends \Orm\Model
 		$self->album_id = $album_id;
 		$self->file_id = $file->id;
 		$self->public_flag = $public_flag;
-		$self->shot_at = isset($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
+		$self->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
 		$self->save();
 		\Model_Member::add_filesize($member->id, $file->filesize);
 
