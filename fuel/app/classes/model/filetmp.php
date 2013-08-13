@@ -48,6 +48,18 @@ class Model_FileTmp extends \Orm\Model
 		),
 	);
 
+	public static function check_authority($id, $target_member_id = 0)
+	{
+		if (!$id) return false;
+
+		$obj = self::find($id);
+		if (!$obj) return false;
+
+		if ($target_member_id && $obj->member_id != $target_member_id) return false;
+
+		return $obj;
+	}
+
 	public static function get_enables($member_id, $contents, $hash)
 	{
 		return self::query()

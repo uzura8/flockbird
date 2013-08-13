@@ -22,18 +22,6 @@ $('#upload_images_btn').on('click', function(){
 	}, 1000);
 });
 
-//$modal.on('click', '.update', function(){
-//	$modal.modal('loading');
-//	setTimeout(function(){
-//		$modal
-//		.modal('loading')
-//		.find('.modal-body')
-//		.prepend('<div class="alert alert-info fade in">' +
-//		'Updated!<button type="button" class="close" data-dismiss="alert">&times;</button>' +
-//		'</div>');
-//	}, 1000);
-//});
-
 $modal.on('hidden', function () {
 	var tmp_hash = $('#tmp_hash').val();
 	get_tmp_images(tmp_hash);
@@ -42,6 +30,11 @@ $modal.on('hidden', function () {
 	$btn_elment.attr('disabled', false);
 	$btn_elment.html(btn_elment_html);
 });
+
+function delte_tmp_image(id) {
+	delete_item_execute_ajax('site/api/delte_tmp_image', id, '#note_image', false);
+	return false;
+}
 
 function get_tmp_images(tmp_hash)
 {

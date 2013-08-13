@@ -18,7 +18,7 @@ class UploadHandler extends \JqueryFileUpload
 		{
 			$info = $this->get_file_object($file_name);
 		}
-		elseif ($album_id && \Config::get('album.upload.display_setting.display_uploaded_files'))
+		elseif ($album_id && \Config::get('album.display_setting.upload.display_uploaded_files'))
 		{
 			$info = $this->get_file_objects($album_id);
 		}
