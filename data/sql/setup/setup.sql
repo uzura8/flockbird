@@ -425,7 +425,7 @@ CREATE TABLE `file_tmp` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
-  KEY `member_id_contents_hash_created_at_idx` (`member_id`,`contents`,`hash`,`created_at`),
+  KEY `member_id_contents_created_at_idx` (`member_id`,`contents`,`created_at`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of temporary files uploaded';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

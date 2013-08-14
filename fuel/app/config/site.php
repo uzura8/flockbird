@@ -25,8 +25,9 @@ $config = array(
 			'accepted_contents' => array(
 					'note',
 				),
-			'lifetime' => 60 * 60 * 50,
+			'lifetime' => 60 * 60 * 24,
 			'is_delete_olds_when_display' => true,
+			'delete_record_limit' => 100,
 		),
 		'types' => array(
 			'img' => array(

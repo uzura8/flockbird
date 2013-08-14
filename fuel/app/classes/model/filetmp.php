@@ -65,10 +65,36 @@ class Model_FileTmp extends \Orm\Model
 		return self::query()
 			->where('member_id', $member_id)
 			->where('contents', $contents)
-			->where('hash', $hash)
 			->where('created_at', '>', date('Y-m-d H:i:s', time() - Config::get('site.upload.tmp_file.lifetime')))
-			->order_by('id')
+			->where('hash', $hash)
+			->order_by('created_at')
 			->get();
+	}
+
+	public static function delete_expired($member_id, $contents, $hash)
+	{
+		$query = self::query()
+			->where('member_id', $member_id)
+			->where('contents', $contents)
+			->where('created_at', '<', date('Y-m-d H:i:s', time() - Config::get('site.upload.tmp_file.lifetime')))
+			->order_by('created_at');
+		if ($limit = Config::get('site.upload.tmp_file.delete_record_limit'))
+		{
+			$query = $query->rows_limit($limit);
+		}
+		$objs = $query->get();
+
+		$i = 0;
+		foreach ($objs as $obj)
+		{
+			$filename = $obj->name;
+			$filepath = $obj->path;
+			$obj->delete();
+			$result = Site_Upload::remove_images($filepath, $filename, true);
+			if ($result) $i++;
+		}
+
+		return $i;
 	}
 
 	public static function delete_with_file($id)
