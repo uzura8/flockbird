@@ -71,7 +71,7 @@ class Model_FileTmp extends \Orm\Model
 			->get();
 	}
 
-	public static function delete_expired($member_id, $contents, $hash)
+	public static function delete_expired($member_id, $contents)
 	{
 		$query = self::query()
 			->where('member_id', $member_id)
