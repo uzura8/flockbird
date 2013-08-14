@@ -111,16 +111,17 @@ class Site_Upload
 		return $file;
 	}
 
-	public static function remove_images($filepath, $filename)
+	public static function remove_images($filepath, $filename, $is_tmp = false)
 	{
-		$file = self::get_uploaded_file_real_path($filepath, $filename);
+		$file = self::get_uploaded_file_real_path($filepath, $filename, 'raw', 'img', $is_tmp);
 		Util_file::remove($file);
 
 		$file_cate = self::get_file_cate_from_filepath($filepath);
-		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.sizes', array());
+		$key_sizes = $is_tmp ? 'sizes_tmp' : 'sizes';
+		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.'.$key_sizes, array());
 		foreach ($sizes as $size)
 		{
-			$file = self::get_uploaded_file_real_path($filepath, $filename, $size);
+			$file = self::get_uploaded_file_real_path($filepath, $filename, $size, 'img', $is_tmp);
 			Util_file::remove($file);
 		}
 
@@ -182,15 +183,19 @@ class Site_Upload
 		return $uri_path;
 	}
 
-	public static function get_uploaded_file_real_path($filepath, $filename, $size = 'raw', $file_type = 'img')
+	public static function get_uploaded_file_real_path($filepath, $filename, $size = 'raw', $file_type = 'img', $is_tmp = false)
 	{
+		$key = 'site.upload.types.'.$file_type;
+		if ($is_tmp) $key .= '.tmp';
 		if ($size == 'raw')
 		{
-			$path = Config::get('site.upload.types.'.$file_type.'.raw_file_path').$filepath.$filename;
+			$key .= '.raw_file_path';
+			$path = Config::get($key).$filepath.$filename;
 		}
 		else
 		{
-			$path = PRJ_PUBLIC_DIR.Config::get('site.upload.types.'.$file_type.'.root_path.cache_dir').$size.'/'.$filepath.$filename;
+			$key .= '.root_path.cache_dir';
+			$path = PRJ_PUBLIC_DIR.Config::get($key).$size.'/'.$filepath.$filename;
 		}
 
 		return $path;
@@ -287,11 +292,9 @@ class Site_Upload
 	public static function check_is_temp_upload($key = 'tmp_hash')
 	{
 		if (!\Input::post_get($key, '')) return false;
-
 		if (!$contents = \Input::post_get('contents', '')) return false;
-		if (!in_array($contents, array('note'))) return false;
 
-		return true;
+		return self::check_is_temp_accepted_contents($contents);
 	}
 
 	public static function check_is_temp_accepted_contents($target)

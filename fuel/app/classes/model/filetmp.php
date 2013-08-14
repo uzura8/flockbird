@@ -70,4 +70,20 @@ class Model_FileTmp extends \Orm\Model
 			->order_by('id')
 			->get();
 	}
+
+	public static function delete_with_file($id)
+	{
+		if (!$id || !$obj = self::find($id))
+		{
+			throw new \FuelException('Invalid file_tmp id.');
+		}
+
+		$filename = $obj->name;
+		$filepath = $obj->path;
+		$filesize = $obj->filesize;
+		$obj->delete();
+		Site_Upload::remove_images($filepath, $filename, true);
+
+		return $filesize;
+	}
 }

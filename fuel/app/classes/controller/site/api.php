@@ -95,7 +95,7 @@ class Controller_Site_Api extends Controller_Base_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			$file_tmp->delete();
+			\Model_FileTmp::delete_with_file($id);
 
 			$response['status'] = 1;
 			$status_code = 200;
