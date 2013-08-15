@@ -1,10 +1,10 @@
 <?php
 $class_name = 'member_img_box_s';
-$img_size   = '30x30';
+$img_size   = '30x30xc';
 if (isset($size) && $size == 'ss')
 {
 	$class_name = 'member_img_box_ss';
-	$img_size   = '20x20';
+	$img_size   = '20x20xc';
 }
 ?>
 <div class="<?php echo $class_name; ?>">

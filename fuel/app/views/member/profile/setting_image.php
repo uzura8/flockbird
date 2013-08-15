@@ -1,5 +1,5 @@
 <div class="well">
-	<div><?php echo img($u->get_image(), '180x180', '', true); ?></div>
+	<div><?php echo img($u->get_image(), '180x180xc', '', true); ?></div>
 	<?php echo form_open(false, true, array('action' => 'member/profile/edit_image', 'class' => 'form-stacked', 'method' => 'post')); ?>
 		<?php echo form_file('image'); ?>
 		<?php echo form_button(); ?>

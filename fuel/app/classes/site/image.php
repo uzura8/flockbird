@@ -2,15 +2,16 @@
 
 class Site_image
 {
-	private $file_cate  = '';
-	private $split_num  = '';
-	private $filename   = '';
-	private $filepath   = '';
-	private $extension  = 'gif';//noimage 画像の拡張子をデフォルト値とする
-	private $size       = '';
-	private $widtn      = '';
-	private $height     = '';
-	private $is_noimage = false;
+	private $file_cate   = '';
+	private $split_num   = '';
+	private $filename    = '';
+	private $filepath    = '';
+	private $extension   = 'gif';//noimage 画像の拡張子をデフォルト値とする
+	private $size        = '';
+	private $widtn       = '';
+	private $resize_type = '';
+	private $height      = '';
+	private $is_noimage  = false;
 
 	public function __construct($config = array())
 	{
@@ -87,7 +88,10 @@ class Site_image
 		if ($this->size == 'raw') return;
 		$this->check_size();
 
-		list($this->width, $this->height) = explode('x', $this->size);
+		$item = Site_Upload::conv_size_str_to_array($this->size);
+		$this->width       = $item['width'];
+		$this->height      = $item['height'];
+		$this->resize_type = $item['resize_type'];
 	}
 
 	private function check_size()
@@ -176,8 +180,7 @@ class Site_image
 	{
 		$target_file_path = sprintf('%s/%s', $target_file_dir, $target_filename);
 		Site_Upload::check_and_make_uploaded_dir($target_file_dir);
-		$resize_type = Site_Upload::get_image_resize_type($this->file_cate);
-		Util_file::resize($original_file_path, $target_file_path, $this->width, $this->height, $resize_type);
+		Util_file::resize($original_file_path, $target_file_path, $this->width, $this->height, $this->resize_type);
 	}
 
 	public function get_extension()

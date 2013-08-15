@@ -17,7 +17,6 @@ return array(
 						),
 						'default_size' => '80x80',
 						'max_size' => '720x720',
-						//'resize_type' => 'crop',
 					),
 				),
 			),

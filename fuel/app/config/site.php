@@ -16,6 +16,7 @@ $config = array(
 	),
 	'upload' => array(
 		'num_of_split_dirs' => 10,
+		'check_and_make_dir_level' => 7,
 		'accepted_filesize' => array(
 			'small' => array(
 				'limit' => '256M',
@@ -54,20 +55,20 @@ $config = array(
 					'png' => 'image/png',
 				),
 				'defaults' => array(
-					'default_size' => '50x50',
+					'default_size' => '50x50xc',
 					'max_size' => '600x600',
 				),
 				'types' => array(
 					'm' => array(
 						'sizes' => array(
-							'SS' => '20x20',
-							'S' => '30x30',
-							'M' => '50x50',
-							'L' => '180x180',
+							'SS' => '20x20xc',
+							'S' => '30x30xc',
+							'M' => '50x50xc',
+							'L' => '180x180xc',
+							'LL' => '600x600',
 						),
-						'default_size' => '50x50',
+						'default_size' => '50x50xc',
 						'max_size' => '600x600',
-						'resize_type' => 'crop',
 					),
 				),
 			),

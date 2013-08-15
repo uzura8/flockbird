@@ -11,7 +11,6 @@ class Site_uploader
 	private $tmp_dir_path = '';
 	private $sizes        = array();
 	private $max_size     = 0;
-	private $resize_type  = 'relative';
 	private $member_id    = 0;
 	private $member_filesize_total = 0;
 	private $file_size_limit       = 0;
@@ -36,7 +35,6 @@ class Site_uploader
 		if (!empty($options['sizes'])) $this->sizes = $options['sizes'];
 		if (!empty($options['old_filepath_name'])) $this->old_filepath_name = $options['old_filepath_name'];
 		if (!empty($options['max_size'])) $this->max_size = $options['max_size'];
-		if (!empty($options['resize_type'])) $this->resize_type = $options['resize_type'];
 		if (!empty($options['member_id'])) $this->member_id = $options['member_id'];
 		if (!empty($options['member_filesize_total'])) $this->member_filesize_total = $options['member_filesize_total'];
 		if (!empty($options['file_size_limit'])) $this->file_size_limit = Util_string::convert2bytes($options['file_size_limit']);
@@ -134,9 +132,7 @@ class Site_uploader
 	{
 		if (!$this->max_size) return false;
 
-		$sizes = Image::sizes($file);
-
-		return Site_Upload::check_max_size_and_resize($file, $this->max_size, $sizes->width, $sizes->height, $this->resize_type);
+		return Site_Upload::check_max_size_and_resize($file, $this->max_size);
 	}
 
 	private function make_thumbnails()
@@ -147,8 +143,9 @@ class Site_uploader
 			Site_Upload::check_and_make_uploaded_dir($dir);
 
 			$new_file = $dir.$this->filename;
-			list($width, $height) = explode('x', $size);
-			Util_file::resize($this->raw_file, $new_file, $width, $height, $this->resize_type);
+			$size_items = Site_Upload::conv_size_str_to_array($size);
+
+			Util_file::resize($this->raw_file, $new_file, $size_items['width'], $size_items['height'], $size_items['resize_type']);
 		}
 	}
 

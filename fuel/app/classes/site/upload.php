@@ -77,7 +77,6 @@ class Site_Upload
 			'filepath'    => $filepath,
 			'sizes'       => Config::get('site.upload.types.img.types.'.$file_cate.'.sizes', array()),
 			'max_size'    => Config::get('site.upload.types.img.types.'.$file_cate.'.max_size', 0),
-			'resize_type' => Config::get('site.upload.types.img.types.'.$file_cate.'.resize_type', 0),
 		);
 		if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE && $member_id)
 		{
@@ -138,33 +137,46 @@ class Site_Upload
 
 	public static function conv_size_str_to_array($size_string)
 	{
-		list($width, $height) = explode('x', $size_string);
+		$items = explode('x', $size_string);
+
 		$sizes = array();
-		$sizes['width']  = $width;
-		$sizes['height'] = $height;
+		$sizes['width']  = !empty($items[0]) ? (int)$items[0] : 0;
+		$sizes['height'] = !empty($items[1]) ? (int)$items[1] : 0;
+		$resize_type_id  = !empty($items[2]) ? (int)$items[2] : '';
+		$sizes['resize_type'] = self::conv_resize_type_id($resize_type_id);
 
 		return $sizes;
 	}
 
-	public static function check_max_size_and_resize($file, $max_size, $width, $height, $resize_type = 'relative')
+	public static function conv_resize_type_id($resize_type_id)
+	{
+		switch ($resize_type_id)
+		{
+			case 'c':
+				return 'crop';
+				break;
+			case 'a':
+				return 'absolute';
+				break;
+			case 'r':
+				return 'relative';
+				break;
+		}
+
+		return 'relative';
+	}
+
+	public static function check_max_size_and_resize($file, $max_size)
 	{
 		$sizes = Image::sizes($file);
 		$size  = filesize($file);
 
 		$max = self::conv_size_str_to_array($max_size);
-		if ($width <= $max['width'] && $height <= $max['height']) return $size;
+		if ($sizes->width <= $max['width'] && $sizes->height <= $max['height']) return $size;
 
-		Util_file::resize($file, $file, $max['width'], $max['width'], $resize_type);
+		Util_file::resize($file, $file, $max['width'], $max['width']);
 
 		return filesize($file);
-	}
-
-	public static function get_image_resize_type($file_cate)
-	{
-		$resize_type = Config::get('site.upload.types.img.types.'.$file_cate.'.resize_type');
-		if (empty($resize_type)) return 'relative';
-
-		return $resize_type;
 	}
 
 	public static function get_uploaded_file_uri_path($filepath = '', $filename = '', $size = 'raw', $file_type = 'img')
@@ -208,8 +220,9 @@ class Site_Upload
 		return file_exists($real_path);
 	}
 
-	public static function check_and_make_uploaded_dir($dir, $check_dir_level = 7)
+	public static function check_and_make_uploaded_dir($dir, $check_dir_level = 0)
 	{
+		if (!$check_dir_level) $check_dir_level = Config::get('site.upload.check_and_make_dir_level');
 		if ($target_path = Util_file::check_exists_file_path($dir, $check_dir_level))
 		{
 			Util_file::make_dir_recursive($dir);

@@ -142,8 +142,7 @@ class UploadHandler extends \JqueryFileUpload
 				}
 				$file->url = $this->options['upload_url'].'raw/'.$file->path.rawurlencode($file->name);
 
-				$sizes = \Image::sizes($file_path);
-				$file->size = \Site_Upload::check_max_size_and_resize($file_path, $max_size, $sizes->width, $sizes->height);
+				$file->size = \Site_Upload::check_max_size_and_resize($file_path, $max_size);
 
 				foreach($this->options['image_versions'] as $version => $options)
 				{
@@ -406,8 +405,8 @@ class UploadHandler extends \JqueryFileUpload
 		$to_dir = sprintf('%s%s/%s', $to_base_dir, $size, $filepath);
 		if (!file_exists($to_dir)) \Site_Upload::check_and_make_uploaded_dir($to_dir);
 		$new_file = $to_dir.$filename;
-		list($width, $height) = explode('x', $size);
+		$item = \Site_Upload::conv_size_str_to_array($size);
 
-		return \Util_file::resize($from_file, $new_file, $width, $height);
+		return \Util_file::resize($from_file, $new_file, $item['width'], $item['height'], $item['resize_type']);
 	}
 }
