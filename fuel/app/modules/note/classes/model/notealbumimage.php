@@ -57,7 +57,7 @@ class Model_NoteAlbumImage extends \Orm\Model
 
 	public static function get_album_image4note_id($note_id)
 	{
-		$album_image_ids = \Util_db::conv_col(\DB::select('id')->from('note_album_image')->where('note_id', $note_id)->execute()->as_array());
+		$album_image_ids = \Util_db::conv_col(\DB::select('album_image_id')->from('note_album_image')->where('note_id', $note_id)->execute()->as_array());
 		if (!$album_image_ids) return array();
 
 		return \Album\Model_AlbumImage::query()

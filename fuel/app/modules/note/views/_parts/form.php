@@ -17,7 +17,7 @@
 	<div id="upload_images" class="modal container hide fade" tabindex="-1"></div>
 	<div id="uploaded_images"></div>
 <?php endif; ?>
-	<?php echo form_radio_public_flag($val, isset($note) ? $note->public_flag : ''); ?>
+	<?php echo form_radio_public_flag($val, isset($note) ? $note->public_flag : null); ?>
 	<?php echo form_button(); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

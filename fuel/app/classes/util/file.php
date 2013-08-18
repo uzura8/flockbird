@@ -3,7 +3,22 @@ class Util_file
 {
 	public static function move($original_file, $moved_file)
 	{
+		if (!file_exists($original_file))
+		{
+			throw new FuelException('Original file not exists.');
+		}
+
 		return rename($original_file, $moved_file);
+	}
+
+	public static function copy($original_file, $moved_file)
+	{
+		if (!file_exists($original_file))
+		{
+			throw new FuelException('Original file not exists.');
+		}
+
+		return copy($original_file, $moved_file);
 	}
 
 	/**

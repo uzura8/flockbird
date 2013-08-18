@@ -2,6 +2,13 @@
 class Model_FileTmp extends \Orm\Model
 {
 	protected static $_table_name = 'file_tmp';
+	protected static $_has_many = array(
+		'file_tmp_config' => array(
+			'key_from' => 'id',
+			'model_to' => 'Model_FileTmpConfig',
+			'key_to' => 'file_tmp_id',
+		)
+	);
 	protected static $_properties = array(
 		'id',
 		'name' => array(
@@ -60,12 +67,13 @@ class Model_FileTmp extends \Orm\Model
 		return $obj;
 	}
 
-	public static function get_enables($member_id, $contents, $hash)
+	public static function get_enables($member_id, $contents, $hash, $spare_time = 0)
 	{
 		return self::query()
+			->related('file_tmp_config')
 			->where('member_id', $member_id)
 			->where('contents', $contents)
-			->where('created_at', '>', date('Y-m-d H:i:s', time() - Config::get('site.upload.tmp_file.lifetime')))
+			->where('created_at', '>', date('Y-m-d H:i:s', time() - Config::get('site.upload.tmp_file.lifetime') - $spare_time))
 			->where('hash', $hash)
 			->order_by('created_at')
 			->get();

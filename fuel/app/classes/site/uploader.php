@@ -141,11 +141,8 @@ class Site_uploader
 		{
 			$dir = sprintf('%s%s/%s', $this->cache_image_base_dir_path, $size, $this->filepath);
 			Site_Upload::check_and_make_uploaded_dir($dir);
-
 			$new_file = $dir.$this->filename;
-			$size_items = Site_Upload::conv_size_str_to_array($size);
-
-			Util_file::resize($this->raw_file, $new_file, $size_items['width'], $size_items['height'], $size_items['resize_type']);
+			Util_file::make_thumbnail($this->raw_file, $new_file, $size);
 		}
 	}
 

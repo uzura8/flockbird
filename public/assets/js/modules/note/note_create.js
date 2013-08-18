@@ -63,6 +63,7 @@ function get_tmp_images(tmp_hash)
 			$(targetDomElement).html(result);
 		},
 		error: function(result) {
+			$('.loading_image').remove();
 			$.jGrowl(get_error_message(result['status'], '読み込みに失敗しました。'));
 		}
 	});

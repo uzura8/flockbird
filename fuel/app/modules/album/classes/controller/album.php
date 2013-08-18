@@ -129,8 +129,6 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		\Site_Upload::setup_uploaded_dir('ai', $album->id);
-
 		$this->template->post_header = \View::forge('_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/upload_footer', array('display_delete_button' => \Config::get('album.display_setting.upload.display_delete_button')));
 		$this->template->content = \View::forge('upload', array('id' => $id, 'album' => $album));
@@ -541,11 +539,7 @@ class Controller_Album extends \Controller_Site
 			$file->type = $uploaded_file['type'];
 			$file->member_id = $this->u->id;
 			$file->save();
-
-			$this->u->file_id = $file->id;
-			$this->u->save();
-			\Model_Member::recalculate_filesize_total($this->u->id);
-
+			\Controller_Base_Site::add_member_filesize_total($file->size);
 			\DB::commit_transaction();
 
 			\Session::set_flash('message', '写真を更新しました。');
@@ -604,7 +598,7 @@ class Controller_Album extends \Controller_Site
 				}
 				else
 				{
-					\Site_Upload::setup_uploaded_dir($file_cate, $album_id, $options['is_tmp']);
+					\Site_Upload::setup_uploaded_dir($file_cate, $filepath, $options['is_tmp']);
 					if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE)
 					{
 						$accepted_upload_filesize_type = 'small';// default

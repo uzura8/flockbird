@@ -193,4 +193,21 @@ class Site_Util
 
 		return $last_real_segment;
 	}
+
+	public static function check_and_get_posted_file_tmps($member_id)
+	{
+		$file_tmps = array();
+		if (!$tmp_hash = Input::post('tmp_hash')) return $file_tmps;
+		if (!$posted_file_tmp_ids = Input::post('file_tmp_id')) return $file_tmps;
+		if (!$ft_tmps = Model_FileTmp::get_enables($member_id, 'note', $tmp_hash, Config::get('site.upload.tmp_file.lifetime_extra_when_posted'))) return $file_tmps;
+
+		foreach ($ft_tmps as $ft_tmp)
+		{
+			if (!in_array($ft_tmp->id, $posted_file_tmp_ids)) continue;
+			$file_tmps[] = $ft_tmp;
+		}
+		unset($ft_tmps);
+
+		return $file_tmps;
+	}
 }

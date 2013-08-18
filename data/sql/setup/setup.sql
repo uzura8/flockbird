@@ -431,6 +431,28 @@ CREATE TABLE `file_tmp` (
 
 
 --
+-- Table structure for table `file_tmp_config`
+--
+
+DROP TABLE IF EXISTS `file_tmp_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `file_tmp_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `file_tmp_id` INT NOT NULL COMMENT 'file_tmp id',
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Configuration name',
+  `value` text NOT NULL COMMENT 'Configuration value',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX file_tmp_id_idx (file_tmp_id),
+  UNIQUE KEY `file_tmp_id_name_UNIQUE_idx` (`file_tmp_id`, `name`),
+  CONSTRAINT `file_tmp_config_file_tmp_id_file_tmp_id` FOREIGN KEY (`file_tmp_id`) REFERENCES `file_tmp` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of each temporary files';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
 -- Table structure for table `items`
 --
 

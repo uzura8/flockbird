@@ -250,7 +250,6 @@ class Controller_Image extends \Controller_Site
 		{
 			$album = Model_Album::get_album_for_note($this->u->id);
 		}
-		//\Site_Upload::setup_uploaded_dir('ai', $album->id, true);
 
 		return \Response::forge(\View::forge('image/upload', array('id' => $album->id, 'album' => $album, 'contents' => $contents, 'tmp_hash' => $tmp_hash)));
 	}

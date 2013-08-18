@@ -109,6 +109,14 @@ class Controller_Note extends \Controller_Site
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
+
+			$file_tmps = array();
+			if ($is_upload['multiple'])
+			{
+				$file_tmps = \Site_Util::check_and_get_posted_file_tmps($this->u->id);
+				$this->save_file_tmp_config_posted_album_image_names($file_tmps);
+			}
+
 			try
 			{
 				if (!$val->run()) throw new \FuelException($val->show_errors());
@@ -117,12 +125,25 @@ class Controller_Note extends \Controller_Site
 				$note->body        = $post['body'];
 				$note->public_flag = $post['public_flag'];
 				$note->member_id   = $this->u->id;
-
 				\DB::start_transaction();
 				$note->save();
 				if ($is_upload['simple'] && \Input::file())
 				{
 					Model_NoteAlbumImage::save_with_file($note->id, $this->u, $post['public_flag']);
+				}
+				elseif ($is_upload['multiple'] && $file_tmps)
+				{
+					$album_id = \Album\Model_Album::get_id_for_note($this->u->id);
+					foreach ($file_tmps as $file_tmp)
+					{
+						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $post['public_flag']);
+						// note_album_image の保存
+						$note_album_image = Model_NoteAlbumImage::forge();
+						$note_album_image->note_id = $note->id;
+						$note_album_image->album_image_id = $album_image->id;
+						$note_album_image->save();
+						\Model_Member::recalculate_filesize_total($this->u->id);
+					}
 				}
 				\DB::commit_transaction();
 
@@ -209,5 +230,16 @@ class Controller_Note extends \Controller_Site
 
 		\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
 		\Response::redirect('note/member');
+	}
+
+	private function save_file_tmp_config_posted_album_image_names($file_tmps)
+	{
+		$album_image_names = \Input::post('album_image_name');
+		foreach ($file_tmps as $file_tmp)
+		{
+			if (!isset($album_image_names[$file_tmp->id])) continue;
+			$value = trim($album_image_names[$file_tmp->id]);
+			\Model_FileTmpConfig::update_for_name($file_tmp->id, 'album_image_name', $value);
+		}
 	}
 }

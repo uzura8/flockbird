@@ -27,6 +27,7 @@ $config = array(
 					'note',
 				),
 			'lifetime' => 60 * 60 * 24,
+			'lifetime_extra_when_posted' => 60 * 60 * 1,
 			'is_delete_olds_when_display' => true,
 			'delete_record_limit' => 100,
 		),
