@@ -64,7 +64,7 @@ class Controller_Site_Api extends Controller_Base_Site_Api
 				$file_tmps = Model_FileTmp::delete_expired($this->u->id, $contents);
 			}
 			$file_tmps = Model_FileTmp::get_enables($this->u->id, $contents, $tmp_hash);
-			$response = View::forge('site/_parts/tmp_images', array('file_tmps' => $file_tmps));
+			$response = View::forge('site/_parts/tmp_images', array('file_tmps' => $file_tmps, 'is_tmp' => true));
 			$status_code = 200;
 
 			return Response::forge($response, $status_code);

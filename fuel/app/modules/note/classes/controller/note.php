@@ -175,40 +175,96 @@ class Controller_Note extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
+		$is_upload = array();
+		$is_upload['simple']   = \Config::get('note.display_setting.form.upload.display') && \Config::get('note.display_setting.form.upload.type') == 'simple';
+		$is_upload['multiple'] = \Config::get('note.display_setting.form.upload.display') && \Config::get('note.display_setting.form.upload.type') == 'multiple';
 
 		$val = \Validation::forge();
 		$val->add_model($note);
 		$val->add('original_public_flag')
 				->add_rule('in_array', \Site_Util::get_public_flags());
 
+		$album_image_name_uploaded_posteds = array();
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
-			if ($val->run())
+
+			$file_tmps = array();
+			if ($is_upload['multiple'])
 			{
+				$file_tmps = \Site_Util::check_and_get_posted_file_tmps($this->u->id);
+				$this->save_file_tmp_config_posted_album_image_names($file_tmps);
+				$album_image_name_uploaded_posteds = \Input::post('album_image_name_uploaded');
+			}
+
+			try
+			{
+				if (!$val->run()) throw new \FuelException($val->show_errors());
+
 				$post = $val->validated();
 				$note->title       = $post['title'];
 				$note->body        = $post['body'];
 				$note->public_flag = $post['public_flag'];
 
-				if ($note and $note->save())
+				\DB::start_transaction();
+				$note->save();
+
+				// album_image の update
+				$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
+				$album_images_posted = \Input::post('album_image_id');
+				foreach ($album_images as $album_image)
 				{
-					\Session::set_flash('message', \Config::get('term.note').'を編集をしました。');
-					\Response::redirect('note/detail/'.$note->id);
+					if (!in_array($album_image->id, $album_images_posted)) continue;
+
+					$album_image->public_flag = $post['public_flag'];
+					if (isset($album_image_name_uploaded_posteds[$album_image->id]))
+					{
+						$album_image->name = trim($album_image_name_uploaded_posteds[$album_image->id]);
+					}
+					$album_image->save();
 				}
-				else
+
+				// tmp_file を album_image として保存
+				if ($is_upload['simple'] && \Input::file())
 				{
-					\Session::set_flash('error', 'Could not save.');
+					Model_NoteAlbumImage::save_with_file($note->id, $this->u, $post['public_flag']);
 				}
+				elseif ($is_upload['multiple'] && $file_tmps)
+				{
+					$album_id = \Album\Model_Album::get_id_for_note($this->u->id);
+					foreach ($file_tmps as $file_tmp)
+					{
+						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $post['public_flag']);
+						// note_album_image の保存
+						$note_album_image = Model_NoteAlbumImage::forge();
+						$note_album_image->note_id = $note->id;
+						$note_album_image->album_image_id = $album_image->id;
+						$note_album_image->save();
+						\Model_Member::recalculate_filesize_total($this->u->id);
+					}
+				}
+				\DB::commit_transaction();
+
+				\Session::set_flash('message', \Config::get('term.note').'を編集しました。');
+				\Response::redirect('note/detail/'.$note->id);
 			}
-			else
+			catch(\FuelException $e)
 			{
-				\Session::set_flash('error', $val->show_errors());
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				\Session::set_flash('error', $e->getMessage());
 			}
 		}
 
+		$tmp_hash = $is_upload['multiple'] ? \Input::get_post('tmp_hash', \Util_toolkit::create_hash()) : '';
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
-		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'note' => $note));
+		$this->template->content = \View::forge('_parts/form', array(
+			'val' => $val,
+			'note' => $note,
+			'is_upload' => $is_upload,
+			'tmp_hash' => $tmp_hash,
+			'is_edit' => true,
+			'album_image_name_uploaded_posteds' => $album_image_name_uploaded_posteds,
+		));
 	}
 
 	/**

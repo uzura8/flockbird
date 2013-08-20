@@ -367,20 +367,30 @@ div.alert ul {
 	margin-bottom: 20px;
 }
 
-#uploaded_images .row-fluid {
+#uploaded_images .row-fluid,
+#tmp_images .row-fluid
+{
 	margin-bottom: 15px;
 }
 
-#uploaded_images .row-fluid .item {
+#uploaded_images .row-fluid .item,
+#tmp_images .row-fluid .item
+{
 	margin-bottom: 5px;
 }
 
-#uploaded_images .row-fluid h6 {
+#uploaded_images .row-fluid h6,
+#tmp_images .row-fluid h6
+{
 	margin: 0 3px;
 }
-#uploaded_images .row-fluid textarea {
+#uploaded_images .row-fluid textarea,
+#tmp_images .row-fluid textarea
+{
 	margin: 0 10px 5px 0;
 }
-#uploaded_images .row-fluid .btn-group {
+#uploaded_images .row-fluid .btn-group,
+#tmp_images .row-fluid .btn-group
+{
 	margin-right: 10px;
 }

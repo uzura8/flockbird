@@ -1,7 +1,15 @@
 <div class="well">
 <?php echo form_open(true, !empty($is_upload['simple'])); ?>
-<?php if (Site_Util::get_action_name() == 'edit'): ?>
+<?php if (isset($is_edit) && $is_edit): ?>
 	<?php echo Form::hidden('original_public_flag', isset($note) ? $note->public_flag : null); ?>
+<?php if (isset($album_image_name_uploaded_posteds) && $album_image_name_uploaded_posteds): ?>
+<?php foreach ($album_image_name_uploaded_posteds as $album_image_id => $value): ?>
+	<?php echo Form::hidden('album_image_name_uploaded_posted_'.$album_image_id, $value, array(
+		'class' => 'album_image_name_uploaded_posted',
+		'id' => 'album_image_name_uploaded_posted_'.$album_image_id,
+	)); ?>
+<?php endforeach; ?>
+<?php endif; ?>
 <?php endif; ?>
 	<?php echo Form::hidden('tmp_hash', isset($tmp_hash) ? $tmp_hash : '', array('id' => 'tmp_hash')); ?>
 	<?php echo form_input($val, 'title', 'タイトル', isset($note) ? $note->title : '', true, 'input-xlarge'); ?>
@@ -15,7 +23,10 @@
 		'data-toggle' => 'modal',
 	)); ?>
 	<div id="upload_images" class="modal container hide fade" tabindex="-1"></div>
+<?php if (isset($is_edit) && $is_edit): ?>
 	<div id="uploaded_images"></div>
+<?php endif; ?>
+	<div id="tmp_images"></div>
 <?php endif; ?>
 	<?php echo form_radio_public_flag($val, isset($note) ? $note->public_flag : null); ?>
 	<?php echo form_button(); ?>
