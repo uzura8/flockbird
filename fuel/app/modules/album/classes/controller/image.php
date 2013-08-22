@@ -84,7 +84,7 @@ class Controller_Image extends \Controller_Site
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related' => array('file', 'album'),
-			'where' => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id), 't2.member_id'),
+			'where' => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id), 't2.member_id'),
 			'limit' => \Config::get('album.articles.limit'),
 			'order_by' => array('shot_at' => 'desc'),
 		), 'Album');

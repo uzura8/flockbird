@@ -60,7 +60,7 @@ class Controller_Note extends \Controller_Site
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
-			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id)),
+			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id)),
 			'limit'    => \Config::get('note.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Note');
