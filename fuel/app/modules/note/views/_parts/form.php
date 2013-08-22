@@ -29,6 +29,10 @@
 	<div id="tmp_images"></div>
 <?php endif; ?>
 	<?php echo form_radio_public_flag($val, isset($note) ? $note->public_flag : null); ?>
+<?php if (isset($is_edit) && $is_edit): ?>
+	<?php echo form_button('送信', 'button'); ?>
+<?php else: ?>
 	<?php echo form_button(); ?>
+<?php endif; ?>
 <?php echo form_close(); ?>
 </div><!-- well -->
