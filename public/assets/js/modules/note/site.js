@@ -8,10 +8,17 @@ $(function(){
 
 function delte_image(id) {
 	var is_tmp = (arguments.length > 1) ? arguments[1] : false;
-
 	var post_uri = is_tmp ? 'site/api/delte_tmp_image' : 'album/image/api/delete';
 	var target_attribute_prefix = is_tmp ? '#note_image_tmp' : '#note_image_uploaded';
-	delete_item_execute_ajax(post_uri, id, target_attribute_prefix, false);
+
+	if (is_tmp) {
+		delete_item_execute_ajax(post_uri, id, target_attribute_prefix, false);
+	} else {
+		apprise('削除した写真は元に戻せません。削除しますか？', {'confirm':true}, function(r) {
+			if (r == true) delete_item_execute_ajax(post_uri, id, target_attribute_prefix, false);
+		});
+	}
+
 	return false;
 }
 
