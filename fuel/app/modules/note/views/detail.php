@@ -1,9 +1,18 @@
-<p><?php echo nl2br($note->body) ?></p>
-<hr />
+<p class="article_body"><?php echo nl2br($note->body) ?></p>
 
+<ul class="thumbnails">
 <?php foreach ($images as $album_image): ?>
-	<div><?php echo img($album_image->file, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
+	<li class="span4">
+		<div class="thumbnail">
+			<?php echo img($album_image->file, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?>
+<?php /*<img data-src="holder.js/300x200" alt="">*/ ; ?>
+<?php if ($album_image->name): ?>
+			<p><?php echo $album_image->name; ?></p>
+<?php endif; ?>
+		</div>
+	</li>
 <?php endforeach; ?>
+</ul>
 
 <?php if (Auth::check() || $comments): ?>
 <h3 id="comments">Comments</h3>

@@ -367,6 +367,10 @@ div.alert ul {
 	margin-bottom: 20px;
 }
 
+.article_body {
+	margin-bottom: 30px;
+}
+
 #uploaded_images .row-fluid,
 #tmp_images .row-fluid
 {
