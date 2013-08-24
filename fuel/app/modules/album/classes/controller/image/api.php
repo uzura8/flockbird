@@ -291,6 +291,10 @@ class Controller_Image_api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
+			if ($result = Site_Util::check_album_disabled_to_update($album_image->album->foreign_table))
+			{
+				throw new \DisableToUpdatePublicFlagException($result['message']);
+			}
 			list($public_flag, $model) = \Site_Util::validate_params_public_flag($album_image->public_flag);
 
 			\DB::start_transaction();
@@ -309,6 +313,11 @@ class Controller_Image_api extends \Controller_Site_Api
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);
+		}
+		catch(\DisableToUpdatePublicFlagException $e)
+		{
+			$response = json_encode(array('error' => array('message' => $e->getMessage())));
+			$status_code = 403;
 		}
 		catch(\HttpInvalidInputException $e)
 		{

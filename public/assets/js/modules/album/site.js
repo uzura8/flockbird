@@ -1,3 +1,6 @@
+$('body').tooltip({
+	selector: 'a[data-toggle=tooltip]'
+});
 $(function(){
 	$(document).on('click','.update_public_flag', function(){
 		if (GL.execute_flg) return false;

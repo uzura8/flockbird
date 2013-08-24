@@ -1,6 +1,7 @@
 <?php
 
 class SiteApiNotAuthorizedException extends \FuelException {}
+class DisableToUpdatePublicFlagException extends \FuelException {}
 
 class Controller_Base_Site_Api extends Controller_Base_Site
 {

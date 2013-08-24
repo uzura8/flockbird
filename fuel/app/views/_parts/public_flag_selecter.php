@@ -2,7 +2,9 @@
 list($name, $icon, $btn_color) = get_public_flag_label($public_flag, isset($view_icon_only) ? $view_icon_only : false);
 $model_uri = str_replace('_', '/', $model);
 ?>
-<?php if (!empty($is_mycontents)): ?>
+<?php if (isset($disabled_to_update) && $disabled_to_update): ?>
+<a class="btn btn-mini public_flag<?php echo $btn_color; ?>"<?php if (!empty($disabled_to_update['message'])): ?> data-toggle="tooltip" data-placement="top" title="<?php echo $disabled_to_update['message']; ?>"<?php endif; ?>><?php echo $icon.$name; ?></a>
+<?php elseif (!empty($is_mycontents)): ?>
 <?php if (empty($without_parent_box)): ?><div class="btn-group public_flag"><?php endif; ?>
 	<button class="btn dropdown-toggle btn-mini<?php echo $btn_color; ?>" id="public_flag_<?php echo $model; ?>_<?php echo $id; ?>" data-toggle="dropdown">
 		<?php echo $icon.$name; ?><span class="caret"></span>

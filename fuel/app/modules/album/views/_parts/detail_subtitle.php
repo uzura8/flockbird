@@ -4,12 +4,13 @@
 	'public_flag' => $album->public_flag,
 	'have_children_public_flag'  => true,
 	'public_flag_view_icon_only' => IS_SP,
+	'public_flag_disabled_to_update' => $disabled_to_update,
 	'is_refresh_after_update_public_flag' => true,
 	'model'       => 'album',
 	'child_model' => 'album_image',
 	'date'        => array('datetime' => $album->created_at, 'label' => '日時')
 )); ?>
-<?php if (isset($u) && $u->id == $album->member_id): ?>
+<?php if (!$disabled_to_update && isset($u) && $u->id == $album->member_id): ?>
 <div class="btn-group edit">
 	<?php echo render('_parts/button_edit'); ?>
 	<ul class="dropdown-menu pull-right">

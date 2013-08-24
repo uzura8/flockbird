@@ -10,6 +10,7 @@
 		<?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
 		<h5><?php echo Html::anchor('album/'.$album->id, strim($album->name, \Config::get('album.articles.trim_width.name'))); ?></h5>
 
+<?php $disable_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table); ?>
 <?php if (!empty($is_member_page)): ?>
 		<div class="date_box">
 			<small><?php echo site_get_time($album->created_at) ?></small>
@@ -20,6 +21,7 @@
 	'public_flag'    => $album->public_flag,
 	'is_mycontents'  => $is_mycontents,
 	'view_icon_only' => true,
+	'disabled_to_update' => $disable_to_update,
 	'have_children_public_flag' => true,
 	'child_model'    => 'album_image',
 )); ?>
@@ -30,6 +32,7 @@
 	'id'          => $album->id,
 	'public_flag' => $album->public_flag,
 	'public_flag_view_icon_only' => true,
+	'public_flag_disabled_to_update' => $disable_to_update,
 	'have_children_public_flag'  => true,
 	'model'       => 'album',
 	'date'        => array('datetime' => $album->created_at),
@@ -46,7 +49,7 @@
 				<i class="icon-picture"></i> 0 枚
 <?php endif; ?>
 			</small>
-<?php if (Auth::check() && $album->member_id == $u->id): ?>
+<?php if (!$disable_to_update && Auth::check() && $album->member_id == $u->id): ?>
 				<div class="btn-group btn_album_edit" id="btn_album_edit_<?php echo $album->id ?>">
 <?php if (\Config::get('album.display_setting.member.display_delete_link')): ?>
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>

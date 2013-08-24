@@ -23,7 +23,7 @@
 <?php endif; ?>
 <?php endif; ?>
 
-<?php if (Config::get('album.display_setting.detail.display_upload_form') && Auth::check() && $album->member_id == $u->id): ?>
+<?php if (Config::get('album.display_setting.detail.display_upload_form') && !$disabled_to_update && Auth::check() && $album->member_id == $u->id): ?>
 <div class="well">
 <h5><?php echo Config::get('term.album_image'); ?>アップロード</h5>
 <?php echo form_open(false, true, array('action' => 'album/upload_image'), array('id' => $id)); ?>
@@ -40,7 +40,9 @@
 <?php echo Html::anchor('album/slide/'.$album->id, sprintf('<i class="icon-picture"></i> %sを見る', Config::get('term.album_image')), array('class' => 'btn mr')); ?>
 <?php endif; ?>
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
+<?php if (!$disabled_to_update): ?>
 <?php echo Html::anchor('album/upload/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn mr')); ?>
+<?php endif; ?>
 <?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('term.album_image')), array('class' => 'btn')); ?>
 <?php endif; ?>
 </div>

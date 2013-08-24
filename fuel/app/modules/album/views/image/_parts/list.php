@@ -21,6 +21,7 @@
 	'public_flag'    => $album_image->public_flag,
 	'is_mycontents'  => $is_mycontents,
 	'view_icon_only' => true,
+	'disabled_to_update' => \Album\Site_Util::check_album_disabled_to_update($album_image->album->foreign_table),
 )); ?>
 		</div>
 <?php else: ?>
@@ -29,6 +30,7 @@
 	'id'          => $album_image->id,
 	'public_flag' => $album_image->public_flag,
 	'public_flag_view_icon_only' => true,
+	'public_flag_disabled_to_update' => \Album\Site_Util::check_album_disabled_to_update($album_image->album->foreign_table),
 	'model'       => 'album_image',
 	'date'        => array('datetime' => $album_image->album->created_at)
 )); ?>

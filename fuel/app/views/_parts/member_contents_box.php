@@ -28,6 +28,7 @@ if (isset($public_flag, $model, $id))
 		'view_icon_only' => isset($public_flag_view_icon_only) ? $public_flag_view_icon_only : false,
 		'have_children_public_flag' => isset($have_children_public_flag) ? $have_children_public_flag : false,
 		'is_refresh_after_update_public_flag' => isset($is_refresh_after_update_public_flag) ? $is_refresh_after_update_public_flag : false,
+		'disabled_to_update' => isset($public_flag_disabled_to_update) ? $public_flag_disabled_to_update : false,
 		'is_mycontents' => $is_mycontents,
 	);
 	if (!empty($child_model)) $data['child_model'] = $child_model;

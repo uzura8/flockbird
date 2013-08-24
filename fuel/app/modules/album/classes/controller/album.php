@@ -85,10 +85,7 @@ class Controller_Album extends \Controller_Site
 	{
 		if (!$album = Model_Album::check_authority($id)) throw new \HttpNotFoundException;
 		$this->check_public_flag($album->public_flag, $album->member_id);
-
-		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album');
-		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
-		$this->template->post_footer = \View::forge('_parts/detail_footer');
+		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related'  => array('file', 'album'),
@@ -111,7 +108,11 @@ class Controller_Album extends \Controller_Site
 		$data['id'] = $id;
 		$data['album'] = $album;
 		$data['is_member_page'] = true;
+		$data['disabled_to_update'] = $disabled_to_update;
 
+		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album');
+		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));
+		$this->template->post_footer = \View::forge('_parts/detail_footer');
 		$this->template->content = \View::forge('detail', $data);
 	}
 
@@ -127,6 +128,10 @@ class Controller_Album extends \Controller_Site
 		if (!$id || !$album = Model_Album::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
+		}
+		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
+		{
+			throw new \HttpForbiddenException;
 		}
 
 		$this->template->post_header = \View::forge('_parts/upload_header');
@@ -147,6 +152,7 @@ class Controller_Album extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
+		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 		$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => 'created_at'));
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
@@ -161,6 +167,7 @@ class Controller_Album extends \Controller_Site
 			'order_by' => array('created_at' => 'desc'),
 		), 'Album');
 		$data['album'] = $album;
+		$data['disabled_to_update'] = $disabled_to_update;
 
 		$this->set_title_and_breadcrumbs(
 			sprintf('%sの%s', $album->name, \Config::get('term.album_image')),
@@ -168,7 +175,7 @@ class Controller_Album extends \Controller_Site
 			$album->member,
 			'album'
 		);
-		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album));
+		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));
 		$this->template->post_footer = \View::forge('_parts/slide_footer', array('id' => $id));
 		$this->template->content = \View::forge('slide', $data);
 	}
@@ -230,6 +237,10 @@ class Controller_Album extends \Controller_Site
 		if (!$album = Model_Album::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
+		}
+		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
+		{
+			throw new \HttpForbiddenException;
 		}
 
 		$add_fields = array(
@@ -312,6 +323,7 @@ class Controller_Album extends \Controller_Site
 			'where'    => array(array('album_id' => $id)),
 			'order_by' => array('created_at' => 'asc')
 		));
+		$is_disabled_to_update_public_flag = Site_Util::check_album_disabled_to_update($album->foreign_table, true);
 
 		$val = \Validation::forge();
 
@@ -324,11 +336,14 @@ class Controller_Album extends \Controller_Site
 
 			$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
 
-			$options = \Site_Util::get_public_flags();
-			$options[] = 99;
-			$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
-				->add_rule('required')
-				->add_rule('in_array', $options);
+			if (!$is_disabled_to_update_public_flag)
+			{
+				$options = \Site_Util::get_public_flags();
+				$options[] = 99;
+				$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
+					->add_rule('required')
+					->add_rule('in_array', $options);
+			}
 
 			$val->add('shot_at', '撮影日時')
 				->add_rule('trim')
@@ -353,7 +368,7 @@ class Controller_Album extends \Controller_Site
 				if ($val->run())
 				{
 					$post = $val->validated();
-					if (!strlen($post['name']) && !strlen($post['shot_at']) && $post['public_flag'] == 99)
+					if (!strlen($post['name']) && empty($post['shot_at']) && (!$is_disabled_to_update_public_flag && $post['public_flag'] == 99))
 					{
 						$error =  '入力してください';
 					}
@@ -366,22 +381,15 @@ class Controller_Album extends \Controller_Site
 
 			if (!$error)
 			{
-				$file_ids   = array();
+				$is_db_error   = false;
+				$message       = '';
 				$deleted_files = array();
-				if ($is_delete || (!$is_delete && strlen($post['shot_at'])))
-				{
-					$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $posted_album_image_ids)->execute()->as_array());
-					if ($is_delete)
-					{
-						$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
-					}
-				}
-
-				$is_db_error = false;
-				$message     = '';
 				\DB::start_transaction();
 				if ($is_delete)
 				{
+					$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $posted_album_image_ids)->execute()->as_array());
+					$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
+
 					// カバー写真が削除された場合の対応
 					if ($album->cover_album_image_id && in_array($album->cover_album_image_id, $posted_album_image_ids))
 					{
@@ -398,10 +406,13 @@ class Controller_Album extends \Controller_Site
 				else
 				{
 					$updated_at = date('Y-m-d H:i:s');
+
 					$values = array();
-					$values['name'] = strlen($post['name']) ? $post['name'] : null;
-					if ($post['public_flag'] != 99) $values['public_flag'] = $post['public_flag'];
+					if (strlen($post['name'])) $values['name'] = $post['name'];
+					if (!$is_disabled_to_update_public_flag && $post['public_flag'] != 99) $values['public_flag'] = $post['public_flag'];
 					if ($post['shot_at']) $values['shot_at'] = $post['shot_at'];
+
+					$result = 0;
 					if (!empty($values))
 					{
 						$values['updated_at'] = $updated_at;
@@ -433,7 +444,13 @@ class Controller_Album extends \Controller_Site
 		$this->template->post_header = \View::forge('_parts/edit_header');
 		$this->template->post_footer = \View::forge('_parts/edit_footer');
 
-		$data = array('id' => $id, 'album' => $album, 'album_images' => $album_images, 'val' => $val, 'album_image_ids' => $posted_album_image_ids);
+		$data = array(
+			'id' => $id, 'album' => $album,
+			'album_images' => $album_images,
+			'val' => $val,
+			'album_image_ids' => $posted_album_image_ids,
+			'is_disabled_to_update_public_flag' => $is_disabled_to_update_public_flag,
+		);
 		$this->template->content = \View::forge('edit_images', $data);
 	}
 
@@ -451,6 +468,10 @@ class Controller_Album extends \Controller_Site
 		if (!$album = Model_Album::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
+		}
+		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
+		{
+			throw new \HttpForbiddenException;
 		}
 
 		try
@@ -479,12 +500,16 @@ class Controller_Album extends \Controller_Site
 	public function action_upload_image()
 	{
 		\Util_security::check_method('POST');
+		\Util_security::check_csrf();
 		$album_id = (int)\Input::post('id');
 		if (!$album_id || !$album = Model_Album::find($album_id))
 		{
 			throw new \HttpNotFoundException;
 		}
-		\Util_security::check_csrf();
+		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
+		{
+			throw new \HttpForbiddenException;
+		}
 
 		$is_start_transaction = false;
 		try
@@ -565,6 +590,10 @@ class Controller_Album extends \Controller_Site
 		if (!$album_id || !$album = Model_Album::find($album_id))
 		{
 			throw new \HttpNotFoundException;
+		}
+		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
+		{
+			throw new \HttpForbiddenException;
 		}
 		//\Util_security::check_csrf();
 

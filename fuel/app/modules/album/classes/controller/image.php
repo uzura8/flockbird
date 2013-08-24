@@ -106,8 +106,9 @@ class Controller_Image extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
+		$disabled_to_update_message = Site_Util::check_album_disabled_to_update($album_image->album->foreign_table);
 
-		$form = $this->form($album_image);
+		$form = $this->form($album_image, $disabled_to_update_message);
 
 		if (\Input::method() == 'POST')
 		{
@@ -125,6 +126,10 @@ class Controller_Image extends \Controller_Site
 			{
 				$error = $val->show_errors();
 			}
+			if ($disabled_to_update_message && isset($post['public_flag']) && $album_image->public_flag != $post['public_flag'])
+			{
+				$error = $disabled_to_update_message;
+			}
 
 			if (!$error)
 			{
@@ -133,8 +138,8 @@ class Controller_Image extends \Controller_Site
 					$post = $val->validated();
 
 					\DB::start_transaction();
-					$album_image->name = strlen($post['name']) ? $post['name'] : null;
-					$album_image->public_flag = $post['public_flag'];
+					if (isset($post['name']) && $post['name'] !== '' && $post['name'] !== $album_image->name) $album_image->name = $post['name'];
+					if (!$disabled_to_update_message && isset($post['public_flag'])) $album_image->public_flag = $post['public_flag'];
 					if (!\Util_Date::check_is_same_minute($post['shot_at_time'], $album_image->shot_at))
 					{
 						$album_image->shot_at = $post['shot_at_time'].':'.'00';
@@ -210,7 +215,7 @@ class Controller_Image extends \Controller_Site
 		\Response::redirect('album/'.$album_id);
 	}
 
-	protected function form($album_image)
+	protected function form($album_image, $without_public_flag = false)
 	{
 		$shot_at = \Input::post('shot_at', '');
 		if (empty($shot_at))
@@ -228,9 +233,11 @@ class Controller_Image extends \Controller_Site
 				'rules' => array(array('in_array', \Site_Util::get_public_flags())),
 			),
 		);
-		$form = \Site_Util::get_form_instance('album_image', $album_image, true, $add_fields, 'button');
 
-		return $form;
+		$disable_fields = array();
+		if ($without_public_flag) $disable_fields[] = 'public_flag';
+
+		return \Site_Util::get_form_instance('album_image', $album_image, true, $add_fields, 'button', array(), $disable_fields);
 	}
 
 	/**

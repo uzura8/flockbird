@@ -118,7 +118,7 @@ class Model_Album extends \Orm\Model
 		$album->delete();
 	}
 
-	public static function get_album_for_note($member_id, $public_flag = null)
+	public static function get_album_for_note($member_id)
 	{
 		$album = self::find('first', array(
 			'where' => array(array('member_id', $member_id), array('foreign_table', 'note')),
@@ -129,16 +129,16 @@ class Model_Album extends \Orm\Model
 		$self = self::forge();
 		$self->name          = sprintf('%s用%s', \Config::get('term.note'), \Config::get('term.album'));
 		$self->member_id     = $member_id;
-		$self->public_flag   = !is_null($public_flag) ? $public_flag : \Config::get('public_flag.default');
+		$self->public_flag   = \Config::get('public_flag.default');
 		$self->foreign_table = 'note';
 		$self->save();
 
 		return $self;
 	}
 
-	public static function get_id_for_note($member_id, $public_flag = null)
+	public static function get_id_for_note($member_id)
 	{
-		$album = self::get_album_for_note($member_id, $public_flag);
+		$album = self::get_album_for_note($member_id);
 
 		return $album->id;
 	}

@@ -28,7 +28,7 @@ class Site_Util
 		return false;
 	}
 
-	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array())
+	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())
 	{
 		$form = Fieldset::forge($name);
 		if ($is_horizontal)
@@ -103,6 +103,12 @@ class Site_Util
 				$btn_name = isset($btn_field['name']) ? $btn_field['name'] : $btn_field['attributes']['type'];
 			}
 			if (!empty($btn_name)) $form->add($btn_name, '', $btn_attr);
+		}
+
+		foreach($hide_fields as $hide_field_name)
+		{
+			$form->disable($hide_field_name, $hide_field_name);
+			$form->field($hide_field_name)->delete_rule('required');
 		}
 
 		return $form;

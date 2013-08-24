@@ -364,12 +364,16 @@ function update_public_flag_execute(selfDomElement) {
 		},
 		error: function(result){
 			$(parentElement).html(selfDomElement);
-			$.jGrowl(get_error_message(result['status'], get_term('public_flag') + 'の変更に失敗しました。'));
+
+			var resData = $.parseJSON(result.responseText);
+			var message = resData.error.message ? resData.error.message : get_term('public_flag') + 'の変更に失敗しました。';
+			$.jGrowl(get_error_message(result['status'], message));
 		}
 	});
 }
 
 function is_expanded_public_range(original_public_flag, changed_public_flag) {
+	if (typeof changed_public_flag === "undefined") return false;
 	if (original_public_flag == changed_public_flag) return false;
 	if (original_public_flag == 0) return true;
 	if (changed_public_flag == 0) return false;

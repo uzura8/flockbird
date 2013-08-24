@@ -4,7 +4,9 @@
 	<h4><?php echo \Config::get('term.album_image'); ?>一括操作</h4>
 	<?php echo Form::hidden('clicked_btn', '', array('id' => 'clicked_btn')); ?>
 	<?php echo form_input($val, 'name', 'タイトル'); ?>
+<?php if (!$is_disabled_to_update_public_flag): ?>
 	<?php echo form_radio_public_flag($val, 99, true); ?>
+<?php endif; ?>
 	<?php echo form_input($val, 'shot_at', '撮影日時', null, false, 'span4'); ?>
 	<?php echo form_button('<i class="ls-icon-edit icon-white"></i> 一括編集', 'button', 'post', array('id' => 'submit_post', 'class' => 'btn btn-primary')); ?>
 	<?php echo form_button('<i class="icon-trash icon-white"></i> 一括削除', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-danger')); ?>

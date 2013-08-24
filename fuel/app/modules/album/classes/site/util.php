@@ -70,4 +70,15 @@ class Site_Util
 
 		return $title;
 	}
+
+	public static function check_album_disabled_to_update($album_foreign_table, $is_bool = false)
+	{
+		if ($album_foreign_table && in_array($album_foreign_table, array('note')))
+		{
+			if ($is_bool) return true;
+			return array('message' => sprintf('%s用%sの%sは変更できません。', \Config::get('term.note'), \Config::get('term.album'), \Config::get('term.public_flag.label')));
+		}
+
+		return false;
+	}
 }
