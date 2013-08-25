@@ -325,7 +325,7 @@ class Controller_Album extends \Controller_Site
 		));
 		$is_disabled_to_update_public_flag = Site_Util::check_album_disabled_to_update($album->foreign_table, true);
 
-		$val = \Validation::forge();
+		$val = self::get_val($is_disabled_to_update_public_flag);
 
 		$shot_at = '';
 		$posted_album_image_ids = array();
@@ -333,23 +333,6 @@ class Controller_Album extends \Controller_Site
 		{
 			\Util_security::check_csrf();
 			$is_delete = \Input::post('clicked_btn') == 'delete';
-
-			$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
-
-			if (!$is_disabled_to_update_public_flag)
-			{
-				$options = \Site_Util::get_public_flags();
-				$options[] = 99;
-				$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
-					->add_rule('required')
-					->add_rule('in_array', $options);
-			}
-
-			$val->add('shot_at', '撮影日時')
-				->add_rule('trim')
-				->add_rule('max_length', 16)
-				->add_rule('datetime_except_second')
-				->add_rule('datetime_is_past');
 
 			$error = '';
 			$posted_album_image_ids = array_map('intval', \Input::post('album_image_ids', array()));
@@ -382,44 +365,19 @@ class Controller_Album extends \Controller_Site
 			if (!$error)
 			{
 				$is_db_error   = false;
-				$message       = '';
+				$result        = 0;
 				$deleted_files = array();
 				\DB::start_transaction();
 				if ($is_delete)
 				{
-					$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $posted_album_image_ids)->execute()->as_array());
-					$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
-
-					// カバー写真が削除された場合の対応
-					if ($album->cover_album_image_id && in_array($album->cover_album_image_id, $posted_album_image_ids))
-					{
-						$album->cover_album_image_id = null;
-						$album->save();
-					}
-					if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
-					if (!$result = \DB::delete('album_image')->where('id', 'in', $posted_album_image_ids)->execute()) $is_db_error = true;
-
-					\Model_Member::recalculate_filesize_total($this->u->id);
-
-					$message = $result.'件削除しました';
+					list($is_db_error, $result, $deleted_files) = Model_AlbumImage::delete_multiple($posted_album_image_ids, $album);
 				}
 				else
 				{
-					$updated_at = date('Y-m-d H:i:s');
-
-					$values = array();
-					if (strlen($post['name'])) $values['name'] = $post['name'];
-					if (!$is_disabled_to_update_public_flag && $post['public_flag'] != 99) $values['public_flag'] = $post['public_flag'];
-					if ($post['shot_at']) $values['shot_at'] = $post['shot_at'];
-
-					$result = 0;
-					if (!empty($values))
-					{
-						$values['updated_at'] = $updated_at;
-						if (!$result = \DB::update('album_image')->set($values)->where('id', 'in', $posted_album_image_ids)->execute()) $is_db_error = true;
-					}
-					$message = $result.'件更新しました';
+					$result = Model_AlbumImage::update_multiple_each($posted_album_image_ids, $post, $is_disabled_to_update_public_flag);
 				}
+				$message = $result.'件更新しました';
+
 				if ($is_db_error)
 				{
 					\DB::rollback_transaction();
@@ -656,5 +614,26 @@ class Controller_Album extends \Controller_Site
 		}
 
 		return $this->response->body($body);
+	}
+
+	private static function get_val($is_disabled_to_update_public_flag)
+	{
+		$val = \Validation::forge();
+		$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
+		if (!$is_disabled_to_update_public_flag)
+		{
+			$options = \Site_Util::get_public_flags();
+			$options[] = 99;
+			$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
+				->add_rule('required')
+				->add_rule('in_array', $options);
+		}
+		$val->add('shot_at', '撮影日時')
+			->add_rule('trim')
+			->add_rule('max_length', 16)
+			->add_rule('datetime_except_second')
+			->add_rule('datetime_is_past');
+
+		return $val;
 	}
 }

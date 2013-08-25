@@ -168,4 +168,82 @@ class Model_AlbumImage extends \Orm\Model
 
 		return $self;
 	}
+
+	public static function delete_multiple($ids, $album)
+	{
+		$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $ids)->execute()->as_array());
+		$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
+
+		// カバー写真が削除された場合の対応
+		if ($album->cover_album_image_id && in_array($album->cover_album_image_id, $ids))
+		{
+			$album->cover_album_image_id = null;
+			$album->save();
+		}
+
+		$is_db_error = false;
+		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
+		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) $is_db_error = true;
+
+		\Model_Member::recalculate_filesize_total($this->u->id);
+
+		return array($is_db_error, $result, $deleted_files);
+	}
+
+	public static function update_multiple_all($ids, $set_value, $is_disabled_to_update_public_flag = false)
+	{
+		$values = array();
+		if (isset($set_value['name']) && strlen($set_value['name']))
+		{
+			$values['name'] = $set_value['name'];
+		}
+		if (!$is_disabled_to_update_public_flag && isset($set_value['public_flag']) && $set_value['public_flag'] != 99)
+		{
+			$values['public_flag'] = $set_value['public_flag'];
+		}
+		if (isset($set_value['shot_at']) && $set_value['shot_at'])
+		{
+			$values['shot_at'] = $set_value['shot_at'];
+		}
+		if (isset($set_value['shot_at']) && !\Util_Date::check_is_same_minute($set_value['shot_at'], $album_image->shot_at))
+		{
+			$values['shot_at'] = $set_value['shot_at'].':'.'00';
+		}
+
+		$result = 0;
+		if (!empty($values))
+		{
+			$values['updated_at'] = date('Y-m-d H:i:s');
+			$result = \DB::update('album_image')->set($values)->where('id', 'in', $posted_album_image_ids)->execute();
+		}
+		$is_db_error = $result ? true : false;
+
+		return array($is_db_error, $result);
+	}
+
+	public static function update_multiple_each($ids, $set_value, $is_disabled_to_update_public_flag = false)
+	{
+
+		$album_images = Model_AlbumImage::find('all', array('where' => array(array('id', 'in', $ids))));
+		$result = 0;
+		foreach ($album_images as $album_image)
+		{
+			if (isset($set_value['name']) && strlen($set_value['name']))
+			{
+				$album_image->name = $set_value['name'];
+			}
+			if (!$is_disabled_to_update_public_flag && isset($set_value['public_flag']) && $set_value['public_flag'] != 99)
+			{
+				$album_image->public_flag = $set_value['public_flag'];
+			}
+			if (isset($set_value['shot_at']) && strlen($set_value['shot_at']) && !\Util_Date::check_is_same_minute($set_value['shot_at'], $album_image->shot_at))
+			{
+				$album_image->shot_at = $set_value['shot_at'].':'.'00';
+			}
+			$album_image->save();
+			$result++;
+		}
+
+		return $result;
+	}
 }
