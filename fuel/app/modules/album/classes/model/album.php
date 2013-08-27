@@ -76,7 +76,7 @@ class Model_Album extends \Orm\Model
 		static::$_properties['name']['label'] = \Config::get('term.album').'名';
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
-		static::$_properties['foreign_table']['validation']['in_array'][] = array('note', 'member_profile');
+		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_album_foreign_tables();
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
@@ -150,7 +150,7 @@ class Model_Album extends \Orm\Model
 			case 'note':
 				return sprintf('%s用%s', \Config::get('term.note'), \Config::get('term.album'));
 				break;
-			case 'member_profile':
+			case 'member':
 				return sprintf('%s写真用%s', \Config::get('term.profile'), \Config::get('term.album'));
 				break;
 			default :

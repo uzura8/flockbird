@@ -48,7 +48,7 @@ class Controller_Member_profile extends Controller_Member
 		try
 		{
 			DB::start_transaction();
-			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'member_profile');
+			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'member');
 
 			$sizes = Arr::merge(\Config::get('site.upload.types.img.types.ai.additional_sizes.profile'), \Config::get('site.upload.types.img.types.ai.sizes'));
 			$album_image = \Album\Model_AlbumImage::save_with_file($album_id, $this->u, Config::get('site.public_flag.default'), null, null, $sizes);

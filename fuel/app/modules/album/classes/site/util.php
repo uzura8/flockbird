@@ -73,12 +73,30 @@ class Site_Util
 
 	public static function check_album_disabled_to_update($album_foreign_table, $is_bool = false)
 	{
-		if ($album_foreign_table && in_array($album_foreign_table, array('note')))
+		if ($album_foreign_table && in_array($album_foreign_table, self::get_album_foreign_tables()))
 		{
 			if ($is_bool) return true;
-			return array('message' => sprintf('%s用%sの%sは変更できません。', \Config::get('term.note'), \Config::get('term.album'), \Config::get('term.public_flag.label')));
+
+			switch ($album_foreign_table)
+			{
+				case 'note':
+					$message_prefix = sprintf('%s用%sの', \Config::get('term.note'), \Config::get('term.album'));
+					break;
+				case 'member':
+					$message_prefix = sprintf('%s用%sの', \Config::get('term.profile'), \Config::get('term.album'));
+					break;
+				default :
+					$message_prefix = '';
+					break;
+			}
+			return array('message' => sprintf('%s%sは変更できません。', $message_prefix, \Config::get('term.public_flag.label')));
 		}
 
 		return false;
+	}
+
+	public static function get_album_foreign_tables()
+	{
+		return array('note', 'member');
 	}
 }
