@@ -70,7 +70,7 @@ $config = array(
 						),
 						'default_size' => '50x50xc',
 						'max_size' => '600x600',
-						'save_as_album_image' => false,
+						'save_as_album_image' => true,
 					),
 				),
 			),

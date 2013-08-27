@@ -116,6 +116,7 @@ class Model_AlbumImage extends \Orm\Model
 		$filename = $album_image->file->name;
 		$filepath = $album_image->file->path;
 		$filesize = $album_image->file->filesize;
+		self::check_and_delete_member_profile_image($album_image);
 		$album_image->file->delete();
 		$album_image->delete();
 		\Site_Upload::remove_images($filepath, $filename);
@@ -178,6 +179,13 @@ class Model_AlbumImage extends \Orm\Model
 		{
 			$album->cover_album_image_id = null;
 			$album->save();
+		}
+
+		// Profile 写真の登録確認&削除
+		if ($album->foreign_table == 'member' && in_array($album->member->file_id, $file_ids))
+		{
+			$album->member->file_id = null;
+			$album->member->save();
 		}
 
 		$is_db_error = false;
@@ -244,5 +252,15 @@ class Model_AlbumImage extends \Orm\Model
 		}
 
 		return $result;
+	}
+
+	// Profile 写真の登録確認&削除
+	public static function check_and_delete_member_profile_image($album_image)
+	{
+		if ($album_image->album->foreign_table == 'member' && $album_image->album->member->file_id == $album_image->file_id)
+		{
+			$album_image->album->member->file_id = null;
+			$album_image->album->member->save();
+		}
 	}
 }
