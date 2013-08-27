@@ -255,7 +255,7 @@ class Controller_Image extends \Controller_Site
 
 		if ($contents == 'note')
 		{
-			$album = Model_Album::get_album_for_note($this->u->id);
+			$album = Model_Album::get_album_for_foreign_table($this->u->id, 'note');
 		}
 
 		return \Response::forge(\View::forge('image/upload', array('id' => $album->id, 'album' => $album, 'contents' => $contents, 'tmp_hash' => $tmp_hash)));

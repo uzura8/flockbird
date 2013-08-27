@@ -77,7 +77,7 @@ function site_get_screen_name($u)
 	return (!empty($u->name)) ? $u->name : 'メンバーID:'.$u->id;
 }
 
-function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false)
+function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '')
 {
 	$option = array();
 	$is_raw = $size == 'raw';
@@ -91,7 +91,7 @@ function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = fa
 	if (!$is_noimage && !Site_Upload::check_filepath_format($filepath)) $is_noimage = true;
 	if ($is_noimage)
 	{
-		$option['alt'] = 'No image.';
+		$option['alt'] = $alt ?: 'No image.';
 		$noimage_filename  = Config::get('site.upload.types.img.noimage_filename');
 		$noimage_tag = Asset::img('site/'.$noimage_filename, $option);
 		if ($file_cate)
@@ -113,6 +113,7 @@ function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = fa
 
 	$uri_path_raw = sprintf('%s/img/raw/%s%s', PRJ_UPLOAD_DIRNAME, $filepath, $filename);
 	$uri_path = $is_raw ? $uri_path_raw : sprintf('%s/img/%s/%s%s', PRJ_UPLOAD_DIRNAME, $size, $filepath, $filename);
+	if ($alt) $option['alt'] = $alt;
 	$image_tag = Html::img($uri_path, $option);
 
 	if ($link_uri) return Html::anchor($link_uri, $image_tag);

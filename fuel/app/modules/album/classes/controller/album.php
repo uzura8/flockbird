@@ -549,10 +549,10 @@ class Controller_Album extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
-		{
-			throw new \HttpForbiddenException;
-		}
+		//if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
+		//{
+		//	throw new \HttpForbiddenException;
+		//}
 		//\Util_security::check_csrf();
 
 		$file_cate = 'ai';
