@@ -66,7 +66,7 @@ class Site_Upload
 		return sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
 	}
 
-	public static function upload($file_cate, $split_criterion_id, $member_id = 0, $member_filesize_total = 0, $old_file = array(), $file_id = 0)
+	public static function upload($file_cate, $split_criterion_id, $member_id = 0, $member_filesize_total = 0, $sizes = array(), $old_file = array(), $file_id = 0)
 	{
 		$file = ($file_id) ? Model_File::find($file_id) : new Model_File;
 		if (empty($file)) $file = new Model_File;
@@ -75,7 +75,7 @@ class Site_Upload
 		$config = array(
 			'file_type'   => 'img',
 			'filepath'    => $filepath,
-			'sizes'       => Config::get('site.upload.types.img.types.'.$file_cate.'.sizes', array()),
+			'sizes'       => $sizes ?: Config::get('site.upload.types.img.types.'.$file_cate.'.sizes', array()),
 			'max_size'    => Config::get('site.upload.types.img.types.'.$file_cate.'.max_size', 0),
 		);
 		if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE && $member_id)

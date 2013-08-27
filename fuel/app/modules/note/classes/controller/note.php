@@ -133,7 +133,7 @@ class Controller_Note extends \Controller_Site
 				}
 				elseif ($is_upload['multiple'] && $file_tmps)
 				{
-					$album_id = \Album\Model_Album::get_id_for_note($this->u->id);
+					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
 					foreach ($file_tmps as $file_tmp)
 					{
 						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $post['public_flag']);
@@ -231,7 +231,7 @@ class Controller_Note extends \Controller_Site
 				}
 				elseif ($is_upload['multiple'] && $file_tmps)
 				{
-					$album_id = \Album\Model_Album::get_id_for_note($this->u->id);
+					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
 					foreach ($file_tmps as $file_tmp)
 					{
 						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $post['public_flag']);

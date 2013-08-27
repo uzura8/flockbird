@@ -108,7 +108,7 @@ CREATE TABLE `album` (
   `body` text NULL,
   `public_flag` tinyint(4) NOT NULL DEFAULT '0',
   `cover_album_image_id` int(11) DEFAULT NULL,
-  `foreign_table` varchar(10) NULL,
+  `foreign_table` varchar(20) NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),

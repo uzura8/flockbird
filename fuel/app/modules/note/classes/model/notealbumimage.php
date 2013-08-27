@@ -44,7 +44,7 @@ class Model_NoteAlbumImage extends \Orm\Model
 			$note = Model_Note::find($note_id, array('related' => 'member'));
 			$member = $note->member;
 		}
-		$album_id = \Album\Model_Album::get_id_for_note($member->id);
+		$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'note');
 		$album_image = \Album\Model_AlbumImage::save_with_file($album_id, $member, $album_image_public_flag);
 
 		$self = self::forge();

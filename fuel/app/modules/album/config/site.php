@@ -15,6 +15,14 @@ return array(
 						'sizes_tmp' => array(
 							'S' => '80x80',
 						),
+						'additional_sizes' => array(
+							'profile' => array(
+								'P_SS' => '20x20xc',
+								'P_S' => '30x30xc',
+								'P_M' => '50x50xc',
+								'P_L' => '180x180xc',
+							),
+						),
 						'default_size' => '80x80',
 						'max_size' => '720x720',
 					),

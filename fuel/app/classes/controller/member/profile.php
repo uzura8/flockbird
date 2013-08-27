@@ -48,12 +48,12 @@ class Controller_Member_profile extends Controller_Member
 		try
 		{
 			DB::start_transaction();
-			$file = Site_Upload::upload('m', $this->u->id, $this->u->id, $this->u->filesize_total, $this->u->get_image(), $this->u->file_id);
+			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'member_profile');
 
-			$this->u->file_id = $file->id;
+			$sizes = Arr::merge(\Config::get('site.upload.types.img.types.ai.additional_sizes.profile'), \Config::get('site.upload.types.img.types.ai.sizes'));
+			$album_image = \Album\Model_AlbumImage::save_with_file($album_id, $this->u, Config::get('site.public_flag.default'), null, null, $sizes);
+			$this->u->file_id = $album_image->file->id;
 			$this->u->save();
-			Model_Member::add_filesize($this->u->id, $file->filesize);
-
 			DB::commit_transaction();
 
 			Session::set_flash('message', '写真を更新しました。');

@@ -37,7 +37,7 @@ class Model_Album extends \Orm\Model
 		'body' => array(
 			'data_type' => 'text',
 			'label' => '説明',
-			'validation' => array('trim', 'required'),
+			'validation' => array('trim'),
 			'form' => array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'),
 		),
 		'public_flag' => array(
@@ -52,7 +52,7 @@ class Model_Album extends \Orm\Model
 		'foreign_table' => array(
 			'data_type' => 'text',
 			//'validation' => array('trim', array('in_array', array('note'))),
-			'validation' => array('trim'),
+			'validation' => array('trim', 'max_length' => array(20)),
 			'form' => array('type' => false),
 		),
 		'created_at' => array('form' => array('type' => false)),
@@ -76,7 +76,7 @@ class Model_Album extends \Orm\Model
 		static::$_properties['name']['label'] = \Config::get('term.album').'名';
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
-		static::$_properties['foreign_table']['validation']['in_array'][] = array('note');
+		static::$_properties['foreign_table']['validation']['in_array'][] = array('note', 'member_profile');
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
@@ -118,28 +118,45 @@ class Model_Album extends \Orm\Model
 		$album->delete();
 	}
 
-	public static function get_album_for_note($member_id)
+	public static function get_album_for_foreign_table($member_id, $table_name)
 	{
 		$album = self::find('first', array(
-			'where' => array(array('member_id', $member_id), array('foreign_table', 'note')),
+			'where' => array(array('member_id', $member_id), array('foreign_table', $table_name)),
 			'order_by' => array('id' => 'asc'),
 		));
 		if ($album) return $album;
 
 		$self = self::forge();
-		$self->name          = sprintf('%s用%s', \Config::get('term.note'), \Config::get('term.album'));
+		$self->name          = self::get_name_for_foreign_table($table_name);
 		$self->member_id     = $member_id;
-		$self->public_flag   = \Config::get('public_flag.default');
-		$self->foreign_table = 'note';
+		$self->public_flag   = \Config::get('site.public_flag.default');
+		$self->foreign_table = $table_name;
 		$self->save();
 
 		return $self;
 	}
 
-	public static function get_id_for_note($member_id)
+	public static function get_id_for_foreign_table($member_id, $table_name)
 	{
-		$album = self::get_album_for_note($member_id);
+		$album = self::get_album_for_foreign_table($member_id, $table_name);
 
 		return $album->id;
+	}
+
+	private static function get_name_for_foreign_table($table_name)
+	{
+		switch ($table_name)
+		{
+			case 'note':
+				return sprintf('%s用%s', \Config::get('term.note'), \Config::get('term.album'));
+				break;
+			case 'member_profile':
+				return sprintf('%s写真用%s', \Config::get('term.profile'), \Config::get('term.album'));
+				break;
+			default :
+				break;
+		}
+
+		return \Config::get('term.album');
 	}
 }

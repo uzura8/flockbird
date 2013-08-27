@@ -147,20 +147,19 @@ class Model_AlbumImage extends \Orm\Model
 		return \DB::update('album_image')->set($values)->where('album_id', $album_id)->execute();
 	}
 
-	public static function save_with_file($album_id, $member = null, $public_flag = null, $name = null, $file = null)
+	public static function save_with_file($album_id, $member = null, $public_flag = null, $name = null, $file = null, $sizes = array())
 	{
 		if (empty($member))
 		{
 			$album = \Model_Album::find($album_id, array('related' => 'member'));
 			$member = $album->member;
 		}
-		if (is_null($public_flag)) $public_flag = \Config::get('site.public_flag.default');
-		if (!$file) $file = \Site_Upload::upload('ai', $album_id, $member->id, $member->filesize_total);
+		if (!$file) $file = \Site_Upload::upload('ai', $album_id, $member->id, $member->filesize_total, $sizes);
 
 		$self = new self;
 		$self->album_id = $album_id;
 		$self->file_id = $file->id;
-		$self->public_flag = $public_flag;
+		$self->public_flag = $public_flag ?: \Config::get('site.public_flag.default');
 		$self->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
 		if ($name) $self->name = $name;
 		$self->save();
@@ -185,7 +184,7 @@ class Model_AlbumImage extends \Orm\Model
 		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
 		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) $is_db_error = true;
 
-		\Model_Member::recalculate_filesize_total($this->u->id);
+		\Model_Member::recalculate_filesize_total($album->member_id);
 
 		return array($is_db_error, $result, $deleted_files);
 	}
