@@ -7,7 +7,7 @@ $button_attrs     = (empty($button_attrs)) ? $button_attrs_def : array_merge($bu
 ?>
 <div class="commentPostBox">
 	<div class="member_img_box_s">
-		<?php echo img($u->get_image(), '30x30xc', 'member/'.$u->id); ?>
+		<?php echo img($u->get_image(), '30x30xc', 'member/'.$u->id, false, site_get_screen_name($u), true); ?>
 		<div class="content">
 			<div class="main">
 				<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>

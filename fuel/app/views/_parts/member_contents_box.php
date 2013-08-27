@@ -8,7 +8,7 @@ if (isset($size) && $size == 'ss')
 }
 ?>
 <div class="<?php echo $class_name; ?>">
-	<?php echo empty($member) ? img('m', $img_size) : img($member->get_image(), $img_size, 'member/'.$member->id); ?>
+	<?php echo empty($member) ? img('m', $img_size) : img($member->get_image(), $img_size, 'member/'.$member->id, false, site_get_screen_name($member), true); ?>
 	<div class="content">
 		<div class="main">
 			<b class="fullname"><?php echo empty($member) ? Config::get('term.left_member') : Html::anchor('member/'.$member->id, $member->name); ?></b>
