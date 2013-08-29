@@ -17,10 +17,6 @@ body {
 	}
 }
 
-div#main div.row-fluid div#main_container {
-	margin: 0 auto;
-}
-
 .sidebar-nav {
 	padding: 9px 0;
 }
@@ -192,6 +188,10 @@ h4#comments {
 
 div#popup_container.ui-draggable #popup_message {
 	color: #000;
+}
+
+div#main div.row-fluid div#main_container {
+	margin: 0 auto;
 }
 
 #main_container .main_item {

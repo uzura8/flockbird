@@ -37,7 +37,7 @@ class Controller_Album extends \Controller_Site
 	public function action_list()
 	{
 		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.album')));
-		$this->template->post_footer = \View::forge('_parts/list_footer');
+		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
@@ -61,7 +61,7 @@ class Controller_Album extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.album')), null, $member);
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
-		$this->template->post_footer = \View::forge('_parts/list_footer');
+		$this->template->post_footer = \View::forge('_parts/load_masonry');
 
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related'  => 'member',

@@ -77,7 +77,7 @@ class Controller_Image_api extends \Controller_Site_Api
 				if (!empty($album))  $data['album']  = $album;
 				if (!empty($member)) $data['member'] = $member;
 
-				$response = \View::forge('image/_parts/list', $data);
+				$response = \View::forge('_parts/album_images', $data);
 				$status_code = 200;
 
 				return \Response::forge($response, $status_code);
@@ -118,7 +118,7 @@ class Controller_Image_api extends \Controller_Site_Api
 				'order_by' => array('created_at' => 'desc'),
 			), 'Album');
 			$data['member'] = $member;
-			$response = \View::forge('image/_parts/list', $data);
+			$response = \View::forge('_parts/album_images', $data);
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);

@@ -29,7 +29,7 @@ class Controller_Image extends \Controller_Site
 	public function action_list()
 	{
 		$this->set_title_and_breadcrumbs(sprintf('%s一覧', \Config::get('term.album_image')), array('album' => sprintf('%s一覧', \Config::get('term.album'))));
-		$this->template->post_footer = \View::forge('_parts/list_footer');
+		$this->template->post_footer = \View::forge('_parts/load_masonry');
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related'  => array('file', 'album'),
@@ -37,7 +37,7 @@ class Controller_Image extends \Controller_Site
 			'order_by' => array('shot_at' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
-		$this->template->content = \View::forge('image/_parts/list', $data);
+		$this->template->content = \View::forge('_parts/album_images', $data);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Controller_Image extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.album_image')), null, $member);
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
-		$this->template->post_footer = \View::forge('_parts/list_footer');
+		$this->template->post_footer = \View::forge('_parts/load_masonry');
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related' => array('file', 'album'),
@@ -89,7 +89,7 @@ class Controller_Image extends \Controller_Site
 			'order_by' => array('shot_at' => 'desc'),
 		), 'Album');
 		$data['member'] = $member;
-		$this->template->content = \View::forge('image/_parts/list', $data);
+		$this->template->content = \View::forge('_parts/album_images', $data);
 	}
 
 	/**

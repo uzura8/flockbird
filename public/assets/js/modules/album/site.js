@@ -47,39 +47,3 @@ function set_cover(selfDomElement) {
 		}
 	});
 }
-
-function load_masonry_item(container_attribute, item_attribute)
-{
-	var finished_msg = (arguments.length > 3) ? arguments[3] : '';
-	var loading_image_url = (arguments.length > 4) ? arguments[4] : get_url('assets/img/site/loading_l.gif');
-
-	var $container = $(container_attribute);
-	$container.imagesLoaded(function(){
-		$container.masonry({
-			itemSelector : item_attribute,
-			isFitWidth: true,
-			isAnimated: true,
-			animationOptions: {
-					duration: 400
-			}
-		});
-	});
-	$container.infinitescroll({
-		navSelector  : '#page-nav',   // ページのナビゲーションを選択
-		nextSelector : '#page-nav a', // 次ページへのリンク
-		itemSelector : item_attribute,    // 持ってくる要素のclass
-		loading: {
-				finishedMsg: finished_msg, //次のページがない場合に表示するテキスト
-				img: loading_image_url //ローディング画像のパス
-			}
-		},
-		// trigger Masonry as a callback
-		function( newElements ) {
-			var $newElems = $( newElements ).css({ opacity: 0 });
-			$newElems.imagesLoaded(function(){
-				$newElems.animate({ opacity: 1 });
-				$container.masonry( 'appended', $newElems, true );
-			});
-		}
-	);
-}

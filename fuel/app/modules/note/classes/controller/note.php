@@ -42,7 +42,7 @@ class Controller_Note extends \Controller_Site
 			'limit'    => \Config::get('note.articles.limit')
 		), 'Note');
 		$this->template->content = \View::forge('_parts/list', $data);
-		$this->template->post_footer = \View::forge('_parts/list_footer');
+		$this->template->post_footer = \View::forge('_parts/load_item');
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Controller_Note extends \Controller_Site
 		), 'Note');
 		$data['member'] = $member;
 		$this->template->content = \View::forge('_parts/list', $data);
-		$this->template->post_footer = \View::forge('_parts/list_footer');
+		$this->template->post_footer = \View::forge('_parts/load_item');
 	}
 
 	/**
@@ -88,6 +88,7 @@ class Controller_Note extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs($note->title, null, $note->member, 'note');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
+		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$this->template->content = \View::forge('detail', array('note' => $note, 'images' => $images, 'comments' => $comments, 'is_all_records' => $is_all_records));
 	}
 
