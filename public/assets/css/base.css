@@ -208,15 +208,28 @@ div#main div.row-fluid div#main_container {
 	text-align: left;
 	padding: 0 8px;
 	margin: 0;
-	position: relative;
 }
 #main_container .main_item img {
 	margin: 0 0 5px;
 }
-#main_container .main_item div.article .btn-group {
+#main_container .main_item div.imgBox {
+	position: relative;
+}
+#main_container .main_item div.imgBox .btn-group {
 	position: absolute;
 	right: 8px;
 	bottom: 0;
+}
+#main_container .main_item div.imgBox .btn-group ul.dropdown-menu li {
+	text-align: left;
+}
+#main_container .main_item div.imgBox div.description {
+	text-align: left;
+	margin-left: 15px;
+	padding-right: 50px;
+	word-break:break-all;
+	word-wrap:break-word;
+	overflow:hidden;
 }
 #main_container .main_item div.article .dropdown-menu {
 	max-width: 170px;

@@ -5,10 +5,12 @@
 <div id="main_container">
 <?php foreach ($list as $album_image): ?>
 	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
-		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!Agent::is_smartphone()): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
+		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!IS_SP): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
 			<div><?php echo img($album_image->file, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
 <?php if (!empty($is_simple_view)): ?>
-			<small><?php echo Html::anchor('album/image/'.$album_image->id, strim(\Album\Site_Util::get_album_image_display_name($album_image), Config::get('album.articles.trim_width.name'))); ?></small>
+			<div class="description">
+				<small><?php echo strim(\Album\Site_Util::get_album_image_display_name($album_image)); ?></small>
+			</div>
 <?php else: ?>
 			<h5><?php echo Html::anchor('album/image/'.$album_image->id, strim(\Album\Site_Util::get_album_image_display_name($album_image), Config::get('album.articles.trim_width.name'))); ?></h5>
 <?php endif; ?>
@@ -55,17 +57,43 @@
 					<small><?php echo Html::anchor('album/image/'.$album_image->id.'?write_comment=1#comments', 'コメントする'); ?></small>
 <?php endif; ?>
 				</div>
-<?php if (Auth::check() && ((!empty($album) && $album->member_id == $u->id) || (!empty($member) && $member->id == $u->id))): ?>
+			</div><!-- article -->
+<?php endif; ?>
+
+<?php if (Auth::check()): ?>
+<?php
+$menus = array();
+if (!empty($is_setting_profile_image) && $album_image->album->member_id == $u->id)
+{
+	$menus[] = Html::anchor(
+		'member/profile/set_image/'.$album_image->id.get_csrf_query_str(),
+		sprintf('<i class="ls-icon-setting"></i> %s写真に設定する', Config::get('term.profile'))
+	);
+	$menus[] = Html::anchor(sprintf('member/profile/delete_image/%d/%s', $album_image->id, get_csrf_query_str()), '<i class="icon-trash"></i> 削除');
+}
+elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && $member->id == $u->id)))
+{
+	$menus[] = Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集');
+	$menus[] = Html::anchor(
+		'#', '<i class="icon-book"></i> カバーに指定',
+		array('class' => 'link_album_image_set_cover', 'id' => 'link_album_image_set_cover_'.$album_image->id)
+	);
+	$menus[] = Html::anchor(
+		'#', '<i class="icon-trash"></i> 削除',
+		array('onclick' => sprintf("delete_item('album/image/api/delete.json', %d, '#main_item');return false;", $album_image->id))
+	);
+}
+?>
+<?php if ($menus): ?>
 				<div class="btn-group btn_album_image_edit" id="btn_album_image_edit_<?php echo $album_image->id ?>">
 					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
 					<ul class="dropdown-menu pull-right">
-						<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>
-						<li><a href="#" class="link_album_image_set_cover" id="link_album_image_set_cover_<?php echo $album_image->id; ?>"><i class="icon-book"></i> カバーに指定</a></li>
-						<li><a href="#" onclick="delete_item('album/image/api/delete.json', <?php echo $album_image->id; ?>, '#main_item');return false;"><i class="icon-trash"></i> 削除</a></li>
+<?php foreach ($menus as $menu): ?>
+						<li><?php echo $menu; ?></li>
+<?php endforeach; ?>
 					</ul>
 				</div><!-- btn-group -->
 <?php endif; ?>
-			</div><!-- article -->
 <?php endif; ?>
 		</div><!-- imgBox -->
 

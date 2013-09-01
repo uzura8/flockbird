@@ -162,7 +162,8 @@ class Model_AlbumImage extends \Orm\Model
 		$self->file_id = $file->id;
 		$self->public_flag = $public_flag ?: \Config::get('site.public_flag.default');
 		$self->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
-		if ($name) $self->name = $name;
+		$self->name = $name ?: $file->original_filename;
+		
 		$self->save();
 		\Model_Member::add_filesize($member->id, $file->filesize);
 

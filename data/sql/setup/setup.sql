@@ -141,6 +141,7 @@ CREATE TABLE `album_image` (
   KEY `album_id_public_flag_created_at` (`album_id`,`public_flag`,`created_at`),
   KEY `album_id_public_flag_shot_at` (`album_id`,`public_flag`,`shot_at`),
   KEY `album_id_idx` (`album_id`),
+  KEY `file_id_idx` (`file_id`),
   CONSTRAINT `album_image_album_id_album_id` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

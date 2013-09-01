@@ -196,3 +196,8 @@ function get_public_flag_label($public_flag, $view_icon_only = false, $is_return
 
 	return array($name, $icon, $btn_color);
 }
+
+function get_csrf_query_str($delimitter = '?')
+{
+	return sprintf('%s%s=%s', $delimitter, Config::get('security.csrf_token_key'), Util_security::get_csrf());
+}
