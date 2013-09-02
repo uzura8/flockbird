@@ -232,7 +232,7 @@ class Site_Upload
 		return true;
 	}
 
-	public static function setup_uploaded_dir($file_cate, $filepath, $is_tmp = false)
+	public static function setup_uploaded_dir($file_cate, $filepath, $is_tmp = false, $sizes = array())
 	{
 		$key = $is_tmp ? 'site.upload.types.img.tmp.raw_file_path' : 'site.upload.types.img.raw_file_path';
 		$real_path_raw = \Config::get($key);
@@ -242,8 +242,11 @@ class Site_Upload
 		$key = $is_tmp ? 'site.upload.types.img.tmp.root_path.cache_dir' : 'site.upload.types.img.root_path.cache_dir';
 		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get($key);
 
-		$key = $is_tmp ? 'site.upload.types.img.types.'.$file_cate.'.sizes_tmp' : 'site.upload.types.img.types.'.$file_cate.'.sizes';
-		$sizes = \Config::get($key);
+		if (!$sizes)
+		{
+			$key = $is_tmp ? 'site.upload.types.img.types.'.$file_cate.'.sizes_tmp' : 'site.upload.types.img.types.'.$file_cate.'.sizes';
+			$sizes = \Config::get($key);
+		}
 		foreach ($sizes as $size)
 		{
 			$dir = sprintf('%s%s/%s', $real_path_cache, $size, $filepath);
@@ -322,7 +325,7 @@ class Site_Upload
 		return Util_file::resize($raw_file_path, $thumbnail_file_path, $size_items['width'], $size_items['height'], $size_items['resize_type']);
 	}
 
-	public static function move_tmp_to_file($file_tmp, $is_delete_tmp_raw = true)
+	public static function move_tmp_to_file($file_tmp, $is_delete_tmp_raw = true, $sizes = array())
 	{
 		$file_cate = self::get_file_cate_from_filepath($file_tmp->path);
 		$config_upload_files = Config::get('site.upload.types.img.types.'.$file_cate);
@@ -333,11 +336,11 @@ class Site_Upload
 
 		$real_path_raw   = Config::get('site.upload.types.img.raw_file_path');
 		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get('site.upload.types.img.root_path.cache_dir');
-		$sizes           = $config_upload_files['sizes'];
+		$sizes           = $sizes ?: $config_upload_files['sizes'];
 
 		$file_path_name = $file_tmp->path.$file_tmp->name;
 
-		self::setup_uploaded_dir($file_cate, $file_tmp->path);
+		self::setup_uploaded_dir($file_cate, $file_tmp->path, false, $sizes);
 		$file_raw_tmp = $real_path_raw_tmp.$file_path_name;
 		$file_raw     = $real_path_raw.$file_path_name;
 		if ($is_delete_tmp_raw)

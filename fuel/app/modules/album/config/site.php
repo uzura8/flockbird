@@ -22,6 +22,9 @@ return array(
 								'P_M' => '50x50xc',
 								'P_L' => '180x180xc',
 							),
+							'note' => array(
+								'N_M' => '400x300xc',
+							),
 						),
 						'default_size' => '80x80',
 						'max_size' => '720x720',

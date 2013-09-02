@@ -3,9 +3,14 @@ namespace Album;
 
 class Site_Model
 {
-	public static function move_from_tmp_to_album_image($album_id, $member_obj, $file_tmp, $public_flag, $is_update_member_filesize_total = false)
+	public static function move_from_tmp_to_album_image($album_id, $member_obj, $file_tmp, $public_flag, $is_update_member_filesize_total = false, $is_note_album_image = false)
 	{
-		\Site_Upload::move_tmp_to_file($file_tmp, false);// 一時ファイルの移動(raw ファイルは残す)
+		$sizes = array();
+		if ($is_note_album_image)
+		{
+			$sizes = \Arr::merge(\Config::get('site.upload.types.img.types.ai.additional_sizes.note'), \Config::get('site.upload.types.img.types.ai.sizes'));
+		}
+		\Site_Upload::move_tmp_to_file($file_tmp, false, $sizes);// 一時ファイルの移動(raw ファイルは残す)
 		$file = \Model_File::save_from_file_tmp($file_tmp);// file の保存
 
 		if ($is_update_member_filesize_total)

@@ -137,7 +137,7 @@ class Controller_Note extends \Controller_Site
 					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
 					foreach ($file_tmps as $file_tmp)
 					{
-						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $post['public_flag']);
+						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $post['public_flag'], false, true);
 						// note_album_image の保存
 						$note_album_image = Model_NoteAlbumImage::forge();
 						$note_album_image->note_id = $note->id;

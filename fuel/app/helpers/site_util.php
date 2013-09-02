@@ -122,8 +122,9 @@ function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = fa
 	return $image_tag;
 }
 
-function img_size($file_cate, $size)
+function img_size($file_cate, $size, $additional_table = '')
 {
+	if ($additional_table) return Config::get(sprintf('site.upload.types.img.types.%s.additional_sizes.%s.%s', $file_cate, $additional_table, $size));
 	return Config::get(sprintf('site.upload.types.img.types.%s.sizes.%s', $file_cate, $size));
 }
 
