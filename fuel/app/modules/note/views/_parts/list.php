@@ -34,6 +34,9 @@
 			<div class="bodyMore"><?php echo Html::anchor('note/'.$id, 'もっとみる'); ?></div>
 <?php endif; ?>
 		</div>
+<?php if ($images = \Note\Model_NoteAlbumImage::get_album_image4note_id($note->id, 4, array('id' => 'desc'))): ?>
+<?php echo render('_parts/thumbnails', array('images' => $images)); ?>
+<?php endif; ?>
 <?php list($comments, $is_all_records, $all_comment_count) = \Note\Model_NoteComment::get_comments($id, \Config::get('site.record_limit.default.comment.s')); ?>
 		<div class="comment_info">
 			<small><i class="icon-comment"></i> <?php echo $all_comment_count; ?></small>
