@@ -2,6 +2,6 @@
 <?php echo Asset::js('jquery.infinitescroll.min.js');?>
 <script type="text/javascript">
 $(function(){
-	load_masonry_item('#main_container', '.main_item');
+	load_masonry_item('#main_container', '.main_item'<?php if (!empty($is_not_load_more)): ?>, false<?php endif; ?>);
 });
 </script>

@@ -415,6 +415,7 @@ function check_is_input(input_attrs) {
 
 function load_masonry_item(container_attribute, item_attribute)
 {
+	var load_more    = (arguments.length > 2) ? arguments[2] : true;
 	var finished_msg = (arguments.length > 3) ? arguments[3] : '';
 	var loading_image_url = (arguments.length > 4) ? arguments[4] : get_url('assets/img/site/loading_l.gif');
 
@@ -429,22 +430,24 @@ function load_masonry_item(container_attribute, item_attribute)
 			}
 		});
 	});
-	$container.infinitescroll({
-		navSelector  : '#page-nav',   // ページのナビゲーションを選択
-		nextSelector : '#page-nav a', // 次ページへのリンク
-		itemSelector : item_attribute,    // 持ってくる要素のclass
-		loading: {
-				finishedMsg: finished_msg, //次のページがない場合に表示するテキスト
-				img: loading_image_url //ローディング画像のパス
+	if (load_more) {
+		$container.infinitescroll({
+			navSelector  : '#page-nav',   // ページのナビゲーションを選択
+			nextSelector : '#page-nav a', // 次ページへのリンク
+			itemSelector : item_attribute,    // 持ってくる要素のclass
+			loading: {
+					finishedMsg: finished_msg, //次のページがない場合に表示するテキスト
+					img: loading_image_url //ローディング画像のパス
+				}
+			},
+			// trigger Masonry as a callback
+			function( newElements ) {
+				var $newElems = $( newElements ).css({ opacity: 0 });
+				$newElems.imagesLoaded(function(){
+					$newElems.animate({ opacity: 1 });
+					$container.masonry( 'appended', $newElems, true );
+				});
 			}
-		},
-		// trigger Masonry as a callback
-		function( newElements ) {
-			var $newElems = $( newElements ).css({ opacity: 0 });
-			$newElems.imagesLoaded(function(){
-				$newElems.animate({ opacity: 1 });
-				$container.masonry( 'appended', $newElems, true );
-			});
-		}
-	);
+		);
+	}
 }
