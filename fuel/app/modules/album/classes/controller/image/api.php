@@ -54,7 +54,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$data = array('album' => null, 'member' => null);
 			$params = array(
 				'related'  => array('file', 'album'),
-				'order_by' => array('created_at' => 'desc'),
+				'order_by' => array('shot_at' => 'asc'),
 			);
 			if ($limit) $params['limit'] = $limit;
 

@@ -57,8 +57,19 @@ class Controller_Image extends \Controller_Site
 		list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($id, $record_limit);
 		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
 
-		$where = \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($album_image->album->member_id));
-		list($data['before_id'], $data['after_id']) =  Site_Util::get_neighboring_album_image_ids($album_image->album_id, $id, 'shot_at', $where);
+		// 前後の id の取得
+		$params = array(
+			'where' => \Site_Model::get_where_params4list(
+				0,
+				\Auth::check() ? $this->u->id : 0,
+				$this->check_is_mypage($album_image->album->member_id),
+				null,
+				array(array('album_id', $album_image->album->id))
+			),
+			'order_by' => array('shot_at' => 'asc'),
+		);
+		$ids = \Site_Model::get_col_array('album_image', 'id', $params, 'Album');
+		list($data['before_id'], $data['after_id']) = \Util_Array::get_neighborings($id, $ids);
 
 		$title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
 		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');

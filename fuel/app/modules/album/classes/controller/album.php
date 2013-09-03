@@ -96,7 +96,7 @@ class Controller_Album extends \Controller_Site
 				null,
 				array(array('album_id', $id))
 			),
-			'order_by' => array('created_at' => 'desc'),
+			'order_by' => array('shot_at' => 'asc'),
 		), 'Album');
 
 		$data['album_images'] = array();

@@ -1,11 +1,21 @@
 <?php
 class Site_Model
 {
-	public static function get_simple_pager_list($table, $page = 1, $params = array(), $namespace = '')
+	public static function get_list_query($table, $params = array(), $namespace = '')
 	{
 		$model = 'Model_'.Util_string::camelize($table);
 		if ($namespace) $model = sprintf('\%s\%s', $namespace, $model);
 		$query = $model::query();
+
+		// select
+		if (!empty($params['select']))
+		{
+			$selects = is_array($params['select']) ? $params['select'] : (array)$params['select'];
+			foreach ($selects as $select)
+			{
+				$query = $query->select($select);
+			}
+		}
 
 		// related
 		if (!empty($params['related']))
@@ -43,8 +53,6 @@ class Site_Model
 				}
 			}
 		}
-		$count = $query->count();
-
 		// order by
 		if (!empty($params['order_by']))
 		{
@@ -53,6 +61,48 @@ class Site_Model
 				$query = $query->order_by($key, $value);
 			}
 		}
+
+		return $query;
+	}
+
+	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_myapge = false, $member_id_colmn = null, $where = array())
+	{
+		if ($target_member_id) $where[] = array($member_id_colmn ?: 'member_id', $target_member_id);
+
+		if ($self_member_id)
+		{
+			if (($target_member_id && $target_member_id != $self_member_id) || !$is_myapge)
+			{
+				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
+			}
+		}
+		else
+		{
+			$where[] = array('public_flag', PRJ_PUBLIC_FLAG_ALL);
+		}
+
+		return $where;
+	}
+
+	public static function get_list($table, $params = array(), $namespace = '')
+	{
+		$query = self::get_list_query($table, $params, $namespace);
+
+		return $query->get();
+	}
+
+	public static function get_col_array($table, $column, $params = array(), $namespace = '')
+	{
+		$params['select'] = $column;
+		$query = self::get_list_query($table, $params, $namespace);
+
+		return Util_Orm::conv_col2array($column, $query->get());
+	}
+
+	public static function get_simple_pager_list($table, $page = 1, $params = array(), $namespace = '')
+	{
+		$query = self::get_list_query($table, $params, $namespace);
+		$count = $query->count();
 
 		// limit, offset
 		$page = (int)$page;
@@ -73,24 +123,5 @@ class Site_Model
 		$list = $query->get();
 
 		return array('list' => $list, 'page' => $page, 'is_next' => $is_next);
-	}
-
-	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_myapge = false, $member_id_colmn = null, $where = array())
-	{
-		if ($target_member_id) $where[] = array($member_id_colmn ?: 'member_id', $target_member_id);
-
-		if ($self_member_id)
-		{
-			if (($target_member_id && $target_member_id != $self_member_id) || !$is_myapge)
-			{
-				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
-			}
-		}
-		else
-		{
-			$where[] = array('public_flag', PRJ_PUBLIC_FLAG_ALL);
-		}
-
-		return $where;
 	}
 }

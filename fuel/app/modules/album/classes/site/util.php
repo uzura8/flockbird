@@ -35,27 +35,6 @@ class Site_Util
 		return (!empty($album_image)) ? $album_image->get_image() : 'ai';
 	}
 
-	public static function get_neighboring_album_image_ids($album_id, $album_image_id, $sort = 'id', $where = array())
-	{
-		$query = Model_AlbumImage::query()->select('id')
-			->where('album_id', $album_id)
-			->where('id', '<', $album_image_id)	
-			->order_by($sort);
-		if ($where) $query = $query->where($where);
-		$album_image = $query->get_one();
-		$prev_id = (isset($album_image->id))? $album_image->id : null;
-
-		$query = Model_AlbumImage::query()->select('id')
-			->where('album_id', $album_id)
-			->where('id', '>', $album_image_id)	
-			->order_by($sort);
-		if ($where) $query = $query->where($where);
-		$album_image = $query->get_one();
-		$next_id = (isset($album_image->id))? $album_image->id : null;
-
-		return array($prev_id, $next_id);
-	}
-
 	public static function get_album_image_page_title($album_image_name, $original_filename)
 	{
 		$title = sprintf(\Config::get('term.album_image'), \Config::get('term.album_image'));
