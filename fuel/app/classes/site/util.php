@@ -84,7 +84,7 @@ class Site_Util
 				if (in_array($btn_field, array('submit', 'button')))
 				{
 					$btn_name = $btn_field;
-					$btn_attr = array('type'=> $btn_field, 'value' => '送信', 'class' => 'btn');
+					$btn_attr = array('type'=> $btn_field, 'value' => '送信', 'class' => 'btn btn-primary');
 				}
 			}
 			else
@@ -95,9 +95,9 @@ class Site_Util
 					unset($btn_field);
 					$btn_field = array('attributes' => $tmp);
 				}
-				if (!isset($btn_field['attributes']['type'])) $btn_field['attributes']['type'] = 'submit';
-				if (!isset($btn_field['attributes']['value'])) $btn_field['attributes']['value'] = '送信';
-				if (!isset($btn_field['attributes']['class'])) $btn_field['attributes']['class'] = 'btn';
+				if (empty($btn_field['attributes']['type'])) $btn_field['attributes']['type'] = 'submit';
+				if (empty($btn_field['attributes']['value'])) $btn_field['attributes']['value'] = '送信';
+				if (empty($btn_field['attributes']['class'])) $btn_field['attributes']['class'] = 'btn btn-primary';
 				$btn_attr = $btn_field['attributes'];
 
 				$btn_name = isset($btn_field['name']) ? $btn_field['name'] : $btn_field['attributes']['type'];

@@ -4,7 +4,7 @@
 <?php echo Form::open('member/leave'); ?>
 <?php echo Form::hidden('password', $input['password'], array('dont_prep' => true)); ?>
 <div class="actions">
-	<?php echo Form::submit('submit1', '戻る', array('class' => 'btn')); ?>
+	<?php echo form_button('<i class="ls-icon-arrowleft"></i> 戻る', 'submit', 'submit_back', array('class' => 'btn')); ?>
 </div>
 <?php echo Form::close(); ?>
 
@@ -12,7 +12,7 @@
 <?php echo Form::hidden(Config::get('security.csrf_token_key'), Util_security::get_csrf()); ?>
 <?php echo Form::hidden('password', $input['password'], array('dont_prep' => true)); ?>
 <div class="actions">
-	<?php echo Form::submit('submit2', '確定', array('class' => 'btn btn-danger')); ?>
+	<?php echo form_button('退会する', 'submit', 'submit', array('class' => 'btn btn-danger')); ?>
 </div>
 <?php echo Form::close(); ?>
 </div>

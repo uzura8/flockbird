@@ -21,7 +21,7 @@
 
 	<div class="control-group">
 		<div class="controls">
-		<?php echo Form::submit(array('value'=>'送信', 'name'=>'submit', 'class' => 'btn')); ?>
+		<?php echo form_button('送信'); ?>
 		</div>
 	</div>
 <?php echo Form::close(); ?>
