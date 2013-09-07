@@ -241,7 +241,8 @@ function set_datetimepicker(attribute)
 		hourGrid: 6,
 		minuteGrid: 15,
 		addSliderAccess: true,
-		sliderAccessArgs: { touchonly: false }
+		sliderAccessArgs: { touchonly: false },
+		maxDateTime: new Date()
 	});
 }
 
