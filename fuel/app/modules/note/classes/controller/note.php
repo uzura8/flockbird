@@ -210,6 +210,15 @@ class Controller_Note extends \Controller_Site
 		$val->add_model($note);
 		$val->add('original_public_flag')
 				->add_rule('in_array', \Site_Util::get_public_flags());
+		$val->add('published_at_time', '日時')
+				->add_rule('datetime_except_second')
+				->add_rule('datetime_is_past');
+		if (!$note->is_published)
+		{
+			$val->add('is_draft', \Config::get('term.draft'))
+					->add_rule('valid_string', 'numeric')
+					->add_rule('in_array', array(0,1));
+		}
 
 		$album_image_name_uploaded_posteds = array();
 		if (\Input::method() == 'POST')
@@ -233,22 +242,37 @@ class Controller_Note extends \Controller_Site
 				$note->body        = $post['body'];
 				$note->public_flag = $post['public_flag'];
 
+				$is_published = !$note->is_published && empty($post['is_draft']);
+				if ($is_published) $note->is_published = 1;
+
+				if ($post['published_at_time'] && !\Util_Date::check_is_same_minute($post['published_at_time'], $note->published_at))
+				{
+					$note->published_at = $post['published_at_time'].':00';
+				}
+				elseif ($is_published)
+				{
+					$note->published_at = date('Y-m-d H:i:s');
+				}
+
 				\DB::start_transaction();
 				$note->save();
 
 				// album_image の update
-				$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
-				$album_images_posted = \Input::post('album_image_id');
-				foreach ($album_images as $album_image)
+				if ($album_images_posted = \Input::post('album_image_id'))
 				{
-					if (!in_array($album_image->id, $album_images_posted)) continue;
-
-					$album_image->public_flag = $post['public_flag'];
-					if (isset($album_image_name_uploaded_posteds[$album_image->id]))
+					$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
+					$album_image_public_flag = $note->is_published ? $post['public_flag'] : PRJ_PUBLIC_FLAG_PRIVATE;
+					foreach ($album_images as $album_image)
 					{
-						$album_image->name = trim($album_image_name_uploaded_posteds[$album_image->id]);
+						if (!in_array($album_image->id, $album_images_posted)) continue;
+
+						$album_image->public_flag = $album_image_public_flag;
+						if (isset($album_image_name_uploaded_posteds[$album_image->id]))
+						{
+							$album_image->name = trim($album_image_name_uploaded_posteds[$album_image->id]);
+						}
+						$album_image->save();
 					}
-					$album_image->save();
 				}
 
 				// tmp_file を album_image として保存
@@ -284,6 +308,8 @@ class Controller_Note extends \Controller_Site
 
 		$tmp_hash = $is_upload['multiple'] ? \Input::get_post('tmp_hash', \Util_toolkit::create_hash()) : '';
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
+		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
+		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_published_at_time'));
 		$this->template->content = \View::forge('_parts/form', array(
 			'val' => $val,
 			'note' => $note,
@@ -303,7 +329,7 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_delete($id = null)
 	{
-		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
+		\Util_security::check_csrf();
 
 		if (!$note = Model_Note::check_authority($id, $this->u->id))
 		{

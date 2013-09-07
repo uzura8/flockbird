@@ -31,10 +31,15 @@
 	<?php echo form_input($val, 'published_at_time', '日時', !empty($note->published_at) ? substr($note->published_at, 0, 16) : '', false, 'span4'); ?>
 	<?php echo form_radio_public_flag($val, isset($note) ? $note->public_flag : null); ?>
 <?php if (isset($is_edit) && $is_edit): ?>
-	<?php echo form_button('送信', 'button'); ?>
+	<?php echo form_button(empty($note->is_published) ? '公開する' : '編集する', 'button'); ?>
 <?php else: ?>
-	<?php echo form_button(); ?>
+	<?php echo form_button('公開する'); ?>
 <?php endif; ?>
+<?php if (empty($note->is_published)): ?>
 	<?php echo form_button(Config::get('term.draft'), 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-inverse')); ?>
+<?php endif; ?>
+<?php if (isset($is_edit) && $is_edit): ?>
+	<?php echo form_anchor(sprintf('note/delete/%d%s', $note->id, get_csrf_query_str()), '削除する', array('class' => 'btn btn-danger')); ?>
+<?php endif; ?>
 <?php echo form_close(); ?>
 </div><!-- well -->
