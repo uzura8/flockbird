@@ -104,8 +104,7 @@ class Controller_Api extends \Controller_Site_Api
 			list($public_flag, $model) = \Site_Util::validate_params_public_flag($note->public_flag);
 
 			\DB::start_transaction();
-			$note->public_flag = $public_flag;
-			$note->save();
+			$note->update_public_flag_with_images($public_flag);
 			\DB::commit_transaction();
 
 			$response = \View::forge('_parts/public_flag_selecter', array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true));

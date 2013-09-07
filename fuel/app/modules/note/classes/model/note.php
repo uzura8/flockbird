@@ -96,4 +96,19 @@ class Model_Note extends \Orm\Model
 		}
 		$this->delete();
 	}
+
+	public function update_public_flag_with_images($public_flag)
+	{
+		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
+		{
+			foreach ($album_images as $album_image)
+			{
+				$album_image->public_flag = $public_flag;
+				$album_image->save();
+			}
+		}
+
+		$this->public_flag = $public_flag;
+		$this->save();
+	}
 }
