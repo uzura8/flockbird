@@ -132,4 +132,16 @@ class Util_toolkit
 
 		return ceil(($base_time - $time) / $unit);
 	}
+
+	public static function reverse_bool($bool, $is_int = false)
+	{
+		if ($is_int)
+		{
+			if (empty($bool)) return 1;
+
+			return 0;
+		}
+
+	 return !$bool;
+	}
 }

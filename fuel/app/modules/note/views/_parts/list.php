@@ -79,14 +79,13 @@
 </div>
 <?php endif; ?>
 
-<?php if ($is_next): ?>
 <nav id="page-nav">
 <?php
 $uri = sprintf('note/api/list.html?page=%d', $page + 1);
-if (!empty($member)) $uri .= '&member_id='.$member->id;
+if (!empty($member))   $uri .= '&member_id='.$member->id;
+if (!empty($is_draft)) $uri .= '&is_draft='.$is_draft;
 echo Html::anchor($uri, '');
 ?>
 </nav>
-<?php endif; ?>
 
 <?php if ($is_api_request): ?></body></html><?php endif; ?>

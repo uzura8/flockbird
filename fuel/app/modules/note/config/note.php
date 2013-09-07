@@ -4,7 +4,7 @@ return array(
 	'articles' => array(
 		'limit' => 2,
 		'trim_width' => array(
-			'title' => 90,
+			'title' => 88,
 			'body'  => 500,
 		),
 		'comment' => array(

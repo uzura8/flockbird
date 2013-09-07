@@ -24,15 +24,26 @@ class Controller_Api extends \Controller_Site_Api
 
 		$page      = (int)\Input::get('page', 1);
 		$member_id = (int)\Input::get('member_id', 0);
+		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
+		$is_draft = $is_mypage ? \Util_string::cast_bool_int(\Input::get('is_draft', 0)) : 0;
+		$is_published = \Util_toolkit::reverse_bool($is_draft, true);
+
 		$response = '';
 		try
 		{
 			$data = \Site_Model::get_simple_pager_list('note', $page, array(
 				'related'  => 'member',
-				'where'    => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id)),
+				'where'    => \Site_Model::get_where_params4list(
+					$member_id,
+					\Auth::check() ? $this->u->id : 0,
+					$is_mypage,
+					null,
+					array(array('is_published', $is_published))
+				),
 				'limit'    => \Config::get('note.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			), 'Note');
+			$data['is_draft'] = $is_draft;
 
 			$response = \View::forge('_parts/list', $data);
 			$status_code = 200;

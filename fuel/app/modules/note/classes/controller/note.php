@@ -56,16 +56,27 @@ class Controller_Note extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
+		$is_draft = $is_mypage ? \Util_string::cast_bool_int(\Input::get('is_draft', 0)) : 0;
+		$is_published = \Util_toolkit::reverse_bool($is_draft, true);
+
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.note')), null, $member);
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
-
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
-			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id)),
+			'where'    => \Site_Model::get_where_params4list(
+				$member->id,
+				\Auth::check() ? $this->u->id : 0,
+				$is_mypage,
+				null,
+				array(array('is_published', $is_published))
+			),
 			'limit'    => \Config::get('note.articles.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Note');
-		$data['member'] = $member;
-		$this->template->content = \View::forge('_parts/list', $data);
+		$data['member']       = $member;
+		$data['is_mypage']    = $is_mypage;
+		$data['is_published'] = $is_published;
+		$data['is_draft']     = $is_draft;
+		$this->template->content = \View::forge('member', $data);
 		$this->template->post_footer = \View::forge('_parts/load_item');
 	}
 

@@ -64,6 +64,13 @@ class Util_string
 		return false;
 	}
 
+	public static function cast_bool_int($val)
+	{
+		if (empty($val)) return 0;
+
+		return 1;
+	}
+
 	public static function check_uri_for_redilrect($target_uri, $domain = '')
 	{
 		// URLとして許可されている文字以外は許可しない
