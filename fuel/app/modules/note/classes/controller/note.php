@@ -335,7 +335,7 @@ class Controller_Note extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		$note->delete();
+		$note->delete_with_images();
 
 		\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
 		\Response::redirect('note/member');

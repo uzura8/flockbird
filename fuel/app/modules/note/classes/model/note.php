@@ -81,4 +81,19 @@ class Model_Note extends \Orm\Model
 
 		return $obj;
 	}
+
+	public function delete_with_images()
+	{
+		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
+		{
+			$album_image_ids = array();
+			foreach ($album_images as $album_image)
+			{
+				if (empty($album)) $album = $album_image->album;
+				$album_image_ids[] = $album_image->id;
+			}
+			\Album\Model_AlbumImage::delete_multiple($album_image_ids, $album);
+		}
+		$this->delete();
+	}
 }

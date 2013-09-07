@@ -61,7 +61,7 @@ class Model_NoteAlbumImage extends \Orm\Model
 		if (!$album_image_ids) return array();
 
 		$query = \Album\Model_AlbumImage::query()
-			->related('file')
+			->related(array('album', 'file'))
 			->where(array('id', 'in', $album_image_ids));
 
 		if ($sort)

@@ -67,7 +67,7 @@ class Controller_Api extends \Controller_Site_Api
 			}
 
 			\DB::start_transaction();
-			$note->delete();
+			$note->delete_with_images();
 			\DB::commit_transaction();
 
 			$response['status'] = 1;
