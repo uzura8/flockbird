@@ -399,8 +399,8 @@ class Controller_Album extends \Controller_Site
 		}
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.album_image').'管理', array('/album/'.$id => $album->name), $album->member, 'album');
-		$this->template->post_header = \View::forge('_parts/edit_header');
-		$this->template->post_footer = \View::forge('_parts/edit_footer');
+		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
+		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_shot_at'));
 
 		$data = array(
 			'id' => $id, 'album' => $album,
