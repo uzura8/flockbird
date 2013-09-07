@@ -20,7 +20,7 @@
 	'id' => $note->id,
 	'public_flag' => $note->public_flag,
 	'public_flag_view_icon_only' => IS_SP,
-	'date' => array('datetime' => $note->created_at)
+	'date' => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at)
 )); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>
 				<div class="btn-group edit" id="btn_edit_<?php echo $id ?>">
@@ -42,6 +42,8 @@
 <?php if ($images = \Note\Model_NoteAlbumImage::get_album_image4note_id($note->id, 4, array('id' => 'desc'))): ?>
 <?php echo render('_parts/thumbnails', array('images' => $images)); ?>
 <?php endif; ?>
+
+<?php if ($note->is_published): ?>
 <?php list($comments, $is_all_records, $all_comment_count) = \Note\Model_NoteComment::get_comments($id, \Config::get('site.record_limit.default.comment.s')); ?>
 		<div class="comment_info">
 			<small><i class="icon-comment"></i> <?php echo $all_comment_count; ?></small>
@@ -69,6 +71,7 @@
 			<div class="listMoreBox"><?php echo Html::anchor('note/'.$id.'?all_comment=1#comments', 'もっとみる'); ?></div>
 <?php endif; ?>
 		</div>
+<?php endif; ?>
 <?php endif; ?>
 
 	</div>

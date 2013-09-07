@@ -4,7 +4,7 @@
 	'public_flag' => $note->public_flag,
 	'public_flag_view_icon_only' => IS_SP,
 	'model'       => 'note',
-	'date'        => array('datetime' => $note->created_at, 'label' => '日時')
+	'date'        => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at, 'label' => $note->published_at ? '日時' : '更新日時')
 )); ?>
 <?php if (isset($u) && $u->id == $note->member_id): ?>
 <div class="btn-group edit">
