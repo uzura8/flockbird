@@ -151,7 +151,7 @@ class Controller_Image extends \Controller_Site
 					\DB::start_transaction();
 					if (isset($post['name']) && $post['name'] !== '' && $post['name'] !== $album_image->name) $album_image->name = $post['name'];
 					if (!$disabled_to_update_message && isset($post['public_flag'])) $album_image->public_flag = $post['public_flag'];
-					if (!\Util_Date::check_is_same_minute($post['shot_at_time'], $album_image->shot_at))
+					if ($post['shot_at_time'] && !\Util_Date::check_is_same_minute($post['shot_at_time'], $album_image->shot_at))
 					{
 						$album_image->shot_at = $post['shot_at_time'].':00';
 					}
@@ -201,7 +201,7 @@ class Controller_Image extends \Controller_Site
 	 */
 	public function action_delete($id = null)
 	{
-		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
+		\Util_security::check_csrf();
 		if (!$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
