@@ -7,7 +7,12 @@
 <?php foreach ($list as $id => $note): ?>
 	<div class="article" id="article_<?php echo $id; ?>">
 		<div class="header">
-			<h4><?php echo Html::anchor('note/'.$id, strim($note->title, Config::get('note.articles.trim_width.title'))); ?></h4>
+			<h4<?php if (!$note->is_published): ?> class="has_label"<?php endif; ?>>
+				<?php echo Html::anchor('note/'.$id, strim($note->title, Config::get('note.articles.trim_width.title'))); ?>
+<?php if (!$note->is_published): ?>
+				<?php echo render('_parts/label', array('name' => Config::get('term.draft'), 'attr' => 'label-inverse')); ?>
+<?php endif; ?>
+			</h4>
 			<div class="list_subtitle">
 <?php echo render('_parts/member_contents_box', array(
 	'member' => $note->member,

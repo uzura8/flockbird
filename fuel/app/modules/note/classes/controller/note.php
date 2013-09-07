@@ -86,7 +86,14 @@ class Controller_Note extends \Controller_Site
 		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
 		list($comments, $is_all_records) = Model_NoteComment::get_comments($id, $record_limit);
 
-		$this->set_title_and_breadcrumbs($note->title, null, $note->member, 'note');
+		$title = array('name' => $note->title);
+		$header_info = array();
+		if (!$note->is_published)
+		{
+			$title['label'] = array('name' => \Config::get('term.draft'), 'attr' => 'label-inverse');
+			$header_info = array('title' => sprintf('この%sはまだ公開されていません。',  \Config::get('term.note')), 'body' => '');
+		}
+		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
 		$this->template->post_footer = \View::forge('_parts/load_masonry', array('is_not_load_more' => true));
 		$this->template->content = \View::forge('detail', array('note' => $note, 'images' => $images, 'comments' => $comments, 'is_all_records' => $is_all_records));
@@ -103,6 +110,12 @@ class Controller_Note extends \Controller_Site
 		$note = Model_Note::forge();
 		$val = \Validation::forge();
 		$val->add_model($note);
+		$val->add('published_at_time', '日時')
+				->add_rule('datetime_except_second')
+				->add_rule('datetime_is_past');
+		$val->add('is_draft', \Config::get('term.draft'))
+				->add_rule('valid_string', 'numeric')
+				->add_rule('in_array', array(0,1));
 
 		$is_upload = array();
 		$is_upload['simple']   = \Config::get('note.display_setting.form.upload.display') && \Config::get('note.display_setting.form.upload.type') == 'simple';
@@ -122,10 +135,19 @@ class Controller_Note extends \Controller_Site
 			{
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-				$note->title       = $post['title'];
-				$note->body        = $post['body'];
-				$note->public_flag = $post['public_flag'];
-				$note->member_id   = $this->u->id;
+				$note->title        = $post['title'];
+				$note->body         = $post['body'];
+				$note->public_flag  = $post['public_flag'];
+				$note->member_id    = $this->u->id;
+				$note->is_published = $post['is_draft'] ? 0 : 1;
+				if ($post['published_at_time'])
+				{
+					$note->published_at = $post['published_at_time'].':00';
+				}
+				elseif ($note->is_published)
+				{
+					$note->published_at = date('Y-m-d H:i:s');
+				}
 				\DB::start_transaction();
 				$note->save();
 				if ($is_upload['simple'] && \Input::file())
@@ -135,9 +157,10 @@ class Controller_Note extends \Controller_Site
 				elseif ($is_upload['multiple'] && $file_tmps)
 				{
 					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
+					$album_image_public_flag = $note->is_published ? $post['public_flag'] : PRJ_PUBLIC_FLAG_PRIVATE;
 					foreach ($file_tmps as $file_tmp)
 					{
-						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $post['public_flag'], false, true);
+						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $album_image_public_flag, false, true);
 						// note_album_image の保存
 						$note_album_image = Model_NoteAlbumImage::forge();
 						$note_album_image->note_id = $note->id;
@@ -148,7 +171,8 @@ class Controller_Note extends \Controller_Site
 				}
 				\DB::commit_transaction();
 
-				\Session::set_flash('message', \Config::get('term.note').'を作成しました。');
+				$message = sprintf('%sを%sしました。', \Config::get('term.note'), $note->is_published ? '作成' : \Config::get('term.draft'));
+				\Session::set_flash('message', $message);
 				\Response::redirect('note/detail/'.$note->id);
 			}
 			catch(\FuelException $e)
@@ -159,6 +183,8 @@ class Controller_Note extends \Controller_Site
 		}
 
 		$tmp_hash = $is_upload['multiple'] ? \Input::get_post('tmp_hash', \Util_toolkit::create_hash()) : '';
+		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
+		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_published_at_time'));
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を書く', null, $this->u, 'note');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'is_upload' => $is_upload, 'tmp_hash' => $tmp_hash));
 	}
@@ -287,6 +313,52 @@ class Controller_Note extends \Controller_Site
 
 		\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
 		\Response::redirect('note/member');
+	}
+
+	/**
+	 * Note publish
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_publish($id = null)
+	{
+		\Util_security::check_csrf();
+		if (!$note = Model_Note::check_authority($id, $this->u->id))
+		{
+			throw new \HttpNotFoundException;
+		}
+		if ($note->is_published)
+		{
+			\Session::set_flash('error', '既に公開されています。');
+			\Response::redirect('note/detail/'.$id);
+		}
+
+		try
+		{
+			\DB::start_transaction();
+			$note->is_published = 1;
+			if (!$note->published_at) $note->published_at = date('Y-m-d H:i:s');
+			$note->save();
+
+			// album_image の public_flag を update
+			$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
+			foreach ($album_images as $album_image)
+			{
+				$album_image->public_flag = $note->public_flag;
+				$album_image->save();
+			}
+			\DB::commit_transaction();
+			\Session::set_flash('message', \Config::get('term.note').'を公開しました。');
+		}
+		catch(\FuelException $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			\Session::set_flash('error', $e->getMessage());
+		}
+
+		\Response::redirect('note/detail/'.$id);
 	}
 
 	private function save_file_tmp_config_posted_album_image_names($file_tmps)

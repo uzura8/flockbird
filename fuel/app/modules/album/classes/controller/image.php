@@ -153,7 +153,7 @@ class Controller_Image extends \Controller_Site
 					if (!$disabled_to_update_message && isset($post['public_flag'])) $album_image->public_flag = $post['public_flag'];
 					if (!\Util_Date::check_is_same_minute($post['shot_at_time'], $album_image->shot_at))
 					{
-						$album_image->shot_at = $post['shot_at_time'].':'.'00';
+						$album_image->shot_at = $post['shot_at_time'].':00';
 					}
 					$album_image->save();
 					\DB::commit_transaction();
@@ -185,8 +185,8 @@ class Controller_Image extends \Controller_Site
 			$album_image->album->member,
 			'album'
 		);
-		$this->template->post_header = \View::forge('_parts/edit_header');
-		$this->template->post_footer = \View::forge('_parts/edit_footer', array('attr_shot_at' => '#form_shot_at_time'));
+		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
+		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_shot_at_time'));
 
 		$this->template->content = \View::forge('edit', array('form' => $form, 'original_public_flag' => $album_image->public_flag));
 		$this->template->content->set_safe('html_form', $form->build('album/image/edit/'.$id));// form の action に入る

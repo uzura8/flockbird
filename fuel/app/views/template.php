@@ -145,7 +145,9 @@ if (Input::get('msg')) $message = e(Input::get('msg'));
 			<!-- title -->
 <?php if (isset($title) || isset($subtitle)): ?>
 			<div class="page-header">
-<?php if (isset($title)): ?><h2><?php echo $title; ?></h2><?php endif; ?>
+<?php if (isset($header_info)): ?><?php echo $header_info; ?><?php endif; ?>
+<?php if (isset($title)): ?><?php echo $title; ?><?php endif; ?>
+
 <?php if (isset($subtitle)): ?>
 			<div id="subtitle"><?php echo $subtitle; ?></div>
 <?php endif; ?>

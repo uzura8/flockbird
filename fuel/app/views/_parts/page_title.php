@@ -1,0 +1,4 @@
+<h2<?php if (!empty($label)): ?> class="has_label"<?php endif; ?>>
+	<?php echo $name; ?>
+<?php if (!empty($label)): ?>	<?php echo render('_parts/label', array('name' => $label['name'], 'attr' => $label['attr'])); ?><?php endif; ?>
+</h2>

@@ -43,6 +43,12 @@ class Model_Note extends \Orm\Model
 			'validation' => array('required'),
 			'form' => array(),
 		),
+		'is_published' => array(
+			'data_type' => 'integer',
+			'validation' => array('max_length' => array(2), 'in_array' => array(0,1)),
+			'form' => array('type' => false),
+		),
+		'published_at'    => array('form' => array('type' => false)),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);

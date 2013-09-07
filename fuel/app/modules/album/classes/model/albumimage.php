@@ -160,7 +160,7 @@ class Model_AlbumImage extends \Orm\Model
 		$self = new self;
 		$self->album_id = $album_id;
 		$self->file_id = $file->id;
-		$self->public_flag = $public_flag ?: \Config::get('site.public_flag.default');
+		$self->public_flag = is_null($public_flag) ? \Config::get('site.public_flag.default') : $public_flag;
 		$self->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
 		$self->name = $name ?: $file->original_filename;
 		

@@ -41,10 +41,25 @@ class Controller_Site extends Controller_Base_Site
 		if ($status) $this->response->status = $status;
 	}
 
-	protected function set_title_and_breadcrumbs($title = '', $middle_breadcrumbs = array(), $member_obj = null, $module = null)
+	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array())
 	{
-		if ($title) $this->template->title = $title;
-		$this->template->header_title = site_title($title);
+		if ($title)
+		{
+			if (is_array($title))
+			{
+				$title_name  = !empty($title['name'])  ? $title['name'] : '';
+				$title_label = !empty($title['label']) ? $title['label'] : array();
+			}
+			else
+			{
+				$title_name  = $title;
+				$title_label = array();
+			}
+			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
+		}
+		$this->template->header_title = site_title($title_name);
+
+		if ($info) $this->template->header_info = View::forge('_parts/information', $info);
 
 		$breadcrumbs = array('/' => Config::get('term.toppage'));
 		if ($member_obj)
@@ -70,7 +85,7 @@ class Controller_Site extends Controller_Base_Site
 			}
 		}
 		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
-		$breadcrumbs[''] = $title;
+		$breadcrumbs[''] = $title_name;
 		$this->template->breadcrumbs = $breadcrumbs;
 	}
 

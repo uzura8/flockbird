@@ -106,7 +106,7 @@ CREATE TABLE `album` (
   `member_id` int(11) NOT NULL,
   `name` text NOT NULL,
   `body` text NULL,
-  `public_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `cover_album_image_id` int(11) DEFAULT NULL,
   `foreign_table` varchar(20) NULL,
   `created_at` datetime NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE `album_image` (
   `album_id` int(11) NOT NULL,
   `file_id` varchar(255) NOT NULL,
   `name` text NULL,
-  `public_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `shot_at` datetime NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -754,14 +754,17 @@ CREATE TABLE `note` (
   `member_id` int(11) NOT NULL,
   `title` text NOT NULL,
   `body` text NOT NULL,
-  `public_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `public_flag` tinyint(2) NOT NULL DEFAULT '0',
+  `is_published` tinyint(2) NOT NULL DEFAULT '0',
+  `published_at` datetime NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `created_at_idx` (`created_at`),
+  KEY `published_at_idx` (`published_at`),
+  KEY `member_id_is_published_published_at_public_flag_idx` (`member_id`,`is_published`,`published_at`,`public_flag`),
   KEY `member_id_created_at_idx` (`member_id`,`created_at`),
   KEY `public_flag_craeted_at_idx` (`public_flag`,`created_at`),
-  KEY `member_id_idx` (`member_id`)
+  KEY `is_published_published_at_public_flag_idx` (`is_published`,`published_at`,`public_flag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

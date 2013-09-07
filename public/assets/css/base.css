@@ -368,6 +368,22 @@ span.required {
 	word-wrap:break-word;
 	overflow:hidden;
 }
+.page-header h2.has_label,
+#article_list .article .header h4.has_label
+{
+	position: relative;
+	padding-right:70px;
+}
+.page-header h2.has_label span.label {
+	position: absolute;
+	right: 0;
+	top: 10px;
+}
+#article_list .article .header h4.has_label span.label {
+	position: absolute;
+	right: 0;
+	top: 2px;
+}
 
 div.alert ul {
 	margin-bottom: 0;
