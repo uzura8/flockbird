@@ -74,7 +74,6 @@ class Controller_Note extends \Controller_Site
 		), 'Note');
 		$data['member']       = $member;
 		$data['is_mypage']    = $is_mypage;
-		$data['is_published'] = $is_published;
 		$data['is_draft']     = $is_draft;
 		$this->template->content = \View::forge('member', $data);
 		$this->template->post_footer = \View::forge('_parts/load_item');
