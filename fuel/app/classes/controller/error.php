@@ -18,7 +18,7 @@ class Controller_Error extends Controller_Site
 	public function action_403()
 	{
 		$this->template->title = '403 Forbidden';
-		$this->template->header_title = site_title($this->template->title);
+		$this->set_title_and_breadcrumbs($this->template->title);
 		$this->template->content = View::forge('error/403');
 		$this->response->status = 403;
 	}
@@ -32,7 +32,7 @@ class Controller_Error extends Controller_Site
 	public function action_404()
 	{
 		$this->template->title = '404 Not Found';
-		$this->template->header_title = site_title($this->template->title);
+		$this->set_title_and_breadcrumbs($this->template->title);
 		$this->template->content = View::forge('error/404');
 		$this->response->status = 404;
 	}
@@ -46,7 +46,7 @@ class Controller_Error extends Controller_Site
 	public function action_500()
 	{
 		$this->template->title = '500 Server Error';
-		$this->template->header_title = site_title($this->template->title);
+		$this->set_title_and_breadcrumbs($this->template->title);
 		$this->template->content = View::forge('error/500');
 		$this->response->status = 500;
 	}
@@ -57,7 +57,7 @@ class Controller_Error extends Controller_Site
 	public function action_invalid()
 	{
 		$this->template->title = 'Invalid input data';
-		$this->template->header_title = site_title($this->template->title);
+		$this->set_title_and_breadcrumbs($this->template->title);
 		$this->template->content = View::forge('error/invalid');
 	}
 }
