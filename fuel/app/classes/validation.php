@@ -103,6 +103,11 @@ class Validation extends Fuel\Core\Validation
 	 * @param   string
 	 * @return  bool
 	 */
+
+	public static function _validation_public_flag($val)
+	{
+		return is_numeric($val) && in_array($val, Site_Util::get_public_flags());
+	}
 	public static function _validation_alpha_small_char_numeric($val)
 	{
 		return (bool)preg_match('/^[a-z0-9]*$/', $val);
@@ -172,7 +177,7 @@ class Validation extends Fuel\Core\Validation
 		return true;
 	}
 
-	public function _validation_datetime_is_futer($val, $base = '', $max = '')
+	public function _validation_datetime_is_future($val, $base = '', $max = '')
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 

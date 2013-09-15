@@ -99,6 +99,44 @@ class Site_Model
 		return Util_Orm::conv_col2array($column, $query->get());
 	}
 
+	public static function get_pager_list($table, $last_id = 0, $params = array(), $namespace = '', $is_check_next = false, $is_over = false)
+	{
+		if ($last_id)
+		{
+			$inequality_sign = '>';
+			if (empty($params['order_by'][0]) || $params['order_by'][0] != 'desc')
+			{
+				$inequality_sign = '<';
+			}
+			if ($is_over) $inequality_sign = '>';
+
+			if (!isset($params['where'])) $params['where'] = array();
+			$params['where'][] = array('id', $inequality_sign, $last_id);
+		}
+		$query = self::get_list_query($table, $params, $namespace);
+
+		if (empty($params['limit']))
+		{
+			$is_check_next = false;
+		}
+		else
+		{
+			$limit = $params['limit'];
+			if ($is_check_next) $limit += 1;
+			$query = $query->rows_limit($limit);
+		}
+		$list = $query->get();
+
+		$is_next = false;
+		if ($is_check_next)
+		{
+			$is_next = count($list) > $params['limit'];
+			if ($is_next) array_pop($list);
+		}
+
+		return array($list, $is_next);
+	}
+
 	public static function get_simple_pager_list($table, $page = 1, $params = array(), $namespace = '')
 	{
 		$query = self::get_list_query($table, $params, $namespace);

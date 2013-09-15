@@ -6,6 +6,7 @@ $routes = array(
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
 	'birds/(((?!(size|watch_spot|life_place)).)+)'    => 'birds/detail/$1',
 	'member/(\d+)'  => 'member/home/$1',
+	'member'  => 'member/myhome',
 );
 
 $modules = Module::loaded();

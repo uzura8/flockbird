@@ -52,25 +52,30 @@ img.profile_image {
 	margin-left: 65px;
 }
 
+.member_img_box_ss,
 .member_img_box_s,
-.member_img_box_ss
+.member_img_box_m
 {
 	position: relative;
 	text-align: left;
 }
+.member_img_box_ss img.profile_image,
 .member_img_box_s img.profile_image,
-.member_img_box_ss img.profile_image
+.member_img_box_m img.profile_image
 {
 	position: absolute;
 	left: 0;
 	top: 3px;
 }
 
+.member_img_box_ss div.content {
+	margin-left: 24px;
+}
 .member_img_box_s div.content {
 	margin-left: 35px;
 }
-.member_img_box_ss div.content {
-	margin-left: 24px;
+.member_img_box_m div.content {
+	margin-left: 60px;
 }
 
 .member_img_box_s div.content .fullname,
@@ -109,12 +114,34 @@ img.profile_image {
 .list_subtitle {
 	position: relative;
 }
+
+.timelineBox {
+	padding: 15px 0;
+	position: relative;
+	min-height: 55px;
+	border-bottom: 1px solid #EEEEEE;;
+}
+
+.timelineBox .content .main {
+	padding-right: 30px;
+}
+
 #subtitle .edit,
-.list_subtitle .edit
-{
+.list_subtitle .edit {
 	position: absolute;
 	right: 0;
 	bottom: 0;
+}
+
+.btn_timeline_delete {
+	position: absolute;
+	right: 0;
+	top: 15px;
+	display: none;
+}
+
+a.load_more_timeline {
+	margin-bottom: 20px;
 }
 
 .commentBox,
@@ -156,6 +183,10 @@ div.btnBox button {
 
 h4#comments {
 	margin-bottom: 3px;
+}
+
+#main .commentPostBox {
+	margin-bottom: 20px;
 }
 
 .ml {

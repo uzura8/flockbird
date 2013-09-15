@@ -27,8 +27,24 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_index()
 	{
+		$this->action_myhome();
+	}
+
+	/**
+	 * Mmeber home
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_myhome()
+	{
+		list($list, $is_next) = \Site_Model::get_pager_list('timeline', 0, array(
+			'where'    => \Site_Model::get_where_params4list(0, $this->u->id),
+			'limit'    => \Config::get('timeline.articles.limit'),
+			'order_by' => array('updated_at' => 'desc'),
+		), 'Timeline', true);
 		$this->set_title_and_breadcrumbs(Config::get('term.myhome'));
-		$this->template->content = View::forge('member/index');
+		$this->template->content = View::forge('member/myhome', array('list' => $list, 'is_next' => $is_next));
 	}
 
 	/**

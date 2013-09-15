@@ -2,11 +2,10 @@
 
 function site_get_current_page_id($delimitter = '_')
 {
-	$items = array(
-		Site_Util::get_module_name(),
-		Site_Util::get_controller_name(),
-		Site_Util::get_action_name(),
-	);
+	$items = array();
+	if ($module = Site_Util::get_module_name()) $items[] = $module;
+	$items[] = Site_Util::get_controller_name();
+	$items[] = Site_Util::get_action_name();
 
 	return implode($delimitter, $items);
 }
@@ -24,7 +23,7 @@ function site_get_form_id($delimitter = '_')
 
 function site_htmltag_include_js_module()
 {
-	$assets_uri = sprintf('modules/%s/site.js', Site_Util::get_module_name());
+	$assets_uri = sprintf('site/modules/%s/site.js', Site_Util::get_module_name());
 	$public_uri = 'assets/js/'.$assets_uri;
 	if (!file_exists(PRJ_PUBLIC_DIR.'/'.$public_uri)) return '';
 
@@ -33,7 +32,8 @@ function site_htmltag_include_js_module()
 
 function site_htmltag_include_js_action()
 {
-	$assets_uri = sprintf('modules/%s/%s_%s.js', Site_Util::get_module_name(), Site_Util::get_controller_name(), Site_Util::get_action_name());
+	$module = Site_Util::get_module_name();
+	$assets_uri = sprintf('site/%s%s_%s.js', $module ? sprintf('modules/%s/', $module) : '', Site_Util::get_controller_name(), Site_Util::get_action_name());
 	$public_uri = 'assets/js/'.$assets_uri;
 	if (!file_exists(PRJ_PUBLIC_DIR.'/'.$public_uri)) return '';
 

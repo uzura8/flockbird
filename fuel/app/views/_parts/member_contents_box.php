@@ -1,10 +1,10 @@
 <?php
 $class_name = 'member_img_box_s';
 $img_size   = '30x30xc';
-if (isset($size) && $size == 'ss')
+if (isset($size))
 {
-	$class_name = 'member_img_box_ss';
-	$img_size   = '20x20xc';
+	$class_name = 'member_img_box_'.strtolower($size);
+	$img_size   = Config::get('site.upload.types.img.types.m.sizes.'.strtoupper($size));
 }
 ?>
 <div class="<?php echo $class_name; ?>">

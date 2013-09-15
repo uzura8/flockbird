@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width<?php if (IS_SP): ?>, initial-scale=1.0, maximum-scale=1.0, user-scalable=no<?php endif; ?>">
-  <meta name="description" content="<?php echo (!$header_description) ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
+  <meta name="description" content="<?php echo $header_description ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
   <meta name="keywords" content="<?php echo site_header_keywords($header_keywords); ?>">
 	<meta name="author" content="">
-  <title><?php echo (!empty($header_title)) ? $header_title : $title; ?></title>
+  <title><?php echo $header_title ? $header_title : $title; ?></title>
 
   <meta name="robots" content="index,follow">
   <?php if (GOOGLE_SITE_VERIFICATION): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
@@ -234,6 +234,7 @@ if (Input::get('msg')) $message = e(Input::get('msg'));
 var GL = {};
 GL.execute_flg = false;
 function get_baseUrl() {return '<?php echo Uri::base(false); ?>';}
+function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
 function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
 function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
 function is_sp() {return <?php echo (Agent::is_smartphone())? 'true' : 'false'; ?>;}
@@ -241,6 +242,7 @@ function get_term(key) {
 	var terms = {};
 	terms['public_flag'] = '<?php echo \Config::get('term.public_flag.label'); ?>';
 	terms['album_image'] = '<?php echo \Config::get('term.album_image'); ?>';
+	terms['timeline']    = '<?php echo \Config::get('term.timeline'); ?>';
 	return terms[key];
 }
 </script>

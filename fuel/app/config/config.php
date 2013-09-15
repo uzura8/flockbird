@@ -272,7 +272,7 @@ return array(
 		 *
 		 * A path must be set in module_paths for this to work.
 		 */
-		'modules'  => array('note', 'album'),
+		'modules'  => array('note', 'album', 'timeline'),
 
 		/**
 		 * Classes to autoload & initialize even when not used

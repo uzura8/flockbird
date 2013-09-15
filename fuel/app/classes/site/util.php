@@ -10,7 +10,7 @@ class Site_Util
 	{
 		if (!isset(Request::main()->route->controller)) return '';
 
-		return Str::lower(preg_replace('/^[a-zA-Z0-9_]+\\\Controller_/', '', Request::main()->route->controller));
+		return Str::lower(preg_replace('/^([a-zA-Z0-9_]+\\\)?Controller_/', '', Request::main()->route->controller));
 	}
 
 	public static function get_action_name()

@@ -905,6 +905,54 @@ INSERT INTO `spots` VALUES (1,'inogashirakouen','井の頭公園','いのかし�
 /*!40000 ALTER TABLE `spots` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `timeline`
+--
+
+DROP TABLE IF EXISTS `timeline`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `timeline` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `public_flag` tinyint(2) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id_is_deleted_public_flag_created_at_idx` (`member_id`,`is_deleted`,`public_flag`,`created_at`),
+  KEY `is_deleted_public_flag_updated_at_idx` (`is_deleted`,`public_flag`,`updated_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `timeline_data`
+--
+
+DROP TABLE IF EXISTS `timeline_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `timeline_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timeline_id` int(11) NOT NULL,
+  `member_id` int(11) NULL,
+  `type` tinyint(2) NOT NULL DEFAULT '0',
+  `body` text NULL,
+  `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
+  `foreign_id` int(11) NULL COMMENT 'The id of reference table',
+  `source` varchar(64) NULL COMMENT 'The source caption',
+  `source_uri` text NULL COMMENT 'The source URI',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `timeline_id_idx` (`timeline_id`),
+  CONSTRAINT `timeline_data_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 --
 -- Table structure for table `uranai`
 --

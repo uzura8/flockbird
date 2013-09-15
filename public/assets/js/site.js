@@ -186,15 +186,20 @@ function reset_textarea()
 function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 {
 	var selfDomElement     = (arguments.length > 4) ? arguments[4] : false;
-	var textarea_attribute = (arguments.length > 5) ? arguments[5] : '#textarea_comment';
-	var list_block_id      = (arguments.length > 6) ? arguments[6] : '#comment_list';
-	var textarea_height    = (arguments.length > 7) ? arguments[7] : '33px';
+	var public_flag        = (arguments.length > 5) ? String(arguments[5]) : '';
+	var textarea_attribute = (arguments.length > 6) ? arguments[6] : '#textarea_comment';
+	var list_block_id      = (arguments.length > 7) ? arguments[7] : '#comment_list';
+	var textarea_height    = (arguments.length > 8) ? arguments[8] : '33px';
+	var is_insert_before   = (arguments.length > 9) ? arguments[9] : false;
+	var article_name       = (arguments.length > 10) ? arguments[10] : 'コメント';
 
 	var body = $(textarea_attribute).val().trim();
 	if (body.length <= 0) return;
 
 	var selfDomElement_html = (selfDomElement) ? $(selfDomElement).html() : '';
-	var data = {'id':parent_id, 'body':body};
+	var data = {'body':body};
+	if (parent_id) data['id'] = parent_id;
+	if (public_flag.length > 0) data['public_flag'] = public_flag;
 	data = set_token(data);
 	$.ajax({
 		url : get_baseUrl() + post_uri,
@@ -217,13 +222,13 @@ function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 			}
 		},
 		success: function(result){
-			$.jGrowl('コメントを投稿しました。');
-			show_list(get_uri, list_block_id, 0, before_element_id_name);
+			$.jGrowl(article_name + 'を投稿しました。');
+			show_list(get_uri, list_block_id, 0, before_element_id_name, is_insert_before);
 			$(textarea_attribute).val('');
 			$(textarea_attribute).css('height', textarea_height);
 		},
 		error: function(data){
-			$.jGrowl(get_error_message(data['status'], 'コメントを投稿できませんでした。'));
+			$.jGrowl(get_error_message(data['status'], article_name + 'の投稿に失敗しました。'));
 		}
 	});
 }
