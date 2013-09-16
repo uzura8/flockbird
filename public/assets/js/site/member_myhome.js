@@ -33,6 +33,12 @@ $(function() {
 		return false;
 	});
 
+	$(document).on('click','.link_comment', function(){
+		$('#commentPostBox_' + $(this).data('id')).show();
+		$('#textarea_comment_' + $(this).data('id')).focus();
+		return false;
+	});
+
 	$(document).on('click','.btn_timeline_delete', function(){
 		delete_item('timeline/api/delete.json', $(this).data('id'), '#timelineBox');
 		return false;

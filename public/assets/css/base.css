@@ -464,3 +464,7 @@ div.alert ul {
 {
 	margin-right: 10px;
 }
+
+#article_list .timelineBox .commentPostBox {
+	display: none;
+}

@@ -41,7 +41,7 @@ if (isset($public_flag, $model, $id))
 <div class="comment_info">
 	<small><i class="icon-comment"></i> <?php echo $comment['all_comment_count']; ?></small>
 <?php if (Auth::check()): ?>
-	<small><?php echo Html::anchor('#', 'コメントする'); ?></small>
+	<small><?php echo Html::anchor('#', 'コメントする', array('class' => 'link_comment', 'data-id' => $parent->id)); ?></small>
 <?php endif; ?>
 </div>
 <div id="comment_list_<?php echo $parent->id; ?>">
@@ -58,7 +58,8 @@ if (isset($public_flag, $model, $id))
 <?php echo render('_parts/post_comment', array(
 	'u' => $u,
 	'button_attrs' => array('class' => 'btn btn-small btn_comment', 'id' => 'btn_comment_'.$parent->id, 'data-parent_id' => $parent->id,),
-	'textarea_attrs' => array('class' => 'span12 autogrow', 'id' => 'textarea_comment_'.$parent->id)
+	'textarea_attrs' => array('class' => 'span12 autogrow', 'id' => 'textarea_comment_'.$parent->id),
+	'parts_attrs' => array('id' => 'commentPostBox_'.$parent->id),
 )); ?>
 <?php endif; ?>
 <?php endif; ?>
