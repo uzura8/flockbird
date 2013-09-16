@@ -118,12 +118,18 @@ img.profile_image {
 .timelineBox {
 	padding: 15px 0;
 	position: relative;
-	min-height: 55px;
 	border-bottom: 1px solid #EEEEEE;;
 }
 
 .timelineBox .content .main {
 	padding-right: 30px;
+}
+#article_list .timelineBox .member_img_box_m {
+	min-height: 55px;
+}
+
+#article_list .timelineBox .commentPostBox .main {
+	padding-right: 0;
 }
 
 #subtitle .edit,
@@ -185,7 +191,7 @@ h4#comments {
 	margin-bottom: 3px;
 }
 
-#main .commentPostBox {
+#main_post_box {
 	margin-bottom: 20px;
 }
 

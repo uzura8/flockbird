@@ -1,4 +1,11 @@
-<?php echo render('_parts/post_comment', array('u' => $u, 'size' => 'M', 'textarea_attrs' => array('class' => 'span12 autogrow input_timeline'))); ?>
+<div id="main_post_box">
+<?php echo render('_parts/post_comment', array(
+	'u' => $u,
+	'size' => 'M',
+	'button_attrs' => array('class' => 'btn', 'id' => 'btn_timeline'),
+	'textarea_attrs' => array('class' => 'span12 autogrow input_timeline')
+)); ?>
+</div>
 <div id="article_list">
 <?php echo render('_parts/timeline/list', array('list' => $list, 'is_next' => $is_next)); ?>
 </div>

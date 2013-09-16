@@ -103,8 +103,9 @@ function show_list(uri, list_block_id) {
 		complete: function(xhr, textStatus) {
 			GL.execute_flg = false;
 		},
-		success: function(result){
+		success: function(result) {
 			if (selfDomElement) $(selfDomElement).remove();
+
 			if (next_element_id_num) {
 				if (is_insert_before) {
 					$(list_block_id).prepend(result).fadeIn('fast');
@@ -114,6 +115,7 @@ function show_list(uri, list_block_id) {
 			} else {
 				$(list_block_id).html(result).fadeIn('fast');
 			}
+			$(list_block_id).find('textarea').autogrow();
 		},
 		error: function(result) {
 			$.jGrowl(get_error_message(result['status'], '読み込みに失敗しました。'));

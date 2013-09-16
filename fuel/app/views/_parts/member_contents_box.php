@@ -35,5 +35,33 @@ if (isset($public_flag, $model, $id))
 	echo render('_parts/public_flag_selecter', $data);
 }
 ?>
+
+<?php if (!empty($comment)): ?>
+<?php $parent = $comment['parent_obj'] ?>
+<div class="comment_info">
+	<small><i class="icon-comment"></i> <?php echo $comment['all_comment_count']; ?></small>
+<?php if (Auth::check()): ?>
+	<small><?php echo Html::anchor('#', 'コメントする'); ?></small>
+<?php endif; ?>
+</div>
+<div id="comment_list_<?php echo $parent->id; ?>">
+<?php echo render('_parts/comment/list', array(
+	'u' => $u,
+	'parent' => $parent,
+	'comments' => $comment['list'],
+	'is_all_records' => $comment['is_all_records'],
+	'list_more_box_attrs' => array('id' => 'listMoreBox_comment_'.$parent->id, 'data-parent_id' => $parent->id),
+)); ?>
+</div>
+
+<?php if (Auth::check()): ?>
+<?php echo render('_parts/post_comment', array(
+	'u' => $u,
+	'button_attrs' => array('class' => 'btn btn-small btn_comment', 'id' => 'btn_comment_'.$parent->id, 'data-parent_id' => $parent->id,),
+	'textarea_attrs' => array('class' => 'span12 autogrow', 'id' => 'textarea_comment_'.$parent->id)
+)); ?>
+<?php endif; ?>
+<?php endif; ?>
+
 	</div>
 </div>

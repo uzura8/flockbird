@@ -1,8 +1,12 @@
 <?php if (Site_Util::check_is_api_request()): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
-<?php if (!$is_all_records): ?><a href="#" class="listMoreBox" id="listMoreBox_comment">全てみる</a><?php endif; ?>
+<?php
+$list_more_box_attrs_def = array('class' => 'listMoreBox', 'id' => 'listMoreBox_comment');
+$list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);
+?>
+<?php if (!$is_all_records): ?><?php echo Html::anchor('#', '全てみる', $list_more_box_attrs); ?><?php endif; ?>
 
 <?php foreach ($comments as $comment): ?>
-<div class="commentBox" id="commentBox_<?php echo $comment->id; ?>">
+<div class="commentBox<?php if ($parent): ?> commentBox_<?php echo $parent->id; ?><?php endif; ?>" id="commentBox_<?php echo $comment->id; ?>">
 <?php echo render('_parts/member_contents_box', array(
 	'member' => $comment->member,
 	'date' => array('datetime' => $comment->created_at),

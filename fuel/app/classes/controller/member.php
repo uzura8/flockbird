@@ -43,6 +43,7 @@ class Controller_Member extends Controller_Site
 			'limit'    => \Config::get('timeline.articles.limit'),
 			'order_by' => array('updated_at' => 'desc'),
 		), 'Timeline', true);
+		$this->template->post_footer = \View::forge('member/_parts/myhome_footer');
 		$this->set_title_and_breadcrumbs(Config::get('term.myhome'));
 		$this->template->content = View::forge('member/myhome', array('list' => $list, 'is_next' => $is_next));
 	}

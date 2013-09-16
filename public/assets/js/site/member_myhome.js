@@ -1,12 +1,13 @@
 $(function() {
- $('textarea.autogrow').css('height', '50px');
+ $('textarea.input_timeline').css('height', '50px');
+
 	var uid = get_uid();
-	$('#btn_comment').click(function(){
+	$('#btn_timeline').click(function(){
 		if (GL.execute_flg) return false;
 		create_comment(
 			0,
 			'timeline/api/create.json',
-			'//timeline/api/list.html?is_over=1&last_id=' + $($('.timelineBox').first()).data('id'),
+			'timeline/api/list.html?is_over=1&last_id=' + $($('.timelineBox').first()).data('id'),
 			$('.timelineBox').first().attr('id'),
 			this,
 			1,
@@ -24,10 +25,11 @@ $(function() {
 		var last_id   = $(this).data('last_id') ?   parseInt($(this).data('last_id')) : 0;
 		var member_id = $(this).data('member_id') ? parseInt($(this).data('member'))  : 0;
 
-		var get_uri = 'timeline/api/list.html?limit=3&last_id=' + last_id;
+		var limit = get_config('timeline_articles_limit');
+		var get_uri = 'timeline/api/list.html?limit=' + limit + '&last_id=' + last_id;
 		if (member_id > 0) get_uri += '&member_id=' + member_id;
 		
-		show_list(get_uri, '#article_list', 3, $('.timelineBox').last().attr('id'), false, this);
+		show_list(get_uri, '#article_list', limit, $('.timelineBox').last().attr('id'), false, this);
 		return false;
 	});
 
@@ -43,13 +45,31 @@ $(function() {
 		},'#article_list .timelineBox');
 	}
 
-	$('#listMoreBox_comment').click(function(){
+	$(document).on('click','.btn_comment', function(){
 		if (GL.execute_flg) return false;
+		var parent_id = $(this).data('parent_id');
+		create_comment(
+			parent_id,
+			'timeline/comment/api/create.json',
+			'timeline/comment/api/list/' + parent_id + '.html',
+			$('.commentBox_' + parent_id).last().attr('id'),
+			this,
+			1,
+			'#textarea_comment_' + parent_id,
+			'#comment_list_' + parent_id
+		);
+
+		return false;
+	});
+
+	$(document).on('click','.listMoreBox', function(){
+		if (GL.execute_flg) return false;
+		var parent_id = $(this).data('parent_id');
 		show_list(
-			'note/comment/api/list/' + parent_id + '.html',
-			'#comment_list',
+			'timeline/comment/api/list/' + parent_id + '.html',
+			'#comment_list_' + parent_id,
 			0,
-			$('.commentBox').first().attr('id'),
+			$('.commentBox_' + parent_id).first().attr('id'),
 			true,
 			this
 		);
@@ -57,8 +77,15 @@ $(function() {
 		return false;
 	});
 
+	if (!is_sp()) {
+		$(document).on({
+			mouseenter:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
+			mouseleave:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
+		},'.commentBox');
+	}
+
 	$(document).on('click','.btn_comment_delete', function(){
-		delete_item('note/comment/api/delete.json', get_id_num($(this).attr('id')), '#commentBox');
+		delete_item('timeline/comment/api/delete.json', get_id_num($(this).attr('id')), '#commentBox');
 		return false;
 	});
 })
