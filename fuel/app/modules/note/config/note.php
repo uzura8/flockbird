@@ -7,6 +7,9 @@ return array(
 			'title' => 88,
 			'body'  => 500,
 		),
+		'truncate_lines' => array(
+			'body'  => 10,
+		),
 		'comment' => array(
 			'limit' => 5,
 			'trim_width' => 200,

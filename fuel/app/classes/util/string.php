@@ -84,4 +84,32 @@ class Util_string
 
 		return true;
 	}
+
+	// n番目に文字列が現れる場所を探す
+	public static function mb_strpos_n($str, $needle, $n = 0, $encoding = null)
+	{
+		$pos = 0;
+		$offset = 0;
+		if (!$encoding) $encoding = mb_internal_encoding();
+		$len = mb_strlen($needle, $encoding);
+		while ($n-- > 0 && ($pos = mb_strpos($str, $needle, $offset, $encoding)) !== false) {
+			$offset = $pos + $len;
+		}
+
+		return $pos;
+	}
+
+	public static function truncate_lines($body, $line, $trimmarker = '...', $encoding = null)
+	{
+		$is_truncated = false;
+
+		if (!$line) return array($body, $is_truncated);
+		if (!$pos = Util_string::mb_strpos_n($body, "\n", $line, $encoding)) return array($body, $is_truncated);
+
+		$is_truncated = $pos < mb_strlen($body, $encoding);
+		$body = mb_substr($body, 0, $pos - 1, $encoding);
+		if ($is_truncated && $trimmarker) $body .= $trimmarker;
+
+		return array($body, $is_truncated);
+	}
 }

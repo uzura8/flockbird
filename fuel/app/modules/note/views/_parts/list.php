@@ -33,12 +33,7 @@
 <?php endif; ?>
 			</div>
 		</div>
-		<div class="body">
-			<div><?php echo nl2br(strim($note->body, Config::get('note.articles.trim_width.body'))) ?></div>
-<?php if (mb_strlen($note->body) > Config::get('note.articles.trim_width.body')): ?>
-			<div class="bodyMore"><?php echo Html::anchor('note/'.$id, 'もっとみる'); ?></div>
-<?php endif; ?>
-		</div>
+		<div class="body"><?php echo truncate_lines($note->body, Config::get('note.articles.truncate_lines.body'), 'note/'.$id); ?></div>
 <?php if ($images = \Note\Model_NoteAlbumImage::get_album_image4note_id($note->id, 4, array('id' => 'desc'))): ?>
 <?php echo render('_parts/thumbnails', array('images' => $images)); ?>
 <?php endif; ?>

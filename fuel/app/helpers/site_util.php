@@ -174,6 +174,18 @@ function strim($string, $width = 0, $trimmarker = '...', $is_html = true)
 	return $string;
 }
 
+function truncate_lines($body, $line, $read_more_uri, $is_convert_nl2br = true, $trimmarker = '...')
+{
+	list($body, $is_truncated) = Util_string::truncate_lines($body, $line, $trimmarker, Config::get('encoding'));
+
+	return render('_parts/truncated_body', array(
+		'body' => $body,
+		'is_truncated' => $is_truncated,
+		'read_more_uri' => $read_more_uri,
+		'is_convert_nl2br' => $is_convert_nl2br,
+	));
+}
+
 function get_public_flag_label($public_flag, $view_icon_only = false, $is_return_string = false)
 {
 	switch ($public_flag)
