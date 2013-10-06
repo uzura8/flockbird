@@ -23,10 +23,13 @@ class Controller_Site extends Controller_Base_Site
 		$this->auth_check();
 		$this->set_current_user();
 
-		$this->template->header_keywords = '';
-		$this->template->header_description = '';
-		$this->template->title = PRJ_SITE_NAME;
-		$this->template->breadcrumbs = array();
+		if (!IS_API)
+		{
+			$this->template->header_keywords = '';
+			$this->template->header_description = '';
+			$this->template->title = PRJ_SITE_NAME;
+			$this->template->breadcrumbs = array();
+		}
 	}
 
 	protected function display_error($message_display = '', $messsage_log = '', $action = 'error/500', $status = 500)
