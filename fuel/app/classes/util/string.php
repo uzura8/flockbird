@@ -107,7 +107,7 @@ class Util_string
 		if (!$pos = Util_string::mb_strpos_n($body, "\n", $line, $encoding)) return array($body, $is_truncated);
 
 		$is_truncated = $pos < mb_strlen($body, $encoding);
-		$body = mb_substr($body, 0, $pos - 1, $encoding);
+		$body = mb_substr($body, 0, $pos, $encoding);
 		if ($is_truncated && $trimmarker) $body .= $trimmarker;
 
 		return array($body, $is_truncated);

@@ -12,7 +12,22 @@ if (isset($size))
 	<div class="content">
 		<div class="main">
 			<b class="fullname"><?php echo empty($member) ? Config::get('term.left_member') : Html::anchor('member/'.$member->id, $member->name); ?></b>
-<?php if (!empty($content)): ?><?php echo empty($trim_width) ? $content : strim($content, $trim_width); ?><?php endif; ?>
+<?php
+if (!empty($content))
+{
+	if (!empty($truncate_lines))
+	{
+		if (empty($read_more_uri)) $read_more_uri = '';
+		$content = truncate_lines($content, $truncate_lines, $read_more_uri);
+	}
+	elseif (!empty($trim_width))
+	{
+		$content = strim($content, $trim_width);
+	}
+
+	echo $content;
+}
+?>
 		</div>
 <?php if ($date): ?>
 			<small><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>

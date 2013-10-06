@@ -8,7 +8,7 @@ return array(
 			//'title' => 88,
 			'body'  => 500,
 		),
-		'trim_rows' => array(
+		'truncate_lines' => array(
 			'body'  => 3,
 		),
 		'comment' => array(

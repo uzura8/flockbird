@@ -9,14 +9,18 @@ $comment = array(
 ?>
 <div class="timelineBox" id="timelineBox_<?php echo $timeline->id; ?>" data-id="<?php echo $timeline->id; ?>">
 
-<?php echo render('_parts/member_contents_box', array(
+<?php
+$data = array(
 	'member' => $timeline_data->member,
 	'size' => 'M',
 	'date' => array('datetime' => $timeline->created_at),
 	'content' => $timeline_data->body,
-	'trim_width' => empty($trim_width) ? 0 : $trim_width,
 	'comment' => $comment,
-)); ?>
+);
+if (!empty($trim_width)) $data['trim_width'] = $trim_width;
+if (!empty($truncate_lines)) $data['truncate_lines'] = $truncate_lines;
+?>
+<?php echo render('_parts/member_contents_box', $data); ?>
 <?php if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline_data->type)): ?>
 <a class="btn btn-mini boxBtn btn_timeline_delete" data-id="<?php echo $timeline->id; ?>" id="btn_timeline_delete_<?php echo $timeline->id; ?>" href="#"><i class="icon-trash"></i></a>
 <?php endif ; ?>

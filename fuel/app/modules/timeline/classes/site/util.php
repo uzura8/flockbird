@@ -31,7 +31,8 @@ class Site_Util
 
 		return render('_parts/timeline/article', array(
 			'timeline' => $timeline_obj,
-			'timeline_data' => $timeline_data
+			'timeline_data' => $timeline_data,
+			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),
 		));
 	}
 }
