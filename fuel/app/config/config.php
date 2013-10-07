@@ -262,6 +262,7 @@ return array(
 			'orm',
 			'auth',
 			'parser',
+			'opauth',
 		),
 
 		/**

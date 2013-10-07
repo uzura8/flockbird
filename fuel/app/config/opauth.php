@@ -25,7 +25,7 @@ return array(
      * eg. if Opauth is reached via http://example.org/auth/, path is '/auth/'.
      * if Opauth is reached via http://auth.example.org/, path is '/'.
      */
-    'path' => '/auth/',
+    'path' => '/auth/login/',
     
     /**
      * Uncoment if you would like to view debug messages.
@@ -51,7 +51,7 @@ return array(
     /**
      * A random string used for signing of $auth response.
      */
-    'security_salt' => 'LDFmiilYf8Fyw5W10rx4W1KsVrieQCnpBzzpTBWA5vJidQKDx8pMJbmw28R1C4m',
+    'security_salt' => PRJ_ENCRYPTION_KEY,
     
     /**
      * Higher value, better security, slower hashing.
@@ -83,5 +83,9 @@ return array(
      */
     'Strategy' => array(
         // Define strategies and their respective configs here
-    ),     
+      'Facebook' => array(
+        'app_id' => PRJ_FACEBOOK_APP_ID,
+        'app_secret' => PRJ_FACEBOOK_APP_SECRET
+      ),
+    ),
 );
