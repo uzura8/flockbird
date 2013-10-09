@@ -88,8 +88,8 @@ class Site_Upload
 		}
 		list($old_filepath, $old_filename) = self::split_file_object2vars($old_file);
 		if (!empty($filepath) && !empty($filename)) $config['old_filepath_name'] = $old_filepath.$old_filename;
-		$uploader = new Site_uploader($config);
-		$uploaded_file = $file_path ? $uploader->save_from_file($file_path) : $uploader->upload();
+		$uploader = new Site_Uploader($config);
+		$uploaded_file = $uploader->execute($file_path);
 
 		$file->name = $uploaded_file['new_filename'];
 		$file->path = $filepath;
