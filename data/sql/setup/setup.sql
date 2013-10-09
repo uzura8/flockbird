@@ -652,7 +652,6 @@ CREATE TABLE `member_email_pre` (
 -- Table structure for table `member_facebook`
 --
 
-DROP TABLE IF EXISTS `member_facebook`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `member_facebook` (
@@ -677,6 +676,50 @@ CREATE TABLE `member_facebook` (
 LOCK TABLES `member_facebook` WRITE;
 /*!40000 ALTER TABLE `member_facebook` DISABLE KEYS */;
 /*!40000 ALTER TABLE `member_facebook` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `member_oauth`
+--
+
+DROP TABLE IF EXISTS `member_oauth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `member_oauth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `oauth_provider_id` tinyint(2) NOT NULL,
+  `uid` varchar(50) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `secret` varchar(255) NULL,
+  `expires` int(11) NULL,
+  `service_name` varchar(255) NULL,
+  `service_url` varchar(255) NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `oauth_provider_id_uid_idx` (`oauth_provider_id`,`uid`),
+  KEY `oauth_provider_id_uid_member_idx` (`oauth_provider_id`,`uid`,`member_id`),
+  CONSTRAINT `member_oauth_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `oauth_provider_id_oauth_provider_id` FOREIGN KEY (`oauth_provider_id`) REFERENCES `oauth_provider` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `oauth_provider`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `oauth_provider` (
+  `id` tinyint(2) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `oauth_provider` WRITE;
+/*!40000 ALTER TABLE `oauth_provider` DISABLE KEYS */;
+INSERT INTO `oauth_provider` VALUES (1,'Facebook'),(2,'Twitter'),(3,'Google');
+/*!40000 ALTER TABLE `oauth_provider` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

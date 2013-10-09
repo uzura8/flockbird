@@ -151,13 +151,25 @@ class Controller_Site extends Controller_Base_Site
 				}
 				else
 				{
-					Session::set_flash('error', 'ログインに失敗しました');
+					$this->login_failed(false);
 				}
 			}
 		}
 
 		$this->set_title_and_breadcrumbs('ログイン');
 		$this->template->content = View::forge('site/_parts/login', array('val' => $val, 'destination' => $destination));
+	}
+
+	protected function login($member_id)
+	{
+		$auth = Auth::instance();
+		$auth->logout();
+		if (!$auth->force_login($member_id))
+		{
+			throw new FuelException('Member login failed.');
+		}
+
+		return true;
 	}
 
 	/**
@@ -173,5 +185,11 @@ class Controller_Site extends Controller_Base_Site
 		Auth::logout();
 		Session::set_flash('message', 'ログアウトしました');
 		Response::redirect('site/login');
+	}
+
+	protected function login_failed($is_redirect = true)
+	{
+		Session::set_flash('error', 'ログインに失敗しました');
+		if ($is_redirect) Response::redirect('site/login');
 	}
 }

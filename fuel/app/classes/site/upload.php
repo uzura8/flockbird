@@ -66,7 +66,7 @@ class Site_Upload
 		return sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
 	}
 
-	public static function upload($file_cate, $split_criterion_id, $member_id = 0, $member_filesize_total = 0, $sizes = array(), $old_file = array(), $file_id = 0)
+	public static function upload($file_cate, $split_criterion_id, $member_id = 0, $member_filesize_total = 0, $sizes = array(), $old_file = array(), $file_id = 0, $file_path = null, $is_save_original_filename = true)
 	{
 		$file = ($file_id) ? Model_File::find($file_id) : new Model_File;
 		if (empty($file)) $file = new Model_File;
@@ -89,12 +89,12 @@ class Site_Upload
 		list($old_filepath, $old_filename) = self::split_file_object2vars($old_file);
 		if (!empty($filepath) && !empty($filename)) $config['old_filepath_name'] = $old_filepath.$old_filename;
 		$uploader = new Site_uploader($config);
-		$uploaded_file = $uploader->upload();
+		$uploaded_file = $file_path ? $uploader->save_from_file($file_path) : $uploader->upload();
 
 		$file->name = $uploaded_file['new_filename'];
 		$file->path = $filepath;
 		$file->filesize = $uploaded_file['size'];
-		$file->original_filename = $uploaded_file['name'];
+		if ($is_save_original_filename) $file->original_filename = $uploaded_file['name'];
 		$file->type = $uploaded_file['type'];
 		if ($member_id) $file->member_id = $member_id;
 		if ($uploaded_file['exif'])
@@ -365,5 +365,27 @@ class Site_Upload
 				self::make_thumbnail($file_raw, $file_to, $size);// thumbnail の作成
 			}
 		}
+	}
+
+	public static function save_image_from_url($image_url, $save_file_path, $max_size = 0, $old_file_path = null)
+	{
+		if (!$data = file_get_contents($image_url)) throw new FuelException('Get image from url failed.');
+		if (!file_put_contents($save_file_path, $data))
+		{
+			throw new FuelException('Failed to save image.');
+		}
+		unset($data);
+		if ($max_size) Site_Upload::check_max_size_and_resize($save_file_path, $max_size);
+
+		// if exists old_file_path, compare data. if data is same, delete new file and return false;
+		if ($old_file_path)
+		{
+			$new_data = file_get_contents($save_file_path);
+			$old_data = file_get_contents($old_file_path);
+			if ($new_data == $old_data) return false;
+		}
+		unset($new_data, $old_data);
+
+		return true;
 	}
 }
