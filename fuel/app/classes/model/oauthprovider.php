@@ -13,4 +13,19 @@ class Model_OauthProvider extends \Orm\Model
 			),
 		),
 	);
+
+	protected static $id_list = array();
+
+	public static function get_id($name)
+	{
+		if (!empty(self::$id_list[$name])) return self::$id_list[$name];
+
+		self::$id_list[$name] = '';
+		if ($row = self::query()->where('name', $name)->get_one())
+		{
+			self::$id_list[$name] = $row->id;
+		}
+
+		return self::$id_list[$name];
+	}
 }

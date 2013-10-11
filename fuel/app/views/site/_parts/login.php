@@ -26,7 +26,10 @@ $input_class = ($is_api_request) ? 'input-medium' : '';
 	<?php echo form_button('ログイン'); ?>
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
-	<?php echo form_anchor('auth/login/facebook', 'facebookでログイン', array('class' => 'btn btn-primary')); ?>
+	<?php echo form_anchor('auth/login/facebook', 'facebookでログイン', array('class' => 'btn')); ?>
+<?php endif; ?>
+<?php if (PRJ_TWITTER_APP_ID): ?>
+	<?php echo form_anchor('auth/login/twitter', 'twitterでログイン', array('class' => 'btn')); ?>
 <?php endif; ?>
 	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-warning')); ?>
 

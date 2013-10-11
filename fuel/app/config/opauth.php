@@ -85,7 +85,13 @@ return array(
         // Define strategies and their respective configs here
       'Facebook' => array(
         'app_id' => PRJ_FACEBOOK_APP_ID,
-        'app_secret' => PRJ_FACEBOOK_APP_SECRET
+        'app_secret' => PRJ_FACEBOOK_APP_SECRET,
+      ),
+      // https://dev.twitter.com/apps/
+      'Twitter' => array(
+        'key' => PRJ_TWITTER_APP_ID,
+        'secret' => PRJ_TWITTER_APP_SECRET,
+        'verify_credentials_json_url' => 'https://api.twitter.com/1.1/account/verify_credentials.json',
       ),
     ),
 );
