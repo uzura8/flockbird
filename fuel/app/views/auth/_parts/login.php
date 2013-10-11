@@ -3,7 +3,7 @@
 
 <?php if (!$is_api_request): ?><div class="well"><?php endif; ?>
 <?php
-$form_attributes = array('action' => 'site/login');
+$form_attributes = array('action' => Config::get('site.login_uri.site'));
 if ($is_api_request) $form_attributes['class'] = '';
 $input_class = ($is_api_request) ? 'input-medium' : '';
 ?>
@@ -26,10 +26,10 @@ $input_class = ($is_api_request) ? 'input-medium' : '';
 	<?php echo form_button('ログイン'); ?>
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
-	<?php echo form_anchor('auth/login/facebook', 'facebookでログイン', array('class' => 'btn')); ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/facebook', '<i class="ls-icon-facebook"></i> facebookでログイン', array('class' => 'btn')); ?>
 <?php endif; ?>
 <?php if (PRJ_TWITTER_APP_ID): ?>
-	<?php echo form_anchor('auth/login/twitter', 'twitterでログイン', array('class' => 'btn')); ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/twitter', '<i class="ls-icon-twitter"></i> twitterでログイン', array('class' => 'btn')); ?>
 <?php endif; ?>
 	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-warning')); ?>
 

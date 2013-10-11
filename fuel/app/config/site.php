@@ -2,7 +2,7 @@
 
 $config = array(
 	'login_uri' => array(
-		'site'  => 'site/login',
+		'site'  => 'auth/login',
 		'admin' => 'admin/login',
 	),
 	'record_limit' => array(

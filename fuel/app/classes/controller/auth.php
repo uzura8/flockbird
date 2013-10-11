@@ -20,12 +20,88 @@ class Controller_Auth extends Controller_Site
 		$this->_iteration_count = 10;
 	}
 
+	/**
+	 * The login.
+	 * 
+	 * @access  public
+	 * @return  Response or void
+	 */
 	public function action_login($_provider = null, $method = null)
 	{
-		// 引数無し時は通常ログイン
-		if (is_null($_provider)) Response::redirect('site/login');
+		// Already logged in
+		Auth::check() and Response::redirect('member');
 
-		// http://domainname/auth/login/twitter/oauth_callback?denied=signature
+		if ($_provider) $this->opauth_login_start($_provider, $method);
+
+		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
+		$val = Validation::forge();
+
+		if (Input::method() == 'POST')
+		{
+			$val->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
+			$val->add('email', 'メールアドレス', array('type' => 'email'))->add_rule('required');
+			$val->add('password', 'パスワード')->add_rule('required');
+			if ($val->run())
+			{
+				Util_security::check_csrf();
+				$auth = Auth::instance();
+
+				// check the credentials. This assumes that you have the previous table created
+				if (Auth::check() or $auth->login(Input::post('email'), Input::post('password')))
+				{
+					// does the user want to be remembered?
+					if (Input::param('rememberme', false))
+					{
+						// create the remember-me cookie
+						Auth::remember_me();
+					}
+					else
+					{
+						// delete the remember-me cookie if present
+						Auth::dont_remember_me();
+					}
+
+					// credentials ok, go right in
+					return $this->login_succeeded($destination);
+				}
+				else
+				{
+					return $this->login_failed(false);
+				}
+			}
+		}
+
+		$this->set_title_and_breadcrumbs('ログイン');
+		$this->template->content = View::forge('auth/_parts/login', array('val' => $val, 'destination' => $destination));
+	}
+
+	protected function force_login($member_id)
+	{
+		$auth = Auth::instance();
+		$auth->logout();
+		if (!$auth->force_login($member_id))
+		{
+			throw new FuelException('Member login failed.');
+		}
+
+		return true;
+	}
+
+	/**
+	 * The logout action.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_logout()
+	{
+		Auth::logout();
+		Session::set_flash('message', 'ログアウトしました');
+		Response::redirect('atuth/login');
+	}
+
+	public function opauth_login_start($_provider = null, $method = null)
+	{
 		if ($method === 'oauth_callback')
 		{
 			if (Input::get('denied'))
@@ -80,11 +156,21 @@ class Controller_Auth extends Controller_Site
 		return $this->provider_login($provider, $response);
 	}
 
-	public function login_succeeded($member_id)
+	public function login_succeeded($destination = null)
 	{
-		$this->login($member_id);
 		Session::set_flash('message', 'ログインしました');
+		$redirect_uri = urldecode($destination);
+		if ($redirect_uri && Util_string::check_uri_for_redilrect($redirect_uri))
+		{
+			Response::redirect($redirect_uri);
+		}
 		Response::redirect('member');
+	}
+
+	protected function login_failed($is_redirect = true)
+	{
+		Session::set_flash('error', 'ログインに失敗しました');
+		if ($is_redirect) Response::redirect('auth/login');
 	}
 
 	public function provider_login($provider, $response = null)
@@ -99,8 +185,9 @@ class Controller_Auth extends Controller_Site
 		}
 		// 登録済みの場合はログイン
 		$member_oauth = $query->get_one();
+		$this->force_login($member_oauth->member_id);
 
-		return $this->login_succeeded($member_oauth->member_id);
+		return $this->login_succeeded();
 	}
 
 	public function provider_signup($provider, $response = null)
@@ -152,8 +239,9 @@ class Controller_Auth extends Controller_Site
 
 			return $this->login_failed();
 		}
+		$this->force_login($member->member_id);
 
-		return $this->login_succeeded($member->id);
+		return $this->login_succeeded();
 	}
 
 	protected function save_profile_image($provider, $image_url, $member_obj)
