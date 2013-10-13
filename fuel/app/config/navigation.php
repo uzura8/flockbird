@@ -23,7 +23,7 @@ return array(
 			Config::get('term.myhome') => 'member/',
 			Config::get('term.profile') => 'member/profile/',
 			'Settings' => 'member/setting/',
-			'Sign out' => 'site/logout/',
+			'Sign out' => 'auth/logout/',
 		),
 		'global_side' => array(
 			'Top' => '/',
@@ -39,7 +39,7 @@ return array(
 			Config::get('term.note') => 'note/member/',
 			Config::get('term.album') => 'album/member/',
 			'Settings' => 'member/setting/',
-			'Sign out' => 'site/logout/',
+			'Sign out' => 'auth/logout/',
 		),
 	),
 	'admin' => array(

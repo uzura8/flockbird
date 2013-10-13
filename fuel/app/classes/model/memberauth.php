@@ -54,4 +54,16 @@ class Model_Memberauth extends \Orm\Model
 
 		return $val;
 	}
+
+	public static function save_email($val, $member_id)
+	{
+		if (!$val = filter_var($val, FILTER_VALIDATE_EMAIL)) return false;
+
+		$obj = self::query()->where('member_id', $member_id)->get_one();
+		if (!$obj) $obj = new self;
+		$obj->member_id = $member_id;
+		$obj->email = $val;
+
+		return $obj->save();
+	}
 }

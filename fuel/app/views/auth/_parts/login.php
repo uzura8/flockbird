@@ -31,6 +31,9 @@ $input_class = ($is_api_request) ? 'input-medium' : '';
 <?php if (PRJ_TWITTER_APP_ID): ?>
 	<?php echo form_anchor(Config::get('site.login_uri.site').'/twitter', '<i class="ls-icon-twitter"></i> twitterでログイン', array('class' => 'btn')); ?>
 <?php endif; ?>
+<?php if (PRJ_GOOGLE_APP_ID): ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/google', '<i class="ls-icon-google"></i> googleでログイン', array('class' => 'btn')); ?>
+<?php endif; ?>
 	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-warning')); ?>
 
 <?php echo form_close(); ?>

@@ -31,7 +31,7 @@ class Controller_Auth extends Controller_Site
 		// Already logged in
 		Auth::check() and Response::redirect('member');
 
-		if ($_provider) $this->opauth_login_start($_provider, $method);
+		if ($_provider) return $this->opauth_login_start($_provider, $method);
 
 		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
 		$val = Validation::forge();
@@ -199,8 +199,8 @@ class Controller_Auth extends Controller_Site
 			'service_name' => $response['auth']['info']['name'],
 		);
 		if (!empty($response['auth']['credentials']['expires'])) $input['expires'] = strtotime($response['auth']['credentials']['expires']);
-		if (!empty($response['auth']['info']['urls'][$provider])) $input['service_url'] = $response['auth']['info']['urls'][$provider];
-	
+		if ($service_url = $this->get_service_url($provider, $response)) $input['service_url'] = $service_url;
+
 		try
 		{
 			$member_oauth = Model_MemberOauth::forge();
@@ -226,6 +226,11 @@ class Controller_Auth extends Controller_Site
 			if (!empty($input['expires'])) $member_oauth->expires = $input['expires'];
 			if (!empty($input['service_url'])) $member_oauth->service_url = $input['service_url'];
 			if ($member_oauth->save() === false) throw new \FuelException('Oauth data save failed.');
+
+			if (!empty($response['auth']['info']['email']))
+			{
+				Model_Memberauth::save_email($response['auth']['info']['email'], $member->id);
+			}
 			\DB::commit_transaction();
 
 			if (!empty($response['auth']['info']['image']))
@@ -239,7 +244,7 @@ class Controller_Auth extends Controller_Site
 
 			return $this->login_failed();
 		}
-		$this->force_login($member->member_id);
+		$this->force_login($member->id);
 
 		return $this->login_succeeded();
 	}
@@ -266,5 +271,19 @@ class Controller_Auth extends Controller_Site
 		}
 
 		return $image_url;
+	}
+
+	protected static function get_service_url($provider, $response)
+	{
+		if ($provider == 'Google' && !empty($response['auth']['raw']['link']))
+		{
+			return $response['auth']['raw']['link'];
+		}
+		elseif (!empty($response['auth']['info']['urls'][strtolower($provider)]))
+		{
+			return $response['auth']['info']['urls'][strtolower($provider)];
+		}
+
+		return false;
 	}
 }

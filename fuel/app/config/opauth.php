@@ -92,5 +92,9 @@ return array(
 			'secret' => PRJ_TWITTER_APP_SECRET,
 			'verify_credentials_json_url' => 'https://api.twitter.com/1.1/account/verify_credentials.json',
 		),
+		'Google' => array(
+			'client_id' => PRJ_GOOGLE_APP_ID,
+			'client_secret' => PRJ_GOOGLE_APP_SECRET,
+		),
 	),
 );
