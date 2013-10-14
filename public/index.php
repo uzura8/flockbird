@@ -11,18 +11,10 @@
  */
 
 /**
- * Path to the project base directory.
- */
-define('PRJ_BASEPATH', realpath(__DIR__.'/../').DIRECTORY_SEPARATOR);
-
-// Load original setting file.
-require PRJ_BASEPATH.'fuel/app/config.inc.php';
-
-/**
  * Set error reporting and display errors settings.  You will want to change these when in production.
  */
-error_reporting(PRJ_ERROR_REPORTING);
-ini_set('display_errors', PRJ_DISPLAY_ERRORS);
+error_reporting(-1);
+ini_set('display_errors', 1);
 
 /**
  * Website document root

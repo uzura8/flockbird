@@ -11,14 +11,6 @@
  */
 
 /**
- * Path to the project base directory.
- */
-define('PRJ_BASEPATH', realpath(__DIR__).DIRECTORY_SEPARATOR);
-
-// Load original setting file.
-require PRJ_BASEPATH.'fuel/app/config.inc.php';
-
-/**
  * Refuse to run oil when called from php-cgi !
  */
 if (substr(php_sapi_name(), 0, 3) == 'cgi')
