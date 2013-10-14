@@ -3,6 +3,7 @@ class Util_Array
 {
 	public static function array_in_array($targets, $haystacks)
 	{
+		if (!is_array($targets)) $targets = (array)$targets;
 		foreach ($targets as $target)
 		{
 			if (!in_array($target, $haystacks)) return false;
