@@ -8,33 +8,13 @@
 	<meta name="author" content="">
   <title><?php echo $header_title ? $header_title : $title; ?></title>
 
-  <meta name="robots" content="index,follow">
+  <meta name="robots" content="<?php if (PRJ_ENVIRONMENT == 'PRODUCTION'): ?>index,follow<?php else: ?>noindex,nofollow<?php endif; ?>">
   <?php if (GOOGLE_SITE_VERIFICATION): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
 
-  <?php echo Asset::css('bootstrap.min.css');?>
-  <?php echo Asset::css('bootstrap-responsive.min.css');?>
-  <?php echo Asset::css('bootstrap-modal.css');?>
-  <?php echo Asset::css('apprise.min.css');?>
-  <?php echo Asset::css('jquery.jgrowl.min.css');?>
-  <?php echo Asset::css('ligature-symbols.min.css');?>
-  <?php echo Asset::css('base.css');?>
-<?php if (Agent::is_smartphone()): ?>
-  <?php echo Asset::css('base_mobile.css');?>
-<?php else: ?>
-  <?php echo Asset::css('base_pc.css');?>
-<?php endif; ?>
-  <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-  <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
+  <?php echo render('_parts/template/load_common_css'); ?>
+  <?php if (IS_SP): ?><?php echo Asset::css('base_mobile.css');?><?php else: ?><?php echo Asset::css('base_pc.css');?><?php endif; ?>
   <?php echo Asset::css('site.css');?>
-
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="<?php echo Uri::create('assets/img/ico/favicon.ico'); ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo Uri::create('assets/img/ico/apple-touch-icon-144-precomposed.png'); ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php echo Uri::create('assets/img/ico/apple-touch-icon-114-precomposed.png'); ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo Uri::create('assets/img/ico/apple-touch-icon-72-precomposed.png'); ?>">
-    <link rel="apple-touch-icon-precomposed" href="<?php echo Uri::create('assets/img/ico/apple-touch-icon-57-precomposed.png'); ?>">
+  <?php echo render('_parts/template/load_common_favicon'); ?>
 
 <?php if (isset($post_header)): ?>
 <?php echo $post_header; ?>
@@ -219,32 +199,10 @@ if (Input::get('msg')) $message = e(Input::get('msg'));
 
 </div><!--/.fluid-container-->
 
-<?php echo Asset::js('jquery-1.8.3.min.js');?>
-<?php echo Asset::js('bootstrap.min.js');?>
-<?php echo Asset::js('bootstrap-modal.js');?>
-<?php echo Asset::js('bootstrap-modalmanager.js');?>
-<?php echo Asset::js('apprise-1.5.min.js');?>
-<?php echo Asset::js('jquery.autogrow-textarea.js');?>
-<?php echo Asset::js('jquery.jgrowl.min.js');?>
-<?php echo Asset::js('moment.min.js');?>
-<?php echo Asset::js('moment.lang_ja.js');?>
-<?php echo Asset::js('livestamp.min.js');?>
-<?php echo Asset::js('js-url/js-url.min.js');?>
+<?php echo render('_parts/template/load_common_js'); ?>
+<?php echo render('_parts/template/common_footer_script'); ?>
 <script type="text/javascript" charset="utf-8">
-var GL = {};
-GL.execute_flg = false;
-function get_baseUrl() {return '<?php echo Uri::base(false); ?>';}
 function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
-function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
-function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
-function is_sp() {return <?php echo (Agent::is_smartphone())? 'true' : 'false'; ?>;}
-function get_term(key) {
-	var terms = {};
-	terms['public_flag'] = '<?php echo \Config::get('term.public_flag.label'); ?>';
-	terms['album_image'] = '<?php echo \Config::get('term.album_image'); ?>';
-	terms['timeline']    = '<?php echo \Config::get('term.timeline'); ?>';
-	return terms[key];
-}
 </script>
 <?php echo Asset::js('util.js');?>
 <?php echo Asset::js('site.js');?>
