@@ -1,6 +1,6 @@
 <?php
 
-class Site_uploader
+class Site_Uploader
 {
 	private $raw_file = '';
 	private $filename = '';
@@ -41,48 +41,59 @@ class Site_uploader
 		if (!empty($options['old_file_size'])) $this->old_file_size = $options['old_file_size'];
 	}
 
-	public function upload()
+	public function execute($file_path = null)
+	{
+		if (!$file_path) $file_path = $this->upload_file();
+
+		$file = $this->get_file_info($file_path);
+		if ($this->member_id && $this->file_size_limit)
+		{
+			$this->check_filesize_per_member($file['size']);
+		}
+		$this->filename = sprintf('%s.%s', Util_string::get_unique_id(), $file['ext']);
+		$this->save_raw_file($file['save_to'], $file['save_as'], $this->filename);
+		$this->raw_file = $this->raw_image_dir_path.$this->filename;
+		if ($size = $this->check_and_resize_raw_file($this->raw_file))
+		{
+			$file['size'] = $size;
+		}
+		$file['new_filename'] = $this->filename;
+
+		$this->make_thumbnails();// 各サイズの thumbnail を作成
+		$this->remove_old_images();// 古い画像の削除
+
+		return $file;
+	}
+
+	private function upload_file()
 	{
 		$options = array('path' => $this->tmp_dir_path);
 		Upload::process($options);
 		$this->validate();
 
-		if ($this->member_id && $this->file_size_limit)
-		{
-			$this->check_filesize_per_member($file['size']);
-		}
-
 		Upload::save(0);
 		$file = Upload::get_files(0);
 
-		/**
-		 * ここで$fileを使ってアップロード後の処理
-		 * $fileの中にいろんな情報が入っている
-		 **/
-		$ext = pathinfo($file['saved_as'], PATHINFO_EXTENSION);
-		$this->filename = sprintf('%s.%s', Util_string::get_unique_id(), $ext);
-		$this->save_raw_file($file['saved_to'], $file['saved_as'], $this->filename);
-		$this->raw_file = $this->raw_image_dir_path.$this->filename;
+		return $file['saved_to'].$file['saved_as'];
+	}
 
-		// Exif データの取得
+	private function get_file_info($file_path)
+	{
+		$file = array();
+		$file_info = File::file_info($file_path);
+		$file['size']    = $file_info['size'];
+		$file['name']    = $file_info['basename'];
+		$file['type']    = $file_info['mimetype'];
+		$file['save_to'] = $file_info['dirname'].'/';
+		$file['save_as'] = $file_info['basename'];
+		$file['path']    = $file_info['realpath'];
+		$file['ext']     =  Util_file::get_image_type($file_path);
+
 		if (PRJ_USE_EXIF_DATA)
 		{
-			$exif = $this->get_exif_data_from_raw_file($this->raw_file);
+			$exif = $this->get_exif_data($file_path);
 			$file['exif'] = ($exif) ? $exif : array();
 		}
-
-		if ($size = $this->check_and_resize_raw_file($this->raw_file))
-		{
-			$file['size'] = $size;
-		}
-
-		// 各サイズの thumbnail を作成
-		$this->make_thumbnails();
-
-		// 古い画像の削除
-		$this->remove_old_images();
-
-		$file['new_filename'] = $this->filename;
 
 		return $file;
 	}
@@ -123,7 +134,7 @@ class Site_uploader
 		if ($size > $accept_size) throw new FuelException('File size is over the limit of the member.');
 	}
 
-	private function get_exif_data_from_raw_file($file)
+	private function get_exif_data($file)
 	{
 		return exif_read_data($file);
 	}

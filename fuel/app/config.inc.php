@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Path to the project root directory.
+ */
+define('PRJ_BASEPATH', realpath(APPPATH.'../../').DIRECTORY_SEPARATOR);
+
 // config.php の読み込み
 require PRJ_BASEPATH.'config.php';
 
@@ -15,7 +20,7 @@ if (!defined('PRJ_PUBLIC_DIR')) define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public/')
 if (!defined('PRJ_UPLOAD_DIRNAME')) define('PRJ_UPLOAD_DIRNAME', 'media');
 if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/');
 //// Controller で Response する場合
-//if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_BASEPATH.'fuel/app/cache');
+//if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', APPPATH.'cache');
 
 // アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum) K/M/G 使用可能
 if (!defined('PRJ_UPLOAD_MAX_FILESIZE')) define('PRJ_UPLOAD_MAX_FILESIZE', _convert2bytes(ini_get('upload_max_filesize')));
@@ -44,6 +49,8 @@ switch (PRJ_ENVIRONMENT)
 		define('PRJ_DISPLAY_ERRORS', 0);
 		break;
 }
+error_reporting(PRJ_ERROR_REPORTING);
+ini_set('display_errors', PRJ_DISPLAY_ERRORS);
 
 // public_flag 定義
 //  非公開は 0, 他は値が大きいほど公開範囲が狭くなるように定義する
@@ -55,7 +62,7 @@ define('PRJ_PUBLIC_FLAG_MEMBER',  2);
 
 // define default configs.
 define('PRJ_DEFAULT_CONFIG_SETTING_FILE', PRJ_BASEPATH.'config.php.sample');
-define('PRJ_DEFAULT_CONFIG_SETTING_CACHE', PRJ_BASEPATH.'fuel/app/cache/default_config_setting');
+define('PRJ_DEFAULT_CONFIG_SETTING_CACHE', APPPATH.'cache/default_config_setting');
 if (!file_exists(PRJ_DEFAULT_CONFIG_SETTING_FILE)) die('There is no config.php.sample.');
 
 $default_configs = _get_default_configs();

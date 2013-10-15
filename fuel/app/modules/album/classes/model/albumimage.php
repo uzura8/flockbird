@@ -148,14 +148,14 @@ class Model_AlbumImage extends \Orm\Model
 		return \DB::update('album_image')->set($values)->where('album_id', $album_id)->execute();
 	}
 
-	public static function save_with_file($album_id, $member = null, $public_flag = null, $name = null, $file = null, $sizes = array())
+	public static function save_with_file($album_id, $member = null, $public_flag = null, $name = null, $file = null, $sizes = array(), $file_path = null, $is_save_original_filename = true)
 	{
 		if (empty($member))
 		{
 			$album = \Model_Album::find($album_id, array('related' => 'member'));
 			$member = $album->member;
 		}
-		if (!$file) $file = \Site_Upload::upload('ai', $album_id, $member->id, $member->filesize_total, $sizes);
+		if (!$file) $file = \Site_Upload::upload('ai', $album_id, $member->id, $member->filesize_total, $sizes, array(), 0, $file_path, $is_save_original_filename);
 
 		$self = new self;
 		$self->album_id = $album_id;

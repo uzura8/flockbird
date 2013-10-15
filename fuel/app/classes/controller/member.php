@@ -141,7 +141,7 @@ class Controller_Member extends Controller_Site
 				$this->send_confirm_register_mail($maildata);
 
 				Session::set_flash('message', '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。');
-				Response::redirect('site/login');
+				Response::redirect(Config::get('site.login_uri.site'));
 			}
 			catch(EmailValidationFailedException $e)
 			{
@@ -228,7 +228,7 @@ class Controller_Member extends Controller_Site
 					}
 
 					Session::set_flash('error', 'ログインに失敗しました');
-					Response::redirect('site/login');
+					Response::redirect(Config::get('site.login_uri.site'));
 				}
 				catch(EmailValidationFailedException $e)
 				{
@@ -345,7 +345,7 @@ END;
 				$this->delete_user($this->u->id);
 				Util_toolkit::sendmail($data);
 				Session::set_flash('message', '退会が完了しました。');
-				Response::redirect('site/login');
+				Response::redirect(Config::get('site.login_uri.site'));
 			}
 			catch(EmailValidationFailedException $e)
 			{
@@ -426,7 +426,7 @@ END;
 		if (!$member_auth = Model_MemberAuth::find()->where('email', $post['email'])->related('member')->get_one())
 		{
 			Session::set_flash('message', $message);
-			Response::redirect('site/login');
+			Response::redirect(Config::get('site.login_uri.site'));
 			return;
 		}
 
@@ -446,7 +446,7 @@ END;
 			$this->send_confirm_reset_password_mail($maildata);
 
 			Session::set_flash('message', $message);
-			Response::redirect('site/login');
+			Response::redirect(Config::get('site.login_uri.site'));
 		}
 		catch(EmailValidationFailedException $e)
 		{

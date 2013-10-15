@@ -511,8 +511,8 @@ class Controller_Album extends \Controller_Site
 				'max_file_size' => PRJ_UPLOAD_MAX_FILESIZE,
 			);
 			if ($this->u->get_image()) $config['old_filename'] = $this->u->get_image();
-			$uploader = new \Site_uploader($config);
-			$uploaded_file = $uploader->upload();
+			$uploader = new \Site_Uploader($config);
+			$uploaded_file = $uploader->execute();
 
 			\DB::start_transaction();
 			$file = ($this->u->file_id) ? \Model_File::find()->where('id', $this->u->file_id)->get_one() : new \Model_File;

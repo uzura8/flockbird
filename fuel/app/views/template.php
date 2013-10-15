@@ -252,7 +252,7 @@ function get_term(key) {
 <?php $destination = Session::get_flash('destination') ?: urlencode(Input::server('REQUEST_URI'));?>
 <script type="text/javascript" charset="utf-8">
 	var inputs = new Array('#form_email', '#form_password');
-	load_popover('#insecure_user_menu', '#insecure_user_popover', '<?php echo Uri::create('site/api/login').'?destination='.$destination; ?>', inputs);
+	load_popover('#insecure_user_menu', '#insecure_user_popover', '<?php echo Uri::create('auth/api/login').'?destination='.$destination; ?>', inputs);
 </script>
 <?php endif; ?>
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>

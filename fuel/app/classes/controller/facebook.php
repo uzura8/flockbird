@@ -156,7 +156,7 @@ class Controller_Facebook extends Controller_Site
 	private function save_profile_image($member_id, $facebook_id, $old_filename = '')
 	{
 		$image_url = 'http://graph.facebook.com/'.$facebook_id.'/picture?type=large';
-		if (!$data = file_get_contents($image_url)) throw new Exception($eception_message);
+		if (!$data = file_get_contents($image_url)) throw new FuelException('Get image from url failed.');
 
 		$original_filepath = Config::get('site.image.member.original.path');
 		if ($old_filename)

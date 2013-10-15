@@ -81,7 +81,7 @@ END;
 				$this->change_password($post['old_password'], $post['password']);
 				Util_toolkit::sendmail($data);
 				Session::set_flash('message', 'パスワードを変更しました。再度ログインしてください。');
-				Response::redirect('site/login');
+				Response::redirect(Config::get('site.login_uri.site'));
 			}
 			catch(EmailValidationFailedException $e)
 			{

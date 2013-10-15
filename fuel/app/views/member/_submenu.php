@@ -5,6 +5,6 @@
   <li><a href="/member/note"><?php echo Config::get('term.note'); ?></a></li>
   <li><a href="/member/setting">設定変更</a></li>
   <li><a href="/member/leave"><?php echo Config::get('term.member_leave'); ?></a></li>
-  <li><a href="/site/logout">ログアウト</a></li>
+  <li><a href="/auth/logout">ログアウト</a></li>
 </ul>
 </div>
