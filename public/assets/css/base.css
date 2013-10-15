@@ -182,9 +182,11 @@ div.btnBox button {
 	bottom: 5px;
 	color: #949494;
 }
-
 .commentBox small {
 	color: #868686;
+}
+.commentPostBox div.clearfix div.public_flag {
+	margin: 3px 10px 0 0;
 }
 
 h4#comments {

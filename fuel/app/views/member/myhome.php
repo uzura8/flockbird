@@ -3,7 +3,8 @@
 	'u' => $u,
 	'size' => 'M',
 	'button_attrs' => array('class' => 'btn', 'id' => 'btn_timeline'),
-	'textarea_attrs' => array('class' => 'span12 autogrow input_timeline')
+	'textarea_attrs' => array('class' => 'span12 autogrow input_timeline'),
+	'with_public_flag_selector' => true,
 )); ?>
 </div>
 <div id="article_list">

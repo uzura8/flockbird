@@ -4,6 +4,7 @@ $textarea_attrs     = (empty($textarea_attrs)) ? $textarea_attrs_def : array_mer
 
 $button_attrs_def = array('class' => 'btn', 'id' => 'btn_comment');
 $button_attrs     = (empty($button_attrs)) ? $button_attrs_def : array_merge($button_attrs_def, $button_attrs);
+$button_attrs['class'] .= ' pull-right';
 
 $parts_attrs_def = array('class' => 'commentPostBox');
 $parts_attrs     = empty($parts_attrs) ? $parts_attrs_def : array_merge($parts_attrs_def, $parts_attrs);
@@ -23,7 +24,19 @@ if (isset($size))
 			<div class="main">
 				<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>
 				<div class="input"><?php echo Form::textarea('body', null, $textarea_attrs); ?></div>
-				<div class="btnBox"><?php echo Form::button('btn_comment', '送信', $button_attrs); ?></div>
+				<div class="clearfix">
+					<?php echo Form::button('btn_comment', '送信', $button_attrs); ?>
+<?php if (!empty($with_public_flag_selector)): ?>
+<?php $public_flag = Config::get('site.public_flag.default'); ?>
+					<?php echo render('_parts/public_flag_selecter', array(
+						'is_use_in_form' => true,
+						'public_flag' => $public_flag,
+						'is_mycontents' => true,
+						'parent_box_additional_class' => 'pull-right',
+					)); ?>
+					<?php echo Form::hidden('public_flag', $public_flag); ?>
+<?php endif; ?>
+				</div>
 			</div>
 		</div>
 	</div>

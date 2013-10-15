@@ -21,6 +21,16 @@ $(function() {
 		return false;
 	});
 
+	$('.select_public_flag').click(function(){
+		var selected_public_flag = $(this).data('public_flag');
+		$('#form_public_flag').val(selected_public_flag);
+
+		//var buttonDomElement = $(this).parent('.btn-group');
+		//$(buttonDomElement).html(result);
+
+		return false;
+	});
+
 	$(document).on('click','.load_more_timeline', function(){
 		var last_id   = $(this).data('last_id') ?   parseInt($(this).data('last_id')) : 0;
 		var member_id = $(this).data('member_id') ? parseInt($(this).data('member'))  : 0;
