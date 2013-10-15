@@ -8,24 +8,6 @@ class Controller_Base_Site extends Controller_Base
 		parent::before();
 	}
 
-	protected function check_not_auth_action($is_api = false)
-	{
-		$action = $is_api ? sprintf('%s_%s', Str::lower(Request::main()->get_method()), Request::active()->action) : Request::active()->action;
-		return in_array($action, $this->check_not_auth_action);
-	}
-
-	protected function auth_check($is_api = false, $redirect_uri = '', $is_check_not_auth_action = true)
-	{
-		if ($is_check_not_auth_action && $this->check_not_auth_action($is_api)) return true;
-		if (Auth::check()) return true;
-
-		if ($is_api) return false;
-
-		if (!$redirect_uri) $redirect_uri = Site_Util::get_login_page_uri();
-		Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
-		Response::redirect($redirect_uri);
-	}
-
 	protected function set_current_user()
 	{
 		$auth = Auth::instance();
