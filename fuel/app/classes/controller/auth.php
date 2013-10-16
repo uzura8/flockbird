@@ -7,17 +7,15 @@ class Controller_Auth extends Controller_Site
 
 	private $_config = null;
 	private $_salt_length = null;
-	private $_iteration_count = null;
 
 	public function before()
 	{
+		parent::before();
+
 		if(!isset($this->_config))
 		{
 			$this->_config = Config::load('opauth', 'opauth');
 		}
-
-		$this->_salt_length = 32;
-		$this->_iteration_count = 10;
 	}
 
 	/**
