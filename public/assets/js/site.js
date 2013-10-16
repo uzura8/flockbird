@@ -390,6 +390,31 @@ function is_expanded_public_range(original_public_flag, changed_public_flag) {
 	return false;
 }
 
+<?php list($name, $icon, $btn_color) = get_public_flag_label($value); ?>
+function get_public_flag_btn_html(value) {
+	var is_label_only = (arguments.length > 1) ? arguments[1] : 0;
+	var items = get_public_flags();
+	var html = '';
+	html += '<div class="btn-group public_flag pull-right">' + "\n";
+	html += '<button class="btn dropdown-toggle btn-mini btn-info" id="public_flag_selector" data-toggle="dropdown">' + "\n";
+	html += '<div class="btn-group public_flag pull-right">' + "\n";
+	html += '<i class="' + items[value]['icon'] + '"></i> 全公開<span class="caret"></span>' + "\n";
+	if (!is_label_only) html += '<i class="' + items[value]['icon'] + '"></i> 全公開<span class="caret"></span>' + "\n";
+	html += '</button>' + "\n";
+<div class="btn-group public_flag pull-right">
+	<button class="btn dropdown-toggle btn-mini btn-info" id="public_flag_selector" data-toggle="dropdown">
+		<i class="ls-icon-globe"></i> 全公開<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu pull-right">
+		<li><a href="#" class="select_public_flag" data-public_flag="0" ><i class="ls-icon-lock"></i> 非公開</a></li>
+		<li><span class="disabled"><i class="ls-icon-globe"></i> 全公開</span></li>
+		<li><a href="#" class="select_public_flag" data-public_flag="2" ><i class="ls-icon-group"></i> SNS内でのみ公開</a></li>
+	</ul>
+</div>
+
+	return false;
+}
+
 function setup_simple_validation_required_popover(input_atter) {
 	$(input_atter).popover({
 		placement: 'bottom',

@@ -10,7 +10,7 @@ $(function() {
 			'timeline/api/list.html?is_over=1&last_id=' + $($('.timelineBox').first()).data('id'),
 			$('.timelineBox').first().attr('id'),
 			this,
-			1,
+			$('#form_public_flag').val(),
 			'#textarea_comment',
 			'#article_list',
 			'50px',
@@ -25,8 +25,9 @@ $(function() {
 		var selected_public_flag = $(this).data('public_flag');
 		$('#form_public_flag').val(selected_public_flag);
 
-		//var buttonDomElement = $(this).parent('.btn-group');
-		//$(buttonDomElement).html(result);
+		var buttonDomElement = $(this).parent('.btn-group');
+		var buttonHtml = get_public_flag_btn_html(selected_public_flag);
+		$(buttonDomElement).html(buttonHtml);
 
 		return false;
 	});
