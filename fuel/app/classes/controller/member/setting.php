@@ -148,7 +148,7 @@ END;
 		}
 		$post = $val->validated();
 
-		if (Model_MemberAuth::find()->where('email', $post['email'])->get_one())
+		if (Model_MemberAuth::query()->where('email', $post['email'])->get_one())
 		{
 			Session::set_flash('error', 'そのアドレスは登録できません。');
 			$this->action_email();
@@ -187,7 +187,7 @@ END;
 	 */
 	public function action_change_email()
 	{
-		$member_email_pre = Model_MemberEmailPre::find()->where('token', Input::param('token'))->get_one();
+		$member_email_pre = Model_MemberEmailPre::query()->where('token', Input::param('token'))->get_one();
 		if (!$member_email_pre || (Auth::check() && $member_email_pre->member_id != $this->u->id))
 		{
 			$this->display_error('メンバー登録: 不正なURL');
@@ -215,7 +215,7 @@ END;
 					{
 						throw new Exception('change email error.');
 					}
-					$member = Model_Member::find()->where('id', $member_email_pre->member_id)->get_one();
+					$member = Model_Member::find($member_email_pre->member_id);
 
 					$maildata = array();
 					$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
@@ -326,7 +326,7 @@ END;
 
 	private function save_member_email_pre($member_id, $data)
 	{
-		$member_email_pre = Model_MemberEmailPre::find()->where('member_id', $member_id)->get_one();
+		$member_email_pre = Model_MemberEmailPre::find($member_id);
 		if (!$member_email_pre) $member_email_pre = new Model_MemberEmailPre;
 
 		$member_email_pre->member_id = $member_id;

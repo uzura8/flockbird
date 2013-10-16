@@ -31,7 +31,7 @@ class UploadHandler extends \JqueryFileUpload
 		if ($album_id)
 		{
 			$info = array();
-			$album_images = Model_AlbumImage::find()->where('album_id', $album_id)->related('album')->related('file')->order_by('created_at')->get();
+			$album_images = Model_AlbumImage::query()->where('album_id', $album_id)->related('album')->related('file')->order_by('created_at')->get();
 			foreach ($album_images as $album_image)
 			{
 				if (empty($album_image->file)) continue;

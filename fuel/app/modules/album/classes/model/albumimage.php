@@ -100,7 +100,7 @@ class Model_AlbumImage extends \Orm\Model
 
 	public static function delete_with_file($id)
 	{
-		if (!$id || !$album_image = self::find()->where('id', $id)->related('album')->get_one())
+		if (!$id || !$album_image = self::query()->where('id', $id)->related('album')->get_one())
 		{
 			throw new \FuelException('Invalid album_image id.');
 		}

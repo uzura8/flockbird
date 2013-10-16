@@ -515,7 +515,7 @@ class Controller_Album extends \Controller_Site
 			$uploaded_file = $uploader->execute();
 
 			\DB::start_transaction();
-			$file = ($this->u->file_id) ? \Model_File::find()->where('id', $this->u->file_id)->get_one() : new \Model_File;
+			$file = ($this->u->file_id) ? \Model_File::find($this->u->file_id) : new \Model_File;
 			$file->name = $uploaded_file['new_filename'];
 			$file->filesize = $uploaded_file['size'];
 			$file->original_filename = $uploaded_file['filename'].'.'.$uploaded_file['extension'];

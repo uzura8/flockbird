@@ -118,7 +118,7 @@ class Model_Member extends \Orm\Model
 	{
 		if (!$id) return false;
 
-		$obj = self::find()->where('id', $id)->get_one();
+		$obj = self::find($id);
 		if (!$obj) return false;
 
 		if ($target_member_id && $obj->id != $target_member_id) return false;
@@ -131,7 +131,7 @@ class Model_Member extends \Orm\Model
 		$filesize_total = Model_File::calc_filesize_total($member_id);
 		if ($filesize_total)
 		{
-			$member = self::find()->where('id', $member_id)->get_one();
+			$member = self::find($member_id);
 			$member->filesize_total = $filesize_total;
 			$member->save();
 		}

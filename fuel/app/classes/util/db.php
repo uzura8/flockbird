@@ -45,7 +45,7 @@ class Util_db
 	{
 		$model = 'Model_'.Util_string::camelize($table);
 
-		return $model::find()->where($field, $value)->count() > 0;
+		return $model::query()->where($field, $value)->count() > 0;
 	}
 
 	public static function get_ids_from_model_objects($model_objects, $id_column_name = 'id')

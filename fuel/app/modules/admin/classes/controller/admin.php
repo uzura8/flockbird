@@ -26,7 +26,7 @@ class Controller_Admin extends \Controller_Base {
 		{
 			$auth = \Auth::instance();
 			$user_id = $auth->get_user_id();
-			$this->u = Model_User::find()->where('id', $user_id[1])->get_one();
+			$this->u = Model_User::query()->where('id', $user_id[1])->get_one();
 		}
 		\View::set_global('u', $this->u);
 	}

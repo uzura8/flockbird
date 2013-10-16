@@ -58,7 +58,7 @@ class Controller_Member extends Controller_Site
 	{
 		if ($id)
 		{
-			if (!$member = Model_Member::find()->where('id', $id)->get_one())
+			if (!$member = Model_Member::find($id))
 			{
 				throw new \HttpNotFoundException;
 			}
@@ -71,7 +71,7 @@ class Controller_Member extends Controller_Site
 		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
 		$this->template->subtitle = View::forge('_parts/home_subtitle', array('member' => $member));
 
-		$list = \Note\Model_Note::find()->where('member_id', $id)->order_by('created_at', 'desc')->get();
+		$list = \Note\Model_Note::query()->where('member_id', $id)->order_by('created_at', 'desc')->get();
 		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list));
 	}
 
@@ -120,7 +120,7 @@ class Controller_Member extends Controller_Site
 
 			try
 			{
-				if (Model_MemberAuth::find()->where('email', $post['email'])->get_one())
+				if (Model_MemberAuth::query()->where('email', $post['email'])->get_one())
 				{
 					throw new Exception('そのメールアドレスは登録できません。');
 				}
@@ -423,7 +423,7 @@ END;
 		$post = $val->validated();
 
 		$message = 'パスワードのリセット方法をメールで送信しました。';
-		if (!$member_auth = Model_MemberAuth::find()->where('email', $post['email'])->related('member')->get_one())
+		if (!$member_auth = Model_MemberAuth::query()->where('email', $post['email'])->related('member')->get_one())
 		{
 			Session::set_flash('message', $message);
 			Response::redirect(Config::get('site.login_uri.site'));
@@ -469,7 +469,7 @@ END;
 		// Already logged in
 		Auth::check() and Response::redirect('member');
 
-		$member_password_pre = Model_MemberPasswordPre::find()->where('token', Input::param('token'))->related('member')->get_one();
+		$member_password_pre = Model_MemberPasswordPre::query()->where('token', Input::param('token'))->related('member')->get_one();
 		if (!$member_password_pre || $member_password_pre->created_at < date('Y-m-d H:i:s', strtotime('-1 day')))
 		{
 			$this->display_error('メンバー登録: 不正なURL');
@@ -625,7 +625,7 @@ END;
 
 	private function check_token()
 	{
-		if ($member_pre = Model_MemberPre::find()->where('token', Input::param('token'))->get_one())
+		if ($member_pre = Model_MemberPre::query()->where('token', Input::param('token'))->get_one())
 		{
 			return $member_pre;
 		}
@@ -653,7 +653,7 @@ END;
 
 	private function save_member_password_pre($data)
 	{
-		$member_password_pre = Model_MemberPasswordPre::find()->where('member_id', $data['member_id'])->get_one();
+		$member_password_pre = Model_MemberPasswordPre::find($data['member_id']);
 		if (!$member_password_pre) $member_password_pre = new Model_MemberPasswordPre;
 
 		$member_password_pre->member_id = $data['member_id'];
