@@ -390,29 +390,33 @@ function is_expanded_public_range(original_public_flag, changed_public_flag) {
 	return false;
 }
 
-<?php list($name, $icon, $btn_color) = get_public_flag_label($value); ?>
-function get_public_flag_btn_html(value) {
-	var is_label_only = (arguments.length > 1) ? arguments[1] : 0;
-	var items = get_public_flags();
-	var html = '';
-	html += '<div class="btn-group public_flag pull-right">' + "\n";
-	html += '<button class="btn dropdown-toggle btn-mini btn-info" id="public_flag_selector" data-toggle="dropdown">' + "\n";
-	html += '<div class="btn-group public_flag pull-right">' + "\n";
-	html += '<i class="' + items[value]['icon'] + '"></i> 全公開<span class="caret"></span>' + "\n";
-	if (!is_label_only) html += '<i class="' + items[value]['icon'] + '"></i> 全公開<span class="caret"></span>' + "\n";
-	html += '</button>' + "\n";
-<div class="btn-group public_flag pull-right">
-	<button class="btn dropdown-toggle btn-mini btn-info" id="public_flag_selector" data-toggle="dropdown">
-		<i class="ls-icon-globe"></i> 全公開<span class="caret"></span>
-	</button>
-	<ul class="dropdown-menu pull-right">
-		<li><a href="#" class="select_public_flag" data-public_flag="0" ><i class="ls-icon-lock"></i> 非公開</a></li>
-		<li><span class="disabled"><i class="ls-icon-globe"></i> 全公開</span></li>
-		<li><a href="#" class="select_public_flag" data-public_flag="2" ><i class="ls-icon-group"></i> SNS内でのみ公開</a></li>
-	</ul>
-</div>
+function get_public_flag_select_button_html(selected_value) {
+	var is_label_only      = (arguments.length > 1) ? arguments[1] : false;
+	var without_parent_box = (arguments.length > 2) ? arguments[2] : false;
 
-	return false;
+	var selected_key = String(selected_value);
+	var items = get_public_flags();
+
+	var html = '';
+	if (!without_parent_box) html += '<div class="btn-group public_flag pull-right">' + "\n";
+	html += '<button class="btn dropdown-toggle btn-mini ' + items[selected_key]['btn_color'] + '" id="public_flag_selector" data-toggle="dropdown">' + "\n";
+	html += items[selected_key]['icon'];
+	if (!is_label_only) html += items[selected_key]['name'];
+	html += '<span class="caret"></span>' + "\n";
+	html += '</button>' + "\n";
+	html += '<ul class="dropdown-menu pull-right">' + "\n";
+	$.each(items, function(i, val) {
+		var key = String(i);
+		if (key == selected_key) {
+			html += '<li><span class="disabled">' + items[key]['icon'] + items[key]['name'] + '</span></li>' + "\n";
+		} else {
+			html += '<li><a href="#" class="select_public_flag" data-public_flag="' + key + '" >' + items[key]['icon'] + items[key]['name'] + '</a></li>' + "\n";
+		}
+	});
+	html += '</ul>' + "\n";
+	if (!without_parent_box) html += '</div>' + "\n";
+
+	return html;
 }
 
 function setup_simple_validation_required_popover(input_atter) {

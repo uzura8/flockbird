@@ -21,12 +21,12 @@ $(function() {
 		return false;
 	});
 
-	$('.select_public_flag').click(function(){
+	$(document).on('click','.select_public_flag', function(){
 		var selected_public_flag = $(this).data('public_flag');
 		$('#form_public_flag').val(selected_public_flag);
 
-		var buttonDomElement = $(this).parent('.btn-group');
-		var buttonHtml = get_public_flag_btn_html(selected_public_flag);
+		var buttonDomElement = $('#public_flag_selector').parent('.btn-group');
+		var buttonHtml = get_public_flag_select_button_html(selected_public_flag, false, true);
 		$(buttonDomElement).html(buttonHtml);
 
 		return false;

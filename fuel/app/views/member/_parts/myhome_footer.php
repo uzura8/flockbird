@@ -4,4 +4,6 @@ function get_config(key) {
 	config['timeline_articles_limit'] = <?php echo Config::get('timeline.articles.limit'); ?>;
 	return config[key];
 }
+
+<?php echo render('_parts/script/get_public_flags'); ?>
 </script>
