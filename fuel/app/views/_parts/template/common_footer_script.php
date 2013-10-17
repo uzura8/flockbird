@@ -1,4 +1,4 @@
-<script type="text/javascript" charset="utf-8">
+<script>
 var GL = {};
 GL.execute_flg = false;
 function get_baseUrl() {return '<?php echo Uri::base(false); ?>';}

@@ -197,14 +197,14 @@ if (Input::get('msg')) $message = e(Input::get('msg'));
 
 <?php echo render('_parts/template/load_common_js'); ?>
 <?php echo render('_parts/template/common_footer_script'); ?>
-<script type="text/javascript" charset="utf-8">
+<script>
 function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
 </script>
 <?php echo Asset::js('util.js');?>
 <?php echo Asset::js('site.js');?>
 <?php if (!Auth::check()): ?>
 <?php $destination = Session::get_flash('destination') ?: urlencode(Input::server('REQUEST_URI'));?>
-<script type="text/javascript" charset="utf-8">
+<script>
 	var inputs = new Array('#form_email', '#form_password');
 	load_popover('#insecure_user_menu', '#insecure_user_popover', '<?php echo Uri::create('auth/api/login').'?destination='.$destination; ?>', inputs);
 </script>

@@ -2,7 +2,7 @@
 <?php echo Asset::js('i18n/jquery.ui.datepicker-ja.js');?>
 <?php echo Asset::js('jquery-ui-timepicker-addon.js');?>
 <?php echo Asset::js('jquery-ui-sliderAccess.js');?>
-<script type="text/javascript">
+<script>
 $(function(){
 	set_datetimepicker('<?php echo isset($attr) ? $attr : '#form_date'; ?>');
 });

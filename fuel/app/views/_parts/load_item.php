@@ -1,5 +1,5 @@
 <?php echo Asset::js('jquery.infinitescroll.min.js');?>
-<script type="text/javascript">
+<script>
 $(function(){
 	load_item('#article_list', '.article');
 });

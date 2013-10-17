@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script>
 function get_config(key) {
 	var config = {};
 	config['timeline_articles_limit'] = <?php echo Config::get('timeline.articles.limit'); ?>;
