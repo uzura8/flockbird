@@ -1,5 +1,6 @@
 $(function() {
- $('textarea.input_timeline').css('height', '50px');
+	$('textarea.input_timeline').css('height', '50px');
+	$('#form_public_flag').val(get_config('site_public_flag_default'));
 
 	var uid = get_uid();
 	$('#btn_timeline').click(function(){
