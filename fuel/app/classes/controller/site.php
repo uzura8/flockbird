@@ -24,10 +24,9 @@ class Controller_Site extends Controller_Base_Site
 
 		if (!IS_API)
 		{
+			$this->set_title_and_breadcrumbs(PRJ_SITE_NAME);
 			$this->template->header_keywords = '';
 			$this->template->header_description = '';
-			$this->template->title = PRJ_SITE_NAME;
-			$this->template->breadcrumbs = array();
 		}
 	}
 
