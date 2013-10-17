@@ -94,6 +94,12 @@ $(function() {
 		return false;
 	});
 
+	$(document).on('click','.update_public_flag', function(){
+		if (GL.execute_flg) return false;
+		update_public_flag(this);
+		return false;
+	});
+
 	if (!is_sp()) {
 		$(document).on({
 			mouseenter:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},

@@ -11,11 +11,15 @@ $comment = array(
 
 <?php
 $data = array(
-	'member' => $timeline_data->member,
-	'size' => 'M',
-	'date' => array('datetime' => $timeline->created_at),
+	'member'  => $timeline_data->member,
+	'size'    => 'M',
+	'date'    => array('datetime' => $timeline->created_at),
 	'content' => $timeline_data->body,
 	'comment' => $comment,
+	'model'   => 'timeline',
+	'id'      => $timeline->id,
+	'public_flag' => $timeline->public_flag,
+	'public_flag_view_icon_only' => IS_SP,
 );
 if (!empty($trim_width)) $data['trim_width'] = $trim_width;
 if (!empty($truncate_lines)) $data['truncate_lines'] = $truncate_lines;

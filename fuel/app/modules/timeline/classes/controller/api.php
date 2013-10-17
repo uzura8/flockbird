@@ -136,4 +136,48 @@ class Controller_Api extends \Controller_Site_Api
 
 		$this->response($response, $status_code);
 	}
+
+	/**
+	 * Timeline update public_flag
+	 * 
+	 * @access  public
+	 * @return  Response (html)
+	 */
+	public function post_update_public_flag()
+	{
+		if ($this->format != 'html') throw new \HttpNotFoundException();
+		$response = '0';
+		try
+		{
+			\Util_security::check_csrf();
+
+			$id = (int)\Input::post('id');
+			if (!$id || !$timeline = Model_Timeline::check_authority($id, $this->u->id))
+			{
+				throw new \HttpNotFoundException;
+			}
+			list($public_flag, $model) = \Site_Util::validate_params_public_flag($timeline->public_flag);
+
+			\DB::start_transaction();
+			$timeline->public_flag = $public_flag;
+			$timeline->save();
+			\DB::commit_transaction();
+
+			$response = \View::forge('_parts/public_flag_selecter', array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true));
+			$status_code = 200;
+
+			return \Response::forge($response, $status_code);
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
+		catch(\FuelException $e)
+		{
+			\DB::rollback_transaction();
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
 }
