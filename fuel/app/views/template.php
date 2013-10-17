@@ -1,27 +1,22 @@
 <?php echo Html::doctype('html5'); ?>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width<?php if (IS_SP): ?>, initial-scale=1.0, maximum-scale=1.0, user-scalable=no<?php endif; ?>">
-  <meta name="description" content="<?php echo $header_description ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
-  <meta name="keywords" content="<?php echo site_header_keywords($header_keywords); ?>">
-	<meta name="author" content="">
-  <title><?php echo $header_title ? $header_title : $title; ?></title>
-
-  <meta name="robots" content="<?php if (PRJ_ENVIRONMENT == 'PRODUCTION'): ?>index,follow<?php else: ?>noindex,nofollow<?php endif; ?>">
-  <?php if (GOOGLE_SITE_VERIFICATION): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
-
-  <?php echo render('_parts/template/load_common_css'); ?>
-  <?php if (IS_SP): ?><?php echo Asset::css('base_mobile.css');?><?php else: ?><?php echo Asset::css('base_pc.css');?><?php endif; ?>
-  <?php echo Asset::css('site.css');?>
-  <?php echo render('_parts/template/load_common_favicon'); ?>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width<?php if (IS_SP): ?>, initial-scale=1.0, maximum-scale=1.0, user-scalable=no<?php endif; ?>">
+<meta name="description" content="<?php echo $header_description ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
+<meta name="keywords" content="<?php echo site_header_keywords($header_keywords); ?>">
+<title><?php echo $header_title ? $header_title : $title; ?></title>
+<meta name="robots" content="<?php if (PRJ_ENVIRONMENT == 'PRODUCTION'): ?>index,follow<?php else: ?>noindex,nofollow<?php endif; ?>">
+<?php if (GOOGLE_SITE_VERIFICATION): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
+<?php echo render('_parts/template/load_common_css'); ?>
+<?php if (IS_SP): ?><?php echo Asset::css('base_mobile.css');?><?php else: ?><?php echo Asset::css('base_pc.css');?><?php endif; ?>
+<?php echo Asset::css('site.css');?>
+<?php echo render('_parts/template/load_common_favicon'); ?>
 <?php if (isset($post_header)): ?>
 <?php echo $post_header; ?>
 <?php endif; ?>
 </head>
 <body id="<?php echo site_get_current_page_id(); ?>">
-
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
@@ -90,17 +85,19 @@
 <?php endif; ?>
 		</div>
 	</div>
-
 </div>
 
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span9">
-
 <?php if (!empty($breadcrumbs)): ?>
 			<ul class="breadcrumb">
 <?php foreach ($breadcrumbs as $path => $name): ?>
-				<li><?php echo $path ? Html::anchor($path, strim($name, 30)).'<span class="divider">/</span>' : sprintf('<li class="active">%s</li>', strim($name, 30));?></li>
+<?php if ($path): ?>
+				<li><?php echo Html::anchor($path, strim($name, 30)); ?> <span class="divider">/</span></li>
+<?php else: ?>
+				<li class="active"><?php echo strim($name, 30); ?></li>
+<?php endif; ?>
 <?php endforeach; ?>
 			</ul>
 <?php endif; ?>
@@ -125,11 +122,14 @@ if (Input::get('msg')) $message = e(Input::get('msg'));
 			<!-- title -->
 <?php if (isset($title) || isset($subtitle)): ?>
 			<div class="page-header">
-<?php if (isset($header_info)): ?><?php echo $header_info; ?><?php endif; ?>
-<?php if (isset($title)): ?><h2><?php echo $title; ?></h2><?php endif; ?>
-
+<?php if (isset($header_info)): ?>
+				<?php echo $header_info; ?>
+<?php endif; ?>
+<?php if (isset($title)): ?>
+				<?php echo $title; ?>
+<?php endif; ?>
 <?php if (isset($subtitle)): ?>
-			<div id="subtitle"><?php echo $subtitle; ?></div>
+				<div id="subtitle"><?php echo $subtitle; ?></div>
 <?php endif; ?>
 			</div>
 <?php endif; ?>
@@ -188,15 +188,11 @@ if (Input::get('msg')) $message = e(Input::get('msg'));
 <?php endif; ?>
 
 		</div><!--/span-->
-
 	</div><!--/row-->
-
 	<hr>
-
 	<footer>
 		<p>Copyright : <?php echo date('Y'); ?> <?php echo PRJ_SITE_NAME; ?></p>
 	</footer>
-
 </div><!--/.fluid-container-->
 
 <?php echo render('_parts/template/load_common_js'); ?>
