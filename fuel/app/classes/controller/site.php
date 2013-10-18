@@ -39,7 +39,7 @@ class Controller_Site extends Controller_Base_Site
 		if ($status) $this->response->status = $status;
 	}
 
-	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array())
+	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false)
 	{
 		if ($title)
 		{
@@ -59,31 +59,35 @@ class Controller_Site extends Controller_Base_Site
 
 		if ($info) $this->template->header_info = View::forge('_parts/information', $info);
 
-		$breadcrumbs = array('/' => Config::get('term.toppage'));
-		if ($member_obj)
+		$breadcrumbs = array();
+		if (!$is_no_breadcrumbs)
 		{
-			if ($this->check_is_mypage($member_obj->id))
+			$breadcrumbs = array('/' => Config::get('term.toppage'));
+			if ($member_obj)
 			{
-				$breadcrumbs['/member'] = Config::get('term.myhome');
-				if ($module)
+				if ($this->check_is_mypage($member_obj->id))
 				{
-					$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
+					$breadcrumbs['/member'] = Config::get('term.myhome');
+					if ($module)
+					{
+						$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
+					}
+				}
+				else
+				{
+					$prefix = $member_obj->name.'さんの';
+					$name = $prefix.Config::get('term.profile');
+					$breadcrumbs['/member/'.$member_obj->id] = $name;
+					if ($module)
+					{
+						$key = sprintf('/%s/member/%d', $module, $member_obj->id);
+						$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
+					}
 				}
 			}
-			else
-			{
-				$prefix = $member_obj->name.'さんの';
-				$name = $prefix.Config::get('term.profile');
-				$breadcrumbs['/member/'.$member_obj->id] = $name;
-				if ($module)
-				{
-					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
-					$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
-				}
-			}
+			if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
+			$breadcrumbs[''] = $title_name;
 		}
-		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
-		$breadcrumbs[''] = $title_name;
 		$this->template->breadcrumbs = $breadcrumbs;
 	}
 
@@ -95,9 +99,7 @@ class Controller_Site extends Controller_Base_Site
 	 */
 	public function action_index()
 	{
-		$this->template->title = PRJ_SITE_NAME.'メインメニュー';
-		$this->template->header_title = site_title();
-
+		$this->set_title_and_breadcrumbs(PRJ_SITE_NAME.'メインメニュー', null, null, null, null, true);
 		$this->template->content = View::forge('site/index');
 	}
 }
