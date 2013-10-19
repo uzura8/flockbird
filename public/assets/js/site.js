@@ -84,7 +84,7 @@ function show_list(uri, list_block_id) {
 
 	var next_element_id_num  = (next_element_id_name.length > 0) ? get_id_num(next_element_id_name) : 0;
 	if (next_element_id_num) {
-		var key = (is_insert_before)? 'after_id' : 'before_id';
+		var key = is_insert_before ? 'after_id' : 'before_id';
 		get_data[key] = next_element_id_num;
 	}
 

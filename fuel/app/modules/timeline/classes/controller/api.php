@@ -22,25 +22,39 @@ class Controller_Api extends \Controller_Site_Api
 	{
 		if ($this->format != 'html') throw new \HttpNotFoundException();
 
-		$last_id   = (int)\Input::get('last_id', 0);
-		$member_id = (int)\Input::get('member_id', 0);
-		$limit     = (int)\Input::get('limit', 0);
-		$is_over   = (bool)\Input::get('is_over', 0);
-		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
-
+		$last_id       = (int)\Input::get('before_id', 0);
+		$member_id     = (int)\Input::get('member_id', 0);
+		$is_over       = (bool)\Input::get('is_over', 0);
+		$is_mytimeline = (bool)\Input::get('mytimeline', 0);
+		$limit         = (int)\Input::get('limit', \Config::get('timeline.articles.limit'));
 		if ($limit > \Config::get('timeline.articles.max_limit')) $limit = \Config::get('timeline.articles.max_limit');
+
+		if (!$member_id) $this->auth_check_api();
+		$is_mypage = $this->check_is_mypage($member_id);
+
 		$response = '';
 		try
 		{
-			$params = array(
-				'where'    => \Site_Model::get_where_params4list(
-					$member_id,
-					\Auth::check() ? $this->u->id : 0,
-					$is_mypage
-				),
-				'order_by' => array('updated_at' => 'desc'),
+			$basic_cond = \Site_Model::get_where_params4list(
+				$member_id,
+				\Auth::check() ? $this->u->id : 0,
+				$is_mypage
 			);
-			//if ($limit) $params['limit'] = \Config::get('timeline.articles.limit');
+			if ($is_mytimeline && \Auth::check())
+			{
+				$where = array();
+				$where['and'] = array();
+				$where['and'] = $basic_cond;
+				$where['and']['or'] = array('member_id', $this->u->id);
+			}
+			else
+			{
+				$where = $basic_cond;
+			}
+			$params = array(
+				'where'    => $where,
+				'order_by' => array('created_at' => 'desc'),
+			);
 			if ($limit) $params['limit'] = $limit;
 			list($list, $is_next) = \Site_Model::get_pager_list('timeline', $last_id, $params, 'Timeline', true, $is_over);
 

@@ -28,29 +28,29 @@ class Site_Model
 		{
 			if (Arr::is_multi($params['where'], true))
 			{
-				foreach ($params['where'] as $where)
+				foreach ($params['where'] as $key => $where)
 				{
-					if (count($where) == 2)
+					if ($key === 'and' || $key === 'or')
 					{
-						$query = $query->where($where[0], $where[1]);
+						$method_open  = $key.'_where_open';
+						$method_close = $key.'_where_close';
+						$query = $query->$method_open();
+						foreach ($where as $key_child => $where_child)
+						{
+							$query = self::add_where($query, $where_child, $key_child);
+						}
+						$query = $query->$method_close();
 					}
-					elseif (count($where) === 3)
+					else
 					{
-						$query = $query->where($where[0], $where[1], $where[2]);
+						$query = self::add_where($query, $where);
 					}
 				}
 			}
 			else
 			{
 				$where = $params['where'];
-				if (count($where) == 2)
-				{
-					$query = $query->where($where[0], $where[1]);
-				}
-				elseif (count($where) === 3)
-				{
-					$query = $query->where($where[0], $where[1], $where[2]);
-				}
+				$query = self::add_where($query, $where);
 			}
 		}
 		// order by
@@ -60,6 +60,32 @@ class Site_Model
 			{
 				$query = $query->order_by($key, $value);
 			}
+		}
+
+		return $query;
+	}
+
+	private static function add_where($query, $wheres, $key = null)
+	{
+		$method = 'where';
+		if ($key)
+		{
+			if ($key === 'or')
+			{
+				$method = 'or_where';
+			}
+			elseif ($key === 'and')
+			{
+				$method = 'and_where';
+			}
+		}
+		if (count($wheres) == 2)
+		{
+			$query = $query->$method($wheres[0], $wheres[1]);
+		}
+		elseif (count($wheres) === 3)
+		{
+			$query = $query->$method($wheres[0], $wheres[1], $wheres[2]);
 		}
 
 		return $query;

@@ -8,7 +8,7 @@ $(function() {
 		create_comment(
 			0,
 			'timeline/api/create.json',
-			'timeline/api/list.html?is_over=1&last_id=' + $($('.timelineBox').first()).data('id'),
+			'timeline/api/list.html?mytimeline=1&is_over=1',
 			$('.timelineBox').first().attr('id'),
 			this,
 			$('#form_public_flag').val(),
@@ -38,7 +38,7 @@ $(function() {
 		var member_id = $(this).data('member_id') ? parseInt($(this).data('member'))  : 0;
 
 		var limit = get_config('timeline_articles_limit');
-		var get_uri = 'timeline/api/list.html?limit=' + limit + '&last_id=' + last_id;
+		var get_uri = 'timeline/api/list.html?mytimeline=1';
 		if (member_id > 0) get_uri += '&member_id=' + member_id;
 		
 		show_list(get_uri, '#article_list', limit, $('.timelineBox').last().attr('id'), false, this);
