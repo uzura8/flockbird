@@ -58,6 +58,11 @@ class Site_Model
 		{
 			foreach ($params['order_by'] as $key => $value)
 			{
+				if (is_numeric($key) && !in_array($value, array('asc', 'desc')))
+				{
+					$key   = $value;
+					$value = 'asc';
+				}
 				$query = $query->order_by($key, $value);
 			}
 		}
