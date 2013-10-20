@@ -38,16 +38,7 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_myhome()
 	{
-		$where = array();
-		$where['and'] = array();
-		$where['and'] = \Site_Model::get_where_params4list(0, $this->u->id, false);
-		$where['and']['or'] = array('member_id', $this->u->id);
-		$params = array(
-			'where'    => $where,
-			'order_by' => array('created_at' => 'desc'),
-			'limit'    => \Config::get('timeline.articles.limit'),
-		);
-		list($list, $is_next) = \Site_Model::get_pager_list('timeline', 0, $params, 'Timeline', true);
+		list($list, $is_next) = \Timeline\Site_Model::get_list($this->u->id, 0, false, true);
 		$this->template->post_footer = \View::forge('member/_parts/myhome_footer');
 		$this->set_title_and_breadcrumbs(Config::get('term.myhome'));
 		$this->template->content = View::forge('member/myhome', array('list' => $list, 'is_next' => $is_next));
