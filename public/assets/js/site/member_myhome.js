@@ -34,15 +34,7 @@ $(function() {
 	});
 
 	$(document).on('click','.load_more_timeline', function(){
-		var last_id   = $(this).data('last_id') ?   parseInt($(this).data('last_id')) : 0;
-		var member_id = $(this).data('member_id') ? parseInt($(this).data('member'))  : 0;
-
-		var limit = get_config('timeline_articles_limit');
-		var get_uri = 'timeline/api/list.html?mytimeline=1';
-		if (member_id > 0) get_uri += '&member_id=' + member_id;
-		
-		show_list(get_uri, '#article_list', limit, $('.timelineBox').last().attr('id'), false, this);
-		return false;
+		load_more_timeline(this);
 	});
 
 	$(document).on('click','.link_comment', function(){

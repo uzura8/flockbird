@@ -11,6 +11,7 @@
 <?php
 $attr = array('class' => 'load_more_timeline listMoreBox', 'data-last_id' => $id);
 if (!empty($member)) $attr['data-member_id'] = $member->id;
+if (!empty($mytimeline)) $attr['data-mytimeline'] = 1;
 echo Html::anchor('#', '<i class="ls-icon-dropdown"></i> もっとみる', $attr);
 ?>
 </nav>

@@ -29,15 +29,17 @@ class Controller_Api extends \Controller_Site_Api
 		$after_id      = (int)\Input::get('after_id', 0);
 		$is_over       = (bool)\Input::get('is_over', 0);
 
-		if (!$member_id) $this->auth_check_api();
-		$is_mypage = $this->check_is_mypage($member_id);
+		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 		$last_id = $before_id ?: $after_id;
 
 		$response = '';
 		try
 		{
 			list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mypage, $is_mytimeline, $last_id, $is_over, $limit);
-			$response = \View::forge('_parts/timeline/list', array('list' => $list, 'is_next' => $is_next));
+			$data = array('list' => $list, 'is_next' => $is_next);
+			if ($member) $data['member'] = $member;
+			if ($is_mytimeline) $data['mytimeline'] = true;
+			$response = \View::forge('_parts/timeline/list', $data);
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);

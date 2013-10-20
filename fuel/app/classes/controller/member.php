@@ -52,23 +52,13 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_home($id = null)
 	{
-		if ($id)
-		{
-			if (!$member = Model_Member::find($id))
-			{
-				throw new \HttpNotFoundException;
-			}
-		}
-		else
-		{
-			$member = $this->u;
-		}
+		list($is_mypage, $member) = $this->check_auth_and_is_mypage($id);
 
 		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
 		$this->template->subtitle = View::forge('_parts/home_subtitle', array('member' => $member));
 
-		$list = \Note\Model_Note::query()->where('member_id', $id)->order_by('created_at', 'desc')->get();
-		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list));
+		list($list, $is_next) = \Timeline\Site_Model::get_list(Auth::check() ? $this->u->id : 0, $id, $is_mypage, false);
+		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list, 'is_next' => $is_next));
 	}
 
 	/**
