@@ -225,7 +225,7 @@ function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 		},
 		success: function(result){
 			$.jGrowl(article_name + 'を投稿しました。');
-			show_list(get_uri, list_block_id, 0, before_element_id_name, is_insert_before);
+			show_list(get_uri, list_block_id, 'all', before_element_id_name, is_insert_before);
 			$(textarea_attribute).val('');
 			$(textarea_attribute).css('height', textarea_height);
 		},

@@ -22,15 +22,15 @@ class Controller_Comment_Api extends \Controller_Site_Api
 	{
 		if ($this->format != 'html') throw new \HttpNotFoundException();
 
+		$note_id   = (int)$parent_id;
+		$before_id = (int)\Input::get('before_id', 0);
+		$after_id  = (int)\Input::get('after_id', 0);
+		$limit     = \Input::get('limit') == 'all' ? \Config::get('note.articles.comment.max_limit', 50) : (int)\Input::get('limit', \Config::get('note.articles.comment.limit'));
+		$is_desc   = (bool)\Input::get('is_desc', false);
+
 		$response = '';
 		try
 		{
-			$note_id = (int)$parent_id;
-			$before_id      = (int)\Input::get('before_id', 0);
-			$after_id       = (int)\Input::get('after_id', 0);
-			$limit          = (int)\Input::get('limit', 0);
-			$is_desc        = (bool)\Input::get('is_desc', false);
-
 			if (!$note_id || !$note = Model_Note::check_authority($note_id))
 			{
 				throw new \HttpNotFoundException;

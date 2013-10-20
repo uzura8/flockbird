@@ -24,7 +24,7 @@ class Controller_Api extends \Controller_Site_Api
 
 		$member_id     = (int)\Input::get('member_id', 0);
 		$is_mytimeline = (bool)\Input::get('mytimeline', 0);
-		$limit         = (int)\Input::get('limit', \Config::get('timeline.articles.limit'));
+		$limit         = \Input::get('limit') == 'all' ? \Config::get('timeline.articles.max_limit', 50) : (int)\Input::get('limit', \Config::get('timeline.articles.limit'));
 		$before_id     = (int)\Input::get('before_id', 0);
 		$after_id      = (int)\Input::get('after_id', 0);
 		$is_over       = (bool)\Input::get('is_over', 0);

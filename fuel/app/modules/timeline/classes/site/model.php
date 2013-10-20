@@ -6,7 +6,7 @@ class Site_Model
 	public static function get_list($self_member_id = 0, $target_member_id = 0, $is_mypage = false, $is_mytimeline = false, $last_id = 0, $is_over = false, $limit = 0, $sort = array())
 	{
 		if (!$limit) $limit = (int)\Config::get('timeline.articles.limit');
-		if ($limit > \Config::get('timeline.articles.max_limit')) $limit = \Config::get('timeline.articles.max_limit');
+		if ($limit > \Config::get('timeline.articles.limit_max')) $limit = \Config::get('timeline.articles.limit_max');
 		if (empty($sort)) $sort = array('created_at' => 'desc');
 
 		$basic_cond = \Site_Model::get_where_params4list(

@@ -10,6 +10,7 @@ return array(
 		),
 		'comment' => array(
 			'limit' => 5,
+			'limit_max' => 50,
 			'trim_width' => 200,
 		),
 	),

@@ -3,7 +3,7 @@
 return array(
 	'articles' => array(
 		'limit' => 3,
-		'max_limit' => 50,
+		'limit_max' => 50,
 		'trim_width' => array(
 			//'title' => 88,
 			'body'  => 500,

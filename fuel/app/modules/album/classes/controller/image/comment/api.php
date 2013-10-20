@@ -22,16 +22,16 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 	{
 		if ($this->format != 'html') throw new \HttpNotFoundException();
 
+		$album_image_id = (int)$parent_id;
+		$before_id      = (int)\Input::get('before_id', 0);
+		$after_id       = (int)\Input::get('after_id', 0);
+		$is_desc        = (bool)\Input::get('is_desc', false);
+		$show_more_link = (bool)\Input::get('disp_more', 1);
+		$limit = \Input::get('limit') == 'all' ? \Config::get('album.articles.comment.max_limit', 50) : (int)\Input::get('limit', \Config::get('album.articles.comment.limit'));
+
 		$response = '';
 		try
 		{
-			$album_image_id = (int)$parent_id;
-			$before_id      = (int)\Input::get('before_id', 0);
-			$after_id       = (int)\Input::get('after_id', 0);
-			$limit          = (int)\Input::get('limit', 0);
-			$is_desc        = (bool)\Input::get('is_desc', false);
-			$show_more_link = (bool)\Input::get('disp_more', 1);
-
 			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
 			{
 				throw new \HttpNotFoundException;
