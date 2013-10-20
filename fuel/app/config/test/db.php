@@ -5,12 +5,13 @@
  * This environment is primarily used by unit tests, to run on a controlled environment.
  */
 
-return array(
-	'default' => array(
-		'connection'  => array(
-			'dsn'        => 'mysql:host=localhost;dbname=fuel_test',
-			'username'   => 'fuel_app',
-			'password'   => 'super_secret_password',
-		),
-	),
-);
+//return array(
+//	'default' => array(
+//		'connection'  => array(
+//			'dsn'        => 'mysql:host=localhost;dbname=fuel_test',
+//			'username'   => 'fuel_app',
+//			'password'   => 'super_secret_password',
+//		),
+//	),
+//);
+return $GLOBALS['DSN']['development'];
