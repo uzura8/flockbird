@@ -33,14 +33,44 @@ class Test_Site_Model extends \TestCase
 
 		foreach ($test_list as $timeline)
 		{
-			// test for public_flag
-			if ($timeline->member_id != $self_member_id)
+			// member_id
+			if ($target_member_id)
 			{
-				$this->assertTrue(in_array($timeline->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER)));
+				$this->assertEquals($target_member_id, $timeline->member_id);
 			}
+
+			// test for public_flag
 			if ($timeline->public_flag ==  PRJ_PUBLIC_FLAG_PRIVATE)
 			{
 				$this->assertEquals($self_member_id, $timeline->member_id);
+			}
+			if (!$self_member_id)
+			{
+				$this->assertEquals($timeline->public_flag, PRJ_PUBLIC_FLAG_ALL);
+			}
+			if ($self_member_id && $timeline->member_id != $self_member_id)
+			{
+				$this->assertTrue(in_array($timeline->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER)));
+			}
+			if ($self_member_id && $self_member_id == $target_member_id && !$is_mypage)
+			{
+				$this->assertTrue(in_array($timeline->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER)));
+			}
+			if ($self_member_id && $self_member_id == $target_member_id && $is_mypage)
+			{
+				$this->assertTrue(in_array($timeline->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_PRIVATE)));
+			}
+			if ($self_member_id && $target_member_id && $self_member_id != $target_member_id)
+			{
+				$this->assertTrue(in_array($timeline->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER)));
+			}
+			if ($self_member_id && $is_mytimeline && $timeline->member_id != $self_member_id)
+			{
+				$this->assertTrue(in_array($timeline->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER)));
+			}
+			if ($self_member_id && $is_mytimeline && $timeline->member_id == $self_member_id)
+			{
+				$this->assertTrue(in_array($timeline->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_PRIVATE)));
 			}
 
 			// test for last_id and sort
@@ -73,6 +103,15 @@ class Test_Site_Model extends \TestCase
 		$data[] = array(1, 0, false, true, 2, null, 30, array('id' => 'asc'));
 		$data[] = array(1, 0, false, true, 2, null, 30, array('id'));
 		$data[] = array(1, 0, false, true, 2, true, 30, null);
+		$data[] = array(2, 2, true, false, null, null, 30, null);
+		$data[] = array(2, 2, true, true, null, null, 30, null);
+		$data[] = array(2, 0, true, false, null, null, 30, null);
+		$data[] = array(1, 2, false, false, null, null, 30, null);
+		$data[] = array(0, 0, false, false, null, null, 30, null);
+		$data[] = array(0, 0, false, false, 2, true, 30, null);
+		$data[] = array(0, 0, false, false, 2, null, 30, array('id' => 'desc'));
+		$data[] = array(0, 0, false, false, 2, null, 30, array('id' => 'asc'));
+		$data[] = array(0, 1, false, false, null, null, 30, null);
 
 		return $data;
 	}
