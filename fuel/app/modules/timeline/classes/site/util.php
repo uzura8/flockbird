@@ -27,7 +27,11 @@ class Site_Util
 
 	public static function get_article_view($timeline_obj)
 	{
-		$timeline_data = Model_TimelineData::query()->related('member')->where('timeline_id', $timeline_obj->id)->get_one();
+		//$timeline_data = Model_TimelineData::query()->related('member')->where('timeline_id', $timeline_obj->id)->get_one();
+		$timeline_data = Model_TimelineData::find('first', array(
+			'where' => array('timeline_id' => $timeline_obj->id),
+			'related' => array('member')
+		));
 
 		return render('_parts/timeline/article', array(
 			'timeline' => $timeline_obj,
