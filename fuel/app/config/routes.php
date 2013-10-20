@@ -7,6 +7,7 @@ $routes = array(
 	'birds/(((?!(size|watch_spot|life_place)).)+)'    => 'birds/detail/$1',
 	'member/(\d+)'  => 'member/home/$1',
 	'member'  => 'member/myhome',
+	'timeline'  => 'timeline/list',
 );
 
 $modules = Module::loaded();

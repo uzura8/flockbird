@@ -7,6 +7,4 @@
 	'with_public_flag_selector' => true,
 )); ?>
 </div>
-<div id="article_list">
 <?php echo render('_parts/timeline/list', array('list' => $list, 'is_next' => $is_next, 'mytimeline' => true)); ?>
-</div>

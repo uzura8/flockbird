@@ -1,5 +1,5 @@
-<?php $is_api_request = Site_Util::check_is_api_request(); ?>
-<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
+<?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
+<?php if (!IS_API): ?><div id="article_list"><?php endif; ?>
 <?php if ($list): ?>
 <?php foreach ($list as $id => $timeline): ?>
 		<?php echo \Timeline\Site_Util::get_article_view($timeline); ?>
@@ -16,5 +16,5 @@ echo Html::anchor('#', '<i class="ls-icon-dropdown"></i> もっとみる', $attr
 ?>
 </nav>
 <?php endif; ?>
-
-<?php if ($is_api_request): ?></body></html><?php endif; ?>
+<?php if (!IS_API): ?></div><!-- article_list --><?php endif; ?>
+<?php if (IS_API): ?></body></html><?php endif; ?>

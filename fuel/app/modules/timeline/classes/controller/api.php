@@ -29,8 +29,15 @@ class Controller_Api extends \Controller_Site_Api
 		$after_id      = (int)\Input::get('after_id', 0);
 		$is_over       = (bool)\Input::get('is_over', 0);
 
-		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 		$last_id = $before_id ?: $after_id;
+
+		$is_mypage = false;
+		$member = null;
+		if ($member_id)
+		{
+			$is_mypage = $this->check_is_mypage($member_id);
+			$member = \Model_Member::find($member_id);
+		}
 
 		$response = '';
 		try

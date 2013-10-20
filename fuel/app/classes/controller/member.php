@@ -53,11 +53,11 @@ class Controller_Member extends Controller_Site
 	public function action_home($id = null)
 	{
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($id);
+		list($list, $is_next) = \Timeline\Site_Model::get_list(Auth::check() ? $this->u->id : 0, $id, $is_mypage, false);
 
 		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
 		$this->template->subtitle = View::forge('_parts/home_subtitle', array('member' => $member));
-
-		list($list, $is_next) = \Timeline\Site_Model::get_list(Auth::check() ? $this->u->id : 0, $id, $is_mypage, false);
+		$this->template->post_footer = \View::forge('_parts/timeline/load_timelines');
 		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list, 'is_next' => $is_next));
 	}
 

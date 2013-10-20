@@ -34,15 +34,10 @@ class Controller_Timeline extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.note')));
-		$data = \Site_Model::get_simple_pager_list('note', 1, array(
-			'related'  => 'member',
-			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
-			'order_by' => array('created_at' => 'desc'),
-			'limit'    => \Config::get('note.articles.limit')
-		), 'Timeline');
-		$this->template->content = \View::forge('_parts/list', $data);
-		$this->template->post_footer = \View::forge('_parts/load_item');
+		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0);
+		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.timeline')));
+		$this->template->post_footer = \View::forge('_parts/timeline/load_timelines');
+		$this->template->content = \View::forge('_parts/timeline/list', array('list' => $list, 'is_next' => $is_next));
 	}
 
 	/**
