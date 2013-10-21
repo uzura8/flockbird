@@ -77,6 +77,9 @@ img.profile_image {
 .member_img_box_m div.content {
 	margin-left: 60px;
 }
+.member_img_box_m div.content .sub_info {
+	margin-top: 5px;
+}
 
 .member_img_box_s div.content .fullname,
 .member_img_box_s div.content small {

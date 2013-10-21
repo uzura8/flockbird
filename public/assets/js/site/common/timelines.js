@@ -13,11 +13,16 @@ $(function() {
 		$(document).on({
 			mouseenter:function() {$('#btn_timeline_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
 			mouseleave:function() {$('#btn_timeline_delete_' + get_id_num($(this).attr('id'))).hide()}
-		},'#article_list .timelineBox');
+		},'.timelineBox');
 	}
 
 	$(document).on('click','.btn_timeline_delete', function(){
-		delete_item('timeline/api/delete.json', $(this).data('id'), '#timelineBox');
+		var delete_uri = $(this).data('uri') ? $(this).data('uri') : '';
+		if (delete_uri) {
+			delete_item(delete_uri);
+		} else {
+			delete_item('timeline/api/delete.json', $(this).data('id'), '#timelineBox');
+		}
 		return false;
 	});
 

@@ -13,7 +13,7 @@ if (isset($size))
 		<div class="main">
 			<b class="fullname"><?php echo empty($member) ? Config::get('term.left_member') : Html::anchor('member/'.$member->id, $member->name); ?></b>
 <?php
-if (!empty($content))
+if (isset($content) && strlen($content))
 {
 	if (!empty($truncate_lines))
 	{
@@ -24,11 +24,17 @@ if (!empty($content))
 	{
 		$content = strim($content, $trim_width);
 	}
+	elseif (!empty($is_convert_nl2br) && $is_convert_nl2br === true)
+	{
+		$content = nl2br($content);
+	}
 
 	echo $content;
 }
 ?>
 		</div>
+<?php if ($date || isset($public_flag, $model, $id)): ?>
+		<div class="sub_info">
 <?php if ($date): ?>
 			<small><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>
 <?php endif; ?>
@@ -50,6 +56,8 @@ if (isset($public_flag, $model, $id))
 	echo render('_parts/public_flag_selecter', $data);
 }
 ?>
+		</div><!-- sub_info -->
+<?php endif; ?>
 
 <?php if (!empty($comment)): ?>
 <?php $parent = $comment['parent_obj'] ?>

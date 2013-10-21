@@ -23,8 +23,9 @@ class Controller_Base_Site extends Controller_Base
 		View::set_global('u', $this->u);
 	}
 
-	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false)
+	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false)
 	{
+		$title_name = '';
 		if ($title)
 		{
 			if (is_array($title))
@@ -37,9 +38,9 @@ class Controller_Base_Site extends Controller_Base
 				$title_name  = $title;
 				$title_label = array();
 			}
-			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
+			$this->template->title = $is_no_title ? '' : View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
 		}
-		$this->template->header_title = site_title($title_name);
+		$this->template->header_title = $title_name ? site_title($title_name) : '';
 
 		if ($info) $this->template->header_info = View::forge('_parts/information', $info);
 

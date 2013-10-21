@@ -5,6 +5,7 @@ return array(
 		'secure_global_head' => array(
 			'Top' => '/',
 			'Home' => 'member/',
+			Config::get('term.timeline') => 'timeline/',
 			Config::get('term.note') => 'note/',
 			Config::get('term.album') => 'album/',
 			'Sitemap' => 'sitemap/',
@@ -13,6 +14,7 @@ return array(
 		),
 		'insecure_global_head' => array(
 			'Top' => '/',
+			Config::get('term.timeline') => 'timeline/',
 			Config::get('term.note') => 'note/',
 			Config::get('term.album') => 'album/',
 			'Sitemap' => 'sitemap/',
@@ -27,6 +29,7 @@ return array(
 		),
 		'global_side' => array(
 			'Top' => '/',
+			Config::get('term.timeline') => 'timeline/',
 			Config::get('term.note') => 'note/',
 			Config::get('term.album') => 'album/',
 			'Sitemap' => 'sitemap/',
@@ -36,6 +39,7 @@ return array(
 		'secure_side' => array(
 			Config::get('term.myhome') => 'member/',
 			Config::get('term.profile') => 'member/profile/',
+			Config::get('term.timeline') => 'timeline/member/',
 			Config::get('term.note') => 'note/member/',
 			Config::get('term.album') => 'album/member/',
 			'Settings' => 'member/setting/',
