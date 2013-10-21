@@ -194,13 +194,18 @@ function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 	var textarea_height    = (arguments.length > 8) ? arguments[8] : '33px';
 	var is_insert_before   = (arguments.length > 9) ? arguments[9] : false;
 	var article_name       = (arguments.length > 10) ? arguments[10] : 'コメント';
+	var count_attr_prefix  = (arguments.length > 11) ? arguments[11] : '#comment_count_';
 
 	var body = $(textarea_attribute).val().trim();
 	if (body.length <= 0) return;
 
 	var selfDomElement_html = (selfDomElement) ? $(selfDomElement).html() : '';
 	var data = {'body':body};
-	if (parent_id) data['id'] = parent_id;
+	var count_attribute = '';
+	if (parent_id) {
+		data['id'] = parent_id;
+		count_attribute = count_attr_prefix + parent_id;
+	}
 	if (public_flag.length > 0) data['public_flag'] = public_flag;
 	data = set_token(data);
 	$.ajax({
@@ -226,6 +231,10 @@ function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 		success: function(result){
 			$.jGrowl(article_name + 'を投稿しました。');
 			show_list(get_uri, list_block_id, 'all', before_element_id_name, is_insert_before);
+			if (count_attribute && $(count_attribute) != null) {
+				var count = parseInt($(count_attribute).html()) + 1;
+				$(count_attribute).html(count);
+			}
 			$(textarea_attribute).val('');
 			$(textarea_attribute).css('height', textarea_height);
 		},
