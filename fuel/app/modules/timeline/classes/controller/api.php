@@ -159,15 +159,15 @@ class Controller_Api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			list($public_flag, $model) = \Site_Util::validate_params_public_flag($timeline->public_flag);
+			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($timeline->public_flag);
 
 			\DB::start_transaction();
 			$timeline->public_flag = $public_flag;
 			$timeline->save();
 			\DB::commit_transaction();
 
-			$response = \View::forge('_parts/public_flag_selecter', array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true));
-			$status_code = 200;
+			$data = array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true, 'without_parent_box' => true);
+			$response = \View::forge('_parts/public_flag_selecter', $data);
 
 			return \Response::forge($response, $status_code);
 		}

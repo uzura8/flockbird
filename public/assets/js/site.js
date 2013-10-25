@@ -298,9 +298,9 @@ function load_popover(link_attribute, content_attribute, content_url) {
 
 function update_public_flag(selfDomElement) {
 	var public_flag          = $(selfDomElement).data('public_flag');
-	var public_flag_original = $(selfDomElement).data('public_flag_original');
+	var public_flag_original = $(selfDomElement).data('public_flag_original') ? $(selfDomElement).data('public_flag_original') : null;
 
-	if (is_expanded_public_range(public_flag_original, public_flag)) {
+	if (public_flag_original != null && is_expanded_public_range(public_flag_original, public_flag)) {
 		apprise('公開範囲が広がります。実行しますか？', {'confirm':true}, function(r) {
 			if (r == true) check_is_update_children_public_flag_before_update(selfDomElement);
 		});
@@ -336,16 +336,18 @@ function update_public_flag_execute(selfDomElement) {
 	var is_update_children_public_flag = (arguments.length > 1) ? arguments[1] : 0;
 	var id          = $(selfDomElement).data('id');
 	var model       = $(selfDomElement).data('model');
-	var model_uri   = $(selfDomElement).data('model_uri');
 	var public_flag = $(selfDomElement).data('public_flag');
+	var model_uri   = $(selfDomElement).data('model_uri');
+	var post_uri       = $(selfDomElement).data('post_uri')  ? $(selfDomElement).data('post_uri')  : '';
 	var icon_only_flag = $(selfDomElement).data('icon_only') ? $(selfDomElement).data('icon_only') : 0;
 	var have_children_public_flag = $(selfDomElement).data('have_children_public_flag') ? $(selfDomElement).data('have_children_public_flag') : 0;
 	var child_model    = $(selfDomElement).data('child_model') ? $(selfDomElement).data('child_model') : '';
-	var is_refresh     = $(selfDomElement).data('is_refresh') ? $(selfDomElement).data('is_refresh') : 0;
+	var is_refresh     = $(selfDomElement).data('is_refresh')  ? $(selfDomElement).data('is_refresh')  : 0;
+	var is_no_msg      = $(selfDomElement).data('is_no_msg')   ? $(selfDomElement).data('is_no_msg')   : 0;
 
-	var parentElement = $(selfDomElement).parent('li');
 	var text = $(selfDomElement).html();
-	var buttonDomElement = $('#public_flag_' + model + '_' + id).parent('.btn-group');
+	var parentElement = $(selfDomElement).parent('li');
+	var buttonElement = $(parentElement).parents('div.btn-group');
 
 	var post_data = {
 		'id'             : id,
@@ -355,9 +357,10 @@ function update_public_flag_execute(selfDomElement) {
 		'have_children_public_flag'      : have_children_public_flag,
 		'is_update_children_public_flag' : is_update_children_public_flag,
 	};
+	uri = post_uri ? post_uri : model_uri +'/api/update_public_flag.html';
 	post_data = set_token(post_data);
 	$.ajax({
-		url : get_baseUrl() + model_uri +'/api/update_public_flag.html',
+		url : get_baseUrl() + uri,
 		type : 'POST',
 		dataType : 'text',
 		data : post_data,
@@ -370,13 +373,18 @@ function update_public_flag_execute(selfDomElement) {
 			GL.execute_flg = false;
 		},
 		success: function(result, status, xhr){
-			$(buttonDomElement).html(result);
-			var msg = get_term('public_flag') + 'を変更しました。';
+			$(buttonElement).html(result);
+			$(buttonElement).removeClass('open');
+			var msg = is_no_msg ? '' : get_term('public_flag') + 'を変更しました。';
 			if (is_refresh) {
-				var delimitter = (url('?').length > 0) ? '&' : '?';
-				location.href=url() + delimitter + 'msg=' + msg;
+				var query_strring = '';
+				if (msg.length > 0) {
+					var delimitter = (url('?').length > 0) ? '&' : '?';
+					query_strring = delimitter + 'msg=' + msg;
+				}
+				location.href=url() + query_strring;
 			} else {
-				$.jGrowl(msg);
+				if (msg.length > 0) $.jGrowl(msg);
 			}
 		},
 		error: function(result){

@@ -301,7 +301,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			{
 				throw new \DisableToUpdatePublicFlagException($result['message']);
 			}
-			list($public_flag, $model) = \Site_Util::validate_params_public_flag($album_image->public_flag);
+			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($album_image->public_flag);
 
 			\DB::start_transaction();
 			$album_image->public_flag = $public_flag;

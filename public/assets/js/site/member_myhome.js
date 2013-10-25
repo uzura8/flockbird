@@ -1,6 +1,13 @@
 $(function() {
 	$('textarea.input_timeline').css('height', '50px');
-	$('#form_public_flag').val(get_config('site_public_flag_default'));
+	$('#form_public_flag').val($('#public_flag_selector').data('public_flag'));
+
+	$(document).on('click','.select_public_flag', function(){
+		if (GL.execute_flg) return false;
+		update_public_flag(this);
+		$('#form_public_flag').val($(this).data('public_flag'));
+		return false;
+	});
 
 	var uid = get_uid();
 	$('#btn_timeline').click(function(){
@@ -18,17 +25,6 @@ $(function() {
 			true,
 			get_term('timeline')
 		);
-
-		return false;
-	});
-
-	$(document).on('click','.select_public_flag', function(){
-		var selected_public_flag = $(this).data('public_flag');
-		$('#form_public_flag').val(selected_public_flag);
-
-		var buttonDomElement = $('#public_flag_selector').parent('.btn-group');
-		var buttonHtml = get_public_flag_select_button_html(selected_public_flag, false, true);
-		$(buttonDomElement).html(buttonHtml);
 
 		return false;
 	});

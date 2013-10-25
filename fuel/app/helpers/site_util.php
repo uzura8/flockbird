@@ -214,3 +214,21 @@ function get_csrf_query_str($delimitter = '?')
 {
 	return sprintf('%s%s=%s', $delimitter, Config::get('security.csrf_token_key'), Util_security::get_csrf());
 }
+
+function conv_data_atter($list = array(), $is_html = false)
+{
+	$output = $is_html ? '' : array();
+	foreach ($list as $key => $value)
+	{
+		if ($is_html)
+		{
+			$output .= sprintf(' data-%s="%s"', $key, $value);
+		}
+		else
+		{
+			$output['data-'.$key] = $value;
+		}
+	}
+
+	return $output;
+}

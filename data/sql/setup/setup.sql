@@ -626,6 +626,27 @@ UNLOCK TABLES;
 
 
 --
+-- Table structure for table `member_config`
+--
+
+DROP TABLE IF EXISTS `member_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `member_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `member_id` int(11) NOT NULL COMMENT 'Member id',
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Configuration name',
+  `value` text NOT NULL COMMENT 'Configuration value',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id_idx` (`member_id`),
+  UNIQUE KEY `member_id_name_UNIQUE_idx` (`member_id`, `name`),
+  CONSTRAINT `member_config_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `member_email_pre`
 --
 

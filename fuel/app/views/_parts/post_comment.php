@@ -27,13 +27,18 @@ if (isset($size))
 				<div class="clearfix">
 					<?php echo Form::button('btn_comment', '送信', $button_attrs); ?>
 <?php if (!empty($with_public_flag_selector)): ?>
-<?php $public_flag = Config::get('site.public_flag.default'); ?>
-					<?php echo render('_parts/public_flag_selecter', array(
-						'is_use_in_form' => true,
-						'public_flag' => $public_flag,
-						'is_mycontents' => true,
-						'parent_box_additional_class' => 'pull-right',
-					)); ?>
+<?php
+if (!isset($public_flag)) $public_flag = Config::get('site.public_flag.default');
+$data = array(
+	'id' => $u->id,
+	'is_use_in_form' => true,
+	'public_flag' => $public_flag,
+	'is_mycontents' => true,
+	'parent_box_additional_class' => 'pull-right',
+);
+if (!empty($uri_for_update_public_flag)) $data['post_uri'] = $uri_for_update_public_flag;
+?>
+					<?php echo render('_parts/public_flag_selecter', $data); ?>
 					<?php echo Form::hidden('public_flag', $public_flag); ?>
 <?php endif; ?>
 				</div>

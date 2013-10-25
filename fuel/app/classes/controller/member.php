@@ -38,10 +38,11 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_myhome()
 	{
+		$public_flag = Model_MemberConfig::get_value($this->u->id, 'timeline_public_flag');
 		list($list, $is_next) = \Timeline\Site_Model::get_list($this->u->id, 0, false, true);
 		$this->template->post_footer = \View::forge('member/_parts/myhome_footer');
 		$this->set_title_and_breadcrumbs(Config::get('term.myhome'));
-		$this->template->content = View::forge('member/myhome', array('list' => $list, 'is_next' => $is_next));
+		$this->template->content = View::forge('member/myhome', array('list' => $list, 'is_next' => $is_next, 'public_flag' => $public_flag));
 	}
 
 	/**

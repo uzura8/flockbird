@@ -170,16 +170,31 @@ class Site_Util
 		return array('note', 'album', 'album_image', 'timeline');
 	}
 
-	public static function validate_params_public_flag($current_public_flag)
+	public static function validate_posted_public_flag($current_public_flag = null, $posted_key = 'public_flag')
 	{
-		$public_flag = \Input::post('public_flag', null);
-		if ($public_flag === null) throw new \HttpInvalidInputException('Invalid input data');
+		$public_flag = \Input::post($posted_key, null);
+		if (is_null($public_flag)) throw new \HttpInvalidInputException('Invalid input data');
+
 		$public_flag = (int)$public_flag;
 		if (!in_array($public_flag, self::get_public_flags())) throw new \HttpInvalidInputException('Invalid input data');
-		if ($current_public_flag == $public_flag) throw new \HttpInvalidInputException('Invalid input data');
+		if ($current_public_flag && $current_public_flag == $public_flag) throw new \HttpInvalidInputException('Invalid input data');
 
-		$model = \Input::post('model', null);
-		if ($model === null || !in_array($model, self::get_have_public_flags_models())) throw new \HttpInvalidInputException('Invalid input data');
+		return $public_flag;
+	}
+
+	public static function validate_params_for_update_public_flag($current_public_flag = null, $posted_key = 'public_flag', $is_check_posted_model = true)
+	{
+		$public_flag = self::validate_posted_public_flag($current_public_flag, $posted_key);
+
+		$model = null;
+		if ($is_check_posted_model)
+		{
+			$model = \Input::post('model', null);
+			if ($model === null || !in_array($model, self::get_have_public_flags_models()))
+			{
+				throw new \HttpInvalidInputException('Invalid input data');
+			}
+		}
 
 		return array($public_flag, $model);
 	}
