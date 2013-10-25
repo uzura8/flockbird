@@ -10,6 +10,7 @@ if (!empty($disabled_to_update['message']))
 	$atter['data-toggle']    = 'tooltip';
 	$atter['data-placement'] = 'top';
 	$atter['title']          = $disabled_to_update['message'];
+	$atter['onclick']        = 'return false;';
 }
 ?>
 <?php echo Html::anchor('#', $icon.$name, $atter); ?>
