@@ -16,6 +16,11 @@ return array(
 			'trim_width' => 200,
 		),
 	),
+	'types' => array(
+		'normal' => 1,
+		'member_register' => 2,
+		'profile_image' => 3,
+	),
 	'display_setting' => array(
 	),
 );

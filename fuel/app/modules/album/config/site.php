@@ -21,6 +21,7 @@ return array(
 								'P_S' => '30x30xc',
 								'P_M' => '50x50xc',
 								'P_L' => '180x180xc',
+								'P_LL' => '400x300xc',
 							),
 							'note' => array(
 								'N_M' => '400x300xc',

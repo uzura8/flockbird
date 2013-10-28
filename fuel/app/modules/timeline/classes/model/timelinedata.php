@@ -72,4 +72,10 @@ class Model_TimelineData extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 	);
+
+	public static function _init()
+	{
+		static::$_properties['type']['validation']['in_array'][] = \Config::get('timeline.types');
+		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_accept_timeline_foreign_tables();
+	}
 }

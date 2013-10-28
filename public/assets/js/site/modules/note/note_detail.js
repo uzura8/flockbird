@@ -1,7 +1,3 @@
-$(function() {
-	$('ul.thumbnails li.span4:nth-child(3n+1)').css('margin-left', '0px')
-})
-
 $(function(){
 	var parent_id = get_id_from_url();
 	//show_list('note/comment/api/list/' + parent_id + '.html', '#comment_list', 5);

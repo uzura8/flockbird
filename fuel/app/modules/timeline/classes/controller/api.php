@@ -81,17 +81,7 @@ class Controller_Api extends \Controller_Site_Api
 			$post = $val->validated();
 
 			\DB::start_transaction();
-			$timeline = Model_Timeline::forge();
-			$timeline->member_id = $this->u->id;
-			$timeline->public_flag = $post['public_flag'];
-			$timeline->is_deleted = 0;
-			$timeline->save();
-
-			$timeline_data->timeline_id = $timeline->id;
-			$timeline_data->member_id = $this->u->id;
-			$timeline_data->body = $post['body'];
-			$timeline_data->type = Site_Util::get_timeline_type(null, $post['body']);
-			$timeline_data->save();
+			list($timeline, $timeline_data) = Site_Model::save_timeline($this->u->id, $post['public_flag'], \Config::get('timeline.types.normal'), $post['body'], $timeline_data);
 			\DB::commit_transaction();
 
 			$response['status'] = 1;

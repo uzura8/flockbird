@@ -26,4 +26,24 @@ class Site_Model
 
 		return \Site_Model::get_pager_list('timeline', $last_id, $params, 'Timeline', true, $is_over);
 	}
+
+	public static function save_timeline($member_id, $public_flag = null, $type = null, $body = null, Model_TimelineData $timeline_data = null, $foreign_table = null, $foreign_id = null, $foreign_column = null)
+	{
+		$timeline = Model_Timeline::forge();
+		$timeline->member_id = $member_id;
+		$timeline->public_flag = $public_flag;
+		$timeline->is_deleted = 0;
+		$timeline->save();
+
+		if (!$timeline_data) $timeline_data = Model_TimelineData::forge();
+		$timeline_data->timeline_id = $timeline->id;
+		$timeline_data->member_id = $member_id;
+		$timeline_data->body = $body;
+		$timeline_data->type = $type ?: Site_Util::get_timeline_type($body, $foreign_table);
+		if ($foreign_table) $timeline_data->foreign_table = $foreign_table;
+		if ($foreign_id) $timeline_data->foreign_id = $foreign_id;
+		$timeline_data->save();
+
+		return array($timeline, $timeline_data);
+	}
 }

@@ -32,6 +32,9 @@ if (isset($content) && strlen($content))
 	echo $content;
 }
 ?>
+<?php if (!empty($images)): ?>
+<?php echo render('_parts/thumbnails', array('images' => $images)); ?>
+<?php endif; ?>
 		</div>
 <?php if ($date || isset($public_flag, $model, $id)): ?>
 		<div class="sub_info">

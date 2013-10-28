@@ -3,14 +3,81 @@ namespace Timeline;
 
 class Site_Util
 {
-	public static function get_timeline_type($foreign_table = null, $body = null)
+	public static function get_accept_timeline_foreign_tables()
 	{
-		if (!$foreign_table && $body)
+		return array(
+			'member',
+			'note',
+			'album_image',
+			'album',
+			'file',
+		);
+	}
+
+	public static function get_timeline_type($body = null, $foreign_table = null, $foreign_id = null, $foreign_column = null)
+	{
+		switch ($foreign_table)
 		{
-			return 1;// 通常 timeline 投稿(つぶやき)
+			case 'member':
+				if ($foreign_column == 'file_id') return 3;// profile 写真投稿
+				return 2;// SNS への参加
+				break;
+			case null:
+				if ($body) return 1;// 通常 timeline 投稿(つぶやき)
+				break;
+			default :
+				break;
 		}
 
 		return 0;
+	}
+
+	public static function get_timeline_body($type, $body = null)
+	{
+		switch ($type)
+		{
+			case 1:// 通常 timeline 投稿(つぶやき)
+				return $body;
+				break;
+			case 2:// SNS への参加
+				return PRJ_SITE_NAME.' に参加しました。';
+				break;
+			case 3:// profile 写真投稿
+				return \Config::get('term.profile').'写真を設定しました。';
+				break;
+			default :
+				break;
+		}
+
+		return $body;
+	}
+
+	public static function get_timeline_images($type, $foreign_table, $foreign_id)
+	{
+		$accept_types = array();
+		$accept_types[] = \Config::get('timeline.types.profile_image');
+		if (!in_array($type, $accept_types)) return null;
+
+		$images = array();
+		if ($type == \Config::get('timeline.types.profile_image') && $foreign_table == 'album_image')
+		{
+			$images['list']   = array();
+			$images['list'][] = \Album\Model_AlbumImage::find($foreign_id);
+			$images['file_cate']        = 'ai';
+			$images['additional_table'] = 'profile';
+			$images['size']             = 'P_LL';
+			$images['column_count']     = 2;
+		}
+		elseif ($type == \Config::get('timeline.types.profile_image') && $foreign_table == 'file')
+		{
+			$images['list']   = array();
+			$images['list'][] = \Model_File::find($foreign_id);
+			$images['file_cate']        = 'm';
+			$images['size']             = 'LL';
+			$images['column_count']     = 2;
+		}
+
+		return $images;
 	}
 
 	public static function check_is_editable($type)
@@ -25,16 +92,16 @@ class Site_Util
 		return false;
 	}
 
-	public static function get_article_view($timeline_obj)
+	public static function get_article_view(Model_Timeline $timeline)
 	{
-		//$timeline_data = Model_TimelineData::query()->related('member')->where('timeline_id', $timeline_obj->id)->get_one();
+		//$timeline_data = Model_TimelineData::query()->related('member')->where('timeline_id', $timeline->id)->get_one();
 		$timeline_data = Model_TimelineData::find('first', array(
-			'where' => array('timeline_id' => $timeline_obj->id),
+			'where' => array('timeline_id' => $timeline->id),
 			'related' => array('member')
 		));
 
 		return render('_parts/timeline/article', array(
-			'timeline' => $timeline_obj,
+			'timeline' => $timeline,
 			'timeline_data' => $timeline_data,
 			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),
 		));

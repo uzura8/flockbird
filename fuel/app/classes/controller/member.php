@@ -174,72 +174,70 @@ class Controller_Member extends Controller_Site
 		{
 			Util_security::check_csrf();
 
-			$val->add('password', 'パスワード', array('type'=>'password'))
-				->add_rule('trim')
-				->add_rule('required')
-				->add_rule('min_length', 6)
-				->add_rule('max_length', 20)
-				->add_rule('match_value', $member_pre->password);
-			$val->set_message('match_value', 'パスワードが正しくありません。');
-			$val->add('token', '', array('type'=>'hidden'))
-				->add_rule('required');
-
-			if ($val->run())
+			try
 			{
-				try
-				{
-					// create new member
-					$auth = Auth::instance();
-					if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $member_pre->name))
-					{
-						throw new Exception('create member error.');
-					}
+				$val->add('password', 'パスワード', array('type'=>'password'))
+					->add_rule('trim')
+					->add_rule('required')
+					->add_rule('min_length', 6)
+					->add_rule('max_length', 20)
+					->add_rule('match_value', $member_pre->password);
+				$val->set_message('match_value', 'パスワードが正しくありません。');
+				$val->add('token', '', array('type'=>'hidden'))
+					->add_rule('required');
 
-					$maildata = array();
-					$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
-					$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-					$maildata['subject']      = \Config::get('site.member_register_mail.subject');
-					$maildata['to_address']   = $member_pre->email;
-					$maildata['to_name']      = $member_pre->name;
-					$maildata['password']     = $member_pre->password;
-					$this->send_register_mail($maildata);
+				if (!$val->run()) throw new \FuelException($val->show_errors());
 
-					// 仮登録情報の削除
-					$email    = $member_pre->email;
-					$password = $member_pre->password;
-					$member_pre->delete();
+				\DB::start_transaction();
+				// create new member
+				$auth = Auth::instance();
+				if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $member_pre->name))
+				{
+					throw new Exception('create member error.');
+				}
+				// 仮登録情報の削除
+				$email    = $member_pre->email;
+				$password = $member_pre->password;
+				$member_pre->delete();
+				// timeline 投稿
+				\Timeline\Site_Model::save_timeline($member_id, Config::get('site.public_flag.default'), Config::get('timeline.types.member_register'));
+				\DB::commit_transaction();
 
-					if ($auth->login($email, $password))
-					{
-						Session::set_flash('message', '登録が完了しました。');
-						Response::redirect('member');
-					}
+				$maildata = array();
+				$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
+				$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+				$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+				$maildata['to_address']   = $member_pre->email;
+				$maildata['to_name']      = $member_pre->name;
+				$maildata['password']     = $member_pre->password;
+				$this->send_register_mail($maildata);
 
-					Session::set_flash('error', 'ログインに失敗しました');
-					Response::redirect(Config::get('site.login_uri.site'));
-				}
-				catch(EmailValidationFailedException $e)
+				if ($auth->login($email, $password))
 				{
-					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-					return;
+					Session::set_flash('message', '登録が完了しました。');
+					Response::redirect('member');
 				}
-				catch(EmailSendingFailedException $e)
-				{
-					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-					return;
-				}
-				catch(Auth\SimpleUserUpdateException $e)
-				{
-					Session::set_flash('error', 'そのアドレスは登録できません');
-				}
-				catch(Exception $e)
-				{
-					Session::set_flash('error', '登録にに失敗しました。');
-				}
+				Session::set_flash('error', 'ログインに失敗しました');
+				Response::redirect(Config::get('site.login_uri.site'));
 			}
-			else
+			catch(EmailValidationFailedException $e)
 			{
-				Session::set_flash('error', $val->show_errors());
+				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+				return;
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+				return;
+			}
+			catch(\Auth\SimpleUserUpdateException $e)
+			{
+				Session::set_flash('error', 'そのアドレスは登録できません');
+			}
+			catch(\FuelException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				Session::set_flash('error', $e->getMessage());
 			}
 		}
 

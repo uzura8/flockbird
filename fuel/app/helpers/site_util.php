@@ -77,7 +77,7 @@ function site_get_screen_name($u)
 	return (!empty($u->name)) ? $u->name : 'メンバーID:'.$u->id;
 }
 
-function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false)
+function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false, $anchor_attrs = array())
 {
 	$option = array();
 	$is_raw = $size == 'raw';
@@ -106,7 +106,7 @@ function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = fa
 			}
 			$noimage_tag = Html::img($noimage_file_root_path, $option);
 		}
-		if ($link_uri) return Html::anchor($link_uri, $noimage_tag);
+		if ($link_uri) return Html::anchor($link_uri, $noimage_tag, $anchor_attrs);
 
 		return $noimage_tag;
 	}
@@ -116,8 +116,12 @@ function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = fa
 	if ($alt) $option['alt'] = $alt;
 	$image_tag = Html::img($uri_path, $option);
 
-	if ($link_uri) return Html::anchor($link_uri, $image_tag);
-	if ($is_link2raw_file) return Html::anchor($uri_path_raw, $image_tag);
+	if ($link_uri) return Html::anchor($link_uri, $image_tag, $anchor_attrs);
+	if ($is_link2raw_file)
+	{
+		$anchor_attrs['target'] = '_blank';
+		return Html::anchor($uri_path_raw, $image_tag, $anchor_attrs);
+	}
 
 	return $image_tag;
 }

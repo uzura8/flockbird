@@ -1027,6 +1027,7 @@ CREATE TABLE `timeline_data` (
   `body` text NULL,
   `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
+  `foreign_column` varchar(20) NULL COMMENT 'The column name of reference table',
   `source` varchar(64) NULL COMMENT 'The source caption',
   `source_uri` text NULL COMMENT 'The source URI',
   `created_at` datetime NOT NULL,
