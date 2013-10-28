@@ -43,9 +43,14 @@ class Site_Uploader
 
 	public function execute($file_path = null)
 	{
-		if (!$file_path) $file_path = $this->upload_file();
-
+		if (!$file_path)
+		{
+			$file_info = $this->upload_file();
+			$file_path = $file_info['path'];
+		}
 		$file = $this->get_file_info($file_path);
+		$file['original_name'] = !empty($file_info['original_name']) ? $file_info['original_name'] : $file['name'];
+
 		if ($this->member_id && $this->file_size_limit)
 		{
 			$this->check_filesize_per_member($file['size']);
@@ -74,7 +79,7 @@ class Site_Uploader
 		Upload::save(0);
 		$file = Upload::get_files(0);
 
-		return $file['saved_to'].$file['saved_as'];
+		return array('path' => $file['saved_to'].$file['saved_as'], 'original_name' => $file['name']);
 	}
 
 	private function get_file_info($file_path)

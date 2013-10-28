@@ -94,7 +94,7 @@ class Site_Upload
 		$file->name = $uploaded_file['new_filename'];
 		$file->path = $filepath;
 		$file->filesize = $uploaded_file['size'];
-		if ($is_save_original_filename) $file->original_filename = $uploaded_file['name'];
+		if ($is_save_original_filename && !empty($uploaded_file['original_name'])) $file->original_filename = $uploaded_file['original_name'];
 		$file->type = $uploaded_file['type'];
 		if ($member_id) $file->member_id = $member_id;
 		if ($uploaded_file['exif'])
