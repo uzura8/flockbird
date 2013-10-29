@@ -7,3 +7,6 @@
 .commentBox .btn_comment_delete {
 	display: none;
 }
+.btn_timeline_delete {
+	display: none;
+}
