@@ -16,6 +16,20 @@ body {
 		margin-left: 5px;
 	}
 }
+@media (max-width: 480px) {
+	body {
+		padding-left: 3px;
+		padding-right: 3px;
+	}
+	 .navbar-fixed-top,  .navbar-fixed-bottom,  .navbar-static-top {
+		margin-left: -3px;
+		margin-right: -3px;
+	}
+	.navbar-fixed-top .navbar .container {
+		padding-left: 2px;
+		padding-right: 2px;
+	}
+}
 
 .sidebar-nav {
 	padding: 9px 0;
@@ -71,7 +85,9 @@ img.profile_image {
 .member_img_box_ss div.content {
 	margin-left: 24px;
 }
-.member_img_box_s div.content {
+.member_img_box_s div.content,
+.member_img_box_m div.content div.member_img_box_s div.content
+{
 	margin-left: 35px;
 }
 .member_img_box_m div.content {
@@ -125,7 +141,7 @@ img.profile_image {
 }
 
 .timelineBox .content .main {
-	padding-right: 30px;
+	padding-right: 5px;
 }
 #article_list .timelineBox .member_img_box_m {
 	min-height: 55px;
