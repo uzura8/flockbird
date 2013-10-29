@@ -45,6 +45,9 @@ class Site_Util
 			case 3:// profile 写真投稿
 				return \Config::get('term.profile').'写真を設定しました。';
 				break;
+			case 4:// note 投稿
+				return \Config::get('term.note').'を投稿しました。';
+				break;
 			default :
 				break;
 		}
@@ -52,10 +55,37 @@ class Site_Util
 		return $body;
 	}
 
+	public static function get_quote_article($type, $foreign_table, $foreign_id)
+	{
+		$accept_types = array();
+		$accept_types[] = \Config::get('timeline.types.note');
+		if (!in_array($type, $accept_types)) return null;
+
+		$title = array('value' => '', 'truncate_count' => 0);
+		$body  = array('value' => '', 'truncate_count' => 0, 'truncate_type' => 'line');
+		$read_more_uri  = '';
+		switch ($type)
+		{
+			case 4:// note 投稿
+				$note = \Note\Model_Note::find($foreign_id);
+				$title['value'] = $note->title;
+				$title['truncate_count'] = \Config::get('note.articles.trim_width.title');
+				$body['value'] = $note->body;
+				$body['truncate_count'] = \Config::get('timeline.articles.truncate_lines.body');
+				$read_more_uri = 'note/'.$note->id;
+				break;
+			default :
+				break;
+		}
+
+		return render('_parts/quote_article', array('title' => $title, 'body' => $body, 'read_more_uri' => $read_more_uri));
+	}
+
 	public static function get_timeline_images($type, $foreign_table, $foreign_id)
 	{
 		$accept_types = array();
 		$accept_types[] = \Config::get('timeline.types.profile_image');
+		$accept_types[] = \Config::get('timeline.types.note');
 		if (!in_array($type, $accept_types)) return null;
 
 		$images = array();
@@ -75,6 +105,15 @@ class Site_Util
 			$images['file_cate']        = 'm';
 			$images['size']             = 'LL';
 			$images['column_count']     = 2;
+		}
+		elseif ($type == \Config::get('timeline.types.note') && $foreign_table == 'note')
+		{
+			$images['list']   = array();
+			$images['list'] = \Note\Model_NoteAlbumImage::get_album_image4note_id($foreign_id, 3);
+			$images['file_cate']        = 'ai';
+			$images['additional_table'] = 'note';
+			$images['size']             = 'N_M';
+			$images['column_count']     = 3;
 		}
 
 		return $images;

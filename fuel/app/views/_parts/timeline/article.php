@@ -29,8 +29,14 @@ if (!empty($truncate_lines))
 	$data['truncate_lines'] = $truncate_lines;
 	$data['read_more_uri']  = 'timeline/'.$timeline->id;
 }
+$view_member_contents_box = View::forge('_parts/member_contents_box', $data);
+
+$quote_article = \Timeline\Site_Util::get_quote_article($timeline_data->type, $timeline_data->foreign_table, $timeline_data->foreign_id);
+if ($quote_article) $view_member_contents_box->set_safe('quote_article', $quote_article);
+
+echo $view_member_contents_box->render();
 ?>
-<?php echo render('_parts/member_contents_box', $data); ?>
+
 <?php if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline_data->type)): ?>
 <a class="btn btn-mini boxBtn btn_timeline_delete"<?php if (!empty($delete_uri)): ?> data-uri="<?php echo $delete_uri; ?>"<?php endif; ?> data-id="<?php echo $timeline->id; ?>" id="btn_timeline_delete_<?php echo $timeline->id; ?>" href="#"><i class="icon-trash"></i></a>
 <?php endif ; ?>

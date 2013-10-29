@@ -160,6 +160,10 @@ class Controller_Note extends \Controller_Site
 				}
 				\DB::start_transaction();
 				$note->save();
+
+				// timeline 投稿
+				\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], \Config::get('timeline.types.note'), null, null, 'note', $note->id);
+
 				if ($is_upload['simple'] && \Input::file())
 				{
 					Model_NoteAlbumImage::save_with_file($note->id, $this->u, $post['public_flag']);

@@ -9,7 +9,7 @@ return array(
 			'body'  => 500,
 		),
 		'truncate_lines' => array(
-			'body'  => 3,
+			'body'  => 5,
 		),
 		'comment' => array(
 			'limit' => 3,
@@ -20,6 +20,7 @@ return array(
 		'normal' => 1,
 		'member_register' => 2,
 		'profile_image' => 3,
+		'note' => 4,
 	),
 	'display_setting' => array(
 	),

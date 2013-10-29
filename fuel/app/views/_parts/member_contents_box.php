@@ -32,6 +32,7 @@ if (isset($content) && strlen($content))
 	echo $content;
 }
 ?>
+<?php if (!empty($quote_article)) echo $quote_article; ?>
 <?php if (!empty($images)): ?>
 <?php echo render('_parts/thumbnails', array('images' => $images)); ?>
 <?php endif; ?>
