@@ -61,6 +61,10 @@ define('PRJ_FACEBOOK_APP_SECRET', '');
 define('PRJ_TWITTER_APP_ID', '');
 define('PRJ_TWITTER_APP_SECRET', '');
 
+// Google 関連設定
+define('PRJ_GOOGLE_APP_ID', '');
+define('PRJ_GOOGLE_APP_SECRET', '');
+
 
 // アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum)
 // 未指定の場合は php.ini の値
