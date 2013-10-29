@@ -16,6 +16,10 @@ class Site_Member
 		}
 		else
 		{
+			// 古いファイルの削除
+			$deleted_filesize = (int)Model_File::delete_with_file($member->file_id);
+			Model_Member::add_filesize($member->id, -$deleted_filesize);
+
 			$file = Site_Upload::upload('m', $member->id, $member->id, $member->filesize_total, array(), $member->get_image(), $member->file_id, $file_path, $is_save_original_filename);
 			$member->file_id = $file->id;
 			$member->save();

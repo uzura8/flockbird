@@ -200,12 +200,14 @@ class Controller_Member_profile extends Controller_Member
 				Model_Member::add_filesize($this->u->id, -$this->u->file->filesize);
 				$this->u->file_id = null;
 				$this->u->save();
+				list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
+				\Timeline\Site_Model::delete_timeline('file', $file->id);
+				$file->delete();
 			}
 			DB::commit_transaction();
 
 			if (isset($file))
 			{
-				list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
 				Site_Upload::remove_images($filepath, $filename);
 			}
 

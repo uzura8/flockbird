@@ -46,4 +46,28 @@ class Site_Model
 
 		return array($timeline, $timeline_data);
 	}
+
+	public static function delete_timeline($foreign_table, $foreign_id)
+	{
+		$timeline_data = Model_TimelineData::query()->related('timeline')
+			->where('foreign_table', $foreign_table)
+			->where('foreign_id', $foreign_id)
+			->get_one();
+		if (!$timeline_data) return false;
+
+		return $timeline_data->timeline->delete();
+	}
+
+	public static function delete_timelines($foreign_table, array $foreign_ids)
+	{
+		$timeline_ids = \Util_db::conv_col(
+			\DB::select('timeline_id')->from('timeline_data')
+				->where('foreign_table', $foreign_table)
+				->where('foreign_id', 'in', $foreign_ids)
+				->execute()->as_array()
+		);
+		if (!$timeline_ids) return false;
+
+		return \DB::delete('timeline')->where('id', 'in', $timeline_ids)->execute();
+	}
 }

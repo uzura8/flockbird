@@ -349,9 +349,20 @@ class Controller_Note extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		$note->delete_with_images();
+		try
+		{
+			\DB::start_transaction();
+			\Timeline\Site_Model::delete_timeline('note', $note->id);
+			$note->delete_with_images();
+			\DB::commit_transaction();
+			\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
+		}
+		catch(\FuelException $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			\Session::set_flash('error', $e->getMessage());
+		}
 
-		\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
 		\Response::redirect('note/member');
 	}
 

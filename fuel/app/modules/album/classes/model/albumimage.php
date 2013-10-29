@@ -111,7 +111,8 @@ class Model_AlbumImage extends \Orm\Model
 			$album_image->album->save();
 		}
 
-		$album_id = $album_image->album_id;
+		\Timeline\Site_Model::delete_timeline('album_image', $id);
+
 		$album_image->file = \Model_File::find($album_image->file_id);
 		$filename = $album_image->file->name;
 		$filepath = $album_image->file->path;
@@ -170,7 +171,7 @@ class Model_AlbumImage extends \Orm\Model
 		return $self;
 	}
 
-	public static function delete_multiple($ids, $album)
+	public static function delete_multiple($ids, \Album\Model_Album $album)
 	{
 		$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $ids)->execute()->as_array());
 		$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
@@ -189,9 +190,17 @@ class Model_AlbumImage extends \Orm\Model
 			$album->member->save();
 		}
 
+		// delete timeline data.
+		\Timeline\Site_Model::delete_timelines('album_image', $ids);
+
 		$is_db_error = false;
 		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
 		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) $is_db_error = true;
+
+		foreach ($deleted_files as $file)
+		{
+			\Site_Upload::remove_images($file['path'], $file['name']);
+		}
 
 		\Model_Member::recalculate_filesize_total($album->member_id);
 

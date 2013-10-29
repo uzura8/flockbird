@@ -112,6 +112,8 @@ class Model_FileTmp extends \Orm\Model
 			throw new \FuelException('Invalid file_tmp id.');
 		}
 
+		\Timeline\Site_Model::delete_timeline('album_image', $id);
+
 		$filename = $obj->name;
 		$filepath = $obj->path;
 		$filesize = $obj->filesize;

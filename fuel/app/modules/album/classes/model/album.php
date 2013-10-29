@@ -114,6 +114,14 @@ class Model_Album extends \Orm\Model
 		// Delete table file data.
 		if ($file_ids) \DB::delete('file')->where('id', 'in', $file_ids)->execute();
 
+		// Delete table timeline data.
+		$album_image_ids = \Util_db::conv_col(
+			\DB::select('album_image_id')->from('album_image')
+				->where('album_id', $id)
+				->execute()->as_array()
+		);
+		\Timeline\Site_Model::delete_timelines('album_image', $album_image_ids);
+
 		// Delete album.
 		$album->delete();
 	}

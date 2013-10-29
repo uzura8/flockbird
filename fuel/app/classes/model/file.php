@@ -110,4 +110,17 @@ class Model_File extends \Orm\Model
 
 		return $obj;
 	}
+
+	public static function delete_with_file($id)
+	{
+		if (!$self = self::find($id)) return false;
+
+		\Timeline\Site_Model::delete_timeline('file', $id);
+		Site_Upload::remove_images($self->path, $self->name);
+
+		$deleted_filesize = $self->filesize;
+		$self->delete();
+
+		return $deleted_filesize;
+	}
 }

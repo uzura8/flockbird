@@ -1027,13 +1027,13 @@ CREATE TABLE `timeline_data` (
   `body` text NULL,
   `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
-  `foreign_column` varchar(20) NULL COMMENT 'The column name of reference table',
   `source` varchar(64) NULL COMMENT 'The source caption',
   `source_uri` text NULL COMMENT 'The source URI',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
+  UNIQUE KEY `foreign_table_foreign_id_UNIQUE_idx` (`foreign_table`, `foreign_id`),
   CONSTRAINT `timeline_data_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
