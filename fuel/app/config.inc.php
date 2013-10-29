@@ -115,7 +115,8 @@ function _make_cache($list)
 	}
 	unset($list);
 
-	return file_put_contents(PRJ_DEFAULT_CONFIG_SETTING_CACHE, serialize($caches));
+	return file_put_contents(PRJ_DEFAULT_CONFIG_SETTING_CACHE, serialize($caches))
+		&& chmod(PRJ_DEFAULT_CONFIG_SETTING_CACHE, 0777);
 }
 
 function _get_definition($strings)
