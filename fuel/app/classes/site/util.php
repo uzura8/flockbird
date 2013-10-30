@@ -231,4 +231,13 @@ class Site_Util
 
 		return $file_tmps;
 	}
+
+	public static function convert_img_size_down($size, $type = 'm')
+	{
+		$size  = strtoupper($size);
+		$sizes = Config::get('site.upload.types.img.types.'.$type.'.sizes');
+		if (!array_key_exists($size, $sizes)) return false;
+
+		return Arr::previous_by_key($sizes, $size);
+	}
 }

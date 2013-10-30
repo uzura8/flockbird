@@ -61,6 +61,7 @@ $config = array(
 				),
 				'types' => array(
 					'm' => array(
+						// サイズが小さい順に定義する
 						'sizes' => array(
 							'SS' => '20x20xc',
 							'S' => '30x30xc',

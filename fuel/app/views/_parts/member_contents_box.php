@@ -1,11 +1,8 @@
 <?php
-$class_name = 'member_img_box_s';
-$img_size   = '30x30xc';
-if (isset($size))
-{
-	$class_name = 'member_img_box_'.strtolower($size);
-	$img_size   = Config::get('site.upload.types.img.types.m.sizes.'.strtoupper($size));
-}
+$size = empty($size) ? 'S' : strtoupper($size);
+if (IS_SP) $size = Site_Util::convert_img_size_down($size) ?: $size;
+$class_name = 'member_img_box_'.strtolower($size);
+$img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 ?>
 <div class="<?php echo $class_name; ?>">
 	<?php echo empty($member) ? img('m', $img_size) : img($member->get_image(), $img_size, 'member/'.$member->id, false, site_get_screen_name($member), true); ?>
