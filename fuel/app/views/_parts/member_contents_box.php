@@ -83,6 +83,9 @@ echo render('_parts/comment/list', array(
 </div>
 
 <?php if (Auth::check()): ?>
+<?php if ($comment['all_comment_count']): ?>
+<?php echo Html::anchor('#', 'コメントする', array('class' => 'link_comment hide-after_click showCommentBox', 'data-id' => $parent->id)); ?>
+<?php endif; ?>
 <?php
 $post_comment_button_attrs_def = array('class' => 'btn btn-small btn_comment', 'id' => 'btn_comment_'.$parent->id, 'data-parent_id' => $parent->id,);
 $post_comment_button_attrs     = empty($post_comment_button_attrs) ? $post_comment_button_attrs_def : array_merge($post_comment_button_attrs_def, $post_comment_button_attrs);

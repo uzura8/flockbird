@@ -27,6 +27,7 @@ $(function() {
 	});
 
 	$(document).on('click','.link_comment', function(){
+		if ($(this).hasClass('hide-after_click')) $(this).hide();
 		$('#commentPostBox_' + $(this).data('id')).show();
 		$('#textarea_comment_' + $(this).data('id')).focus();
 		return false;

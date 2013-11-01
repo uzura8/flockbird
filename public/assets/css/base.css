@@ -170,7 +170,8 @@ a.load_more_timeline {
 
 .commentBox,
 .commentPostBox,
-.listMoreBox
+.listMoreBox,
+.showCommentBox
 {
 	margin-bottom: 3px;
 	padding: 5px;
@@ -178,11 +179,13 @@ a.load_more_timeline {
 	position: relative;
 	word-wrap: break-word;
 }
-.listMoreBox
+.listMoreBox,
+.showCommentBox
 {
 	text-align: center;
 }
-a.listMoreBox
+a.listMoreBox,
+a.showCommentBox
 {
 	display: block;
 }
