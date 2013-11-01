@@ -69,22 +69,30 @@ if (isset($public_flag, $model, $id))
 <?php endif; ?>
 </div>
 <div id="comment_list_<?php echo $parent->id; ?>">
-<?php echo render('_parts/comment/list', array(
+<?php
+$list_more_box_attrs_def = array('id' => 'listMoreBox_comment_'.$parent->id, 'data-parent_id' => $parent->id);
+$list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);
+echo render('_parts/comment/list', array(
 	'u' => $u,
 	'parent' => $parent,
 	'comments' => $comment['list'],
 	'is_all_records' => $comment['is_all_records'],
-	'list_more_box_attrs' => array('id' => 'listMoreBox_comment_'.$parent->id, 'data-parent_id' => $parent->id),
-)); ?>
+	'list_more_box_attrs' => $list_more_box_attrs,
+));
+?>
 </div>
 
 <?php if (Auth::check()): ?>
-<?php echo render('_parts/post_comment', array(
+<?php
+$post_comment_button_attrs_def = array('class' => 'btn btn-small btn_comment', 'id' => 'btn_comment_'.$parent->id, 'data-parent_id' => $parent->id,);
+$post_comment_button_attrs     = empty($post_comment_button_attrs) ? $post_comment_button_attrs_def : array_merge($post_comment_button_attrs_def, $post_comment_button_attrs);
+echo render('_parts/post_comment', array(
 	'u' => $u,
-	'button_attrs' => array('class' => 'btn btn-small btn_comment', 'id' => 'btn_comment_'.$parent->id, 'data-parent_id' => $parent->id,),
+	'button_attrs' => $post_comment_button_attrs,
 	'textarea_attrs' => array('class' => 'span12 autogrow', 'id' => 'textarea_comment_'.$parent->id),
 	'parts_attrs' => array('id' => 'commentPostBox_'.$parent->id),
-)); ?>
+));
+?>
 <?php endif; ?>
 <?php endif; ?>
 

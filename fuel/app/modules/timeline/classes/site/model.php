@@ -27,7 +27,23 @@ class Site_Model
 		return \Site_Model::get_pager_list('timeline', $last_id, $params, 'Timeline', true, $is_over);
 	}
 
-	public static function save_timeline($member_id, $public_flag = null, $type = null, $body = null, Model_TimelineData $timeline_data = null, $foreign_table = null, $foreign_id = null, $foreign_column = null)
+	public static function get_comments($type, $timeline_id, $foreign_table = '', $foreign_id = 0, $limit = 0)
+	{
+		if (!$limit) $limit = \Config::get('timeline.articles.comment.limit');
+
+		if ($type == \Config::get('timeline.types.note'))
+		{
+			return \Note\Model_NoteComment::get_comments($foreign_id, $limit);
+		}
+		elseif ($type == \Config::get('timeline.types.profile_image') && $foreign_table == 'album_image')
+		{
+			return \Album\Model_AlbumImageComment::get_comments($foreign_id, $limit);
+		}
+
+		return Model_TimelineComment::get_comments($timeline_id, $limit);;
+	}
+
+	public static function save_timeline($member_id, $public_flag = null, $type = null, $body = null, Model_TimelineData $timeline_data = null, $foreign_table = null, $foreign_id = null)
 	{
 		$timeline = Model_Timeline::forge();
 		$timeline->member_id = $member_id;
@@ -39,7 +55,7 @@ class Site_Model
 		$timeline_data->timeline_id = $timeline->id;
 		$timeline_data->member_id = $member_id;
 		$timeline_data->body = $body;
-		$timeline_data->type = $type ?: Site_Util::get_timeline_type($body, $foreign_table);
+		$timeline_data->type = $type ?: \Config::get('timeline.types.normal');
 		if ($foreign_table) $timeline_data->foreign_table = $foreign_table;
 		if ($foreign_id) $timeline_data->foreign_id = $foreign_id;
 		$timeline_data->save();

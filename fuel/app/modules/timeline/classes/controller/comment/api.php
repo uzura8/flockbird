@@ -70,14 +70,18 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$timeline_id = (int)\Input::post('id');
-			if (!$timeline_id || !$timeline = Model_Timeline::check_authority($timeline_id))
+			if (!$timeline_id || !$timeline = Model_Timeline::check_authority($timeline_id, 0, true))
 			{
 				throw new \HttpNotFoundException;
 			}
 			$this->check_public_flag($timeline->public_flag, $timeline->member_id);
 
-			// Lazy validation
-			if (!$body = trim(\Input::post('body', ''))) throw new \HttpNotFoundException;
+			// validation
+			if (!Site_Util::check_accepted_type_for_post_comment($timeline->timeline_data->type, $timeline->timeline_data->foreign_table))
+			{
+				throw new \HttpInvalidInputException;
+			}
+			if (!$body = trim(\Input::post('body', ''))) throw new \HttpInvalidInputException;
 
 			// Create a new comment
 			$values = array(
@@ -92,6 +96,10 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			$response['status'] = 1;
 			$response['id'] = $comment->id;
 			$status_code = 200;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
 		}
 		catch(\FuelException $e)
 		{

@@ -66,11 +66,13 @@ class Model_Timeline extends \Orm\Model
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 	}
 
-	public static function check_authority($id, $target_member_id = 0)
+	public static function check_authority($id, $target_member_id = 0, $with_timeline_data = false)
 	{
 		if (!$id) return false;
 
-		$obj = self::find($id);
+		$options = array();
+		if ($with_timeline_data) $options['related'] = array('timeline_data');
+		$obj = self::find($id, $options);
 		if (!$obj) return false;
 
 		if ($target_member_id && $obj->member_id != $target_member_id) return false;

@@ -1,5 +1,5 @@
 <?php
-list($list, $is_all_records, $all_comment_count) = \Timeline\Model_TimelineComment::get_comments($timeline->id, \Config::get('timeline.articles.comment.limit'));
+list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline_data->type, $timeline->id, $timeline_data->foreign_table, $timeline_data->foreign_id);
 $comment = array(
 	'list' => $list,
 	'is_all_records' => $is_all_records,
@@ -10,6 +10,7 @@ $comment = array(
 <div class="timelineBox" id="timelineBox_<?php echo $timeline->id; ?>" data-id="<?php echo $timeline->id; ?>">
 
 <?php
+$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri($timeline_data->type, $timeline_data->foreign_table, false, $timeline->id, $timeline_data->foreign_id);
 $data = array(
 	'member'  => $timeline_data->member,
 	'size'    => 'M',
@@ -21,6 +22,12 @@ $data = array(
 	'id'      => $timeline->id,
 	'public_flag' => $timeline->public_flag,
 	'public_flag_view_icon_only' => IS_SP,
+	'list_more_box_attrs' => array('data-get_uri' => $comment_get_uri),
+	'post_comment_button_attrs' => array(
+		'data-get_uri' => $comment_get_uri,
+		'data-post_parent_id' => \Timeline\Site_Util::get_comment_parent_id($timeline_data->type, $timeline_data->foreign_table, $timeline->id, $timeline_data->foreign_id),
+		'data-post_uri' => \Timeline\Site_Util::get_comment_api_uri($timeline_data->type, $timeline_data->foreign_table, true),
+	),
 );
 if (!empty($is_convert_nl2br)) $data['is_convert_nl2br'] = $is_convert_nl2br;
 if (!empty($trim_width)) $data['trim_width'] = $trim_width;

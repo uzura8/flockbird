@@ -14,38 +14,20 @@ class Site_Util
 		);
 	}
 
-	public static function get_timeline_type($body = null, $foreign_table = null, $foreign_id = null, $foreign_column = null)
-	{
-		switch ($foreign_table)
-		{
-			case 'member':
-				if ($foreign_column == 'file_id') return 3;// profile 写真投稿
-				return 2;// SNS への参加
-				break;
-			case null:
-				if ($body) return 1;// 通常 timeline 投稿(つぶやき)
-				break;
-			default :
-				break;
-		}
-
-		return 0;
-	}
-
 	public static function get_timeline_body($type, $body = null)
 	{
 		switch ($type)
 		{
-			case 1:// 通常 timeline 投稿(つぶやき)
+			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
 				return $body;
 				break;
-			case 2:// SNS への参加
+			case \Config::get('timeline.types.member_register'):// SNS への参加
 				return PRJ_SITE_NAME.' に参加しました。';
 				break;
-			case 3:// profile 写真投稿
+			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
 				return \Config::get('term.profile').'写真を設定しました。';
 				break;
-			case 4:// note 投稿
+			case \Config::get('timeline.types.note'):// note 投稿
 				return \Config::get('term.note').'を投稿しました。';
 				break;
 			default :
@@ -66,7 +48,7 @@ class Site_Util
 		$read_more_uri  = '';
 		switch ($type)
 		{
-			case 4:// note 投稿
+			case \Config::get('timeline.types.note'):// note 投稿
 				$note = \Note\Model_Note::find($foreign_id);
 				$title['value'] = $note->title;
 				$title['truncate_count'] = \Config::get('note.articles.trim_width.title');
@@ -79,6 +61,55 @@ class Site_Util
 		}
 
 		return render('_parts/quote_article', array('title' => $title, 'body' => $body, 'read_more_uri' => $read_more_uri));
+	}
+
+	public static function check_accepted_type_for_post_comment($type, $foreign_table = '')
+	{
+		if ($type == \Config::get('timeline.types.note'))
+		{
+			return false;
+		}
+		elseif ($type == \Config::get('timeline.types.profile_image') && $foreign_table == 'album_image')
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	public static function get_comment_parent_id($type, $foreign_table = '', $timeline_id = 0, $foreign_id = 0)
+	{
+		if ($type == \Config::get('timeline.types.note'))
+		{
+			return $foreign_id;
+		}
+		elseif ($type == \Config::get('timeline.types.profile_image') && $foreign_table == 'album_image')
+		{
+			return $foreign_id;
+		}
+
+		return $timeline_id;
+	}
+
+	public static function get_comment_api_uri($type, $foreign_table = '', $is_post = false, $timeline_id = 0, $foreign_id = 0)
+	{
+		$common_path = $is_post ? 'comment/api/create.json' : 'comment/api/list/'.$foreign_id.'.html';
+
+		if ($type == \Config::get('timeline.types.note'))
+		{
+			$prefix = 'note/';
+		}
+		elseif ($type == \Config::get('timeline.types.profile_image') && $foreign_table == 'album_image')
+		{
+			$prefix = 'album/image/';
+		}
+		else
+		{
+			$prefix = 'timeline/';
+			if (!$is_post) $common_path = 'comment/api/list/'.$timeline_id.'.html';
+		}
+
+		return $prefix.$common_path;
 	}
 
 	public static function get_timeline_images($type, $foreign_table, $foreign_id)
@@ -121,14 +152,11 @@ class Site_Util
 
 	public static function check_is_editable($type)
 	{
-		switch ($type)
-		{
-			case 1:
-				return true;
-				break;
-		}
+		$editable_types = array(
+			\Config::get('timeline.types.normal')
+		);
 
-		return false;
+		return in_array($type, $editable_types);
 	}
 
 	public static function get_article_view(Model_Timeline $timeline)

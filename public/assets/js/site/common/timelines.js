@@ -35,10 +35,14 @@ $(function() {
 	$(document).on('click','.btn_comment', function(){
 		if (GL.execute_flg) return false;
 		var parent_id = $(this).data('parent_id');
+		var post_parent_id = $(this).data('post_parent_id') ? $(this).data('post_parent_id') : parent_id;
+		var post_uri = $(this).data('post_uri') ? $(this).data('post_uri') : 'timeline/comment/api/create.json';
+		var get_uri = $(this).data('get_uri') ? $(this).data('get_uri') : 'timeline/comment/api/list/' + post_parent_id + '.html';
+
 		create_comment(
-			parent_id,
-			'timeline/comment/api/create.json',
-			'timeline/comment/api/list/' + parent_id + '.html',
+			post_parent_id,
+			post_uri,
+			get_uri,
 			$('.commentBox_' + parent_id).last().attr('id'),
 			this,
 			1,
@@ -52,8 +56,11 @@ $(function() {
 	$(document).on('click','.listMoreBox', function(){
 		if (GL.execute_flg) return false;
 		var parent_id = $(this).data('parent_id');
+		var get_uri   = $(this).data('get_uri') ? $(this).data('get_uri') : '';
+		if (get_uri.length == 0) get_uri = 'timeline/comment/api/list/' + parent_id + '.html';
+
 		show_list(
-			'timeline/comment/api/list/' + parent_id + '.html',
+			get_uri,
 			'#comment_list_' + parent_id,
 			0,
 			$('.commentBox_' + parent_id).first().attr('id'),
