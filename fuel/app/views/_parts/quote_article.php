@@ -1,6 +1,6 @@
 <?php if (isset($title['value']) && strlen($title['value'])): ?>
 <?php $label = strim($title['value'], $title['truncate_count']); ?>
-<h5><?php if (!empty($read_more_uri)): ?><?php echo Html::anchor($read_more_uri, $label); ?><?php else: ?><?php echo $label; ?><?php endif; ?></h5>
+<h4><?php if (!empty($read_more_uri)): ?><?php echo Html::anchor($read_more_uri, $label); ?><?php else: ?><?php echo $label; ?><?php endif; ?></h4>
 <?php endif; ?>
 <?php if (isset($body['value']) && strlen($body['value'])): ?>
 <?php

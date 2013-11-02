@@ -159,7 +159,7 @@ class Controller_Api extends \Controller_Site_Api
 			$data = array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true, 'without_parent_box' => true);
 			$response = \View::forge('_parts/public_flag_selecter', $data);
 
-			return \Response::forge($response, $status_code);
+			return \Response::forge($response, 200);
 		}
 		catch(\HttpInvalidInputException $e)
 		{
