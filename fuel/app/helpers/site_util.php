@@ -236,3 +236,27 @@ function conv_data_atter($list = array(), $is_html = false)
 
 	return $output;
 }
+
+function anchor_button($href, $icon_class = '', $text = '', $class_attr_add = '', $attr = array(), $is_mini_btn = false, $is_sp = false, $is_force_btn = false, $is_force_loud_color = false)
+{
+	$class_attrs  = array('btn');
+	if ($is_mini_btn) $class_attrs[] = 'btn-mini';
+
+	if ($is_sp && !$is_force_btn)
+	{
+		$class_attrs = array();
+		if (!$is_force_loud_color) $class_attrs = array('cl-modest');
+	}
+	$class_attr = implode(' ', $class_attrs);
+	if ($class_attr_add) $class_attr .= ' '.$class_attr_add;
+
+	if (!empty($attr['class'])) $class_attr .= ' '.$attr['class'];
+	$attr['class'] = $class_attr;
+
+	$element = '';
+	if ($icon_class) $element = sprintf('<i class="%s"></i>', $icon_class);
+	if ($text) $element .= ' '.$text;
+
+	return Html::anchor($href, $element, $attr);
+}
+?>

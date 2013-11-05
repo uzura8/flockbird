@@ -35,10 +35,15 @@ $quote_article = \Timeline\Site_Util::get_quote_article($timeline_data->type, $t
 if ($quote_article) $view_member_contents_box->set_safe('quote_article', $quote_article);
 
 echo $view_member_contents_box->render();
+
+if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline_data->type))
+{
+	$attr = array(
+		'id'      => 'btn_timeline_delete_'.$timeline->id,
+		'data-id' => $timeline->id,
+	);
+	if (!empty($delete_uri)) $attr['data-uri'] = $delete_uri;
+	echo anchor_button('#', 'ls-icon-delete', '', 'boxBtn btn_timeline_delete', $attr, true, IS_SP);
+}
 ?>
-
-<?php if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline_data->type)): ?>
-<a class="btn btn-mini boxBtn btn_timeline_delete"<?php if (!empty($delete_uri)): ?> data-uri="<?php echo $delete_uri; ?>"<?php endif; ?> data-id="<?php echo $timeline->id; ?>" id="btn_timeline_delete_<?php echo $timeline->id; ?>" href="#"><i class="icon-trash"></i></a>
-<?php endif ; ?>
-
 </div><!-- timelineBox -->
