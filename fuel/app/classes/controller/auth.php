@@ -93,6 +93,7 @@ class Controller_Auth extends Controller_Site
 	 */
 	public function action_logout()
 	{
+		Auth::dont_remember_me();
 		Auth::logout();
 		Session::set_flash('message', 'ログアウトしました');
 		Response::redirect('auth/login');
