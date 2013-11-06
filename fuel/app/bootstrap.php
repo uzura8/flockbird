@@ -31,7 +31,7 @@ Autoloader::register();
  *
  * Fuel::DEVELOPMENT
  * Fuel::TEST
- * Fuel::STAGE
+ * Fuel::STAGING
  * Fuel::PRODUCTION
  */
 Fuel::$env = (isset($_SERVER['FUEL_ENV']) ? $_SERVER['FUEL_ENV'] : constant('Fuel::'.PRJ_ENVIRONMENT));
