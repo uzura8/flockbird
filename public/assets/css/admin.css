@@ -1,9 +1,19 @@
-.navbar .navbar-inner {
-  background-color: #5b1414;
-  background-image: -moz-linear-gradient(top, #5b1414, #160101);
-  background-image: -ms-linear-gradient(top, #5b1414, #160101);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5b1414), to(#160101));
-  background-image: -webkit-linear-gradient(top, #5b1414, #160101);
-  background-image: -o-linear-gradient(top, #5b1414, #160101);
-  background-image: linear-gradient(top, #5b1414, #160101);
+.navbar-inverse .navbar-inner {
+	background-color: #001F85;
+	background-image: -moz-linear-gradient(top, #001F85, #031244);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#001F85), to(#031244));
+	background-image: -webkit-linear-gradient(top, #001F85, #031244);
+	background-image: -o-linear-gradient(top, #001F85, #031244);
+	background-image: linear-gradient(to bottom, #001F85, #031244);
+	background-repeat: repeat-x;
+	border-color: #252525;
+	filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff001F85', endColorstr='#ff031244', GradientType=0);
+}
+
+.navbar-inverse .brand {
+	color: #C7C4C4;
+}
+.navbar-inverse .brand, .navbar-inverse .nav > li > a {
+	color: #C7C4C4;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
