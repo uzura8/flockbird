@@ -36,14 +36,14 @@ class Controller_Admin extends \Controller_Base {
 		// Already logged in
 		\Auth::check() and \Response::redirect('admin');
 
+		$destination = \Session::get_flash('destination') ?: \Input::post('destination', '');
 		$val = \Validation::forge();
 
 		if (\Input::method() == 'POST')
 		{
-			$val->add('email', 'Email or Username')
-			    ->add_rule('required');
-			$val->add('password', 'Password')
-			    ->add_rule('required');
+			$val->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
+			$val->add('email', 'Email or Username')->add_rule('required');
+			$val->add('password', 'Password')->add_rule('required');
 
 			if ($val->run())
 			{
@@ -53,18 +53,18 @@ class Controller_Admin extends \Controller_Base {
 				if (\Auth::check() or $auth->login(\Input::post('email'), \Input::post('password')))
 				{
 					// credentials ok, go right in
-					\Session::set_flash('notice', 'Welcome, '.$this->u->username);
+					\Session::set_flash('message', 'Welcome, '.$auth->get_screen_name());
 					\Response::redirect('admin');
 				}
 				else
 				{
-					$this->template->set_global('login_error', 'Fail');
+					\Session::set_flash('error', 'Fail');
 				}
 			}
 		}
 
-		$this->template->title = 'Login';
-		$this->template->content = \View::forge('admin/login', array('val' => $val));
+		$this->set_title_and_breadcrumbs('Login', null, null, null, null, true);
+		$this->template->content = \View::forge('admin/login', array('val' => $val, 'destination' => $destination));
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class Controller_Admin extends \Controller_Base {
 	 */
 	public function action_index()
 	{		
-		$this->template->title = 'Dashboard';
+		$this->set_title_and_breadcrumbs('管理画面 Dashboard', null, null, null, null, true);
 		$this->template->content = \View::forge('admin/dashboard');
 	}
 }

@@ -29,34 +29,18 @@
 
 <?php echo render('_parts/template/global_alerts'); ?>
 
-<?php if (!empty($title) || !empty($subtitle)): ?>
-			<div class="page-header">
-<?php if (isset($header_info)): ?>
-				<?php echo $header_info; ?>
-<?php endif; ?>
-<?php if ($title): ?>
-				<?php echo $title; ?>
-<?php endif; ?>
-<?php if (isset($subtitle)): ?>
-				<div id="subtitle"><?php echo $subtitle; ?></div>
-<?php endif; ?>
-			</div><!-- page-header -->
-<?php endif; ?>
+<?php
+$title = isset($title) ? $title : null;
+$subtitle = isset($subtitle) ? $subtitle : null;
+$header_info = isset($header_info) ? $header_info : null;
+echo render('_parts/template/page_header', array('title' => $title, 'subtitle' => $subtitle, 'header_info' => $header_info));
+?>
 
-<?php if (isset($sub_column)): ?>
-			<div class="row-fluid">
-				<div class="span10" id="main_column">
-<?php echo $content; ?>
-				</div><!--/span-->
-				<div class="span2">
-<?php echo $sub_column; ?>
-				</div><!--/span-->
-			</div><!--/row-->
-<?php else: ?>
-			<div id="main">
-<?php if (isset($content)) echo $content; ?>
-			</div>
-<?php endif; ?>
+<?php
+$content = isset($content) ? $content : null;
+$sub_column = isset($sub_column) ? $sub_column : null;
+echo render('_parts/template/main_content', array('content' => $content, 'sub_column' => $sub_column));
+?>
 
 <?php if (!empty($breadcrumbs) && IS_SP): ?>
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
@@ -104,5 +88,6 @@ function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
 <?php echo site_htmltag_include_js_module();?>
 <?php echo site_htmltag_include_js_action();?>
+
 </body>
 </html>
