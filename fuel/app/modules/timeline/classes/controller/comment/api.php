@@ -70,14 +70,14 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$timeline_id = (int)\Input::post('id');
-			if (!$timeline_id || !$timeline = Model_Timeline::check_authority($timeline_id, 0, true))
+			if (!$timeline_id || !$timeline = Model_Timeline::check_authority($timeline_id, 0))
 			{
 				throw new \HttpNotFoundException;
 			}
 			$this->check_public_flag($timeline->public_flag, $timeline->member_id);
 
 			// validation
-			if (!Site_Util::check_accepted_type_for_post_comment($timeline->timeline_data->type, $timeline->timeline_data->foreign_table))
+			if (!Site_Util::check_accepted_type_for_post_comment($timeline->type, $timeline->foreign_table))
 			{
 				throw new \HttpInvalidInputException;
 			}

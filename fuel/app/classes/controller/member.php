@@ -200,7 +200,7 @@ class Controller_Member extends Controller_Site
 				$password = $member_pre->password;
 				$member_pre->delete();
 				// timeline 投稿
-				\Timeline\Site_Model::save_timeline($member_id, Config::get('site.public_flag.default'), Config::get('timeline.types.member_register'));
+				\Timeline\Site_Model::save_timeline($member_id, null, 'member_register');
 				\DB::commit_transaction();
 
 				$maildata = array();

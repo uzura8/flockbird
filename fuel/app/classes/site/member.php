@@ -28,6 +28,10 @@ class Site_Member
 			$foreign_id = $file->id;
 		}
 		// timeline 投稿
-		\Timeline\Site_Model::save_timeline($member->id, Config::get('site.public_flag.default'), Config::get('timeline.types.profile_image'), null, null, $foreign_table, $foreign_id);
+		$values = array(
+			'foreign_table' => $foreign_table,
+			'foreign_id' => $foreign_id,
+		);
+		\Timeline\Site_Model::save_timeline($member->id, $values, 'profile_image');
 	}
 }

@@ -130,7 +130,7 @@ class Site_Model
 		return Util_Orm::conv_col2array($column, $query->get());
 	}
 
-	public static function get_pager_list($table, $last_id = 0, $params = array(), $namespace = '', $is_check_next = false, $is_over = false)
+	public static function get_pager_list($table, $last_id = 0, $params = array(), $namespace = '', $is_check_next = false, $is_over = false, $primary_key = 'id')
 	{
 		if ($last_id)
 		{
@@ -142,7 +142,7 @@ class Site_Model
 			if ($is_over) $inequality_sign = '>';
 
 			if (!isset($params['where'])) $params['where'] = array();
-			$params['where'][] = array('id', $inequality_sign, $last_id);
+			$params['where'][] = array($primary_key, $inequality_sign, $last_id);
 		}
 		$query = self::get_list_query($table, $params, $namespace);
 

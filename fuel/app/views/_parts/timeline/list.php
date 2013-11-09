@@ -1,8 +1,8 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!IS_API): ?><div id="article_list"><?php endif; ?>
 <?php if ($list): ?>
-<?php foreach ($list as $id => $timeline): ?>
-		<?php echo \Timeline\Site_Util::get_article_view($timeline); ?>
+<?php foreach ($list as $id => $timeline_cache): ?>
+		<?php echo \Timeline\Site_Util::get_article_view($timeline_cache->timeline_id); ?>
 <?php endforeach; ?>
 <?php endif; ?>
 

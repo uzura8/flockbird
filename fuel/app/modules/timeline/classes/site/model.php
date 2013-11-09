@@ -7,7 +7,7 @@ class Site_Model
 	{
 		if (!$limit) $limit = (int)\Config::get('timeline.articles.limit');
 		if ($limit > \Config::get('timeline.articles.limit_max')) $limit = \Config::get('timeline.articles.limit_max');
-		if (empty($sort)) $sort = array('created_at' => 'desc');
+		if (empty($sort)) $sort = array('sort_datetime' => 'desc');
 
 		$basic_cond = \Site_Model::get_where_params4list(
 			$target_member_id,
@@ -24,7 +24,7 @@ class Site_Model
 		}
 		$params = array('where' => $where, 'order_by' => $sort, 'limit' => $limit);
 
-		return \Site_Model::get_pager_list('timeline', $last_id, $params, 'Timeline', true, $is_over);
+		return \Site_Model::get_pager_list('timeline_cache', $last_id, $params, 'Timeline', true, $is_over, 'timeline_id');
 	}
 
 	public static function get_comments($type, $timeline_id, $foreign_table = '', $foreign_id = 0, $limit = 0)
@@ -43,24 +43,20 @@ class Site_Model
 		return Model_TimelineComment::get_comments($timeline_id, $limit);;
 	}
 
-	public static function save_timeline($member_id, $public_flag = null, $type = null, $body = null, Model_TimelineData $timeline_data = null, $foreign_table = null, $foreign_id = null)
+	public static function save_timeline($member_id, $values = array(), $type_key = null, Model_Timeline $timeline = null)
 	{
-		$timeline = Model_Timeline::forge();
-		$timeline->member_id = $member_id;
-		$timeline->public_flag = $public_flag;
-		$timeline->is_deleted = 0;
+		if (!$timeline) $timeline = Model_Timeline::forge();
+
+		if (!isset($values['member_id']))   $values['member_id'] = $member_id;
+		if (!isset($values['public_flag'])) $values['public_flag'] = \Config::get('site.public_flag.default');
+
+		$type = $type_key ? \Config::get('timeline.types.'.$type_key) : \Config::get('timeline.types.normal');
+		if (!isset($values['type'])) $values['type'] = $type;
+
+		$timeline->set($values);
 		$timeline->save();
 
-		if (!$timeline_data) $timeline_data = Model_TimelineData::forge();
-		$timeline_data->timeline_id = $timeline->id;
-		$timeline_data->member_id = $member_id;
-		$timeline_data->body = $body;
-		$timeline_data->type = $type ?: \Config::get('timeline.types.normal');
-		if ($foreign_table) $timeline_data->foreign_table = $foreign_table;
-		if ($foreign_id) $timeline_data->foreign_id = $foreign_id;
-		$timeline_data->save();
-
-		return array($timeline, $timeline_data);
+		return $timeline;
 	}
 
 	public static function delete_timeline($foreign_table, $foreign_id)

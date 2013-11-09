@@ -1,5 +1,5 @@
 <?php
-list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline_data->type, $timeline->id, $timeline_data->foreign_table, $timeline_data->foreign_id);
+list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_table, $timeline->foreign_id);
 $comment = array(
 	'list' => $list,
 	'is_all_records' => $is_all_records,
@@ -10,13 +10,13 @@ $comment = array(
 <div class="timelineBox" id="timelineBox_<?php echo $timeline->id; ?>" data-id="<?php echo $timeline->id; ?>">
 
 <?php
-$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri($timeline_data->type, $timeline_data->foreign_table, false, $timeline->id, $timeline_data->foreign_id);
+$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri($timeline->type, $timeline->foreign_table, false, $timeline->id, $timeline->foreign_id);
 $data = array(
-	'member'  => $timeline_data->member,
+	'member'  => $timeline->member,
 	'size'    => 'M',
 	'date'    => array('datetime' => $timeline->created_at),
-	'content' => \Timeline\Site_Util::get_timeline_body($timeline_data->type, $timeline_data->body),
-	'images'  => \Timeline\Site_Util::get_timeline_images($timeline_data->type, $timeline_data->foreign_table, $timeline_data->foreign_id),
+	'content' => \Timeline\Site_Util::get_timeline_body($timeline->type, $timeline->body),
+	'images'  => \Timeline\Site_Util::get_timeline_images($timeline->type, $timeline->foreign_table, $timeline->foreign_id),
 	'comment' => $comment,
 	'model'   => 'timeline',
 	'id'      => $timeline->id,
@@ -25,8 +25,8 @@ $data = array(
 	'list_more_box_attrs' => array('data-get_uri' => $comment_get_uri),
 	'post_comment_button_attrs' => array(
 		'data-get_uri' => $comment_get_uri,
-		'data-post_parent_id' => \Timeline\Site_Util::get_comment_parent_id($timeline_data->type, $timeline_data->foreign_table, $timeline->id, $timeline_data->foreign_id),
-		'data-post_uri' => \Timeline\Site_Util::get_comment_api_uri($timeline_data->type, $timeline_data->foreign_table, true),
+		'data-post_parent_id' => \Timeline\Site_Util::get_comment_parent_id($timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id),
+		'data-post_uri' => \Timeline\Site_Util::get_comment_api_uri($timeline->type, $timeline->foreign_table, true),
 	),
 );
 if (!empty($is_convert_nl2br)) $data['is_convert_nl2br'] = $is_convert_nl2br;
@@ -38,13 +38,13 @@ if (!empty($truncate_lines))
 }
 $view_member_contents_box = View::forge('_parts/member_contents_box', $data);
 
-$quote_article = \Timeline\Site_Util::get_quote_article($timeline_data->type, $timeline_data->foreign_table, $timeline_data->foreign_id);
+$quote_article = \Timeline\Site_Util::get_quote_article($timeline->type, $timeline->foreign_table, $timeline->foreign_id);
 if ($quote_article) $view_member_contents_box->set_safe('quote_article', $quote_article);
 
 echo $view_member_contents_box->render();
 ?>
 
-<?php if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline_data->type)): ?>
+<?php if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline->type)): ?>
 <a class="btn btn-mini boxBtn btn_timeline_delete"<?php if (!empty($delete_uri)): ?> data-uri="<?php echo $delete_uri; ?>"<?php endif; ?> data-id="<?php echo $timeline->id; ?>" id="btn_timeline_delete_<?php echo $timeline->id; ?>" href="#"><i class="icon-trash"></i></a>
 <?php endif ; ?>
 

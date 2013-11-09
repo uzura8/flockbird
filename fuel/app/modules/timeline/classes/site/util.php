@@ -159,17 +159,12 @@ class Site_Util
 		return in_array($type, $editable_types);
 	}
 
-	public static function get_article_view(Model_Timeline $timeline)
+	public static function get_article_view($timeline_id)
 	{
-		//$timeline_data = Model_TimelineData::query()->related('member')->where('timeline_id', $timeline->id)->get_one();
-		$timeline_data = Model_TimelineData::find('first', array(
-			'where' => array('timeline_id' => $timeline->id),
-			'related' => array('member')
-		));
+		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));
 
 		return render('_parts/timeline/article', array(
 			'timeline' => $timeline,
-			'timeline_data' => $timeline_data,
 			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),
 		));
 	}

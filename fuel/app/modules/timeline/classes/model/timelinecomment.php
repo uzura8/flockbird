@@ -20,8 +20,14 @@ class Model_TimelineComment extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'timeline_id',
-		'member_id',
+		'timeline_id' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
+		'member_id' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
 		'body',
 		'created_at',
 		'updated_at',
@@ -35,6 +41,14 @@ class Model_TimelineComment extends \Orm\Model
 		'Orm\Observer_UpdatedAt' => array(
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
+		),
+		'MyOrm\Observer_UpdateParentDatetime'=>array(
+			'events'=>array('after_insert'),
+			'key_from' => 'timeline_id',
+			'model_to' => '\Timeline\Model_Timeline',
+			'key_to' => 'id',
+			'property_from' => 'updated_at',
+			'property_to' => 'sort_datetime',
 		),
 	);
 

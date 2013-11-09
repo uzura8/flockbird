@@ -73,15 +73,19 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			\Util_security::check_csrf();
 
-			$timeline_data = Model_TimelineData::forge();
+			$timeline = Model_Timeline::forge();
 			$val = \Validation::forge();
-			$val->add_model($timeline_data);
-			$val->add('public_flag', \Config::get('term.public_flag.label'))->add_rule('public_flag');
+			$val->add_model($timeline);
+			//$val->add('public_flag', \Config::get('term.public_flag.label'))->add_rule('public_flag');
 			if (!$val->run()) throw new \FuelException($val->show_errors());
 			$post = $val->validated();
 
 			\DB::start_transaction();
-			list($timeline, $timeline_data) = Site_Model::save_timeline($this->u->id, $post['public_flag'], \Config::get('timeline.types.normal'), $post['body'], $timeline_data);
+			$values = array(
+				'public_flag' => $post['public_flag'],
+				'body' => $post['body'],
+			);
+			$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $values, 'normal', $timeline);
 			\DB::commit_transaction();
 
 			$response['status'] = 1;
