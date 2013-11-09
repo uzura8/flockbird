@@ -246,6 +246,8 @@ h4#comments {
 	padding-bottom: 10px;
 }
 
+.cl-modest {color: #C4C4C4;}
+
 ul.thumbnails li.span12 + li { margin-left : 0px; }
 ul.thumbnails li.span6:nth-child(2n + 1) { margin-left : 0px; }
 ul.thumbnails li.span4:nth-child(3n + 1) { margin-left : 0px; }

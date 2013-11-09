@@ -9,8 +9,7 @@ return array(
 			'subinfo'  => 50,
 		),
 		'comment' => array(
-			'limit' => 5,
-			'limit_max' => 50,
+			'limit' => 3,
 			'trim_width' => 200,
 		),
 	),

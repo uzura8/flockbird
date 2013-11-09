@@ -14,9 +14,11 @@ function get_term(key) {
 }
 function get_config(key) {
 	var config = {};
-	config['timeline_articles_limit'] = <?php echo Config::get('timeline.articles.limit'); ?>;
+	config['default_list_comment_limit_max'] = <?php echo Config::get('site.view_params_default.list.comment.limit_max'); ?>;
+	config['default_detail_comment_limit_max'] = <?php echo Config::get('site.view_params_default.detail.comment.limit_max'); ?>;
+	config['timeline_list_limit'] = <?php echo Config::get('timeline.articles.limit'); ?>;
+	config['timeline_list_comment_limit_max'] = <?php echo Config::get('timeline.articles.comment.limit_max'); ?>;
 	config['site_public_flag_default'] = <?php echo Config::get('site.public_flag.default'); ?>;
 	return config[key];
 }
-
 </script>

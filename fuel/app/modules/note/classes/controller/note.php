@@ -39,7 +39,7 @@ class Controller_Note extends \Controller_Site
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
 			'order_by' => array('created_at' => 'desc'),
-			'limit'    => \Config::get('note.articles.limit')
+			'limit'    => \Config::get('site.view_params_default.list.limit'),
 		), 'Note');
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->post_footer = \View::forge('_parts/load_item');
@@ -69,7 +69,7 @@ class Controller_Note extends \Controller_Site
 				null,
 				array(array('is_published', $is_published))
 			),
-			'limit'    => \Config::get('note.articles.limit'),
+			'limit'    => \Config::get('site.view_params_default.list.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Note');
 		$data['member']       = $member;
@@ -93,7 +93,8 @@ class Controller_Note extends \Controller_Site
 
 		$images = Model_NoteAlbumImage::get_album_image4note_id($id);
 
-		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
+		$record_limit = \Config::get('site.view_params_default.detail.comment.limit');
+		if (\Input::get('all_comment', 0)) $record_limit = \Config::get('site.view_params_default.detail.comment.limit_max');
 		list($comments, $is_all_records) = Model_NoteComment::get_comments($id, $record_limit);
 
 		$title = array('name' => $note->title);

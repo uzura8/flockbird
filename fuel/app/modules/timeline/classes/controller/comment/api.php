@@ -42,8 +42,12 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			if ($after_id)  $params[] = array('id', '<', $after_id);
 			list($comments, $is_all_records) = Model_TimelineComment::get_comments($timeline_id, $limit, $params, $is_desc);
 
-			$data = array('comments' => $comments, 'parent' => $timeline, 'is_all_records' => $is_all_records);
-			if ($limit) $data['show_more_link'] = true;
+			$data = array(
+				'comments' => $comments,
+				'parent' => $timeline,
+				'is_all_records' => $is_all_records,
+				'list_more_box_attrs' => array('id' => 'listMoreBox_comment_'.$timeline_id, 'data-parent_id' => $timeline_id),
+			);
 			$response = \View::forge('_parts/comment/list', $data);
 			$status_code = 200;
 			return \Response::forge($response, $status_code);

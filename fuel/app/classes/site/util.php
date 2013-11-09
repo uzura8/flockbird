@@ -15,7 +15,7 @@ class Site_Util
 
 	public static function get_action_name()
 	{
-		return (isset(Request::main()->route->action))? Request::main()->route->action : '';
+		return (isset(Request::main()->route->action))? Request::main()->route->action : 'index';
 	}
 
 	public static function check_is_admin_request()

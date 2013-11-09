@@ -30,7 +30,7 @@ class Controller_Error extends Controller_Site
 	 */
 	public function action_404()
 	{
-		$this->set_title_and_breadcrumbs('404 Not Found');
+		$this->set_title_and_breadcrumbs('404 Not Found', null, null, null, null, true);
 		$this->template->content = View::forge('error/404');
 		$this->response->status = 404;
 	}
@@ -43,7 +43,7 @@ class Controller_Error extends Controller_Site
 	 */
 	public function action_500()
 	{
-		$this->set_title_and_breadcrumbs('500 Server Error');
+		$this->set_title_and_breadcrumbs('500 Server Error', null, null, null, null, true);
 		$this->template->content = View::forge('error/500');
 		$this->response->status = 500;
 	}
@@ -53,7 +53,7 @@ class Controller_Error extends Controller_Site
 	 */
 	public function action_invalid()
 	{
-		$this->set_title_and_breadcrumbs('Invalid input data');
+		$this->set_title_and_breadcrumbs('Invalid input data', null, null, null, null, true);
 		$this->template->content = View::forge('error/invalid');
 	}
 }

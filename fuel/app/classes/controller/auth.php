@@ -64,7 +64,7 @@ class Controller_Auth extends Controller_Site
 				}
 				else
 				{
-					return $this->login_failed(false);
+					$this->login_failed(false);
 				}
 			}
 		}
@@ -93,9 +93,10 @@ class Controller_Auth extends Controller_Site
 	 */
 	public function action_logout()
 	{
+		Auth::dont_remember_me();
 		Auth::logout();
 		Session::set_flash('message', 'ログアウトしました');
-		Response::redirect('atuth/login');
+		Response::redirect('auth/login');
 	}
 
 	public function opauth_login_start($_provider = null, $method = null)

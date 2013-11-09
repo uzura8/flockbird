@@ -505,13 +505,14 @@ function load_masonry_item(container_attribute, item_attribute)
 		);
 	}
 }
+
 function load_more_timeline(selfDomElement)
 {
 	var last_id    = $(selfDomElement).data('last_id') ?    parseInt($(selfDomElement).data('last_id')) : 0;
 	var mytimeline = $(selfDomElement).data('mytimeline') ? parseInt($(selfDomElement).data('mytimeline')) : 0;
 	var member_id  = $(selfDomElement).data('member_id') ?  parseInt($(selfDomElement).data('member_id')) : 0;
 
-	var limit = get_config('timeline_articles_limit');
+	var limit = get_config('timeline_list_limit');
 	var get_uri = 'timeline/api/list.html';
 	if (mytimeline) get_uri += '?mytimeline=1';
 	if (member_id > 0) {

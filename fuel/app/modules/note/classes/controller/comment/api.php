@@ -25,8 +25,9 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		$note_id   = (int)$parent_id;
 		$before_id = (int)\Input::get('before_id', 0);
 		$after_id  = (int)\Input::get('after_id', 0);
-		$limit     = \Input::get('limit') == 'all' ? \Config::get('note.articles.comment.max_limit', 50) : (int)\Input::get('limit', \Config::get('note.articles.comment.limit'));
 		$is_desc   = (bool)\Input::get('is_desc', false);
+		$limit     = (int)\Input::get('limit', \Config::get('site.view_params_default.list.comment.limit'));
+		if (\Input::get('limit') == 'all') $limit = \Config::get('site.view_params_default.list.comment.max_limit', 50);
 
 		$response = '';
 		try
@@ -42,7 +43,12 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			if ($after_id)  $params[] = array('id', '<', $after_id);
 			list($comments, $is_all_records) = Model_NoteComment::get_comments($note_id, $limit, $params, $is_desc);
 
-			$data = array('comments' => $comments, 'parent' => $note, 'is_all_records' => $is_all_records);
+			$data = array(
+				'comments' => $comments,
+				'parent' => $note,
+				'is_all_records' => $is_all_records,
+				'list_more_box_attrs' => array('data-parent_id' => $note_id),
+			);
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('_parts/comment/list', $data);
 			$status_code = 200;

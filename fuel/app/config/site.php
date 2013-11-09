@@ -5,15 +5,6 @@ $config = array(
 		'site'  => 'auth/login',
 		'admin' => 'admin/login',
 	),
-	'record_limit' => array(
-		'default' => array(
-			'comment' => array(
-				'l' => 10,
-				'm' => 5,
-				's' => 3,
-			),
-		),
-	),
 	'upload' => array(
 		'num_of_split_dirs' => 10,
 		'check_and_make_dir_level' => 7,
@@ -74,6 +65,30 @@ $config = array(
 						'save_as_album_image' => true,
 					),
 				),
+			),
+		),
+	),
+	'view_params_default' => array(
+		'list' => array(
+			'limit' => 5,
+			'limit_max' => 50,
+			'trim_width' => array(
+				'title' => 88,
+				'body'  => 500,
+			),
+			'truncate_lines' => array(
+				'body'  => 5,
+			),
+			'comment' => array(
+				'limit' => 5,
+				'limit_max' => 20,
+				'trim_width' => 200,
+			),
+		),
+		'detail' => array(
+			'comment' => array(
+				'limit' => 10,
+				'limit_max' => 30,
 			),
 		),
 	),
