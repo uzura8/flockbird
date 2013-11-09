@@ -15,12 +15,12 @@ $(function(){
 		return false;
 	});
 
-	$('#listMoreBox_comment').click(function(){
+	$(document).on('click','#listMoreBox_comment', function(){
 		if (GL.execute_flg) return false;
 		show_list(
 			'note/comment/api/list/' + parent_id + '.html',
 			'#comment_list',
-			0,
+			get_config('default_detail_comment_limit_max'),
 			$('.commentBox').first().attr('id'),
 			true,
 			this

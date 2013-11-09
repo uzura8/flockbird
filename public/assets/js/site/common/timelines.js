@@ -55,7 +55,7 @@ $(function() {
 		show_list(
 			'timeline/comment/api/list/' + parent_id + '.html',
 			'#comment_list_' + parent_id,
-			0,
+			get_config('timeline_list_comment_limit_max'),
 			$('.commentBox_' + parent_id).first().attr('id'),
 			true,
 			this

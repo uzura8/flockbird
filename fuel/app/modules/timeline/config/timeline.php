@@ -12,7 +12,8 @@ return array(
 			'body'  => 5,
 		),
 		'comment' => array(
-			'limit' => 3,
+			'limit' => 5,
+			'limit_max' => 20,
 			'trim_width' => 200,
 		),
 	),

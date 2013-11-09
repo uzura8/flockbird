@@ -27,7 +27,8 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 		$after_id       = (int)\Input::get('after_id', 0);
 		$is_desc        = (bool)\Input::get('is_desc', false);
 		$show_more_link = (bool)\Input::get('disp_more', 1);
-		$limit = \Input::get('limit') == 'all' ? \Config::get('album.articles.comment.max_limit', 50) : (int)\Input::get('limit', \Config::get('album.articles.comment.limit'));
+		$limit     = (int)\Input::get('limit', \Config::get('site.view_params_default.list.comment.limit'));
+		if (\Input::get('limit') == 'all') $limit = \Config::get('site.view_params_default.list.comment.max_limit', 50);
 
 		$response = '';
 		try
@@ -42,7 +43,12 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			if ($after_id)  $params[] = array('id', '<', $after_id);
 			list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($album_image_id, $limit, $params, $is_desc);
 
-			$data = array('comments' => $comments, 'parent' => $album_image->album, 'is_all_records' => $is_all_records);
+			$data = array(
+				'comments' => $comments,
+				'parent' => $album_image->album,
+				'is_all_records' => $is_all_records,
+				'list_more_box_attrs' => array('data-parent_id' => $album_image_id),
+			);
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('_parts/comment/list', $data);
 			$status_code = 200;

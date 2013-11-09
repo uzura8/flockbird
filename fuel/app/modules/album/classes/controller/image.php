@@ -53,8 +53,10 @@ class Controller_Image extends \Controller_Site
 		if (!$id || !$album_image = Model_Albumimage::check_authority($id)) throw new \HttpNotFoundException;
 		$this->check_public_flag($album_image->public_flag, $album_image->album->member_id);
 
-		$record_limit = (\Input::get('all_comment', 0))? 0 : \Config::get('site.record_limit.default.comment.m');
+		$record_limit = \Config::get('site.view_params_default.detail.comment.limit');
+		if (\Input::get('all_comment', 0)) $record_limit = \Config::get('site.view_params_default.detail.comment.limit_max');
 		list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($id, $record_limit);
+
 		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
 
 		// 前後の id の取得

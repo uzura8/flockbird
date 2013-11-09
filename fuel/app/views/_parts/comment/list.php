@@ -3,7 +3,9 @@
 $list_more_box_attrs_def = array('class' => 'listMoreBox', 'id' => 'listMoreBox_comment');
 $list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);
 ?>
-<?php if (!$is_all_records): ?><?php echo Html::anchor('#', '全てみる', $list_more_box_attrs); ?><?php endif; ?>
+<?php if (!$is_all_records): ?>
+<?php echo Html::anchor(isset($uri_for_all_comments) ? $uri_for_all_comments : '#', 'もっと見る', $list_more_box_attrs); ?>
+<?php endif; ?>
 
 <?php foreach ($comments as $comment): ?>
 <div class="commentBox<?php if ($parent): ?> commentBox_<?php echo $parent->id; ?><?php endif; ?>" id="commentBox_<?php echo $comment->id; ?>">

@@ -103,11 +103,9 @@ elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && 
 	'parent' => (!empty($album)) ? $album : $album_image->album,
 	'comments' => $album_image_comment,
 	'is_all_records' => $is_all_records,
+	'uri_for_all_comments' => sprintf('album/image/%d?all_comment=1#comments', $album_image->id),
 	'trim_width' => Config::get('album.articles.comment.trim_width'),
 )); ?>
-<?php if (!$is_all_records): ?>
-			<div class="listMoreBox"><a href="<?php echo Uri::create(sprintf('album/image/%d?all_comment=1#comments', $album_image->id)); ?>">もっと見る</a></div>
-<?php endif; ?>
 		</div>
 <?php endif; ?>
 	</div><!-- main_item -->

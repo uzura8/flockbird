@@ -69,7 +69,7 @@ class Site_Util
 			case 4:// note 投稿
 				$note = \Note\Model_Note::find($foreign_id);
 				$title['value'] = $note->title;
-				$title['truncate_count'] = \Config::get('note.articles.trim_width.title');
+				$title['truncate_count'] = \Config::get('site.view_params_default.list.trim_width.title');
 				$body['value'] = $note->body;
 				$body['truncate_count'] = \Config::get('timeline.articles.truncate_lines.body');
 				$read_more_uri = 'note/'.$note->id;
