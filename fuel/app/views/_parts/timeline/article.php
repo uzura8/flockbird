@@ -43,7 +43,7 @@ if ($quote_article) $view_member_contents_box->set_safe('quote_article', $quote_
 
 echo $view_member_contents_box->render();
 
-if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline_data->type))
+if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline->type))
 {
 	$attr = array(
 		'id'      => 'btn_timeline_delete_'.$timeline->id,
