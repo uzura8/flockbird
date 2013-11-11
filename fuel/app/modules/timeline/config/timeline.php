@@ -23,6 +23,7 @@ return array(
 		'profile_image' => 3,
 		'note' => 4,
 	),
+	'follow_timeline_limit_max' => 10,
 	'display_setting' => array(
 	),
 );

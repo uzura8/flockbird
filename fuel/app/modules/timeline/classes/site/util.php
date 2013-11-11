@@ -159,11 +159,12 @@ class Site_Util
 		return in_array($type, $editable_types);
 	}
 
-	public static function get_article_view($timeline_id)
+	public static function get_article_view($timeline_cache_id, $timeline_id)
 	{
 		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));
 
 		return render('_parts/timeline/article', array(
+			'timeline_cache_id' => $timeline_cache_id,
 			'timeline' => $timeline,
 			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),
 		));

@@ -83,12 +83,6 @@ class Model_Timeline extends \Orm\Model
 			'validation' => array('trim'),
 			'form' => array('type' => false),
 		),
-		'is_deleted' => array(
-			'data_type' => 'integer',
-			'validation' => array('max_length' => array(1), 'in_array' => array(array(0,1))),
-			'form' => array('type' => false),
-			'default' => 0,
-		),
 		'public_flag' => array(
 			'data_type' => 'integer',
 			'validation' => array('required', 'max_length' => array(2)),
@@ -124,13 +118,28 @@ class Model_Timeline extends \Orm\Model
 				'member_id',
 				'member_id_to',
 				'group_id',
-				'is_deleted',
 				'public_flag',
 				'created_at',
 				'sort_datetime',
 			),
 		),
 		'MyOrm\Observer_InsertCacheDuplicate'=>array(
+			'events'   => array('after_insert'),
+			'model_to' => '\Timeline\Model_TimelineCache',
+			'properties' => array(
+				'timeline_id' => 'id',
+				'member_id',
+				'member_id_to',
+				'group_id',
+				'public_flag',
+				'created_at',
+				'sort_datetime',
+			),
+			'special_properties' => array(
+				'is_follow' => array('value' => 1),
+			),
+		),
+		'MyOrm\Observer_UpdateCacheDuplicate'=>array(
 			'events'   => array('after_update'),
 			'key_from' => 'id',
 			'model_to' => '\Timeline\Model_TimelineCache',
@@ -140,21 +149,47 @@ class Model_Timeline extends \Orm\Model
 				'member_id',
 				'member_id_to',
 				'group_id',
-				'is_deleted',
 				'public_flag',
 				'created_at',
 				'sort_datetime',
 			),
 			'special_properties' => array(
-				'is_important' => array('value' => 1),
+				'is_follow' => array('value' => 1),
 			),
 			'is_check_updated_at' => array(
 				'property' => 'sort_datetime',
 			),
 			'is_update_duplicated' => array(
+				'is_insert_new_record' => true,
 				'additional_conditions' => array(
-					'is_important' => 1,
+					'is_follow' => 1,
 				),
+			),
+		),
+		'MyOrm\Observer_InsertRelationialTable'=>array(
+			'events'   => array('after_insert'),
+			'model_to' => '\Timeline\Model_MemberFollowTimeline',
+			'properties' => array(
+				'timeline_id' => 'id',
+				'member_id',
+			),
+			'additional_records' => array(
+				array(
+					'timeline_id' => 'id',
+					'member_id' => 'member_id_to',
+				),
+			),
+		),
+		'MyOrm\Observer_UpdateRelationalTable'=>array(
+			'events'   => array('after_update'),
+			'key_from' => 'id',
+			'model_to' => '\Timeline\Model_MemberFollowTimeline',
+			'table_to' => 'member_follow_timeline',
+			'key_to'   => 'timeline_id',
+			'property_to'   => 'updated_at',
+			'property_from' => 'sort_datetime',
+			'is_check_updated_at' => array(
+				'property' => 'sort_datetime',
 			),
 		),
 	);

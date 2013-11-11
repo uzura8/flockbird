@@ -35,13 +35,7 @@ class Model_TimelineCache extends \Orm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
-		'is_important' => array(
-			'data_type' => 'integer',
-			'validation' => array('max_length' => array(1), 'in_array' => array(array(0,1))),
-			'form' => array('type' => false),
-			'default' => 0,
-		),
-		'is_deleted' => array(
+		'is_follow' => array(
 			'data_type' => 'integer',
 			'validation' => array('max_length' => array(1), 'in_array' => array(array(0,1))),
 			'form' => array('type' => false),

@@ -989,7 +989,6 @@ CREATE TABLE `timeline` (
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
   `source` varchar(64) NULL COMMENT 'The source caption',
   `source_uri` text NULL COMMENT 'The source URI',
-  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -1013,15 +1012,14 @@ CREATE TABLE `timeline_cache` (
   `member_id_to` int(11) NULL,
   `group_id` int(11) NULL,
   `page_id` int(11) NULL,
-  `is_important` tinyint(1) NOT NULL DEFAULT '0',
-  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `is_follow` tinyint(1) NOT NULL DEFAULT '0',
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
-  UNIQUE KEY `timeline_id_is_important_UNIQUE_idx` (`timeline_id`,`is_important`),
-  KEY `is_deleted_public_flag_sort_datetime_idx` (`is_deleted`,`public_flag`,`sort_datetime`),
+  UNIQUE KEY `timeline_id_is_follow_UNIQUE_idx` (`timeline_id`,`is_follow`),
+  KEY `public_flag_sort_datetime_idx` (`public_flag`,`sort_datetime`),
   CONSTRAINT `timeline_cache_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1062,6 +1060,27 @@ CREATE TABLE `timeline_comment` (
   PRIMARY KEY (`id`),
   KEY `timeline_id_created_at` (`timeline_id`,`created_at`),
   CONSTRAINT `timeline_comment_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `member_follow_timeline`
+--
+
+DROP TABLE IF EXISTS `member_follow_timeline`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `member_follow_timeline` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `timeline_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_timeline_id_UNIQUE_idx` (`member_id`,`timeline_id`),
+  CONSTRAINT `member_follow_timeline_member_id_timeline_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_follow_timeline_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

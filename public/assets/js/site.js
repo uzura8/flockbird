@@ -71,6 +71,7 @@ function show_list(uri, list_block_id) {
 	var next_element_id_name = (arguments.length > 3 && arguments[3]) ? arguments[3] : '';
 	var is_insert_before     = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
 	var selfDomElement       = (arguments.length > 5) ? arguments[5] : false;
+	var next_element_id_num  = (arguments.length > 6) ? arguments[6] : 0;
 
 	if (!selfDomElement) {
 		$(list_block_id).append('<div class="loading_image" id="list_loading_image">' + get_loading_image_tag() + '</div>');
@@ -82,7 +83,9 @@ function show_list(uri, list_block_id) {
 	get_data['nochache']  = (new Date()).getTime();
 	get_data['limit'] = record_limit;
 
-	var next_element_id_num  = (next_element_id_name.length > 0) ? get_id_num(next_element_id_name) : 0;
+	if (!next_element_id_num && next_element_id_name.length > 0) {
+		next_element_id_num = get_id_num(next_element_id_name);
+	}
 	if (next_element_id_num) {
 		var key = is_insert_before ? 'after_id' : 'before_id';
 		get_data[key] = next_element_id_num;

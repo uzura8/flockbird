@@ -7,7 +7,7 @@ $comment = array(
 	'parent_obj' => $timeline,
 );
 ?>
-<div class="timelineBox" id="timelineBox_<?php echo $timeline->id; ?>" data-id="<?php echo $timeline->id; ?>">
+<div class="timelineBox" id="timelineBox_<?php echo $timeline_cache_id; ?>" data-id="<?php echo $timeline->id; ?>">
 
 <?php
 $comment_get_uri = \Timeline\Site_Util::get_comment_api_uri($timeline->type, $timeline->foreign_table, false, $timeline->id, $timeline->foreign_id);

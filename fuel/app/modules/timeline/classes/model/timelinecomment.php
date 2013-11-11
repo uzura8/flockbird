@@ -47,8 +47,22 @@ class Model_TimelineComment extends \Orm\Model
 			'key_from' => 'timeline_id',
 			'model_to' => '\Timeline\Model_Timeline',
 			'key_to' => 'id',
-			'property_from' => 'updated_at',
+			'property_from' => 'created_at',
 			'property_to' => 'sort_datetime',
+		),
+		'MyOrm\Observer_InsertRelationialTable'=>array(
+			'events'   => array('after_insert'),
+			'model_to' => '\Timeline\Model_MemberFollowTimeline',
+			'properties' => array(
+				'timeline_id' => 'timeline_id',
+				'member_id',
+			),
+			'is_check_duplicated' => array(
+				'conditions' => array(
+					'timeline_id' => 'timeline_id',
+					'member_id',
+				),
+			),
 		),
 	);
 

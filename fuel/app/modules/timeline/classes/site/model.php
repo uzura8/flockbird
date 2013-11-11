@@ -7,24 +7,83 @@ class Site_Model
 	{
 		if (!$limit) $limit = (int)\Config::get('timeline.articles.limit');
 		if ($limit > \Config::get('timeline.articles.limit_max')) $limit = \Config::get('timeline.articles.limit_max');
-		if (empty($sort)) $sort = array('sort_datetime' => 'desc');
+		if (empty($sort)) $sort = array('id' => 'desc');
+
+		$query = Model_TimelineCache::query()->select('id', 'timeline_id');
 
 		$basic_cond = \Site_Model::get_where_params4list(
 			$target_member_id,
 			$self_member_id,
 			$is_mypage
 		);
-		$where = $basic_cond;
+
+		if ($last_id) $query->and_where_open();
 		if ($is_mytimeline && $self_member_id)
 		{
-			$where = array();
-			$where['and'] = array();
-			$where['and'] = $basic_cond;
-			$where['and']['or'] = array('member_id', $self_member_id);
+			if ($follow_timeline_ids = self::get_follow_timeline_ids($self_member_id))
+			{
+				$query->or_where_open();
+					$query->and_where_open();
+						$query->where($basic_cond);
+						$query->or_where('member_id', $self_member_id);
+					$query->and_where_close();
+					$query->where('timeline_id', 'in', $follow_timeline_ids);
+					$query->where('is_follow', 1);
+				$query->or_where_close();
+				$query->or_where_open();
+					$query->and_where_open();
+						$query->where($basic_cond);
+						$query->or_where('member_id', $self_member_id);
+					$query->and_where_close();
+					$query->where('timeline_id', 'not in', $follow_timeline_ids);
+					$query->where('is_follow', 0);
+				$query->or_where_close();
+			}
+			else
+			{
+				$query->and_where_open();
+					$query->where($basic_cond);
+					$query->or_where('member_id', $self_member_id);
+				$query->and_where_close();
+				$query->where('is_follow', 0);
+			}
 		}
-		$params = array('where' => $where, 'order_by' => $sort, 'limit' => $limit);
+		else
+		{
+			$query->where($basic_cond);
+		}
+		if ($last_id) $query->and_where_close();
 
-		return \Site_Model::get_pager_list('timeline_cache', $last_id, $params, 'Timeline', true, $is_over, 'timeline_id');
+		if ($last_id)
+		{
+			$inequality_sign = '>';
+			if (empty($sort[1]) || $sort[1] == 'asc')
+			{
+				$inequality_sign = '<';
+			}
+			if ($is_over) $inequality_sign = '>';
+
+			$query->where('id', $inequality_sign, $last_id);
+		}
+
+		$query->order_by($sort);
+
+		if ($limit)
+		{
+			$rows_limit = $limit + 1;
+			$query->rows_limit($rows_limit);
+		}
+
+		$list = $query->get();
+
+		$is_next = false;
+		if ($limit)
+		{
+			$is_next = count($list) > $limit;
+			if ($is_next) array_pop($list);
+		}
+
+		return array($list, $is_next);
 	}
 
 	public static function get_comments($type, $timeline_id, $foreign_table = '', $foreign_id = 0, $limit = 0)
@@ -41,6 +100,17 @@ class Site_Model
 		}
 
 		return Model_TimelineComment::get_comments($timeline_id, $limit);;
+	}
+
+	public static function get_follow_timeline_ids($member_id)
+	{
+		return \Util_db::conv_col(
+			\DB::select('timeline_id')->from('member_follow_timeline')
+				->where('member_id', $member_id)
+				->order_by('updated_at', 'desc')
+				->limit(\Config::get('timeline.follow_timeline_limit_max'))
+				->execute()->as_array()
+		);
 	}
 
 	public static function save_timeline($member_id, $values = array(), $type_key = null, Model_Timeline $timeline = null)
