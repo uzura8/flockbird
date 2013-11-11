@@ -75,10 +75,11 @@ class Model_AlbumImageComment extends \Orm\Model
 	public static function get_comments($album_image_id, $record_limit = 0, $params = array(), $is_desc = false)
 	{
 		$params = array_merge(array(array('album_image_id', '=', $album_image_id)), $params);;
-		$query = self::query()->where($params)->related('member');
+		$query = self::query()->where($params);
 
 		$is_all_records = false;
 		$all_records_count = $query->count();
+		$query->related('member');
 		if (!$record_limit || $record_limit >= $all_records_count)
 		{
 			$is_all_records = true;

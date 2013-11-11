@@ -76,8 +76,9 @@ class Model_NoteComment extends \Orm\Model
 	{
 		$is_all_records = false;
 		$params = array_merge(array(array('note_id', '=', $note_id)), $params);;
-		$query = self::query()->where($params)->related('member');
+		$query = self::query()->where($params);
 		$all_records_count = $query->count();
+		$query->related('member');
 		if (!$record_limit || $record_limit >= $all_records_count)
 		{
 			$is_all_records = true;
