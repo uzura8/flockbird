@@ -51,7 +51,7 @@ class Controller_Timeline extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
-		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mypage);
+		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, $is_mypage);
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.timeline')), null, $member);
 		$this->template->post_footer = \View::forge('_parts/timeline/load_timelines');

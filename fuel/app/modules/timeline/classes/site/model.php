@@ -51,6 +51,7 @@ class Site_Model
 		else
 		{
 			$query->where($basic_cond);
+			$query->where('is_follow', 0);
 		}
 		if ($last_id) $query->and_where_close();
 
