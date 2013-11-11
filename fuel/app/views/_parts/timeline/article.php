@@ -46,7 +46,7 @@ echo $view_member_contents_box->render();
 if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline->type))
 {
 	$attr = array(
-		'id'      => 'btn_timeline_delete_'.$timeline->id,
+		'id'      => 'btn_timeline_delete_'.$timeline_cache_id,
 		'data-id' => $timeline->id,
 	);
 	if (!empty($delete_uri)) $attr['data-uri'] = $delete_uri;

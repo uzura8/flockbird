@@ -132,11 +132,12 @@ function delete_item(uri)
 {
 	var id = (arguments.length > 1) ? arguments[1] : 0;
 	var target_attribute_prefix = (arguments.length > 2) ? arguments[2] : '';
-	var item_term = (arguments.length > 3) ? arguments[3] : '';
+	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
+	var item_term = (arguments.length > 4) ? arguments[4] : '';
 
 	apprise('削除しますか?', {'confirm':true}, function(r) {
-		if (id > 0 && target_attribute_prefix.length > 0) {
-			if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, true, item_term);
+		if (id) {
+			if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, target_attribute_id, true, item_term);
 		} else {
 			if (r == true) delete_item_execute(uri);
 		}
@@ -151,8 +152,9 @@ function delete_item_execute(uri)
 
 function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 {
-	var is_display_message_success = (arguments.length > 3) ? arguments[3] : true;
-	var item_term = (arguments.length > 4) ? arguments[4] : '';
+	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
+	var is_display_message_success = (arguments.length > 4) ? arguments[4] : true;
+	var item_term = (arguments.length > 5) ? arguments[5] : '';
 
 	var baseUrl = get_baseUrl();
 
@@ -170,7 +172,8 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 		data : post_data,
 		type : 'POST',
 		success: function(data){
-			$(target_attribute_prefix + '_' + id).fadeOut();
+			var delete_target_attribute = target_attribute_id ? target_attribute_id : target_attribute_prefix + '_' + id;
+			$(delete_target_attribute).fadeOut();
 			if (is_display_message_success) $.jGrowl(msg_prefix + '削除しました。');
 		},
 		error: function(data){

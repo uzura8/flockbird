@@ -18,10 +18,12 @@ $(function() {
 
 	$(document).on('click','.btn_timeline_delete', function(){
 		var delete_uri = $(this).data('uri') ? $(this).data('uri') : '';
+		var list_id = get_id_num($(this).attr('id'));
+
 		if (delete_uri) {
 			delete_item(delete_uri);
 		} else {
-			delete_item('timeline/api/delete.json', $(this).data('id'), '#timelineBox');
+			delete_item('timeline/api/delete.json', $(this).data('id'), '', '#timelineBox_' + list_id);
 		}
 		return false;
 	});
