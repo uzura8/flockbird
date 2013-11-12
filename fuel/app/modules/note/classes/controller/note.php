@@ -163,7 +163,10 @@ class Controller_Note extends \Controller_Site
 				$note->save();
 
 				// timeline 投稿
-				\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
+				if ($note->is_published)
+				{
+					\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
+				}
 
 				if ($is_upload['simple'] && \Input::file())
 				{
@@ -309,6 +312,11 @@ class Controller_Note extends \Controller_Site
 						\Model_Member::recalculate_filesize_total($this->u->id);
 					}
 				}
+				// timeline 投稿
+				if ($is_published)
+				{
+					\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+				}
 				\DB::commit_transaction();
 
 				\Session::set_flash('message', \Config::get('term.note').'を編集しました。');
@@ -401,6 +409,8 @@ class Controller_Note extends \Controller_Site
 				$album_image->public_flag = $note->public_flag;
 				$album_image->save();
 			}
+			// timeline 投稿
+			\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
 			\DB::commit_transaction();
 			\Session::set_flash('message', \Config::get('term.note').'を公開しました。');
 		}
