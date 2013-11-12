@@ -77,6 +77,28 @@ class Site_Util
 		return true;
 	}
 
+	public static function get_foreign_table_from_type($type)
+	{
+		switch ($type)
+		{
+			case \Config::get('timeline.types.member_register'):
+				return 'member';
+				break;
+			case \Config::get('timeline.types.profile_image'):
+				if (Config::get('site.upload.types.img.types.m.save_as_album_image'))
+				{
+					return 'album_image';
+				}
+				return 'file';
+				break;
+			case \Config::get('timeline.types.note'):
+				return 'note';
+				break;
+		}
+
+		return null;
+	}
+
 	public static function get_comment_parent_id($type, $foreign_table = '', $timeline_id = 0, $foreign_id = 0)
 	{
 		if ($type == \Config::get('timeline.types.note'))

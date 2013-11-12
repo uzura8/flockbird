@@ -81,11 +81,7 @@ class Controller_Api extends \Controller_Site_Api
 			$post = $val->validated();
 
 			\DB::start_transaction();
-			$values = array(
-				'public_flag' => $post['public_flag'],
-				'body' => $post['body'],
-			);
-			$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $values, 'normal', $timeline);
+			$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'normal', null, $post['body'], $timeline);
 			\DB::commit_transaction();
 
 			$response['status'] = 1;

@@ -163,12 +163,7 @@ class Controller_Note extends \Controller_Site
 				$note->save();
 
 				// timeline 投稿
-				$values = array(
-					'public_flag' => $post['public_flag'],
-					'foreign_table' => 'note',
-					'foreign_id' => $note->id,
-				);
-				\Timeline\Site_Model::save_timeline($this->u->id, $values, 'note');
+				\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
 
 				if ($is_upload['simple'] && \Input::file())
 				{
