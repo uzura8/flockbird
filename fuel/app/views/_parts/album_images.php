@@ -1,7 +1,7 @@
 <?php $is_api_request = Site_Util::check_is_api_request(); ?>
 <?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if ($list): ?>
-<div class="row-fluid">
+<div class="row">
 <div id="main_container">
 <?php foreach ($list as $album_image): ?>
 	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
@@ -85,8 +85,8 @@ elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && 
 }
 ?>
 <?php if ($menus): ?>
-				<div class="btn-group btn_album_image_edit" id="btn_album_image_edit_<?php echo $album_image->id ?>">
-					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
+				<div class="btn_album_image_edit btn-group dropdown-toggle" data-toggle="dropdown" id="btn_album_image_edit_<?php echo $album_image->id ?>">
+					<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
 					<ul class="dropdown-menu pull-right">
 <?php foreach ($menus as $menu): ?>
 						<li><?php echo $menu; ?></li>
@@ -111,7 +111,7 @@ elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && 
 	</div><!-- main_item -->
 <?php endforeach; ?>
 </div><!-- main_container -->
-</div><!-- row-fluid -->
+</div><!-- row -->
 <?php endif; ?>
 
 <?php if (empty($is_simple_view)): ?>

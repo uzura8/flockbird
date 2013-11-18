@@ -34,6 +34,6 @@
 <p>No Posts.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/posts/create', 'Add new Post', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/posts/create', 'Add new Post', array('class' => 'btn btn-default success')); ?>
 
 </p>

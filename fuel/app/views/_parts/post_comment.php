@@ -1,8 +1,8 @@
 <?php
-$textarea_attrs_def = array('rows' => 1, 'class' => 'span12 autogrow', 'id' => 'textarea_comment');
+$textarea_attrs_def = array('rows' => 2, 'class' => 'col-xs-12 autogrow', 'id' => 'textarea_comment');
 $textarea_attrs     = (empty($textarea_attrs)) ? $textarea_attrs_def : array_merge($textarea_attrs_def, $textarea_attrs);
 
-$button_attrs_def = array('class' => 'btn', 'id' => 'btn_comment');
+$button_attrs_def = array('class' => 'btn btn-default', 'id' => 'btn_comment');
 $button_attrs     = (empty($button_attrs)) ? $button_attrs_def : array_merge($button_attrs_def, $button_attrs);
 $button_attrs['class'] .= ' pull-right';
 

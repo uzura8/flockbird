@@ -19,7 +19,7 @@
 <?php elseif (!empty($is_upload['multiple'])): ?>
 	<?php echo form_button('<i class="ls-icon-camera"></i> 写真を追加', 'button', '', array(
 		'id' => 'upload_images_btn',
-		'class' => 'btn',
+		'class' => 'btn btn-default',
 		'data-toggle' => 'modal',
 	)); ?>
 	<div id="upload_images" class="modal container hide fade" tabindex="-1"></div>
@@ -36,10 +36,10 @@
 	<?php echo form_button('公開する'); ?>
 <?php endif; ?>
 <?php if (empty($note->is_published)): ?>
-	<?php echo form_button(Config::get('term.draft'), 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-inverse')); ?>
+	<?php echo form_button(Config::get('term.draft'), 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
 <?php endif; ?>
 <?php if (isset($is_edit) && $is_edit): ?>
-	<?php echo form_anchor(sprintf('note/delete/%d%s', $note->id, get_csrf_query_str()), '削除する', array('class' => 'btn btn-danger')); ?>
+	<?php echo form_anchor(sprintf('note/delete/%d%s', $note->id, get_csrf_query_str()), '削除する', array('class' => 'btn btn-default btn-danger')); ?>
 <?php endif; ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

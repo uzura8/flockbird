@@ -10,7 +10,7 @@ echo render('_parts/member_contents_box', array(
 	'date'        => array('datetime' => $date, 'label' => '撮影')
 )); ?>
 <?php if (isset($u) && $u->id == $album_image->album->member_id): ?>
-<div class="btn-group edit">
+<div class="edit btn-group dropdown-toggle" data-toggle="dropdown">
 	<?php echo render('_parts/button_edit'); ?>
 	<ul class="dropdown-menu pull-right">
 		<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集'); ?></li>

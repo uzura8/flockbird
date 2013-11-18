@@ -89,7 +89,7 @@ function form_textarea($val_obj, $name, $label = '', $default_value = '', $is_re
 function form_button($label = '送信', $type = 'submit', $name = '', $atter = array())
 {
 	$atter_default = array(
-		'class' => 'btn btn-primary',
+		'class' => 'btn btn-default btn-primary',
 		'id'    => 'form_'.$type,
 		'type'  => $type,
 	);

@@ -24,8 +24,8 @@
 	'date' => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at)
 )); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>
-				<div class="btn-group edit" id="btn_edit_<?php echo $id ?>">
-					<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
+				<div class="edit btn-group dropdown-toggle" data-toggle="dropdown" id="btn_edit_<?php echo $id ?>">
+					<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
 					<ul class="dropdown-menu pull-right">
 						<li><?php echo Html::anchor('note/edit/'.$id, '<i class="icon-pencil"></i> 編集'); ?></li>
 						<li><a href="#" onclick="delete_item('note/api/delete.json', <?php echo $id; ?>, '#article');return false;"><i class="icon-trash"></i> 削除</a></li>
@@ -59,7 +59,7 @@
 	'date' => array('datetime' => $comment->created_at)
 )); ?>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $note->member_id))): ?>
-				<a class="btn btn-mini boxBtn btn_comment_delete" id="btn_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
+				<a class="btn btn-default btn-xs boxBtn btn_comment_delete" id="btn_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
 <?php endif; ?>
 			</div>
 <?php endforeach; ?>

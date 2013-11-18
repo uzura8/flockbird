@@ -3,7 +3,7 @@
 <?php if (!$list): ?>
 <?php if (!$is_api_request): ?><?php echo \Config::get('term.album'); ?>がありません。<?php endif; ?>
 <?php else: ?>
-<div class="row-fluid">
+<div class="row">
 <div id="main_container">
 <?php foreach ($list as $album): ?>
 	<div class="main_item" id="main_item_<?php echo $album->id; ?>">
@@ -50,15 +50,15 @@
 <?php endif; ?>
 				</small>
 <?php if (!$disable_to_update && Auth::check() && $album->member_id == $u->id): ?>
-					<div class="btn-group btn_album_edit" id="btn_album_edit_<?php echo $album->id ?>">
+					<div class="btn_album_edit btn-group dropdown-toggle" data-toggle="dropdown" id="btn_album_edit_<?php echo $album->id ?>">
 <?php if (\Config::get('album.display_setting.member.display_delete_link')): ?>
-						<button data-toggle="dropdown" class="btn btn-mini dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
+						<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
 						<ul class="dropdown-menu">
 							<li><?php echo Html::anchor('album/edit/'.$album->id, '<i class="icon-pencil"></i> 編集'); ?></li>
 							<li><a href="#" onclick="delete_item('album/api/delete.json', <?php echo $album->id; ?>, '#main_item');return false;"><i class="icon-trash"></i> 削除</a></li>
 						</ul>
 <?php else: ?>
-					<?php echo Html::anchor('album/edit/'.$album->id, '<i class="ls-icon-edit mrlr10"></i>', array('class' => 'btn btn-mini')); ?>
+					<?php echo Html::anchor('album/edit/'.$album->id, '<i class="ls-icon-edit mrlr10"></i>', array('class' => 'btn btn-default btn-xs')); ?>
 <?php endif; ?>
 					</div><!-- /btn-group -->
 <?php endif; ?>
@@ -67,7 +67,7 @@
 	</div><!-- main_item -->
 <?php endforeach; ?>
 </div><!-- main_container. -->
-</div><!-- row-fluid -->
+</div><!-- row -->
 <?php endif; ?>
 
 <nav id="page-nav">

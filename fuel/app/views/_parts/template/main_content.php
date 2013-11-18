@@ -1,11 +1,11 @@
 <?php if (isset($sub_column)): ?>
-<div class="row-fluid">
-	<div class="span10" id="main_column">
+<div class="row">
+	<div class="col-md-10" id="main_column">
 <?php echo $content; ?>
-	</div><!--/span-->
-	<div class="span2">
+	</div><!--/col-md-10 -->
+	<div class="col-md-2">
 <?php echo $sub_column; ?>
-	</div><!--/span-->
+	</div><!--/col-md-2 -->
 </div><!--/row-->
 
 <?php else: ?>

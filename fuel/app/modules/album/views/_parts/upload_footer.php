@@ -12,7 +12,7 @@
                 <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
             </td>
             <td class="start">{% if (!o.options.autoUpload) { %}
-                <button class="btn btn-primary">
+                <button class="btn btn-default btn-primary">
                     <i class="icon-upload icon-white"></i>
                     <span>{%=locale.fileupload.start%}</span>
                 </button>
@@ -21,7 +21,7 @@
             <td colspan="2"></td>
         {% } %}
         <td class="cancel">{% if (!i) { %}
-            <button class="btn btn-warning">
+            <button class="btn btn-default btn-warning">
                 <i class="icon-ban-circle icon-white"></i>
                 <span>{%=locale.fileupload.cancel%}</span>
             </button>
@@ -50,7 +50,7 @@
         {% } %}
 <?php if (isset($display_delete_button) && $display_delete_button === true): ?>
         <td class="delete">
-            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+            <button class="btn btn-default btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
                 <i class="icon-trash icon-white"></i>
                 <span>{%=locale.fileupload.destroy%}</span>
             </button>

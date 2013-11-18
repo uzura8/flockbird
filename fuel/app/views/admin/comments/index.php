@@ -34,6 +34,6 @@
 <p>No Comments.</p>
 
 <?php endif; ?><p>
-	<?php echo Html::anchor('admin/comments/create', 'Add new Comment', array('class' => 'btn success')); ?>
+	<?php echo Html::anchor('admin/comments/create', 'Add new Comment', array('class' => 'btn btn-default success')); ?>
 
 </p>

@@ -37,13 +37,13 @@
 
 <div id="btn_menu">
 <?php if ($list): ?>
-<?php echo Html::anchor('album/slide/'.$album->id, sprintf('<i class="icon-picture"></i> %sを見る', Config::get('term.album_image')), array('class' => 'btn mr')); ?>
+<?php echo Html::anchor('album/slide/'.$album->id, sprintf('<i class="icon-picture"></i> %sを見る', Config::get('term.album_image')), array('class' => 'btn btn-default mr')); ?>
 <?php endif; ?>
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
 <?php if (!$disabled_to_update): ?>
-<?php echo Html::anchor('album/upload/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn mr')); ?>
+<?php echo Html::anchor('album/upload/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn btn-default mr')); ?>
 <?php endif; ?>
-<?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('term.album_image')), array('class' => 'btn')); ?>
+<?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('term.album_image')), array('class' => 'btn btn-default')); ?>
 <?php endif; ?>
 </div>
 

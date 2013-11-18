@@ -11,7 +11,7 @@ if ($is_tmp)
 <?php else: ?>
 	<?php echo Form::hidden('album_image_id[]', $file_tmp->id); ?>
 <?php endif; ?>
-<div class="row-fluid note_image" id="note_image_<?php if ($is_tmp): ?>tmp<?php else: ?>uploaded<?php endif; ?>_<?php echo $file_tmp->id; ?>">
+<div class="row note_image" id="note_image_<?php if ($is_tmp): ?>tmp<?php else: ?>uploaded<?php endif; ?>_<?php echo $file_tmp->id; ?>">
 	<a class="pull-left span1 offset1">
 <?php if ($is_tmp): ?>
 		<?php echo Html::img(sprintf('%s/%s%s', $upload_uri, $file_tmp->path, $file_tmp->name), array('class' => 'img-polaroid')); ?>
@@ -53,6 +53,6 @@ else
 			'data-id' => $file_tmp->id
 		)); ?>
 	</div>
-</div><!-- row-fluid -->
+</div><!-- row -->
 <?php endforeach; ?>
 <?php endif; ?>

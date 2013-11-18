@@ -239,8 +239,8 @@ function conv_data_atter($list = array(), $is_html = false)
 
 function anchor_button($href, $icon_class = '', $text = '', $class_attr_add = '', $attr = array(), $is_mini_btn = false, $is_sp = false, $is_force_btn = false, $is_force_loud_color = false)
 {
-	$class_attrs  = array('btn');
-	if ($is_mini_btn) $class_attrs[] = 'btn-mini';
+	$class_attrs  = array('btn', 'btn-default');
+	if ($is_mini_btn) $class_attrs[] = 'btn-xs';
 
 	if ($is_sp && !$is_force_btn)
 	{

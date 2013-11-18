@@ -11,14 +11,16 @@ $input_class = ($is_api_request) ? 'input-medium' : '';
 	<?php echo form_input($val, 'email', 'メールアドレス', '', true, $input_class, 'email'); ?>
 	<?php echo form_input($val, 'password', 'パスワード', '', true, $input_class, 'password'); ?>
 
-	<div class="control-group">
-		<div class="controls">
+	<div class="form-group">
+		<div class="col-sm-10 col-sm-offset-2">
+			<div class="checkbox">
 			<?php echo Form::checkbox(
 				'rememberme[]',
 				'1',
 				in_array('1', Input::post('rememberme', array())) ? array('checked' => 'checked', 'id' => 'form_rememberme_1') : array('id' => 'form_rememberme_1')
 			); ?>
-			<?php echo Form::label('次回から自動的にログイン', 'rememberme_1', array('class' => 'checkbox')); ?>
+			<?php echo Form::label('次回から自動的にログイン', 'rememberme_1'); ?>
+			</div>
 		</div>
 	</div>
 
@@ -26,15 +28,15 @@ $input_class = ($is_api_request) ? 'input-medium' : '';
 	<?php echo form_button('ログイン'); ?>
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
-	<?php echo form_anchor(Config::get('site.login_uri.site').'/facebook', '<i class="ls-icon-facebook"></i> facebookでログイン', array('class' => 'btn')); ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/facebook', '<i class="ls-icon-facebook"></i> facebookでログイン', array('class' => 'btn btn-default')); ?>
 <?php endif; ?>
 <?php if (PRJ_TWITTER_APP_ID): ?>
-	<?php echo form_anchor(Config::get('site.login_uri.site').'/twitter', '<i class="ls-icon-twitter"></i> twitterでログイン', array('class' => 'btn')); ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/twitter', '<i class="ls-icon-twitter"></i> twitterでログイン', array('class' => 'btn btn-default')); ?>
 <?php endif; ?>
 <?php if (PRJ_GOOGLE_APP_ID): ?>
-	<?php echo form_anchor(Config::get('site.login_uri.site').'/google', '<i class="ls-icon-google"></i> googleでログイン', array('class' => 'btn')); ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/google', '<i class="ls-icon-google"></i> googleでログイン', array('class' => 'btn btn-default')); ?>
 <?php endif; ?>
-	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-warning')); ?>
+	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-default btn-warning')); ?>
 
 <?php echo form_close(); ?>
 <?php if (!$is_api_request): ?></div><?php endif; ?>

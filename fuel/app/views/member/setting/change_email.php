@@ -4,14 +4,14 @@
 	<?php echo Form::hidden('token' ,$member_email_pre['token']); ?>
 	<?php echo Form::hidden(Config::get('security.csrf_token_key') ,Util_security::get_csrf()); ?>
 
-	<div class="control-group">
-		<label class="control-label">メールアドレス</label>
-		<div class="controls"><?php echo $member_email_pre['email']; ?></div>
+	<div class="form-group">
+		<label class="control-label col-sm-2">メールアドレス</label>
+		<div class="col-sm-10"><?php echo $member_email_pre['email']; ?></div>
 	</div>
 
-	<div class="control-group">
-		<label class="control-label">パスワード</label>
-		<div class="controls">
+	<div class="form-group">
+		<label class="control-label col-sm-2">パスワード</label>
+		<div class="col-sm-10">
 		<?php echo Form::password('password', '', array('class' => 'span4')); ?>
 		<?php if ($val->error('password')): ?>
 		<span class="help-inline error_msg"><?php echo $val->error('password')->get_message(); ?></span>
@@ -19,8 +19,8 @@
 		</div>
 	</div>
 
-	<div class="control-group">
-		<div class="controls">
+	<div class="form-group">
+		<div class="col-sm-10">
 		<?php echo form_button('送信'); ?>
 		</div>
 	</div>

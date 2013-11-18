@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width<?php if (IS_SP): ?>, initial-scale=1.0, maximum-scale=1.0, user-scalable=no<?php endif; ?>">
 <meta name="description" content="<?php echo $header_description ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
 <meta name="keywords" content="<?php echo site_header_keywords($header_keywords); ?>">
@@ -20,9 +21,9 @@
 
 <?php echo render('_parts/template/navbar'); ?>
 
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span9">
+<div class="container">
+	<div class="row row-offcanvas row-offcanvas-right">
+		<div class="col-sm-9">
 <?php if (!empty($breadcrumbs) && !IS_SP): ?>
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
 <?php endif; ?>
@@ -48,17 +49,12 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 
 		</div><!--/span-->
 
-		<div class="span3">
+		<div class="col-sm-3" id="sidebar" role="navigation">
 <?php if (Auth::check()): ?>
-			<div class="well sidebar-nav">
-				<?php echo render('_parts/template/profile_img_box'); ?>
-				<?php echo render('_parts/nav_list', array('header' => 'Member', 'list' => Config::get('navigation.site.secure_side'))); ?>
-			</div><!--/.well -->
+			<?php echo render('_parts/template/profile_img_box'); ?>
+			<?php echo render('_parts/nav_list', array('header' => 'Member', 'list' => Config::get('navigation.site.secure_side'))); ?>
 <?php endif; ?>
-
-			<div class="well sidebar-nav">
-				<?php echo render('_parts/nav_list', array('header' => 'Site', 'list' => Config::get('navigation.site.global_side'))); ?>
-			</div><!--/.well -->
+			<?php echo render('_parts/nav_list', array('header' => 'Site', 'list' => Config::get('navigation.site.global_side'))); ?>
 
 <?php if (isset($subside_contents)): ?>
 <?php echo $subside_contents; ?>
@@ -69,7 +65,7 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 
 <?php echo render('_parts/template/footer'); ?>
 
-</div><!--/.fluid-container-->
+</div><!--/.container-->
 
 <?php echo render('_parts/template/load_common_js'); ?>
 <?php echo render('_parts/template/common_footer_script'); ?>

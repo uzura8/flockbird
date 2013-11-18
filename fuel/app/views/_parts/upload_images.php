@@ -13,21 +13,21 @@
 	<div class="row fileupload-buttonbar">
 			<div class="span8 btn_box">
 					<!-- The fileinput-button span is used to style the file input field as button -->
-					<span class="btn btn-success fileinput-button">
+					<span class="btn btn-default btn-success fileinput-button">
 							<i class="icon-plus icon-white"></i>
 							<span>Add files...</span>
 							<input type="file" name="files[]" multiple>
 					</span>
-					<button type="submit" class="btn btn-primary start">
+					<button type="submit" class="btn btn-default btn-primary start">
 							<i class="icon-upload icon-white"></i>
 							<span>Start upload</span>
 					</button>
-					<button type="reset" class="btn btn-warning cancel">
+					<button type="reset" class="btn btn-default btn-warning cancel">
 							<i class="icon-ban-circle icon-white"></i>
 							<span>Cancel upload</span>
 					</button>
 <?php if (isset($display_delete_button) && $display_delete_button === true): ?>
-					<button type="button" class="btn btn-danger delete">
+					<button type="button" class="btn btn-default btn-danger delete">
 							<i class="icon-trash icon-white"></i>
 							<span>Delete</span>
 					</button>

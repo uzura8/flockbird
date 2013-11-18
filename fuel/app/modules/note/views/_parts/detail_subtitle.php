@@ -8,7 +8,7 @@
 	'date'        => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at, 'label' => $note->published_at ? '日時' : '更新日時')
 )); ?>
 <?php if (isset($u) && $u->id == $note->member_id): ?>
-<div class="btn-group edit">
+<div class="edit btn-group dropdown-toggle" data-toggle="dropdown">
 	<?php echo render('_parts/button_edit'); ?>
 	<ul class="dropdown-menu pull-right">
 <?php if (!$note->is_published): ?>

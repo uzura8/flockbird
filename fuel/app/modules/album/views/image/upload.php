@@ -13,7 +13,7 @@
 )); ?>
 </div>
 <div class="modal-footer">
-<button type="button" data-dismiss="modal" class="btn">Close</button>
-<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+<!-- <button type="button" class="btn btn-default btn-primary">Save changes</button> -->
 </div>
 <?php echo render('_parts/upload_footer', array('display_delete_button' => true)); ?>

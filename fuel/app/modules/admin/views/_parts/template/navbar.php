@@ -1,14 +1,14 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
-		<div class="container-fluid">
-			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+		<div class="container">
+			<a class="btn btn-default navbar-btn" data-toggle="collapse" data-target=".nav-collapse">
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			<a class="brand" href="<?php echo Uri::create('/admin/'); ?>"><?php echo PRJ_SITE_NAME; ?> 管理画面</a>
 <?php if (Auth::check()): ?>
 			<div class="btn-group pull-right">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="icon-user"></i> <?php echo $u->username; ?>
 					<span class="caret"></span>
 				</a>
@@ -40,7 +40,7 @@
 			</div><!--/.nav-collapse -->
 <?php else: ?>
 			<div class="btn-group pull-right">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
 					<span class="caret"></span>
 				</a>

@@ -5,7 +5,7 @@
 		<?php echo form_button(); ?>
 <?php if (Auth::check() && $u->file_id): ?>
 		<?php echo form_anchor('#', '<i class="ls-icon-delete"></i> 削除', array(
-			'class' => 'btn btn-white btn-danger boxBtn',
+			'class' => 'btn btn-default btn-white btn-danger boxBtn',
 			'onclick' => "delete_item('member/profile/delete_image');return false;"
 		)); ?>
 <?php endif; ?>

@@ -4,7 +4,7 @@ if (!empty($model)) $model_uri = str_replace('_', '/', $model);
 ?>
 <?php if (!empty($disabled_to_update)): ?>
 <?php
-$atter = array('class' => 'btn btn-mini public_flag'.$btn_color);
+$atter = array('class' => 'btn btn-default btn-xs public_flag'.$btn_color);
 if (!empty($disabled_to_update['message']))
 {
 	$atter['data-toggle']    = 'tooltip';
@@ -15,8 +15,8 @@ if (!empty($disabled_to_update['message']))
 ?>
 <?php echo Html::anchor('#', $icon.$name, $atter); ?>
 <?php elseif (!empty($is_mycontents)): ?>
-<?php if (empty($without_parent_box)): ?><div class="btn-group public_flag<?php if (!empty($parent_box_additional_class)): ?> <?php echo $parent_box_additional_class; ?><?php endif; ?>"><?php endif; ?>
-	<button class="btn dropdown-toggle btn-mini<?php echo $btn_color; ?>" id="<?php if (!empty($model) && !empty($id)): ?>public_flag_<?php echo $model; ?>_<?php echo $id; ?><?php else: ?>public_flag_selector<?php endif; ?>" data-toggle="dropdown" data-public_flag="<?php echo $public_flag; ?>">
+<?php if (empty($without_parent_box)): ?><div class="public_flag<?php if (!empty($parent_box_additional_class)): ?> <?php echo $parent_box_additional_class; ?><?php endif; ?> btn-group dropdown-toggle" data-toggle="dropdown"><?php endif; ?>
+	<button class="btn dropdown-toggle btn-default btn-xs<?php echo $btn_color; ?>" type="button" id="<?php if (!empty($model) && !empty($id)): ?>public_flag_<?php echo $model; ?>_<?php echo $id; ?><?php else: ?>public_flag_selector<?php endif; ?>" data-toggle="dropdown" data-public_flag="<?php echo $public_flag; ?>">
 		<?php echo $icon.$name; ?><span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu pull-right">
@@ -55,5 +55,5 @@ $atter['class'] = $class_atter;
 	</ul>
 <?php if (empty($without_parent_box)): ?></div><?php endif; ?>
 <?php else: ?>
-<span class="btn btn-mini public_flag<?php echo $btn_color; ?>"><?php echo $icon.$name; ?></span>
+<span class="btn btn-default btn-xs public_flag<?php echo $btn_color; ?>"><?php echo $icon.$name; ?></span>
 <?php endif; ?>

@@ -16,7 +16,7 @@ $list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_de
 	'trim_width' => empty($trim_width) ? 0 : $trim_width,
 )); ?>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $parent->member_id))): ?>
-<a class="btn btn-mini boxBtn btn_comment_delete" id="btn_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
+<a class="btn btn-default btn-xs boxBtn btn_comment_delete" id="btn_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
 <?php endif ; ?>
 </div>
 <?php endforeach; ?>
