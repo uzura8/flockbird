@@ -417,16 +417,18 @@ CREATE TABLE `file_tmp` (
   `type` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
   `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
-  `member_id` int(11) DEFAULT NULL,
-  `exif` text NULL,
-  `contents` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File refered from this contents',
-  `hash` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Hash to recognize contents',
+  `member_id` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `exif` text DEFAULT NULL,
+  `contents` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'File refered from this contents',
+  `hash` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL  COMMENT 'Hash to recognize contents',
   `shot_at` datetime NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
-  KEY `member_id_contents_created_at_idx` (`member_id`,`contents`,`created_at`)
+  KEY `name_member_id_idx` (`name`,`member_id`)
+--  KEY `member_id_contents_created_at_idx` (`member_id`,`contents`,`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of temporary files uploaded';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

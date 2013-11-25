@@ -166,29 +166,13 @@ class Validation extends Fuel\Core\Validation
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
-		if (!$time = strtotime($val)) return false;
-
-		$base_time = empty($base) ? time() : strtotime($base);
-		if ($time > $base_time) return false;
-
-		$min_time = empty($min) ? Config::get('site.posted_value_rule_default.time.default.min', strtotime('- 120 years')) : strtotime($min);
-		if ($time < $min_time) return false;
-
-		return true;
+		return Util_Date::check_is_past($val, $base, min ?: Config::get('site.posted_value_rule_default.time.default.min'));
 	}
 
-	public function _validation_datetime_is_future($val, $base = '', $max = '')
+	public function _validation_datetime_is_future($val, $base = '', $max = '', $is_return_time = false)
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
-		if (!$time = strtotime($val)) return false;
-
-		$base_time = empty($base) ? time() : strtotime($base);
-		if ($time < $base_time) return false;
-
-		$max_time = empty($max) ? Config::get('site.posted_value_rule_default.time.default.max', strtotime('+ 50 years')) : strtotime($max);
-		if ($time > $max_time) return false;
-
-		return true;
+		return Util_Date::check_is_futer($val, $base, min ?: Config::get('site.posted_value_rule_default.time.default.max'));
 	}
 }

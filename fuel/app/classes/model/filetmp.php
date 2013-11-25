@@ -29,7 +29,15 @@ class Model_FileTmp extends \Orm\Model
 		'member_id' => array(
 			'validation' => array('trim', 'valid_string' => array('integer')),
 		),
-		'exif',
+		'description' => array(
+			'data_type' => 'text',
+			'validation' => array('trim'),
+			'form' => array('type' => 'textarea', 'cols' => 60, 'rows' => 2, 'placeholder' => '写真の説明', 'class' => 'col-xs-12'),
+		),
+		'exif' => array(
+			'data_type' => 'text',
+			'validation' => array('trim'),
+		),
 		'type' => array(
 			'validation' => array('trim', 'max_length' => array(64)),
 		),
@@ -65,6 +73,14 @@ class Model_FileTmp extends \Orm\Model
 		if ($target_member_id && $obj->member_id != $target_member_id) return false;
 
 		return $obj;
+	}
+
+	public static function get4name_and_member_id($name, $member_id)
+	{
+		return self::query()
+			->where('name', $name)
+			->where('member_id', $member_id)
+			->get_one();
 	}
 
 	public static function get_enables($member_id, $contents, $hash, $spare_time = 0)

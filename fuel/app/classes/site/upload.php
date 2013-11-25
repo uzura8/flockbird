@@ -220,13 +220,13 @@ class Site_Upload
 		return file_exists($real_path);
 	}
 
-	public static function check_and_make_uploaded_dir($dir, $check_dir_level = 0)
+	public static function check_and_make_uploaded_dir($dir, $check_dir_level = 0, $mode = 0777)
 	{
 		if (!$check_dir_level) $check_dir_level = Config::get('site.upload.check_and_make_dir_level');
 		if ($target_path = Util_file::check_exists_file_path($dir, $check_dir_level))
 		{
-			Util_file::make_dir_recursive($dir);
-			Util_file::chmod_recursive($target_path, 0777);
+			if (false === Util_file::make_dir_recursive($dir, $mode)) return false;
+			Util_file::chmod_recursive($target_path, $mode);
 		}
 
 		return true;
