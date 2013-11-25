@@ -49,7 +49,19 @@
   - url: http://momentjs.com/
 * moment.lang_ja.js
   - license: MIT
-* jqueryfileupload
+* jQuery File Upload Plugin
+  - version: 5.37.0
+  - license: MIT
+  - url: https://github.com/blueimp/jQuery-File-Upload
+* jQuery File Upload Plugin PHP Class
+  - version: 7.0.1
+  - license: MIT
+* jQuery Iframe Transport Plugin
+  - version: 1.8.1
+  - license: MIT
+* jQuery UI Widget
+  - version: 1.10.3+amd
+  - license: MIT
 * Bootstrap-Image-Gallery
 * JavaScript-Canvas-to-Blob
 * JavaScript-Load-Image
