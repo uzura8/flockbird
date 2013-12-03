@@ -6,13 +6,18 @@ $config = array(
 		'admin' => 'admin/login',
 	),
 	'upload' => array(
+		'remove_exif_data' => true,
 		'num_of_split_dirs' => 10,
-		'check_and_make_dir_level' => 7,
+		'check_and_make_dir_level' => 5,
+		'mkdir_mode' => 0755,
 		'accepted_filesize' => array(
 			'small' => array(
 				'limit' => '256M',
 			),
 		),
+		'accepted_max_size' => array(
+			'default' => '600x600',
+			),
 		'tmp_file' => array(
 			'accepted_contents' => array(
 					'note',
@@ -64,7 +69,6 @@ $config = array(
 							'LL' => '600x600',
 						),
 						'default_size' => '50x50xc',
-						'max_size' => '600x600',
 						'save_as_album_image' => true,
 					),
 				),

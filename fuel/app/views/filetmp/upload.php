@@ -12,4 +12,8 @@
 		<div class="progress-bar progress-bar-success"></div>
 </div>
 <!-- The container for the uploaded files -->
-<div id="files" class="files row"></div>
+<div id="files" class="files row">
+<?php if (!empty($files)): ?>
+<?php echo render('filetmp/_parts/upload_images', array('files' => $files)); ?>
+<?php endif; ?>
+</div>

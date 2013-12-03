@@ -220,9 +220,10 @@ class Site_Upload
 		return file_exists($real_path);
 	}
 
-	public static function check_and_make_uploaded_dir($dir, $check_dir_level = 0, $mode = 0777)
+	public static function check_and_make_uploaded_dir($dir, $check_dir_level = null, $mode = null)
 	{
 		if (!$check_dir_level) $check_dir_level = Config::get('site.upload.check_and_make_dir_level');
+		if (!$mode) $mode = Config::get('site.upload.mkdir_mode');
 		if ($target_path = Util_file::check_exists_file_path($dir, $check_dir_level))
 		{
 			if (false === Util_file::make_dir_recursive($dir, $mode)) return false;
@@ -256,7 +257,31 @@ class Site_Upload
 		return true;
 	}
 
-	public static function get_upload_handler_options($filepath, $script_url, $file_cate, $tmp_hash_key = 'tmp_hash')
+	public static function get_upload_handler_options($member_id)
+	{
+		$filepath = \Site_Upload::get_filepath('m', $member_id);
+		$thumbnail_sizes = Site_Upload::conv_size_str_to_array(Config::get('site.upload.types.img.tmp.sizes.thumbnail'));
+		$options = array(
+			'upload_dir' => Config::get('site.upload.types.img.tmp.raw_file_path').$filepath,
+			'upload_url' => Uri::create(Config::get('site.upload.types.img.tmp.root_path.raw_dir')).$filepath,
+			'mkdir_mode' => Config::get('site.upload.mkdir_mode'),
+			'member_id' => $member_id,
+			'site_filepath' => $filepath,
+			'image_versions' => array(
+				'' => array(
+					'auto_orient' => true
+				),
+				'thumbnail' => array(
+					'max_width' => $thumbnail_sizes['width'],
+					'max_height' => $thumbnail_sizes['height'],
+				),
+			),
+		);
+
+		return $options;
+	}
+
+	public static function get_upload_handler_options_old($filepath, $script_url, $file_cate, $tmp_hash_key = 'tmp_hash')
 	{
 		$tmp_hash = Input::post_get($tmp_hash_key, '');
 		$contents = Input::post_get('contents', '');
@@ -316,6 +341,23 @@ class Site_Upload
 		if (empty($target)) return false;
 
 		return in_array($target, Config::get('site.upload.tmp_file.accepted_contents'));
+	}
+
+	public static function make_thumbnails($raw_file_path, $filepath, $is_check_and_make_dir = true)
+	{
+		$file_cate = Util_string::get_exploded($filepath, 0, '/');
+		$sizes = Config::get(sprintf('site.upload.types.img.types.%s.sizes', $file_cate));
+		$cache_dir_path = PRJ_PUBLIC_DIR.Config::get('site.upload.types.img.root_path.cache_dir');
+
+		$result = true;
+		foreach ($sizes as $size)
+		{
+			$cache_file_path   = sprintf('%s%s/%s', $cache_dir_path, $size, $filepath);
+			if ($is_check_and_make_dir) self::check_and_make_uploaded_dir($cache_file_path);
+			if (self::make_thumbnail($raw_file_path, $cache_file_path, $size) === false) $result = false;// thumbnail の作成
+		}
+
+		return $result;
 	}
 
 	public static function make_thumbnail($raw_file_path, $thumbnail_file_path, $size_string)
@@ -387,5 +429,18 @@ class Site_Upload
 		unset($new_data, $old_data);
 
 		return true;
+	}
+
+	public static function get_accepted_max_size()
+	{
+		return Config::get('site.upload.accepted_max_size.default');
+	}
+
+	public static function get_accepted_filesize($member_id = null, $is_return_byte = true)
+	{
+		$value = Config::get('site.upload.accepted_filesize.small.limit');
+		if ($is_return_byte) $value = Num::bytes($value);
+
+		return $value;
 	}
 }

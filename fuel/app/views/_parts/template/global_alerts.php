@@ -8,7 +8,7 @@ if ($message)
 }
 if ($error = Session::get_flash('error'))
 {
-	$view_alerts = View::forge('_parts/alerts', array('type' => 'error'));
+	$view_alerts = View::forge('_parts/alerts', array('type' => 'danger'));
 	$view_alerts->set_safe('message', view_convert_list($error));
 	echo $view_alerts->render();
 }

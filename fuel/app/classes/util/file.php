@@ -46,6 +46,16 @@ class Util_file
 		return $image->save($resized_file);
 	}
 
+	/**
+	 * use for remove exif.
+	 */
+	public static function resave($file_path)
+	{
+		$image = Image::load($file_path)->resize('100%', '100%');
+
+		return $image->save($file_path);
+	}
+
 	public static function remove($file)
 	{
 		if (!file_exists($file)) return;

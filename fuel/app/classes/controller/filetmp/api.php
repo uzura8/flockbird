@@ -18,18 +18,22 @@ class Controller_FileTmp_Api extends Controller_Site_Api
 	 */
 	public function get_upload()
 	{
-		//if ($this->format != 'html') throw new HttpNotFoundException();
-
 		$response = '';
 		try
 		{
-			$options = $this->get_default_options($this->u->id);
+			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
+
+			$options = Site_Upload::get_upload_handler_options($this->u->id);
 			$uploadhandler = new MyUploadHandler($options, false);
-			$response = $uploadhandler->get(false);
-			//$response = View::forge('site/_parts/tmp_images', array('file_tmps' => $file_tmps, 'is_tmp' => true));
+			$file = $uploadhandler->get(false);
 			$status_code = 200;
 
-			return Response::forge($response, $status_code);
+			if ($this->format == 'html')
+			{
+				$response = View::forge('filetmp/_parts/upload_image', $file);
+				return Response::forge($response, $status_code);
+			}
+			$response = $files;
 		}
 		catch(FuelException $e)
 		{
@@ -59,7 +63,7 @@ class Controller_FileTmp_Api extends Controller_Site_Api
 			//Util_security::check_csrf();
 			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
 
-			$options = $this->get_default_options($this->u->id);
+			$options = Site_Upload::get_upload_handler_options($this->u->id);
 			$options['max_file_size'] = PRJ_UPLOAD_MAX_FILESIZE;
 			$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
 			$options['is_save_exif'] = PRJ_USE_EXIF_DATA;
@@ -101,7 +105,7 @@ class Controller_FileTmp_Api extends Controller_Site_Api
 				throw new HttpNotFoundException;
 			}
 
-			$options = $this->get_default_options($this->u->id);
+			$options = Site_Upload::get_upload_handler_options($this->u->id);
 			$uploadhandler = new MyUploadHandler($options, false);
 			$response = $uploadhandler->delete(false, $file_tmp);
 			$status_code = 200;
@@ -116,28 +120,5 @@ class Controller_FileTmp_Api extends Controller_Site_Api
 		}
 
 		return $this->response($response, $status_code);
-	}
-
-	private function get_default_options($member_id)
-	{
-		$filepath = \Site_Upload::get_filepath('m', $member_id);
-		$thumbnail_sizes = Site_Upload::conv_size_str_to_array(Config::get('site.upload.types.img.tmp.sizes.thumbnail'));
-		$options = array(
-			'upload_dir' => Config::get('site.upload.types.img.tmp.raw_file_path').$filepath,
-			'upload_url' => Uri::create(Config::get('site.upload.types.img.tmp.root_path.raw_dir')).$filepath,
-			'member_id' => $member_id,
-			'site_filepath' => $filepath,
-			'image_versions' => array(
-				'' => array(
-					'auto_orient' => true
-				),
-				'thumbnail' => array(
-					'max_width' => $thumbnail_sizes['width'],
-					'max_height' => $thumbnail_sizes['height'],
-				),
-			),
-		);
-
-		return $options;
 	}
 }

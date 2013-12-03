@@ -134,9 +134,89 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpForbiddenException;
 		}
 
-		$this->template->post_header = \View::forge('_parts/upload_header');
-		$this->template->post_footer = \View::forge('_parts/upload_footer', array('display_delete_button' => \Config::get('album.display_setting.upload.display_delete_button')));
-		$this->template->content = \View::forge('upload', array('id' => $id, 'album' => $album));
+		$files = array();
+		if (\Input::method() == 'POST')
+		{
+			\Util_security::check_csrf();
+
+			$file_tmps = array();
+			$moved_files = array();
+			try
+			{
+				//if (!$val->run()) throw new \FuelException($val->show_errors());
+				$file_tmps = \Site_FileTmp::get_file_tmps_uploaded($this->u->id);
+				\Site_FileTmp::check_uploaded_under_accepted_filesize($file_tmps, $this->u->filesize_total, \Site_Upload::get_accepted_filesize());
+
+				$new_filepath = \Site_Upload::get_filepath('ai', $album->id);
+				$new_file_dir  = \Config::get('site.upload.types.img.raw_file_path').$new_filepath;
+				if (!\Site_Upload::check_and_make_uploaded_dir($new_file_dir, \Config::get('site.upload.check_and_make_dir_level'), \Config::get('site.upload.mkdir_mode')))
+				{
+					throw new\FuelException('Failed to make save dirs.');
+				}
+
+				\DB::start_transaction();
+				foreach ($file_tmps as $file_tmp)
+				{
+					$old_file_path = \Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
+					$new_file_path = $new_file_dir.$file_tmp->name;
+					\Util_file::move($old_file_path, $new_file_path);
+					$moved_files[$file_tmp->id] = array(
+						'from' => $old_file_path,
+						'to'   => $new_file_path,
+					);
+					$file = \Model_File::move_from_file_tmp($file_tmp, $new_filepath);
+
+					$album_image = Model_AlbumImage::forge();
+					$album_image->album_id    = $album->id;
+					$album_image->file_id     = $file->id;
+					$album_image->name        = $file_tmp->description;
+					$album_image->public_flag = $album->public_flag;
+					$album_image->shot_at     = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
+					$album_image->save();
+				}
+				// timeline 投稿
+				//\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
+				\DB::commit_transaction();
+
+				// thumbnail 作成
+				foreach ($moved_files as $moved_file)
+				{
+					\Site_Upload::make_thumbnails($moved_file['to'], $new_filepath);
+				}
+
+				$message = sprintf('%sをアップロードしました。', \Config::get('term.album_image'));
+				\Session::set_flash('message', $message);
+				\Response::redirect('album/detail/'.$album->id);
+			}
+			catch(\FuelException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+
+				// 移動した一時ファイルを元に戻す
+				if ($moved_files)
+				{
+					foreach ($moved_files as $moved_file)
+					{
+						\Util_file::move($moved_file['to'], $moved_file['from']);
+					}
+				}
+
+				$options = \Site_Upload::get_upload_handler_options($this->u->id);
+				$uploadhandler = new \MyUploadHandler($options, false);
+				$files = $uploadhandler->get_file_objects_from_file_names($file_tmps);
+				\Session::set_flash('error', $e->getMessage());
+			}
+		}
+
+		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
+		$this->template->post_footer = \View::forge('_parts/upload_footer');
+		$this->set_title_and_breadcrumbs(
+			\Config::get('term.album_image').'アップロード',
+			array('/album/'.$id => $album->name),
+			$album->member,
+			'album'
+		);
+		$this->template->content = \View::forge('upload', array('id' => $id, 'album' => $album, 'files' => $files));
 	}
 
 	/**

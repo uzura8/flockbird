@@ -123,4 +123,21 @@ class Model_File extends \Orm\Model
 
 		return $deleted_filesize;
 	}
+
+	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filepath)
+	{
+		$file = new self;
+		$file->name = $file_tmp->name;
+		$file->path = $new_filepath;
+		$file->filesize = $file_tmp->filesize;
+		$file->original_filename = $file_tmp->original_filename;
+		$file->type = $file_tmp->type;
+		$file->member_id = $file_tmp->member_id;
+		if (!is_null($file_tmp->exif)) $file->exif = $file_tmp->exif;
+		if (!empty($file_tmp->shot_at)) $file->shot_at = $file_tmp->shot_at;
+		$file->save();
+		$file_tmp->delete();
+
+		return $file;
+	}
 }

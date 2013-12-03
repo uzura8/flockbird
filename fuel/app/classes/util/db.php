@@ -43,9 +43,16 @@ class Util_db
 
 	public static function check_record_exist($table, $field, $value)
 	{
-		$model = 'Model_'.Util_string::camelize($table);
+		$model = 'Model_'.Inflector::camelize($table);
 
 		return $model::query()->where($field, $value)->count() > 0;
+	}
+
+	public static function get4ids($table, $values, $field = 'id')
+	{
+		$model = 'Model_'.Inflector::camelize($table);
+
+		return $model::query()->where($field, 'in', $values)->get();
 	}
 
 	public static function get_ids_from_model_objects($model_objects, $id_column_name = 'id')

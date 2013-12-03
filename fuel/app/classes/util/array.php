@@ -30,4 +30,29 @@ class Util_Array
 
 		return array($before, $after);
 	}
+
+	public static function cast_values(array $values, $type, $is_check_empty = false)
+	{
+		switch ($type)
+		{
+			case 'int':
+				$func = 'intval';
+				break;
+			case 'string':
+				$func = 'strval';
+				break;
+			default :
+				throw new \InvalidArgumentException("Second parameter must be 'int' or 'string'.");
+				break;
+		}
+
+		$return = array();
+		foreach ($values as $value)
+		{
+			if ($is_check_empty && empty($value)) return false;
+			$return[] = $func($value);
+		}
+
+		return $return;
+	}
 }

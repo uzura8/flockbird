@@ -2,6 +2,22 @@
 
 class MyUploadHandler extends UploadHandler
 {
+	public function get_file_objects_from_file_names($file_tmps)
+	{
+		if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
+		$files = array();
+		foreach ($file_tmps as $file_tmp)
+		{
+			$file = $this->get_file_object($file_tmp->name);
+			$file->file_tmp_id   = $file_tmp->id;
+			$file->original_name = $file_tmp->original_filename;
+			$file->description   = $file_tmp->description;
+			$files[] = $file;
+		}
+
+		return $files;
+	}
+
 	public function get($print_response = true)
 	{
 		//if ($print_response && isset($_GET['download']))
@@ -9,6 +25,7 @@ class MyUploadHandler extends UploadHandler
 		//	return $this->download();
 		//}
 		$file_name = $this->get_file_name_param();
+		if (!$file_name) throw new \FuelException('Not requested file_name.');
 
 		if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
 		if (!$file_tmp = \Model_FileTmp::get4name_and_member_id($file_name, $this->options['member_id']))
@@ -16,14 +33,10 @@ class MyUploadHandler extends UploadHandler
 			throw new \FuelException('Not exists file_tmp data.');
 		}
 
-		if ($file_name)
-		{
-			$response = array($this->get_singular_param_name() => $this->get_file_object($file_name));
-		}
-		else
-		{
-			$response = array($this->options['param_name'] => $this->get_file_objects());
-		}
+		$file = $this->get_file_object($file_name);
+		$file->file_tmp_id   = $file_tmp->id;
+		$file->original_name = $file_tmp->original_filename;
+		$response = array($this->get_singular_param_name() => $file);
 
 		return $this->generate_response($response, $print_response);
 	}
@@ -126,7 +139,7 @@ class MyUploadHandler extends UploadHandler
 			$file->error = 'ファイル名の作成に失敗しました。';
 			return $file;
 		}
-		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], 3, $this->options['mkdir_mode']))
+		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], Config::get('site.upload.check_and_make_dir_level'), $this->options['mkdir_mode']))
 		{
 			$file->error = 'ディレクトリの作成に失敗しました。';
 			return $file;
@@ -135,18 +148,10 @@ class MyUploadHandler extends UploadHandler
 		{
 			return $file;
 		}
-		//if (!$this->check_filesize_per_member($file->size))
-		//{
-		//	$file->error = 'アップロード可能サイズを超えています。';
-		//	return $file;
-		//}
 
 		$this->handle_form_data($file, $index);
 		$upload_dir = $this->get_upload_path();
 		$file_path = $this->get_upload_path($file->name);
-
-		//$file->size = Site_Upload::check_max_size_and_resize($file_path, $max_size);
-
 		$append_file = $content_range && is_file($file_path) &&
 				$file->size > $this->get_file_size($file_path);
 		if ($uploaded_file && is_uploaded_file($uploaded_file))
@@ -194,9 +199,20 @@ class MyUploadHandler extends UploadHandler
 		}
 		$this->set_additional_file_properties($file);
 
+		// exif データの取得
+		$exif = array();
+		if ($this->options['is_save_exif'] && $extention == 'jpg')
+		{
+			$exif = exif_read_data($file_path) ?: array();
+		}
+
+		// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
+		$file_size_before = $file->size;
+		$file->size = Site_Upload::check_max_size_and_resize($file_path, Site_Upload::get_accepted_max_size());
+		if (Config::get('site.upload.remove_exif_data') && $file_size_before == $file->size) Util_file::resave($file_path);
+
 		try
 		{
-			$exif = ($this->options['is_save_exif']) ? exif_read_data($file_path) : array();
 			$file->file_tmp_id = $this->save_file_tmp($file, $exif);
 		}
 		catch(\FuelException $e)

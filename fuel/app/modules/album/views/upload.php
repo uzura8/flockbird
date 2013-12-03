@@ -1,2 +1,8 @@
-<?php echo render('_parts/upload_images', array('album' => $album, 'display_delete_button' => Config::get('album.display_setting.upload.display_delete_button'))); ?>
-<?php echo render('_parts/main_link', array('href' => 'album/'.$id, 'text' => Config::get('term.album').'を見る')); ?>
+<?php echo form_open(false, false, array('class' => '')); ?>
+	<?php echo render('filetmp/upload', array('files' => $files)); ?>
+	<?php echo Form::button('form_button', \Config::get('term.album_image').'を投稿する', array(
+		'class' => 'btn btn-default btn-primary',
+		'id'    => 'form_button',
+		'type'  => 'button',
+	)); ?>
+<?php echo form_close(); ?>
