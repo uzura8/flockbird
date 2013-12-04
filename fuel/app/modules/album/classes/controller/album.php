@@ -158,11 +158,13 @@ class Controller_Album extends \Controller_Site
 				foreach ($file_tmps as $file_tmp)
 				{
 					$old_file_path = \Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
+					$thumbnail_file_path = \Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.'thumbnail/'.$file_tmp->name;
 					$new_file_path = $new_file_dir.$file_tmp->name;
 					\Util_file::move($old_file_path, $new_file_path);
 					$moved_files[$file_tmp->id] = array(
 						'from' => $old_file_path,
 						'to'   => $new_file_path,
+						'from_thumbnail' => $thumbnail_file_path,
 					);
 					$file = \Model_File::move_from_file_tmp($file_tmp, $new_filepath);
 
@@ -178,10 +180,11 @@ class Controller_Album extends \Controller_Site
 				//\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
 				\DB::commit_transaction();
 
-				// thumbnail 作成
+				// thumbnail 作成 & tmp_file thumbnail 削除
 				foreach ($moved_files as $moved_file)
 				{
 					\Site_Upload::make_thumbnails($moved_file['to'], $new_filepath);
+					\Util_file::remove($moved_file['from_thumbnail']);
 				}
 
 				$message = sprintf('%sをアップロードしました。', \Config::get('term.album_image'));
