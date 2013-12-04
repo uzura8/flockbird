@@ -345,7 +345,7 @@ class Site_Upload
 
 	public static function make_thumbnails($raw_file_path, $filepath, $is_check_and_make_dir = true)
 	{
-		$file_cate = Util_string::get_exploded($filepath, 0, '/');
+		$file_cate = self::get_file_cate_from_filepath($filepath);
 		$sizes = Config::get(sprintf('site.upload.types.img.types.%s.sizes', $file_cate));
 		$cache_dir_path = PRJ_PUBLIC_DIR.Config::get('site.upload.types.img.root_path.cache_dir');
 

@@ -138,7 +138,7 @@ class Site_Model
 
 	public static function delete_timeline($foreign_table, $foreign_id)
 	{
-		$timeline_data = Model_TimelineData::query()->related('timeline')
+		$timeline_data = Model_Timeline::query()
 			->where('foreign_table', $foreign_table)
 			->where('foreign_id', $foreign_id)
 			->get_one();

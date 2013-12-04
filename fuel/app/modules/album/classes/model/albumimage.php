@@ -110,14 +110,14 @@ class Model_AlbumImage extends \Orm\Model
 			$album_image->album->cover_album_image_id = null;
 			$album_image->album->save();
 		}
+		self::check_and_delete_member_profile_image($album_image);
 
-		\Timeline\Site_Model::delete_timeline('album_image', $id);
+		//\Timeline\Site_Model::delete_timeline('album_image', $id);
 
 		$album_image->file = \Model_File::find($album_image->file_id);
 		$filename = $album_image->file->name;
 		$filepath = $album_image->file->path;
 		$filesize = $album_image->file->filesize;
-		self::check_and_delete_member_profile_image($album_image);
 		$album_image->file->delete();
 		$album_image->delete();
 		\Site_Upload::remove_images($filepath, $filename);
@@ -166,7 +166,6 @@ class Model_AlbumImage extends \Orm\Model
 		$self->name = $name ?: $file->original_filename;
 		
 		$self->save();
-		\Model_Member::add_filesize($member->id, $file->filesize);
 
 		return $self;
 	}

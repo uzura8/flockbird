@@ -256,7 +256,6 @@ class UploadHandler extends \JqueryFileUpload
 
 			\DB::start_transaction();
 			$deleted_filesize = Model_AlbumImage::delete_with_file($id);
-			\Model_Member::add_filesize($member_id, -$deleted_filesize);
 			\DB::commit_transaction();
 			$response[] = $deleted_filesize;
 		}

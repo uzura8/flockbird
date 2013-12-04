@@ -187,7 +187,6 @@ class Controller_Member_profile extends Controller_Member
 			{
 				$file_id = $album_image->file_id;
 				$deleted_filesize = \Album\Model_AlbumImage::delete_with_file($album_image->id);
-				Model_Member::add_filesize($this->u->id, -$deleted_filesize);
 				if ($file_id == $this->u->file_id)
 				{
 					$this->u->file_id = null;
@@ -197,7 +196,6 @@ class Controller_Member_profile extends Controller_Member
 			else
 			{
 				$file = $this->u->file;
-				Model_Member::add_filesize($this->u->id, -$this->u->file->filesize);
 				$this->u->file_id = null;
 				$this->u->save();
 				list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
