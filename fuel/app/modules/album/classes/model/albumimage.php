@@ -115,12 +115,9 @@ class Model_AlbumImage extends \Orm\Model
 		//\Timeline\Site_Model::delete_timeline('album_image', $id);
 
 		$album_image->file = \Model_File::find($album_image->file_id);
-		$filename = $album_image->file->name;
-		$filepath = $album_image->file->path;
 		$filesize = $album_image->file->filesize;
 		$album_image->file->delete();
 		$album_image->delete();
-		\Site_Upload::remove_images($filepath, $filename);
 
 		return $filesize;
 	}

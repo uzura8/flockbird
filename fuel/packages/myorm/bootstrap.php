@@ -1,5 +1,6 @@
 <?php
 Autoloader::add_classes(array(
+	'MyOrm\\Observer_RemoveFile' => __DIR__.'/classes/observer/removefile.php',
 	'MyOrm\\Observer_CopyValue' => __DIR__.'/classes/observer/copyvalue.php',
 	'MyOrm\\Observer_InsertCache' => __DIR__.'/classes/observer/insertcache.php',
 	'MyOrm\\Observer_UpdateParentDatetime' => __DIR__.'/classes/observer/updateparentdatetime.php',

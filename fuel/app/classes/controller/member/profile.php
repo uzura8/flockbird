@@ -121,14 +121,9 @@ class Controller_Member_profile extends Controller_Member
 			if (empty($this->u->file_id)) throw new FuelException('No profile image.');
 
 			DB::start_transaction();
-			$this->u->filesize_total -= $this->u->file->filesize;
-			if ($this->u->filesize_total < 0) $this->u->filesize_total = 0;
 			$this->u->file->delete();
 			$this->u->file_id = null;
 			$this->u->save();
-
-			list($filepath, $filename) = Site_Upload::split_file_object2vars($this->u->file);
-			Site_Upload::remove_images($filepath, $filename);
 			DB::commit_transaction();
 
 			Session::set_flash('message', '写真を削除しました。');
@@ -186,7 +181,7 @@ class Controller_Member_profile extends Controller_Member
 			if ($save_as_album_image)
 			{
 				$file_id = $album_image->file_id;
-				$deleted_filesize = \Album\Model_AlbumImage::delete_with_file($album_image->id);
+				\Album\Model_AlbumImage::delete_with_file($album_image->id);
 				if ($file_id == $this->u->file_id)
 				{
 					$this->u->file_id = null;
@@ -198,16 +193,10 @@ class Controller_Member_profile extends Controller_Member
 				$file = $this->u->file;
 				$this->u->file_id = null;
 				$this->u->save();
-				list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
 				\Timeline\Site_Model::delete_timeline('file', $file->id);
 				$file->delete();
 			}
 			DB::commit_transaction();
-
-			if (isset($file))
-			{
-				Site_Upload::remove_images($filepath, $filename);
-			}
 
 			Session::set_flash('message', Config::get('term.profile').'写真を削除しました。');
 		}
