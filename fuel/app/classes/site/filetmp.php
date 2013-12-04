@@ -9,8 +9,11 @@ class Site_FileTmp
 		{
 			throw new HttpInvalidInputException('Invalid input data.');
 		}
+		if (!$file_tmps = Util_db::get4ids('file_tmp', $file_tmp_ids))
+		{
+			throw new FuelException('ファイルが選択されていません。');
+		}
 
-		$file_tmps = \Util_db::get4ids('file_tmp', $file_tmp_ids);
 		foreach ($file_tmps as $key => $file_tmp)
 		{
 			if ($file_tmp->member_id != $member_id) throw new \HttpForbiddenException;
