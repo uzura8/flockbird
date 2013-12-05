@@ -367,48 +367,6 @@ class Site_Upload
 		return Util_file::resize($raw_file_path, $thumbnail_file_path, $size_items['width'], $size_items['height'], $size_items['resize_type']);
 	}
 
-	public static function move_tmp_to_file($file_tmp, $is_delete_tmp_raw = true, $sizes = array())
-	{
-		$file_cate = self::get_file_cate_from_filepath($file_tmp->path);
-		$config_upload_files = Config::get('site.upload.types.img.types.'.$file_cate);
-
-		$real_path_raw_tmp   = Config::get('site.upload.types.img.tmp.raw_file_path');
-		$real_path_cache_tmp = PRJ_PUBLIC_DIR.\Config::get('site.upload.types.img.tmp.root_path.cache_dir');
-		$sizes_tmp           = $config_upload_files['sizes_tmp'];
-
-		$real_path_raw   = Config::get('site.upload.types.img.raw_file_path');
-		$real_path_cache = PRJ_PUBLIC_DIR.\Config::get('site.upload.types.img.root_path.cache_dir');
-		$sizes           = $sizes ?: $config_upload_files['sizes'];
-
-		$file_path_name = $file_tmp->path.$file_tmp->name;
-
-		self::setup_uploaded_dir($file_cate, $file_tmp->path, false, $sizes);
-		$file_raw_tmp = $real_path_raw_tmp.$file_path_name;
-		$file_raw     = $real_path_raw.$file_path_name;
-		if ($is_delete_tmp_raw)
-		{
-			Util_file::move($file_raw_tmp, $file_raw);// raw_file の移動
-		}
-		else
-		{
-			Util_file::copy($file_raw_tmp, $file_raw);// raw_file の移動
-		}
-
-		foreach ($sizes as $size)
-		{
-			$file_from = sprintf('%s%s/%s', $real_path_cache_tmp, $size, $file_path_name);
-			$file_to   = sprintf('%s%s/%s', $real_path_cache, $size, $file_path_name);
-			if (in_array($size, $sizes_tmp) && file_exists($file_from))
-			{
-				Util_file::move($file_from, $file_to);// thumbnail の移動
-			}
-			else
-			{
-				self::make_thumbnail($file_raw, $file_to, $size);// thumbnail の作成
-			}
-		}
-	}
-
 	public static function save_image_from_url($image_url, $save_file_path, $max_size = 0, $old_file_path = null)
 	{
 		if (!$data = file_get_contents($image_url)) throw new FuelException('Get image from url failed.');

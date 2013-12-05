@@ -128,24 +128,20 @@ class Controller_Note extends \Controller_Site
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', array(0,1));
 
-		$is_upload = array();
-		$is_upload['simple']   = \Config::get('note.display_setting.form.upload.display') && \Config::get('note.display_setting.form.upload.type') == 'simple';
-		$is_upload['multiple'] = \Config::get('note.display_setting.form.upload.display') && \Config::get('note.display_setting.form.upload.type') == 'multiple';
+		$files = array();
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
 
 			$file_tmps = array();
-			if ($is_upload['multiple'])
-			{
-				$file_tmps = \Site_Util::check_and_get_posted_file_tmps($this->u->id);
-				$this->save_file_tmp_config_posted_album_image_names($file_tmps);
-			}
-
+			$moved_files = array();
 			try
 			{
+				$file_tmps = \Site_FileTmp::get_file_tmps_uploaded($this->u->id);
+				\Site_FileTmp::check_uploaded_under_accepted_filesize($file_tmps, $this->u->filesize_total, \Site_Upload::get_accepted_filesize());
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
+
 				$note->title        = $post['title'];
 				$note->body         = $post['body'];
 				$note->public_flag  = $post['public_flag'];
@@ -161,33 +157,19 @@ class Controller_Note extends \Controller_Site
 				}
 				\DB::start_transaction();
 				$note->save();
+				$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $note->public_flag);
+				\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
 
 				// timeline 投稿
 				if ($note->is_published)
 				{
 					\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
 				}
-
-				if ($is_upload['simple'] && \Input::file())
-				{
-					Model_NoteAlbumImage::save_with_file($note->id, $this->u, $post['public_flag']);
-				}
-				elseif ($is_upload['multiple'] && $file_tmps)
-				{
-					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
-					$album_image_public_flag = $note->is_published ? $post['public_flag'] : PRJ_PUBLIC_FLAG_PRIVATE;
-					foreach ($file_tmps as $file_tmp)
-					{
-						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $album_image_public_flag, false, true);
-						// note_album_image の保存
-						$note_album_image = Model_NoteAlbumImage::forge();
-						$note_album_image->note_id = $note->id;
-						$note_album_image->album_image_id = $album_image->id;
-						$note_album_image->save();
-						\Model_Member::recalculate_filesize_total($this->u->id);
-					}
-				}
 				\DB::commit_transaction();
+
+				// thumbnail 作成 & tmp_file thumbnail 削除
+				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
 				$message = sprintf('%sを%sしました。', \Config::get('term.note'), $note->is_published ? '作成' : \Config::get('term.draft'));
 				\Session::set_flash('message', $message);
@@ -196,15 +178,17 @@ class Controller_Note extends \Controller_Site
 			catch(\FuelException $e)
 			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
+				if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
+				$files = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id);
+
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
 
-		$tmp_hash = $is_upload['multiple'] ? \Input::get_post('tmp_hash', \Util_toolkit::create_hash()) : '';
-		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
-		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_published_at_time'));
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を書く', null, $this->u, 'note');
-		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'is_upload' => $is_upload, 'tmp_hash' => $tmp_hash));
+		$this->template->post_header = \View::forge('_parts/create_header');
+		$this->template->post_footer = \View::forge('_parts/create_footer');
+		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
 	}
 
 	/**
@@ -220,9 +204,6 @@ class Controller_Note extends \Controller_Site
 		{
 			throw new \HttpNotFoundException;
 		}
-		$is_upload = array();
-		$is_upload['simple']   = \Config::get('note.display_setting.form.upload.display') && \Config::get('note.display_setting.form.upload.type') == 'simple';
-		$is_upload['multiple'] = \Config::get('note.display_setting.form.upload.display') && \Config::get('note.display_setting.form.upload.type') == 'multiple';
 
 		$val = \Validation::forge();
 		$val->add_model($note);

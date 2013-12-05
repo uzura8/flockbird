@@ -144,7 +144,7 @@ class Controller_Album extends \Controller_Site
 			try
 			{
 				//if (!$val->run()) throw new \FuelException($val->show_errors());
-				$file_tmps = \Site_FileTmp::get_file_tmps_uploaded($this->u->id);
+				$file_tmps = \Site_FileTmp::get_file_tmps_uploaded($this->u->id, true);
 				\Site_FileTmp::check_uploaded_under_accepted_filesize($file_tmps, $this->u->filesize_total, \Site_Upload::get_accepted_filesize());
 
 				\DB::start_transaction();
@@ -242,7 +242,7 @@ class Controller_Album extends \Controller_Site
 			$moved_files = array();
 			try
 			{
-				$file_tmps = \Site_FileTmp::get_file_tmps_uploaded($this->u->id);
+				$file_tmps = \Site_FileTmp::get_file_tmps_uploaded($this->u->id, true);
 				\Site_FileTmp::check_uploaded_under_accepted_filesize($file_tmps, $this->u->filesize_total, \Site_Upload::get_accepted_filesize());
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();

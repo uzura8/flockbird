@@ -37,22 +37,20 @@ class Model_NoteAlbumImage extends \Orm\Model
 		),
 	);
 
-	public static function save_with_file($note_id, $member = null, $album_image_public_flag = null)
+	public static function save_multiple($note_id, array $album_image_ids)
 	{
-		if (empty($member))
+		$note_album_image_ids = array();
+		foreach ($album_image_ids as $album_image_id)
 		{
-			$note = Model_Note::find($note_id, array('related' => 'member'));
-			$member = $note->member;
+			$self = self::forge();
+			$self->note_id = $note_id;
+			$self->album_image_id = $album_image_id;
+			$self->save();
+
+			$note_album_image_ids[] = $self->id;
 		}
-		$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'note');
-		$album_image = \Album\Model_AlbumImage::save_with_file($album_id, $member, $album_image_public_flag);
 
-		$self = self::forge();
-		$self->note_id = $note_id;
-		$self->album_image_id = $album_image->id;
-		$self->save();
-
-		return $self;
+		return $note_album_image_ids;
 	}
 
 	public static function get_album_image4note_id($note_id, $limit = 0, $sort = array('id' => 'asc'))
