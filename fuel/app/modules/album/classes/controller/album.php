@@ -272,40 +272,99 @@ class Controller_Album extends \Controller_Site
 	public function action_create()
 	{
 		$album = Model_Album::forge();
-		$form = \Site_Util::get_form_instance('album', $album, true, array(), 'submit');
+		$val = \Validation::forge();
+		$val->add_model($album);
+
+		$files = array();
 		if (\Input::method() == 'POST')
 		{
-			$val = $form->validation();
-			if ($val->run())
+			\Util_security::check_csrf();
+
+			$file_tmps = array();
+			$moved_files = array();
+			try
 			{
-				\Util_security::check_csrf();
+				$file_tmps = \Site_FileTmp::get_file_tmps_uploaded($this->u->id);
+				if (!$val->run()) throw new \FuelException($val->show_errors());
+				\Site_FileTmp::check_uploaded_under_accepted_filesize($file_tmps, $this->u->filesize_total, \Site_Upload::get_accepted_filesize());
 
 				$post = $val->validated();
+				\DB::start_transaction();
 				$album->name = $post['name'];
 				$album->body = $post['body'];
 				$album->public_flag = $post['public_flag'];
 				$album->member_id = $this->u->id;
+				$album->save();
 
-				if ($album and $album->save())
+				$new_filepath = \Site_Upload::get_filepath('ai', $album->id);
+				$new_file_dir  = \Config::get('site.upload.types.img.raw_file_path').$new_filepath;
+				if (!\Site_Upload::check_and_make_uploaded_dir($new_file_dir, \Config::get('site.upload.check_and_make_dir_level'), \Config::get('site.upload.mkdir_mode')))
 				{
-					\Session::set_flash('message', \Config::get('term.album_image').'を追加してください。');
-					\Response::redirect('album/upload/'.$album->id);
+					throw new\FuelException('Failed to make save dirs.');
 				}
-				else
+
+				foreach ($file_tmps as $file_tmp)
 				{
-					\Session::set_flash('error', 'Could not save post.');
+					$old_file_path = \Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
+					$thumbnail_file_path = \Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.'thumbnail/'.$file_tmp->name;
+					$new_file_path = $new_file_dir.$file_tmp->name;
+					\Util_file::move($old_file_path, $new_file_path);
+					$moved_files[$file_tmp->id] = array(
+						'from' => $old_file_path,
+						'to'   => $new_file_path,
+						'from_thumbnail' => $thumbnail_file_path,
+					);
+					$file = \Model_File::move_from_file_tmp($file_tmp, $new_filepath);
+
+					$album_image = Model_AlbumImage::forge();
+					$album_image->album_id    = $album->id;
+					$album_image->file_id     = $file->id;
+					$album_image->name        = $file_tmp->description;
+					$album_image->public_flag = $album->public_flag;
+					$album_image->shot_at     = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
+					$album_image->save();
 				}
+				// timeline 投稿
+				//\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
+				\DB::commit_transaction();
+
+				// thumbnail 作成 & tmp_file thumbnail 削除
+				foreach ($moved_files as $moved_file)
+				{
+					\Site_Upload::make_thumbnails($moved_file['to'], $new_filepath);
+					\Util_file::remove($moved_file['from_thumbnail']);
+				}
+
+				$message = sprintf('%sを作成しました。', \Config::get('term.album_image'));
+				\Session::set_flash('message', $message);
+				\Response::redirect('album/detail/'.$album->id);
 			}
-			else
+			catch(\FuelException $e)
 			{
-				\Session::set_flash('error', $val->show_errors());
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+
+				// 移動した一時ファイルを元に戻す
+				if ($moved_files)
+				{
+					foreach ($moved_files as $moved_file)
+					{
+						\Util_file::move($moved_file['to'], $moved_file['from']);
+					}
+				}
+
+				$options = \Site_Upload::get_upload_handler_options($this->u->id);
+				$uploadhandler = new \MyUploadHandler($options, false);
+				$files = $uploadhandler->get_file_objects_from_file_names($file_tmps);
+				\Session::set_flash('error', $e->getMessage());
 			}
 		}
-		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を書く', null, $this->u, 'album');
 
-		$form->populate($album, true);
-		$this->template->content = \View::forge('create', array('form' => $form));
-		$this->template->content->set_safe('html_form', $form->build('album/create'));// form の action に入る
+		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を作成する', null, $this->u, 'album');
+		//$form->populate($album, true);
+		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
+		$this->template->post_footer = \View::forge('_parts/create_footer');
+		$this->template->content = \View::forge('create', array('val' => $val, 'files' => $files));
+		//$this->template->content->set_safe('html_form', $form->build('album/create'));// form の action に入る
 	}
 
 	/**
