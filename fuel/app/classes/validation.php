@@ -166,13 +166,13 @@ class Validation extends Fuel\Core\Validation
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
-		return Util_Date::check_is_past($val, $base, min ?: Config::get('site.posted_value_rule_default.time.default.min'));
+		return Util_Date::check_is_past($val, $base, $min ?: Config::get('site.posted_value_rule_default.time.default.min'));
 	}
 
 	public function _validation_datetime_is_future($val, $base = '', $max = '', $is_return_time = false)
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
-		return Util_Date::check_is_futer($val, $base, min ?: Config::get('site.posted_value_rule_default.time.default.max'));
+		return Util_Date::check_is_futer($val, $base, $max ?: Config::get('site.posted_value_rule_default.time.default.max'));
 	}
 }

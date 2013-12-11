@@ -78,4 +78,33 @@ class Site_Util
 	{
 		return array('note', 'member');
 	}
+
+	public static function get_file_objects($album_images, $member_id, $album_id)
+	{
+		$options = \Site_Upload::get_upload_handler_options($member_id, false, 'ai', $album_id);
+		$uploadhandler = new \MyUploadHandler($options, false);
+		$album_image_names_posted = \Input::post('file_description');
+
+		return $uploadhandler->get_file_objects_from_album_images($album_images, $album_image_names_posted);
+	}
+
+	public static function update_album_images4file_objects($album_images, $files, $public_flag = null)
+	{
+		foreach ($files as $file)
+		{
+			if(empty($album_images[$file->id])) continue;
+			$album_image = $album_images[$file->id];
+
+			if ($album_image->name !== $file->description)
+			{
+				$album_image->name = $file->description;
+			}
+			if (!is_null($public_flag) && $album_image->public_flag != $public_flag)
+			{
+				$album_image->public_flag = $public_flag;
+			}
+
+			$album_image->save();
+		}
+	}
 }

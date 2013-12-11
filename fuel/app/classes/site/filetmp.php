@@ -2,10 +2,18 @@
 
 class Site_FileTmp
 {
+	public static function get_file_tmps_and_check_filesize($member_id, $filesize_total)
+	{
+		$file_tmps = self::get_file_tmps_uploaded($member_id);
+		self::check_uploaded_under_accepted_filesize($file_tmps, $filesize_total, Site_Upload::get_accepted_filesize($member_id));
+
+		return $file_tmps;
+	}
+
 	public static function get_file_tmps_uploaded($member_id, $is_check_select_files = false, $is_throw_exception_not_exists_file = true, $is_delete_record_not_exists_file = false)
 	{
 		$file_tmps = array();
-		if (!$file_tmps_posted = Input::post('file_tmps'))
+		if (!$file_tmps_posted = Input::post('file_tmp'))
 		{
 			if ($is_check_select_files)  throw new HttpInvalidInputException('File not selected.');
 
@@ -25,7 +33,7 @@ class Site_FileTmp
 			if ($file_tmp->member_id != $member_id) throw new HttpForbiddenException;
 			if ($file_tmps_posted[$file_tmp->id] != $file_tmp->name) throw new HttpInvalidInputException('Invalid input data.');
 
-			$file_tmps_description_posted = Input::post('file_tmps_description');
+			$file_tmps_description_posted = Input::post('file_tmp_description');
 			if (!is_null($file_tmps_description_posted[$file_tmp->id]))
 			{
 				$file_tmps[$key]->description = trim($file_tmps_description_posted[$file_tmp->id]);
@@ -66,12 +74,19 @@ class Site_FileTmp
 			throw newFuelException('Failed to make save dirs.');
 		}
 
-		foreach ($file_tmps as $file_tmp)
+		foreach ($file_tmps as $id => $file_tmp)
 		{
 			$old_file_path = Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
 			$thumbnail_file_path = Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.'thumbnail/'.$file_tmp->name;
 			$new_file_path = $new_file_dir.$file_tmp->name;
 			Util_file::move($old_file_path, $new_file_path);
+			$moved_files[$file_tmp->id] = array(
+				'from' => $old_file_path,
+				'to'   => $new_file_path,
+				'from_thumbnail' => $thumbnail_file_path,
+				'filepath' => $new_filepath,
+			);
+
 			$file = Model_File::move_from_file_tmp($file_tmp, $new_filepath);
 
 			$album_image = \Album\Model_AlbumImage::forge();
@@ -81,24 +96,17 @@ class Site_FileTmp
 			$album_image->public_flag = $public_flag;
 			$album_image->shot_at     = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
 			$album_image->save();
-
-			$moved_files[$file_tmp->id] = array(
-				'from' => $old_file_path,
-				'to'   => $new_file_path,
-				'from_thumbnail' => $thumbnail_file_path,
-				'filepath' => $new_filepath,
-			);
 			$album_image_ids[] = $album_image->id;
 		}
 
 		return array($moved_files, $album_image_ids);
 	}
 
-	public static function make_and_remove_thumbnails($moved_files)
+	public static function make_and_remove_thumbnails($moved_files, $additional_sizes_key = null)
 	{
 		foreach ($moved_files as $moved_file)
 		{
-			Site_Upload::make_thumbnails($moved_file['to'], $moved_file['filepath']);
+			Site_Upload::make_thumbnails($moved_file['to'], $moved_file['filepath'], true, $additional_sizes_key);
 			Util_file::remove($moved_file['from_thumbnail']);
 		}
 	}
@@ -116,6 +124,6 @@ class Site_FileTmp
 		$options = Site_Upload::get_upload_handler_options($member_id);
 		$uploadhandler = new MyUploadHandler($options, false);
 
-		return $uploadhandler->get_file_objects_from_file_names($file_tmps);
+		return $uploadhandler->get_file_objects_from_file_tmps($file_tmps);
 	}
 }

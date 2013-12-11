@@ -119,15 +119,7 @@ class Controller_Note extends \Controller_Site
 	public function action_create()
 	{
 		$note = Model_Note::forge();
-		$val = \Validation::forge();
-		$val->add_model($note);
-		$val->add('published_at_time', '日時')
-				->add_rule('datetime_except_second')
-				->add_rule('datetime_is_past');
-		$val->add('is_draft', \Config::get('term.draft'))
-				->add_rule('valid_string', 'numeric')
-				->add_rule('in_array', array(0,1));
-
+		$val = self::get_validation_object($note);
 		$files = array();
 		if (\Input::method() == 'POST')
 		{
@@ -137,8 +129,7 @@ class Controller_Note extends \Controller_Site
 			$moved_files = array();
 			try
 			{
-				$file_tmps = \Site_FileTmp::get_file_tmps_uploaded($this->u->id);
-				\Site_FileTmp::check_uploaded_under_accepted_filesize($file_tmps, $this->u->filesize_total, \Site_Upload::get_accepted_filesize());
+				$file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 
@@ -169,7 +160,7 @@ class Controller_Note extends \Controller_Site
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
-				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
+				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'note');
 
 				$message = sprintf('%sを%sしました。', \Config::get('term.note'), $note->is_published ? '作成' : \Config::get('term.draft'));
 				\Session::set_flash('message', $message);
@@ -186,7 +177,7 @@ class Controller_Note extends \Controller_Site
 		}
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を書く', null, $this->u, 'note');
-		$this->template->post_header = \View::forge('_parts/create_header');
+		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/create_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
 	}
@@ -205,38 +196,23 @@ class Controller_Note extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 
-		$val = \Validation::forge();
-		$val->add_model($note);
-		$val->add('original_public_flag')
-				->add_rule('in_array', \Site_Util::get_public_flags());
-		$val->add('published_at_time', '日時')
-				->add_rule('datetime_except_second')
-				->add_rule('datetime_is_past');
-		if (!$note->is_published)
-		{
-			$val->add('is_draft', \Config::get('term.draft'))
-					->add_rule('valid_string', 'numeric')
-					->add_rule('in_array', array(0,1));
-		}
+		$val = self::get_validation_object($note, true);
+		$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
+		$album_images = Model_NoteAlbumImage::get_album_image4note_id($note->id);
 
-		$album_image_name_uploaded_posteds = array();
+		$files = \Album\Site_Util::get_file_objects($album_images, $this->u->id, $album_id);
+		$file_tmps = array();
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
 
-			$file_tmps = array();
-			if ($is_upload['multiple'])
-			{
-				$file_tmps = \Site_Util::check_and_get_posted_file_tmps($this->u->id);
-				$this->save_file_tmp_config_posted_album_image_names($file_tmps);
-				$album_image_name_uploaded_posteds = \Input::post('album_image_name_uploaded');
-			}
-
+			$moved_files = array();
 			try
 			{
+				$file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
 				if (!$val->run()) throw new \FuelException($val->show_errors());
-
 				$post = $val->validated();
+
 				$note->title       = $post['title'];
 				$note->body        = $post['body'];
 				$note->public_flag = $post['public_flag'];
@@ -256,43 +232,10 @@ class Controller_Note extends \Controller_Site
 				\DB::start_transaction();
 				$note->save();
 
-				// album_image の update
-				if ($album_images_posted = \Input::post('album_image_id'))
-				{
-					$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
-					$album_image_public_flag = $note->is_published ? $post['public_flag'] : PRJ_PUBLIC_FLAG_PRIVATE;
-					foreach ($album_images as $album_image)
-					{
-						if (!in_array($album_image->id, $album_images_posted)) continue;
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $note->public_flag);
+				\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
+				\Album\Site_Util::update_album_images4file_objects($album_images, $files, $note->public_flag);
 
-						$album_image->public_flag = $album_image_public_flag;
-						if (isset($album_image_name_uploaded_posteds[$album_image->id]))
-						{
-							$album_image->name = trim($album_image_name_uploaded_posteds[$album_image->id]);
-						}
-						$album_image->save();
-					}
-				}
-
-				// tmp_file を album_image として保存
-				if ($is_upload['simple'] && \Input::file())
-				{
-					Model_NoteAlbumImage::save_with_file($note->id, $this->u, $post['public_flag']);
-				}
-				elseif ($is_upload['multiple'] && $file_tmps)
-				{
-					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
-					foreach ($file_tmps as $file_tmp)
-					{
-						$album_image = \Album\Site_Model::move_from_tmp_to_album_image($album_id, $this->u, $file_tmp, $post['public_flag']);
-						// note_album_image の保存
-						$note_album_image = Model_NoteAlbumImage::forge();
-						$note_album_image->note_id = $note->id;
-						$note_album_image->album_image_id = $album_image->id;
-						$note_album_image->save();
-						\Model_Member::recalculate_filesize_total($this->u->id);
-					}
-				}
 				// timeline 投稿
 				if ($is_published)
 				{
@@ -300,27 +243,31 @@ class Controller_Note extends \Controller_Site
 				}
 				\DB::commit_transaction();
 
+				// thumbnail 作成 & tmp_file thumbnail 削除
+				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'note');
+
 				\Session::set_flash('message', \Config::get('term.note').'を編集しました。');
 				\Response::redirect('note/detail/'.$note->id);
 			}
 			catch(\FuelException $e)
 			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
+				if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
+				$file_tmps = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id);
+
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
+		$files += $file_tmps;
 
-		$tmp_hash = $is_upload['multiple'] ? \Input::get_post('tmp_hash', \Util_toolkit::create_hash()) : '';
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
-		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
-		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_published_at_time'));
+		$this->template->post_header = \View::forge('_parts/form_header');
+		$this->template->post_footer = \View::forge('_parts/edit_footer');
 		$this->template->content = \View::forge('_parts/form', array(
 			'val' => $val,
 			'note' => $note,
-			'is_upload' => $is_upload,
-			'tmp_hash' => $tmp_hash,
 			'is_edit' => true,
-			'album_image_name_uploaded_posteds' => $album_image_name_uploaded_posteds,
+			'files' => $files,
 		));
 	}
 
@@ -413,5 +360,28 @@ class Controller_Note extends \Controller_Site
 			$value = trim($album_image_names[$file_tmp->id]);
 			\Model_FileTmpConfig::update_for_name($file_tmp->id, 'album_image_name', $value);
 		}
+	}
+
+	private static function get_validation_object(Model_Note $note, $is_edit = false)
+	{
+		$val = \Validation::forge();
+		$val->add_model($note);
+
+		$val->add('published_at_time', '日時')
+				->add_rule('datetime_except_second')
+				->add_rule('datetime_is_past');
+		if (empty($note->is_published))
+		{
+			$val->add('is_draft', \Config::get('term.draft'))
+					->add_rule('valid_string', 'numeric')
+					->add_rule('in_array', array(0,1));
+		}
+		if ($is_edit)
+		{
+			$val->add('original_public_flag')
+					->add_rule('in_array', \Site_Util::get_public_flags());
+		}
+
+		return $val;
 	}
 }

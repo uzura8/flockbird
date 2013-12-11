@@ -2,16 +2,46 @@
 
 class MyUploadHandler extends UploadHandler
 {
-	public function get_file_objects_from_file_names($file_tmps)
+	public function get_file_objects_from_file_tmps($file_tmps)
 	{
 		if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
+
+		$thumbnail_dir_uri = $this->options['upload_uri'].'thumbnail/';
 		$files = array();
 		foreach ($file_tmps as $file_tmp)
 		{
 			$file = $this->get_file_object($file_tmp->name);
+			$file->is_tmp   = true;
 			$file->file_tmp_id   = $file_tmp->id;
 			$file->original_name = $file_tmp->original_filename;
+			$file->thumbnail_uri = $thumbnail_dir_uri.$file_tmp->name;
 			$file->description   = $file_tmp->description;
+			$files[] = $file;
+		}
+
+		return $files;
+	}
+
+	public function get_file_objects_from_album_images($album_images, $album_image_names_posted)
+	{
+		if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
+
+		$cache_dir_uri = Config::get('site.upload.types.img.root_path.cache_dir');
+		$cache_size    = Config::get('site.upload.types.img.types.ai.sizes.thumbnail');
+		$files = array();
+		foreach ($album_images as $album_image)
+		{
+			$file = $this->get_file_object($album_image->file->name);
+			$file->is_tmp = false;
+			$file->id = (int)$album_image->id;
+			$file->original_name = $album_image->file->original_filename;
+			$file->thumbnail_uri = sprintf('%s%s/%s%s', $cache_dir_uri, $cache_size, $album_image->file->path, $album_image->file->name);
+			
+			$file->description   = $album_image->name;
+			if (!is_null($album_image_names_posted[$album_image->id]) && strlen($album_image_names_posted[$album_image->id]))
+			{
+				$file->description = $album_image_names_posted[$album_image->id];
+			}
 			$files[] = $file;
 		}
 
@@ -126,6 +156,7 @@ class MyUploadHandler extends UploadHandler
 	protected function handle_file_upload($uploaded_file, $original_name, $size, $type, $error, $index = null, $content_range = null)
 	{
 		$file = new \stdClass();
+		$file->is_tmp = true;
 		$file->original_name = $original_name;
 		$file->size = $this->fix_integer_overflow(intval($size));
 		$file->type = $type;
@@ -149,6 +180,7 @@ class MyUploadHandler extends UploadHandler
 			return $file;
 		}
 
+		$file->thumbnail_uri = sprintf('%sthumbnail/%s', $this->options['upload_uri'], $file->name);
 		$this->handle_form_data($file, $index);
 		$upload_dir = $this->get_upload_path();
 		$file_path = $this->get_upload_path($file->name);
@@ -213,7 +245,7 @@ class MyUploadHandler extends UploadHandler
 
 		try
 		{
-			$file->file_tmp_id = $this->save_file_tmp($file, $exif);
+			$file->id = $this->save_file_tmp($file, $exif);
 		}
 		catch(\FuelException $e)
 		{
