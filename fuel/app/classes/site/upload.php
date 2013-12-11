@@ -430,4 +430,16 @@ class Site_Upload
 
 		return $value;
 	}
+
+	public static function get_sizes_all4file_cate($file_cate)
+	{
+		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.sizes');
+		$additional_sizes_list = Config::get('site.upload.types.img.types.'.$file_cate.'.additional_sizes');
+		foreach ($additional_sizes_list as $key => $additional_sizes)
+		{
+			$sizes += $additional_sizes;
+		}
+
+		return $sizes;
+	}
 }
