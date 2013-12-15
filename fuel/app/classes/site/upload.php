@@ -116,8 +116,7 @@ class Site_Upload
 		Util_file::remove($file);
 
 		$file_cate = self::get_file_cate_from_filepath($filepath);
-		$key_sizes = $is_tmp ? 'sizes_tmp' : 'sizes';
-		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.'.$key_sizes, array());
+		$sizes = self::get_sizes_all4file_cate($file_cate);
 		foreach ($sizes as $size)
 		{
 			$file = self::get_uploaded_file_real_path($filepath, $filename, $size, 'img', $is_tmp);
@@ -431,9 +430,12 @@ class Site_Upload
 		return $value;
 	}
 
-	public static function get_sizes_all4file_cate($file_cate)
+	public static function get_sizes_all4file_cate($file_cate, $is_tmp = false)
 	{
-		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.sizes');
+		$key_sizes = $is_tmp ? 'sizes_tmp' : 'sizes';
+		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.'.$key_sizes, array());
+		if ($is_tmp) return $sizes;
+
 		$additional_sizes_list = Config::get('site.upload.types.img.types.'.$file_cate.'.additional_sizes');
 		foreach ($additional_sizes_list as $key => $additional_sizes)
 		{

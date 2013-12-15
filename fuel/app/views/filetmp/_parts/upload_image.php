@@ -19,6 +19,7 @@
 			<?php echo Html::anchor('#', '<i class="ls-icon-delete"></i>', array(
 				'class' => 'btn btn-xs btn-danger delete_file_tmp',
 				'data-id' => $file->id,
+				'data-type' => $prefix,
 			)); ?>
 			<?php echo Form::hidden(sprintf($prefix.'[%d]', $file->id), $file->name); ?>
 		</div><!-- caption -->

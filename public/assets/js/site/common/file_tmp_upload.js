@@ -21,9 +21,11 @@ $(function () {
 		.parent().addClass($.support.fileInput ? undefined : 'disabled');
 
 	$(document).on('click','.delete_file_tmp', function(){
-		var file_tmp_id = $(this).data('id') ? parseInt($(this).data('id')) : 0;
+		var file_id   = $(this).data('id') ? parseInt($(this).data('id')) : 0;
+		var file_type = $(this).data('type') ? $(this).data('type') : 'file_tmp';
 
-		delete_item('filetmp/api/upload.json', file_tmp_id, '#file_tmp');
+		var delete_uri = (file_type == 'file_tmp') ? 'filetmp/api/upload.json' : 'album/image/api/delete.json';
+		delete_item(delete_uri, file_id, '#' + file_type);
 		return false;
 	});
 });

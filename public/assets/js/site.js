@@ -161,6 +161,7 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 	var token_key = get_token_key();
 	var post_data = {};
 	post_data['id'] = id;
+	post_data['_method'] = 'DELETE';
 	post_data[token_key] = get_token();
 
 	var msg_prefix = '';
