@@ -10,17 +10,19 @@
 		<?php echo Html::img($file->thumbnail_uri, array('class' => 'thumbnail', 'alt' => $file->original_name)); ?>
 		<div class="caption">
 			<h5><?php echo $file->original_name; ?></h5>
-			<p><?php echo Num::format_bytes($file->size); ?></p>
+			<p class="clearfix">
+				<?php echo Num::format_bytes($file->size); ?>
+				<?php echo Html::anchor('#', '<i class="ls-icon-delete"></i>', array(
+					'class' => 'btn btn-xs btn-default delete_file_tmp pull-right',
+					'data-id' => $file->id,
+					'data-type' => $prefix,
+				)); ?>
+			</p>
 			<p><?php echo Form::textarea(
 				sprintf($prefix.'_description[%d]', $file->id),
 				isset($file->description) ? $file->description : '',
-				array('rows' => 2, 'placeholder' => '写真の説明', 'class' => 'col-xs-12')
+				array('rows' => 2, 'placeholder' => '写真の説明', 'class' => 'form-control')
 			); ?></p>
-			<?php echo Html::anchor('#', '<i class="ls-icon-delete"></i>', array(
-				'class' => 'btn btn-xs btn-danger delete_file_tmp',
-				'data-id' => $file->id,
-				'data-type' => $prefix,
-			)); ?>
 			<?php echo Form::hidden(sprintf($prefix.'[%d]', $file->id), $file->name); ?>
 		</div><!-- caption -->
 	</div><!-- thumbnail -->

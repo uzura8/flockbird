@@ -463,3 +463,10 @@ div.alert ul {
 #article_list .timelineBox .commentPostBox {
 	display: none;
 }
+
+.fileinput .thumbnail {
+	margin-bottom: 0;
+}
+.fileinput textarea.form-control {
+	padding: 0;
+}
