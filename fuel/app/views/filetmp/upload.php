@@ -1,4 +1,9 @@
+<?php if (!isset($hide_form)) $hide_form = false; ?>
+<?php if ($hide_form): ?>
+<button type="button" class="btn btn-default btn-xs display_fileinput-button"><span class="glyphicon glyphicon-camera"></span> 写真を追加</button>
+<?php endif; ?>
 <!-- The fileinput-button span is used to style the file input field as button -->
+<div class="fileinput<?php if ($hide_form): ?> hidden<?php endif; ?>">
 <span class="btn btn-success fileinput-button">
 		<i class="glyphicon glyphicon-plus"></i>
 		<span>Select files...</span>
@@ -17,3 +22,4 @@
 <?php echo render('filetmp/_parts/upload_images', array('files' => $files)); ?>
 <?php endif; ?>
 </div>
+</div><!-- fileinput -->

@@ -132,7 +132,7 @@ function form_radio_public_flag($val_obj = null, $default_value = null, $with_no
 	return render('_parts/form/radio_public_flag', $data);
 }
 
-function form_upload_files($files)
+function form_upload_files($files, $hide_form = false)
 {
-	return render('_parts/form/upload_files', array('files' => $files));
+	return render('_parts/form/upload_files', array('files' => $files, 'hide_form' => $hide_form));
 }
