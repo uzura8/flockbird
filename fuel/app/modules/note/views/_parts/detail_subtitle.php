@@ -8,9 +8,9 @@
 	'date'        => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at, 'label' => $note->published_at ? '日時' : '更新日時')
 )); ?>
 <?php if (isset($u) && $u->id == $note->member_id): ?>
-<div class="edit btn-group dropdown-toggle" data-toggle="dropdown">
+<div class="edit btn-group">
 	<?php echo render('_parts/button_edit'); ?>
-	<ul class="dropdown-menu pull-right">
+	<ul class="dropdown-menu pull-right" role="menu">
 <?php if (!$note->is_published): ?>
 		<li><?php echo Html::anchor(sprintf('note/publish/%d%s', $note->id, get_csrf_query_str()), '公開する'); ?></li>
 <?php endif; ?>
@@ -19,3 +19,4 @@
 	</ul>
 </div><!-- /btn-group -->
 <?php endif; ?>
+
