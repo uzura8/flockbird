@@ -1,1 +1,1 @@
-<button data-toggle="dropdown" class="btn btn-default dropdown-toggle<?php if (IS_SP): ?> btn-xs<?php endif; ?>"><i class="ls-icon-edit"></i><?php if (!IS_SP): ?> edit <?php endif; ?><span class="caret"></span></button>
+<button data-toggle="dropdown" class="btn btn-default dropdown-toggle<?php if (IS_SP): ?> btn-xs<?php endif; ?>"><span class="glyphicon glyphicon-edit"></span><?php if (!IS_SP): ?> edit <?php endif; ?><span class="caret"></span></button>

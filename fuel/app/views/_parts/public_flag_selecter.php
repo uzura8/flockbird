@@ -15,7 +15,7 @@ if (!empty($disabled_to_update['message']))
 ?>
 <?php echo Html::anchor('#', $icon.$name, $atter); ?>
 <?php elseif (!empty($is_mycontents)): ?>
-<?php if (empty($without_parent_box)): ?><div class="public_flag<?php if (!empty($parent_box_additional_class)): ?> <?php echo $parent_box_additional_class; ?><?php endif; ?> btn-group dropdown-toggle" data-toggle="dropdown"><?php endif; ?>
+<?php if (empty($without_parent_box)): ?><div class="public_flag<?php if (!empty($parent_box_additional_class)): ?> <?php echo $parent_box_additional_class; ?><?php endif; ?> btn-group dropdown-toggle"><?php endif; ?>
 	<button class="btn dropdown-toggle btn-default btn-xs<?php echo $btn_color; ?>" type="button" id="<?php if (!empty($model) && !empty($id)): ?>public_flag_<?php echo $model; ?>_<?php echo $id; ?><?php else: ?>public_flag_selector<?php endif; ?>" data-toggle="dropdown" data-public_flag="<?php echo $public_flag; ?>">
 		<?php echo $icon.$name; ?><span class="caret"></span>
 	</button>

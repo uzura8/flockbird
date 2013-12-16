@@ -85,8 +85,8 @@ elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && 
 }
 ?>
 <?php if ($menus): ?>
-				<div class="btn_album_image_edit btn-group dropdown-toggle" data-toggle="dropdown" id="btn_album_image_edit_<?php echo $album_image->id ?>">
-					<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
+				<div class="btn_album_image_edit btn-group" id="btn_album_image_edit_<?php echo $album_image->id ?>">
+					<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="glyphicon glyphicon-edit"></span><span class="caret"></span></button>
 					<ul class="dropdown-menu pull-right">
 <?php foreach ($menus as $menu): ?>
 						<li><?php echo $menu; ?></li>
