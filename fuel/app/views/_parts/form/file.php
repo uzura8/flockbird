@@ -10,7 +10,7 @@ if ($is_required)
 	<?php echo Form::label($label, $name, array('class' => 'control-label col-sm-2')); ?>
 <?php endif; ?>
 	<div class="col-sm-10">
-		<?php echo Form::input($name, null, array('type' => 'file', 'class' => 'input-file form-control')); ?>
+		<?php echo Form::input($name, null, $input_atter); ?>
 <?php if (!empty($val) && $val->error($name)): ?>
 		<span class="help-inline error_msg"><?php echo $val->error($name)->get_message(); ?></span>
 <?php endif; ?>
