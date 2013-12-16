@@ -437,7 +437,7 @@ class Site_Upload
 		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.'.$key_sizes, array());
 		if ($is_tmp) return $sizes;
 
-		$additional_sizes_list = Config::get('site.upload.types.img.types.'.$file_cate.'.additional_sizes');
+		$additional_sizes_list = Config::get('site.upload.types.img.types.'.$file_cate.'.additional_sizes', array());
 		foreach ($additional_sizes_list as $key => $additional_sizes)
 		{
 			$sizes += $additional_sizes;

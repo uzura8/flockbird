@@ -110,3 +110,10 @@ form .popover.bottom .arrow:after {
 	top: 0;
 	right: 8px;
 }
+
+#member_profile_setting_image .imgBox {
+	margin-bottom: 10px;
+}
+#member_profile_setting_image .imgBox .delete_image {
+	vertical-align: bottom;
+}
