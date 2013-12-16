@@ -24,13 +24,16 @@
 	'date' => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at)
 )); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>
-				<div class="edit btn-group dropdown-toggle" data-toggle="dropdown" id="btn_edit_<?php echo $id ?>">
-					<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><i class="ls-icon-edit"></i><span class="caret"></span></button>
-					<ul class="dropdown-menu pull-right">
-						<li><?php echo Html::anchor('note/edit/'.$id, '<i class="icon-pencil"></i> 編集'); ?></li>
-						<li><a href="#" onclick="delete_item('note/api/delete.json', <?php echo $id; ?>, '#article');return false;"><i class="icon-trash"></i> 削除</a></li>
+				<div class="btn-group edit" id="btn_edit_<?php echo $id ?>">
+					<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+						<span class="glyphicon glyphicon-edit"></span><span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu pull-right" role="menu">
+						<li><?php echo Html::anchor('note/edit/'.$id, '<i class="glyphicon glyphicon-pencil"></i> 編集'); ?></li>
+						<li><a href="#" onclick="delete_item('note/api/delete.json', <?php echo $id; ?>, '#article');return false;"><i class="glyphicon glyphicon-trash"></i> 削除</a></li>
 					</ul>
 				</div><!-- /btn-group -->
+
 <?php endif; ?>
 			</div>
 		</div>

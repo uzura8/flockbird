@@ -465,8 +465,21 @@ div.alert ul {
 }
 
 .fileinput .thumbnail {
+	margin-bottom: 10px;
+}
+.fileinput .thumbnail img {
 	margin-bottom: 0;
+}
+.fileinput p.subinfo {
+	position: relative;
+}
+.fileinput p.subinfo .delete_file_tmp {
+	position: absolute;
+	top: -5px;
+	right: 0;
 }
 .fileinput textarea.form-control {
 	padding: 0;
 }
+
+

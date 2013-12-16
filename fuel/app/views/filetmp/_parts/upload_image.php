@@ -10,10 +10,10 @@
 		<?php echo Html::img($file->thumbnail_uri, array('class' => 'thumbnail', 'alt' => $file->original_name)); ?>
 		<div class="caption">
 			<h5><?php echo $file->original_name; ?></h5>
-			<p class="clearfix">
+			<p class="subinfo">
 				<?php echo Num::format_bytes($file->size); ?>
 				<?php echo Html::anchor('#', '<i class="ls-icon-delete"></i>', array(
-					'class' => 'btn btn-xs btn-default delete_file_tmp pull-right',
+					'class' => 'btn btn-xs btn-default delete_file_tmp',
 					'data-id' => $file->id,
 					'data-type' => $prefix,
 				)); ?>

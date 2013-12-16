@@ -5,7 +5,7 @@
 <?php endif; ?>
 	<?php echo form_input($val, 'title', 'タイトル', isset($note) ? $note->title : '', true, 'input-xlarge'); ?>
 	<?php echo form_textarea($val, 'body', '本文', isset($note) ? $note->body : '', true); ?>
-	<?php echo form_upload_files($files, true); ?>
+	<?php echo form_upload_files($files, $files ? false : true); ?>
 	<?php echo form_input($val, 'published_at_time', '日時', !empty($note->published_at) ? substr($note->published_at, 0, 16) : '', false, 'span4'); ?>
 	<?php echo form_radio_public_flag($val, isset($note) ? $note->public_flag : null); ?>
 <?php if (isset($is_edit) && $is_edit): ?>

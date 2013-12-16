@@ -296,6 +296,7 @@ class Site_Upload
 				'thumbnail' => array(
 					'max_width' => $thumbnail_sizes['width'],
 					'max_height' => $thumbnail_sizes['height'],
+					'crop' => true,
 				),
 			),
 		);
