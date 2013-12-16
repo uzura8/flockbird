@@ -282,7 +282,7 @@ class MyUploadHandler extends UploadHandler
 		if ($exif)
 		{
 			$model_file_tmp->exif = serialize($exif);
-			if ($exif_time = \Util_Date::check_is_past($exif['DateTimeOriginal'], null, null, true))
+			if (isset($exif['DateTimeOriginal']) && $exif_time = \Util_Date::check_is_past($exif['DateTimeOriginal'], null, null, true))
 			{
 				$model_file_tmp->shot_at = date('Y-m-d H:i:s', $exif_time);
 			}
