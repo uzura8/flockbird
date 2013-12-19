@@ -146,25 +146,28 @@ class Model_AlbumImage extends \Orm\Model
 		return \DB::update('album_image')->set($values)->where('album_id', $album_id)->execute();
 	}
 
-	public static function save_with_file($album_id, $member = null, $public_flag = null, $name = null, $file = null, $sizes = array(), $file_path = null, $is_save_original_filename = true)
+	public static function save_with_file($album_id, $member = null, $public_flag = null, $file_path = null)
 	{
 		if (empty($member))
 		{
 			$album = \Model_Album::find($album_id, array('related' => 'member'));
 			$member = $album->member;
 		}
-		if (!$file) $file = \Site_Upload::upload('ai', $album_id, $member->id, $member->filesize_total, $sizes, array(), 0, $file_path, $is_save_original_filename);
+
+		$options = \Site_Upload::get_uploader_options($member->id, 'ai', $album_id);
+		$uploadhandler = new \Site_Uploader($options);
+		$file = $uploadhandler->save($file_path);
+		if (!empty($file['error'])) throw new \FuelException($file['error']);
 
 		$self = new self;
-		$self->album_id = $album_id;
-		$self->file_id = $file->id;
+		$self->album_id    = $album_id;
+		$self->file_id     = $file['id'];
 		$self->public_flag = is_null($public_flag) ? \Config::get('site.public_flag.default') : $public_flag;
-		$self->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
-		$self->name = $name ?: $file->original_filename;
-		
+		$self->shot_at     = $file['shot_at'];
+		//$self->name = $name ?: $file['original_filename'];
 		$self->save();
 
-		return $self;
+		return array($self, $file);
 	}
 
 	public static function delete_multiple($ids, \Album\Model_Album $album)

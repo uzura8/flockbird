@@ -107,7 +107,7 @@ class Site_FileTmp
 		foreach ($moved_files as $moved_file)
 		{
 			Site_Upload::make_thumbnails($moved_file['to'], $moved_file['filepath'], true, $additional_sizes_key);
-			Util_file::remove($moved_file['from_thumbnail']);
+			if (!empty($moved_file['from_thumbnail'])) Util_file::remove($moved_file['from_thumbnail']);
 		}
 	}
 

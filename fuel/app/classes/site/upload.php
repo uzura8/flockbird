@@ -81,8 +81,7 @@ class Site_Upload
 		if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE && $member_id)
 		{
 			$config['member_id'] = $member_id;
-
-			$config['file_size_limit'] = Config::get('site.upload.accepted_filesize.small.limit');// default
+			$config['file_size_limit'] = self::get_accepted_filesize($member_id);
 			$config['member_filesize_total'] = $member_filesize_total;
 			if ($file_id) $config['old_file_size'] = $file->filesize;
 		}
@@ -100,11 +99,9 @@ class Site_Upload
 		if ($uploaded_file['exif'])
 		{
 			$exif = $uploaded_file['exif'];
-			if (!empty($exif['DateTimeOriginal'])) $file->shot_at = date('Y-m-d H:i:s', strtotime($exif['DateTimeOriginal']));
 			$file->exif = serialize($exif);
+			if ($exif_time = self::get_exif_datetime($exif)) $file->shot_at = $exif_time;
 		}
-		//if (empty($file->shot_at)) $file->shot_at = date('Y-m-d H:i:s');
-
 		$file->save();
 
 		return $file;
@@ -264,42 +261,72 @@ class Site_Upload
 		return true;
 	}
 
-	public static function get_upload_handler_options($member_id, $is_tmp = true, $file_cate = 'm', $split_criterion_id = 0)
+	public static function get_uploader_info($file_cate, $split_criterion_id, $is_tmp = false, $with_thumbnails = false)
 	{
-		if (!$split_criterion_id) $split_criterion_id = $member_id;
 		$filepath = \Site_Upload::get_filepath($file_cate, $split_criterion_id);
+		$thumbnail_sizes = array();
 		if ($is_tmp)
 		{
-			$thumbnail_sizes = Site_Upload::conv_size_str_to_array(Config::get('site.upload.types.img.tmp.sizes.thumbnail'));
-			$upload_dir      = Config::get('site.upload.types.img.tmp.raw_file_path').$filepath;
-			$upload_uri      = Config::get('site.upload.types.img.tmp.root_path.raw_dir').$filepath;
+			if ($with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(Config::get('site.upload.types.img.tmp.sizes.thumbnail'));
+			$upload_dir = Config::get('site.upload.types.img.tmp.raw_file_path').$filepath;
+			$upload_uri = Config::get('site.upload.types.img.tmp.root_path.raw_dir').$filepath;
 		}
 		else
 		{
-			$thumbnail_sizes = Site_Upload::conv_size_str_to_array(Config::get('site.upload.types.img.types.'.$file_cate.'.sizes.thumbnail'));
+			if ($with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(Config::get('site.upload.types.img.types.'.$file_cate.'.sizes.thumbnail'));
 			$upload_dir      = Config::get('site.upload.types.img.raw_file_path').$filepath;
 			$upload_uri      = Config::get('site.upload.types.img.root_path.raw_dir').$filepath;
 		}
 		$upload_url = Uri::create($upload_uri);
 
-		$options = array(
+		$info = array(
+			'filepath'   => $filepath,
 			'upload_dir' => $upload_dir,
-			'upload_url' => $upload_url,
 			'upload_uri' => $upload_uri,
-			'mkdir_mode' => Config::get('site.upload.mkdir_mode'),
-			'member_id' => $member_id,
-			'site_filepath' => $filepath,
+			'upload_url' => $upload_url,
+		);
+		if (!empty($thumbnail_sizes)) $info['thumbnail_sizes'] = $thumbnail_sizes;
+
+		return $info;
+	}
+
+	public static function get_uploader_options($member_id, $file_cate = 'm', $split_criterion_id = 0)
+	{
+		if (!$split_criterion_id) $split_criterion_id = $member_id;
+		$options = self::get_uploader_info($file_cate, $split_criterion_id);
+		$options['member_id'] = $member_id;
+
+		return $options;
+	}
+
+	public static function get_upload_handler_options($member_id, $is_tmp = true, $file_cate = 'm', $split_criterion_id = 0, $is_multiple_upload = true, $with_thumbnail = true)
+	{
+		if (!$split_criterion_id) $split_criterion_id = $member_id;
+		$uploader_info = self::get_uploader_info($file_cate, $split_criterion_id, $is_tmp, true);
+		$options = array(
+			'max_file_size'  => PRJ_UPLOAD_MAX_FILESIZE,
+			'max_number_of_files' => $is_multiple_upload ? PRJ_MAX_FILE_UPLOADS : 1,
+			'is_save_exif'   => PRJ_USE_EXIF_DATA,
+			'upload_dir'     => $uploader_info['upload_dir'],
+			'upload_url'     => $uploader_info['upload_url'],
+			'upload_uri'     => $uploader_info['upload_uri'],
+			'mkdir_mode'     => Config::get('site.upload.mkdir_mode'),
+			'member_id'      => $member_id,
+			'filepath'       => $uploader_info['filepath'],
 			'image_versions' => array(
 				'' => array(
 					'auto_orient' => true
 				),
-				'thumbnail' => array(
-					'max_width' => $thumbnail_sizes['width'],
-					'max_height' => $thumbnail_sizes['height'],
-					'crop' => true,
-				),
 			),
 		);
+		if ($with_thumbnail)
+		{
+			$options['image_versions']['thumbnail'] = array(
+				'max_width'  => $uploader_info['thumbnail_sizes']['width'],
+				'max_height' => $uploader_info['thumbnail_sizes']['height'],
+				'crop' => true,
+			);
+		}
 
 		return $options;
 	}
@@ -418,7 +445,7 @@ class Site_Upload
 		return true;
 	}
 
-	public static function get_accepted_max_size()
+	public static function get_accepted_max_size($member_id = null)
 	{
 		return Config::get('site.upload.accepted_max_size.default');
 	}
@@ -444,5 +471,13 @@ class Site_Upload
 		}
 
 		return $sizes;
+	}
+
+	public static function get_exif_datetime($exif)
+	{
+		if (empty($exif['DateTimeOriginal'])) return null;
+		if (!$exif_time = \Util_Date::check_is_past($exif['DateTimeOriginal'], null, null, true)) return null;
+
+		return $exif_time;
 	}
 }

@@ -56,14 +56,19 @@ class Controller_Member_profile extends Controller_Member
 		try
 		{
 			DB::start_transaction();
-			Site_Member::save_profile_image($this->u);
+			$file = Site_Member::save_profile_image($this->u);
 			DB::commit_transaction();
-
+			Site_Upload::make_thumbnails(
+				$file['file_path'],
+				$file['filepath'],
+				true,
+				Config::get('site.upload.types.img.types.m.save_as_album_image') ? 'profile' : null
+			);
 			Session::set_flash('message', '写真を更新しました。');
 		}
 		catch(FuelException $e)
 		{
-			DB::rollback_transaction();
+			if (DB::in_transaction()) DB::rollback_transaction();
 			Session::set_flash('error', $e->getMessage());
 		}
 

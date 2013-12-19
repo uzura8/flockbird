@@ -2,78 +2,111 @@
 
 class Site_Uploader
 {
-	private $raw_file = '';
-	private $filename = '';
-	private $filepath = '';
-	private $raw_image_base_dir_path   = '';
-	private $raw_image_dir_path        = '';
-	private $cache_image_base_dir_path = '';
-	private $tmp_dir_path = '';
-	private $sizes        = array();
-	private $max_size     = 0;
-	private $member_id    = 0;
-	private $member_filesize_total = 0;
-	private $file_size_limit       = 0;
-	private $old_filepath_name     = '';
-	private $old_file_size         = 0;
+	private $options = array();
 
 	public function __construct($options = array())
 	{
-		if (empty($options['filepath'])) throw new FuelException('File path not set.');
-		$this->filepath  = $options['filepath'];
-		$file_type = $options['file_type'] ?: 'img';
-		
-		$this->raw_image_base_dir_path = (!empty($options['real_path_raw_file_dir'])) ?
-			$options['real_path_raw_file_dir'] : Config::get('site.upload.types.'.$file_type.'.raw_file_path');
-		$this->raw_image_dir_path .= $this->raw_image_base_dir_path.$this->filepath;
-
-		$root_path_cache_file_dir = (!empty($options['root_path_cache_file_dir'])) ?
-			$options['root_path_cache_file_dir'] : Config::get('site.upload.types.'.$file_type.'.root_path.cache_dir');
-		$this->cache_image_base_dir_path = PRJ_PUBLIC_DIR.$root_path_cache_file_dir;
-
-		$this->tmp_dir_path = (!empty($options['tmp_dir_path'])) ? $options['tmp_dir_path'] : APPPATH.'tmp';
-		if (!empty($options['sizes'])) $this->sizes = $options['sizes'];
-		if (!empty($options['old_filepath_name'])) $this->old_filepath_name = $options['old_filepath_name'];
-		if (!empty($options['max_size'])) $this->max_size = $options['max_size'];
-		if (!empty($options['member_id'])) $this->member_id = $options['member_id'];
-		if (!empty($options['member_filesize_total'])) $this->member_filesize_total = $options['member_filesize_total'];
-		if (!empty($options['file_size_limit'])) $this->file_size_limit = Util_string::convert2bytes($options['file_size_limit']);
-		if (!empty($options['old_file_size'])) $this->old_file_size = $options['old_file_size'];
+		$this->options = array(
+			'max_size'       => PRJ_UPLOAD_MAX_FILESIZE,
+			'ext_whitelist'  => array_keys(Config::get('site.upload.types.img.accept_format')),
+			'type_whitelist' => array('image'),
+			'path_chmod'     => Config::get('site.upload.mkdir_mode'),
+			'path'           => APPPATH.'tmp',
+			'upload_dir'     => PRJ_UPLOAD_DIR.'img/raw/',
+			'is_save_exif'   => PRJ_USE_EXIF_DATA,
+			'auto_orient'   => true,
+		);
+		if ($options)
+		{
+			$this->options = $options + $this->options;
+		}
 	}
 
-	public function execute($file_path = null)
+	public function save($file_path = null)
 	{
-		if (!$file_path)
+		$file = array();
+		try
 		{
-			$file_info = $this->upload_file();
-			$file_path = $file_info['path'];
-		}
-		$file = $this->get_file_info($file_path);
-		$file['original_name'] = !empty($file_info['original_name']) ? $file_info['original_name'] : $file['name'];
+			if (!$file_path)
+			{
+				$file_info = $this->upload_file();
+				$file_path = $file_info['path'];
+			}
+			$file = $this->get_file_info($file_path);
+			$file['original_name'] = !empty($file_info['original_name']) ? $file_info['original_name'] : $file['name'];
 
-		if ($this->member_id && $this->file_size_limit)
-		{
-			$this->check_filesize_per_member($file['size']);
-		}
-		$this->filename = sprintf('%s.%s', Util_string::get_unique_id(), $file['ext']);
-		$this->save_raw_file($file['save_to'], $file['save_as'], $this->filename);
-		$this->raw_file = $this->raw_image_dir_path.$this->filename;
-		if ($size = $this->check_and_resize_raw_file($this->raw_file))
-		{
-			$file['size'] = $size;
-		}
-		$file['new_filename'] = $this->filename;
+			$file['name'] = Util_file::make_filename($file['original_name'], $file['ext']);
+			if (!Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], Config::get('site.upload.check_and_make_dir_level'), $this->options['path_chmod']))
+			{
+				throw new FuelException('ディレクトリの作成に失敗しました。');
+			}
+			$file_path = $this->save_raw_file($file['save_to'], $file['save_as'], $file['name']);
+			$file['file_path'] = $file_path;
+			//$file['new_filename'] = $file['name'];
 
-		$this->make_thumbnails();// 各サイズの thumbnail を作成
-		$this->remove_old_images();// 古い画像の削除
+			// exif データの取得
+			$exif = array();
+			if ($this->options['is_save_exif'] && $file['ext'] == 'jpg')
+			{
+				$exif = exif_read_data($file_path) ?: array();
+			}
+			$file['exif'] = $exif;
+
+			// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
+			$file_size_before = $file['size'];
+			if ($max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
+			{
+				$file['size'] = Site_Upload::check_max_size_and_resize($file_path, $max_size);
+			}
+			if (Config::get('site.upload.remove_exif_data') && $file_size_before == $file['size'])
+			{
+				Util_file::resave($file_path);
+			}
+
+			if (!$model_file = $this->save_model_file($file, $exif))
+			{
+				throw new FuelException('画像情報の保存に失敗しました。');
+			}
+			$file['id'] = $model_file->id;
+			$file['filepath'] = $model_file->path;
+			$file['shot_at']  = $model_file->shot_at;
+			//$this->make_thumbnails();// 各サイズの thumbnail を作成
+		}
+		catch(\FuelException $e)
+		{
+			if (isset($file_path) && file_exists($file_path)) Util_file::remove($file_path);
+			$file['error'] = $e->getMessage();
+		}
 
 		return $file;
 	}
 
+	protected function save_model_file($file, $exif = array())
+	{
+		$model_file = new \Model_File;
+		$model_file->name     = $file['name'];
+		$model_file->filesize = $file['size'];
+		$model_file->type     = $file['type'];
+		$model_file->path     = $this->options['filepath'];
+		$model_file->original_filename = $file['original_name'];
+		$model_file->member_id         = $this->options['member_id'];
+		if ($exif)
+		{
+			$model_file->exif = serialize($exif);
+			if ($exif_time = Site_Upload::get_exif_datetime($exif))
+			{
+				$model_file->shot_at = $exif_time;
+			}
+		}
+		if (!$model_file->shot_at) $model_file->shot_at = date('Y-m-d H:i:s');
+		$model_file->save();
+
+		return $model_file;
+	}
+
 	private function upload_file()
 	{
-		$options = array('path' => $this->tmp_dir_path);
-		Upload::process($options);
+		Upload::process($this->options);
 		$this->validate();
 
 		Upload::save(0);
@@ -94,12 +127,6 @@ class Site_Uploader
 		$file['path']    = $file_info['realpath'];
 		$file['ext']     =  Util_file::get_image_type($file_path);
 
-		if (PRJ_USE_EXIF_DATA)
-		{
-			$exif = $this->get_exif_data($file_path);
-			$file['exif'] = ($exif) ? $exif : array();
-		}
-
 		return $file;
 	}
 
@@ -113,7 +140,10 @@ class Site_Uploader
 				throw new FuelException($errors[0]['errors'][0]['message']);
 			}
 		}
-		if (count(Upload::get_files()) != 1) throw new FuelException('File upload error.');
+		if (count(Upload::get_files()) > 1)
+		{
+			throw new FuelException('File upload error.');
+		}
 	}
 
 	private function save_raw_file($original_file_dir, $original_filename, $new_filename)
@@ -123,32 +153,11 @@ class Site_Uploader
 		{
 			throw new FuelException('File not found.');
 		}
-		Site_Upload::check_and_make_uploaded_dir($this->raw_image_dir_path);
+		$to = $this->options['upload_dir'].$new_filename;
+		if (file_exists($to)) throw new FuelException('File already exists.');
+		if (!Util_file::move($from, $to)) throw new FuelException('Save raw file error.');
 
-		$to = $this->raw_image_dir_path.$new_filename;
-		if (file_exists($to)) return;
-
-		if (!rename($from, $to)) throw new FuelException('save raw file error.');
-	}
-
-	private function check_filesize_per_member($size)
-	{
-		if ($this->old_file_size) $size -= $this->old_file_size;
-
-		$accept_size = $this->file_size_limit - $this->member_filesize_total;
-		if ($size > $accept_size) throw new FuelException('File size is over the limit of the member.');
-	}
-
-	private function get_exif_data($file)
-	{
-		return exif_read_data($file);
-	}
-
-	private function check_and_resize_raw_file($file)
-	{
-		if (!$this->max_size) return false;
-
-		return Site_Upload::check_max_size_and_resize($file, $this->max_size);
+		return $to;
 	}
 
 	private function make_thumbnails()
@@ -160,27 +169,6 @@ class Site_Uploader
 			$new_file = $dir.$this->filename;
 			$item = Site_Upload::conv_size_str_to_array($size);
 			Util_file::resize($this->raw_file, $new_file, $item['width'], $item['height'], $item['resize_type']);
-		}
-	}
-
-	private function remove_old_images()
-	{
-		if (!strlen($this->old_filepath_name)) return;
-
-		self::remove_images($this->old_filepath_name);
-	}
-
-	private function remove_images($filepath_name)
-	{
-		$raw_file = $this->raw_image_base_dir_path.$filename_name;
-		Util_file::remove($raw_file);
-
-		foreach ($this->sizes as $size)
-		{
-			$file = sprintf('%s%s/%s', $this->cache_image_base_dir_path, $size, $filepath_name);
-			if (!file_exists($file)) continue;
-
-			Util_file::remove($file);
 		}
 	}
 }

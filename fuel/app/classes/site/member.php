@@ -2,30 +2,40 @@
 
 class Site_Member
 {
-	public static function save_profile_image(Model_Member $member, $file_path = null, $is_save_original_filename = true)
+	public static function save_profile_image(Model_Member $member, $file_path = null)
 	{
 		if (Config::get('site.upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
-			$sizes = Arr::merge(Config::get('site.upload.types.img.types.ai.additional_sizes.profile'), \Config::get('site.upload.types.img.types.ai.sizes'));
-			$album_image = \Album\Model_AlbumImage::save_with_file($album_id, $member, Config::get('site.public_flag.default'), null, null, $sizes, $file_path, $is_save_original_filename);
+			//$sizes = Arr::merge(Config::get('site.upload.types.img.types.ai.additional_sizes.profile'), \Config::get('site.upload.types.img.types.ai.sizes'));
+			list($album_image, $file) = \Album\Model_AlbumImage::save_with_file($album_id, $member, PRJ_PUBLIC_FLAG_ALL, $file_path);
+
 			$member->file_id = $album_image->file->id;
 			$member->save();
+
 			$foreign_table = 'album_image';
 			$foreign_id = $album_image->id;
 		}
 		else
 		{
-			// 古いファイルの削除
-			$deleted_filesize = (int)Model_File::delete_with_file($member->file_id);
+			$old_file_id = $member->file_id;
+			$options = Site_Upload::get_uploader_options($member->id);
+			$uploadhandler = new Site_Uploader($options);
+			$file = $uploadhandler->save();
+			if (!empty($file['error'])) throw new FuelException($file['error']);
 
-			$file = Site_Upload::upload('m', $member->id, $member->id, $member->filesize_total, array(), $member->get_image(), $member->file_id, $file_path, $is_save_original_filename);
-			$member->file_id = $file->id;
+			$member->file_id = $file['id'];
 			$member->save();
+
+			// 古いファイルの削除
+			$deleted_filesize = (int)Model_File::delete_with_timeline($old_file_id);
+
 			$foreign_table = 'file';
-			$foreign_id = $file->id;
+			$foreign_id = $file['id'];
 		}
 		// timeline 投稿
 		\Timeline\Site_Model::save_timeline($member->id, null, 'profile_image', $foreign_id, null, null, $foreign_table);
+
+		return $file;
 	}
 }

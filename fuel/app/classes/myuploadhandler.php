@@ -165,7 +165,7 @@ class MyUploadHandler extends UploadHandler
 			$file->error = $this->get_error_message('accept_file_types');
 			return $file;
 		}
-		if (!$file->name = $this->make_file_name($uploaded_file, $original_name, $extention))
+		if (!$file->name = $this->make_file_name($original_name, $extention))
 		{
 			$file->error = 'ファイル名の作成に失敗しました。';
 			return $file;
@@ -240,8 +240,14 @@ class MyUploadHandler extends UploadHandler
 
 		// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
 		$file_size_before = $file->size;
-		$file->size = Site_Upload::check_max_size_and_resize($file_path, Site_Upload::get_accepted_max_size());
-		if (Config::get('site.upload.remove_exif_data') && $file_size_before == $file->size) Util_file::resave($file_path);
+		if ($max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
+		{
+			$file->size = Site_Upload::check_max_size_and_resize($file_path, $max_size);
+		}
+		if (Config::get('site.upload.remove_exif_data') && $file_size_before == $file->size)
+		{
+			Util_file::resave($file_path);
+		}
 
 		try
 		{
@@ -256,7 +262,7 @@ class MyUploadHandler extends UploadHandler
 		return $file;
 	}
 
-	protected function make_file_name($uploaded_file, $original_filename, $extention)
+	protected function make_file_name($original_filename, $extention)
 	{
 		$name = \Util_file::make_filename($original_filename, $extention);
 		$i = 0;
@@ -274,7 +280,7 @@ class MyUploadHandler extends UploadHandler
 	{
 		$model_file_tmp = new \Model_FileTmp;
 		$model_file_tmp->name = $file->name;
-		$model_file_tmp->path = $this->options['site_filepath'];
+		$model_file_tmp->path = $this->options['filepath'];
 		$model_file_tmp->filesize = $file->size;
 		$model_file_tmp->type = $file->type;
 		$model_file_tmp->original_filename = $file->original_name;
@@ -282,16 +288,11 @@ class MyUploadHandler extends UploadHandler
 		if ($exif)
 		{
 			$model_file_tmp->exif = serialize($exif);
-			if (isset($exif['DateTimeOriginal']) && $exif_time = \Util_Date::check_is_past($exif['DateTimeOriginal'], null, null, true))
+			if ($exif_time = Site_Upload::get_exif_datetime($exif))
 			{
-				$model_file_tmp->shot_at = date('Y-m-d H:i:s', $exif_time);
+				$model_file_tmp->shot_at = $exif_time;
 			}
 		}
-		//if ($is_tmp)
-		//{
-		//	$model_file_tmp->hash     = $tmp_hash;
-		//	$model_file_tmp->contents = $contents;
-		//}
 		$model_file_tmp->save();
 
 		return $model_file_tmp->id;

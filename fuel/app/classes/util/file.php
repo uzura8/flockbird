@@ -151,37 +151,6 @@ class Util_file
 		return false;
 	}
 
-	public static function make_thumbnails($original_file_dir, $original_file_name, $sizes, $skip_size_types = array(), $old_filename = '')
-	{
-		if ($skip_size_types && !is_array($skip_size_types)) $skip_size_types = (array)$skip_size_types;
-
-		$original_file = $original_file_dir.'/'.$original_file_name;
-		try
-		{
-			foreach ($sizes as $key => $config)
-			{
-				if (in_array($key, $skip_size_types)) continue;
-
-				if (empty($config['width']) || empty($config['height']))
-				{
-					self::move($original_file, $config['path'].'/'.$original_file_name);
-				}
-				else
-				{
-					self::resize($original_file, $config['path'].'/'.$original_file_name, $config['width'], $config['height']);
-					if ($old_filename) self::remove($config['path'].'/'.$old_filename);
-				}
-			}
-			if ($old_filename) self::remove($original_file_dir.'/'.$old_filename);
-		}
-		catch(Exception $e)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
 	public static function make_filename($original_filename, $extension = '', $prefix = '', $with_extension = true, $delimitter = '_', $is_seccure = false)
 	{
 		$filename = Util_string::get_random($original_filename, $extension, $is_seccure);

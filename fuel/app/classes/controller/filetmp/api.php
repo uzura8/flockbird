@@ -64,9 +64,6 @@ class Controller_FileTmp_Api extends Controller_Site_Api
 			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
 
 			$options = Site_Upload::get_upload_handler_options($this->u->id);
-			$options['max_file_size'] = PRJ_UPLOAD_MAX_FILESIZE;
-			$options['max_number_of_files'] = PRJ_MAX_FILE_UPLOADS;
-			$options['is_save_exif'] = PRJ_USE_EXIF_DATA;
 			$uploadhandler = new MyUploadHandler($options, false);
 			$files = $uploadhandler->post(false);
 			$status_code = 200;
