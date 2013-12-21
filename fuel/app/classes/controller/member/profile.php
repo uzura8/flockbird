@@ -59,8 +59,8 @@ class Controller_Member_profile extends Controller_Member
 			$file = Site_Member::save_profile_image($this->u);
 			DB::commit_transaction();
 			Site_Upload::make_thumbnails(
-				$file['file_path'],
-				$file['filepath'],
+				$file->file_path,
+				$file->filepath,
 				true,
 				Config::get('site.upload.types.img.types.m.save_as_album_image') ? 'profile' : null
 			);

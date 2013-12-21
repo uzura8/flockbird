@@ -480,4 +480,18 @@ class Site_Upload
 
 		return $exif_time;
 	}
+
+	public static function make_file_name($original_filename, $extention, $upload_dir, $retry_count = 3)
+	{
+		$name = Util_file::make_filename($original_filename, $extention);
+		$i = 0;
+		while(file_exists($upload_dir.$name))
+		{
+			$name = Util_file::make_filename($original_filename, $extention);
+			if ($i == $retry_count) return false;
+			$i++;
+		}
+
+		return $name;
+	}
 }

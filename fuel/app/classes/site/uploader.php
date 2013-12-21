@@ -3,9 +3,12 @@
 class Site_Uploader
 {
 	private $options = array();
+	private $file;
 
 	public function __construct($options = array())
 	{
+		$this->file = new stdClass();
+
 		$this->options = array(
 			'max_size'       => PRJ_UPLOAD_MAX_FILESIZE,
 			'ext_whitelist'  => array_keys(Config::get('site.upload.types.img.accept_format')),
@@ -22,73 +25,58 @@ class Site_Uploader
 		}
 	}
 
-	public function save($file_path = null)
+	public function save($tmp_file_path = null)
 	{
-		$file = array();
 		try
 		{
-			if (!$file_path)
-			{
-				$file_info = $this->upload_file();
-				$file_path = $file_info['path'];
-			}
-			$file = $this->get_file_info($file_path);
-			$file['original_name'] = !empty($file_info['original_name']) ? $file_info['original_name'] : $file['name'];
-
-			$file['name'] = Util_file::make_filename($file['original_name'], $file['ext']);
+			if (!$tmp_file_path) $tmp_file_path = $this->upload_file();
+			$this->set_file_properties($tmp_file_path);
 			if (!Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], Config::get('site.upload.check_and_make_dir_level'), $this->options['path_chmod']))
 			{
 				throw new FuelException('ディレクトリの作成に失敗しました。');
 			}
-			$file_path = $this->save_raw_file($file['save_to'], $file['save_as'], $file['name']);
-			$file['file_path'] = $file_path;
-			//$file['new_filename'] = $file['name'];
+			if (!Util_file::move($tmp_file_path, $this->file->file_path)) throw new FuelException('Save raw file error.');
 
 			// exif データの取得
-			$exif = array();
-			if ($this->options['is_save_exif'] && $file['ext'] == 'jpg')
+			$exif = null;
+			if ($this->options['is_save_exif'] && $this->file->type == 'image/jpeg')
 			{
-				$exif = exif_read_data($file_path) ?: array();
+				$exif = exif_read_data($this->file->file_path) ?: null;
 			}
-			$file['exif'] = $exif;
 
 			// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
-			$file_size_before = $file['size'];
+			$file_size_before = $this->file->size;
 			if ($max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
 			{
-				$file['size'] = Site_Upload::check_max_size_and_resize($file_path, $max_size);
+				$this->file->size = Site_Upload::check_max_size_and_resize($this->file->file_path, $max_size);
 			}
-			if (Config::get('site.upload.remove_exif_data') && $file_size_before == $file['size'])
+			if (Config::get('site.upload.remove_exif_data') && $file_size_before == $this->file->size)
 			{
-				Util_file::resave($file_path);
+				Util_file::resave($this->file->file_path);
 			}
 
-			if (!$model_file = $this->save_model_file($file, $exif))
-			{
-				throw new FuelException('画像情報の保存に失敗しました。');
-			}
-			$file['id'] = $model_file->id;
-			$file['filepath'] = $model_file->path;
-			$file['shot_at']  = $model_file->shot_at;
-			//$this->make_thumbnails();// 各サイズの thumbnail を作成
+			$this->save_model_file($exif);
 		}
 		catch(\FuelException $e)
 		{
-			if (isset($file_path) && file_exists($file_path)) Util_file::remove($file_path);
-			$file['error'] = $e->getMessage();
+			if (isset($this->file->file_path) && file_exists($this->file->file_path))
+			{
+				Util_file::remove($this->file->file_path);
+			}
+			$this->file->error = $e->getMessage();
 		}
 
-		return $file;
+		return $this->file;
 	}
 
-	protected function save_model_file($file, $exif = array())
+	protected function save_model_file($exif)
 	{
 		$model_file = new \Model_File;
-		$model_file->name     = $file['name'];
-		$model_file->filesize = $file['size'];
-		$model_file->type     = $file['type'];
+		$model_file->name     = $this->file->name;
+		$model_file->filesize = $this->file->size;
+		$model_file->type     = $this->file->type;
 		$model_file->path     = $this->options['filepath'];
-		$model_file->original_filename = $file['original_name'];
+		$model_file->original_filename = $this->file->original_name;
 		$model_file->member_id         = $this->options['member_id'];
 		if ($exif)
 		{
@@ -101,33 +89,36 @@ class Site_Uploader
 		if (!$model_file->shot_at) $model_file->shot_at = date('Y-m-d H:i:s');
 		$model_file->save();
 
-		return $model_file;
+		$this->file->id       = $model_file->id;
+		$this->file->shot_at  = $model_file->shot_at;
 	}
 
 	private function upload_file()
 	{
 		Upload::process($this->options);
 		$this->validate();
-
 		Upload::save(0);
 		$file = Upload::get_files(0);
 
-		return array('path' => $file['saved_to'].$file['saved_as'], 'original_name' => $file['name']);
+		$this->file->original_name = $file['name'];
+
+		return $file['saved_to'].$file['saved_as'];
 	}
 
-	private function get_file_info($file_path)
+	private function set_file_properties($file_path)
 	{
-		$file = array();
 		$file_info = File::file_info($file_path);
-		$file['size']    = $file_info['size'];
-		$file['name']    = $file_info['basename'];
-		$file['type']    = $file_info['mimetype'];
-		$file['save_to'] = $file_info['dirname'].'/';
-		$file['save_as'] = $file_info['basename'];
-		$file['path']    = $file_info['realpath'];
-		$file['ext']     =  Util_file::get_image_type($file_path);
+		$this->file->size = $file_info['size'];
+		$this->file->type = $file_info['mimetype'];
 
-		return $file;
+		$ext = Util_file::get_image_type($file_path);
+		if (!$this->file->name = \Site_Upload::make_file_name($this->file->original_name, $ext, $this->options['upload_dir']))
+		{
+			throw new FuelException('File already exists.');
+		}
+
+		$this->file->file_path = $this->options['upload_dir'].$this->file->name;
+		$this->file->filepath = $this->options['filepath'];
 	}
 
 	private function validate()
@@ -143,32 +134,6 @@ class Site_Uploader
 		if (count(Upload::get_files()) > 1)
 		{
 			throw new FuelException('File upload error.');
-		}
-	}
-
-	private function save_raw_file($original_file_dir, $original_filename, $new_filename)
-	{
-		$from = $original_file_dir.$original_filename;
-		if (!file_exists($from))
-		{
-			throw new FuelException('File not found.');
-		}
-		$to = $this->options['upload_dir'].$new_filename;
-		if (file_exists($to)) throw new FuelException('File already exists.');
-		if (!Util_file::move($from, $to)) throw new FuelException('Save raw file error.');
-
-		return $to;
-	}
-
-	private function make_thumbnails()
-	{
-		foreach ($this->sizes as $size)
-		{
-			$dir = sprintf('%s%s/%s', $this->cache_image_base_dir_path, $size, $this->filepath);
-			Site_Upload::check_and_make_uploaded_dir($dir);
-			$new_file = $dir.$this->filename;
-			$item = Site_Upload::conv_size_str_to_array($size);
-			Util_file::resize($this->raw_file, $new_file, $item['width'], $item['height'], $item['resize_type']);
 		}
 	}
 }

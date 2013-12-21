@@ -157,14 +157,14 @@ class Model_AlbumImage extends \Orm\Model
 		$options = \Site_Upload::get_uploader_options($member->id, 'ai', $album_id);
 		$uploadhandler = new \Site_Uploader($options);
 		$file = $uploadhandler->save($file_path);
-		if (!empty($file['error'])) throw new \FuelException($file['error']);
+		if (!empty($file->error)) throw new \FuelException($file->error);
 
 		$self = new self;
 		$self->album_id    = $album_id;
-		$self->file_id     = $file['id'];
+		$self->file_id     = $file->id;
 		$self->public_flag = is_null($public_flag) ? \Config::get('site.public_flag.default') : $public_flag;
-		$self->shot_at     = $file['shot_at'];
-		//$self->name = $name ?: $file['original_filename'];
+		$self->shot_at     = $file->shot_at;
+		//$self->name = $name ?: $file->original_filename;
 		$self->save();
 
 		return array($self, $file);

@@ -160,12 +160,12 @@ class MyUploadHandler extends UploadHandler
 		$file->original_name = $original_name;
 		$file->size = $this->fix_integer_overflow(intval($size));
 		$file->type = $type;
-		if (!$extention = \Util_file::check_image_type($uploaded_file, \Site_Upload::get_accept_format(), $type))
+		if (!$extention = Util_file::check_image_type($uploaded_file, \Site_Upload::get_accept_format(), $type))
 		{
 			$file->error = $this->get_error_message('accept_file_types');
 			return $file;
 		}
-		if (!$file->name = $this->make_file_name($original_name, $extention))
+		if (!$file->name = Site_Upload::make_file_name($original_name, $extention, $this->options['upload_dir']))
 		{
 			$file->error = 'ファイル名の作成に失敗しました。';
 			return $file;
@@ -260,20 +260,6 @@ class MyUploadHandler extends UploadHandler
 		}
 
 		return $file;
-	}
-
-	protected function make_file_name($original_filename, $extention)
-	{
-		$name = \Util_file::make_filename($original_filename, $extention);
-		$i = 0;
-		while(file_exists($this->options['upload_dir'].$name))
-		{
-			$name = \Util_file::make_filename($original_filename, $extention);
-			if ($i == 3) return false;
-			$i++;
-		}
-
-		return $name;
 	}
 
 	protected function save_file_tmp($file, $exif = array())
