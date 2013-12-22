@@ -41,12 +41,6 @@ class Model_FileTmp extends \Orm\Model
 		'type' => array(
 			'validation' => array('trim', 'max_length' => array(64)),
 		),
-		'contents' => array(
-			'validation' => array('trim', 'max_length' => array(20)),
-		),
-		'hash' => array(
-			'validation' => array('trim', 'max_length' => array(64)),
-		),
 		'shot_at',
 		'created_at',
 		'updated_at'
@@ -81,61 +75,5 @@ class Model_FileTmp extends \Orm\Model
 			->where('name', $name)
 			->where('member_id', $member_id)
 			->get_one();
-	}
-
-	public static function get_enables($member_id, $contents, $hash, $spare_time = 0)
-	{
-		return self::query()
-			->related('file_tmp_config')
-			->where('member_id', $member_id)
-			->where('contents', $contents)
-			->where('created_at', '>', date('Y-m-d H:i:s', time() - Config::get('site.upload.tmp_file.lifetime') - $spare_time))
-			->where('hash', $hash)
-			->order_by('created_at')
-			->get();
-	}
-
-	public static function delete_expired($member_id, $contents)
-	{
-		$query = self::query()
-			->where('member_id', $member_id)
-			->where('contents', $contents)
-			->where('created_at', '<', date('Y-m-d H:i:s', time() - Config::get('site.upload.tmp_file.lifetime')))
-			->order_by('created_at');
-		if ($limit = Config::get('site.upload.tmp_file.delete_record_limit'))
-		{
-			$query = $query->rows_limit($limit);
-		}
-		$objs = $query->get();
-
-		$i = 0;
-		foreach ($objs as $obj)
-		{
-			$filename = $obj->name;
-			$filepath = $obj->path;
-			$obj->delete();
-			$result = Site_Upload::remove_images($filepath, $filename, true);
-			if ($result) $i++;
-		}
-
-		return $i;
-	}
-
-	public static function delete_with_file($id)
-	{
-		if (!$id || !$obj = self::find($id))
-		{
-			throw new \FuelException('Invalid file_tmp id.');
-		}
-
-		\Timeline\Site_Model::delete_timeline('album_image', $id);
-
-		$filename = $obj->name;
-		$filepath = $obj->path;
-		$filesize = $obj->filesize;
-		$obj->delete();
-		Site_Upload::remove_images($filepath, $filename, true);
-
-		return $filesize;
 	}
 }

@@ -19,12 +19,7 @@ $config = array(
 			'default' => '600x600',
 			),
 		'tmp_file' => array(
-			'accepted_contents' => array(
-					'note',
-				),
 			'lifetime' => 60 * 60 * 24,
-			'lifetime_extra_when_posted' => 60 * 60 * 1,
-			'is_delete_olds_when_display' => true,
 			'delete_record_limit' => 100,
 		),
 		'types' => array(
@@ -46,7 +41,6 @@ $config = array(
 						'thumbnail' => '320x320',
 					),
 				),
-				// member profile image
 				'noimage_filename' => 'noimage.gif',
 				'accept_format' => array(
 					'gif' => 'image/gif',
@@ -59,6 +53,7 @@ $config = array(
 					'max_size' => '600x600',
 				),
 				'types' => array(
+					// profile
 					'm' => array(
 						// サイズが小さい順に定義する
 						'sizes' => array(

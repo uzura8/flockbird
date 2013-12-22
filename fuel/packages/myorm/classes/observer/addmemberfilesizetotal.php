@@ -1,6 +1,8 @@
 <?php
 namespace MyOrm;
 
+class LimitUploadFileSizeException extends \FuelException {}
+
 class Observer_AddMemberFilesizeTotal extends \Orm\Observer
 {
 	protected $_model_to;
@@ -32,7 +34,7 @@ class Observer_AddMemberFilesizeTotal extends \Orm\Observer
 		// check filesize_total
 		if ($model->{$this->_property_to} > \Site_Upload::get_accepted_filesize($obj->{$this->_key_from}))
 		{
-			throw new \FuelException('Upload beyond the allowed size.');
+			throw new LimitUploadFileSizeException('File size is over the limit of the member.');
 		}
 
 		$model->save();

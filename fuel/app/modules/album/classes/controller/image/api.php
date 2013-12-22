@@ -150,44 +150,6 @@ class Controller_Image_api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Api get_tmp_images
-	 * 
-	 * @access  public
-	 * @return  Response (html)
-	 */
-	public function get_uploaded_images($contents = null)
-	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-		if (!\Site_Upload::check_is_temp_accepted_contents($contents)) throw new \HttpNotFoundException;
-		if (!$content_id = (int)\Input::get('content_id', 0)) throw new \HttpNotFoundException();
-		// とりあえず note 限定で実装
-		if (!$note = \Note\Model_Note::check_authority($content_id, $this->u->id)) throw new \HttpNotFoundException;
-
-		$response = '';
-		try
-		{
-			// とりあえず note 限定で実装
-			$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($content_id);
-			foreach ($album_images as $key => $album_image)
-			{
-				$get_key  = 'album_image_'.$album_image->id;
-				$get_value = \Input::get($get_key);
-				if (!is_null($get_value)) $album_images[$key]->name = $get_value;
-			}
-			$response = \View::forge('site/_parts/tmp_images', array('is_tmp' => false, 'file_tmps' => $album_images));
-			$status_code = 200;
-
-			return \Response::forge($response, $status_code);
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
-	}
-
-	/**
 	 * Api post_set_cover
 	 * 
 	 * @access  public

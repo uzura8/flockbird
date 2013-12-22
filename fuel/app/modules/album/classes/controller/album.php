@@ -148,7 +148,7 @@ class Controller_Album extends \Controller_Site
 				\Site_FileTmp::check_uploaded_under_accepted_filesize($file_tmps, $this->u->filesize_total, \Site_Upload::get_accepted_filesize());
 
 				\DB::start_transaction();
-				$moved_files = \Site_FileTmp::save_as_album_images($file_tmps, $album->id, $album->public_flag);
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album->id, $album->public_flag);
 				//\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
 				\DB::commit_transaction();
 
@@ -253,7 +253,7 @@ class Controller_Album extends \Controller_Site
 				$album->public_flag = $post['public_flag'];
 				$album->member_id = $this->u->id;
 				$album->save();
-				$moved_files = \Site_FileTmp::save_as_album_images($file_tmps, $album->id, $album->public_flag);
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album->id, $album->public_flag);
 				//\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
 				\DB::commit_transaction();
 
@@ -589,86 +589,6 @@ class Controller_Album extends \Controller_Site
 		}
 
 		\Response::redirect('member/profile/setting_image');
-	}
-
-	/**
-	 * Album upload images
-	 * 
-	 * @access  public
-	 * @return  Response
-	 */
-	public function action_upload_images($album_id = null)
-	{
-		$album_id = (int)$album_id;
-		if (!$album_id || !$album = Model_Album::find($album_id))
-		{
-			throw new \HttpNotFoundException;
-		}
-		//if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
-		//{
-		//	throw new \HttpForbiddenException;
-		//}
-		//\Util_security::check_csrf();
-
-		$file_cate = 'ai';
-		$filepath = \Site_Upload::get_filepath($file_cate, $album_id);
-		$script_url = \Uri::create('album/upload_images/'.$album_id);
-		$options = \Site_Upload::get_upload_handler_options($filepath, $script_url, $file_cate, 'tmp_hash_upload');
-		$upload_handler = new UploadHandler($options);
-
-		$this->response->set_header('Pragma', 'no-cache');
-		$this->response->set_header('Cache-Control', 'no-store, no-cache, must-revalidate');
-		$this->response->set_header('Content-Disposition', 'inline; filename="files.json"');
-		$this->response->set_header('X-Content-Type-Options', 'nosniff');
-		$this->response->set_header('Access-Control-Allow-Origin', '*');
-		$this->response->set_header('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
-		$this->response->set_header('Access-Control-Allow-$response->set_headers', 'X-File-Name, X-File-Type, X-File-Size');
-
-		$body = '';
-		switch (\Input::method()) {
-			case 'OPTIONS':
-				break;
-			case 'HEAD':
-			case 'GET':
-				$body = $upload_handler->get($album_id);
-				$this->response->set_header('Content-type', 'application/json');
-				break;
-			case 'POST':
-				$_method = \Input::post('_method');
-				if (isset($_method) && $_method === 'DELETE') {
-					$body = $upload_handler->delete($this->u->id);
-				}
-				else
-				{
-					\Site_Upload::setup_uploaded_dir($file_cate, $filepath, $options['is_tmp']);
-					if (PRJ_IS_LIMIT_UPLOAD_FILE_SIZE)
-					{
-						$accepted_upload_filesize_type = 'small';// default
-						$upload_handler->accepted_upload_filesize = (int)\Util_string::convert2bytes(\Config::get('site.upload.accepted_filesize.'.$accepted_upload_filesize_type.'.limit'));
-						$upload_handler->member_filesize_total    = $this->u->filesize_total;
-					}
-					$upload_handler->is_save_exif_data = PRJ_USE_EXIF_DATA;
-					$body = $upload_handler->post($album_id, $this->u->id, $options['max_size']);
-					$HTTP_ACCEPT = \Input::server('HTTP_ACCEPT', null);
-					if (isset($HTTP_ACCEPT) && (strpos($HTTP_ACCEPT, 'application/json') !== false))
-					{
-						$this->response->set_header('Content-type', 'application/json');
-					}
-					else
-					{
-						$this->response->set_header('Content-type', 'text/plain');
-					}
-				}
-				break;
-			case 'DELETE':
-				$body = $upload_handler->delete($this->u->id);
-				$this->response->set_header('Content-type', 'application/json');
-				break;
-			default:
-				header('HTTP/1.1 405 Method Not Allowed');
-		}
-
-		return $this->response->body($body);
 	}
 
 	private static function get_val($is_disabled_to_update_public_flag)

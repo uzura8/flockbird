@@ -251,25 +251,4 @@ class Controller_Image extends \Controller_Site
 
 		return \Site_Util::get_form_instance('album_image', $album_image, true, $add_fields, 'button', array(), $disable_fields);
 	}
-
-	/**
-	 * Album_image upload
-	 * 
-	 * @access  public
-	 * @params string 
-	 * @params  integer
-	 * @return  Response
-	 */
-	public function action_upload($contents = null)
-	{
-		if (!\Site_Upload::check_is_temp_accepted_contents($contents)) throw new \HttpNotFoundException;
-		$tmp_hash = \Input::get('tmp_hash', '');
-
-		if ($contents == 'note')
-		{
-			$album = Model_Album::get_album_for_foreign_table($this->u->id, 'note');
-		}
-
-		return \Response::forge(\View::forge('image/upload', array('id' => $album->id, 'album' => $album, 'contents' => $contents, 'tmp_hash' => $tmp_hash)));
-	}
 }

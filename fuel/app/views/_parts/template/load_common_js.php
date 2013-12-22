@@ -1,7 +1,7 @@
 <?php echo Asset::js('jquery-2.0.3.min.js');?>
 <?php echo Asset::js('bootstrap.min.js');?>
 <?php echo Asset::js('bootstrap-modal.js');?>
-<?php echo Asset::js('bootstrap-modalmanager.js');?>
+<?php //echo Asset::js('bootstrap-modalmanager.js');?>
 <?php echo Asset::js('apprise-1.5.min.js');?>
 <?php echo Asset::js('jquery.autogrow-textarea.js');?>
 <?php echo Asset::js('jquery.jgrowl.min.js');?>
