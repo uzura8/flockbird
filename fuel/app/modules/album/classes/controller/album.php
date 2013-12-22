@@ -524,7 +524,6 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpForbiddenException;
 		}
 
-		$is_start_transaction = false;
 		try
 		{
 			$val = \Validation::forge();
@@ -533,13 +532,14 @@ class Controller_Album extends \Controller_Site
 			$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
 				->add_rule('required')
 				->add_rule('in_array', $options);
-			if (!$val->run())
-			{
-				throw new \FuelException($val->show_errors());
-			}
+			if (!$val->run()) throw new \FuelException($val->show_errors());
 			$post = $val->validated();
+
 			\DB::start_transaction();
-			Model_AlbumImage::save_with_file($album_id, $this->u, $post['public_flag']);
+			list($album_image, $file) = Model_AlbumImage::save_with_file($album_id, $this->u, $post['public_flag']);
+
+			// timeline 投稿
+			//\Timeline\Site_Model::save_timeline($this->u->id, null, 'album_image', $album_image->id, null, null, 'album_image');
 			\DB::commit_transaction();
 			\Session::set_flash('message', '写真を投稿しました。');
 		}
