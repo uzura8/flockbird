@@ -178,7 +178,7 @@ class Controller_Note extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を書く', null, $this->u, 'note');
 		$this->template->post_header = \View::forge('_parts/form_header');
-		$this->template->post_footer = \View::forge('_parts/create_footer');
+		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
 	}
 
@@ -262,7 +262,7 @@ class Controller_Note extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
 		$this->template->post_header = \View::forge('_parts/form_header');
-		$this->template->post_footer = \View::forge('_parts/edit_footer');
+		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array(
 			'val' => $val,
 			'note' => $note,

@@ -29,6 +29,10 @@ $(function () {
 		return false;
 	});
 });
+$('.display_fileinput-button').click(function() {
+	$('.display_fileinput-button').remove();
+	$('.fileinput').attr('class', 'fileinput');
+});
 
 function load_file_tmp(get_url, file_name, parent_attr) {
 	var parentDomElement = $(parent_attr);
