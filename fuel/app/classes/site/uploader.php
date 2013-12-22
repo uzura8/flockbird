@@ -44,13 +44,22 @@ class Site_Uploader
 				$exif = exif_read_data($this->file->file_path) ?: null;
 			}
 
+			$is_resaved = false;
+			// 回転状態の補正
+			if ($this->options['auto_orient'] && !empty($exif['Orientation']))
+			{
+				Util_file::correct_orientation($this->file->file_path, $exif['Orientation']);
+				$is_resaved = true;
+			}
+
 			// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
 			$file_size_before = $this->file->size;
 			if ($max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
 			{
 				$this->file->size = Site_Upload::check_max_size_and_resize($this->file->file_path, $max_size);
+				$is_resaved = true;
 			}
-			if (Config::get('site.upload.remove_exif_data') && $file_size_before == $this->file->size)
+			if (Config::get('site.upload.remove_exif_data') && !$is_resaved)
 			{
 				Util_file::resave($this->file->file_path);
 			}

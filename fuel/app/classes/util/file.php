@@ -46,6 +46,52 @@ class Util_file
 		return $image->save($resized_file);
 	}
 
+	public static function correct_orientation($original_file, $exif_orientation_info, $corrected_file = null)
+	{
+		if (!file_exists($original_file))
+		{
+			throw new FuelException('Original file not exists.');
+		}
+		if (!$corrected_file) $corrected_file = $original_file;
+
+		$degrees   = 0;
+		$direction = null;
+		switch ((int)$exif_orientation_info)
+		{
+			case 2:
+				$direction = 'vertical';
+				break;
+				break;
+			case 3:
+				$degrees = 180;
+				break;
+			case 4:
+				$direction = 'horizontal';
+				break;
+			case 5:
+				$degrees = 270;
+				$direction = 'vertical';
+				break;
+			case 6:
+				$degrees = 90;
+				break;
+			case 7:
+				$degrees = 90;
+				$direction = 'vertical';
+				break;
+			case 8:
+				$degrees = 270;
+				break;
+		}
+		if (!$degrees && !$direction) return;
+
+		$image = Image::load($original_file);
+		if ($degrees)   $image->rotate($degrees);
+		if ($direction) $image->flip($direction);
+
+		return $image->save($corrected_file);
+	}
+
 	/**
 	 * use for remove exif.
 	 */
