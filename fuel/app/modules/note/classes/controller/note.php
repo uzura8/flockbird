@@ -102,7 +102,7 @@ class Controller_Note extends \Controller_Site
 		if (!$note->is_published)
 		{
 			$title['label'] = array('name' => \Config::get('term.draft'), 'attr' => 'label-inverse');
-			$header_info = array('title' => sprintf('この%sはまだ公開されていません。',  \Config::get('term.note')), 'body' => '');
+			$header_info = array('body' => sprintf('この%sはまだ公開されていません。',  \Config::get('term.note')));
 		}
 		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
