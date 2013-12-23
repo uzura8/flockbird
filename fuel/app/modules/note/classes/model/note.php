@@ -84,6 +84,7 @@ class Model_Note extends \Orm\Model
 
 	public function delete_with_images()
 	{
+		$deleted_files = array();
 		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			$album_image_ids = array();
@@ -92,9 +93,11 @@ class Model_Note extends \Orm\Model
 				if (empty($album)) $album = $album_image->album;
 				$album_image_ids[] = $album_image->id;
 			}
-			\Album\Model_AlbumImage::delete_multiple($album_image_ids, $album);
+			list($result, $deleted_files) = \Album\Model_AlbumImage::delete_multiple($album_image_ids, $album);
 		}
 		$this->delete();
+
+		return $deleted_files;
 	}
 
 	public function update_public_flag_with_images($public_flag)

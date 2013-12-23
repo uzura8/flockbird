@@ -419,35 +419,31 @@ class Controller_Album extends \Controller_Site
 
 			if (!$error)
 			{
-				$is_db_error   = false;
-				$result        = 0;
-				$deleted_files = array();
-				\DB::start_transaction();
-				if ($is_delete)
+				try
 				{
-					list($is_db_error, $result, $deleted_files) = Model_AlbumImage::delete_multiple($posted_album_image_ids, $album);
-				}
-				else
-				{
-					$result = Model_AlbumImage::update_multiple_each($posted_album_image_ids, $post, $is_disabled_to_update_public_flag);
-				}
-				$message = $result.'件更新しました';
-
-				if ($is_db_error)
-				{
-					\DB::rollback_transaction();
-					\Session::set_flash('error', '更新に失敗しました');
-				}
-				else
-				{
-					\DB::commit_transaction();
-					if ($is_delete && !empty($deleted_files))
+					$result        = 0;
+					$deleted_files = array();
+					\DB::start_transaction();
+					if ($is_delete)
 					{
-						foreach ($deleted_files as $deleted_file) \Site_Upload::remove_images($deleted_file['path'], $deleted_file['name']);
+						list($result, $deleted_files) = Model_AlbumImage::delete_multiple($posted_album_image_ids, $album);
 					}
+					else
+					{
+						$result = Model_AlbumImage::update_multiple_each($posted_album_image_ids, $post, $is_disabled_to_update_public_flag);
+					}
+					$message = $result.'件更新しました';
+					\DB::commit_transaction();
+
+					if ($is_delete && !empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 					\Session::set_flash('message', $message);
 					\Response::redirect('album/edit_images/'.$id);
+				}
+				catch(\FuelException $e)
+				{
+					if (\DB::in_transaction()) \DB::rollback_transaction();
+					Session::set_flash('error', '更新に失敗しました');
 				}
 			}
 			if ($error) \Session::set_flash('error', $error);
@@ -490,14 +486,15 @@ class Controller_Album extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			Model_Album::delete_all($id);
-			\Model_Member::recalculate_filesize_total($this->u->id);
+			$deleted_files = Model_Album::delete_all($album);
 			\DB::commit_transaction();
+			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
+
 			\Session::set_flash('message', \Config::get('term.album').'を削除しました。');
 		}
 		catch(Exception $e)
 		{
-			\DB::rollback_transaction();
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			\Session::set_flash('error', $e->getMessage());
 		}
 

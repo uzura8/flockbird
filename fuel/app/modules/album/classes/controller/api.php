@@ -68,16 +68,16 @@ class Controller_Api extends \Controller_Site_Api
 			}
 
 			\DB::start_transaction();
-			Model_Album::delete_all($id);
-			\Model_Member::recalculate_filesize_total($this->u->id);
+			$deleted_files = Model_Album::delete_all($album);
 			\DB::commit_transaction();
+			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 			$response['status'] = 1;
 			$status_code = 200;
 		}
 		catch(\FuelException $e)
 		{
-			\DB::rollback_transaction();
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 

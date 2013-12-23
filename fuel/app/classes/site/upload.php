@@ -82,6 +82,18 @@ class Site_Upload
 		return true;
 	}
 
+	public static function remove_files(array $files)
+	{
+		$i = 0;
+		foreach ($files as $file)
+		{
+			if (!self::remove_images($file['path'], $file['name'])) continue;
+			$i++;
+		}
+
+		return $i;
+	}
+
 	public static function get_file_cate_from_filepath($filepath)
 	{
 		$parts = explode('/', $filepath);

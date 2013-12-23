@@ -91,11 +91,14 @@ class Model_Album extends \Orm\Model
 		return $obj;
 	}
 
-	public static function delete_all($id)
+	public static function delete_all(Model_Album $album, $id = null)
 	{
-		if (!$id || !$album = self::find($id))
+		if (!$album)
 		{
-			throw new \Exception('Invalid album id.');
+			if (!$id || !$album = self::find($id, array('rows_limit' => 1, 'related' => 'member')))
+			{
+				throw new \Exception('Invalid album id.');
+			}
 		}
 
 		// Delete album_image file.
@@ -105,25 +108,35 @@ class Model_Album extends \Orm\Model
 			->where('album_image.album_id', $id)
 			->execute()->as_array();
 		$file_ids = array();
-		foreach ($files as $file)
+		foreach ($files as $file) $file_ids[] = $file['id'];
+
+		if ($file_ids)
 		{
-			\Site_Upload::remove_images($file['path'], $file['name']);
-			$file_ids[] = $file['id'];
+			// Profile 写真の登録確認&削除
+			if ($album->foreign_table == 'member' && in_array($album->member->file_id, $file_ids))
+			{
+				$album->member->file_id = null;
+				$album->member->save();
+			}
+
+			// Delete table file data.
+			if (!\DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
 		}
 
-		// Delete table file data.
-		if ($file_ids) \DB::delete('file')->where('id', 'in', $file_ids)->execute();
-
 		// Delete table timeline data.
-		$album_image_ids = \Util_db::conv_col(
-			\DB::select('album_image_id')->from('album_image')
-				->where('album_id', $id)
-				->execute()->as_array()
-		);
-		\Timeline\Site_Model::delete_timelines('album_image', $album_image_ids);
+		//$album_image_ids = \Util_db::conv_col(
+		//	\DB::select('album_image_id')->from('album_image')
+		//		->where('album_id', $id)
+		//		->execute()->as_array()
+		//);
+		//\Timeline\Site_Model::delete_timelines('album_image', $album_image_ids);
 
 		// Delete album.
 		$album->delete();
+
+		\Model_Member::recalculate_filesize_total($album->member_id);
+
+		return $files;
 	}
 
 	public static function get_album_for_foreign_table($member_id, $table_name)

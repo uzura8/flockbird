@@ -168,21 +168,12 @@ class Model_AlbumImage extends \Orm\Model
 			$album->member->save();
 		}
 
-		// delete timeline data.
-		\Timeline\Site_Model::delete_timelines('album_image', $ids);
-
-		$is_db_error = false;
-		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) $is_db_error = true;
-		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) $is_db_error = true;
-
-		foreach ($deleted_files as $file)
-		{
-			\Site_Upload::remove_images($file['path'], $file['name']);
-		}
+		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
+		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) throw new \FuelException('Album images delete error.');
 
 		\Model_Member::recalculate_filesize_total($album->member_id);
 
-		return array($is_db_error, $result, $deleted_files);
+		return array($result, $deleted_files);
 	}
 
 	public static function update_multiple_all($ids, $set_value, $is_disabled_to_update_public_flag = false)
