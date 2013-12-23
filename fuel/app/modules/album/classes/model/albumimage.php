@@ -69,6 +69,9 @@ class Model_AlbumImage extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 		'Orm\\Observer_Validation',
+		'MyOrm\Observer_DeleteAlbumImage' => array(
+			'events' => array('after_delete'),
+		),
 	);
 
 	protected static $count_par_album_list = array();
@@ -96,30 +99,6 @@ class Model_AlbumImage extends \Orm\Model
 		if (empty($this->file_id)) return 'ai';
 
 		return \Model_File::get_name($this->file_id);
-	}
-
-	public static function delete_with_file($id)
-	{
-		if (!$id || !$album_image = self::query()->where('id', $id)->related('album')->get_one())
-		{
-			throw new \FuelException('Invalid album_image id.');
-		}
-
-		if ($album_image->album->cover_album_image_id == $id)
-		{
-			$album_image->album->cover_album_image_id = null;
-			$album_image->album->save();
-		}
-		self::check_and_delete_member_profile_image($album_image);
-
-		//\Timeline\Site_Model::delete_timeline('album_image', $id);
-
-		$album_image->file = \Model_File::find($album_image->file_id);
-		$filesize = $album_image->file->filesize;
-		$album_image->file->delete();
-		$album_image->delete();
-
-		return $filesize;
 	}
 
 	public static function get_count4album_id($album_id)
@@ -261,15 +240,5 @@ class Model_AlbumImage extends \Orm\Model
 		}
 
 		return $result;
-	}
-
-	// Profile 写真の登録確認&削除
-	public static function check_and_delete_member_profile_image($album_image)
-	{
-		if ($album_image->album->foreign_table == 'member' && $album_image->album->member->file_id == $album_image->file_id)
-		{
-			$album_image->album->member->file_id = null;
-			$album_image->album->member->save();
-		}
 	}
 }

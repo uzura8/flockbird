@@ -185,13 +185,7 @@ class Controller_Member_profile extends Controller_Member
 			DB::start_transaction();
 			if ($save_as_album_image)
 			{
-				$file_id = $album_image->file_id;
-				\Album\Model_AlbumImage::delete_with_file($album_image->id);
-				if ($file_id == $this->u->file_id)
-				{
-					$this->u->file_id = null;
-					$this->u->save();
-				}
+				$album_image->delete();
 			}
 			else
 			{

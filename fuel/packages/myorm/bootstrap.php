@@ -10,6 +10,7 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_UpdateRelationalTable' => __DIR__.'/classes/observer/updaterelationaltable.php',
 	'MyOrm\\Observer_AddMemberFilesizeTotal' => __DIR__.'/classes/observer/addmemberfilesizetotal.php',
 	'MyOrm\\Observer_SubtractMemberFilesizeTotal' => __DIR__.'/classes/observer/subtractmemberfilesizetotal.php',
+	'MyOrm\\Observer_DeleteAlbumImage' => __DIR__.'/classes/observer/deletealbumimage.php',
 ));
 
 /* End of file bootstrap.php */

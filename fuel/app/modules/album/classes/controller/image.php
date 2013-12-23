@@ -213,7 +213,7 @@ class Controller_Image extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			$deleted_filesize = Model_AlbumImage::delete_with_file($id);
+			$album_image->delete();
 			\DB::commit_transaction();
 
 			\Session::set_flash('message', \Config::get('term.album_image').'を削除しました。');

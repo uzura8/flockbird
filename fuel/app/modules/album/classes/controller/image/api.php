@@ -217,7 +217,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			}
 
 			\DB::start_transaction();
-			$deleted_filesize = Model_AlbumImage::delete_with_file($id);
+			$album_image->delete();
 			\DB::commit_transaction();
 
 			$response['status'] = 1;
