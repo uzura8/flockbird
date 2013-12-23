@@ -48,9 +48,11 @@ class Util_db
 		return $model::query()->where($field, $value)->count() > 0;
 	}
 
-	public static function get4ids($table, $values, $field = 'id')
+	public static function get4ids($table, $values, $field = 'id', $namespace = null)
 	{
-		$model = 'Model_'.Inflector::camelize($table);
+		$model = '';
+		if ($namespace) $model .= "\\".$namespace;
+		$model .= '\Model_'.Inflector::camelize($table);
 
 		return $model::query()->where($field, 'in', $values)->get();
 	}

@@ -12,7 +12,7 @@ class MyUploadHandler extends UploadHandler
 		{
 			$file = $this->get_file_object($file_tmp->name);
 			$file->is_tmp   = true;
-			$file->file_tmp_id   = $file_tmp->id;
+			$file->id   = $file_tmp->id;
 			$file->original_name = $file_tmp->original_filename;
 			$file->thumbnail_uri = $thumbnail_dir_uri.$file_tmp->name;
 			$file->description   = $file_tmp->description;

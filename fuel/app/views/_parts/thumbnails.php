@@ -5,7 +5,7 @@
 	<div class="col-sm-<?php echo $col_num; ?>">
 <?php
 $file_cate = !empty($images['file_cate']) ? $images['file_cate'] : 'ai';
-if ($file_cate == 'ai')
+if ($file_cate == 'ai' && $image)
 {
 	$file_obj = $image->file;
 	$size = 'M';
@@ -15,7 +15,7 @@ if ($file_cate == 'ai')
 }
 else
 {
-	$file_obj  = $image;
+	$file_obj = $image;
 	$file_cate = 'm';
 	$size = 'LL';
 	$link_uri = '';

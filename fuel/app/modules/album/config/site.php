@@ -10,6 +10,7 @@ return array(
 						'sizes' => array(
 							'S' => '80x80',
 							'M' => '220x220',
+							'N_M' => '400x300xc',
 							'L' => '600x600',
 							'thumbnail' => '320x320xc',
 						),

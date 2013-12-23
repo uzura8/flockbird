@@ -30,6 +30,9 @@ class Site_Util
 			case \Config::get('timeline.types.note'):// note 投稿
 				return \Config::get('term.note').'を投稿しました。';
 				break;
+			case \Config::get('timeline.types.album'):// note 投稿
+				return \Config::get('term.album').'を作成しました。';
+				break;
 			default :
 				break;
 		}
@@ -41,6 +44,7 @@ class Site_Util
 	{
 		$accept_types = array();
 		$accept_types[] = \Config::get('timeline.types.note');
+		$accept_types[] = \Config::get('timeline.types.album');
 		if (!in_array($type, $accept_types)) return null;
 
 		$title = array('value' => '', 'truncate_count' => 0);
@@ -55,6 +59,14 @@ class Site_Util
 				$body['value'] = $note->body;
 				$body['truncate_count'] = \Config::get('timeline.articles.truncate_lines.body');
 				$read_more_uri = 'note/'.$note->id;
+				break;
+			case \Config::get('timeline.types.album'):// note 投稿
+				$album = \Album\Model_Album::find($foreign_id);
+				$title['value'] = $album->name;
+				$title['truncate_count'] = \Config::get('site.view_params_default.list.trim_width.title');
+				$body['value'] = $album->body;
+				$body['truncate_count'] = \Config::get('timeline.articles.truncate_lines.body');
+				$read_more_uri = 'album/'.$album->id;
 				break;
 			default :
 				break;
@@ -93,6 +105,21 @@ class Site_Util
 				break;
 			case \Config::get('timeline.types.note'):
 				return 'note';
+				break;
+			case \Config::get('timeline.types.album'):
+				return 'album';
+				break;
+		}
+
+		return null;
+	}
+
+	public static function get_child_foreign_table_from_type($type)
+	{
+		switch ($type)
+		{
+			case \Config::get('timeline.types.album'):
+				return 'album_image';
 				break;
 		}
 
@@ -134,11 +161,12 @@ class Site_Util
 		return $prefix.$common_path;
 	}
 
-	public static function get_timeline_images($type, $foreign_table, $foreign_id)
+	public static function get_timeline_images($type, $foreign_table, $foreign_id, $timeline_id = null)
 	{
 		$accept_types = array();
 		$accept_types[] = \Config::get('timeline.types.profile_image');
 		$accept_types[] = \Config::get('timeline.types.note');
+		$accept_types[] = \Config::get('timeline.types.album');
 		if (!in_array($type, $accept_types)) return null;
 
 		$images = array();
@@ -161,10 +189,16 @@ class Site_Util
 		}
 		elseif ($type == \Config::get('timeline.types.note') && $foreign_table == 'note')
 		{
-			$images['list']   = array();
-			$images['list'] = \Note\Model_NoteAlbumImage::get_album_image4note_id($foreign_id, 3);
+			$images['list'] = \Note\Model_NoteAlbumImage::get_album_image4note_id($foreign_id, \Config::get('timeline.articles.thumbnail.limit'));
 			$images['file_cate']        = 'ai';
 			$images['additional_table'] = 'note';
+			$images['size']             = 'N_M';
+			$images['column_count']     = 3;
+		}
+		elseif ($type == \Config::get('timeline.types.album') && $foreign_table == 'album')
+		{
+			$images['list'] = \Album\Model_AlbumImage::get4ids(Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id), \Config::get('timeline.articles.thumbnail.limit'));
+			$images['file_cate']        = 'ai';
 			$images['size']             = 'N_M';
 			$images['column_count']     = 3;
 		}

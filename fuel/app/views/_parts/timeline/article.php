@@ -16,7 +16,7 @@ $data = array(
 	'size'    => 'M',
 	'date'    => array('datetime' => $timeline->created_at),
 	'content' => \Timeline\Site_Util::get_timeline_body($timeline->type, $timeline->body),
-	'images'  => \Timeline\Site_Util::get_timeline_images($timeline->type, $timeline->foreign_table, $timeline->foreign_id),
+	'images'  => \Timeline\Site_Util::get_timeline_images($timeline->type, $timeline->foreign_table, $timeline->foreign_id, $timeline->id),
 	'comment' => $comment,
 	'model'   => 'timeline',
 	'id'      => $timeline->id,

@@ -114,7 +114,7 @@ class Site_Model
 		);
 	}
 
-	public static function save_timeline($member_id, $public_flag = null, $type_key = null, $foreign_id = null,  $body = null, Model_Timeline $timeline = null, $foreign_table = null)
+	public static function save_timeline($member_id, $public_flag = null, $type_key = null, $foreign_id = null,  $body = null, Model_Timeline $timeline = null, $foreign_table = null, $child_foreign_ids = array())
 	{
 		if (is_null($public_flag)) $public_flag = \Config::get('site.public_flag.default');
 		$type = $type_key ? \Config::get('timeline.types.'.$type_key) : \Config::get('timeline.types.normal');
@@ -130,8 +130,13 @@ class Site_Model
 			$timeline->foreign_id = $foreign_id;
 		}
 		if (!is_null($body)) $timeline->body = $body;
-
 		$timeline->save();
+
+		if (in_array($type_key, array('album')) && $child_foreign_ids)
+		{
+			$child_foreign_table = Site_Util::get_child_foreign_table_from_type($type);
+			Model_TimelineChildData::save_multiple($timeline->id, $child_foreign_table, $child_foreign_ids);
+		}
 
 		return $timeline;
 	}

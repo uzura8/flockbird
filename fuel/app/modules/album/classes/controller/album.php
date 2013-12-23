@@ -254,13 +254,13 @@ class Controller_Album extends \Controller_Site
 				$album->member_id = $this->u->id;
 				$album->save();
 				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album->id, $album->public_flag);
-				//\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
+				\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'album', $album->id, null, null, null, $album_image_ids);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
-				$message = sprintf('%sを作成しました。', \Config::get('term.album_image'));
+				$message = sprintf('%sを作成しました。', \Config::get('term.album'));
 				\Session::set_flash('message', $message);
 				\Response::redirect('album/detail/'.$album->id);
 			}

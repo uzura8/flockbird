@@ -16,12 +16,16 @@ return array(
 			'limit_max' => 20,
 			'trim_width' => 200,
 		),
+		'thumbnail' => array(
+			'limit' => 3,
+		),
 	),
 	'types' => array(
 		'normal' => 1,
 		'member_register' => 2,
 		'profile_image' => 3,
 		'note' => 4,
+		'album' => 5,
 	),
 	'follow_timeline_limit_max' => 10,
 	'display_setting' => array(
