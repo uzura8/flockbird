@@ -2,7 +2,7 @@
 	<?php echo Form::label(Config::get('term.public_flag.label').'<span class="required">*</span>', 'public_flag', array('class' => 'control-label col-sm-2')); ?>
 	<div class="col-sm-10">
 <?php if ($with_no_change_option): ?>
-		<div class="checkbox">
+		<div class="radio">
 		<?php echo Form::radio('public_flag', 99, is_null(Input::post('public_flag')) || Input::post('public_flag') == 99, array('id' => 'form_public_flag_99')); ?>
 		<?php echo Form::label('変更しない', 'public_flag_99'); ?>
 		</div>
