@@ -111,6 +111,16 @@ class Model_AlbumImage extends \Orm\Model
 		return self::$count_par_album_list[$album_id];
 	}
 
+	public static function get_list($album_id)
+	{
+		if (!empty(self::$count_par_album_list[$album_id])) return self::$count_par_album_list[$album_id];
+
+		$query = self::query()->where('album_id', $album_id);
+		self::$count_par_album_list[$album_id] = $query->count();
+
+		return self::$count_par_album_list[$album_id];
+	}
+
 	public static function get_ids4album_id($album_id, $order_by = 'id')
 	{
 		$result = \DB::select('id')->from('album_image')->where('album_id', $album_id)->order_by($order_by, 'asc')->execute()->as_array();
@@ -125,6 +135,8 @@ class Model_AlbumImage extends \Orm\Model
 		$query = self::query()
 			->related(array('album', 'file'))
 			->where('id', 'in', $album_image_ids);
+
+		$count_all = $query->count();
 
 		if ($sort)
 		{

@@ -193,4 +193,23 @@ class Site_Model
 
 		return array('list' => $list, 'page' => $page, 'is_next' => $is_next);
 	}
+
+	public static function get_list_and_count($table, $params = array(), $namespace = '')
+	{
+		$query = self::get_list_query($table, $params, $namespace);
+		$count_all = $query->count();
+
+		if (!empty($params['limit']))
+		{
+			$query = $query->rows_limit($params['limit']);
+		}
+		if (!empty($params['offset']))
+		{
+			$query = $query->rows_offset($params['offset']);
+		}
+		$list = $query->get();
+		$count = count($list);
+
+		return array('list' => $list, 'count' => $count, 'count_all' => $count_all);
+	}
 }

@@ -39,16 +39,10 @@
 	'child_model' => 'album_image',
 )); ?>
 <?php endif; ?>
-
+<?php $album_image_count = (int)\Album\Model_AlbumImage::get_count4album_id($album->id); ?>
 			<div class="article">
 				<div class="body"><?php echo nl2br(strim($album->body, \Config::get('album.articles.trim_width.body'))) ?></div>
-				<small>
-<?php if ($album_image_count = (int)\Album\Model_AlbumImage::get_count4album_id($album->id)): ?>
-				<?php echo Html::anchor('album/slide/'.$album->id.'#slidetop', '<i class="icon-picture"></i> '.$album_image_count.' 枚'); ?>
-<?php else: ?>
-				<i class="icon-picture"></i> 0 枚
-<?php endif; ?>
-				</small>
+				<small><?php echo render('_parts/image_count_link', array('count' => $album_image_count, 'uri' => 'album/slide/'.$album->id.'#slidetop')); ?></small>
 <?php if (!$disable_to_update && Auth::check() && $album->member_id == $u->id): ?>
 					<div class="btn_album_edit btn-group" data-toggle="dropdown" id="btn_album_edit_<?php echo $album->id ?>">
 <?php if (\Config::get('album.display_setting.member.display_delete_link')): ?>

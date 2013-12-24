@@ -53,7 +53,7 @@ class Model_NoteAlbumImage extends \Orm\Model
 		return $note_album_image_ids;
 	}
 
-	public static function get_album_image4note_id($note_id, $limit = 0, $sort = array('id' => 'asc'))
+	public static function get_album_image4note_id($note_id, $limit = 0, $sort = array('id' => 'asc'), $with_count_all = false)
 	{
 		$album_image_ids = \Util_db::conv_col(\DB::select('album_image_id')->from('note_album_image')->where('note_id', $note_id)->execute()->as_array());
 		if (!$album_image_ids) return array();
@@ -61,6 +61,8 @@ class Model_NoteAlbumImage extends \Orm\Model
 		$query = \Album\Model_AlbumImage::query()
 			->related(array('album', 'file'))
 			->where(array('id', 'in', $album_image_ids));
+
+		if ($with_count_all) $count_all = $query->count();
 
 		if ($sort)
 		{
@@ -70,7 +72,8 @@ class Model_NoteAlbumImage extends \Orm\Model
 			}
 		}
 		if ($limit) $query->rows_limit($limit);
+		$list = $query->get();
 
-		return $query->get();
+		return $with_count_all ? array($list, $count_all) : $list;
 	}
 }

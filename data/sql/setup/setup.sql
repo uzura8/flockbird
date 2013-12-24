@@ -1034,9 +1034,11 @@ DROP TABLE IF EXISTS `timeline_child_data`;
 CREATE TABLE `timeline_child_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timeline_id` int(11) NOT NULL,
+  `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
+  KEY `foreign_table_foreign_id_idx` (`foreign_table`,`foreign_id`),
   CONSTRAINT `timeline_child_data_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

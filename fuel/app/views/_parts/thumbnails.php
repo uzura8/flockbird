@@ -33,4 +33,7 @@ echo img($file_obj, img_size($file_cate, $size, $additional_table), $link_uri, $
 	</div>
 <?php endforeach; ?>
 </div>
+<?php if (isset($images['parent_page_uri'])): ?>
+<div><?php echo render('_parts/image_count_link', array('count' => $images['count_all'], 'uri' => $images['parent_page_uri'])); ?></div>
+<?php endif; ?>
 <?php endif; ?>

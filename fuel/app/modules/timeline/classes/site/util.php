@@ -161,12 +161,13 @@ class Site_Util
 		return $prefix.$common_path;
 	}
 
-	public static function get_timeline_images($type, $foreign_table, $foreign_id, $timeline_id = null)
+	public static function get_timeline_images($type, $foreign_table, $foreign_id, $timeline_id = null, $target_member_id = null, $self_member_id = null)
 	{
-		$accept_types = array();
-		$accept_types[] = \Config::get('timeline.types.profile_image');
-		$accept_types[] = \Config::get('timeline.types.note');
-		$accept_types[] = \Config::get('timeline.types.album');
+		$accept_types = array(
+			\Config::get('timeline.types.profile_image'),
+			\Config::get('timeline.types.note'),
+			\Config::get('timeline.types.album'),
+		);
 		if (!in_array($type, $accept_types)) return null;
 
 		$images = array();
@@ -189,18 +190,34 @@ class Site_Util
 		}
 		elseif ($type == \Config::get('timeline.types.note') && $foreign_table == 'note')
 		{
-			$images['list'] = \Note\Model_NoteAlbumImage::get_album_image4note_id($foreign_id, \Config::get('timeline.articles.thumbnail.limit'));
+			list($images['list'], $images['count_all']) = \Note\Model_NoteAlbumImage::get_album_image4note_id(
+				$foreign_id,
+				\Config::get('timeline.articles.thumbnail.limit'),
+				array('id' => 'asc'),
+				true
+			);
 			$images['file_cate']        = 'ai';
 			$images['additional_table'] = 'note';
 			$images['size']             = 'N_M';
 			$images['column_count']     = 3;
+			$images['parent_page_uri']  = 'note/'.$foreign_id;
 		}
 		elseif ($type == \Config::get('timeline.types.album') && $foreign_table == 'album')
 		{
-			$images['list'] = \Album\Model_AlbumImage::get4ids(Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id), \Config::get('timeline.articles.thumbnail.limit'));
+			$images = \Site_Model::get_list_and_count('album_image', array(
+				'where'    => \Site_Model::get_where_params4list(
+					$target_member_id,
+					$self_member_id,
+					($self_member_id && $target_member_id == $self_member_id),
+					array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
+				),
+				'limit'    => \Config::get('timeline.articles.thumbnail.limit'),
+				'order_by' => array('created_at' => 'asc'),
+			), 'Album');
 			$images['file_cate']        = 'ai';
 			$images['size']             = 'N_M';
 			$images['column_count']     = 3;
+			$images['parent_page_uri']  = 'album/'.$foreign_id;
 		}
 
 		return $images;
