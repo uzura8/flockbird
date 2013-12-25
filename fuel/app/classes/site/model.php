@@ -102,7 +102,7 @@ class Site_Model
 
 		if ($self_member_id)
 		{
-			if (($target_member_id && $target_member_id != $self_member_id) || !$target_member_id || !$is_myapge)
+			if (($target_member_id && $target_member_id != $self_member_id) || !$is_myapge)
 			{
 				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
 			}
