@@ -114,27 +114,25 @@ class Site_Model
 		);
 	}
 
-	public static function save_timeline($member_id, $public_flag = null, $type_key = null, $foreign_id = null,  $body = null, Model_Timeline $timeline = null, $foreign_table = null, $child_foreign_ids = array())
+	public static function save_timeline($member_id, $public_flag = null, $type_key = null, $foreign_id = null,  $body = null, Model_Timeline $timeline = null, $child_foreign_ids = array())
 	{
-		if (is_null($public_flag)) $public_flag = \Config::get('site.public_flag.default');
-		$type = $type_key ? \Config::get('timeline.types.'.$type_key) : \Config::get('timeline.types.normal');
-		if (!$foreign_table) $foreign_table = Site_Util::get_foreign_table_from_type($type);
+		list($type, $foreign_table, $child_foreign_table) = Site_Util::get_timeline_save_values($type_key);
+		if (!$timeline) $timeline = Site_Util::get_timeline_object($type_key, $foreign_id);
+		$is_new = empty($timeline->id) ? true : false;
 
-		if (!$timeline) $timeline = Model_Timeline::forge();
-		$timeline->member_id = $member_id;
-		$timeline->type = $type;
-		$timeline->public_flag = $public_flag;
-		if ($foreign_table && $foreign_id)
+		if ($is_new)
 		{
+			$timeline->member_id = $member_id;
+			$timeline->type = $type;
+			$timeline->public_flag = is_null($public_flag) ? \Config::get('site.public_flag.default') : $public_flag;
 			$timeline->foreign_table = $foreign_table;
 			$timeline->foreign_id = $foreign_id;
+			if (!is_null($body)) $timeline->body = $body;
 		}
-		if (!is_null($body)) $timeline->body = $body;
 		$timeline->save();
 
-		if (in_array($type_key, array('album')) && $child_foreign_ids)
+		if ($child_foreign_ids)
 		{
-			$child_foreign_table = Site_Util::get_child_foreign_table_from_type($type);
 			Model_TimelineChildData::save_multiple($timeline->id, $child_foreign_table, $child_foreign_ids);
 		}
 

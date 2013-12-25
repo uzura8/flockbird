@@ -992,7 +992,8 @@ CREATE TABLE `timeline` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `sort_datetime` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `foreign_table_foreign_id_created_at_idx` (`foreign_table`,`foreign_id`,`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

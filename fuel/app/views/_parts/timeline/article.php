@@ -18,7 +18,6 @@ $data = array(
 	'content' => \Timeline\Site_Util::get_timeline_body($timeline->type, $timeline->body),
 	'images'  => \Timeline\Site_Util::get_timeline_images(
 		$timeline->type,
-		$timeline->foreign_table,
 		$timeline->foreign_id,
 		$timeline->id,
 		$timeline->member_id,
@@ -32,7 +31,7 @@ $data = array(
 	'list_more_box_attrs' => array('data-get_uri' => $comment_get_uri),
 	'post_comment_button_attrs' => array(
 		'data-get_uri' => $comment_get_uri,
-		'data-post_parent_id' => \Timeline\Site_Util::get_comment_parent_id($timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id),
+		'data-post_parent_id' => \Timeline\Site_Util::get_comment_parent_id($timeline->type, $timeline->id, $timeline->foreign_id),
 		'data-post_uri' => \Timeline\Site_Util::get_comment_api_uri($timeline->type, $timeline->foreign_table, true),
 	),
 );

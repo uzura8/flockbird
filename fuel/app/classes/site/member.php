@@ -12,7 +12,7 @@ class Site_Member
 			$member->file_id = $album_image->file->id;
 			$member->save();
 
-			$foreign_table = 'album_image';
+			$type_key = 'album_image_profile';
 			$foreign_id = $album_image->id;
 		}
 		else
@@ -29,11 +29,11 @@ class Site_Member
 			// 古いファイルの削除
 			$deleted_filesize = (int)Model_File::delete_with_timeline($old_file_id);
 
-			$foreign_table = 'file';
+			$type_key = 'profile_image';
 			$foreign_id = $file->id;
 		}
 		// timeline 投稿
-		\Timeline\Site_Model::save_timeline($member->id, null, 'profile_image', $foreign_id, null, null, $foreign_table);
+		\Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, $type_key, $foreign_id);
 
 		return $file;
 	}

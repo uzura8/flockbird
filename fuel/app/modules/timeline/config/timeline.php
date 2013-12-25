@@ -26,8 +26,14 @@ return array(
 		'profile_image' => 3,
 		'note' => 4,
 		'album' => 5,
+		'album_image' => 6,
+		'album_image_profile' => 7,
+		'album_image_timeline' => 8,
 	),
-	'follow_timeline_limit_max' => 10,
+	'periode_to_update' => array(
+		'album' => '1 minute',
+		//'album' => '3 day',
+	),
 	'display_setting' => array(
 	),
 );

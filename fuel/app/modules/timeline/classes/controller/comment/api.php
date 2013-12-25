@@ -81,7 +81,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			$this->check_public_flag($timeline->public_flag, $timeline->member_id);
 
 			// validation
-			if (!Site_Util::check_accepted_type_for_post_comment($timeline->type, $timeline->foreign_table))
+			if (Site_Util::check_type_for_post_foreign_table_comment($timeline->type))
 			{
 				throw new \HttpInvalidInputException;
 			}

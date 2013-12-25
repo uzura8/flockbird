@@ -214,4 +214,17 @@ class Model_Timeline extends \Orm\Model
 
 		return $obj;
 	}
+
+	public static function get4latest_foreign_data($foreign_table, $foreign_id, $since_datetime = null)
+	{
+		$query = self::query()
+			->where('foreign_table', $foreign_table)
+			->where('foreign_id', $foreign_id);
+
+		if ($since_datetime) $query = $query->where('created_at', '>', $since_datetime);
+
+		return $query->order_by('created_at', 'desc')
+			->rows_limit(1)
+			->get_one();
+	}
 }

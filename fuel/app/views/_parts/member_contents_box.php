@@ -63,7 +63,7 @@ if (isset($public_flag, $model, $id))
 <?php if (!empty($comment)): ?>
 <?php $parent = $comment['parent_obj'] ?>
 <div class="comment_info">
-	<small><i class="icon-comment"></i> <span id="comment_count_<?php echo $parent->id; ?>"><?php echo $comment['all_comment_count']; ?><span></small>
+	<small><span class="glyphicon glyphicon-comment"></span> <span id="comment_count_<?php echo $parent->id; ?>"><?php echo $comment['all_comment_count']; ?><span></small>
 <?php if (Auth::check()): ?>
 	<small><?php echo Html::anchor('#', 'コメントする', array('class' => 'link_comment', 'data-id' => $parent->id)); ?></small>
 <?php endif; ?>
