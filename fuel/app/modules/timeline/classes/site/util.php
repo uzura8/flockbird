@@ -56,62 +56,72 @@ class Site_Util
 	}
 
 
-	public static function get_timeline_body($type, $body = null)
+	public static function get_timeline_body($type, $body = null, $foreign_table_obj = null, array $optional_info = null)
 	{
+		$is_safe = false;
 		switch ($type)
 		{
 			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
-				return $body;
 				break;
 			case \Config::get('timeline.types.member_register'):// SNS への参加
-				return PRJ_SITE_NAME.' に参加しました。';
+				$body = PRJ_SITE_NAME.' に参加しました。';
 				break;
 			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				return \Config::get('term.profile').'写真を設定しました。';
+				$body = \Config::get('term.profile').'写真を設定しました。';
 				break;
 			case \Config::get('timeline.types.note'):// note 投稿
-				return \Config::get('term.note').'を投稿しました。';
+				$body = \Config::get('term.note').'を投稿しました。';
 				break;
-			case \Config::get('timeline.types.album'):// note 投稿
-				return \Config::get('term.album').'を作成しました。';
+			case \Config::get('timeline.types.album'):// album 作成
+				$body = \Config::get('term.album').'を作成しました。';
+				break;
+			case \Config::get('timeline.types.album_image'):// album_image 投稿
+				$is_safe = true;
+				$body = render('_parts/timeline/body_for_add_album_image', array(
+					'album_id' => $foreign_table_obj->id,
+					'name' => $foreign_table_obj->name,
+					'count' => isset($optional_info['count']) ? $optional_info['count'] : 0,
+				));
+				break;
+			case \Config::get('timeline.types.album_image_timeline'):
+				$body = null;
 				break;
 			default :
 				break;
 		}
 
-		return $body;
+		return array($body, $is_safe);
 	}
 
-	public static function get_quote_article($type, $foreign_table, $foreign_id)
+	public static function get_quote_article($type, $foreign_table_obj)
 	{
-		$accept_types = array();
-		$accept_types[] = \Config::get('timeline.types.note');
-		$accept_types[] = \Config::get('timeline.types.album');
+		$accept_types = array(
+			\Config::get('timeline.types.note'),
+			\Config::get('timeline.types.album'),
+		);
 		if (!in_array($type, $accept_types)) return null;
 
-		$title = array('value' => '', 'truncate_count' => 0);
-		$body  = array('value' => '', 'truncate_count' => 0, 'truncate_type' => 'line');
+		$title = array(
+			'value' => '',
+			'truncate_count' => \Config::get('site.view_params_default.list.trim_width.title')
+		);
+		$body = array(
+			'value' => $foreign_table_obj->body,
+			'truncate_count' => \Config::get('timeline.articles.truncate_lines.body'),
+			'truncate_type' => 'line'
+		);
 		$read_more_uri  = '';
+
 		switch ($type)
 		{
-			case \Config::get('timeline.types.note'):// note 投稿
-				$note = \Note\Model_Note::find($foreign_id);
-				$title['value'] = $note->title;
-				$title['truncate_count'] = \Config::get('site.view_params_default.list.trim_width.title');
-				$body['value'] = $note->body;
-				$body['truncate_count'] = \Config::get('timeline.articles.truncate_lines.body');
-				$read_more_uri = 'note/'.$note->id;
+			case \Config::get('timeline.types.note'):
+				$title['value'] = $foreign_table_obj->title;
+				$read_more_uri = 'note/'.$foreign_table_obj->id;
 				break;
-			case \Config::get('timeline.types.album'):// note 投稿
-				$album = \Album\Model_Album::find($foreign_id);
-				$title['value'] = $album->name;
-				$title['truncate_count'] = \Config::get('site.view_params_default.list.trim_width.title');
-				$body['value'] = $album->body;
-				$body['truncate_count'] = \Config::get('timeline.articles.truncate_lines.body');
-				$read_more_uri = 'album/'.$album->id;
-				break;
-			default :
+			case \Config::get('timeline.types.album'):
+				$title['value'] = $foreign_table_obj->name;
+				$read_more_uri = 'album/'.$foreign_table_obj->id;
 				break;
 		}
 
@@ -162,14 +172,6 @@ class Site_Util
 
 	public static function get_timeline_images($type, $foreign_id, $timeline_id = null, $target_member_id = null, $self_member_id = null)
 	{
-		$accept_types = array(
-			\Config::get('timeline.types.album_image_profile'),
-			\Config::get('timeline.types.profile_image'),
-			\Config::get('timeline.types.note'),
-			\Config::get('timeline.types.album'),
-		);
-		if (!in_array($type, $accept_types)) return null;
-
 		$images = array();
 		switch ($type)
 		{
@@ -205,7 +207,8 @@ class Site_Util
 				break;
 
 			case \Config::get('timeline.types.album'):
-				$images = \Site_Model::get_list_and_count('album_image', array(
+			case \Config::get('timeline.types.album_image'):
+				list($images['list'], $images['count_all']) = \Site_Model::get_list_and_count('album_image', array(
 					'where'    => \Site_Model::get_where_params4list(
 						$target_member_id,
 						$self_member_id,
@@ -215,6 +218,7 @@ class Site_Util
 					'limit'    => \Config::get('timeline.articles.thumbnail.limit'),
 					'order_by' => array('created_at' => 'asc'),
 				), 'Album');
+				$images['count_all'] = (int)\Album\Model_AlbumImage::get_count4album_id($foreign_id);
 				$images['file_cate']        = 'ai';
 				$images['size']             = 'N_M';
 				$images['column_count']     = 3;
@@ -230,7 +234,7 @@ class Site_Util
 
 	public static function get_timeline_object($type_key, $foreign_id)
 	{
-		if ($type_key == 'album')
+		if ($type_key == 'album' || $type_key == 'album_image')
 		{
 			$since_datetime = date('Y-m-d H:i:s', strtotime('- '.\Config::get('timeline.periode_to_update.album')));
 			if ($timeline = Model_Timeline::get4latest_foreign_data('album', $foreign_id, $since_datetime))

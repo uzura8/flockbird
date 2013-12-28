@@ -105,6 +105,8 @@ img.profile_image {
 
 .timelineBox .content .main {
 	padding-right: 5px;
+	word-break: break-all;
+	word-wrap: break-word;
 }
 #article_list .timelineBox .member_img_box_m {
 	min-height: 55px;

@@ -87,20 +87,33 @@ class Site_Model
 		return array($list, $is_next);
 	}
 
-	public static function get_comments($type, $timeline_id, $foreign_table = '', $foreign_id = 0, $limit = 0)
+	public static function get_comments($type, $timeline_id, $foreign_id = 0, $limit = 0)
 	{
 		if (!$limit) $limit = \Config::get('timeline.articles.comment.limit');
+		switch ($type)
+		{
+			case \Config::get('timeline.types.note'):// note 投稿
+				return \Note\Model_NoteComment::get_comments($foreign_id, $limit);
 
-		if ($type == \Config::get('timeline.types.note'))
-		{
-			return \Note\Model_NoteComment::get_comments($foreign_id, $limit);
-		}
-		elseif ($type == \Config::get('timeline.types.profile_image') && $foreign_table == 'album_image')
-		{
-			return \Album\Model_AlbumImageComment::get_comments($foreign_id, $limit);
+			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
+				return \Album\Model_AlbumImageComment::get_comments($foreign_id, $limit);
 		}
 
 		return Model_TimelineComment::get_comments($timeline_id, $limit);;
+	}
+
+	public static function get_foreign_table_obj($type, $foreign_id)
+	{
+		switch ($type)
+		{
+			case \Config::get('timeline.types.note'):
+				return \Note\Model_Note::find($foreign_id);
+			case \Config::get('timeline.types.album'):
+			case \Config::get('timeline.types.album_image'):
+				return \Album\Model_Album::find($foreign_id);
+		}
+
+		return null;
 	}
 
 	public static function get_follow_timeline_ids($member_id)

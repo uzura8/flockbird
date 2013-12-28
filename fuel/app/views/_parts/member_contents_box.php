@@ -12,20 +12,22 @@ $img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 <?php
 if (isset($content) && strlen($content))
 {
-	if (!empty($truncate_lines))
+	if (empty($is_output_raw_content))
 	{
-		if (empty($read_more_uri)) $read_more_uri = '';
-		$content = truncate_lines($content, $truncate_lines, $read_more_uri);
+		if (!empty($truncate_lines))
+		{
+			if (empty($read_more_uri)) $read_more_uri = '';
+			$content = truncate_lines($content, $truncate_lines, $read_more_uri);
+		}
+		elseif (!empty($trim_width))
+		{
+			$content = strim($content, $trim_width);
+		}
+		elseif (!empty($is_convert_nl2br) && $is_convert_nl2br === true)
+		{
+			$content = nl2br($content);
+		}
 	}
-	elseif (!empty($trim_width))
-	{
-		$content = strim($content, $trim_width);
-	}
-	elseif (!empty($is_convert_nl2br) && $is_convert_nl2br === true)
-	{
-		$content = nl2br($content);
-	}
-
 	echo $content;
 }
 ?>

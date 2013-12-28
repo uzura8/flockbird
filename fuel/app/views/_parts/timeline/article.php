@@ -1,5 +1,5 @@
 <?php
-list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_table, $timeline->foreign_id);
+list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id);
 $comment = array(
 	'list' => $list,
 	'is_all_records' => $is_all_records,
@@ -11,18 +11,18 @@ $comment = array(
 
 <?php
 $comment_get_uri = \Timeline\Site_Util::get_comment_api_uri($timeline->type, $timeline->foreign_table, false, $timeline->id, $timeline->foreign_id);
+$images = \Timeline\Site_Util::get_timeline_images(
+	$timeline->type,
+	$timeline->foreign_id,
+	$timeline->id,
+	$timeline->member_id,
+	\Auth::check() ? $u->id : 0
+);
 $data = array(
 	'member'  => $timeline->member,
 	'size'    => 'M',
 	'date'    => array('datetime' => $timeline->created_at),
-	'content' => \Timeline\Site_Util::get_timeline_body($timeline->type, $timeline->body),
-	'images'  => \Timeline\Site_Util::get_timeline_images(
-		$timeline->type,
-		$timeline->foreign_id,
-		$timeline->id,
-		$timeline->member_id,
-		\Auth::check() ? $u->id : 0
-	),
+	'images'  => $images,
 	'comment' => $comment,
 	'model'   => 'timeline',
 	'id'      => $timeline->id,
@@ -35,6 +35,7 @@ $data = array(
 		'data-post_uri' => \Timeline\Site_Util::get_comment_api_uri($timeline->type, $timeline->foreign_table, true),
 	),
 );
+
 if (!empty($is_convert_nl2br)) $data['is_convert_nl2br'] = $is_convert_nl2br;
 if (!empty($trim_width)) $data['trim_width'] = $trim_width;
 if (!empty($truncate_lines))
@@ -42,9 +43,19 @@ if (!empty($truncate_lines))
 	$data['truncate_lines'] = $truncate_lines;
 	$data['read_more_uri']  = 'timeline/'.$timeline->id;
 }
+
 $view_member_contents_box = View::forge('_parts/member_contents_box', $data);
 
-$quote_article = \Timeline\Site_Util::get_quote_article($timeline->type, $timeline->foreign_table, $timeline->foreign_id);
+$foreign_table_obj = \Timeline\Site_Model::get_foreign_table_obj($timeline->type, $timeline->foreign_id);
+$optional_info = array();
+if (isset($images['count'])) $optional_info['count'] = $images['count'];
+if (isset($images['count_all'])) $optional_info['count_all'] = $images['count_all'];
+list($content, $is_safe_content) = \Timeline\Site_Util::get_timeline_body($timeline->type, $timeline->body, $foreign_table_obj, $optional_info);
+$method = $is_safe_content ? 'set_safe' : 'set';
+$view_member_contents_box->$method('content', $content);
+$view_member_contents_box->set('is_output_raw_content', $is_safe_content);
+
+$quote_article = \Timeline\Site_Util::get_quote_article($timeline->type, $foreign_table_obj);
 if ($quote_article) $view_member_contents_box->set_safe('quote_article', $quote_article);
 
 echo $view_member_contents_box->render();

@@ -7,6 +7,7 @@ return array(
 		'trim_width' => array(
 			//'title' => 88,
 			'body'  => 500,
+			'title_in_body' => 50,
 		),
 		'truncate_lines' => array(
 			'body'  => 5,
@@ -31,7 +32,7 @@ return array(
 		'album_image_timeline' => 8,
 	),
 	'periode_to_update' => array(
-		'album' => '1 minute',
+		'album' => '10 minute',
 		//'album' => '3 day',
 	),
 	'display_setting' => array(
