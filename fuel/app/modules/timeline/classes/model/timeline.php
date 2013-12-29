@@ -227,4 +227,12 @@ class Model_Timeline extends \Orm\Model
 			->rows_limit(1)
 			->get_one();
 	}
+
+	public static function get4foreign_table_and_foreign_id($foreign_table, $foreign_id)
+	{
+		return self::query()
+			->where('foreign_table', $foreign_table)
+			->where('foreign_id', $foreign_id)
+			->get();
+	}
 }

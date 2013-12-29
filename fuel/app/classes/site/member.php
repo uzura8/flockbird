@@ -4,6 +4,7 @@ class Site_Member
 {
 	public static function save_profile_image(Model_Member $member, $file_path = null)
 	{
+		\Timeline\Site_Model::delete_timeline('file', $member->file_id);
 		if (Config::get('site.upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
@@ -17,17 +18,16 @@ class Site_Member
 		}
 		else
 		{
-			$old_file_id = $member->file_id;
 			$options = Site_Upload::get_uploader_options($member->id);
 			$uploadhandler = new Site_Uploader($options);
 			$file = $uploadhandler->save();
 			if (!empty($file->error)) throw new FuelException($file->error);
 
+			$file_old = Model_File::find($member->file_id);
+			$file_old->delete();
+
 			$member->file_id = $file->id;
 			$member->save();
-
-			// 古いファイルの削除
-			$deleted_filesize = (int)Model_File::delete_with_timeline($old_file_id);
 
 			$type_key = 'profile_image';
 			$foreign_id = $file->id;

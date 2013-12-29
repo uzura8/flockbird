@@ -30,15 +30,15 @@ class Controller_Member_profile extends Controller_Member
 	 */
 	public function action_setting_image()
 	{
+		$this->set_title_and_breadcrumbs(Config::get('term.profile').'写真設定', array('/member/profile/' => Config::get('term.profile')), $this->u);
+
 		$images = array();
 		if (Config::get('site.upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'member');
 			$images = \Album\Model_AlbumImage::query()->related('album')->where('album_id', $album_id)->order_by('id', 'desc')->get();
+			$this->template->post_footer = \View::forge('_parts/load_masonry');
 		}
-
-		$this->set_title_and_breadcrumbs(Config::get('term.profile').'写真設定', array('/member/profile/' => Config::get('term.profile')), $this->u);
-		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$this->template->content = View::forge('member/profile/setting_image', array('images' => $images));
 	}
 
@@ -151,30 +151,18 @@ class Controller_Member_profile extends Controller_Member
 	public function action_delete_image($album_image_id = null)
 	{
 		Util_security::check_csrf();
-		$save_as_album_image = Config::get('site.upload.types.img.types.m.save_as_album_image');
 
 		try
 		{
-			if ($save_as_album_image)
+			if ($album_image_id)
 			{
-				if ($album_image_id)
+				if (!$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id))
 				{
-					if (!$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id))
-					{
-						throw new \HttpNotFoundException;
-					}
-					if ($album_image->album->foreign_table != 'member')
-					{
-						throw new FuelException('Disabled to set album image as profile image.');
-					}
+					throw new \HttpNotFoundException;
 				}
-				else
+				if ($album_image->album->foreign_table != 'member')
 				{
-					if (empty($this->u->file_id)) throw new FuelException('No profile image.');
-					if (!$album_image = \Album\Model_AlbumImage::query()->related('album')->where('file_id', $this->u->file_id)->get_one())
-					{
-						throw new FuelException('No profile image.');
-					}
+					throw new FuelException('Disabled to set album image as profile image.');
 				}
 			}
 			else
@@ -183,17 +171,15 @@ class Controller_Member_profile extends Controller_Member
 			}
 
 			DB::start_transaction();
-			if ($save_as_album_image)
+			if ($album_image_id)
 			{
 				$album_image->delete();
 			}
 			else
 			{
-				$file = $this->u->file;
+				\Timeline\Site_Model::delete_timeline('file', $this->u->file_id);
 				$this->u->file_id = null;
 				$this->u->save();
-				\Timeline\Site_Model::delete_timeline('file', $file->id);
-				$file->delete();
 			}
 			DB::commit_transaction();
 

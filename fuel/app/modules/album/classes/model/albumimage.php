@@ -70,7 +70,7 @@ class Model_AlbumImage extends \Orm\Model
 		),
 		'Orm\\Observer_Validation',
 		'MyOrm\Observer_DeleteAlbumImage' => array(
-			'events' => array('after_delete'),
+			'events' => array('before_delete'),
 		),
 	);
 

@@ -26,10 +26,18 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 		{
 			throw new \FuelException('Invalid member id.');
 		}
-		if ($album->foreign_table == 'member' && $member->file_id == $obj->file_id)
+		if ($album->foreign_table == 'member')
 		{
-			$member->file_id = null;
-			$member->save();
+			if ($member->file_id == $obj->file_id)
+			{
+				$member->file_id = null;
+				$member->save();
+			}
+			// timeline 投稿の削除
+			if ($timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_id('album_image', $obj->id))
+			{
+				foreach ($timelines as $timeline) $timeline->delete();
+			}
 		}
 
 		// file 削除

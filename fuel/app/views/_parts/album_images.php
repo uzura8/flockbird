@@ -69,7 +69,10 @@ if (!empty($is_setting_profile_image) && $album_image->album->member_id == $u->i
 		'member/profile/set_image/'.$album_image->id.get_csrf_query_str(),
 		sprintf('<i class="ls-icon-setting"></i> %s写真に設定する', Config::get('term.profile'))
 	);
-	$menus[] = Html::anchor(sprintf('member/profile/delete_image/%d/%s', $album_image->id, get_csrf_query_str()), '<i class="icon-trash"></i> 削除');
+	$menus[] = Html::anchor(
+		'#', '<i class="icon-trash"></i> 削除',
+		array('onclick' => sprintf("delete_item('member/profile/delete_image/%d');return false;", $album_image->id))
+	);
 }
 elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && $member->id == $u->id)))
 {
