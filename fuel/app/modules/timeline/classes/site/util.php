@@ -208,7 +208,7 @@ class Site_Util
 
 			case \Config::get('timeline.types.album'):
 			case \Config::get('timeline.types.album_image'):
-				list($images['list'], $images['count_all']) = \Site_Model::get_list_and_count('album_image', array(
+				list($images['list'], $images['count']) = \Site_Model::get_list_and_count('album_image', array(
 					'where'    => \Site_Model::get_where_params4list(
 						$target_member_id,
 						$self_member_id,
