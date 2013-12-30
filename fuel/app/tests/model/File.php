@@ -8,50 +8,51 @@
  */
 class Test_Model_File extends TestCase
 {
-	/**
-	* @dataProvider file_exists_provider
-	*/
-	public function test_file_exists($file_path)
+	protected $files = array();
+
+	protected function setUp()
 	{
-		$test = file_exists($file_path);
-		$this->assertTrue($test);
+		if (!$this->files = \Model_File::find('all'))
+		{
+			$this->markTestSkipped('No data.');
+		}
 	}
 
-	public function file_exists_provider()
+	public function test_file_exists()
 	{
-		$data = array();
-		$raw_dir_path = Config::get('site.upload.types.img.raw_file_path');
-		$files = Model_File::find('all');
-		foreach ($files as $file)
+		foreach ($this->files as $file)
 		{
-			$data[] = array($raw_dir_path.$file->path.$file->name);
+			$this->assertFileExists($this->get_file_path($file->path, $file->name));
+		}
+	}
+
+	public function test_check_file_size()
+	{
+		foreach ($this->files as $file)
+		{
+			$test = File::get_size($this->get_file_path($file->path, $file->name));
+			$this->assertEquals($file->filesize, $test);
+		}
+	}
+
+	public function test_check_removed_exif()
+	{
+		if (!is_callable('exif_read_data'))
+		{
+			$this->markTestSkipped('No data.');
 		}
 
-		return $data;
-	}
-
-	/**
-	* @dataProvider check_file_size_provider
-	*/
-	public function test_check_file_size($file_path, $expected)
-	{
-		$test = File::get_size($file_path);
-		$this->assertEquals($expected, $test);
-	}
-
-	public function check_file_size_provider()
-	{
-		$data = array();
-		$raw_dir_path = Config::get('site.upload.types.img.raw_file_path');
-		$files = Model_File::find('all');
-		foreach ($files as $file)
+		foreach ($this->files as $file)
 		{
-			$data[] = array(
-				$raw_dir_path.$file->path.$file->name,
-				$file->filesize,
-			);
+			$test = exif_read_data($this->get_file_path($file->path, $file->name));
+			$this->assertFalse($test);
 		}
+	}
 
-		return $data;
+	private function get_file_path($filepath, $name)
+	{
+		$raw_dir_path = Config::get('site.upload.types.img.raw_file_path');
+
+		return $raw_dir_path.$filepath.$name;
 	}
 }

@@ -283,4 +283,45 @@ class Util_file
 				return false;
 		}
 	}
+
+	public static function get_file_recursive($path, $is_name_only = false)
+	{
+		$files = array();
+		$d = dir($path);
+		$base_path = $path;
+		while (false !== ($entry = $d->read()))
+		{
+			if ($entry == '.' || $entry == '..') continue;
+			$path = sprintf('%s/%s', $base_path, $entry);
+			if (is_dir($path))
+			{
+				$files += self::get_file_recursive($path);
+			}
+			else
+			{
+				$files[] = $is_name_only ? $entry : $path;
+			}
+		}
+
+		return $files;
+	}
+
+	public static function get_path_partial($path, $length = 1)
+	{
+		$parts = explode('/', $path);
+		$parts = array_reverse($parts);
+		$return = '';
+		for ($i = 0; $i < $length; $i++)
+		{
+			if (strlen($return) == 0)
+			{
+				$return = $parts[$i];
+				continue;
+			}
+
+			$return = $parts[$i].'/'.$return;
+		}
+
+		return $return;
+	}
 }

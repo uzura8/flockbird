@@ -108,6 +108,11 @@ class Model_File extends \Orm\Model
 		return self::$name_list[$id];
 	}
 
+	public static function get4name($name)
+	{
+		return self::query()->where('name', $name)->get_one();
+	}
+
 	public static function delete_with_timeline($id)
 	{
 		if (!$self = self::find($id)) return false;
