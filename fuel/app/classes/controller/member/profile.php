@@ -99,6 +99,10 @@ class Controller_Member_profile extends Controller_Member
 			{
 				throw new FuelException('Disabled to set album image as profile image.');
 			}
+			if ($this->u->file_id == $album_image->file_id)
+			{
+				throw new FuelException('既に設定されています。');
+			}
 
 			DB::start_transaction();
 			$this->u->file_id = $album_image->file_id;
