@@ -235,4 +235,12 @@ class Model_Timeline extends \Orm\Model
 			->where('foreign_id', $foreign_id)
 			->get();
 	}
+
+	public static function get4type_key($type_key)
+	{
+		$type = \Config::get('timeline.types.'.$type_key);
+		if (is_null($type)) throw new \InvalidArgumentException('first parameter is invalid.');
+
+		return self::query()->where('type', $type)->get();
+	}
 }

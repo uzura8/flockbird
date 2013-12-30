@@ -55,7 +55,6 @@ class Site_Util
 		return array($type, $foreign_table, $child_foreign_table);
 	}
 
-
 	public static function get_timeline_body($type, $body = null, $foreign_table_obj = null, array $optional_info = null)
 	{
 		$is_safe = false;
