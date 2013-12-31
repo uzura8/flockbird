@@ -55,4 +55,12 @@ class Test_Model_File extends TestCase
 
 		return $raw_dir_path.$filepath.$name;
 	}
+
+	public function test_check_shot_at()
+	{
+		foreach ($this->files as $file)
+		{
+			$this->assertNotEquals('0000-00-00 H:i:s', $file->shot_at);
+		}
+	}
 }

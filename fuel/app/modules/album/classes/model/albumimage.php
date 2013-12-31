@@ -150,6 +150,10 @@ class Model_AlbumImage extends \Orm\Model
 		return $query->get();
 	}
 
+	public static function get4file_id($file_id)
+	{
+		return self::query()->where('file_id', $file_id)->get_one();
+	}
 	public static function update_public_flag4album_id($album_id, $public_flag)
 	{
 		$values = array('public_flag' => $public_flag, 'updated_at' => date('Y-m-d H:i:s'));
@@ -194,10 +198,18 @@ class Model_AlbumImage extends \Orm\Model
 		}
 
 		// Profile 写真の登録確認&削除
-		if ($album->foreign_table == 'member' && in_array($album->member->file_id, $file_ids))
+		if ($album->foreign_table == 'member')
 		{
-			$album->member->file_id = null;
-			$album->member->save();
+			if (in_array($album->member->file_id, $file_ids))
+			{
+				$album->member->file_id = null;
+				$album->member->save();
+			}
+			// timeline 投稿の削除
+			if ($timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids('album_image', $ids))
+			{
+				foreach ($timelines as $timeline) $timeline->delete();
+			}
 		}
 
 		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');

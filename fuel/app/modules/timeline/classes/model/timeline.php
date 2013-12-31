@@ -236,6 +236,14 @@ class Model_Timeline extends \Orm\Model
 			->get();
 	}
 
+	public static function get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids)
+	{
+		return self::query()
+			->where('foreign_table', $foreign_table)
+			->where('foreign_id', 'in', $foreign_ids)
+			->get();
+	}
+
 	public static function get4type_key($type_key)
 	{
 		$type = \Config::get('timeline.types.'.$type_key);

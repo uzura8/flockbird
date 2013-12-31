@@ -295,7 +295,7 @@ class Util_file
 			$path = sprintf('%s/%s', $base_path, $entry);
 			if (is_dir($path))
 			{
-				$files += self::get_file_recursive($path);
+				$files = array_merge($files, self::get_file_recursive($path));
 			}
 			else
 			{

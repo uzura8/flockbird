@@ -47,7 +47,7 @@ class Test_Model_Timeline extends \TestCase
 			// check for reference data.
 			$this->assertEquals('member', $obj->foreign_table);
 			$this->assertEquals($obj->member_id, $obj->foreign_id);
-			$this->assertNotEmpty(\Model_Member::find($obj->foreign_id));
+			$this->assertNotEmpty(\Model_Member::check_authority($obj->foreign_id));
 
 			// check for public_flag.
 			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
@@ -75,7 +75,49 @@ class Test_Model_Timeline extends \TestCase
 			$this->assertEquals($album_image->album->member_id, $obj->member_id);
 
 			// check for public_flag.
-			$this->assertEquals($album_image->public_flag, $obj->public_flag);
+			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
+			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $album_image->public_flag);
+
+			// 未使用カラムの値が null か
+			$this->assertEmpty($obj->body);
+		}
+	}
+
+/*
+	'types' => array(
+		'profile_image' => 3,
+		'note' => 4,
+		'album' => 5,
+		'album_image' => 6,
+	),
+
+   created_at: 2013-12-30 23:05:49
+   updated_at: 2013-12-30 23:05:49
+sort_datetime: 2013-12-30 23:05:49
+*/
+	public function test_check_type_profile_image()
+	{
+		if (!$list = Model_Timeline::get4type_key('profile_image'))
+		{
+			$this->markTestSkipped('No record for test.');
+		}
+
+		foreach ($list as $obj)
+		{
+			// check for reference data.
+			$this->assertEquals('file', $obj->foreign_table);
+			$file = \Model_File::find($obj->foreign_id);
+			$this->assertNotEmpty($file);
+
+			$member = \Model_Member::check_authority($obj->member_id);
+			$this->assertNotEmpty($member);
+			$this->assertEquals($member->file_id, $obj->foreign_id);
+
+			// check for member_id
+			$this->assertEquals($file->member_id, $obj->member_id);
+
+			// check for public_flag.
+			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
 
 			// 未使用カラムの値が null か
 			$this->assertEmpty($obj->body);

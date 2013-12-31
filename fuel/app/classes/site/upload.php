@@ -361,7 +361,8 @@ class Site_Upload
 	public static function get_exif_datetime($exif)
 	{
 		if (empty($exif['DateTimeOriginal'])) return null;
-		if (!$exif_time = \Util_Date::check_is_past($exif['DateTimeOriginal'], null, null, true)) return null;
+
+		if (!$exif_time = \Util_Date::check_is_past($exif['DateTimeOriginal'], null, '-30 years', true)) return null;
 
 		return $exif_time;
 	}

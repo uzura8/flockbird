@@ -72,7 +72,7 @@ class Model_File extends \Orm\Model
 			'property_to' => 'filesize_total',
 		),
 		'MyOrm\Observer_RemoveFile' => array(
-			'events' => array('after_delete'),
+			'events' => array('before_delete'),
 		),
 	);
 

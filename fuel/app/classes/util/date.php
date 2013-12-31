@@ -18,7 +18,7 @@ class Util_Date
 		return $matches[1];
 	}
 
-	public static function check_is_past($val, $base = '', $min = '', $is_return_time = false)
+	public static function check_is_past($val, $base = '', $min = '', $is_return_time = false, $is_return_time_format = 'Y-m-d H:i:s')
 	{
 		if (empty($val)) return false;
 		if (!$time = strtotime($val)) return false;
@@ -29,12 +29,12 @@ class Util_Date
 		$min_time = empty($min) ? strtotime('- 120 years') : strtotime($min);
 		if ($time < $min_time) return false;
 
-		if ($is_return_time) return $time;
+		if ($is_return_time) return date($is_return_time_format, $time);
 
 		return true;
 	}
 
-	public static function check_is_future($val, $base = '', $max = '', $is_return_time = false)
+	public static function check_is_future($val, $base = '', $max = '', $is_return_time = false, $is_return_time_format = 'Y-m-d H:i:s')
 	{
 		if (empty($val)) return false;
 		if (!$time = strtotime($val)) return false;
@@ -45,7 +45,7 @@ class Util_Date
 		$max_time = empty($max) ? strtotime('+ 50 years') : strtotime($max);
 		if ($time > $max_time) return false;
 
-		if ($is_return_time) return $time;
+		if ($is_return_time) return date($is_return_time_format, $time);
 
 		return true;
 	}

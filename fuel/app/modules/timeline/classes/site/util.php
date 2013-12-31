@@ -176,7 +176,7 @@ class Site_Util
 		{
 			case \Config::get('timeline.types.album_image_profile'):
 				$images['list']   = array();
-				$images['list'][] = \Album\Model_AlbumImage::find($foreign_id);
+				$images['list'][] = \Album\Model_AlbumImage::check_authority($foreign_id);
 				$images['file_cate']        = 'ai';
 				$images['additional_table'] = 'profile';
 				$images['size']             = 'P_LL';

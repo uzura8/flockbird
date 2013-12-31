@@ -36,7 +36,7 @@ class Controller_Member_profile extends Controller_Member
 		if (Config::get('site.upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'member');
-			$images = \Album\Model_AlbumImage::query()->related('album')->where('album_id', $album_id)->order_by('id', 'desc')->get();
+			$images = \Album\Model_AlbumImage::query()->related('album')->related('file')->where('album_id', $album_id)->order_by('id', 'desc')->get();
 			$this->template->post_footer = \View::forge('_parts/load_masonry');
 		}
 		$this->template->content = View::forge('member/profile/setting_image', array('images' => $images));
