@@ -46,19 +46,19 @@ $('table#album_image_list td:not(.image)').click(function() {
 	}
 });
 $('table#album_image_list td input[type=checkbox]').click(function(){
-	if($(this).attr('checked')) {
-		$(this).attr('checked', false);
-	}else{
-		$(this).attr('checked', true);
+	if ($(this).prop('checked')) {
+		$(this).prop('checked', '');
+	} else {
+		$(this).prop('checked', 'checked');
 	}
 });
 
 $('input.album_image_all').click(function() {
 	if (this.checked) {
-		$('input.album_image_ids').attr('checked', 'checked');
-		$('input.album_image_all').attr('checked', 'checked');
+		$('input.album_image_ids').prop('checked', 'checked');
+		$('input.album_image_all').prop('checked', 'checked');
 	} else {
-		$('input.album_image_ids').removeAttr('checked');
-		$('input.album_image_all').removeAttr('checked');
+		$('input.album_image_ids').prop('checked', '');
+		$('input.album_image_all').prop('checked', '');
 	}
 });
