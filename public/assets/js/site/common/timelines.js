@@ -17,14 +17,13 @@ $(function() {
 	}
 
 	$(document).on('click','.btn_timeline_delete', function(){
-		var delete_uri = $(this).data('uri') ? $(this).data('uri') : '';
-		var list_id = get_id_num($(this).attr('id'));
+		var post_uri = $(this).data('uri') ? $(this).data('uri') : 'timeline/api/delete.json';
+		var post_id  = $(this).data('post_id') ? $(this).data('post_id') : '';
+		var list_id  = get_id_num($(this).attr('id'));
 
-		if (delete_uri) {
-			delete_item(delete_uri);
-		} else {
-			delete_item('timeline/api/delete.json', $(this).data('id'), '', '#timelineBox_' + list_id);
-		}
+		if (!post_id) return false;
+		delete_item(post_uri, post_id, '', '#timelineBox_' + list_id);
+
 		return false;
 	});
 

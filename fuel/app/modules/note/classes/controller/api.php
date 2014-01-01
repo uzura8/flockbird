@@ -78,8 +78,9 @@ class Controller_Api extends \Controller_Site_Api
 			}
 
 			\DB::start_transaction();
-			$note->delete_with_images();
+			$deleted_files = $note->delete_with_relations();
 			\DB::commit_transaction();
+			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 			$response['status'] = 1;
 			$status_code = 200;

@@ -290,9 +290,9 @@ class Controller_Note extends \Controller_Site
 		{
 			\DB::start_transaction();
 			\Timeline\Site_Model::delete_timeline('note', $note->id);
-			$deleted_files = $note->delete_with_images();
+			$deleted_files = $note->delete_with_relations();
 			\DB::commit_transaction();
-			\Site_Upload::remove_files($deleted_files);
+			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 			\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
 		}
 		catch(\FuelException $e)

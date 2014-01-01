@@ -83,18 +83,6 @@ class Test_Model_Timeline extends \TestCase
 		}
 	}
 
-/*
-	'types' => array(
-		'profile_image' => 3,
-		'note' => 4,
-		'album' => 5,
-		'album_image' => 6,
-	),
-
-   created_at: 2013-12-30 23:05:49
-   updated_at: 2013-12-30 23:05:49
-sort_datetime: 2013-12-30 23:05:49
-*/
 	public function test_check_type_profile_image()
 	{
 		if (!$list = Model_Timeline::get4type_key('profile_image'))
@@ -118,6 +106,61 @@ sort_datetime: 2013-12-30 23:05:49
 
 			// check for public_flag.
 			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
+
+			// 未使用カラムの値が null か
+			$this->assertEmpty($obj->body);
+		}
+	}
+	public function test_check_type_note()
+	{
+		if (!$list = Model_Timeline::get4type_key('note'))
+		{
+			$this->markTestSkipped('No record for test.');
+		}
+
+		foreach ($list as $obj)
+		{
+			// check for reference data.
+			$this->assertEquals('note', $obj->foreign_table);
+			$note = \Note\Model_Note::check_authority($obj->foreign_id);
+			$this->assertNotEmpty($note);
+
+			$member = \Model_Member::check_authority($obj->member_id);
+			$this->assertNotEmpty($member);
+
+			// check for member_id
+			$this->assertEquals($note->member_id, $obj->member_id);
+
+			// check for public_flag.
+			$this->assertEquals($note->public_flag, $obj->public_flag);
+
+			// 未使用カラムの値が null か
+			$this->assertEmpty($obj->body);
+		}
+	}
+
+	public function test_check_type_album()
+	{
+		if (!$list = Model_Timeline::get4type_key('album'))
+		{
+			$this->markTestSkipped('No record for test.');
+		}
+
+		foreach ($list as $obj)
+		{
+			// check for reference data.
+			$this->assertEquals('album', $obj->foreign_table);
+			$album = \Album\Model_Album::check_authority($obj->foreign_id);
+			$this->assertNotEmpty($album);
+
+			$member = \Model_Member::check_authority($obj->member_id);
+			$this->assertNotEmpty($member);
+
+			// check for member_id
+			$this->assertEquals($album->member_id, $obj->member_id);
+
+			// check for public_flag.
+			$this->assertEquals($album->public_flag, $obj->public_flag);
 
 			// 未使用カラムの値が null か
 			$this->assertEmpty($obj->body);

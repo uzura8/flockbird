@@ -228,20 +228,16 @@ class Model_Timeline extends \Orm\Model
 			->get_one();
 	}
 
-	public static function get4foreign_table_and_foreign_id($foreign_table, $foreign_id)
+	public static function delete4foreign_table_and_foreign_ids($foreign_table, $foreign_ids)
 	{
-		return self::query()
-			->where('foreign_table', $foreign_table)
-			->where('foreign_id', $foreign_id)
-			->get();
-	}
+		if (!is_array($foreign_ids)) $foreign_ids = (array)$foreign_ids;
 
-	public static function get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids)
-	{
-		return self::query()
+		$objs = self::query()
 			->where('foreign_table', $foreign_table)
 			->where('foreign_id', 'in', $foreign_ids)
 			->get();
+
+		foreach ($objs as $obj) $obj->delete();
 	}
 
 	public static function get4type_key($type_key)

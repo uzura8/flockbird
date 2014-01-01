@@ -55,19 +55,21 @@ $method = $is_safe_content ? 'set_safe' : 'set';
 $view_member_contents_box->$method('content', $content);
 $view_member_contents_box->set('is_output_raw_content', $is_safe_content);
 
-$quote_article = \Timeline\Site_Util::get_quote_article($timeline->type, $foreign_table_obj);
+$quote_article = $foreign_table_obj ? \Timeline\Site_Util::get_quote_article($timeline->type, $foreign_table_obj) : null;
 if ($quote_article) $view_member_contents_box->set_safe('quote_article', $quote_article);
 
 echo $view_member_contents_box->render();
 
 if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline->type))
 {
+	list($post_id, $post_uri) = \Timeline\Site_Util::get_delete_api_info($timeline);
 	$attr = array(
-		'id'      => 'btn_timeline_delete_'.$timeline_cache_id,
-		'data-id' => $timeline->id,
+		'id'           => 'btn_timeline_delete_'.$timeline_cache_id,
+		'data-id'      => $timeline->id,
+		'data-post_id' => $post_id,
+		'data-uri'     => $post_uri,
 	);
-	if (!empty($delete_uri)) $attr['data-uri'] = $delete_uri;
-	echo anchor_button('#', 'ls-icon-delete', '', 'boxBtn btn_timeline_delete', $attr, true, IS_SP);
+	echo anchor_button('#', 'glyphicon glyphicon-trash', '', 'boxBtn btn_timeline_delete', $attr, true, IS_SP);
 }
 ?>
 </div><!-- timelineBox -->

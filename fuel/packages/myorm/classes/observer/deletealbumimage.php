@@ -34,10 +34,7 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 				$member->save();
 			}
 			// timeline 投稿の削除
-			if ($timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_id('album_image', $obj->id))
-			{
-				foreach ($timelines as $timeline) $timeline->delete();
-			}
+			\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $obj->id);
 		}
 
 		// file 削除

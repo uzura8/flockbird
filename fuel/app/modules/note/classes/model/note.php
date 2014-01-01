@@ -82,9 +82,10 @@ class Model_Note extends \Orm\Model
 		return $obj;
 	}
 
-	public function delete_with_images()
+	public function delete_with_relations()
 	{
 		$deleted_files = array();
+		// album_image の削除
 		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			$album_image_ids = array();
@@ -95,6 +96,11 @@ class Model_Note extends \Orm\Model
 			}
 			list($result, $deleted_files) = \Album\Model_AlbumImage::delete_multiple($album_image_ids, $album);
 		}
+
+		// timeline 投稿の削除
+		\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $this->id);
+
+		// note の削除
 		$this->delete();
 
 		return $deleted_files;

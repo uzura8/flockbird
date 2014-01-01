@@ -77,11 +77,11 @@ class Site_Util
 				break;
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
 				$is_safe = true;
-				$body = render('_parts/timeline/body_for_add_album_image', array(
+				$body = $foreign_table_obj ? render('_parts/timeline/body_for_add_album_image', array(
 					'album_id' => $foreign_table_obj->id,
 					'name' => $foreign_table_obj->name,
 					'count' => isset($optional_info['count']) ? $optional_info['count'] : 0,
-				));
+				)) : null;
 				break;
 			case \Config::get('timeline.types.album_image_timeline'):
 				$body = null;
@@ -248,10 +248,36 @@ class Site_Util
 	public static function check_is_editable($type)
 	{
 		$editable_types = array(
-			\Config::get('timeline.types.normal')
+			\Config::get('timeline.types.normal'),
+			\Config::get('timeline.types.note'),
 		);
 
 		return in_array($type, $editable_types);
+	}
+
+	public static function get_delete_api_info(Model_Timeline $timeline)
+	{
+		$id  = 0;
+		$uri = '';
+		switch ($timeline->type)
+		{
+			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
+				$id  = $timeline->id;
+				$uri = 'timeline/api/delete.json';
+				break;
+			case \Config::get('timeline.types.note'):// note 投稿
+				$id  = $timeline->foreign_id;
+				$uri = 'note/api/delete.json';
+				break;
+			case \Config::get('timeline.types.album'):// album 作成
+				$id  = $timeline->foreign_id;
+				$uri = 'album/api/delete.json';
+				break;
+			default :
+				break;
+		}
+
+		return array($id, $uri);
 	}
 
 	public static function get_article_view($timeline_cache_id, $timeline_id)

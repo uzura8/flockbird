@@ -206,10 +206,7 @@ class Model_AlbumImage extends \Orm\Model
 				$album->member->save();
 			}
 			// timeline 投稿の削除
-			if ($timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids('album_image', $ids))
-			{
-				foreach ($timelines as $timeline) $timeline->delete();
-			}
+			\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $ids);
 		}
 
 		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
