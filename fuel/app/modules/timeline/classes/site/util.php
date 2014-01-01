@@ -250,6 +250,7 @@ class Site_Util
 		$editable_types = array(
 			\Config::get('timeline.types.normal'),
 			\Config::get('timeline.types.note'),
+			\Config::get('timeline.types.album'),
 		);
 
 		return in_array($type, $editable_types);

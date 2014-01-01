@@ -91,7 +91,7 @@ class Model_Album extends \Orm\Model
 		return $obj;
 	}
 
-	public static function delete_all(Model_Album $album, $id = null)
+	public static function delete_relations(Model_Album $album, $id = null)
 	{
 		if (!$album)
 		{
@@ -123,13 +123,8 @@ class Model_Album extends \Orm\Model
 			if (!\DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
 		}
 
-		// Delete table timeline data.
-		//$album_image_ids = \Util_db::conv_col(
-		//	\DB::select('album_image_id')->from('album_image')
-		//		->where('album_id', $id)
-		//		->execute()->as_array()
-		//);
-		//\Timeline\Site_Model::delete_timelines('album_image', $album_image_ids);
+		// timeline 投稿の削除
+		\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $album->id);
 
 		// Delete album.
 		$album->delete();
