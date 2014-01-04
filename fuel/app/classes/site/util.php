@@ -199,6 +199,26 @@ class Site_Util
 		return array($public_flag, $model);
 	}
 
+	public static function check_is_expanded_public_flag_range($original_public_flag, $changed_public_flag)
+	{
+		if ($original_public_flag == $changed_public_flag) return false;
+		if ($changed_public_flag == PRJ_PUBLIC_FLAG_PRIVATE)  return false;
+		if ($original_public_flag == PRJ_PUBLIC_FLAG_PRIVATE) return true;
+		if ($changed_public_flag < $original_public_flag) return true;
+
+		return false;
+	}
+
+	public static function check_is_reduced_public_flag_range($original_public_flag, $changed_public_flag)
+	{
+		if ($original_public_flag == $changed_public_flag) return false;
+		if ($changed_public_flag == PRJ_PUBLIC_FLAG_PRIVATE)  return true;
+		if ($original_public_flag == PRJ_PUBLIC_FLAG_PRIVATE) return false;
+		if ($changed_public_flag > $original_public_flag) return true;
+
+		return false;
+	}
+
 	public static function get_uri_last_real_segment($check_string = '', $extends = array())
 	{
 		$last_real_segment = Util_string::get_exploded_last(Input::server('REQUEST_URI'), '/');

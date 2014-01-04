@@ -106,16 +106,18 @@ class Model_Note extends \Orm\Model
 		return $deleted_files;
 	}
 
-	public function update_public_flag_with_images($public_flag)
+	public function update_public_flag_with_relations($public_flag)
 	{
+		// album_image の public_flag の更新
 		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			foreach ($album_images as $album_image)
 			{
-				$album_image->public_flag = $public_flag;
-				$album_image->save();
+				$album_image->update_public_flag($public_flag);
 			}
 		}
+		// timeline の public_flag の更新
+		\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
 
 		$this->public_flag = $public_flag;
 		$this->save();

@@ -113,13 +113,7 @@ class Controller_Api extends \Controller_Site_Api
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($album->public_flag);
 
 			\DB::start_transaction();
-			$album->public_flag = $public_flag;
-			$album->save();
-			// update album_image public_flag
-			if (!empty($is_update_children_public_flag))
-			{
-				Model_AlbumImage::update_public_flag4album_id($id, $public_flag);
-			}
+			$album->update_public_flag_with_relations($public_flag, !empty($is_update_children_public_flag));
 			\DB::commit_transaction();
 
 			$response = \View::forge('_parts/public_flag_selecter', array(
@@ -147,7 +141,7 @@ class Controller_Api extends \Controller_Site_Api
 		}
 		catch(\FuelException $e)
 		{
-			\DB::rollback_transaction();
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 

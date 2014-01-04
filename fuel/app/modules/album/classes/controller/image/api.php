@@ -259,8 +259,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($album_image->public_flag);
 
 			\DB::start_transaction();
-			$album_image->public_flag = $public_flag;
-			$album_image->save();
+			$album_image->update_public_flag($public_flag);
 			\DB::commit_transaction();
 
 			$response = \View::forge('_parts/public_flag_selecter', array(

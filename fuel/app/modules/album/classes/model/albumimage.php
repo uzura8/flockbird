@@ -111,14 +111,9 @@ class Model_AlbumImage extends \Orm\Model
 		return self::$count_par_album_list[$album_id];
 	}
 
-	public static function get_list($album_id)
+	public static function get4album_id($album_id)
 	{
-		if (!empty(self::$count_par_album_list[$album_id])) return self::$count_par_album_list[$album_id];
-
-		$query = self::query()->where('album_id', $album_id);
-		self::$count_par_album_list[$album_id] = $query->count();
-
-		return self::$count_par_album_list[$album_id];
+		return self::query()->where('album_id', $album_id)->get();
 	}
 
 	public static function get_ids4album_id($album_id, $order_by = 'id')
@@ -154,11 +149,27 @@ class Model_AlbumImage extends \Orm\Model
 	{
 		return self::query()->where('file_id', $file_id)->get_one();
 	}
+
+	public function update_public_flag($public_flag)
+	{
+		$this->public_flag = $public_flag;
+		$result = $this->save();
+
+		if (!Site_Util::check_album_disabled_to_update($this->album->foreign_table))
+		{
+			\Timeline\Model_Timeline::check_and_update_public_flag4child_data($public_flag, 'album_image', $this->id);
+		}
+
+		return $result;
+	}
+
 	public static function update_public_flag4album_id($album_id, $public_flag)
 	{
-		$values = array('public_flag' => $public_flag, 'updated_at' => date('Y-m-d H:i:s'));
-
-		return \DB::update('album_image')->set($values)->where('album_id', $album_id)->execute();
+		$objs = self::get4album_id($album_id);
+		foreach ($objs as $obj)
+		{
+			$obj->update_public_flag($public_flag);
+		}
 	}
 
 	public static function save_with_file($album_id, $member = null, $public_flag = null, $file_path = null)
@@ -208,6 +219,9 @@ class Model_AlbumImage extends \Orm\Model
 			// timeline 投稿の削除
 			\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $ids);
 		}
+
+		// timeline_child_data の削除
+		\Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('album_image', $ids);
 
 		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
 		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) throw new \FuelException('Album images delete error.');
@@ -259,15 +273,15 @@ class Model_AlbumImage extends \Orm\Model
 			{
 				$album_image->name = $set_value['name'];
 			}
-			if (!$is_disabled_to_update_public_flag && isset($set_value['public_flag']) && $set_value['public_flag'] != 99)
-			{
-				$album_image->public_flag = $set_value['public_flag'];
-			}
 			if (isset($set_value['shot_at']) && strlen($set_value['shot_at']) && !\Util_Date::check_is_same_minute($set_value['shot_at'], $album_image->shot_at))
 			{
 				$album_image->shot_at = $set_value['shot_at'].':'.'00';
 			}
 			$album_image->save();
+			if (!$is_disabled_to_update_public_flag && isset($set_value['public_flag']) && $set_value['public_flag'] != 99)
+			{
+				$album_image->update_public_flag($set_value['public_flag']);
+			}
 			$result++;
 		}
 

@@ -993,7 +993,7 @@ CREATE TABLE `timeline` (
   `updated_at` datetime NOT NULL,
   `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `foreign_table_foreign_id_created_at_idx` (`foreign_table`,`foreign_id`,`created_at`)
+  KEY `foreign_table_foreign_id_type_created_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1039,7 +1039,7 @@ CREATE TABLE `timeline_child_data` (
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
-  KEY `foreign_table_foreign_id_idx` (`foreign_table`,`foreign_id`),
+  KEY `foreign_table_foreign_id_timeline_id_idx` (`foreign_table`,`foreign_id`,`timeline_id`),
   CONSTRAINT `timeline_child_data_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

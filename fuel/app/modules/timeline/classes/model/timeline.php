@@ -110,9 +110,9 @@ class Model_Timeline extends \Orm\Model
 			'property_to'   => 'sort_datetime',
 			'property_from' => 'created_at',
 		),
-		'MyOrm\Observer_InsertCache'=>array(
+		// insert 時に紐づく timeline_cache レコードを挿入する
+		'MyOrm\Observer_InsertTimelineCache'=>array(
 			'events' => array('after_insert'),
-			'model_to' => '\Timeline\Model_TimelineCache',
 			'properties' => array(
 				'timeline_id' => 'id',
 				'member_id',
@@ -123,49 +123,11 @@ class Model_Timeline extends \Orm\Model
 				'sort_datetime',
 			),
 		),
-		'MyOrm\Observer_InsertCacheDuplicate'=>array(
-			'events'   => array('after_insert'),
-			'model_to' => '\Timeline\Model_TimelineCache',
-			'properties' => array(
-				'timeline_id' => 'id',
-				'member_id',
-				'member_id_to',
-				'group_id',
-				'public_flag',
-				'created_at',
-				'sort_datetime',
-			),
-			'special_properties' => array(
-				'is_follow' => array('value' => 1),
-			),
+		// update 時に timeline_cache の特定のカラムのみ更新する
+		'MyOrm\Observer_UpdateTimelineCache'=>array(
+			'events' => array('after_update'),
 		),
-		'MyOrm\Observer_UpdateCacheDuplicate'=>array(
-			'events'   => array('after_update'),
-			'key_from' => 'id',
-			'model_to' => '\Timeline\Model_TimelineCache',
-			'key_to'   => 'timeline_id',
-			'properties' => array(
-				'timeline_id' => 'id',
-				'member_id',
-				'member_id_to',
-				'group_id',
-				'public_flag',
-				'created_at',
-				'sort_datetime',
-			),
-			'special_properties' => array(
-				'is_follow' => array('value' => 1),
-			),
-			'is_check_updated_at' => array(
-				'property' => 'sort_datetime',
-			),
-			'is_update_duplicated' => array(
-				'is_insert_new_record' => true,
-				'additional_conditions' => array(
-					'is_follow' => 1,
-				),
-			),
-		),
+		// insert 時に紐づく memberfollow_timeline を inseert する
 		'MyOrm\Observer_InsertRelationialTable'=>array(
 			'events'   => array('after_insert'),
 			'model_to' => '\Timeline\Model_MemberFollowTimeline',
@@ -180,6 +142,7 @@ class Model_Timeline extends \Orm\Model
 				),
 			),
 		),
+		// update 時に memberfollow_timeline の updated_at を更新する
 		'MyOrm\Observer_UpdateRelationalTable'=>array(
 			'events'   => array('after_update'),
 			'key_from' => 'id',
@@ -228,15 +191,39 @@ class Model_Timeline extends \Orm\Model
 			->get_one();
 	}
 
+	public static function get4ids($timeline_ids)
+	{
+		if (!is_array($timeline_ids)) $timeline_ids = (array)$timeline_ids;
+
+		return self::query()
+			->where('id', 'in', $timeline_ids)
+			->get();
+	}
+
+	public static function get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids, $type = null)
+	{
+		$query = self::query()->where('foreign_table', $foreign_table);
+
+		if (is_array($foreign_ids))
+		{
+			$query = $query->where('foreign_id', 'in', $foreign_ids);
+		}
+		else
+		{
+			$query = $query->where('foreign_id', $foreign_ids);
+		}
+
+		if (!is_null($type))
+		{
+			$query = $query->where('type', $type);
+		}
+
+		return $query->get();
+	}
+
 	public static function delete4foreign_table_and_foreign_ids($foreign_table, $foreign_ids)
 	{
-		if (!is_array($foreign_ids)) $foreign_ids = (array)$foreign_ids;
-
-		$objs = self::query()
-			->where('foreign_table', $foreign_table)
-			->where('foreign_id', 'in', $foreign_ids)
-			->get();
-
+		$objs = self::get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids);
 		foreach ($objs as $obj) $obj->delete();
 	}
 
@@ -246,5 +233,66 @@ class Model_Timeline extends \Orm\Model
 		if (is_null($type)) throw new \InvalidArgumentException('first parameter is invalid.');
 
 		return self::query()->where('type', $type)->get();
+	}
+
+	public static function update_public_flag4foreign_table_and_foreign_id($public_flag, $foreign_table, $foreign_ids, $type)
+	{
+		$objs = self::get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids, $type);
+		foreach ($objs as $obj)
+		{
+			$obj->update_public_flag($public_flag);
+		}
+	}
+
+	public function update_public_flag($public_flag, $is_check_child_data = false)
+	{
+		if ($is_check_child_data) return $this->update_public_flag_with_check_child_data($public_flag);
+
+		$this->public_flag = $public_flag;
+
+		return $this->save();
+	}
+
+	public static function check_and_update_public_flag4child_data($public_flag, $child_foreign_table, $child_foreign_id)
+	{
+		if (!$ids = Model_TimelineChildData::get_timeline_ids4foreign_table_and_foreign_id($child_foreign_table, $child_foreign_id))
+		{
+			return false;
+		}
+		if (!$objs = self::get4ids($ids)) return false;
+
+		foreach ($objs as $obj)
+		{
+			$obj->update_public_flag_with_check_child_data($public_flag);
+		}
+	}
+
+	public function update_public_flag_with_check_child_data($public_flag = null)
+	{
+		if (is_null($public_flag)) $public_flag = PRJ_PUBLIC_FLAG_PRIVATE;
+
+		$public_flag = self::get_public_flag_for_update_with_check_child_data($public_flag, $this);
+		if ($this->public_flag == $public_flag) return;
+
+		$this->public_flag = $public_flag;
+		$this->save();
+	}
+
+	public static function get_public_flag_for_update_with_check_child_data($public_flag, Model_Timeline $obj)
+	{
+		$check_target_types = array(
+			\Config::get('timeline.types.album_image'),
+		);
+		if (!in_array($obj->type, $check_target_types)) return $public_flag;
+
+		$public_flag_range_max = Model_TimelineChildData::get_public_flag_range_max4timeline_id($obj->id);
+		if ($public_flag_range_max === false) return $public_flag;
+
+		if (\Site_Util::check_is_reduced_public_flag_range($public_flag_range_max, $public_flag))
+		{
+			return $public_flag_range_max;
+		}
+
+		return $public_flag;
 	}
 }

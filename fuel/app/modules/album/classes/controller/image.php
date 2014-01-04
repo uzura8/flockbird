@@ -152,12 +152,15 @@ class Controller_Image extends \Controller_Site
 
 					\DB::start_transaction();
 					if (isset($post['name']) && $post['name'] !== '' && $post['name'] !== $album_image->name) $album_image->name = $post['name'];
-					if (!$disabled_to_update_message && isset($post['public_flag'])) $album_image->public_flag = $post['public_flag'];
 					if ($post['shot_at_time'] && !\Util_Date::check_is_same_minute($post['shot_at_time'], $album_image->shot_at))
 					{
 						$album_image->shot_at = $post['shot_at_time'].':00';
 					}
 					$album_image->save();
+					if (!$disabled_to_update_message && isset($post['public_flag']))
+					{
+						$album_image->update_public_flag($post['public_flag']);
+					}
 					\DB::commit_transaction();
 
 					\Session::set_flash('message', \Config::get('term.album_image').'を編集をしました。');

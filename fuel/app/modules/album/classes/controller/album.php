@@ -320,18 +320,24 @@ class Controller_Album extends \Controller_Site
 				try
 				{
 					$post = $val->validated();
+					$is_update_public_flag = ($note->public_flag != $post['public_flag']);
 
 					\DB::start_transaction();
 					// update album
 					$album->name = $post['name'];
 					$album->body = $post['body'];
-					$album->public_flag = $post['public_flag'];
+					if ($is_update_public_flag) $album->public_flag = $post['public_flag'];
 					$album->save();
 
 					// update album_image public_flag
-					if (!empty($post['is_update_children_public_flag']))
+					if ($is_update_public_flag && !empty($post['is_update_children_public_flag']))
 					{
 						Model_AlbumImage::update_public_flag4album_id($album->id, $post['public_flag']);
+					}
+					// timeline の public_flag の更新
+					if ($is_update_public_flag)
+					{
+						\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($post['public_flag'], 'album', $album->id, \Config::get('timeline.types.album'));
 					}
 					\DB::commit_transaction();
 

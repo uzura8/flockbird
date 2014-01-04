@@ -134,6 +134,21 @@ class Model_Album extends \Orm\Model
 		return $files;
 	}
 
+	public function update_public_flag_with_relations($public_flag, $is_update_album_images = false)
+	{
+		// album_image の public_flag の更新
+		if ($is_update_album_images)
+		{
+			Model_AlbumImage::update_public_flag4album_id($this->id, $public_flag);
+		}
+
+		// timeline の public_flag の更新
+		\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'album', $this->id, \Config::get('timeline.types.album'));
+
+		$this->public_flag = $public_flag;
+		$this->save();
+	}
+
 	public static function get_album_for_foreign_table($member_id, $table_name)
 	{
 		$album = self::find('first', array(

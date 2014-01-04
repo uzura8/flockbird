@@ -84,4 +84,8 @@ $(function() {
 		delete_item('timeline/comment/api/delete.json', get_id_num($(this).attr('id')), '#commentBox');
 		return false;
 	});
+
+	$('body').tooltip({
+		selector: 'a[data-toggle=tooltip]'
+	});
 })

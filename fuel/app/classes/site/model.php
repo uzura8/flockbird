@@ -1,10 +1,24 @@
 <?php
 class Site_Model
 {
+	public static function get_model_name($table, $namespace = '')
+	{
+		$model = '\Model_'.Inflector::camelize($table);
+		if ($namespace) $model = sprintf('\%s%s', $namespace, $model);
+
+		return $model;
+	}
+
+	public static function get4ids($table, $values, $field = 'id', $namespace = null)
+	{
+		$model = self::get_model_name($table, $namespace);
+
+		return $model::query()->where($field, 'in', $values)->get();
+	}
+
 	public static function get_list_query($table, $params = array(), $namespace = '')
 	{
-		$model = 'Model_'.Util_string::camelize($table);
-		if ($namespace) $model = sprintf('\%s\%s', $namespace, $model);
+		$model = self::get_model_name($table, $namespace);
 		$query = $model::query();
 
 		// select

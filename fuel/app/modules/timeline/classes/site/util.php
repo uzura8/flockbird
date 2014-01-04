@@ -281,6 +281,42 @@ class Site_Util
 		return array($id, $uri);
 	}
 
+	public static function get_public_flag_info(Model_Timeline $timeline)
+	{
+		$info = array(
+			'model' => 'timeline',
+			'public_flag_target_id' => $timeline->id,
+			'have_children_public_flag' => false,
+			'child_model' => null,
+			'disabled_to_update' => false,
+		);
+		switch ($timeline->type)
+		{
+			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
+				break;
+			case \Config::get('timeline.types.note'):// note 投稿
+				$info['model'] = 'note';
+				$info['public_flag_target_id'] = $timeline->foreign_id;
+				break;
+			case \Config::get('timeline.types.album'):// album 作成
+				$info['model'] = 'album';
+				$info['public_flag_target_id'] = $timeline->foreign_id;
+				$info['have_children_public_flag'] = true;
+				$info['child_model'] = 'album_image';
+				break;
+			case \Config::get('timeline.types.member_register'):
+			case \Config::get('timeline.types.profile_image'):
+			case \Config::get('timeline.types.album_image_profile'):
+			case \Config::get('timeline.types.album_image'):
+				$info['disabled_to_update'] = array('message' => '変更できません。');
+				break;
+			default :
+				break;
+		}
+
+		return $info;
+	}
+
 	public static function get_article_view($timeline_cache_id, $timeline_id)
 	{
 		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));

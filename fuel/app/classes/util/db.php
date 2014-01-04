@@ -41,22 +41,6 @@ class Util_db
 		return $syllabary_range_list[$initial];
 	}
 
-	public static function check_record_exist($table, $field, $value)
-	{
-		$model = 'Model_'.Inflector::camelize($table);
-
-		return $model::query()->where($field, $value)->count() > 0;
-	}
-
-	public static function get4ids($table, $values, $field = 'id', $namespace = null)
-	{
-		$model = '';
-		if ($namespace) $model .= "\\".$namespace;
-		$model .= '\Model_'.Inflector::camelize($table);
-
-		return $model::query()->where($field, 'in', $values)->get();
-	}
-
 	public static function get_ids_from_model_objects($model_objects, $id_column_name = 'id')
 	{
 		$ids = array();

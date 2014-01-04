@@ -18,16 +18,21 @@ $images = \Timeline\Site_Util::get_timeline_images(
 	$timeline->member_id,
 	\Auth::check() ? $u->id : 0
 );
+$public_flag_info = \Timeline\Site_Util::get_public_flag_info($timeline);
 $data = array(
 	'member'  => $timeline->member,
 	'size'    => 'M',
 	'date'    => array('datetime' => $timeline->created_at),
 	'images'  => $images,
 	'comment' => $comment,
-	'model'   => 'timeline',
 	'id'      => $timeline->id,
+	'model'   => $public_flag_info['model'],
 	'public_flag' => $timeline->public_flag,
 	'public_flag_view_icon_only' => IS_SP,
+	'public_flag_target_id'  => $public_flag_info['public_flag_target_id'],
+	'have_children_public_flag' => $public_flag_info['have_children_public_flag'],
+	'child_model' => $public_flag_info['child_model'],
+	'public_flag_disabled_to_update' => $public_flag_info['disabled_to_update'],
 	'list_more_box_attrs' => array('data-get_uri' => $comment_get_uri),
 	'post_comment_button_attrs' => array(
 		'data-get_uri' => $comment_get_uri,

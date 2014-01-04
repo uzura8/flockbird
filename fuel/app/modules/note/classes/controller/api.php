@@ -116,7 +116,7 @@ class Controller_Api extends \Controller_Site_Api
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($note->public_flag);
 
 			\DB::start_transaction();
-			$note->update_public_flag_with_images($public_flag);
+			$note->update_public_flag_with_relations($public_flag);
 			\DB::commit_transaction();
 
 			$data = array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true, 'without_parent_box' => true);
@@ -125,13 +125,17 @@ class Controller_Api extends \Controller_Site_Api
 
 			return \Response::forge($response, $status_code);
 		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
 		catch(\HttpInvalidInputException $e)
 		{
 			$status_code = 400;
 		}
 		catch(\FuelException $e)
 		{
-			\DB::rollback_transaction();
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 

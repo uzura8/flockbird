@@ -212,10 +212,11 @@ class Controller_Note extends \Controller_Site
 				$file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
+				$is_update_public_flag = ($note->public_flag != $post['public_flag']);
 
-				$note->title       = $post['title'];
-				$note->body        = $post['body'];
-				$note->public_flag = $post['public_flag'];
+				$note->title = $post['title'];
+				$note->body  = $post['body'];
+				if ($is_update_public_flag) $note->public_flag = $post['public_flag'];
 
 				$is_published = !$note->is_published && empty($post['is_draft']);
 				if ($is_published) $note->is_published = 1;
@@ -240,6 +241,11 @@ class Controller_Note extends \Controller_Site
 				if ($is_published)
 				{
 					\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+				}
+				elseif ($is_update_public_flag)
+				{
+					// timeline の public_flag の更新
+					\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($note->public_flag, 'note', $note->id, \Config::get('timeline.types.note'));
 				}
 				\DB::commit_transaction();
 

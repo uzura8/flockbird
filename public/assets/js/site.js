@@ -396,10 +396,10 @@ function update_public_flag_execute(selfDomElement) {
 		},
 		error: function(result){
 			$(parentElement).html(selfDomElement);
-
-			var resData = $.parseJSON(result.responseText);
-			var message = resData.error.message ? resData.error.message : get_term('public_flag') + 'の変更に失敗しました。';
-			$.jGrowl(get_error_message(result['status'], message));
+			//var resData = $.parseJSON(result.responseText);
+			//var message = resData.error.message ? resData.error.message : get_term('public_flag') + 'の変更に失敗しました。';
+			//$.jGrowl(get_error_message(result['status'], message));
+			$.jGrowl(get_error_message(result['status'], get_term('public_flag') + 'の投稿に失敗しました。'));
 		}
 	});
 }

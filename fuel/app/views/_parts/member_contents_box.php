@@ -47,7 +47,7 @@ if (isset($public_flag, $model, $id))
 	$is_mycontents = Auth::check() && $u->id == $member->id;
 	$data = array(
 		'model' => $model,
-		'id' => $id,
+		'id' => !empty($public_flag_target_id) ? $public_flag_target_id : $id,
 		'public_flag' => $public_flag,
 		'view_icon_only' => isset($public_flag_view_icon_only) ? $public_flag_view_icon_only : false,
 		'have_children_public_flag' => isset($have_children_public_flag) ? $have_children_public_flag : false,

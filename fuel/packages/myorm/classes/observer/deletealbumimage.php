@@ -11,7 +11,7 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 	public function before_delete(\Orm\Model $obj)
 	{
 		// カバー写真の確認 & 削除
-		if (!$album = \Album\Model_Album::query()->where('id', $obj->album_id)->get_one())
+		if (!$album = \Album\Model_Album::check_authority($obj->album_id))
 		{
 			throw new \FuelException('Invalid album id.');
 		}
@@ -22,20 +22,19 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 		}
 
 		// プロフィール写真の確認 & 削除
-		if (!$member = \Model_Member::query()->where('id', $album->member_id)->get_one())
-		{
-			throw new \FuelException('Invalid member id.');
-		}
 		if ($album->foreign_table == 'member')
 		{
-			if ($member->file_id == $obj->file_id)
+			if ($album->member->file_id == $obj->file_id)
 			{
-				$member->file_id = null;
-				$member->save();
+				$album->member->file_id = null;
+				$album->member->save();
 			}
 			// timeline 投稿の削除
 			\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $obj->id);
 		}
+
+		// timeline_child_data の削除
+		\Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('album_image', $obj->id);
 
 		// file 削除
 		if (!$file = \Model_File::query()->where('id', $obj->file_id)->get_one())

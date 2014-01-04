@@ -111,6 +111,7 @@ class Test_Model_Timeline extends \TestCase
 			$this->assertEmpty($obj->body);
 		}
 	}
+
 	public function test_check_type_note()
 	{
 		if (!$list = Model_Timeline::get4type_key('note'))
@@ -164,6 +165,93 @@ class Test_Model_Timeline extends \TestCase
 
 			// 未使用カラムの値が null か
 			$this->assertEmpty($obj->body);
+		}
+	}
+
+	public function test_check_type_album_image()
+	{
+		if (!$list = Model_Timeline::get4type_key('album_image'))
+		{
+			$this->markTestSkipped('No record for test.');
+		}
+
+		foreach ($list as $obj)
+		{
+			// check for reference data.
+			$this->assertEquals('album', $obj->foreign_table);
+			$album = \Album\Model_Album::check_authority($obj->foreign_id);
+			$this->assertNotEmpty($album);
+
+			// check for member
+			$member = \Model_Member::check_authority($obj->member_id);
+			$this->assertNotEmpty($member);
+
+			// check for member_id
+			$this->assertEquals($album->member_id, $obj->member_id);
+
+			// check for timeline_child_data
+			$timeline_child_datas = Model_TimelineChildData::get4timeline_id($obj->id);
+			$this->assertNotEmpty($timeline_child_datas);
+
+			$public_flag_max_range = null;
+			if ($timeline_child_datas)
+			{
+				foreach ($timeline_child_datas as $timeline_child_data)
+				{
+					// check for reference data.
+					$this->assertEquals('album_image', $timeline_child_data->foreign_table);
+
+					// check for album_image
+					$album_image = \Album\Model_AlbumImage::check_authority($timeline_child_data->foreign_id);
+					$this->assertNotEmpty($album_image);
+
+					// check for album_id
+					$this->assertEquals($album->id, $album_image->album_id);
+
+					// check for public_flag.
+					if (is_null($public_flag_max_range)) $public_flag_max_range = $album_image->public_flag;
+					if (\Site_Util::check_is_expanded_public_flag_range($public_flag_max_range, $album_image->public_flag))
+					{
+						$public_flag_max_range = $album_image->public_flag;
+					}
+				}
+				$this->assertEquals($public_flag_max_range, $obj->public_flag);
+			}
+
+			// 未使用カラムの値が null か
+			$this->assertEmpty($obj->body);
+		}
+	}
+
+	public function test_timeline_cache()
+	{
+		if (!$list = Model_Timeline::find('all'))
+		{
+			$this->markTestSkipped('No record for test.');
+		}
+		foreach ($list as $obj)
+		{
+			// test for cache exists.
+			$caches = Model_TimelineCache::get4timeline_id($obj->id);
+			$this->assertNotEmpty($caches);
+
+			// test for cache count.
+			$this->assertCount(2, $caches);
+
+			foreach ($caches as $cache)
+			{
+				// test for same values.
+				$this->assertEquals($obj->member_id, $cache->member_id);
+				$this->assertEquals($obj->member_id_to, $cache->member_id_to);
+				$this->assertEquals($obj->group_id, $cache->group_id);
+				$this->assertEquals($obj->page_id, $cache->page_id);
+				$this->assertEquals($obj->public_flag, $cache->public_flag);
+				$this->assertEquals($obj->created_at, $cache->created_at);
+				$this->assertEquals($obj->sort_datetime, $cache->sort_datetime);
+
+				// test for is_follow.
+				$this->assertContains($cache->is_follow, array(0, 1));
+			}
 		}
 	}
 }

@@ -61,4 +61,9 @@ class Model_TimelineCache extends \Orm\Model
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 	}
+
+	public static function get4timeline_id($timeline_id)
+	{
+		return self::query()->where('timeline_id', $timeline_id)->get();
+	}
 }
