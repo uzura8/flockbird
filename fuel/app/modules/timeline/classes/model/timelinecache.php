@@ -62,8 +62,11 @@ class Model_TimelineCache extends \Orm\Model
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 	}
 
-	public static function get4timeline_id($timeline_id)
+	public static function get4timeline_id($timeline_id, $is_limit_one_record = false, $is_follow = false)
 	{
-		return self::query()->where('timeline_id', $timeline_id)->get();
+		$query = self::query()->where('timeline_id', $timeline_id);
+		if (!$is_limit_one_record) return $query->get();
+
+		return $query->where('is_follow', (int)$is_follow)->get_one();
 	}
 }
