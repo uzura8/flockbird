@@ -132,7 +132,14 @@ function form_radio_public_flag($val_obj = null, $default_value = null, $with_no
 	return render('_parts/form/radio_public_flag', $data);
 }
 
-function form_upload_files($files, $hide_form = false)
+function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array())
 {
-	return render('_parts/form/upload_files', array('files' => $files, 'hide_form' => $hide_form));
+	return render('_parts/form/upload_files', array(
+		'files' => $files,
+		'is_raw_form' => $is_raw_form,
+		'hide_form' => $hide_form,
+		'is_horizontal' => $is_horizontal,
+		'thumbnail_size' => $thumbnail_size,
+		'selects' => $selects,
+	));
 }

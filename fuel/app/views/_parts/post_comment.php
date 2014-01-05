@@ -1,5 +1,5 @@
 <?php
-$textarea_attrs_def = array('rows' => 2, 'class' => 'col-xs-12 autogrow', 'id' => 'textarea_comment');
+$textarea_attrs_def = array('rows' => 2, 'class' => 'form-control autogrow', 'id' => 'textarea_comment');
 $textarea_attrs     = (empty($textarea_attrs)) ? $textarea_attrs_def : array_merge($textarea_attrs_def, $textarea_attrs);
 
 $button_attrs_def = array('class' => 'btn btn-default', 'id' => 'btn_comment');
@@ -24,7 +24,20 @@ if (isset($size))
 			<div class="main">
 				<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>
 				<div class="input"><?php echo Form::textarea('body', null, $textarea_attrs); ?></div>
+<?php if (!empty($with_uploader)): ?>
+<?php if (!isset($files)) $files = array(); ?>
+				<div class="upload hidden">
+				<?php echo form_upload_files($files, false, true, false, 'S', $uploader_selects); ?>
+				</div>
+<?php endif; ?>
 				<div class="clearfix">
+<?php if (!empty($with_uploader)): ?>
+					<?php echo Form::button(
+						'display_fileinput-button',
+						'<span class="glyphicon glyphicon-camera"></span> 写真を追加',
+						array('class' => 'btn btn-default btn-ms pull-left display_upload_form')
+					); ?>
+<?php endif; ?>
 					<?php echo Form::button('btn_comment', '送信', $button_attrs); ?>
 <?php if (!empty($with_public_flag_selector)): ?>
 <?php

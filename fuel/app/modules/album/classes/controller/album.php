@@ -425,10 +425,10 @@ class Controller_Album extends \Controller_Site
 
 			if (!$error)
 			{
+				$deleted_files = array();
 				try
 				{
 					$result        = 0;
-					$deleted_files = array();
 					\DB::start_transaction();
 					if ($is_delete)
 					{

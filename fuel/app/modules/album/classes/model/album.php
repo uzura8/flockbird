@@ -157,10 +157,11 @@ class Model_Album extends \Orm\Model
 		));
 		if ($album) return $album;
 
+		$table_info = Site_Util::get_foreign_table_info($table_name);
 		$self = self::forge();
-		$self->name          = self::get_name_for_foreign_table($table_name);
+		$self->name          = $table_info['name'];
 		$self->member_id     = $member_id;
-		$self->public_flag   = \Config::get('site.public_flag.default');
+		$self->public_flag   = $table_info['public_flag'];
 		$self->foreign_table = $table_name;
 		$self->save();
 
@@ -172,22 +173,5 @@ class Model_Album extends \Orm\Model
 		$album = self::get_album_for_foreign_table($member_id, $table_name);
 
 		return $album->id;
-	}
-
-	private static function get_name_for_foreign_table($table_name)
-	{
-		switch ($table_name)
-		{
-			case 'note':
-				return sprintf('%s用%s', \Config::get('term.note'), \Config::get('term.album'));
-				break;
-			case 'member':
-				return sprintf('%s写真用%s', \Config::get('term.profile'), \Config::get('term.album'));
-				break;
-			default :
-				break;
-		}
-
-		return \Config::get('term.album');
 	}
 }

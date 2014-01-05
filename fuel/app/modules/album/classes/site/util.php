@@ -52,31 +52,33 @@ class Site_Util
 
 	public static function check_album_disabled_to_update($album_foreign_table, $is_bool = false)
 	{
-		if ($album_foreign_table && in_array($album_foreign_table, self::get_album_foreign_tables()))
-		{
-			if ($is_bool) return true;
+		if (!$album_foreign_table) return false;
+		if (!in_array($album_foreign_table, self::get_album_foreign_tables())) return false;
 
-			switch ($album_foreign_table)
-			{
-				case 'note':
-					$message_prefix = sprintf('%s用%sの', \Config::get('term.note'), \Config::get('term.album'));
-					break;
-				case 'member':
-					$message_prefix = sprintf('%s用%sの', \Config::get('term.profile'), \Config::get('term.album'));
-					break;
-				default :
-					$message_prefix = '';
-					break;
-			}
-			return array('message' => sprintf('%s%sは変更できません。', $message_prefix, \Config::get('term.public_flag.label')));
+		if ($is_bool) return true;
+
+		switch ($album_foreign_table)
+		{
+			case 'note':
+				$message_prefix = sprintf('%s用%sの', \Config::get('term.note'), \Config::get('term.album'));
+				break;
+			case 'member':
+				$message_prefix = sprintf('%s用%sの', \Config::get('term.profile'), \Config::get('term.album'));
+				break;
+			case 'timeline':
+				$message_prefix = sprintf('%s用%sの', \Config::get('term.timeline'), \Config::get('term.album'));
+				break;
+			default :
+				$message_prefix = '';
+				break;
 		}
 
-		return false;
+		return array('message' => sprintf('%s%sは変更できません。', $message_prefix, \Config::get('term.public_flag.label')));
 	}
 
 	public static function get_album_foreign_tables()
 	{
-		return array('note', 'member');
+		return array('note', 'member', 'timeline');
 	}
 
 	public static function get_file_objects($album_images, $member_id, $album_id)
@@ -106,5 +108,27 @@ class Site_Util
 
 			$album_image->save();
 		}
+	}
+
+	public static function get_foreign_table_info($table_name)
+	{
+		$info = array('public_flag' => \Config::get('site.public_flag.default'));
+		switch ($table_name)
+		{
+			case 'note':
+				$info['name'] = sprintf('%s用%s', \Config::get('term.note'), \Config::get('term.album'));
+				break;
+			case 'member':
+				$info['name'] = sprintf('%s用%s', \Config::get('term.profile'), \Config::get('term.album'));
+				$info['public_flag'] = PRJ_PUBLIC_FLAG_ALL;
+				break;
+			case 'timeline':
+				$info['name'] = sprintf('%s用%s', \Config::get('term.timeline'), \Config::get('term.album'));
+				break;
+			default :
+				break;
+		}
+
+		return $info;
 	}
 }

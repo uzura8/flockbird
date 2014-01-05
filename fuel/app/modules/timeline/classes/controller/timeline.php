@@ -90,14 +90,33 @@ class Controller_Timeline extends \Controller_Site
 	public function action_delete($id = null)
 	{
 		\Util_security::check_csrf();
-
 		if (!$timeline = Model_Timeline::check_authority($id, $this->u->id))
 		{
 			throw new \HttpNotFoundException;
 		}
-		$timeline->delete();
 
-		\Session::set_flash('message', \Config::get('term.timeline').'を削除しました。');
-		\Response::redirect('member');
+		try
+		{
+			$id = (int)\Input::post('id');
+			if (!$id || !$timeline = Model_Timeline::check_authority($id, $this->u->id))
+			{
+				throw new \HttpNotFoundException;
+			}
+
+			\DB::start_transaction();
+			list($result, $deleted_files) = Site_Model::delete_timeline($timeline, $this->u->id);
+			\DB::commit_transaction();
+			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
+
+			\Session::set_flash('message', \Config::get('term.timeline').'を削除しました。');
+			\Response::redirect('timeline/member');
+		}
+		catch(\FuelException $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			\Session::set_flash('error', $e->getMessage());
+		}
+
+		\Response::redirect('timeline/'.$id);
 	}
 }

@@ -110,6 +110,7 @@ class Site_Model
 				return \Note\Model_Note::find($foreign_id);
 			case \Config::get('timeline.types.album'):
 			case \Config::get('timeline.types.album_image'):
+			case \Config::get('timeline.types.album_image_timeline'):
 				return \Album\Model_Album::find($foreign_id);
 		}
 
@@ -152,27 +153,18 @@ class Site_Model
 		return $timeline;
 	}
 
-	public static function delete_timeline($foreign_table, $foreign_id)
+	public static function delete_timeline(Model_Timeline $timeline, $member_id)
 	{
-		$timeline = Model_Timeline::query()
-			->where('foreign_table', $foreign_table)
-			->where('foreign_id', $foreign_id)
-			->get_one();
-		if (!$timeline) return false;
+		$deleted_files = null;
+		if (Site_Util::check_type($timeline->type, 'album_image_timeline'))
+		{
+			list($result, $deleted_files) = $timeline->delete_with_album_image($member_id);
+		}
+		else
+		{
+			$result = $timeline->delete();
+		}
 
-		return $timeline->delete();
-	}
-
-	public static function delete_timelines($foreign_table, array $foreign_ids)
-	{
-		$timeline_ids = \Util_db::conv_col(
-			\DB::select('timeline_id')->from('timeline_data')
-				->where('foreign_table', $foreign_table)
-				->where('foreign_id', 'in', $foreign_ids)
-				->execute()->as_array()
-		);
-		if (!$timeline_ids) return false;
-
-		return \DB::delete('timeline')->where('id', 'in', $timeline_ids)->execute();
+		return array($result, $deleted_files);
 	}
 }

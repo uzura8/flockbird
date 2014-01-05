@@ -223,8 +223,15 @@ class Model_Timeline extends \Orm\Model
 
 	public static function delete4foreign_table_and_foreign_ids($foreign_table, $foreign_ids)
 	{
+		$deleted_files_all = array();
 		$objs = self::get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids);
-		foreach ($objs as $obj) $obj->delete();
+		foreach ($objs as $obj)
+		{
+			list($result, $deleted_files) = Site_Model::delete_timeline($timeline, $this->u->id);
+			$deleted_files_all = array_merge($deleted_files_all, $deleted_files);
+		}
+
+		return $deleted_files_all;
 	}
 
 	public static function get4type_key($type_key)
@@ -294,5 +301,23 @@ class Model_Timeline extends \Orm\Model
 		}
 
 		return $public_flag;
+	}
+
+	public function delete_with_album_image($member_id)
+	{
+		$album_image_ids = array();
+		$deleted_files   = null;
+		if (Site_Util::check_type($this->type, 'album_image_timeline')
+			&& $album = \Album\Model_Album::check_authority($this->foreign_id, $member_id))
+		{
+			$album_image_ids = Model_TimelineChildData::get_foreign_ids4timeline_id($this->id);
+		}
+		if ($album_image_ids)
+		{
+			list($result, $deleted_files) = \Album\Model_AlbumImage::delete_multiple($album_image_ids, $album);
+		}
+		$result = $this->delete();
+
+		return array($result, $deleted_files);
 	}
 }

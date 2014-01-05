@@ -269,20 +269,29 @@ class Model_AlbumImage extends \Orm\Model
 		$result = 0;
 		foreach ($album_images as $album_image)
 		{
-			if (isset($set_value['name']) && strlen($set_value['name']))
+			$is_set = false;
+			if (isset($set_value['name']) && strlen($set_value['name'])
+				&& $album_image->name != $set_value['name'])
 			{
 				$album_image->name = $set_value['name'];
+				$is_set = true;
 			}
-			if (isset($set_value['shot_at']) && strlen($set_value['shot_at']) && !\Util_Date::check_is_same_minute($set_value['shot_at'], $album_image->shot_at))
+			if (isset($set_value['shot_at']) && strlen($set_value['shot_at'])
+				&& !\Util_Date::check_is_same_minute($set_value['shot_at'], $album_image->shot_at))
 			{
 				$album_image->shot_at = $set_value['shot_at'].':'.'00';
+				$is_set = true;
 			}
-			$album_image->save();
-			if (!$is_disabled_to_update_public_flag && isset($set_value['public_flag']) && $set_value['public_flag'] != 99)
+			if ($is_set) $album_image->save();
+
+			if (!$is_disabled_to_update_public_flag && isset($set_value['public_flag'])
+				&& $set_value['public_flag'] != 99
+				&& $album_image->public_flag != $set_value['public_flag'])
 			{
 				$album_image->update_public_flag($set_value['public_flag']);
+				$is_set = true;
 			}
-			$result++;
+			if ($is_set) $result++;;
 		}
 
 		return $result;

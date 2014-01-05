@@ -2,13 +2,17 @@
 /*global window, $ */
 $(function () {
 	'use strict';
+	var post_url = get_url('filetmp/api/upload.html');
 	// Change this to the location of your server-side upload handler:
-	var url = get_url('filetmp/api/upload.html');
 	$('#fileupload').fileupload({
-		url: url,
+		url: post_url,
 		dataType: 'text',
+		formData: {thumbnail_size: $('#thumbnail_size').val()},
+		start: function (e) {
+			$('#progress .progress-bar').css('width', 0);
+		},
 		done: function (e, data) {
-			$('#files').append(data['result']).fadeIn('fast');
+			$('#files').append(data['result']).fadein('fast');
 		},
 		progressall: function (e, data) {
 			var progress = parseInt(data.loaded / data.total * 100, 10);

@@ -223,6 +223,53 @@ class Test_Model_Timeline extends \TestCase
 		}
 	}
 
+	public function test_check_type_album_image_timeline()
+	{
+		if (!$list = Model_Timeline::get4type_key('album_image_timeline'))
+		{
+			$this->markTestSkipped('No record for test.');
+		}
+
+		foreach ($list as $obj)
+		{
+			// check for reference data.
+			$this->assertEquals('album', $obj->foreign_table);
+			$album = \Album\Model_Album::check_authority($obj->foreign_id);
+			$this->assertNotEmpty($album);
+
+			// check for member
+			$member = \Model_Member::check_authority($obj->member_id);
+			$this->assertNotEmpty($member);
+
+			// check for member_id
+			$this->assertEquals($album->member_id, $obj->member_id);
+
+			// check for timeline_child_data
+			$timeline_child_datas = Model_TimelineChildData::get4timeline_id($obj->id);
+			$this->assertNotEmpty($timeline_child_datas);
+
+			$public_flag_max_range = null;
+			if ($timeline_child_datas)
+			{
+				foreach ($timeline_child_datas as $timeline_child_data)
+				{
+					// check for reference data.
+					$this->assertEquals('album_image', $timeline_child_data->foreign_table);
+
+					// check for album_image
+					$album_image = \Album\Model_AlbumImage::check_authority($timeline_child_data->foreign_id);
+					$this->assertNotEmpty($album_image);
+
+					// check for album_id
+					$this->assertEquals($album->id, $album_image->album_id);
+
+					// check for public_flag.
+					$this->assertEquals($album_image->public_flag, $obj->public_flag);
+				}
+			}
+		}
+	}
+
 	public function test_timeline_cache()
 	{
 		if (!$list = Model_Timeline::find('all'))

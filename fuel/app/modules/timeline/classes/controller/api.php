@@ -69,6 +69,9 @@ class Controller_Api extends \Controller_Site_Api
 	public function post_create()
 	{
 		$response = array('status' => 0);
+		$file_tmps = array();
+		$moved_files = array();
+		$album_image_ids = array();
 		try
 		{
 			\Util_security::check_csrf();
@@ -76,13 +79,46 @@ class Controller_Api extends \Controller_Site_Api
 			$timeline = Model_Timeline::forge();
 			$val = \Validation::forge();
 			$val->add_model($timeline);
-			//$val->add('public_flag', \Config::get('term.public_flag.label'))->add_rule('public_flag');
 			if (!$val->run()) throw new \FuelException($val->show_errors());
 			$post = $val->validated();
 
+			$file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
+
+			if (!strlen($post['body']) && !$file_tmps)
+			{
+				throw new \FuelException('Data is empty.');
+			}
+
+			$type_key = 'normal';
+			$album_id = (int)\Input::post('album_id', 0);
+			if ($file_tmps && $album_id)
+			{
+				if (!$album = \Album\Model_Album::check_authority($album_id, $this->u->id))
+				{
+					throw new \FuelException('Album id is invalid.');
+				}
+				if (\Album\Site_Util::check_album_disabled_to_update($album->foreign_table, true))
+				{
+					throw new \FuelException('Album id is invalid.');
+				}
+				$type_key = 'album_image';
+			}
+
 			\DB::start_transaction();
-			$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'normal', null, $post['body'], $timeline);
+			if ($file_tmps)
+			{
+				if (!$album_id)
+				{
+					$type_key = 'album_image_timeline';
+					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'timeline');
+				}
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $post['public_flag']);
+			}
+			$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], $type_key, $album_id, $post['body'], $timeline, $album_image_ids);
 			\DB::commit_transaction();
+
+			// thumbnail 作成 & tmp_file thumbnail 削除
+			\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
 			$response['status'] = 1;
 			$response['id'] = $timeline->id;
@@ -91,6 +127,7 @@ class Controller_Api extends \Controller_Site_Api
 		catch(\FuelException $e)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
+			if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
 			$status_code = 400;
 			$response['message'] = $e->getMessage();
 		}
@@ -116,14 +153,18 @@ class Controller_Api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			$timeline->delete();
+
+			\DB::start_transaction();
+			list($result, $deleted_files) = Site_Model::delete_timeline($timeline, $this->u->id);
+			\DB::commit_transaction();
+			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 			$response['status'] = 1;
 			$status_code = 200;
 		}
 		catch(\FuelException $e)
 		{
-			\DB::rollback_transaction();
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 
@@ -152,6 +193,11 @@ class Controller_Api extends \Controller_Site_Api
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($timeline->public_flag);
 
 			\DB::start_transaction();
+			if (Site_Util::check_type($timeline->type, 'album_image_timeline'))
+			{
+				$album_image_ids = Model_TimelineChildData::get_foreign_ids4timeline_id($timeline->id);
+				\Album\Model_AlbumImage::update_multiple_each($album_image_ids, array('public_flag' => $public_flag));
+			}
 			$timeline->public_flag = $public_flag;
 			$timeline->save();
 			\DB::commit_transaction();

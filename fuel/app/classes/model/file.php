@@ -117,7 +117,7 @@ class Model_File extends \Orm\Model
 	{
 		if (!$self = self::find($id)) return false;
 
-		\Timeline\Site_Model::delete_timeline('file', $id);
+		\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $id);
 		$deleted_filesize = $self->filesize;
 		$self->delete();
 

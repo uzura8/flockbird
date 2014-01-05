@@ -18,7 +18,10 @@ return array(
 			'trim_width' => 200,
 		),
 		'thumbnail' => array(
-			'limit' => 3,
+			'limit' => array(
+				'default' => 3,
+				'album_image_timeline' => 12,
+			),
 		),
 	),
 	'types' => array(

@@ -194,32 +194,36 @@ function reset_textarea()
 
 function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 {
-	var selfDomElement     = (arguments.length > 4) ? arguments[4] : false;
-	var public_flag        = (arguments.length > 5) ? String(arguments[5]) : '';
-	var textarea_attribute = (arguments.length > 6) ? arguments[6] : '#textarea_comment';
-	var list_block_id      = (arguments.length > 7) ? arguments[7] : '#comment_list';
-	var textarea_height    = (arguments.length > 8) ? arguments[8] : '33px';
-	var is_insert_before   = (arguments.length > 9) ? arguments[9] : false;
-	var article_name       = (arguments.length > 10) ? arguments[10] : 'コメント';
-	var count_attr_prefix  = (arguments.length > 11) ? arguments[11] : '#comment_count_';
+	var selfDomElement       = (arguments.length > 4)  ? arguments[4] : false;
+	var public_flag          = (arguments.length > 5)  ? String(arguments[5]) : '';
+	var textarea_attribute   = (arguments.length > 6)  ? arguments[6] : '#textarea_comment';
+	var list_block_id        = (arguments.length > 7)  ? arguments[7] : '#comment_list';
+	var post_data_additional = (arguments.length > 8)  ? arguments[8] : {};
+	var is_check_input_body  = (arguments.length > 9)  ? arguments[9] : true;
+	var textarea_height      = (arguments.length > 10) ? arguments[10] : '33px';
+	var is_insert_before     = (arguments.length > 11) ? arguments[11] : false;
+	var article_name         = (arguments.length > 12) ? arguments[12] : 'コメント';
+	var count_attr_prefix    = (arguments.length > 13) ? arguments[13] : '#comment_count_';
 
 	var body = $(textarea_attribute).val().trim();
-	if (body.length <= 0) return;
+	if (is_check_input_body && body.length <= 0) return;
 
 	var selfDomElement_html = (selfDomElement) ? $(selfDomElement).html() : '';
-	var data = {'body':body};
+	var post_data = post_data_additional;
+	post_data['body'] = body;
 	var count_attribute = '';
 	if (parent_id) {
-		data['id'] = parent_id;
+		post_data['id'] = parent_id;
 		count_attribute = count_attr_prefix + parent_id;
 	}
-	if (public_flag.length > 0) data['public_flag'] = public_flag;
-	data = set_token(data);
+	if (public_flag.length > 0) post_data['public_flag'] = public_flag;
+	post_data = set_token(post_data);
+	var ret = false;
 	$.ajax({
 		url : get_baseUrl() + post_uri,
 		type : 'POST',
 		dataType : 'text',
-		data : data,
+		data : post_data,
 		timeout: 10000,
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
@@ -244,11 +248,15 @@ function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 			}
 			$(textarea_attribute).val('');
 			$(textarea_attribute).css('height', textarea_height);
+
+			var ret = true;
 		},
-		error: function(data){
-			$.jGrowl(get_error_message(data['status'], article_name + 'の投稿に失敗しました。'));
+		error: function(result){
+			$.jGrowl(get_error_message(result['status'], article_name + 'の投稿に失敗しました。'));
 		}
 	});
+
+	return ret;
 }
 
 function set_datetimepicker(attribute)

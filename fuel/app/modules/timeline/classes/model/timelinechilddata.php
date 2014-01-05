@@ -35,7 +35,7 @@ class Model_TimelineChildData extends \Orm\Model
 			'events' => array('before_save'),
 		),
 		// delete 後に timeline_child_data が無くなる timeline を削除、または timeline の公開範囲を適切に更新
-		'MyOrm\iObserver_DeleteOrUpdateTimeline4ChildData'=>array(
+		'MyOrm\Observer_DeleteOrUpdateTimeline4ChildData'=>array(
 			'events' => array('after_delete'),
 		),
 	);

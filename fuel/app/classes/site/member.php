@@ -4,7 +4,7 @@ class Site_Member
 {
 	public static function save_profile_image(Model_Member $member, $file_path = null)
 	{
-		\Timeline\Site_Model::delete_timeline('file', $member->file_id);
+		\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $member->file_id);
 		if ($member->file_id && $file_old = Model_File::find($member->file_id))
 		{
 			if (!\Album\Model_AlbumImage::get4file_id($member->file_id)) $file_old->delete();

@@ -14,14 +14,36 @@ class Site_Util
 		);
 	}
 
-	public static function get_timeline_save_values($type_key = null)
+	public static function get_type4key($type_key = null)
 	{
 		if (!$type_key) $type_key = 'normal';
 		if (!$type = \Config::get('timeline.types.'.$type_key))
 		{
-			throw new \InvalidArgumentException("first parameter is invalid.");
+			throw new \InvalidArgumentException('first parameter is invalid.');
 		}
 
+		return $type;
+	}
+
+	public static function get_key4type($target_type = null)
+	{
+		$types = \Config::get('timeeline.types');
+		foreach ($types as $key => $type)
+		{
+			if ($type == $target_type) return $key;
+		}
+
+		throw new \InvalidArgumentException('first parameter is invalid.');
+	}
+
+	public static function check_type($target_type, $type_key)
+	{
+		return $target_type == self::get_type4key($type_key);
+	}
+
+	public static function get_timeline_save_values($type_key = null)
+	{
+		$type = self::get_type4key($type_key);
 		$foreign_table = null;
 		$child_foreign_table = null;
 		switch ($type_key)
@@ -47,7 +69,7 @@ class Site_Util
 				$foreign_table = 'album_image';
 				break;
 			case 'album_image_timeline':
-				$foreign_table = 'album_image';
+				$foreign_table = 'album';
 				$child_foreign_table = 'album_image';
 				break;
 		}
@@ -84,7 +106,14 @@ class Site_Util
 				)) : null;
 				break;
 			case \Config::get('timeline.types.album_image_timeline'):
-				$body = null;
+				if (!strlen($body))
+				{
+					$body = sprintf('%sに写真を投稿しました。', \Config::get('term.timeline'));
+					if (!empty($optional_info['count']))
+					{
+						$body = sprintf('%sに写真を %d 枚投稿しました。', \Config::get('term.timeline'), $optional_info['count']);
+					}
+				}
 				break;
 			default :
 				break;
@@ -171,13 +200,17 @@ class Site_Util
 
 	public static function get_timeline_images($type, $foreign_id, $timeline_id = null, $target_member_id = null, $self_member_id = null)
 	{
+		// defaults
 		$images = array();
+		$images['file_cate']        = 'ai';
+		$images['size']             = 'N_M';
+		$images['column_count']     = 3;
+
 		switch ($type)
 		{
 			case \Config::get('timeline.types.album_image_profile'):
 				$images['list']   = array();
 				$images['list'][] = \Album\Model_AlbumImage::check_authority($foreign_id);
-				$images['file_cate']        = 'ai';
 				$images['additional_table'] = 'profile';
 				$images['size']             = 'P_LL';
 				$images['column_count']     = 2;
@@ -194,14 +227,11 @@ class Site_Util
 			case \Config::get('timeline.types.note'):
 				list($images['list'], $images['count_all']) = \Note\Model_NoteAlbumImage::get_album_image4note_id(
 					$foreign_id,
-					\Config::get('timeline.articles.thumbnail.limit'),
+					\Config::get('timeline.articles.thumbnail.limit.default'),
 					array('id' => 'asc'),
 					true
 				);
-				$images['file_cate']        = 'ai';
 				$images['additional_table'] = 'note';
-				$images['size']             = 'N_M';
-				$images['column_count']     = 3;
 				$images['parent_page_uri']  = 'note/'.$foreign_id;
 				break;
 
@@ -214,14 +244,26 @@ class Site_Util
 						($self_member_id && $target_member_id == $self_member_id),
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
 					),
-					'limit'    => \Config::get('timeline.articles.thumbnail.limit'),
+					'limit'    => \Config::get('timeline.articles.thumbnail.limit.default'),
 					'order_by' => array('created_at' => 'asc'),
 				), 'Album');
 				$images['count_all'] = (int)\Album\Model_AlbumImage::get_count4album_id($foreign_id);
-				$images['file_cate']        = 'ai';
-				$images['size']             = 'N_M';
-				$images['column_count']     = 3;
 				$images['parent_page_uri']  = 'album/'.$foreign_id;
+				break;
+
+			case \Config::get('timeline.types.album_image_timeline'):
+				list($images['list'], $images['count']) = \Site_Model::get_list_and_count('album_image', array(
+					'where' => \Site_Model::get_where_params4list(
+						$target_member_id,
+						$self_member_id,
+						($self_member_id && $target_member_id == $self_member_id),
+						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
+					),
+					'limit'    => \Config::get('timeline.articles.thumbnail.limit.album_image_timeline'),
+					'order_by' => array('created_at' => 'asc'),
+				), 'Album');
+				$images['count_all'] = $images['count'];
+				$images['parent_page_uri']  = 'timeline/'.$timeline_id;
 				break;
 
 			default :
@@ -251,6 +293,7 @@ class Site_Util
 			\Config::get('timeline.types.normal'),
 			\Config::get('timeline.types.note'),
 			\Config::get('timeline.types.album'),
+			\Config::get('timeline.types.album_image_timeline'),
 		);
 
 		return in_array($type, $editable_types);
@@ -262,15 +305,16 @@ class Site_Util
 		$uri = '';
 		switch ($timeline->type)
 		{
-			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
+			case \Config::get('timeline.types.normal'):
+			case \Config::get('timeline.types.album_image_timeline'):
 				$id  = $timeline->id;
 				$uri = 'timeline/api/delete.json';
 				break;
-			case \Config::get('timeline.types.note'):// note 投稿
+			case \Config::get('timeline.types.note'):
 				$id  = $timeline->foreign_id;
 				$uri = 'note/api/delete.json';
 				break;
-			case \Config::get('timeline.types.album'):// album 作成
+			case \Config::get('timeline.types.album'):
 				$id  = $timeline->foreign_id;
 				$uri = 'album/api/delete.json';
 				break;
@@ -292,13 +336,14 @@ class Site_Util
 		);
 		switch ($timeline->type)
 		{
-			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
+			case \Config::get('timeline.types.normal'):
+			case \Config::get('timeline.types.album_image_timeline'):
 				break;
-			case \Config::get('timeline.types.note'):// note 投稿
+			case \Config::get('timeline.types.note'):
 				$info['model'] = 'note';
 				$info['public_flag_target_id'] = $timeline->foreign_id;
 				break;
-			case \Config::get('timeline.types.album'):// album 作成
+			case \Config::get('timeline.types.album'):
 				$info['model'] = 'album';
 				$info['public_flag_target_id'] = $timeline->foreign_id;
 				$info['have_children_public_flag'] = true;

@@ -63,9 +63,13 @@ class Controller_FileTmp_Api extends Controller_Site_Api
 			//Util_security::check_csrf();
 			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
 
+			$thumbnail_size = \Input::post('thumbnail_size');
+			\Validation::_validation_in_array($thumbnail_size, array('M', 'S'));
+
 			$options = Site_Upload::get_upload_handler_options($this->u->id);
 			$uploadhandler = new MyUploadHandler($options, false);
 			$files = $uploadhandler->post(false);
+			$files['thumbnail_size'] = $thumbnail_size;
 			$status_code = 200;
 
 			if ($this->format == 'html')
