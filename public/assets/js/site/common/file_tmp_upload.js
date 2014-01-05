@@ -35,7 +35,7 @@ $(function () {
 });
 $('.display_fileinput-button').click(function() {
 	$('.display_fileinput-button').remove();
-	$('.fileinput').attr('class', 'fileinput');
+	$('#upload_files').removeClass('hidden');
 });
 
 function load_file_tmp(get_url, file_name, parent_attr) {
