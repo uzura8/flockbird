@@ -62,6 +62,25 @@ class Model_Note extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		// 更新時に timeline の sort_datetime を更新
+		'MyOrm\Observer_UpdateTimelineDatetime'=>array(
+			'events'=>array('after_update'),
+			'model_to' => '\Timeline\Model_Timeline',
+			'relations' => array(
+				'foreign_table' => array(
+					'note' => 'value',
+				),
+				'foreign_id' => array(
+					'id' => 'property',
+				),
+			),
+			'properties_check_changed' => array(
+				'title',
+				'body',
+			),
+			'property_from' => 'updated_at',
+			'property_to' => 'sort_datetime',
+		),
 	);
 
 	public static function _init()
