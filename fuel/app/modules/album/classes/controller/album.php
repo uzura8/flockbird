@@ -320,7 +320,7 @@ class Controller_Album extends \Controller_Site
 				try
 				{
 					$post = $val->validated();
-					$is_update_public_flag = ($note->public_flag != $post['public_flag']);
+					$is_update_public_flag = ($album->public_flag != $post['public_flag']);
 
 					\DB::start_transaction();
 					// update album
