@@ -143,6 +143,10 @@ class Site_Model
 			$timeline->foreign_id = $foreign_id;
 			if (!is_null($body)) $timeline->body = $body;
 		}
+		else
+		{
+			$timeline->sort_datetime = date('Y-m-d H:i:s');
+		}
 		$timeline->save();
 
 		if ($child_foreign_ids)
