@@ -69,6 +69,26 @@ class Model_Album extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 		'Orm\\Observer_Validation',
+		// 更新時に timeline の sort_datetime を更新
+		'MyOrm\Observer_UpdateTimelineDatetime'=>array(
+			'events'=>array('after_update'),
+			'model_to' => '\Timeline\Model_Timeline',
+			'relations' => array(
+				'foreign_table' => array(
+					'album' => 'value',
+				),
+				'foreign_id' => array(
+					'id' => 'property',
+				),
+				'type' => array(),
+			),
+			'properties_check_changed' => array(
+				'name',
+				'body',
+			),
+			'property_from' => 'updated_at',
+			'property_to' => 'sort_datetime',
+		),
 	);
 
 	public static function _init()
@@ -77,6 +97,9 @@ class Model_Album extends \Orm\Model
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_album_foreign_tables();
+
+		$observer_key = \Config::get('timeline.types.album');
+		static::$_observers['MyOrm\Observer_UpdateTimelineDatetime']['relations']['type'][$observer_key] = 'value';
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
