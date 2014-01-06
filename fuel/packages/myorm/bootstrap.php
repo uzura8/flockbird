@@ -5,6 +5,7 @@ Autoloader::add_classes(array(
 	//'MyOrm\\Observer_InsertCache' => __DIR__.'/classes/observer/insertcache.php',
 	'MyOrm\\Observer_InsertTimelineCache' => __DIR__.'/classes/observer/inserttimelinecache.php',
 	'MyOrm\\Observer_UpdateParentDatetime' => __DIR__.'/classes/observer/updateparentdatetime.php',
+	'MyOrm\\Observer_UpdateTimelineDatetime' => __DIR__.'/classes/observer/updatetimelinedatetime.php',
 	//'MyOrm\\Observer_InsertCacheDuplicate' => __DIR__.'/classes/observer/insertcacheduplicate.php',
 	'MyOrm\\Observer_UpdateTimelineCache' => __DIR__.'/classes/observer/updatetimelinecache.php',
 	'MyOrm\\Observer_DeleteOrUpdateTimeline4ChildData' => __DIR__.'/classes/observer/deleteorupdatetimeline4childdata.php',

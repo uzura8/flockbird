@@ -93,7 +93,9 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			);
 
 			$comment = new Model_NoteComment($values);
+			\DB::start_transaction();
 			$comment->save();
+			\DB::commit_transaction();
 
 			$response['status'] = 1;
 			$response['id'] = $comment->id;
@@ -101,6 +103,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		}
 		catch(\FuelException $e)
 		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 

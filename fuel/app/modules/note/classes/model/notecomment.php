@@ -36,6 +36,20 @@ class Model_NoteComment extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'MyOrm\Observer_UpdateTimelineDatetime'=>array(
+			'events'=>array('after_insert'),
+			'model_to' => '\Timeline\Model_Timeline',
+			'relations' => array(
+				'foreign_table' => array(
+					'note' => 'value',
+				),
+				'foreign_id' => array(
+					'note_id' => 'property',
+				),
+			),
+			'property_from' => 'created_at',
+			'property_to' => 'sort_datetime',
+		),
 	);
 
 	protected static $count_per_note = array();
