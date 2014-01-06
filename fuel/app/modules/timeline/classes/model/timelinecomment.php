@@ -42,11 +42,14 @@ class Model_TimelineComment extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_UpdateParentDatetime'=>array(
+		'MyOrm\Observer_UpdateRelationalTable'=>array(
 			'events'=>array('after_insert'),
-			'key_from' => 'timeline_id',
 			'model_to' => '\Timeline\Model_Timeline',
-			'key_to' => 'id',
+			'relations' => array(
+				'id' => array(
+					'timeline_id' => 'property',
+				),
+			),
 			'property_from' => 'created_at',
 			'property_to' => 'sort_datetime',
 		),

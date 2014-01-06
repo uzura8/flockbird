@@ -36,7 +36,7 @@ class Model_NoteComment extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_UpdateTimelineDatetime'=>array(
+		'MyOrm\Observer_UpdateRelationalTable'=>array(
 			'events'=>array('after_insert'),
 			'model_to' => '\Timeline\Model_Timeline',
 			'relations' => array(

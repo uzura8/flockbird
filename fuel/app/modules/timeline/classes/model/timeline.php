@@ -142,18 +142,20 @@ class Model_Timeline extends \Orm\Model
 				),
 			),
 		),
-		// update 時に memberfollow_timeline の updated_at を更新する
+		// update 時に紐づく memberfollow_timeline の updated_at を更新する
 		'MyOrm\Observer_UpdateRelationalTable'=>array(
-			'events'   => array('after_update'),
-			'key_from' => 'id',
+			'events'=>array('after_update'),
 			'model_to' => '\Timeline\Model_MemberFollowTimeline',
-			'table_to' => 'member_follow_timeline',
-			'key_to'   => 'timeline_id',
+			'relations' => array(
+				'timeline_id' => array(
+					'id' => 'property',
+				),
+			),
+			'properties_check_changed' => array(
+				'sort_datetime',
+			),
 			'property_to'   => 'updated_at',
 			'property_from' => 'sort_datetime',
-			'is_check_updated_at' => array(
-				'property' => 'sort_datetime',
-			),
 		),
 	);
 

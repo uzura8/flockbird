@@ -70,7 +70,7 @@ class Model_Album extends \Orm\Model
 		),
 		'Orm\\Observer_Validation',
 		// 更新時に timeline の sort_datetime を更新
-		'MyOrm\Observer_UpdateTimelineDatetime'=>array(
+		'MyOrm\Observer_UpdateRelationalTable'=>array(
 			'events'=>array('after_update'),
 			'model_to' => '\Timeline\Model_Timeline',
 			'relations' => array(
@@ -99,7 +99,7 @@ class Model_Album extends \Orm\Model
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_album_foreign_tables();
 
 		$observer_key = \Config::get('timeline.types.album');
-		static::$_observers['MyOrm\Observer_UpdateTimelineDatetime']['relations']['type'][$observer_key] = 'value';
+		static::$_observers['MyOrm\Observer_UpdateRelationalTable']['relations']['type'][$observer_key] = 'value';
 	}
 
 	public static function check_authority($id, $target_member_id = 0)

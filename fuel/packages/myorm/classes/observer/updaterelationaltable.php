@@ -3,60 +3,107 @@ namespace MyOrm;
 
 class Observer_UpdateRelationalTable extends \Orm\Observer
 {
-	public static $required_properties = array(
-		'key_from',
-		'model_to',
-		'table_to',
-		'key_to',
-		'property_to',
-		'property_from',
-	);
-	protected $key_from;
-	protected $model_to;
-	protected $table_to;
-	protected $key_to;
-	protected $property_to;
-	protected $property_from;
-	protected $is_check_updated_at  = false;
+	protected $_model_to;
+	protected $_relations;
+	protected $_property_from;
+	protected $_property_to;
+	protected $_properties_check_changed;
 
 	public function __construct($class)
 	{
 		$props = $class::observers(get_class($this));
-		foreach (static::$required_properties as $property)
+		$this->_model_to = $props['model_to'];
+		$this->_relations = $props['relations'];
+		$this->_property_from = $props['property_from'];
+		$this->_property_to = $props['property_to'];
+		if (isset($props['properties_check_changed']))
 		{
-			if (!isset($property)) throw new \FuelException('Required property is not set : '.$property);
+			$this->_properties_check_changed = $props['properties_check_changed'];
 		}
-		$this->key_from = $props['key_from'];
-		$this->model_to = $props['model_to'];
-		$this->table_to = $props['table_to'];
-		$this->key_to   = $props['key_to'];
-		$this->property_to   = $props['property_to'];
-		$this->property_from = $props['property_from'];
-		if (isset($props['is_check_updated_at'])) $this->is_check_updated_at = $props['is_check_updated_at'];
+	}
+
+	public function after_insert(\Orm\Model $obj)
+	{
+		if (!class_exists($this->_model_to))
+		{
+			throw new \FuelException('Class not found : '.$this->_model_to);
+		}
+		$model_to = get_real_class($this->_model_to);
+
+		$query = $model_to::query();
+		foreach ($this->_relations as $property_to => $froms)
+		{
+			foreach ($froms as $value_from => $type)
+			{
+				switch ($type)
+				{
+					case 'value':
+						$value = $value_from;
+						break;
+					case 'property':
+						$value = $obj->{$value_from};
+						break;
+					default :
+						throw new \FuelException('Orm observer setting error.');
+						break;
+				}
+				$query = $query->where($property_to, $value);
+			}
+		}
+		$models = $query->get();
+		foreach ($models as $model)
+		{
+			$model->{$this->_property_to} = $obj->{$this->_property_from};
+			$model->save();
+		}
 	}
 
 	public function after_update(\Orm\Model $obj)
 	{
-		if (!class_exists($this->model_to))
-		{
-			throw new \FuelException('Class not found : '.$this->model_to);
-		}
+		if (!$this->check_target_properties_updated($obj)) return;
 
-		if ($this->is_check_updated_at)
+		if (!class_exists($this->_model_to))
 		{
-			$check_property = $this->is_check_updated_at['property'];
-			if ($obj->updated_at && $obj->$check_property && $obj->updated_at != $obj->$check_property)
+			throw new \FuelException('Class not found : '.$this->_model_to);
+		}
+		$model_to = get_real_class($this->_model_to);
+
+		$query = $model_to::query();
+		foreach ($this->_relations as $property_to => $froms)
+		{
+			foreach ($froms as $value_from => $type)
 			{
-				return;
+				switch ($type)
+				{
+					case 'value':
+						$value = $value_from;
+						break;
+					case 'property':
+						$value = $obj->{$value_from};
+						break;
+					default :
+						throw new \FuelException('Orm observer setting error.');
+						break;
+				}
+				$query = $query->where($property_to, $value);
 			}
 		}
+		$models = $query->get();
+		foreach ($models as $model)
+		{
+			$model->{$this->_property_to} = $obj->{$this->_property_from};
+			$model->save();
+		}
+	}
 
-		$model_to = get_real_class($this->model_to);
+	private function check_target_properties_updated($obj)
+	{
+		foreach ($this->_properties_check_changed as $property_check_changed)
+		{
+			if ($obj->is_changed($property_check_changed)) return true;
+		}
 
-		return \DB::update($this->table_to)
-			->value($this->property_to, $obj->{$this->property_from})
-			->where($this->key_to, $obj->{$this->key_from})
-			->execute();
+		return false;
 	}
 }
 // End of file updaterelationaltable.php

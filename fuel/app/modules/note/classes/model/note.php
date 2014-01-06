@@ -63,7 +63,7 @@ class Model_Note extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 		// 更新時に timeline の sort_datetime を更新
-		'MyOrm\Observer_UpdateTimelineDatetime'=>array(
+		'MyOrm\Observer_UpdateRelationalTable'=>array(
 			'events'=>array('after_update'),
 			'model_to' => '\Timeline\Model_Timeline',
 			'relations' => array(

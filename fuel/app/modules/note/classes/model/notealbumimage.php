@@ -35,8 +35,8 @@ class Model_NoteAlbumImage extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		// ialbum_image 追加時に timeline の sort_datetime を更新
-		'MyOrm\Observer_UpdateTimelineDatetime'=>array(
+		// album_image 追加時に timeline の sort_datetime を更新
+		'MyOrm\Observer_UpdateRelationalTable'=>array(
 			'events' => array('after_insert'),
 			'model_to' => '\Timeline\Model_Timeline',
 			'relations' => array(
