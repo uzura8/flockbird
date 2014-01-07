@@ -1,6 +1,4 @@
-<?php if (empty($images['list'])): ?>
-<p>表示可能な写真がありません。</p>
-<?php else: ?>
+<?php if (!empty($images['list'])): ?>
 <div class="row">
 <?php $col_num = empty($images['column_count']) ? 3 : floor(12 / $images['column_count']); ?>
 <?php foreach ($images['list'] as $image): ?>
