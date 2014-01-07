@@ -8,7 +8,7 @@ $list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_de
 <?php endif; ?>
 
 <?php foreach ($comments as $comment): ?>
-<div class="commentBox<?php if ($parent): ?> commentBox_<?php echo $parent->id; ?><?php endif; ?>" id="commentBox_<?php echo $comment->id; ?>">
+<div class="commentBox<?php if ($parent || !empty($class_id)): ?> commentBox_<?php echo isset($class_id) ? $class_id : $parent->id; ?><?php endif; ?>" id="commentBox_<?php echo $comment->id; ?>">
 <?php echo render('_parts/member_contents_box', array(
 	'member' => $comment->member,
 	'date' => array('datetime' => $comment->created_at),

@@ -25,6 +25,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		$note_id   = (int)$parent_id;
 		$before_id = (int)\Input::get('before_id', 0);
 		$after_id  = (int)\Input::get('after_id', 0);
+		$class_id  = (int)\Input::get('class_id', 0);
 		$is_desc   = (bool)\Input::get('is_desc', false);
 		$limit     = (int)\Input::get('limit', \Config::get('site.view_params_default.list.comment.limit'));
 		if (\Input::get('limit') == 'all') $limit = \Config::get('site.view_params_default.list.comment.max_limit', 50);
@@ -48,6 +49,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				'parent' => $note,
 				'is_all_records' => $is_all_records,
 				'list_more_box_attrs' => array('data-parent_id' => $note_id),
+				'class_id' => $class_id,
 			);
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('_parts/comment/list', $data);

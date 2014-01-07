@@ -37,6 +37,7 @@ $(function() {
 			'#textarea_comment',
 			'#article_list',
 			post_data_additional,
+			{},
 			false,
 			'50px',
 			true,

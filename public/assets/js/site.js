@@ -71,7 +71,8 @@ function show_list(uri, list_block_id) {
 	var next_element_id_name = (arguments.length > 3 && arguments[3]) ? arguments[3] : '';
 	var is_insert_before     = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
 	var selfDomElement       = (arguments.length > 5) ? arguments[5] : false;
-	var next_element_id_num  = (arguments.length > 6) ? arguments[6] : 0;
+	var get_data_additional  = (arguments.length > 6) ? arguments[6] : {};
+	var next_element_id_num  = (arguments.length > 7) ? arguments[7] : 0;
 
 	if (!selfDomElement) {
 		$(list_block_id).append('<div class="loading_image" id="list_loading_image">' + get_loading_image_tag() + '</div>');
@@ -79,7 +80,7 @@ function show_list(uri, list_block_id) {
 
 	var baseUrl = get_baseUrl();
 	var get_url = baseUrl + uri;
-	var get_data = {};
+	var get_data = get_data_additional;
 	get_data['nochache']  = (new Date()).getTime();
 	get_data['limit'] = record_limit;
 
@@ -194,16 +195,17 @@ function reset_textarea()
 
 function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 {
-	var selfDomElement       = (arguments.length > 4)  ? arguments[4] : false;
+	var selfDomElement       = (arguments.length > 4)  ? arguments[4]  : false;
 	var public_flag          = (arguments.length > 5)  ? String(arguments[5]) : '';
-	var textarea_attribute   = (arguments.length > 6)  ? arguments[6] : '#textarea_comment';
-	var list_block_id        = (arguments.length > 7)  ? arguments[7] : '#comment_list';
-	var post_data_additional = (arguments.length > 8)  ? arguments[8] : {};
-	var is_check_input_body  = (arguments.length > 9)  ? arguments[9] : true;
-	var textarea_height      = (arguments.length > 10) ? arguments[10] : '33px';
-	var is_insert_before     = (arguments.length > 11) ? arguments[11] : false;
-	var article_name         = (arguments.length > 12) ? arguments[12] : 'コメント';
-	var count_attr_prefix    = (arguments.length > 13) ? arguments[13] : '#comment_count_';
+	var textarea_attribute   = (arguments.length > 6)  ? arguments[6]  : '#textarea_comment';
+	var list_block_id        = (arguments.length > 7)  ? arguments[7]  : '#comment_list';
+	var post_data_additional = (arguments.length > 8)  ? arguments[8]  : {};
+	var get_data_additional  = (arguments.length > 9)  ? arguments[9]  : {};
+	var is_check_input_body  = (arguments.length > 10) ? arguments[10] : true;
+	var textarea_height      = (arguments.length > 11) ? arguments[11] : '33px';
+	var is_insert_before     = (arguments.length > 12) ? arguments[12] : false;
+	var article_name         = (arguments.length > 13) ? arguments[13] : 'コメント';
+	var count_attr_prefix    = (arguments.length > 14) ? arguments[14] : '#comment_count_';
 
 	var body = $(textarea_attribute).val().trim();
 	if (is_check_input_body && body.length <= 0) return;
@@ -241,7 +243,7 @@ function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 		},
 		success: function(result){
 			$.jGrowl(article_name + 'を投稿しました。');
-			show_list(get_uri, list_block_id, 'all', before_element_id_name, is_insert_before);
+			show_list(get_uri, list_block_id, 'all', before_element_id_name, is_insert_before, false, get_data_additional);
 			if (count_attribute && $(count_attribute) != null) {
 				var count = parseInt($(count_attribute).html()) + 1;
 				$(count_attribute).html(count);
