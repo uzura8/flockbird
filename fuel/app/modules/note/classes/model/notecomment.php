@@ -50,6 +50,18 @@ class Model_NoteComment extends \Orm\Model
 			'property_from' => 'created_at',
 			'property_to' => 'sort_datetime',
 		),
+		'MyOrm\Observer_InsertMemberFollowTimeline' => array(
+			'events'   => array('after_insert'),
+			'timeline_relations' => array(
+				'foreign_table' => array(
+					'note' => 'value',
+				),
+				'foreign_id' => array(
+					'note_id' => 'property',
+				),
+			),
+			'property_from_member_id' => 'member_id',
+		),
 	);
 
 	protected static $count_per_note = array();

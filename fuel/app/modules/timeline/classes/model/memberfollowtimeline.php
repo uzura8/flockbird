@@ -45,4 +45,9 @@ class Model_MemberFollowTimeline extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 	);
+
+	public static function get4timeline_id_and_member_id($timeline_id, $member_id)
+	{
+		return self::query()->where('timeline_id', $timeline_id)->where('member_id', $member_id)->get_one();
+	}
 }

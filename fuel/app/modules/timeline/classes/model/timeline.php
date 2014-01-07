@@ -127,8 +127,8 @@ class Model_Timeline extends \Orm\Model
 		'MyOrm\Observer_UpdateTimelineCache'=>array(
 			'events' => array('after_update'),
 		),
-		// insert 時に紐づく memberfollow_timeline を inseert する
-		'MyOrm\Observer_InsertRelationialTable'=>array(
+		// insert 時に紐づく memberfollow_timeline を insert する
+		'MyOrm\Observer_InsertRelationialTable' => array(
 			'events'   => array('after_insert'),
 			'model_to' => '\Timeline\Model_MemberFollowTimeline',
 			'properties' => array(

@@ -13,6 +13,7 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_InsertTimelineCache' => __DIR__.'/classes/observer/inserttimelinecache.php',
 	'MyOrm\\Observer_UpdateTimelineCache' => __DIR__.'/classes/observer/updatetimelinecache.php',
 	'MyOrm\\Observer_DeleteOrUpdateTimeline4ChildData' => __DIR__.'/classes/observer/deleteorupdatetimeline4childdata.php',
+	'MyOrm\\Observer_InsertMemberFollowTimeline' => __DIR__.'/classes/observer/insertmemberfollowtimeline.php',
 ));
 
 /* End of file bootstrap.php */
