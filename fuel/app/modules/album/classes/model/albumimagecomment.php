@@ -36,6 +36,18 @@ class Model_AlbumImageComment extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'MyOrm\Observer_InsertMemberFollowTimeline' => array(
+			'events'   => array('after_insert'),
+			'timeline_relations' => array(
+				'foreign_table' => array(
+					'album_image' => 'value',
+				),
+				'foreign_id' => array(
+					'album_image_id' => 'property',
+				),
+			),
+			'property_from_member_id' => 'member_id',
+		),
 	);
 
 	protected static $count_per_album_image_list = array();
