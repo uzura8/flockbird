@@ -16,7 +16,15 @@ $list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_de
 	'trim_width' => empty($trim_width) ? 0 : $trim_width,
 )); ?>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $parent->member_id))): ?>
-<a class="btn btn-default btn-xs boxBtn btn_comment_delete" id="btn_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
+<?php
+$attrs = array(
+	'class' => 'btn btn-default btn-xs boxBtn btn_comment_delete',
+	'id' => 'btn_comment_delete_'.$comment->id,
+	'data-post_id' => $comment->id,
+);
+if (!empty($delete_uri)) $attrs['data-uri'] = $delete_uri;
+echo Html::anchor('#', '<span class="glyphicon glyphicon-trash"></span>', $attrs);
+?>
 <?php endif ; ?>
 </div>
 <?php endforeach; ?>

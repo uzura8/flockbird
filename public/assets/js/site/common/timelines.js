@@ -84,7 +84,12 @@ $(function() {
 	}
 
 	$(document).on('click','.btn_comment_delete', function(){
-		delete_item('timeline/comment/api/delete.json', get_id_num($(this).attr('id')), '#commentBox');
+		var post_uri = $(this).data('uri') ? $(this).data('uri') : 'timeline/comment/api/delete.json';
+		var post_id  = $(this).data('post_id') ? $(this).data('post_id') : get_id_num($(this).attr('id'));
+		var list_id  = get_id_num($(this).attr('id'));
+		if (!post_id) return false;
+
+		delete_item(post_uri, post_id, '#commentBox');
 		return false;
 	});
 

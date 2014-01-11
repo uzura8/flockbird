@@ -45,6 +45,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 
 			$data = array(
 				'comments' => $comments,
+				'delete_uri' => 'album/image/comment/api/delete.json',
 				'parent' => $album_image->album,
 				'is_all_records' => $is_all_records,
 				'list_more_box_attrs' => array('data-parent_id' => $album_image_id),

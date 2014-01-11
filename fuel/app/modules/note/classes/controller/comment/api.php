@@ -50,6 +50,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				'is_all_records' => $is_all_records,
 				'list_more_box_attrs' => array('data-parent_id' => $note_id),
 				'class_id' => $class_id,
+				'delete_uri' => 'note/comment/api/delete.json',
 			);
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('_parts/comment/list', $data);

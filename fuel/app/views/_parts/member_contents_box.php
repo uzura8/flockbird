@@ -74,13 +74,15 @@ if (isset($public_flag, $model, $id))
 <?php
 $list_more_box_attrs_def = array('id' => 'listMoreBox_comment_'.$parent->id, 'data-parent_id' => $parent->id);
 $list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);
-echo render('_parts/comment/list', array(
+$data = array(
 	'u' => $u,
 	'parent' => $parent,
 	'comments' => $comment['list'],
 	'is_all_records' => $comment['is_all_records'],
 	'list_more_box_attrs' => $list_more_box_attrs,
-));
+);
+if (!empty($comment_delete_uri)) $data['delete_uri'] = $comment_delete_uri;
+echo render('_parts/comment/list', $data);
 ?>
 </div>
 

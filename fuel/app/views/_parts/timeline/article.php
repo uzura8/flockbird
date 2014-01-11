@@ -10,7 +10,7 @@ $comment = array(
 <div class="timelineBox" id="timelineBox_<?php echo $timeline_cache_id; ?>" data-id="<?php echo $timeline->id; ?>">
 
 <?php
-$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri($timeline->type, $timeline->foreign_table, false, $timeline->id, $timeline->foreign_id);
+$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri('get', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
 $images = \Timeline\Site_Util::get_timeline_images(
 	$timeline->type,
 	$timeline->foreign_id,
@@ -37,8 +37,9 @@ $data = array(
 	'post_comment_button_attrs' => array(
 		'data-get_uri' => $comment_get_uri,
 		'data-post_parent_id' => \Timeline\Site_Util::get_comment_parent_id($timeline->type, $timeline->id, $timeline->foreign_id),
-		'data-post_uri' => \Timeline\Site_Util::get_comment_api_uri($timeline->type, $timeline->foreign_table, true),
+		'data-post_uri' => \Timeline\Site_Util::get_comment_api_uri('create', $timeline->type, $timeline->foreign_table),
 	),
+	'comment_delete_uri' => \Timeline\Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->id, $timeline->foreign_id, $timeline->foreign_table),
 );
 
 if (!empty($is_convert_nl2br)) $data['is_convert_nl2br'] = $is_convert_nl2br;

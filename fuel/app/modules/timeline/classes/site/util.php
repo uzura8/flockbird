@@ -177,21 +177,34 @@ class Site_Util
 		return self::check_type_for_post_foreign_table_comment($type) ? $foreign_id : $timeline_id;
 	}
 
-	public static function get_comment_api_uri($type, $foreign_table = '', $is_post = false, $timeline_id = 0, $foreign_id = 0)
+	public static function get_comment_api_uri($action, $type, $foreign_table = '', $timeline_id = 0, $foreign_id = 0)
 	{
-		$common_path = $is_post ? 'comment/api/create.json' : 'comment/api/list/'.$foreign_id.'.html';
+		switch ($action)
+		{
+			case 'create':
+				$common_path = 'comment/api/create.json';
+				break;
+			case 'delete':
+				$common_path = 'comment/api/delete.json';
+				break;
+			case 'get':
+			default :
+				$common_path = 'comment/api/list/'.$timeline_id.'.html';
+				break;
+		}
 
 		switch ($type)
 		{
 			case \Config::get('timeline.types.note'):// note 投稿
 				$pre_path = 'note/';
+				if ($action == 'get') $common_path = 'comment/api/list/'.$foreign_id.'.html';
 				break;
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
 				$pre_path = 'album/image/';
+				if ($action == 'get') $common_path = 'comment/api/list/'.$foreign_id.'.html';
 				break;
 			default :
 				$pre_path = 'timeline/';
-				if (!$is_post) $common_path = 'comment/api/list/'.$timeline_id.'.html';
 				break;
 		}
 
@@ -202,9 +215,9 @@ class Site_Util
 	{
 		// defaults
 		$images = array();
-		$images['file_cate']        = 'ai';
-		$images['size']             = 'N_M';
-		$images['column_count']     = 3;
+		$images['file_cate']    = 'ai';
+		$images['size']         = 'N_M';
+		$images['column_count'] = 3;
 
 		switch ($type)
 		{

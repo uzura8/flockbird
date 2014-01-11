@@ -46,6 +46,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				'comments' => $comments,
 				'parent' => $timeline,
 				'is_all_records' => $is_all_records,
+				'delete_uri' => Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->id, $timeline->foreign_id, $timeline->foreign_table),
 				'list_more_box_attrs' => array('id' => 'listMoreBox_comment_'.$timeline_id, 'data-parent_id' => $timeline_id),
 			);
 			$response = \View::forge('_parts/comment/list', $data);
