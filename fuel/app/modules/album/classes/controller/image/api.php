@@ -252,10 +252,6 @@ class Controller_Image_api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			if ($result = Site_Util::check_album_disabled_to_update($album_image->album->foreign_table))
-			{
-				throw new \DisableToUpdatePublicFlagException($result['message']);
-			}
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($album_image->public_flag);
 
 			\DB::start_transaction();

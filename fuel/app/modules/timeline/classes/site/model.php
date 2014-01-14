@@ -159,7 +159,7 @@ class Site_Model
 
 	public static function delete_timeline(Model_Timeline $timeline, $member_id)
 	{
-		$deleted_files = null;
+		$deleted_files = array();
 		if (Site_Util::check_type($timeline->type, 'album_image_timeline'))
 		{
 			list($result, $deleted_files) = $timeline->delete_with_album_image($member_id);

@@ -229,7 +229,7 @@ class Model_Timeline extends \Orm\Model
 		$objs = self::get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids);
 		foreach ($objs as $obj)
 		{
-			list($result, $deleted_files) = Site_Model::delete_timeline($timeline, $this->u->id);
+			list($result, $deleted_files) = Site_Model::delete_timeline($obj, $obj->member_id);
 			$deleted_files_all = array_merge($deleted_files_all, $deleted_files);
 		}
 
@@ -281,6 +281,7 @@ class Model_Timeline extends \Orm\Model
 		if (is_null($public_flag)) $public_flag = PRJ_PUBLIC_FLAG_PRIVATE;
 
 		$public_flag = self::get_public_flag_for_update_with_check_child_data($public_flag, $this);
+		if ($public_flag === false) return;
 		if ($this->public_flag == $public_flag) return;
 
 		$this->public_flag = $public_flag;
@@ -292,7 +293,7 @@ class Model_Timeline extends \Orm\Model
 		$check_target_types = array(
 			\Config::get('timeline.types.album_image'),
 		);
-		if (!in_array($obj->type, $check_target_types)) return $public_flag;
+		if (!in_array($obj->type, $check_target_types)) return false;
 
 		$public_flag_range_max = Model_TimelineChildData::get_public_flag_range_max4timeline_id($obj->id);
 		if ($public_flag_range_max === false) return $public_flag;

@@ -152,13 +152,14 @@ class Model_AlbumImage extends \Orm\Model
 
 	public function update_public_flag($public_flag)
 	{
+		if ($result = Site_Util::check_album_disabled_to_update($this->album->foreign_table))
+		{
+			throw new \DisableToUpdatePublicFlagException($result['message']);
+		}
+
 		$this->public_flag = $public_flag;
 		$result = $this->save();
-
-		if (!Site_Util::check_album_disabled_to_update($this->album->foreign_table))
-		{
-			\Timeline\Model_Timeline::check_and_update_public_flag4child_data($public_flag, 'album_image', $this->id);
-		}
+		\Timeline\Model_Timeline::check_and_update_public_flag4child_data($public_flag, 'album_image', $this->id);
 
 		return $result;
 	}
