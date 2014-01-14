@@ -37,7 +37,6 @@ class Controller_Api extends \Controller_Site_Api
 					$member_id,
 					\Auth::check() ? $this->u->id : 0,
 					$is_mypage,
-					null,
 					array(array('is_published', $is_published))
 				),
 				'limit'    => \Config::get('site.view_params_default.list.limit'),

@@ -110,7 +110,7 @@ class Site_Model
 		return $query;
 	}
 
-	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_myapge = false, $member_id_colmn = null, $where = array())
+	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_myapge = false, $where = array(), $member_id_colmn = null)
 	{
 		if ($target_member_id) $where[] = array($member_id_colmn ?: 'member_id', $target_member_id);
 
@@ -206,6 +206,13 @@ class Site_Model
 		$list = $query->get();
 
 		return array('list' => $list, 'page' => $page, 'is_next' => $is_next);
+	}
+
+	public static function get_count($table, $params = array(), $namespace = '')
+	{
+		$query = self::get_list_query($table, $params, $namespace);
+
+		return $query->count();
 	}
 
 	public static function get_list_and_count($table, $params = array(), $namespace = '')

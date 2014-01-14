@@ -252,7 +252,7 @@ class Site_Util
 			case \Config::get('timeline.types.album_image'):
 				list($images['list'], $images['count']) = \Site_Model::get_list_and_count('album_image', array(
 					'where'    => \Site_Model::get_where_params4list(
-						$target_member_id,
+						null,
 						$self_member_id,
 						($self_member_id && $target_member_id == $self_member_id),
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
@@ -260,7 +260,14 @@ class Site_Util
 					'limit'    => \Config::get('timeline.articles.thumbnail.limit.default'),
 					'order_by' => array('created_at' => 'asc'),
 				), 'Album');
-				$images['count_all'] = (int)\Album\Model_AlbumImage::get_count4album_id($foreign_id);
+				$images['count_all'] = \Site_Model::get_count('album_image', array(
+					'where' => \Site_Model::get_where_params4list(
+						null,
+						$self_member_id,
+						($self_member_id && $target_member_id == $self_member_id),
+						array(array('album_id', $foreign_id))
+					),
+				), 'Album');
 				$images['parent_page_uri']  = 'album/'.$foreign_id;
 				break;
 

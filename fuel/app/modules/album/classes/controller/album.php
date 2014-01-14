@@ -93,7 +93,6 @@ class Controller_Album extends \Controller_Site
 				0,
 				\Auth::check() ? $this->u->id : 0,
 				$this->check_is_mypage($album->member_id),
-				null,
 				array(array('album_id', $id))
 			),
 			'order_by' => array('shot_at' => 'asc'),
@@ -202,7 +201,6 @@ class Controller_Album extends \Controller_Site
 				0,
 				\Auth::check() ? $this->u->id : 0,
 				$this->check_is_mypage($album->member_id),
-				null,
 				array(array('album_id', $id))
 			),
 			'order_by' => array('created_at' => 'desc'),

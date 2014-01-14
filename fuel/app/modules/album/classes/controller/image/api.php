@@ -68,7 +68,7 @@ class Controller_Image_api extends \Controller_Site_Api
 				$target_member_id = $member->id;
 				$member_id_colmn  = 't2.member_id';
 			}
-			$params['where'] = \Site_Model::get_where_params4list($target_member_id, $self_member_id, $is_mypage, $member_id_colmn, $where);
+			$params['where'] = \Site_Model::get_where_params4list($target_member_id, $self_member_id, $is_mypage, $where, $member_id_colmn);
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, $params, 'Album');
 
 			if ($this->format == 'html')
