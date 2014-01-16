@@ -1,7 +1,23 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-	padding-top: 50px;
-	padding-bottom: 20px;
+	padding-top: 65px;
+	padding-bottom: 10px;
+	min-width: 320px;
+}
+
+@media (max-width: 767px) /* @grid-float-breakpoint -1 */
+{
+	body {
+		padding-top: 0;
+	}
+	.navbar-fixed-top
+	{
+		position: relative;
+		top: auto;
+	}
+	.page-header h1 {
+		font-size: ;
+	}
 }
 
 .nav > li.disabled.nav-header > a {
@@ -10,6 +26,12 @@ body {
 	font-weight: bold;
 	text-transform: uppercase;
 }
+@media (min-width: 768px) and (max-width: 979px) {
+  .container {
+    width: 100%;
+  }
+}
+
 
 /*
 body {

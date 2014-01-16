@@ -16,14 +16,14 @@ img.profile_image {
 	font-weight: bold;
 }
 .profile_img_box {
-	padding: 7px 5px;
+	padding: 10px 5px;
 	position: relative;
 	margin-bottom: 5px;
 }
 .profile_img_box img.profile_image {
 	position: absolute;
 	left: 10px;
-	top: 0;
+	top: 5px;
 }
 .profile_img_box div.content {
 	margin-left: 65px;
@@ -41,7 +41,7 @@ img.profile_image {
 .member_img_box_m img.profile_image
 {
 	position: absolute;
-	left: 0;
+	left: 3px;
 	top: 3px;
 }
 
@@ -224,7 +224,7 @@ div#popup_container.ui-draggable #popup_message {
 	color: #000;
 }
 
-div#main div.row-fluid div#main_container {
+div#main div.row div#main_container {
 	margin: 0 auto;
 }
 
@@ -242,9 +242,6 @@ div#main div.row-fluid div#main_container {
 	text-align: left;
 	padding: 0 8px;
 	margin: 0;
-}
-#main_container .main_item img {
-	margin: 0 0 5px;
 }
 #main_container .main_item div.imgBox {
 	position: relative;
@@ -317,7 +314,6 @@ div#main div.row-fluid div#main_container {
 
 .img_box {
 	text-align: center;
-	padding: 0 auto;
 	position: relative;
 }
 .img_box a.forward {
@@ -329,6 +325,9 @@ div#main div.row-fluid div#main_container {
 	position: absolute;
 	left: 0;
 	top: 0;
+}
+.img_box img {
+	margin: 0 auto;
 }
 
 #img_comment_box {
@@ -432,34 +431,6 @@ div.alert ul {
 
 .article_body {
 	margin-bottom: 30px;
-}
-
-#uploaded_images .row-fluid,
-#tmp_images .row-fluid
-{
-	margin-bottom: 15px;
-}
-
-#uploaded_images .row-fluid .item,
-#tmp_images .row-fluid .item
-{
-	margin-bottom: 5px;
-}
-
-#uploaded_images .row-fluid h6,
-#tmp_images .row-fluid h6
-{
-	margin: 0 3px;
-}
-#uploaded_images .row-fluid textarea,
-#tmp_images .row-fluid textarea
-{
-	margin: 0 10px 5px 0;
-}
-#uploaded_images .row-fluid .btn-group,
-#tmp_images .row-fluid .btn-group
-{
-	margin-right: 10px;
 }
 
 #article_list .timelineBox .commentPostBox {

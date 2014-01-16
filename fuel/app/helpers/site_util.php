@@ -77,9 +77,10 @@ function site_get_screen_name($u)
 	return (!empty($u->name)) ? $u->name : 'メンバーID:'.$u->id;
 }
 
-function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false, $anchor_attrs = array())
+function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false, $is_img_responsive = false, $anchor_attrs = array())
 {
 	$option = array();
+	$option['class'] = 'img-responsive';
 	$is_raw = $size == 'raw';
 	list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
 

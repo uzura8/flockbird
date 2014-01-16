@@ -5,11 +5,11 @@
 <?php
 $form_attributes = array('action' => Config::get('site.login_uri.site'));
 if ($is_api_request) $form_attributes['class'] = '';
-$input_class = ($is_api_request) ? 'input-medium' : '';
+$col_sm_size = $is_api_request ? 12 : 7;
 ?>
 <?php echo form_open(false, false, $form_attributes, array('destination' => $destination)); ?>
-	<?php echo form_input($val, 'email', 'メールアドレス', '', true, $input_class, 'email'); ?>
-	<?php echo form_input($val, 'password', 'パスワード', '', true, $input_class, 'password'); ?>
+	<?php echo form_input($val, 'email', 'メールアドレス', '', false, $col_sm_size, '', 3, 'email'); ?>
+	<?php echo form_input($val, 'password', 'パスワード', '', false, $col_sm_size, '', 3, 'password'); ?>
 
 	<div class="form-group">
 		<div class="col-sm-10 col-sm-offset-2">

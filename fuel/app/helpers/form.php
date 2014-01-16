@@ -26,7 +26,7 @@ function form_close()
 	return render('_parts/form/close');
 }
 
-function form_input($val_obj, $name, $label = '', $default_value = '', $is_required = false, $input_class = 'span8', $type = 'text')
+function form_input($val_obj, $name, $label = '', $default_value = '', $is_required = false, $col_sm_size = 12, $input_class = '', $label_col_sm_size = 2, $type = 'text')
 {
 	$input_atter = array(
 		'type'  => $type,
@@ -40,6 +40,8 @@ function form_input($val_obj, $name, $label = '', $default_value = '', $is_requi
 		'default_value' => $default_value,
 		'is_required'   => $is_required,
 		'input_atter'   => $input_atter,
+		'col_sm_size'   => $col_sm_size,
+		'label_col_sm_size' => $label_col_sm_size,
 	);
 
 	return render('_parts/form/input', $data);
@@ -64,15 +66,19 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 	return render('_parts/form/file', $data);
 }
 
-function form_textarea($val_obj, $name, $label = '', $default_value = '', $is_required = false, $atter = array())
+function form_textarea($val_obj, $name, $label = '', $default_value = '', $is_required = false, $atter = array(), $label_col_sm_size = 2, $is_autogrow = true)
 {
 	$atter_default = array(
-		'class' => 'input-xlarge',
+		'class' => '',
 		'id'    => 'form_'.$name,
-		'cols'  => 60,
 		'rows'  => 10,
 	);
 	$atter = array_merge($atter_default, $atter);
+	if ($is_autogrow)
+	{
+		if (!empty($atter['class'])) $atter['class'] .= ' ';
+		$atter['class'] .= 'autogrow';
+	}
 
 	$data = array(
 		'val'   => $val_obj,
@@ -81,6 +87,7 @@ function form_textarea($val_obj, $name, $label = '', $default_value = '', $is_re
 		'default_value' => $default_value,
 		'atter' => $atter,
 		'is_required' => $is_required,
+		'label_col_sm_size' => $label_col_sm_size,
 	);
 
 	return render('_parts/form/textarea', $data);

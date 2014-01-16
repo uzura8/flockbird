@@ -52,7 +52,7 @@
 
 <?php list($album_image_comment, $is_all_records, $all_comment_count) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('album.articles.comment.limit')); ?>
 				<div class="comment_info">
-					<small><i class="icon-comment"></i> <?php echo $all_comment_count; ?></small>
+					<small><span class="glyphicon glyphicon-comment"></span> <?php echo $all_comment_count; ?></small>
 <?php if (Auth::check()): ?>
 					<small><?php echo Html::anchor('album/image/'.$album_image->id.'?write_comment=1#comments', 'コメントする'); ?></small>
 <?php endif; ?>
@@ -67,29 +67,29 @@ if (!empty($is_setting_profile_image) && $album_image->album->member_id == $u->i
 {
 	$menus[] = Html::anchor(
 		'member/profile/set_image/'.$album_image->id.get_csrf_query_str(),
-		sprintf('<i class="ls-icon-setting"></i> %s写真に設定する', Config::get('term.profile'))
+		sprintf('<span class="glyphicon glyphicon-setting"></span> %s写真に設定する', Config::get('term.profile'))
 	);
 	$menus[] = Html::anchor(
-		'#', '<i class="icon-trash"></i> 削除',
+		'#', '<span class="glyphicon glyphicon-trash"></span> 削除',
 		array('onclick' => sprintf("delete_item('member/profile/delete_image/%d');return false;", $album_image->id))
 	);
 }
 elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && $member->id == $u->id)))
 {
-	$menus[] = Html::anchor('album/image/edit/'.$album_image->id, '<i class="icon-pencil"></i> 編集');
+	$menus[] = Html::anchor('album/image/edit/'.$album_image->id, '<i class="glyphicon glyphicon-pencil"></i> 編集');
 	$menus[] = Html::anchor(
-		'#', '<i class="icon-book"></i> カバーに指定',
+		'#', '<i class="glyphicon glyphicon-book"></i> カバーに指定',
 		array('class' => 'link_album_image_set_cover', 'id' => 'link_album_image_set_cover_'.$album_image->id)
 	);
 	$menus[] = Html::anchor(
-		'#', '<i class="icon-trash"></i> 削除',
+		'#', '<i class="glyphicon glyphicon-trash"></i> 削除',
 		array('onclick' => sprintf("delete_item('album/image/api/delete.json', %d, '#main_item');return false;", $album_image->id))
 	);
 }
 ?>
 <?php if ($menus): ?>
 				<div class="btn_album_image_edit btn-group" id="btn_album_image_edit_<?php echo $album_image->id ?>">
-					<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="glyphicon glyphicon-edit"></span><span class="caret"></span></button>
+					<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><i class="glyphicon glyphicon-edit"></i><i class="caret"></i></button>
 					<ul class="dropdown-menu pull-right">
 <?php foreach ($menus as $menu): ?>
 						<li><?php echo $menu; ?></li>
