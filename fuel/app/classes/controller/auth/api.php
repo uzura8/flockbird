@@ -30,6 +30,10 @@ class Controller_Auth_Api extends Controller_Base_Site_Api
 			$destination = Input::get('destination', '');
 
 			$val = Validation::forge();
+			$val->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
+			$val->add('email', 'メールアドレス', array('type' => 'email'))->add_rule('required');
+			$val->add('password', 'パスワード', array('type' => 'password'))->add_rule('required');
+
 			$response = View::forge('auth/_parts/login', array('val' => $val, 'destination' => $destination));
 			$status_code = 200;
 

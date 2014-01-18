@@ -6,13 +6,14 @@
 $form_attributes = array('action' => Config::get('site.login_uri.site'));
 if ($is_api_request) $form_attributes['class'] = '';
 $col_sm_size = $is_api_request ? 12 : 7;
+$label_col_sm_size = $is_api_request ? 12 : 3;
 ?>
 <?php echo form_open(false, false, $form_attributes, array('destination' => $destination)); ?>
-	<?php echo form_input($val, 'email', 'メールアドレス', '', false, $col_sm_size, '', 3, 'email'); ?>
-	<?php echo form_input($val, 'password', 'パスワード', '', false, $col_sm_size, '', 3, 'password'); ?>
+	<?php echo form_input($val, 'email', '', $col_sm_size, $label_col_sm_size); ?>
+	<?php echo form_input($val, 'password', '', $col_sm_size, $label_col_sm_size); ?>
 
 	<div class="form-group">
-		<div class="col-sm-10 col-sm-offset-2">
+		<div class="col-sm-9 col-sm-offset-3">
 			<div class="checkbox">
 			<?php echo Form::checkbox(
 				'rememberme[]',
@@ -24,19 +25,19 @@ $col_sm_size = $is_api_request ? 12 : 7;
 		</div>
 	</div>
 
-	<?php echo form_anchor('member/resend_password', 'パスワードを忘れた場合はこちら', array(), null, true); ?>
-	<?php echo form_button('ログイン'); ?>
+	<?php echo form_anchor('member/resend_password', 'パスワードを忘れた場合はこちら', array(), 3, null, true); ?>
+	<?php echo form_button('ログイン', 'submit', null, null, 3); ?>
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
-	<?php echo form_anchor(Config::get('site.login_uri.site').'/facebook', '<i class="ls-icon-facebook"></i> facebookでログイン', array('class' => 'btn btn-default')); ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/facebook', '<i class="ls-icon-facebook"></i> facebookでログイン', array('class' => 'btn btn-default'), 3); ?>
 <?php endif; ?>
 <?php if (PRJ_TWITTER_APP_ID): ?>
-	<?php echo form_anchor(Config::get('site.login_uri.site').'/twitter', '<i class="ls-icon-twitter"></i> twitterでログイン', array('class' => 'btn btn-default')); ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/twitter', '<i class="ls-icon-twitter"></i> twitterでログイン', array('class' => 'btn btn-default'), 3); ?>
 <?php endif; ?>
 <?php if (PRJ_GOOGLE_APP_ID): ?>
-	<?php echo form_anchor(Config::get('site.login_uri.site').'/google', '<i class="ls-icon-google"></i> googleでログイン', array('class' => 'btn btn-default')); ?>
+	<?php echo form_anchor(Config::get('site.login_uri.site').'/google', '<i class="ls-icon-google"></i> googleでログイン', array('class' => 'btn btn-default'), 3); ?>
 <?php endif; ?>
-	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-default btn-warning')); ?>
+	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-default btn-warning'), 3); ?>
 
 <?php echo form_close(); ?>
 <?php if (!$is_api_request): ?></div><?php endif; ?>

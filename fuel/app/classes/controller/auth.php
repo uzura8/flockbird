@@ -33,12 +33,12 @@ class Controller_Auth extends Controller_Site
 
 		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
 		$val = Validation::forge();
+		$val->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
+		$val->add('email', 'メールアドレス', array('type' => 'email'))->add_rule('required');
+		$val->add('password', 'パスワード', array('type' => 'password'))->add_rule('required');
 
 		if (Input::method() == 'POST')
 		{
-			$val->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
-			$val->add('email', 'メールアドレス', array('type' => 'email'))->add_rule('required');
-			$val->add('password', 'パスワード')->add_rule('required');
 			if ($val->run())
 			{
 				Util_security::check_csrf();

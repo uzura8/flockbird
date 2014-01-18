@@ -239,7 +239,7 @@ class Controller_Image extends \Controller_Site
 		$add_fields = array(
 			'shot_at_time' => array(
 				'label' => '撮影日時',
-				'attributes' => array('value' => $shot_at, 'class' => 'input-medium form-control' ),
+				'attributes' => array('value' => $shot_at, 'class' => 'input-medium form-control'),
 				'rules' => array('required', 'datetime_except_second', 'datetime_is_past'),
 			),
 			'original_public_flag' => array(

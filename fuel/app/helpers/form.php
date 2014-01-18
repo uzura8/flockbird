@@ -90,7 +90,7 @@ function form_textarea(Validation $val, $name, $default_value = '', $label_col_s
 	return render('_parts/form/textarea', $data);
 }
 
-function form_button($label = '', $type = 'submit', $name = '', $atter = array())
+function form_button($label = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2)
 {
 	if (!strlen($label)) $label = term('form.submit');
 	$atter_default = array(
@@ -98,6 +98,7 @@ function form_button($label = '', $type = 'submit', $name = '', $atter = array()
 		'id'    => 'form_'.$type,
 		'type'  => $type,
 	);
+	if (!is_array($atter)) $atter = (array)$atter;
 	$atter = array_merge($atter_default, $atter);
 
 	if (!strlen($name)) $name = $type;
@@ -105,6 +106,7 @@ function form_button($label = '', $type = 'submit', $name = '', $atter = array()
 	$data = array(
 		'name'  => $name,
 		'atter' => $atter,
+		'offset_size' => $offset_size,
 	);
 	$view = \View::forge('_parts/form/button', $data);
 	$view->set_safe('label', $label);
@@ -112,12 +114,13 @@ function form_button($label = '', $type = 'submit', $name = '', $atter = array()
 	return $view;
 }
 
-function form_anchor($href, $label, $atter = array(), $secure = null, $is_enclose_small_tag = false)
+function form_anchor($href, $label, $atter = array(), $offset_size = 2, $secure = null, $is_enclose_small_tag = false)
 {
 	$data = array(
 		'href'   => $href,
 		'atter'  => $atter,
 		'secure' => $secure,
+		'offset_size' => $offset_size,
 		'is_enclose_small_tag' => $is_enclose_small_tag,
 	);
 	$view = \View::forge('_parts/form/anchor', $data);
