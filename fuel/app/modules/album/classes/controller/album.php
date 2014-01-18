@@ -275,7 +275,7 @@ class Controller_Album extends \Controller_Site
 		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を作成する', null, $this->u, 'album');
 		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/create_footer');
-		$this->template->content = \View::forge('create', array('val' => $val, 'files' => $files));
+		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
 	}
 
 	/**
@@ -296,72 +296,57 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpForbiddenException;
 		}
 
-		$add_fields = array(
-			'original_public_flag' => array(
-				'attributes' => array('type' => 'hidden', 'value' => $album->public_flag, 'id' => 'original_public_flag'),
-				'rules' => array(array('in_array', \Site_Util::get_public_flags())),
-			),
-			'is_update_children_public_flag' => array(
-				'attributes' => array('type' => 'hidden', 'value' => 0, 'id' => 'is_update_children_public_flag'),
-				'rules' => array(array('in_array', array(0, 1))),
-			),
-		);
-		$form = \Site_Util::get_form_instance('album', $album, true, $add_fields, 'button');
+		$val = \Validation::forge();
+		$val->add_model($album);
+		$val->add('original_public_flag')
+				->add_rule('in_array', \Site_Util::get_public_flags());
+		$val->add('is_update_children_public_flag')
+					->add_rule('in_array', array(0,1));
 
 		if (\Input::method() == 'POST')
 		{
-			\Util_security::check_csrf();
-
-			$val = $form->validation();
-			if ($val->run())
+			try
 			{
-				try
+				\Util_security::check_csrf();
+				if (!$val->run()) throw new \FuelException($val->show_errors());
+				$post = $val->validated();
+				$is_update_public_flag = ($album->public_flag != $post['public_flag']);
+
+				\DB::start_transaction();
+				// update album
+				$album->name = $post['name'];
+				$album->body = $post['body'];
+				if ($is_update_public_flag) $album->public_flag = $post['public_flag'];
+				$album->save();
+
+				// update album_image public_flag
+				if ($is_update_public_flag && !empty($post['is_update_children_public_flag']))
 				{
-					$post = $val->validated();
-					$is_update_public_flag = ($album->public_flag != $post['public_flag']);
-
-					\DB::start_transaction();
-					// update album
-					$album->name = $post['name'];
-					$album->body = $post['body'];
-					if ($is_update_public_flag) $album->public_flag = $post['public_flag'];
-					$album->save();
-
-					// update album_image public_flag
-					if ($is_update_public_flag && !empty($post['is_update_children_public_flag']))
-					{
-						Model_AlbumImage::update_public_flag4album_id($album->id, $post['public_flag']);
-					}
-					// timeline の public_flag の更新
-					if ($is_update_public_flag)
-					{
-						\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($post['public_flag'], 'album', $album->id, \Config::get('timeline.types.album'));
-					}
-					\DB::commit_transaction();
-
-					\Session::set_flash('message', \Config::get('term.album').'を編集をしました。');
-					\Response::redirect('album/'.$album->id);
+					Model_AlbumImage::update_public_flag4album_id($album->id, $post['public_flag']);
 				}
-				catch(Exception $e)
+				// timeline の public_flag の更新
+				if ($is_update_public_flag)
 				{
-					\DB::rollback_transaction();
-					\Session::set_flash('error', 'Could not save.');
+					\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($post['public_flag'], 'album', $album->id, \Config::get('timeline.types.album'));
 				}
+				\DB::commit_transaction();
+
+				\Session::set_flash('message', \Config::get('term.album').'を編集をしました。');
+				\Response::redirect('album/'.$album->id);
 			}
-			else
+			catch(Exception $e)
 			{
-				\Session::set_flash('error', $val->show_errors());
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				\Session::set_flash('error', $e->getMessage());
 			}
-			$form->repopulate();
-		}
-		else
-		{
-			$form->populate($album);
 		}
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を編集する', array('/album/'.$id => $album->name), $album->member, 'album');
-		$this->template->content = \View::forge('edit', array('form' => $form, 'original_public_flag' => $album->public_flag));
-		$this->template->content->set_safe('html_form', $form->build('album/edit/'.$id));// form の action に入る
+		$this->template->content = \View::forge('_parts/form', array(
+			'val' => $val,
+			'album' => $album,
+			'is_edit' => true,
+		));
 	}
 
 	/**

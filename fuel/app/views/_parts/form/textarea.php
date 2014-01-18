@@ -4,8 +4,6 @@ if ($is_required)
 	$label .= '<span class="required">*</span>';
 	$atter['required'] = 'required';
 }
-if (!empty($atter['class'])) $atter['class'] .= ' ';
-$atter['class'] .= 'form-control';
 
 $label_class = 'col-sm-'.$label_col_sm_size;
 $input_col_sm_size = 12 - $label_col_sm_size;

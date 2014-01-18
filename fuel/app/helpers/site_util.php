@@ -80,7 +80,7 @@ function site_get_screen_name($u)
 function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false, $is_img_responsive = false, $anchor_attrs = array())
 {
 	$option = array();
-	$option['class'] = 'img-responsive';
+	if ($is_img_responsive) $option['class'] = 'img-responsive';
 	$is_raw = $size == 'raw';
 	list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
 
@@ -259,5 +259,10 @@ function anchor_button($href, $icon_class = '', $text = '', $class_attr_add = ''
 	if ($text) $element .= ' '.$text;
 
 	return Html::anchor($href, $element, $attr);
+}
+
+function term($key)
+{
+	return Config::get('term.'.$key);
 }
 ?>

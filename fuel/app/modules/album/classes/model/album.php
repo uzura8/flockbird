@@ -32,7 +32,7 @@ class Model_Album extends \Orm\Model
 			'data_type' => 'varchar',
 			'label' => '名前',
 			'validation' => array('trim', 'required', 'max_length' => array(255)),
-			'form' => array('type' => 'text', 'class' => 'input-xlarge'),
+			'form' => array('type' => 'text'),
 		),
 		'body' => array(
 			'data_type' => 'text',

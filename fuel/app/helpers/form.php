@@ -26,19 +26,20 @@ function form_close()
 	return render('_parts/form/close');
 }
 
-function form_input($val_obj, $name, $label = '', $default_value = '', $is_required = false, $col_sm_size = 12, $input_class = '', $label_col_sm_size = 2, $type = 'text')
+function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2)
 {
+	$field = $val->fieldset()->field($name);
 	$input_atter = array(
-		'type'  => $type,
+		'type'  => $field->get_attribute('type'),
 		'id'    => 'form_'.$name,
-		'class' => $input_class,
+		'class' => 'form-control',
 	);
 	$data = array(
-		'val'   => $val_obj,
+		'val'   => $val,
 		'name'  => $name,
-		'label' => $label,
+		'label' => $field->get_attribute('label'),
 		'default_value' => $default_value,
-		'is_required'   => $is_required,
+		'is_required'   => $field->get_attribute('required') == 'required',
 		'input_atter'   => $input_atter,
 		'col_sm_size'   => $col_sm_size,
 		'label_col_sm_size' => $label_col_sm_size,
@@ -66,35 +67,32 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 	return render('_parts/form/file', $data);
 }
 
-function form_textarea($val_obj, $name, $label = '', $default_value = '', $is_required = false, $atter = array(), $label_col_sm_size = 2, $is_autogrow = true)
+function form_textarea(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $is_autogrow = true)
 {
-	$atter_default = array(
-		'class' => '',
+	$field = $val->fieldset()->field($name);
+	$atter = array(
 		'id'    => 'form_'.$name,
-		'rows'  => 10,
+		'rows'  => $field->get_attribute('rows'),
+		'class' => 'form-control',
 	);
-	$atter = array_merge($atter_default, $atter);
-	if ($is_autogrow)
-	{
-		if (!empty($atter['class'])) $atter['class'] .= ' ';
-		$atter['class'] .= 'autogrow';
-	}
+	if ($is_autogrow) $atter['class'] .= ' autogrow';
 
 	$data = array(
-		'val'   => $val_obj,
+		'val'   => $val,
 		'name'  => $name,
-		'label' => $label,
+		'label' => $field->get_attribute('label'),
 		'default_value' => $default_value,
 		'atter' => $atter,
-		'is_required' => $is_required,
+		'is_required' => $field->get_attribute('required') == 'required',
 		'label_col_sm_size' => $label_col_sm_size,
 	);
 
 	return render('_parts/form/textarea', $data);
 }
 
-function form_button($label = '送信', $type = 'submit', $name = '', $atter = array())
+function form_button($label = '', $type = 'submit', $name = '', $atter = array())
 {
+	if (!strlen($label)) $label = term('form.submit');
 	$atter_default = array(
 		'class' => 'btn btn-default btn-primary',
 		'id'    => 'form_'.$type,

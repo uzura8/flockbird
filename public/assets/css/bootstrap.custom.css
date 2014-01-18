@@ -32,6 +32,10 @@ body {
   }
 }
 
+.input-medium {
+  width: 150px;
+}
+
 
 /*
 body {

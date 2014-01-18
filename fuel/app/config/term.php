@@ -1,6 +1,9 @@
 <?php
 
 $config = array(
+	'form' => array(
+		'submit' => '送信',
+	),
 	'toppage' => 'Top',
 	'myhome'  => 'Home',
 	'profile' => 'Profile',

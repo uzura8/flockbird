@@ -30,13 +30,13 @@ class Model_Note extends \Orm\Model
 			'data_type' => 'varchar',
 			'label' => 'タイトル',
 			'validation' => array('trim', 'required', 'max_length' => array(255)),
-			'form' => array('type' => 'text', 'class' => 'input-xlarge'),
+			'form' => array('type' => 'text'),
 		),
 		'body' => array(
 			'data_type' => 'text',
 			'label' => '本文',
 			'validation' => array('trim', 'required'),
-			'form' => array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'),
+			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
 		'public_flag' => array(
 			'data_type' => 'integer',
