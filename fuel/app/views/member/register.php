@@ -1,31 +1,10 @@
-<div class="alert alert-info">パスワードを入力してください</div>
-
-<?php echo Form::open(array('action' => 'member/register', 'class' => 'form-horizontal well')); ?>
+<?php echo alert('パスワードを入力してください'); ?>
+<div class="well">
+<?php echo form_open(true); ?>
 	<?php echo Form::hidden('token' ,$member_pre['token']); ?>
-	<?php echo Form::hidden(Config::get('security.csrf_token_key') ,Util_security::get_csrf()); ?>
-
-	<div class="form-group">
-		<label class="control-label col-sm-2">名前</label>
-		<div class="col-sm-10"><?php echo $member_pre['name']; ?></div>
-	</div>
-	<div class="form-group">
-		<label class="control-label col-sm-2">メールアドレス</label>
-		<div class="col-sm-10"><?php echo $member_pre['email']; ?></div>
-	</div>
-
-	<div class="form-group">
-		<label class="control-label col-sm-2">パスワード</label>
-		<div class="col-sm-10">
-		<?php echo Form::password('password', '', array('class' => 'span4')); ?>
-		<?php if ($val->error('password')): ?>
-		<span class="help-inline error_msg"><?php echo $val->error('password')->get_message(); ?></span>
-		<?php endif; ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<div class="col-sm-10">
-		<?php echo Form::submit(array('value'=>'送信', 'name'=>'submit', 'class' => 'btn btn-default')); ?>
-		</div>
-	</div>
-<?php echo Form::close(); ?>
+	<?php echo form_text($member_pre['name'], '名前', 3); ?>
+	<?php echo form_text($member_pre['email'], 'メールアドレス', 3); ?>
+	<?php echo form_input($val, 'password', '', 6, 3); ?>
+	<?php echo form_button(null, 'submit', null, null, 3); ?>
+<?php echo form_close(); ?>
+</div><!-- well -->

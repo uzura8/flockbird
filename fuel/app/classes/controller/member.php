@@ -171,74 +171,79 @@ class Controller_Member extends Controller_Site
 		}
 
 		$val = Validation::forge('register');
+		$val->add('password', 'パスワード', array('type'=>'password'))
+			->add_rule('trim')
+			->add_rule('required')
+			->add_rule('min_length', 6)
+			->add_rule('max_length', 20)
+			->add_rule('match_value', $member_pre->password);
+			$val->set_message('match_value', 'パスワードが正しくありません。');
+		$val->add('token', '', array('type'=>'hidden'))
+			->add_rule('required');
+
 		if (Input::method() == 'POST')
 		{
 			Util_security::check_csrf();
 
-			try
+			if (!$val->run())
 			{
-				$val->add('password', 'パスワード', array('type'=>'password'))
-					->add_rule('trim')
-					->add_rule('required')
-					->add_rule('min_length', 6)
-					->add_rule('max_length', 20)
-					->add_rule('match_value', $member_pre->password);
 				$val->set_message('match_value', 'パスワードが正しくありません。');
-				$val->add('token', '', array('type'=>'hidden'))
-					->add_rule('required');
-
-				if (!$val->run()) throw new \FuelException($val->show_errors());
-
-				\DB::start_transaction();
-				// create new member
-				$auth = Auth::instance();
-				if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $member_pre->name))
+			}
+			else
+			{
+				try
 				{
-					throw new Exception('create member error.');
+					\DB::start_transaction();
+					// create new member
+					$auth = Auth::instance();
+					if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $member_pre->name))
+					{
+						throw new Exception('create member error.');
+					}
+					// 仮登録情報の削除
+					$email    = $member_pre->email;
+					$password = $member_pre->password;
+					$member_pre->delete();
+					// timeline 投稿
+					\Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id);
+					\DB::commit_transaction();
+
+					$maildata = array();
+					$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
+					$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+					$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+					$maildata['to_address']   = $member_pre->email;
+					$maildata['to_name']      = $member_pre->name;
+					$maildata['password']     = $member_pre->password;
+					$this->send_register_mail($maildata);
+
+					if ($auth->login($email, $password))
+					{
+						Session::set_flash('message', '登録が完了しました。');
+						Response::redirect('member');
+					}
+					Session::set_flash('error', 'ログインに失敗しました');
+					Response::redirect(Config::get('site.login_uri.site'));
 				}
-				// 仮登録情報の削除
-				$email    = $member_pre->email;
-				$password = $member_pre->password;
-				$member_pre->delete();
-				// timeline 投稿
-				\Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id);
-				\DB::commit_transaction();
-
-				$maildata = array();
-				$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
-				$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-				$maildata['subject']      = \Config::get('site.member_register_mail.subject');
-				$maildata['to_address']   = $member_pre->email;
-				$maildata['to_name']      = $member_pre->name;
-				$maildata['password']     = $member_pre->password;
-				$this->send_register_mail($maildata);
-
-				if ($auth->login($email, $password))
+				catch(EmailValidationFailedException $e)
 				{
-					Session::set_flash('message', '登録が完了しました。');
-					Response::redirect('member');
+					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+					return;
 				}
-				Session::set_flash('error', 'ログインに失敗しました');
-				Response::redirect(Config::get('site.login_uri.site'));
-			}
-			catch(EmailValidationFailedException $e)
-			{
-				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-				return;
-			}
-			catch(EmailSendingFailedException $e)
-			{
-				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-				return;
-			}
-			catch(\Auth\SimpleUserUpdateException $e)
-			{
-				Session::set_flash('error', 'そのアドレスは登録できません');
-			}
-			catch(\FuelException $e)
-			{
-				if (\DB::in_transaction()) \DB::rollback_transaction();
-				Session::set_flash('error', $e->getMessage());
+				catch(EmailSendingFailedException $e)
+				{
+					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+					return;
+				}
+				catch(\Auth\SimpleUserUpdateException $e)
+				{
+					Session::set_flash('error', 'そのアドレスは登録できません');
+				}
+				catch(\FuelException $e)
+				{
+					if (\DB::in_transaction()) \DB::rollback_transaction();
+					Session::set_flash('error', $e->getMessage());
+				}
 			}
 		}
 
@@ -533,28 +538,25 @@ END;
 
 	public function form()
 	{
-		$form = Fieldset::forge('confirm_register');
+		$add_fields = array(
+			'name' => array(
+				'label' => '名前',
+				'attributes' => array('class' => 'input-xlarge form-control'),
+				'rules' => array('trim', 'required', array('max_length', 50)),
+			),
+			'email' => array(
+				'label' => 'メールアドレス',
+				'attributes' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
+				'rules' => array('trim', 'required', 'valid_email'),
+			),
+			'password' => array(
+				'label' => 'パスワード',
+				'attributes' => array('type' => 'password', 'class' => 'input-xlarge form-control'),
+				'rules' => array('trim', 'required', array('min_length', 6), array('max_length', 20)),
+			),
+		);
 
-		$form->add('name', '名前')
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('max_length', 50);
-
-		$form->add('email', 'メールアドレス')
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('valid_email');
-
-		$form->add('password', 'パスワード', array('type'=>'password'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('min_length', 6)
-			->add_rule('max_length', 20);
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn btn-default'));
-		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Util_security::get_csrf()));
-
-		return $form;
+		return Site_Util::get_form_instance('confirm_register', null, true, $add_fields, 'submit');
 	}
 
 	public function form_leave()
@@ -562,7 +564,7 @@ END;
 		$add_fields = array(
 			'password' => array(
 				'label' => 'パスワード',
-				'attributes' => array('type'=>'password', 'class' => 'span6'),
+				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
 				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20)),
 			),
 		);

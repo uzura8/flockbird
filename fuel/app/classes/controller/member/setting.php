@@ -190,22 +190,22 @@ END;
 		$member_email_pre = Model_MemberEmailPre::query()->where('token', Input::param('token'))->get_one();
 		if (!$member_email_pre || (Auth::check() && $member_email_pre->member_id != $this->u->id))
 		{
-			$this->display_error('メンバー登録: 不正なURL');
+			$this->display_error(null, null, 'error/403', 403);
 			return;
 		}
 
 		$val = Validation::forge('change_email');
+		$val->add('password', 'パスワード', array('type'=>'password'))
+			->add_rule('trim')
+			->add_rule('required')
+			->add_rule('min_length', 6)
+			->add_rule('max_length', 20);
+		$val->add('token', '', array('type'=>'hidden'))
+			->add_rule('required');
+
 		if (Input::method() == 'POST')
 		{
 			Util_security::check_csrf();
-			$val->add('password', 'パスワード', array('type'=>'password'))
-				->add_rule('trim')
-				->add_rule('required')
-				->add_rule('min_length', 6)
-				->add_rule('max_length', 20);
-			$val->add('token', '', array('type'=>'hidden'))
-				->add_rule('required');
-
 			$auth = Auth::instance();
 			if ($val->run() && $auth->check_password())
 			{
@@ -275,17 +275,17 @@ END;
 		$add_fields = array(
 			'old_password' => array(
 				'label' => '現在のパスワード',
-				'attributes' => array('type'=>'password', 'class' => 'span6'),
+				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
 				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20)),
 			),
 			'password' => array(
 				'label' => '新しいパスワード',
-				'attributes' => array('type'=>'password', 'class' => 'span6'),
+				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
 				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20), array('unmatch_field', 'old_password')),
 			),
 			'password_confirm' => array(
 				'label' => '新しいパスワード(確認)',
-				'attributes' => array('type'=>'password', 'class' => 'span6'),
+				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
 				'rules' => array('trim', 'required', array('match_field', 'password')),
 			),
 		);
@@ -299,12 +299,12 @@ END;
 		$add_fields = array(
 			'email' => array(
 				'label' => 'メールアドレス',
-				'attributes' => array('type'=>'email', 'class' => 'span7'),
+				'attributes' => array('type'=>'email', 'class' => 'form-control input-xlarge'),
 				'rules' => array('trim', 'required', 'valid_email'),
 			),
 			'email_confirm' => array(
 				'label' => 'メールアドレス(確認)',
-				'attributes' => array('type'=>'email', 'class' => 'span7'),
+				'attributes' => array('type'=>'email', 'class' => 'form-control input-xlarge'),
 				'rules' => array('trim', 'required', array('match_field', 'email')),
 			),
 		);

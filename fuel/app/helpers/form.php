@@ -140,6 +140,17 @@ function form_radio_public_flag($val_obj = null, $default_value = null, $with_no
 	return render('_parts/form/radio_public_flag', $data);
 }
 
+function form_text($value, $label, $label_col_sm_size = 2)
+{
+	$data = array(
+		'value' => $value,
+		'label' => $label,
+		'label_col_sm_size' => $label_col_sm_size,
+	);
+
+	return render('_parts/form/text', $data);
+}
+
 function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array())
 {
 	return render('_parts/form/upload_files', array(

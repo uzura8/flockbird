@@ -265,4 +265,10 @@ function term($key)
 {
 	return Config::get('term.'.$key);
 }
+
+function alert($message, $type = 'info')
+{
+ return render('_parts/alerts', array('message' => $message, 'type' => $type));
+}
+
 ?>

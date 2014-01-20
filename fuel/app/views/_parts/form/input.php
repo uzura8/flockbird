@@ -15,6 +15,12 @@ else
 {
 	$label_class .= ' control-label';
 }
+
+$error_sm_size = 12 - $col_sm_size;
+if (!$col_sm_size || $col_sm_size == 12)
+{
+	$error_sm_size = 12;
+}
 ?>
 <div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>">
 	<?php echo Form::label($label, $name, array('class' => $label_class)); ?>
@@ -24,7 +30,7 @@ else
 				<?php echo Form::input($name, Input::post($name, $default_value), $input_atter); ?>
 			</div>
 <?php if ($val->error($name)): ?>
-			<div class="col-sm-12">
+			<div class="col-sm-<?php echo $error_sm_size; ?>">
 				<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
 			</div>
 <?php endif; ?>
