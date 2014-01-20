@@ -16,7 +16,7 @@ class Observer_InsertMemberFollowTimeline extends \Orm\Observer
 	public function after_insert(\Orm\Model $obj)
 	{
 
-		$timeline = $this->get_timeline($obj);
+		if (!$timeline = $this->get_timeline($obj)) return false;
 		if ($this->check_already_exists($timeline->id, $obj->{$this->_property_from_member_id})) return false;
 
 		$member_follow_timeline = new \Timeline\Model_MemberFollowTimeline();
