@@ -274,7 +274,7 @@ class Site_Util
 			case \Config::get('timeline.types.album_image_timeline'):
 				list($images['list'], $images['count']) = \Site_Model::get_list_and_count('album_image', array(
 					'where' => \Site_Model::get_where_params4list(
-						$target_member_id,
+						null,
 						$self_member_id,
 						($self_member_id && $target_member_id == $self_member_id),
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
