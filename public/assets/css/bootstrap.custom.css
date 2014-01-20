@@ -38,6 +38,12 @@ body {
 	font-weight: bold;
 	text-transform: uppercase;
 }
+@media (min-width: 768px) {
+	body div.jGrowl.top-right {
+		right: 0;
+		top: 50px;
+	}
+}
 @media (min-width: 768px) and (max-width: 979px) {
   .container {
     width: 100%;
