@@ -5,6 +5,14 @@ body {
 	min-width: 320px;
 }
 
+.input-medium {
+  width: 150px;
+}
+
+.input-xlarge {
+  width: 270px;
+}
+
 @media (max-width: 767px) /* @grid-float-breakpoint -1 */
 {
 	body {
@@ -17,6 +25,10 @@ body {
 	}
 	.page-header h1 {
 		font-size: ;
+	}
+
+	.input-xlarge {
+		width: 100%;
 	}
 }
 
@@ -32,10 +44,11 @@ body {
   }
 }
 
-.input-medium {
-  width: 150px;
+.form-horizontal .form-text {
+  padding-top: 7px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
-
 
 /*
 body {

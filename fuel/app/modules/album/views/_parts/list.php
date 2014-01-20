@@ -52,7 +52,7 @@
 							<li><a href="#" onclick="delete_item('album/api/delete.json', <?php echo $album->id; ?>, '#main_item');return false;"><i class="icon-trash"></i> 削除</a></li>
 						</ul>
 <?php else: ?>
-					<?php echo Html::anchor('album/edit/'.$album->id, '<span class="glyphicon glyphicon-edit mrlr10"></span>', array('class' => 'btn btn-default btn-xs')); ?>
+					<?php echo Html::anchor('#', '<span class="glyphicon glyphicon-edit mrlr10"></span>', array('class' => 'album_edit_link btn btn-default btn-xs', 'data-id' => $album->id)); ?>
 <?php endif; ?>
 					</div><!-- /btn-group -->
 <?php endif; ?>

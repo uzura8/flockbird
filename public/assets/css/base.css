@@ -240,7 +240,7 @@ div#main div.row div#main_container {
 }
 #main_container .main_item div.article {
 	text-align: left;
-	padding: 0 8px;
+	padding: 5px 8px;
 	margin: 0;
 }
 #main_container .main_item div.imgBox {
@@ -362,13 +362,6 @@ div.loading_image {
 	color: #7A7A7A;
 }
 
-/* form */
-/* browser width is over 480px */
-@media (min-width: 480px) {
-	.input-xlarge {
-		width: 95%;
-	}
-}
 span.required {
 	font-weight: bold;
 	color: #D45555;
@@ -455,4 +448,6 @@ div.alert ul {
 	padding: 0;
 }
 
-
+.commentPostBox .input {
+	margin-bottom: 5px;
+}

@@ -7,6 +7,11 @@ $(function(){
 		update_public_flag(this);
 		return false;
 	});
+
+	$(document).on('click','.album_edit_link', function(){
+		location.href = get_url('album/edit/' + $(this).data('id'));
+		return false;
+	});
 });
 
 function set_cover(selfDomElement) {

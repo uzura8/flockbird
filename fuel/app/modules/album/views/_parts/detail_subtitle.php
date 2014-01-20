@@ -14,8 +14,8 @@
 <div class="btn-group edit">
 	<?php echo render('_parts/button_edit'); ?>
 	<ul class="dropdown-menu pull-right">
-		<li><?php echo Html::anchor('album/edit/'.$album->id, '<i class="icon-pencil"></i> 編集'); ?></li>
-		<li><a href="#" onclick="delete_item('album/delete/<?php echo $album->id; ?>');return false;"><i class="icon-trash"></i> 削除</a></li>
+		<li><?php echo Html::anchor('album/edit/'.$album->id, '<i class="glyphicon glyphicon-pencil"></i> 編集'); ?></li>
+		<li><a href="#" onclick="delete_item('album/delete/<?php echo $album->id; ?>');return false;"><i class="glyphicon glyphicon-trash"></i> 削除</a></li>
 	</ul>
 </div><!-- /btn-group -->
 <?php endif; ?>

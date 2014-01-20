@@ -14,8 +14,8 @@
 <?php if (!$note->is_published): ?>
 		<li><?php echo Html::anchor(sprintf('note/publish/%d%s', $note->id, get_csrf_query_str()), '公開する'); ?></li>
 <?php endif; ?>
-		<li><?php echo Html::anchor('note/edit/'.$note->id, '<i class="icon-pencil"></i> 編集'); ?></li>
-		<li><a href="#" onclick="delete_item('note/delete/<?php echo $note->id; ?>');return false;"><i class="icon-trash"></i> 削除</a></li>
+		<li><?php echo Html::anchor('note/edit/'.$note->id, '<i class="glyphicon glyphicon-pencil"></i> 編集'); ?></li>
+		<li><a href="#" onclick="delete_item('note/delete/<?php echo $note->id; ?>');return false;"><i class="glyphicon glyphicon-trash"></i> 削除</a></li>
 	</ul>
 </div><!-- /btn-group -->
 <?php endif; ?>
