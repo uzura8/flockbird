@@ -86,7 +86,8 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			{
 				throw new \HttpInvalidInputException;
 			}
-			if (!$body = trim(\Input::post('body', ''))) throw new \HttpInvalidInputException;
+			$body = trim(\Input::post('body', ''));
+			if (!strlen($body)) throw new \HttpInvalidInputException;
 
 			// Create a new comment
 			$values = array(

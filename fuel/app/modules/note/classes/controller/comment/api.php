@@ -86,7 +86,8 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			$this->check_public_flag($note->public_flag, $note->member_id);
 
 			// Lazy validation
-			if (!$body = trim(\Input::post('body'))) throw new \HttpNotFoundException;
+			$body = trim(\Input::post('body', ''));
+			if (!strlen($body)) throw new \HttpInvalidInputException;
 
 			// Create a new comment
 			$values = array(

@@ -83,11 +83,12 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			}
 
 			// Lazy validation
-			if (!\Input::post('body')) throw new \HttpNotFoundException;
+			$body = trim(\Input::post('body', ''));
+			if (!strlen($body)) throw new \HttpInvalidInputException;
 
 			// Create a new comment
 			$values = array(
-				'body' => \Input::post('body'),
+				'body' => $body,
 				'album_image_id' => $album_image_id,
 				'member_id' => $this->u->id,
 			);
