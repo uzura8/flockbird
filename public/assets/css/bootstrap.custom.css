@@ -56,6 +56,13 @@ body {
   margin-bottom: 0;
 }
 
+.navbar .popover {
+	right: 10px!important;
+}
+.navbar .popover-content {
+	padding: 9px 0px;
+}
+
 /*
 body {
 	padding-top: 60px;

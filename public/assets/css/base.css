@@ -451,3 +451,8 @@ div.alert ul {
 .commentPostBox .input {
 	margin-bottom: 5px;
 }
+
+.navbar .popover .popover-content .checkbox input {
+	margin-left: -5px;
+	margin-right: 5px;
+}

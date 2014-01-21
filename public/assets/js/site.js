@@ -299,7 +299,7 @@ function load_popover(link_attribute, content_attribute, content_url) {
 	$(link_attribute).popover({html: true})
 	$(link_attribute).click(function(){
 		$(content_attribute).load(content_url);
-		//if (input_attribute.length > 0) $(input_attribute).focus();
+		//if (input_attrs.length > 0) $(input_attrs).focus();
 		$(window).resize(function(e) {
 			e.preventDefault()
 			$(link_attribute).each(function (){
