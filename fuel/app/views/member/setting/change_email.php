@@ -1,4 +1,4 @@
-<div class="alert alert-info">パスワードを入力してください</div>
+<?php echo alert('パスワードを入力してください。'); ?>
 
 <?php echo Form::open(array('action' => 'member/setting/change_email', 'class' => 'form-horizontal well')); ?>
 <?php echo Form::hidden('token' ,$member_email_pre['token']); ?>

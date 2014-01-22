@@ -266,9 +266,9 @@ function term($key)
 	return Config::get('term.'.$key);
 }
 
-function alert($message, $type = 'info')
+function alert($message, $type = 'info', $with_dismiss_btn = false)
 {
- return render('_parts/alerts', array('message' => $message, 'type' => $type));
+ return render('_parts/alerts', array('message' => $message, 'type' => $type, 'with_dismiss_btn' => $with_dismiss_btn));
 }
 
 ?>

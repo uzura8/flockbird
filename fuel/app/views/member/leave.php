@@ -3,7 +3,7 @@
 	<li><?php echo Html::anchor('member/setting/password', 'パスワード変更'); ?></li>
 	<li class="active"><?php echo Html::anchor('member/leave', Config::get('term.member_leave')); ?></li>
 </ul>
-<div class="alert alert-info">パスワードを入力してください</div>
+<?php echo alert('パスワードを入力してください。'); ?>
 <div class="well">
 <?php echo render('_parts/form/description', array('exists_required_fields' => true)); ?>
 <?php echo $html_form; ?>
