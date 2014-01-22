@@ -33,7 +33,7 @@ switch ($thumbnail_size)
 <?php endif; ?>
 			<p class="subinfo<?php if ($is_subinfo_pull_right): ?> pull-right<?php endif; ?>">
 				<?php echo Num::format_bytes($file->size); ?>
-				<?php echo Html::anchor('#', '<i class="ls-icon-delete"></i>', array(
+				<?php echo Html::anchor('#', '<i class="glyphicon glyphicon-trash"></i>', array(
 					'class' => 'btn btn-xs btn-default delete_file_tmp',
 					'data-id' => $file->id,
 					'data-type' => $prefix,

@@ -2,7 +2,7 @@
 <div class="well">
 <?php echo form_open(false, false, array('action' => 'member/leave')); ?>
 <?php echo Form::hidden('password', $input['password'], array('dont_prep' => true)); ?>
-	<?php echo form_button('<i class="ls-icon-arrowleft"></i> 戻る', 'submit', 'submit_back', array('class' => 'btn btn-default')); ?>
+	<?php echo form_button('<i class="glyphicon glyphicon-arrow-left"></i> 戻る', 'submit', 'submit_back', array('class' => 'btn btn-default')); ?>
 <?php echo form_close(); ?>
 
 <?php echo form_open(false, false, array('action' => 'member/delete')); ?>

@@ -45,7 +45,7 @@
 <?php if ($note->is_published): ?>
 <?php list($comments, $is_all_records, $all_comment_count) = \Note\Model_NoteComment::get_comments($id, \Config::get('site.view_params_default.list.comment.limit')); ?>
 		<div class="comment_info">
-			<small><i class="icon-comment"></i> <?php echo $all_comment_count; ?></small>
+			<small><i class="glyphicon glyphicon-comment"></i> <?php echo $all_comment_count; ?></small>
 <?php if (Auth::check()): ?>
 			<small><?php echo Html::anchor('note/'.$id.'?write_comment=1#comments', 'コメントする'); ?></small>
 <?php endif; ?>
@@ -62,7 +62,7 @@
 	'date' => array('datetime' => $comment->created_at)
 )); ?>
 <?php if (isset($u) && in_array($u->id, array($comment->member_id, $note->member_id))): ?>
-				<a class="btn btn-default btn-xs boxBtn btn_comment_delete" id="btn_comment_delete_<?php echo $comment->id ?>" href="#"><i class="icon-trash"></i></a>
+				<a class="btn btn-default btn-xs boxBtn btn_comment_delete" id="btn_comment_delete_<?php echo $comment->id ?>" href="#"><i class="glyphicon glyphicon-trash"></i></a>
 <?php endif; ?>
 			</div>
 <?php endforeach; ?>

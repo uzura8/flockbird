@@ -49,7 +49,7 @@
 						<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="glyphicon glyphicon-edit"></span><span class="caret"></span></button>
 						<ul class="dropdown-menu">
 							<li><?php echo Html::anchor('album/edit/'.$album->id, '<i class="glyphicon glyphicon-pencil"></i> 編集'); ?></li>
-							<li><a href="#" onclick="delete_item('album/api/delete.json', <?php echo $album->id; ?>, '#main_item');return false;"><i class="icon-trash"></i> 削除</a></li>
+							<li><a href="#" onclick="delete_item('album/api/delete.json', <?php echo $album->id; ?>, '#main_item');return false;"><i class="glyphicon glyphicon-trash"></i> 削除</a></li>
 						</ul>
 <?php else: ?>
 					<?php echo Html::anchor('#', '<span class="glyphicon glyphicon-edit mrlr10"></span>', array('class' => 'album_edit_link btn btn-default btn-xs', 'data-id' => $album->id)); ?>

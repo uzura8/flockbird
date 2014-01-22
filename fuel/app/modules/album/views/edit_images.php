@@ -8,8 +8,8 @@
 	<?php echo form_radio_public_flag($val, 99, true); ?>
 <?php endif; ?>
 	<?php echo form_input($val, 'shot_at', '撮影日時', null, false, 6); ?>
-	<?php echo form_button('<i class="ls-icon-edit icon-white"></i> 一括編集', 'button', 'post', array('id' => 'submit_post', 'class' => 'btn btn-default btn-primary')); ?>
-	<?php echo form_button('<i class="icon-trash icon-white"></i> 一括削除', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-default btn-danger')); ?>
+	<?php echo form_button('<i class="glyphicon glyphicon-edit"></i> 一括編集', 'button', 'post', array('id' => 'submit_post', 'class' => 'btn btn-default btn-primary')); ?>
+	<?php echo form_button('<i class="glyphicon glyphicon-trash"></i> 一括削除', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-default btn-danger')); ?>
 </div><!-- well -->
 
 <label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
