@@ -31,7 +31,7 @@ $img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 <?php if (!empty($with_uploader)): ?>
 					<?php echo Form::button(
 						'display_fileinput-button',
-						'<span class="glyphicon glyphicon-camera"></span> 写真を追加',
+						sprintf('<span class="glyphicon glyphicon-camera"></span>%s', IS_SP ? '' : ' 写真を追加'),
 						array('class' => 'btn btn-default btn-ms pull-left display_upload_form')
 					); ?>
 <?php endif; ?>
@@ -43,6 +43,7 @@ $data = array(
 	'id' => $u->id,
 	'is_use_in_form' => true,
 	'public_flag' => $public_flag,
+	'view_icon_only' => IS_SP,
 	'is_mycontents' => true,
 	'parent_box_additional_class' => 'pull-right',
 );
