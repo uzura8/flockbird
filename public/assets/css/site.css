@@ -52,14 +52,7 @@
 	}
 }
 
-@media (min-width: 480px) {
-	#album_album_upload table {table-layout: fixed;}
-	#album_album_upload td {word-wrap: break-word;}
-	#album_album_upload .form-horizontal .control-label {width: 60px;}
-	#album_album_upload .form-horizontal .controls {margin-left: 80px;}
-	#album_album_upload .files .progress {width: 100%;}
-	#album_album_upload #fileupload .btn_box {padding-left: 19px;}
-}
+#album_album_upload #form_button {margin-top: 10px;}
 
 #album_album_edit_images td {
 	word-break: break-all;
