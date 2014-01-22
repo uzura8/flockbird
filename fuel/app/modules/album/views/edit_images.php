@@ -7,7 +7,7 @@
 <?php if (!$is_disabled_to_update_public_flag): ?>
 	<?php echo form_radio_public_flag($val, 99, true); ?>
 <?php endif; ?>
-	<?php echo form_input($val, 'shot_at', '撮影日時', null, false, 6); ?>
+	<?php echo form_input($val, 'shot_at', null, 5); ?>
 	<?php echo form_button('<i class="glyphicon glyphicon-edit"></i> 一括編集', 'button', 'post', array('id' => 'submit_post', 'class' => 'btn btn-default btn-primary')); ?>
 	<?php echo form_button('<i class="glyphicon glyphicon-trash"></i> 一括削除', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-default btn-danger')); ?>
 </div><!-- well -->
