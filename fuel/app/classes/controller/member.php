@@ -575,39 +575,37 @@ END;
 
 	public function form_resend_password()
 	{
-		$form = Fieldset::forge('resend_password', array('class' => 'form-horizontal'));
-
-		$form->add('email', 'メールアドレス')
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('valid_email');
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'btn btn-default'));
-		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Util_security::get_csrf()));
+		$add_fields = array(
+			'email' => array(
+				'label' => 'メールアドレス',
+				'attributes' => array('type'=>'email', 'class' => 'form-control input-xlarge'),
+				'rules' => array('trim', 'required', 'valid_email'),
+			),
+		);
+		$form = \Site_Util::get_form_instance('resend_password', null, true, $add_fields, array('value' => term('form.submit')));
 
 		return $form;
 	}
 
 	public function form_reset_password()
 	{
-		$form = Fieldset::forge('reset_password');
-
-		$form->add('password', '新しいパスワード', array('type'=>'password'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('min_length', 6)
-			->add_rule('max_length', 20);
-
-		$form->add('password_confirm', '新しいパスワード(確認用)', array('type'=>'password'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('match_field', 'password');
-
-		$form->add('token', '', array('type'=>'hidden', 'value' => Input::param('token')))
-			->add_rule('required');
-
-		$form->add('submit', '', array('type'=>'submit', 'value' => '変更', 'class' => 'btn btn-default'));
-		$form->add(Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => Util_security::get_csrf()));
+		$add_fields = array(
+			'password' => array(
+				'label' => '新しいパスワード',
+				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
+				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20)),
+			),
+			'password_confirm' => array(
+				'label' => '新しいパスワード(確認用)',
+				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
+				'rules' => array('trim', 'required', array('match_field', 'password')),
+			),
+			'token' => array(
+				'attributes' => array('type'=>'hidden', 'value' => Input::param('token')),
+				'rules' => array('required'),
+			),
+		);
+		$form = \Site_Util::get_form_instance('reset_password', null, true, $add_fields, array('value' => '変更'));
 
 		return $form;
 	}
