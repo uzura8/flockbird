@@ -9,13 +9,10 @@ $button_attrs['class'] .= ' pull-right';
 $parts_attrs_def = array('class' => 'commentPostBox');
 $parts_attrs     = empty($parts_attrs) ? $parts_attrs_def : array_merge($parts_attrs_def, $parts_attrs);
 
-$class_name = 'member_img_box_s';
-$img_size   = '30x30xc';
-if (isset($size))
-{
-	$class_name = 'member_img_box_'.strtolower($size);
-	$img_size   = Config::get('site.upload.types.img.types.m.sizes.'.strtoupper($size));
-}
+$size = empty($size) ? 'S' : strtoupper($size);
+if (IS_SP) $size = Site_Util::convert_img_size_down($size) ?: $size;
+$class_name = 'member_img_box_'.strtolower($size);
+$img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 ?>
 <div<?php if (!empty($parts_attrs['class'])): ?> class="<?php echo $parts_attrs['class']; ?>"<?php endif; ?><?php if (!empty($parts_attrs['id'])): ?> id="<?php echo $parts_attrs['id']; ?>"<?php endif; ?>>
 	<div class="<?php echo $class_name; ?>">
