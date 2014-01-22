@@ -58,18 +58,14 @@ class Model_File extends \Orm\Model
 		'MyOrm\Observer_AddMemberFilesizeTotal' => array(
 			'events' => array('before_insert'),
 			'key_from' => 'member_id',
-			'model_to' => '\Model_Member',
 			'key_to' => 'id',
 			'property_from' => 'filesize',
-			'property_to' => 'filesize_total',
 		),
 		'MyOrm\Observer_SubtractMemberFilesizeTotal' => array(
 			'events' => array('after_delete'),
 			'key_from' => 'member_id',
-			'model_to' => '\Model_Member',
 			'key_to' => 'id',
 			'property_from' => 'filesize',
-			'property_to' => 'filesize_total',
 		),
 		'MyOrm\Observer_RemoveFile' => array(
 			'events' => array('before_delete'),
