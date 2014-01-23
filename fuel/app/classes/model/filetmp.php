@@ -55,6 +55,10 @@ class Model_FileTmp extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'MyOrm\Observer_RemoveFile' => array(
+			'events' => array('before_delete'),
+			'is_tmp' => true,
+		),
 	);
 
 	public static function check_authority($id, $target_member_id = 0)
@@ -75,5 +79,10 @@ class Model_FileTmp extends \Orm\Model
 			->where('name', $name)
 			->where('member_id', $member_id)
 			->get_one();
+	}
+
+	public static function get4name($name)
+	{
+		return self::query()->where('name', $name)->get_one();
 	}
 }

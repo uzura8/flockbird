@@ -306,13 +306,15 @@ class Util_file
 		return $files;
 	}
 
-	public static function get_path_partial($path, $length = 1)
+	public static function get_path_partial($path, $length = 1, $offset = 0)
 	{
 		$parts = explode('/', $path);
 		$parts = array_reverse($parts);
 		$return = '';
 		for ($i = 0; $i < $length; $i++)
 		{
+			if ($i < $offset) continue;
+
 			if (strlen($return) == 0)
 			{
 				$return = $parts[$i];

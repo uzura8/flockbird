@@ -72,10 +72,10 @@ class Site_Upload
 		Util_file::remove($file);
 
 		$file_cate = self::get_file_cate_from_filepath($filepath);
-		$sizes = self::get_sizes_all4file_cate($file_cate);
-		foreach ($sizes as $size)
+		$sizes = self::get_sizes_all4file_cate($file_cate, $is_tmp);
+		foreach ($sizes as $key => $size)
 		{
-			$file = self::get_uploaded_file_real_path($filepath, $filename, $size, 'img', $is_tmp);
+			$file = self::get_uploaded_file_real_path($filepath, $filename, $is_tmp ? $key : $size, 'img', $is_tmp);
 			Util_file::remove($file);
 		}
 
@@ -181,8 +181,16 @@ class Site_Upload
 		}
 		else
 		{
-			$key .= '.root_path.cache_dir';
-			$path = PRJ_PUBLIC_DIR.Config::get($key).$size.'/'.$filepath.$filename;
+			if ($is_tmp)
+			{
+				$key .= '.raw_file_path';
+				$path = Config::get($key).$filepath.$size.'/'.$filename;
+			}
+			else
+			{
+				$key .= '.root_path.cache_dir';
+				$path = PRJ_PUBLIC_DIR.Config::get($key).$size.'/'.$filepath.$filename;
+			}
 		}
 
 		return $path;
@@ -345,10 +353,9 @@ class Site_Upload
 
 	public static function get_sizes_all4file_cate($file_cate, $is_tmp = false)
 	{
-		$key_sizes = $is_tmp ? 'sizes_tmp' : 'sizes';
-		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.'.$key_sizes, array());
-		if ($is_tmp) return $sizes;
+		if ($is_tmp) return Config::get('site.upload.types.img.tmp.sizes', array());
 
+		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.sizes', array());
 		$additional_sizes_list = Config::get('site.upload.types.img.types.'.$file_cate.'.additional_sizes', array());
 		foreach ($additional_sizes_list as $key => $additional_sizes)
 		{
