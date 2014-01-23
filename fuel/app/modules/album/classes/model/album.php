@@ -172,6 +172,17 @@ class Model_Album extends \Orm\Model
 		$this->save();
 	}
 
+	public static function get4member_id($member_id, array $cols = array(), $with_foreigns = true)
+	{
+		$obj = self::query();
+		foreach ($cols as $col) $obj = $obj->select($col);
+		$obj = $obj->where('member_id', $member_id)->order_by('id', 'asc');
+		if (!$with_foreigns) $obj = $obj->where('foreign_table', 'is', null);
+		$obj = $obj->order_by('id', 'asc');
+
+		return $obj->get();
+	}
+
 	public static function get_album_for_foreign_table($member_id, $table_name)
 	{
 		$album = self::find('first', array(

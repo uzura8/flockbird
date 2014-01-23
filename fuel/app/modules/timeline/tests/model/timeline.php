@@ -217,9 +217,6 @@ class Test_Model_Timeline extends \TestCase
 				}
 				$this->assertEquals($public_flag_max_range, $obj->public_flag);
 			}
-
-			// 未使用カラムの値が null か
-			$this->assertEmpty($obj->body);
 		}
 	}
 

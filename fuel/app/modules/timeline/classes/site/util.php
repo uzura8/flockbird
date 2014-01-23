@@ -127,6 +127,7 @@ class Site_Util
 		$accept_types = array(
 			\Config::get('timeline.types.note'),
 			\Config::get('timeline.types.album'),
+			\Config::get('timeline.types.album_image'),
 		);
 		if (!in_array($type, $accept_types)) return null;
 
@@ -150,6 +151,9 @@ class Site_Util
 			case \Config::get('timeline.types.album'):
 				$title['value'] = $foreign_table_obj->name;
 				$read_more_uri = 'album/'.$foreign_table_obj->id;
+				break;
+			case \Config::get('timeline.types.album_image'):
+				$read_more_uri = 'timeline/'.$foreign_table_obj->id;
 				break;
 		}
 

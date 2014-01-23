@@ -61,7 +61,13 @@ $method = $is_safe_content ? 'set_safe' : 'set';
 $view_member_contents_box->$method('content', $content);
 $view_member_contents_box->set('is_output_raw_content', $is_safe_content);
 
-$quote_article = $foreign_table_obj ? \Timeline\Site_Util::get_quote_article($timeline->type, $foreign_table_obj) : null;
+$quote_article = '';
+if ($foreign_table_obj || $timeline->type == \Config::get('timeline.types.album_image'))
+{
+	$quote_obj = ($timeline->type == \Config::get('timeline.types.album_image')) ? $timeline : $foreign_table_obj;
+	$quote_article = \Timeline\Site_Util::get_quote_article($timeline->type, $quote_obj);
+	unset($quote_obj);
+}
 if ($quote_article) $view_member_contents_box->set_safe('quote_article', $quote_article);
 
 echo $view_member_contents_box->render();

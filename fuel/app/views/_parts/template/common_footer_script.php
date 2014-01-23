@@ -7,9 +7,10 @@ function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
 function is_sp() {return <?php echo (IS_SP)? 'true' : 'false'; ?>;}
 function get_term(key) {
 	var terms = {};
-	terms['public_flag'] = '<?php echo \Config::get('term.public_flag.label'); ?>';
-	terms['album_image'] = '<?php echo \Config::get('term.album_image'); ?>';
-	terms['timeline']    = '<?php echo \Config::get('term.timeline'); ?>';
+	terms['public_flag'] = '<?php echo term('public_flag.label'); ?>';
+	terms['album']       = '<?php echo term('album'); ?>';
+	terms['album_image'] = '<?php echo term('album_image'); ?>';
+	terms['timeline']    = '<?php echo term('timeline'); ?>';
 	return terms[key];
 }
 function get_config(key) {

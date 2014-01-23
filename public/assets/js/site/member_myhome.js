@@ -5,6 +5,33 @@ $(function() {
 	$(document).on('click','.display_upload_form', function(){
 		$('.upload').removeClass('hidden');
 		$(this).addClass('hidden');
+
+		var url = get_url('album/api/albums.json');
+		var get_data = {};
+		get_data['nochache']  = (new Date()).getTime();
+		$.ajax({
+			url : url,
+			type : 'GET',
+			dataType : 'json',
+			data : get_data,
+			timeout: 10000,
+			beforeSend: function(xhr, settings) {
+				//GL.execute_flg = true;
+				$('#album_id').attr('disabled', 'disabled');
+			},
+			complete: function(xhr, textStatus) {
+				//GL.execute_flg = false;
+				$('#album_id').removeAttr('disabled');
+			},
+			success: function(result) {
+				$.each(result, function(i, val) {
+					$('#album_id').append('<option value="' + val.id + '">' + val.name + '</option>');
+				});
+			},
+			error: function(result) {
+			}
+		});
+
 		return false;
 	});
 
@@ -24,9 +51,8 @@ $(function() {
 		$('input[name^="file_tmp"]').each(function(){
 				post_data_additional[this.name] = this.value;
 		});
-		if (body.length == 0 && post_data_additional.length == 0) return;
-
-		post_data_additional[album_id] = $('#album_id').val();
+		if (body.length == 0 && Object.keys(post_data_additional).length == 0) return;
+		post_data_additional['album_id'] = $('#album_id').val();
 		create_comment(
 			0,
 			'timeline/api/create.json',
@@ -49,5 +75,6 @@ $(function() {
 		$('#files').html('');
 		$('#album_id').val('0')
 		$('#progress .progress-bar').css('width', 0);
+		$('#album_id').html('<option selected="selected" value="0">' + get_term('timeline') + '用' + get_term('album') + '</option>');
 	});
 })

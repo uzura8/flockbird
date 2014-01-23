@@ -49,6 +49,22 @@ class Controller_Api extends \Controller_Site_Api
 	}
 
 	/**
+	 * Api albums
+	 * 
+	 * @access  public
+	 * @return  Response (json)
+	 */
+	public function get_albums($cols = array('id', 'name'))
+	{
+		if ($this->format != 'json') throw new \HttpNotFoundException();
+
+		$with_foreigns = (int)\Input::get('with_foreigns', 0);
+		$albums = Model_Album::get4member_id($this->u->id, array('id', 'name'), $with_foreigns);
+
+		$this->response($albums, 200);
+	}
+
+	/**
 	 * Album delete
 	 * 
 	 * @access  public
