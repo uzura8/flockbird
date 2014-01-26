@@ -271,4 +271,9 @@ function alert($message, $type = 'info', $with_dismiss_btn = false)
  return render('_parts/alerts', array('message' => $message, 'type' => $type, 'with_dismiss_btn' => $with_dismiss_btn));
 }
 
+function small_tag($str, $is_enclose_small_tag = true)
+{
+	return sprintf('%s%s%s', $is_enclose_small_tag ? '<small>' : '', $str, $is_enclose_small_tag ? '</small>' : '');
+}
+
 ?>

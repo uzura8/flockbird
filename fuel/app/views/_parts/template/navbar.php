@@ -8,12 +8,10 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="<?php echo Uri::create('/'); ?>"><?php echo PRJ_SITE_NAME; ?></a>
-		</div>
-		<div class="collapse navbar-collapse">
 <?php if (Auth::check()): ?>
 			<div class="pull-right navbar-btn btn-group">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<?php echo img($u->get_image(), '20x20xc', '', false, '', true); ?> <?php echo site_get_screen_name($u); ?>
+					<?php echo img($u->get_image(), '20x20xc', '', false, '', true); ?><span class="hidden-xs-inline"> <?php echo site_get_screen_name($u); ?></span>
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
@@ -22,6 +20,15 @@
 <?php endforeach; ?>
 				</ul>
 			</div>
+<?php 	else: ?>
+			<button href="#" type="button" id="insecure_user_menu" class="btn btn-default pull-right navbar-btn" data-content="<div id='insecure_user_popover'></div>" data-placement="bottom">
+				<i class="glyphicon glyphicon-user"></i><span class="hidden-xs-inline"> <?php echo site_get_screen_name($u); ?></span>
+				<span class="caret"></span>
+			</button>
+<?php 	endif; ?>
+		</div>
+		<div class="collapse navbar-collapse">
+<?php if (Auth::check()): ?>
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
 <?php	$i = 1; ?>
@@ -43,10 +50,6 @@
 				</ul>
 			</div><!--/.nav-collapse -->
 <?php else: ?>
-			<button href="#" type="button" id="insecure_user_menu" class="btn btn-default pull-right navbar-btn" data-content="<div id='insecure_user_popover'></div>" data-placement="bottom">
-				<span class="glyphicon glyphicon-user"></span> <?php echo site_get_screen_name($u); ?>
-				<span class="caret"></span>
-			</button>
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
 <?php	$i = 1; ?>

@@ -5,12 +5,8 @@ body {
 	min-width: 320px;
 }
 
-.input-medium {
-  width: 150px;
-}
-
-.input-xlarge {
-  width: 270px;
+.hidden-xs-inline {
+  display: inline !important;
 }
 
 @media (max-width: 767px) /* @grid-float-breakpoint -1 */
@@ -30,6 +26,27 @@ body {
 	.input-xlarge {
 		width: 100%;
 	}
+	.hidden-xs-inline {
+		display: none !important;
+	}
+}
+
+@media (min-width: 768px) {
+	.navbar .container .navbar-header .navbar-btn {
+		position: absolute;
+		top: 0;
+		right: 15px;
+	}
+	body div.jGrowl.top-right {
+		right: 0;
+		top: 50px;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+  .container {
+    width: 100%;
+  }
 }
 
 .nav > li.disabled.nav-header > a {
@@ -38,16 +55,9 @@ body {
 	font-weight: bold;
 	text-transform: uppercase;
 }
-@media (min-width: 768px) {
-	body div.jGrowl.top-right {
-		right: 0;
-		top: 50px;
-	}
-}
-@media (min-width: 768px) and (max-width: 979px) {
-  .container {
-    width: 100%;
-  }
+
+.navbar .container {
+	position: relative;
 }
 
 .form-horizontal .form-text {
@@ -57,10 +67,19 @@ body {
 }
 
 .navbar .popover {
-	right: 10px!important;
+	right: 15px!important;
+	min-width: 195px;
 }
 .navbar .popover-content {
 	padding: 9px 0px;
+}
+
+.input-medium {
+  width: 150px;
+}
+
+.input-xlarge {
+  width: 270px;
 }
 
 /*

@@ -20,7 +20,7 @@ $label_col_sm_size = $is_api_request ? 12 : 3;
 					'rememberme[]',
 					'1',
 					in_array('1', Input::post('rememberme', array())) ? array('checked' => 'checked', 'id' => 'form_rememberme_1') : array('id' => 'form_rememberme_1')
-				); ?> 次回から自動的にログイン
+				); ?> <?php echo small_tag('次回から自動的にログイン', $is_api_request); ?>
 				</label>
 			</div>
 		</div>
