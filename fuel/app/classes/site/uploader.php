@@ -116,11 +116,12 @@ class Site_Uploader
 
 	private function set_file_properties($file_path)
 	{
+		$ext = Util_file::get_image_type($file_path);
 		$file_info = File::file_info($file_path);
 		$this->file->size = $file_info['size'];
 		$this->file->type = $file_info['mimetype'];
+		if (empty($this->file->original_name)) $this->file->original_name = $file_info['filename'];
 
-		$ext = Util_file::get_image_type($file_path);
 		if (!$this->file->name = \Site_Upload::make_file_name($this->file->original_name, $ext, $this->options['upload_dir']))
 		{
 			throw new FuelException('File already exists.');

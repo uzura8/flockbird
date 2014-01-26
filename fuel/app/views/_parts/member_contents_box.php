@@ -5,7 +5,7 @@ $class_name = 'member_img_box_'.strtolower($size);
 $img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 ?>
 <div class="<?php echo $class_name; ?>">
-	<?php echo empty($member) ? img('m', $img_size) : img($member->get_image(), $img_size, 'member/'.$member->id, false, site_get_screen_name($member), true); ?>
+	<?php echo empty($member) ? img('m', $img_size, '', false, '', true) : img($member->get_image(), $img_size, 'member/'.$member->id, false, site_get_screen_name($member), true); ?>
 	<div class="content">
 		<div class="main">
 			<b class="fullname"><?php echo empty($member) ? Config::get('term.left_member') : Html::anchor('member/'.$member->id, $member->name); ?></b>
@@ -44,7 +44,7 @@ if (isset($content) && strlen($content))
 <?php
 if (isset($public_flag, $model, $id))
 {
-	$is_mycontents = Auth::check() && $u->id == $member->id;
+	$is_mycontents = Auth::check() && isset($member) && $u->id == $member->id;
 	$data = array(
 		'model' => $model,
 		'id' => !empty($public_flag_target_id) ? $public_flag_target_id : $id,
