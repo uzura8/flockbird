@@ -1,25 +1,43 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-			<a class="btn btn-default navbar-btn" data-toggle="collapse" data-target=".nav-collapse">
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
-			<a class="brand" href="<?php echo Uri::create('/admin/'); ?>"><?php echo PRJ_SITE_NAME; ?> 管理画面</a>
+			</button>
+			<a class="navbar-brand" href="<?php echo Uri::create('/admin/'); ?>"><?php echo PRJ_SITE_NAME; ?> 管理画面</a>
 <?php if (Auth::check()): ?>
-			<div class="btn-group pull-right">
-				<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+			<div class="pull-right navbar-btn btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 					<i class="icon-user"></i> <?php echo $u->username; ?>
 					<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
+				</button>
+				<ul class="dropdown-menu" role="menu">
 <?php foreach (Config::get('navigation.admin.secure_user_dropdown') as $name => $path): ?>
 					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
 <?php endforeach; ?>
 				</ul>
 			</div>
-			<div class="nav-collapse">
-				<ul class="nav">
+<?php else: ?>
+			<div class="pull-right navbar-btn btn-group">
+				<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+<?php foreach (Config::get('navigation.admin.insecure_user_dropdown') as $name => $path): ?>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+<?php endforeach; ?>
+				</ul>
+			</div>
+<?php endif; ?>
+		</div>
+		<div class="collapse navbar-collapse">
+<?php if (Auth::check()): ?>
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
 <?php	$i = 1; ?>
 <?php foreach (Config::get('navigation.admin.secure_global_head') as $name => $value): ?>
 <?php		if (is_array($value)): ?>
@@ -39,19 +57,8 @@
 				</ul>
 			</div><!--/.nav-collapse -->
 <?php else: ?>
-			<div class="btn-group pull-right">
-				<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
-					<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-<?php foreach (Config::get('navigation.admin.insecure_user_dropdown') as $name => $path): ?>
-					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
-<?php endforeach; ?>
-				</ul>
-			</div>
-			<div class="nav-collapse">
-				<ul class="nav">
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
 <?php	$i = 1; ?>
 <?php foreach (Config::get('navigation.admin.insecure_global_head') as $name => $value): ?>
 <?php		if (is_array($value)): ?>
@@ -71,6 +78,6 @@
 				</ul>
 			</div><!--/.nav-collapse -->
 <?php endif; ?>
-		</div>
-	</div>
-</div>
+		</div><!-- /.nav-collapse -->
+	</div><!-- /.container -->
+</div><!-- /.navbar -->

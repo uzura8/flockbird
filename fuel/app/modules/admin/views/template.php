@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width<?php if (IS_SP): ?>, initial-scale=1.0, maximum-scale=1.0, user-scalable=no<?php endif; ?>">
 <title><?php echo $header_title ? $header_title : $title; ?></title>
 <meta name="robots" content="noindex,nofollow">
@@ -19,9 +20,8 @@
 <?php echo render('_parts/template/navbar'); ?>
 
 <div class="container">
-	<div class="row">
-		<div class="span9">
-
+	<div class="row row-offcanvas row-offcanvas-right">
+		<div class="col-sm-9">
 <?php if (!empty($breadcrumbs) && !IS_SP): ?>
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
 <?php endif; ?>
@@ -47,16 +47,11 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 
 		</div><!--/span-->
 
-		<div class="span3">
+		<div class="col-sm-3" id="sidebar" role="navigation">
 <?php if (Auth::check()): ?>
-			<div class="well sidebar-nav">
 				<?php echo render('_parts/nav_list', array('header' => 'Member', 'list' => Config::get('navigation.admin.secure_side'))); ?>
-			</div><!--/.well -->
 <?php endif; ?>
-
-			<div class="well sidebar-nav">
 				<?php echo render('_parts/nav_list', array('header' => 'Site', 'list' => Config::get('navigation.admin.global_side'))); ?>
-			</div><!--/.well -->
 
 <?php if (isset($subside_contents)): ?>
 <?php echo $subside_contents; ?>
