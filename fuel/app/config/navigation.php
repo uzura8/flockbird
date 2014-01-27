@@ -50,6 +50,9 @@ return array(
 			'Member' => array(
 				'Member list' => 'admin/member',
 			),
+			'SNS settings' => array(
+				'Profile setting' => 'admin/profile',
+			),
 			'Admin settings' => array(
 				'Account management' => 'admin/setting/account',
 				'Change password' => 'admin/setting/change_password',
