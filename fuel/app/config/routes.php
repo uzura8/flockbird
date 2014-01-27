@@ -4,7 +4,6 @@ $routes = array(
 	'_404_'   => 'error/404',   // The main 404 route
 	
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
-	'birds/(((?!(size|watch_spot|life_place)).)+)'    => 'birds/detail/$1',
 	'member/(\d+)'  => 'member/home/$1',
 	'member'  => 'member/myhome',
 );

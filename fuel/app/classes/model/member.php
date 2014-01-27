@@ -86,35 +86,6 @@ class Model_Member extends \Orm\Model
 		return Model_File::get_name($this->file_id) ?: 'm';
 	}
 
-	/**
-	 * Create new member from facebook
-	 *
-	 * @param   string
-	 * @param   string
-	 * @param   string  must contain valid email address
-	 * @param   int     group id
-	 * @param   Array
-	 * @return  bool
-	 */
-	public function create_member_from_facebook($facebook_id, $name)
-	{
-		$facebook_id = trim($facebook_id);
-		if (empty($facebook_id)) return false;
-		$name = trim($name);
-
-		$user = array(
-			'name'        => (string) $name,
-			'register_type'   => 1,// 0: normal, 1:facebook
-			'created_at'      => date('Y-m-d H:i:s')
-		);
-		Config::load('simpleauth', 'simpleauth');
-		$result = \DB::insert(\Config::get('simpleauth.table_name'))
-			->set($user)
-			->execute(\Config::get('simpleauth.db_connection'));
-
-		return ($result[1] > 0) ? $result[0] : false;
-	}
-
 	public static function check_authority($id, $target_member_id = 0)
 	{
 		if (!$id) return false;
