@@ -74,20 +74,6 @@ CREATE TABLE `contacts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `fbusers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
-  `facebook_id` varchar(50) NOT NULL,
-  `facebook_name` varchar(255) NOT NULL,
-  `facebook_link` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `facebook_id_UNIQUE_idx` (`facebook_id`),
-  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE `file` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
@@ -146,7 +132,7 @@ CREATE TABLE `member` (
   `login_hash` varchar(255) DEFAULT NULL,
   `file_id` varchar(255) DEFAULT NULL,
   `filesize_total` int(11) NOT NULL DEFAULT '0' COMMENT 'Total file size',
-  `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook',
+  `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
@@ -193,21 +179,6 @@ CREATE TABLE `member_email_pre` (
   UNIQUE KEY `token_UNIQUE_idx` (`token`),
   KEY `email_idx` (`email`),
   CONSTRAINT `member_email_pre_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_facebook` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
-  `facebook_id` varchar(50) NOT NULL,
-  `facebook_name` varchar(255) NOT NULL,
-  `facebook_link` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `facebook_id_UNIQUE_idx` (`facebook_id`),
-  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
-  CONSTRAINT `member_facebook_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
