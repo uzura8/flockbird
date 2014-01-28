@@ -1,6 +1,8 @@
 <p class="article_body"><?php echo nl2br($note->body) ?></p>
 
-<?php echo render('_parts/album_images', array('list' => $images, 'is_simple_view' => true)); ?>
+<?php if (Module::loaded('album')): ?>
+<?php echo render('album::image/_parts/list', array('list' => $images, 'is_simple_view' => true)); ?>
+<?php endif; ?>
 
 <?php if ($note->is_published): ?>
 <?php if (Auth::check() || $comments): ?>

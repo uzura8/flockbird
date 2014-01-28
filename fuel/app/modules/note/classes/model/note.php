@@ -109,7 +109,7 @@ class Model_Note extends \Orm\Model
 	{
 		$deleted_files = array();
 		// album_image の削除
-		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
+		if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			$album_image_ids = array();
 			foreach ($album_images as $album_image)
@@ -121,7 +121,7 @@ class Model_Note extends \Orm\Model
 		}
 
 		// timeline 投稿の削除
-		\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $this->id);
+		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $this->id);
 
 		// note の削除
 		$this->delete();
@@ -132,7 +132,7 @@ class Model_Note extends \Orm\Model
 	public function update_public_flag_with_relations($public_flag)
 	{
 		// album_image の public_flag の更新
-		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
+		if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			foreach ($album_images as $album_image)
 			{

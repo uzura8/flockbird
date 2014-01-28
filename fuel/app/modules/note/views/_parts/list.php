@@ -38,7 +38,7 @@
 			</div>
 		</div>
 		<div class="body"><?php echo truncate_lines($note->body, Config::get('site.view_params_default.list.truncate_lines.body'), 'note/'.$id); ?></div>
-<?php if ($images = \Note\Model_NoteAlbumImage::get_album_image4note_id($note->id, 4, array('id' => 'desc'))): ?>
+<?php if (Module::loaded('album') && $images = \Note\Model_NoteAlbumImage::get_album_image4note_id($note->id, 4, array('id' => 'desc'))): ?>
 <?php echo render('_parts/thumbnails', array('images' => array('list' => $images, 'additional_table' => 'note', 'size' => 'N_M', 'column_count' => 4))); ?>
 <?php endif; ?>
 
