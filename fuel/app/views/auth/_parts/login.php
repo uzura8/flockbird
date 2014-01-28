@@ -1,40 +1,39 @@
-<?php $is_api_request = Site_Util::check_is_api_request(); ?>
-<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
+<?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 
-<?php if (!$is_api_request): ?><div class="well"><?php endif; ?>
+<?php if (!IS_API): ?><div class="well"><?php endif; ?>
 <?php
 $form_attributes = array('action' => Config::get('site.login_uri.site'));
-if ($is_api_request) $form_attributes['class'] = '';
-$col_sm_size = $is_api_request ? 12 : 7;
-$label_col_sm_size = $is_api_request ? 12 : 3;
+if (IS_API) $form_attributes['class'] = '';
+$col_sm_size = IS_API ? 12 : 7;
+$label_col_sm_size = IS_API ? 12 : 3;
 ?>
 <?php echo form_open(false, false, $form_attributes, array('destination' => $destination)); ?>
 	<?php echo form_input($val, 'email', '', $col_sm_size, $label_col_sm_size); ?>
 	<?php echo form_input($val, 'password', '', $col_sm_size, $label_col_sm_size); ?>
 
 	<div class="form-group">
-		<div class=" <?php if ($is_api_request): ?>col-sm-12<?php else: ?>col-sm-9 col-sm-offset-3<?php endif; ?>">
+		<div class=" <?php if (IS_API): ?>col-sm-12<?php else: ?>col-sm-9 col-sm-offset-3<?php endif; ?>">
 			<div class="checkbox">
 				<label>
 				<?php echo Form::checkbox(
 					'rememberme[]',
 					'1',
 					in_array('1', Input::post('rememberme', array())) ? array('checked' => 'checked', 'id' => 'form_rememberme_1') : array('id' => 'form_rememberme_1')
-				); ?> <?php echo small_tag('次回から自動的にログイン', $is_api_request); ?>
+				); ?> <?php echo small_tag('次回から自動的にログイン', IS_API); ?>
 				</label>
 			</div>
 		</div>
 	</div>
 
-	<?php echo form_anchor('member/resend_password', 'パスワードを忘れた場合はこちら', array(), $is_api_request ? 0 : 3, null, true); ?>
-	<?php echo form_button('ログイン', 'submit', null, null, $is_api_request ? 0 : 3); ?>
+	<?php echo form_anchor('member/resend_password', 'パスワードを忘れた場合はこちら', array(), IS_API ? 0 : 3, null, true); ?>
+	<?php echo form_button('ログイン', 'submit', null, null, IS_API ? 0 : 3); ?>
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
 	<?php echo form_anchor(
 		Config::get('site.login_uri.site').'/facebook',
 		'<i class="ls-icon-facebook"></i> facebookでログイン',
 		array('class' => 'btn btn-default'),
-		$is_api_request ? 0 : 3
+		IS_API ? 0 : 3
 	); ?>
 <?php endif; ?>
 <?php if (PRJ_TWITTER_APP_ID): ?>
@@ -42,7 +41,7 @@ $label_col_sm_size = $is_api_request ? 12 : 3;
 		Config::get('site.login_uri.site').'/twitter',
 		'<i class="ls-icon-twitter"></i> Twitterでログイン',
 		array('class' => 'btn btn-default'),
-		$is_api_request ? 0 : 3
+		IS_API ? 0 : 3
 	); ?>
 <?php endif; ?>
 <?php if (PRJ_GOOGLE_APP_ID): ?>
@@ -50,11 +49,11 @@ $label_col_sm_size = $is_api_request ? 12 : 3;
 		Config::get('site.login_uri.site').'/google',
 		'<i class="ls-icon-google"></i> Googleでログイン',
 		array('class' => 'btn btn-default'),
-		$is_api_request ? 0 : 3
+		IS_API ? 0 : 3
 	); ?>
 <?php endif; ?>
-	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-default btn-warning'), $is_api_request ? 0 : 3); ?>
+	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-default btn-warning'), IS_API ? 0 : 3); ?>
 
 <?php echo form_close(); ?>
-<?php if (!$is_api_request): ?></div><?php endif; ?>
-<?php if ($is_api_request): ?></body></html><?php endif; ?>
+<?php if (!IS_API): ?></div><?php endif; ?>
+<?php if (IS_API): ?></body></html><?php endif; ?>
