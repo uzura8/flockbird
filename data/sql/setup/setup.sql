@@ -236,6 +236,23 @@ CREATE TABLE `member_pre` (
   UNIQUE KEY `token_UNIQUE_idx` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `member_profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `member_id` int(11) NOT NULL COMMENT 'Member id',
+  `profile_id` int(11) NOT NULL COMMENT 'Profile id',
+  `profile_option_id` int(11) DEFAULT NULL COMMENT 'Profile option id',
+  `value` text COLLATE utf8_unicode_ci NOT NULL COMMENT 'Text content for this profile item',
+  `public_flag` tinyint(4) DEFAULT NULL COMMENT 'Public flag',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id_idx` (`member_id`),
+  KEY `profile_id_idx` (`profile_id`),
+  KEY `profile_option_id_idx` (`profile_option_id`),
+  CONSTRAINT `member_profile_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_profile_profile_id_profile_id` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_profile_profile_option_id_profile_option_id` FOREIGN KEY (`profile_option_id`) REFERENCES `profile_option` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves informations of every member''''s profile';
 
 CREATE TABLE `migration` (
   `name` varchar(50) NOT NULL,
@@ -305,6 +322,39 @@ CREATE TABLE `posts` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified profile name (ASCII)',
+  `is_required` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'This is a required',
+  `is_unique` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Cannot select duplicate item',
+  `is_edit_public_flag` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Settable public flag',
+  `default_public_flag` tinyint(4) NOT NULL DEFAULT '1' COMMENT 'Default of public flag',
+  `form_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Form type to input/select',
+  `value_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of input value',
+  `is_disp_regist` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Shows when registeration',
+  `is_disp_config` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Shows when edit',
+  `is_disp_search` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Shows when searching',
+  `is_public_web` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Flag for adding public_flag for publishing to web',
+  `value_regexp` text COLLATE utf8_unicode_ci COMMENT 'Regular expression',
+  `value_min` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Minimum value',
+  `value_max` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Maximum value',
+  `sort_order` int(11) DEFAULT NULL COMMENT 'Order to sort',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves input/select items for the member profile';
+
+CREATE TABLE `profile_option` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `profile_id` int(11) NOT NULL COMMENT 'Profile id',
+  `sort_order` int(11) DEFAULT NULL COMMENT 'Order to sort',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `profile_id_idx` (`profile_id`),
+  CONSTRAINT `profile_option_profile_id_profile_id` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves options of profile items';
 
 CREATE TABLE `timeline` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
