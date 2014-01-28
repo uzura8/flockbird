@@ -36,8 +36,8 @@ class Controller_Timeline extends \Controller_Site
 	{
 		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0);
 		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.timeline')));
-		$this->template->post_footer = \View::forge('_parts/timeline/load_timelines');
-		$this->template->content = \View::forge('_parts/timeline/list', array('list' => $list, 'is_next' => $is_next));
+		$this->template->post_footer = \View::forge('_parts/load_timelines');
+		$this->template->content = \View::forge('_parts/list', array('list' => $list, 'is_next' => $is_next));
 	}
 
 	/**
@@ -54,8 +54,24 @@ class Controller_Timeline extends \Controller_Site
 		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, $is_mypage);
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.timeline')), null, $member);
-		$this->template->post_footer = \View::forge('_parts/timeline/load_timelines');
-		$this->template->content = \View::forge('_parts/timeline/list', array('member' => $member, 'list' => $list, 'is_next' => $is_next));
+		$this->template->post_footer = \View::forge('_parts/load_timelines');
+		$this->template->content = \View::forge('_parts/list', array('member' => $member, 'list' => $list, 'is_next' => $is_next));
+	}
+
+	/**
+	 * Mmeber home
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_myhome()
+	{
+		$public_flag = \Model_MemberConfig::get_value($this->u->id, 'timeline_public_flag');
+		list($list, $is_next) = Site_Model::get_list($this->u->id, 0, false, true);
+		$this->template->post_header = \View::forge('member/_parts/myhome_header');
+		$this->template->post_footer = \View::forge('member/_parts/myhome_footer');
+		$this->set_title_and_breadcrumbs(\Config::get('term.myhome'));
+		$this->template->content = \View::forge('member/myhome', array('list' => $list, 'is_next' => $is_next, 'public_flag' => $public_flag));
 	}
 
 	/**
@@ -72,8 +88,8 @@ class Controller_Timeline extends \Controller_Site
 		$timeline_cache = Model_TimelineCache::get4timeline_id($id, true);
 
 		$this->set_title_and_breadcrumbs(\Config::get('term.timeline').'詳細', null, $timeline->member, 'timeline', null, false, true);
-		$this->template->post_footer = \View::forge('_parts/timeline/load_timelines');
-		$this->template->content = \View::forge('_parts/timeline/article', array(
+		$this->template->post_footer = \View::forge('_parts/load_timelines');
+		$this->template->content = \View::forge('_parts/article', array(
 			'timeline_cache_id' => $timeline_cache->id,
 			'timeline' => $timeline,
 			'is_convert_nl2br' => true,

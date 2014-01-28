@@ -153,7 +153,7 @@ class Controller_Note extends \Controller_Site
 				\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
 
 				// timeline 投稿
-				if ($note->is_published)
+				if ($note->is_published && \Module::loaded('timeline'))
 				{
 					\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
 				}
@@ -238,14 +238,17 @@ class Controller_Note extends \Controller_Site
 				\Album\Site_Util::update_album_images4file_objects($album_images, $files, $note->public_flag);
 
 				// timeline 投稿
-				if ($is_published)
+				if (\Module::loaded('timeline'))
 				{
-					\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
-				}
-				elseif ($is_update_public_flag)
-				{
-					// timeline の public_flag の更新
-					\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($note->public_flag, 'note', $note->id, \Config::get('timeline.types.note'));
+					if ($is_published)
+					{
+						\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+					}
+					elseif ($is_update_public_flag)
+					{
+						// timeline の public_flag の更新
+						\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($note->public_flag, 'note', $note->id, \Config::get('timeline.types.note'));
+					}
 				}
 				\DB::commit_transaction();
 
@@ -295,7 +298,7 @@ class Controller_Note extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $note->id);
+			if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $note->id);
 			$deleted_files = $note->delete_with_relations();
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
@@ -345,7 +348,7 @@ class Controller_Note extends \Controller_Site
 				$album_image->save();
 			}
 			// timeline 投稿
-			\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+			if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
 			\DB::commit_transaction();
 			\Session::set_flash('message', \Config::get('term.note').'を公開しました。');
 		}

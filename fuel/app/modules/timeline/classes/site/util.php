@@ -99,7 +99,7 @@ class Site_Util
 				break;
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
 				$is_safe = true;
-				$body = $foreign_table_obj ? render('_parts/timeline/body_for_add_album_image', array(
+				$body = $foreign_table_obj ? render('_parts/body_for_add_album_image', array(
 					'album_id' => $foreign_table_obj->id,
 					'name' => $foreign_table_obj->name,
 					'count' => isset($optional_info['count']) ? $optional_info['count'] : 0,
@@ -390,7 +390,7 @@ class Site_Util
 	{
 		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));
 
-		return render('_parts/timeline/article', array(
+		return render('timeline::_parts/article', array(
 			'timeline_cache_id' => $timeline_cache_id,
 			'timeline' => $timeline,
 			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),

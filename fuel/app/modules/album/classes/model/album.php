@@ -69,26 +69,6 @@ class Model_Album extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 		'Orm\\Observer_Validation',
-		// 更新時に timeline の sort_datetime を更新
-		'MyOrm\Observer_UpdateRelationalTable'=>array(
-			'events'=>array('after_update'),
-			'model_to' => '\Timeline\Model_Timeline',
-			'relations' => array(
-				'foreign_table' => array(
-					'album' => 'value',
-				),
-				'foreign_id' => array(
-					'id' => 'property',
-				),
-				'type' => array(),
-			),
-			'properties_check_changed' => array(
-				'name',
-				'body',
-			),
-			'property_from' => 'updated_at',
-			'property_to' => 'sort_datetime',
-		),
 	);
 
 	public static function _init()
@@ -98,8 +78,32 @@ class Model_Album extends \Orm\Model
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_album_foreign_tables();
 
-		$observer_key = \Config::get('timeline.types.album');
-		static::$_observers['MyOrm\Observer_UpdateRelationalTable']['relations']['type'][$observer_key] = 'value';
+		if (\Module::loaded('timeline'))
+		{
+			// 更新時に timeline の sort_datetime を更新
+			$observer_key = \Config::get('timeline.types.album');
+			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
+				'events' => array('after_update'),
+				'model_to' => '\Timeline\Model_Timeline',
+				'relations' => array(
+					'foreign_table' => array(
+						'album' => 'value',
+					),
+					'foreign_id' => array(
+						'id' => 'property',
+					),
+					'type' => array(
+						$observer_key => 'value',
+					),
+				),
+				'properties_check_changed' => array(
+					'name',
+					'body',
+				),
+				'property_from' => 'updated_at',
+				'property_to' => 'sort_datetime',
+			);
+		}
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
@@ -147,7 +151,7 @@ class Model_Album extends \Orm\Model
 		}
 
 		// timeline 投稿の削除
-		\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $album->id);
+		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $album->id);
 
 		// Delete album.
 		$album->delete();
@@ -166,7 +170,10 @@ class Model_Album extends \Orm\Model
 		}
 
 		// timeline の public_flag の更新
-		\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'album', $this->id, \Config::get('timeline.types.album'));
+		if (\Module::loaded('timeline'))
+		{
+			\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'album', $this->id, \Config::get('timeline.types.album'));
+		}
 
 		$this->public_flag = $public_flag;
 		$this->save();

@@ -8,18 +8,24 @@ function is_sp() {return <?php echo (IS_SP)? 'true' : 'false'; ?>;}
 function get_term(key) {
 	var terms = {};
 	terms['public_flag'] = '<?php echo term('public_flag.label'); ?>';
+<?php if (Module::loaded('album')): ?>
 	terms['album']       = '<?php echo term('album'); ?>';
 	terms['album_image'] = '<?php echo term('album_image'); ?>';
+<?php endif; ?>
+<?php if (Module::loaded('timeline')): ?>
 	terms['timeline']    = '<?php echo term('timeline'); ?>';
+<?php endif; ?>
 	return terms[key];
 }
 function get_config(key) {
 	var config = {};
 	config['default_list_comment_limit_max'] = <?php echo Config::get('site.view_params_default.list.comment.limit_max'); ?>;
 	config['default_detail_comment_limit_max'] = <?php echo Config::get('site.view_params_default.detail.comment.limit_max'); ?>;
+	config['site_public_flag_default'] = <?php echo Config::get('site.public_flag.default'); ?>;
+<?php if (Module::loaded('timeline')): ?>
 	config['timeline_list_limit'] = <?php echo Config::get('timeline.articles.limit'); ?>;
 	config['timeline_list_comment_limit_max'] = <?php echo Config::get('timeline.articles.comment.limit_max'); ?>;
-	config['site_public_flag_default'] = <?php echo Config::get('site.public_flag.default'); ?>;
+<?php endif; ?>
 	return config[key];
 }
 </script>

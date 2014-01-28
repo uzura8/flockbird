@@ -19,4 +19,4 @@
 	'uri_for_update_public_flag' => 'member/api/update_config/timeline_public_flag.html',
 )); ?>
 </div>
-<?php echo render('_parts/timeline/list', array('list' => $list, 'is_next' => $is_next, 'mytimeline' => true)); ?>
+<?php echo render('_parts/list', array('list' => $list, 'is_next' => $is_next, 'mytimeline' => true)); ?>

@@ -181,7 +181,7 @@ class Controller_Member_profile extends Controller_Member
 			}
 			else
 			{
-				\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
+				if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
 				$this->u->file_id = null;
 				$this->u->save();
 			}

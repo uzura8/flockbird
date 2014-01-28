@@ -47,7 +47,7 @@ class Controller_Api extends \Controller_Site_Api
 			$data = array('list' => $list, 'is_next' => $is_next);
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;
-			$response = \View::forge('_parts/timeline/list', $data);
+			$response = \View::forge('_parts/list', $data);
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);

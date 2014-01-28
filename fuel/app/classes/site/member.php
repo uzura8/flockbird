@@ -4,7 +4,7 @@ class Site_Member
 {
 	public static function save_profile_image(Model_Member $member, $file_path = null)
 	{
-		\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $member->file_id);
+		if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $member->file_id);
 		if ($member->file_id && $file_old = Model_File::find($member->file_id))
 		{
 			if (!\Album\Model_AlbumImage::get4file_id($member->file_id)) $file_old->delete();
@@ -35,7 +35,7 @@ class Site_Member
 			$foreign_id = $file->id;
 		}
 		// timeline 投稿
-		\Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, $type_key, $foreign_id);
+		if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, $type_key, $foreign_id);
 
 		return $file;
 	}

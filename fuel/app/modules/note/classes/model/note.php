@@ -62,31 +62,35 @@ class Model_Note extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		// 更新時に timeline の sort_datetime を更新
-		'MyOrm\Observer_UpdateRelationalTable'=>array(
-			'events'=>array('after_update'),
-			'model_to' => '\Timeline\Model_Timeline',
-			'relations' => array(
-				'foreign_table' => array(
-					'note' => 'value',
-				),
-				'foreign_id' => array(
-					'id' => 'property',
-				),
-			),
-			'properties_check_changed' => array(
-				'title',
-				'body',
-			),
-			'property_from' => 'updated_at',
-			'property_to' => 'sort_datetime',
-		),
 	);
 
 	public static function _init()
 	{
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
+
+		if (\Module::loaded('timeline'))
+		{
+			// 更新時に timeline の sort_datetime を更新
+			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
+				'events'=>array('after_update'),
+				'model_to' => '\Timeline\Model_Timeline',
+				'relations' => array(
+					'foreign_table' => array(
+						'note' => 'value',
+					),
+					'foreign_id' => array(
+						'id' => 'property',
+					),
+				),
+				'properties_check_changed' => array(
+					'title',
+					'body',
+				),
+				'property_from' => 'updated_at',
+				'property_to' => 'sort_datetime',
+			);
+		}
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
@@ -136,7 +140,10 @@ class Model_Note extends \Orm\Model
 			}
 		}
 		// timeline の public_flag の更新
-		\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
+		if (\Module::loaded('timeline'))
+		{
+			\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
+		}
 
 		$this->public_flag = $public_flag;
 		$this->save();
