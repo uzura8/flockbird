@@ -35,22 +35,29 @@ class Model_NoteAlbumImage extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		// album_image 追加時に timeline の sort_datetime を更新
-		'MyOrm\Observer_UpdateRelationalTable'=>array(
-			'events' => array('after_insert'),
-			'model_to' => '\Timeline\Model_Timeline',
-			'relations' => array(
-				'foreign_table' => array(
-					'note' => 'value',
-				),
-				'foreign_id' => array(
-					'note_id' => 'property',
-				),
-			),
-			'property_from' => 'created_at',
-			'property_to' => 'sort_datetime',
-		),
 	);
+
+	public static function _init()
+	{
+		if (\Module::loaded('timeline'))
+		{
+			// album_image 追加時に timeline の sort_datetime を更新
+			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
+				'events' => array('after_insert'),
+				'model_to' => '\Timeline\Model_Timeline',
+				'relations' => array(
+					'foreign_table' => array(
+						'note' => 'value',
+					),
+					'foreign_id' => array(
+						'note_id' => 'property',
+					),
+				),
+				'property_from' => 'created_at',
+				'property_to' => 'sort_datetime',
+			);
+		}
+	}
 
 	public static function save_multiple($note_id, array $album_image_ids)
 	{

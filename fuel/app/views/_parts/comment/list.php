@@ -1,4 +1,4 @@
-<?php if (Site_Util::check_is_api_request()): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
+<?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
 <?php
 $list_more_box_attrs_def = array('class' => 'listMoreBox', 'id' => 'listMoreBox_comment');
 $list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);

@@ -1,5 +1,4 @@
-<?php $is_api_request = Site_Util::check_is_api_request(); ?>
-<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
+<?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
 <?php echo \Config::get('term.note'); ?>がありません。
 <?php else: ?>
@@ -38,7 +37,7 @@
 			</div>
 		</div>
 		<div class="body"><?php echo truncate_lines($note->body, Config::get('site.view_params_default.list.truncate_lines.body'), 'note/'.$id); ?></div>
-<?php if ($images = \Note\Model_NoteAlbumImage::get_album_image4note_id($note->id, 4, array('id' => 'desc'))): ?>
+<?php if (Module::loaded('album') && $images = \Note\Model_NoteAlbumImage::get_album_image4note_id($note->id, 4, array('id' => 'desc'))): ?>
 <?php echo render('_parts/thumbnails', array('images' => array('list' => $images, 'additional_table' => 'note', 'size' => 'N_M', 'column_count' => 4))); ?>
 <?php endif; ?>
 
@@ -87,4 +86,4 @@ echo Html::anchor($uri, '');
 ?>
 </nav>
 
-<?php if ($is_api_request): ?></body></html><?php endif; ?>
+<?php if (IS_API): ?></body></html><?php endif; ?>

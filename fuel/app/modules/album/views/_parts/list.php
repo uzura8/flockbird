@@ -1,7 +1,6 @@
-<?php $is_api_request = Site_Util::check_is_api_request(); ?>
-<?php if ($is_api_request): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
+<?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php if (!$is_api_request): ?><?php echo \Config::get('term.album'); ?>がありません。<?php endif; ?>
+<?php if (!IS_API): ?><?php echo \Config::get('term.album'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div class="row">
 <div id="main_container">
@@ -73,4 +72,4 @@ echo Html::anchor($uri, '');
 ?>
 </nav>
 
-<?php if ($is_api_request): ?></body></html><?php endif; ?>
+<?php if (IS_API): ?></body></html><?php endif; ?>

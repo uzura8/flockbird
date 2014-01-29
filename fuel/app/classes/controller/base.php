@@ -6,7 +6,7 @@ class Controller_Base extends Controller_Hybrid
 	{
 		parent::before();
 
-		// smartphone アクセス判定
+		if (!defined('IS_ADMIN')) define('IS_ADMIN', Site_Util::get_module_name() == 'admin');
 		if (!defined('IS_SP')) define('IS_SP', Agent::is_smartphone());
 		if (!defined('IS_API')) define('IS_API', Input::is_ajax());
 

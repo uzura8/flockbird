@@ -62,31 +62,35 @@ class Model_Note extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		// 更新時に timeline の sort_datetime を更新
-		'MyOrm\Observer_UpdateRelationalTable'=>array(
-			'events'=>array('after_update'),
-			'model_to' => '\Timeline\Model_Timeline',
-			'relations' => array(
-				'foreign_table' => array(
-					'note' => 'value',
-				),
-				'foreign_id' => array(
-					'id' => 'property',
-				),
-			),
-			'properties_check_changed' => array(
-				'title',
-				'body',
-			),
-			'property_from' => 'updated_at',
-			'property_to' => 'sort_datetime',
-		),
 	);
 
 	public static function _init()
 	{
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
+
+		if (\Module::loaded('timeline'))
+		{
+			// 更新時に timeline の sort_datetime を更新
+			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
+				'events'=>array('after_update'),
+				'model_to' => '\Timeline\Model_Timeline',
+				'relations' => array(
+					'foreign_table' => array(
+						'note' => 'value',
+					),
+					'foreign_id' => array(
+						'id' => 'property',
+					),
+				),
+				'properties_check_changed' => array(
+					'title',
+					'body',
+				),
+				'property_from' => 'updated_at',
+				'property_to' => 'sort_datetime',
+			);
+		}
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
@@ -105,7 +109,7 @@ class Model_Note extends \Orm\Model
 	{
 		$deleted_files = array();
 		// album_image の削除
-		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
+		if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			$album_image_ids = array();
 			foreach ($album_images as $album_image)
@@ -117,7 +121,7 @@ class Model_Note extends \Orm\Model
 		}
 
 		// timeline 投稿の削除
-		\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $this->id);
+		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $this->id);
 
 		// note の削除
 		$this->delete();
@@ -128,7 +132,7 @@ class Model_Note extends \Orm\Model
 	public function update_public_flag_with_relations($public_flag)
 	{
 		// album_image の public_flag の更新
-		if ($album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
+		if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			foreach ($album_images as $album_image)
 			{
@@ -136,7 +140,10 @@ class Model_Note extends \Orm\Model
 			}
 		}
 		// timeline の public_flag の更新
-		\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
+		if (\Module::loaded('timeline'))
+		{
+			\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
+		}
 
 		$this->public_flag = $public_flag;
 		$this->save();

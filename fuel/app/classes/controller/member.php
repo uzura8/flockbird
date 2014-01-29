@@ -27,23 +27,6 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_index()
 	{
-		$this->action_myhome();
-	}
-
-	/**
-	 * Mmeber home
-	 * 
-	 * @access  public
-	 * @return  Response
-	 */
-	public function action_myhome()
-	{
-		$public_flag = Model_MemberConfig::get_value($this->u->id, 'timeline_public_flag');
-		list($list, $is_next) = \Timeline\Site_Model::get_list($this->u->id, 0, false, true);
-		$this->template->post_header = \View::forge('member/_parts/myhome_header');
-		$this->template->post_footer = \View::forge('member/_parts/myhome_footer');
-		$this->set_title_and_breadcrumbs(Config::get('term.myhome'));
-		$this->template->content = View::forge('member/myhome', array('list' => $list, 'is_next' => $is_next, 'public_flag' => $public_flag));
 	}
 
 	/**
@@ -60,7 +43,7 @@ class Controller_Member extends Controller_Site
 
 		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
 		$this->template->subtitle = View::forge('_parts/home_subtitle', array('member' => $member));
-		$this->template->post_footer = \View::forge('_parts/timeline/load_timelines');
+		$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list, 'is_next' => $is_next));
 	}
 
@@ -205,7 +188,7 @@ class Controller_Member extends Controller_Site
 					$password = $member_pre->password;
 					$member_pre->delete();
 					// timeline 投稿
-					\Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id);
+					if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id);
 					\DB::commit_transaction();
 
 					$maildata = array();

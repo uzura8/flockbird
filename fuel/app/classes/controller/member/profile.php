@@ -33,7 +33,7 @@ class Controller_Member_profile extends Controller_Member
 		$this->set_title_and_breadcrumbs(Config::get('term.profile').'写真設定', array('/member/profile/' => Config::get('term.profile')), $this->u);
 
 		$images = array();
-		if (Config::get('site.upload.types.img.types.m.save_as_album_image'))
+		if (Module::loaded('album') && Config::get('site.upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'member');
 			$images = \Album\Model_AlbumImage::query()->related('album')->related('file')->where('album_id', $album_id)->order_by('id', 'desc')->get();
@@ -62,7 +62,7 @@ class Controller_Member_profile extends Controller_Member
 				$file->file_path,
 				$file->filepath,
 				true,
-				Config::get('site.upload.types.img.types.m.save_as_album_image') ? 'profile' : null
+				(Module::loaded('album') && Config::get('site.upload.types.img.types.m.save_as_album_image')) ? 'profile' : null
 			);
 			Session::set_flash('message', '写真を更新しました。');
 		}
@@ -87,7 +87,7 @@ class Controller_Member_profile extends Controller_Member
 
 		try
 		{
-			if (!Config::get('site.upload.types.img.types.m.save_as_album_image'))
+			if (!Module::loaded('album') || !Config::get('site.upload.types.img.types.m.save_as_album_image'))
 			{
 				throw new \HttpNotFoundException;
 			}
@@ -158,6 +158,7 @@ class Controller_Member_profile extends Controller_Member
 
 		try
 		{
+			if (Module::loaded('album')) $album_image_id = null;
 			if ($album_image_id)
 			{
 				if (!$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id))
@@ -181,7 +182,7 @@ class Controller_Member_profile extends Controller_Member
 			}
 			else
 			{
-				\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
+				if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
 				$this->u->file_id = null;
 				$this->u->save();
 			}

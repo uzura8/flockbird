@@ -16,6 +16,6 @@
 <?php echo Form::close(); ?>
 <?php endif; ?>
 </div><!-- well -->
-<?php if (Config::get('site.upload.types.img.types.m.save_as_album_image')): ?>
-<?php echo render('_parts/album_images', array('list' => $images, 'is_simple_view' => true, 'is_setting_profile_image' => true)); ?>
+<?php if (Module::loaded('album') && Config::get('site.upload.types.img.types.m.save_as_album_image')): ?>
+<?php echo render('album::image/_parts/list', array('list' => $images, 'is_simple_view' => true, 'is_setting_profile_image' => true)); ?>
 <?php endif; ?>

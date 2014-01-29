@@ -159,7 +159,7 @@ class Model_AlbumImage extends \Orm\Model
 
 		$this->public_flag = $public_flag;
 		$result = $this->save();
-		\Timeline\Model_Timeline::check_and_update_public_flag4child_data($public_flag, 'album_image', $this->id);
+		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::check_and_update_public_flag4child_data($public_flag, 'album_image', $this->id);
 
 		return $result;
 	}
@@ -218,11 +218,11 @@ class Model_AlbumImage extends \Orm\Model
 				$album->member->save();
 			}
 			// timeline 投稿の削除
-			\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $ids);
+			if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $ids);
 		}
 
 		// timeline_child_data の削除
-		\Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('album_image', $ids);
+		if (\Module::loaded('timeline')) \Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('album_image', $ids);
 
 		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
 		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) throw new \FuelException('Album images delete error.');

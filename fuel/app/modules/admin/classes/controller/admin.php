@@ -63,7 +63,7 @@ class Controller_Admin extends \Controller_Base {
 		}
 
 		$this->set_title_and_breadcrumbs('Login', null, null, null, null, true);
-		$this->template->content = \View::forge('admin/login', array('val' => $val, 'destination' => $destination));
+		$this->template->content = \View::forge('login', array('val' => $val, 'destination' => $destination));
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class Controller_Admin extends \Controller_Base {
 	public function action_index()
 	{		
 		$this->set_title_and_breadcrumbs('管理画面 Dashboard', null, null, null, null, true);
-		$this->template->content = \View::forge('admin/dashboard');
+		$this->template->content = \View::forge('dashboard');
 	}
 }
 

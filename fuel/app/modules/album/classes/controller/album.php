@@ -148,7 +148,7 @@ class Controller_Album extends \Controller_Site
 
 				\DB::start_transaction();
 				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album->id, $album->public_flag);
-				\Timeline\Site_Model::save_timeline($this->u->id, $album->public_flag, 'album_image', $album->id, null, null, $album_image_ids);
+				if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $album->public_flag, 'album_image', $album->id, null, null, $album_image_ids);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
@@ -252,7 +252,7 @@ class Controller_Album extends \Controller_Site
 				$album->member_id = $this->u->id;
 				$album->save();
 				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album->id, $album->public_flag);
-				\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'album', $album->id, null, null, $album_image_ids);
+				if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'album', $album->id, null, null, $album_image_ids);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
@@ -325,7 +325,7 @@ class Controller_Album extends \Controller_Site
 					Model_AlbumImage::update_public_flag4album_id($album->id, $post['public_flag']);
 				}
 				// timeline の public_flag の更新
-				if ($is_update_public_flag)
+				if ($is_update_public_flagif && \Module::loaded('timeline'))
 				{
 					\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($post['public_flag'], 'album', $album->id, \Config::get('timeline.types.album'));
 				}
@@ -525,7 +525,7 @@ class Controller_Album extends \Controller_Site
 			list($album_image, $file) = Model_AlbumImage::save_with_file($album_id, $this->u, $post['public_flag']);
 
 			// timeline 投稿
-			\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'album_image', $album->id, null, null, array($album_image->id));
+			if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'album_image', $album->id, null, null, array($album_image->id));
 			\DB::commit_transaction();
 			\Session::set_flash('message', '写真を投稿しました。');
 		}

@@ -115,7 +115,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Album image comment delete
+	 * Api comment delete
 	 * 
 	 * @access  public
 	 * @return  Response

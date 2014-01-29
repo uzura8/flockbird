@@ -37,7 +37,7 @@ class Controller_Image extends \Controller_Site
 			'order_by' => array('shot_at' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
-		$this->template->content = \View::forge('_parts/album_images', $data);
+		$this->template->content = \View::forge('image/_parts/list', $data);
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Controller_Image extends \Controller_Site
 			'order_by' => array('shot_at' => 'desc'),
 		), 'Album');
 		$data['member'] = $member;
-		$this->template->content = \View::forge('_parts/album_images', $data);
+		$this->template->content = \View::forge('image/_parts/list', $data);
 	}
 
 	/**

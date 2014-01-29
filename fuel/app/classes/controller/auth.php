@@ -232,7 +232,7 @@ class Controller_Auth extends Controller_Site
 				Model_Memberauth::save_email($response['auth']['info']['email'], $member->id);
 			}
 			// timeline 投稿
-			\Timeline\Site_Model::save_timeline($member->id, null, 'member_register', $member->id);
+			if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member->id, null, 'member_register', $member->id);
 			\DB::commit_transaction();
 
 			if (!empty($response['auth']['info']['image']))

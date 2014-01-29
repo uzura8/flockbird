@@ -47,4 +47,4 @@
 <?php endif; ?>
 </div>
 
-<?php echo render('_parts/album_images', array('id' => $id, 'album' => $album, 'list' => $list, 'page' => $page, 'is_next' => $is_next, 'is_member_page' => $is_member_page)); ?>
+<?php echo render('image/_parts/list', array('id' => $id, 'album' => $album, 'list' => $list, 'page' => $page, 'is_next' => $is_next, 'is_member_page' => $is_member_page)); ?>

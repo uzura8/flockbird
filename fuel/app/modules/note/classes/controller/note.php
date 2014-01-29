@@ -91,7 +91,7 @@ class Controller_Note extends \Controller_Site
 		if (!$note = Model_Note::check_authority($id)) throw new \HttpNotFoundException;
 		$this->check_public_flag($note->public_flag, $note->member_id);
 
-		$images = Model_NoteAlbumImage::get_album_image4note_id($id);
+		$images = \Module::loaded('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
 
 		$record_limit = \Config::get('site.view_params_default.detail.comment.limit');
 		if (\Input::get('all_comment', 0)) $record_limit = \Config::get('site.view_params_default.detail.comment.limit_max');
@@ -148,12 +148,15 @@ class Controller_Note extends \Controller_Site
 				}
 				\DB::start_transaction();
 				$note->save();
-				$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
-				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $note->public_flag);
-				\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
+				if (\Module::loaded('album'))
+				{
+					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
+					list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $note->public_flag);
+					\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
+				}
 
 				// timeline 投稿
-				if ($note->is_published)
+				if ($note->is_published && \Module::loaded('timeline'))
 				{
 					\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
 				}
@@ -197,10 +200,13 @@ class Controller_Note extends \Controller_Site
 		}
 
 		$val = self::get_validation_object($note, true);
-		$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
-		$album_images = Model_NoteAlbumImage::get_album_image4note_id($note->id);
+		if (\Module::loaded('album'))
+		{
+			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
+			$album_images = Model_NoteAlbumImage::get_album_image4note_id($note->id);
+		}
 
-		$files = \Album\Site_Util::get_file_objects($album_images, $this->u->id, $album_id);
+		$files = \Module::loaded('album') ? \Album\Site_Util::get_file_objects($album_images, $this->u->id, $album_id) : array();
 		$file_tmps = array();
 		if (\Input::method() == 'POST')
 		{
@@ -209,7 +215,8 @@ class Controller_Note extends \Controller_Site
 			$moved_files = array();
 			try
 			{
-				$file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
+				if (\Module::loaded('album')) $file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
+
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 				$is_update_public_flag = ($note->public_flag != $post['public_flag']);
@@ -232,20 +239,25 @@ class Controller_Note extends \Controller_Site
 
 				\DB::start_transaction();
 				$note->save();
-
-				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $note->public_flag);
-				\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
-				\Album\Site_Util::update_album_images4file_objects($album_images, $files, $note->public_flag);
+				if (\Module::loaded('album'))
+				{
+					list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $note->public_flag);
+					\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
+					\Album\Site_Util::update_album_images4file_objects($album_images, $files, $note->public_flag);
+				}
 
 				// timeline 投稿
-				if ($is_published)
+				if (\Module::loaded('timeline'))
 				{
-					\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
-				}
-				elseif ($is_update_public_flag)
-				{
-					// timeline の public_flag の更新
-					\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($note->public_flag, 'note', $note->id, \Config::get('timeline.types.note'));
+					if ($is_published)
+					{
+						\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+					}
+					elseif ($is_update_public_flag)
+					{
+						// timeline の public_flag の更新
+						\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($note->public_flag, 'note', $note->id, \Config::get('timeline.types.note'));
+					}
 				}
 				\DB::commit_transaction();
 
@@ -295,7 +307,7 @@ class Controller_Note extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $note->id);
+			if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $note->id);
 			$deleted_files = $note->delete_with_relations();
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
@@ -338,14 +350,17 @@ class Controller_Note extends \Controller_Site
 			$note->save();
 
 			// album_image の public_flag を update
-			$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
-			foreach ($album_images as $album_image)
+			if (\Module::loaded('album'))
 			{
-				$album_image->public_flag = $note->public_flag;
-				$album_image->save();
+				$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
+				foreach ($album_images as $album_image)
+				{
+					$album_image->public_flag = $note->public_flag;
+					$album_image->save();
+				}
 			}
 			// timeline 投稿
-			\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+			if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
 			\DB::commit_transaction();
 			\Session::set_flash('message', \Config::get('term.note').'を公開しました。');
 		}
@@ -356,17 +371,6 @@ class Controller_Note extends \Controller_Site
 		}
 
 		\Response::redirect('note/detail/'.$id);
-	}
-
-	private function save_file_tmp_config_posted_album_image_names($file_tmps)
-	{
-		$album_image_names = \Input::post('album_image_name');
-		foreach ($file_tmps as $file_tmp)
-		{
-			if (!isset($album_image_names[$file_tmp->id])) continue;
-			$value = trim($album_image_names[$file_tmp->id]);
-			\Model_FileTmpConfig::update_for_name($file_tmp->id, 'album_image_name', $value);
-		}
 	}
 
 	private static function get_validation_object(Model_Note $note, $is_edit = false)
