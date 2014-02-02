@@ -36,11 +36,12 @@ class Model_Member extends \Orm\Model
 			),
 		),
 		'last_login',
-		'register_type' => array(// 0: normal, 1:facebook
+		'register_type' => array(
 			'validation' => array(
 				'trim',
 				'required',
-				'match_pattern' => array('/[01]{1}/'),
+				'valid_string' => array('integer'),
+				'max_length' => array(1),
 			),
 		),
 		'file_id' => array(
