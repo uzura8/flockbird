@@ -2,7 +2,9 @@
 
 $config = array(
 	'form' => array(
-		'submit' => '送信',
+		'submit' => '送信する',
+		'delete' => '削除する',
+		'upload' => 'アップロード',
 	),
 	'toppage' => 'Top',
 	'myhome'  => 'Home',

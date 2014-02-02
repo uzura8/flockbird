@@ -231,17 +231,6 @@ function form_public_flag(Validation $val, $default_value = null, $is_select = f
 	return render('_parts/form/radio', $data);
 }
 
-function form_radio_public_flag(Validation $val = null, $default_value = null, $with_no_change_option = false, $is_select = false, $name = 'public_flag')
-{
-	$data = array(
-		'val' => $val,
-		'with_no_change_option' => $with_no_change_option,
-		'default_value' => isset($default_value) ? $default_value : Config::get('site.public_flag.default'),
-	);
-
-	return render('_parts/form/radio_public_flag', $data);
-}
-
 function form_text($value, $label, $label_col_sm_size = 2)
 {
 	$data = array(

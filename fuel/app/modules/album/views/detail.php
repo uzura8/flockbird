@@ -23,12 +23,12 @@
 <?php endif; ?>
 <?php endif; ?>
 
-<?php if (Config::get('album.display_setting.detail.display_upload_form') && !$disabled_to_update && Auth::check() && $album->member_id == $u->id): ?>
+<?php if (!empty($val)): ?>
 <div class="well">
-<h5><?php echo Config::get('term.album_image'); ?>アップロード</h5>
+<h5><?php echo Config::get('term.album_image').term('form.upload'); ?></h5>
 <?php echo form_open(false, true, array('action' => 'album/upload_image'), array('id' => $id)); ?>
 <?php echo form_file('image'); ?>
-<?php echo form_radio_public_flag(); ?>
+<?php echo form_public_flag($val); ?>
 <?php echo form_button(); ?>
 <?php echo form_close(); ?>
 <?php echo Form::close(); ?>

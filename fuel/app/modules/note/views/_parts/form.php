@@ -7,7 +7,7 @@
 	<?php echo form_textarea($val, 'body', isset($note) ? $note->body : ''); ?>
 	<?php echo form_upload_files($files, $files ? false : true); ?>
 	<?php echo form_input($val, 'published_at_time', (!empty($note->published_at)) ? substr($note->published_at, 0, 16) : '', 6); ?>
-	<?php echo form_radio_public_flag($val, isset($note) ? $note->public_flag : null); ?>
+	<?php echo form_public_flag($val, isset($note) ? $note->public_flag : null); ?>
 <?php if (isset($is_edit) && $is_edit): ?>
 	<?php echo form_button(empty($note->is_published) ? '公開する' : '編集する', 'button'); ?>
 <?php else: ?>

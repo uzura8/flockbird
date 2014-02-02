@@ -5,7 +5,7 @@
 	<?php echo Form::hidden('clicked_btn', '', array('id' => 'clicked_btn')); ?>
 	<?php echo form_input($val, 'name', 'タイトル'); ?>
 <?php if (!$is_disabled_to_update_public_flag): ?>
-	<?php echo form_radio_public_flag($val, 99, true); ?>
+	<?php echo form_public_flag($val, 99, false, 2, true); ?>
 <?php endif; ?>
 	<?php echo form_input($val, 'shot_at', null, 5); ?>
 	<?php echo form_button('<i class="glyphicon glyphicon-edit"></i> 一括編集', 'button', 'post', array('id' => 'submit_post', 'class' => 'btn btn-default btn-primary')); ?>

@@ -103,6 +103,10 @@ class Controller_Album extends \Controller_Site
 		{
 			$data['album_images'] = $data['list'];
 		}
+		if (\Config::get('album.display_setting.detail.display_upload_form') && !$disabled_to_update && \Auth::check() && $album->member_id == $this->u->id)
+		{
+			$data['val'] = self::get_val_public_flag();
+		}
 		$data['list'] = array_slice($data['list'], 0, \Config::get('album.articles.limit'));
 		$data['id'] = $id;
 		$data['album'] = $album;
@@ -512,12 +516,7 @@ class Controller_Album extends \Controller_Site
 
 		try
 		{
-			$val = \Validation::forge();
-			$options = \Site_Util::get_public_flags();
-			$options[] = 99;
-			$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
-				->add_rule('required')
-				->add_rule('in_array', $options);
+			$val = self::get_val_public_flag();
 			if (!$val->run()) throw new \FuelException($val->show_errors());
 			$post = $val->validated();
 
@@ -583,17 +582,27 @@ class Controller_Album extends \Controller_Site
 		$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
 		if (!$is_disabled_to_update_public_flag)
 		{
-			$options = \Site_Util::get_public_flags();
-			$options[] = 99;
+			$options = \Site_Form::get_public_flag_options();
 			$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
 				->add_rule('required')
-				->add_rule('in_array', $options);
+				->add_rule('in_array', array_keys($options));
 		}
 		$val->add('shot_at', '撮影日時')
 			->add_rule('trim')
 			->add_rule('max_length', 16)
 			->add_rule('datetime_except_second')
 			->add_rule('datetime_is_past');
+
+		return $val;
+	}
+
+	private static function get_val_public_flag()
+	{
+		$val = \Validation::forge();
+		$options = \Site_Form::get_public_flag_options();
+		$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
+			->add_rule('required')
+			->add_rule('in_array', array_keys($options));
 
 		return $val;
 	}
