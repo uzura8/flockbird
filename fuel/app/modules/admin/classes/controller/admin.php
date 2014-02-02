@@ -15,6 +15,7 @@ class Controller_Admin extends \Controller_Base {
 		$this->auth_check();
 		$this->set_current_user();
 
+		$this->template->layout = 'normal';
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
 	}

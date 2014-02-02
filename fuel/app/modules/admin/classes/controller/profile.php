@@ -67,6 +67,7 @@ class Controller_Profile extends Controller_Admin {
 			}
 		}
 
+		$this->template->layout = 'wide';
 		$this->set_title_and_breadcrumbs(term('profile').'項目作成');
 		$this->template->content = \View::forge('profile/_parts/form', array('val' => $val));
 	}

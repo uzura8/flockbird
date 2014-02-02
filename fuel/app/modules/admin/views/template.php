@@ -21,7 +21,7 @@
 
 <div class="container">
 	<div class="row row-offcanvas row-offcanvas-right">
-		<div class="col-sm-9">
+		<div class="col-sm-<?php if ($layout == 'wide'): ?>12<?php else: ?>9<?php endif; ?>">
 <?php if (!empty($breadcrumbs) && !IS_SP): ?>
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
 <?php endif; ?>
@@ -45,8 +45,8 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
 <?php endif; ?>
 
+<?php if ($layout == 'normal'): ?>
 		</div><!--/span-->
-
 		<div class="col-sm-3" id="sidebar" role="navigation">
 <?php if (Auth::check()): ?>
 				<?php echo render('_parts/nav_list', array('header' => 'Member', 'list' => Config::get('navigation.admin.secure_side'))); ?>
@@ -56,8 +56,9 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 <?php if (isset($subside_contents)): ?>
 <?php echo $subside_contents; ?>
 <?php endif; ?>
-
 		</div><!--/span-->
+<?php endif; ?>
+
 	</div><!--/row-->
 
 <?php echo render('_parts/template/footer'); ?>
