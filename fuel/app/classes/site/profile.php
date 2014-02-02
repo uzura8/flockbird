@@ -1,0 +1,51 @@
+<?php
+
+class Site_Profile
+{
+	public static function get_form_type_options()
+	{
+		return array(
+			'input' => 'テキスト',
+			'textarea' => 'テキスト(複数行)',
+			'select' => '単一選択(プルダウン)',
+			'radio' => '単一選択(ラジオボタン)',
+			'checkbox' => '複数選択(チェックボックス)',
+			'date' => '日付',
+		);
+	}
+
+	public static function get_value_type_options()
+	{
+		return array(
+			'string'  => '文字列',
+			'integer' => '数値',
+			'email'   => 'メールアドレス',
+			'url'     => 'URL',
+			'regexp'  => '正規表現',
+		);
+	}
+
+	public static function get_is_edit_public_flag_options()
+	{
+		return array(
+			0 => '固定',
+			1 => 'メンバー選択',
+		);
+	}
+
+	public static function get_is_unique_options()
+	{
+		return array(
+			0 => '許可',
+			1 => '禁止',
+		);
+	}
+
+	public static function get_is_disp_options()
+	{
+		return array(
+			1 => '表示する',
+			0 => '表示しない',
+		);
+	}
+}

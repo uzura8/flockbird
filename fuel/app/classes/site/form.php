@@ -13,10 +13,10 @@ class Site_Form
 		return $options;
 	}
 
-	public static function get_public_flag_configs()
+	public static function get_public_flag_configs($is_select = false)
 	{
 		return array(
-			'type'    => 'radio',
+			'type'    => $is_select ? 'select' : 'radio',
 			'label'   => Config::get('term.public_flag.label'),
 			'options' => self::get_public_flag_options(),
 			'value'   => Config::get('site.public_flag.default'),

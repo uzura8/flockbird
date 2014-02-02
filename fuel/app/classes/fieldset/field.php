@@ -44,4 +44,17 @@ class Fieldset_Field extends Fuel\Core\Fieldset_Field
 
 		return $template;
 	}
+
+	/**
+	 * Get a options by key
+	 */
+	public function get_options($key = null, $default = null)
+	{
+		if ($key === null)
+		{
+			return $this->options;
+		}
+
+		return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
+	}
 }

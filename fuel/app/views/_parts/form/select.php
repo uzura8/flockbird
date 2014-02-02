@@ -2,7 +2,7 @@
 if ($is_required)
 {
 	$label .= '<span class="required">*</span>';
-	$input_atter['required'] = 'required';
+	$atter['required'] = 'required';
 }
 
 $label_class = 'col-sm-'.$label_col_sm_size;
@@ -27,14 +27,14 @@ if (!$col_sm_size || $col_sm_size == 12)
 	<div class="col-sm-<?php echo $input_col_sm_size; ?>">
 		<div class="row">
 			<div class="col-sm-<?php echo $col_sm_size; ?>">
-				<?php echo Form::input($name, Input::post($name, $default_value), $input_atter); ?>
+				<?php echo Form::select($name, Input::post($name, $default_value), $options, $atter); ?>
 			</div>
-<?php if ($val->error($name)): ?>
-			<div class="col-sm-<?php echo $error_sm_size; ?>">
-				<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
-			</div>
-<?php endif; ?>
 		</div>
+<?php if ($val->error($name)): ?>
+		<div class="col-sm-<?php echo $error_sm_size; ?>">
+			<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
+		</div>
+<?php endif; ?>
 <?php if (!empty($help)): ?>
 		<div class="row">
 			<div class="col-sm-12">

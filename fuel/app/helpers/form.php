@@ -26,7 +26,7 @@ function form_close()
 	return render('_parts/form/close');
 }
 
-function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2)
+function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $help = '')
 {
 	$field = $val->fieldset()->field($name);
 	$input_atter = array(
@@ -43,6 +43,7 @@ function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 
 		'input_atter'   => $input_atter,
 		'col_sm_size'   => $col_sm_size,
 		'label_col_sm_size' => $label_col_sm_size,
+		'help' => $help,
 	);
 
 	return render('_parts/form/input', $data);
@@ -90,6 +91,70 @@ function form_textarea(Validation $val, $name, $default_value = '', $label_col_s
 	return render('_parts/form/textarea', $data);
 }
 
+function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $help = '')
+{
+	$field = $val->fieldset()->field($name);
+	$atter = array(
+		'id'    => 'form_'.$name,
+		'class' => 'form-control',
+	);
+	$data = array(
+		'val'   => $val,
+		'name'  => $name,
+		'label' => $field->get_attribute('label'),
+		'options' => $field->get_options(),
+		'atter' => $atter,
+		'default_value' => $default_value,
+		'is_required'   => $field->get_attribute('required') == 'required',
+		'col_sm_size' => $col_sm_size,
+		'label_col_sm_size' => $label_col_sm_size,
+		'help' => $help,
+	);
+
+	return render('_parts/form/select', $data);
+}
+
+function form_checkbox(Validation $val, $name, $default_value = '', $label_col_sm_size = 2)
+{
+	$field = $val->fieldset()->field($name);
+	$atter = array(
+		'id'    => 'form_'.$name,
+		'class' => 'form-control',
+	);
+	$data = array(
+		'val'   => $val,
+		'name'  => $name,
+		'label' => $field->get_attribute('label'),
+		'default_value' => $default_value,
+		'is_required'   => $field->get_attribute('required') == 'required',
+		'label_col_sm_size' => $label_col_sm_size,
+	);
+
+	return render('_parts/form/checkbox', $data);
+}
+
+function form_radio(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $is_inline_options = false, $help = '')
+{
+	$field = $val->fieldset()->field($name);
+	$atter = array(
+		'id'    => 'form_'.$name,
+		'class' => 'form-control',
+	);
+	$data = array(
+		'val'   => $val,
+		'name'  => $name,
+		'label' => $field->get_attribute('label'),
+		'options' => $field->get_options(),
+		'default_value' => $default_value,
+		'is_required'   => $field->get_attribute('required') == 'required',
+		'label_col_sm_size' => $label_col_sm_size,
+		'is_inline_options' => $is_inline_options,
+		'help' => $help,
+	);
+
+	return render('_parts/form/radio', $data);
+}
+
 function form_button($label = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2)
 {
 	if (!strlen($label)) $label = term('form.submit');
@@ -129,10 +194,47 @@ function form_anchor($href, $label, $atter = array(), $offset_size = 2, $secure 
 	return $view;
 }
 
-function form_radio_public_flag($val_obj = null, $default_value = null, $with_no_change_option = false)
+function form_public_flag(Validation $val, $default_value = null, $is_select = false, $label_col_sm_size = 2, $with_no_change_option = false, $name = 'public_flag', $is_inline_options = false)
+{
+	$field = $val->fieldset()->field($name);
+	$atter = array();
+	if (is_null($default_value)) $default_value = Config::get('site.public_flag.default');
+	$label = $field->get_attribute('label', Config::get('term.public_flag.label'));
+
+	$options = $field->get_options();
+	if ($with_no_change_option) $options = array(99 => '変更しない') + $options;
+
+	$data = array(
+		'val'   => $val,
+		'name'  => $name,
+		'label' => $label,
+		'options' => $options,
+		'default_value' => $default_value,
+		'is_required'   => $field->get_attribute('required') == 'required',
+		'label_col_sm_size' => $label_col_sm_size,
+	);
+
+	if ($is_select)
+	{
+		$col_sm_size = 6;
+		$atter['id'] = 'form_'.$name;
+		$atter['class'] = 'form-control';
+
+		$data['atter'] = $atter;
+		$data['col_sm_size'] = $col_sm_size;
+
+		return render('_parts/form/select', $data);
+	}
+
+	$data['is_inline_options'] = $is_inline_options;
+
+	return render('_parts/form/radio', $data);
+}
+
+function form_radio_public_flag(Validation $val = null, $default_value = null, $with_no_change_option = false, $is_select = false, $name = 'public_flag')
 {
 	$data = array(
-		'val' => $val_obj,
+		'val' => $val,
 		'with_no_change_option' => $with_no_change_option,
 		'default_value' => isset($default_value) ? $default_value : Config::get('site.public_flag.default'),
 	);
