@@ -23,5 +23,8 @@ else
 <?php if ($val->error($name)): ?>
 		<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
 <?php endif; ?>
+<?php if (!empty($help)): ?>
+		<span class="help-block"><?php echo $help; ?></span>
+<?php endif; ?>
 	</div>
 </div>

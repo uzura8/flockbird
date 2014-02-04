@@ -232,4 +232,12 @@ class Site_Model
 
 		return array($list, $count);
 	}
+
+	public static function get_next_sort_order($table, $namespace = null, $sort_order_col_name = 'sort_order')
+	{
+		$model = self::get_model_name($table, $namespace);
+		$max = (int)$model::query()->max($sort_order_col_name);
+
+		return Site_Util::get_next_sort_order_num($max);
+	}
 }

@@ -9,9 +9,9 @@
 	<?php echo form_radio($val, 'is_edit_public_flag', isset($profile) ? $profile->is_edit_public_flag : 0, $label_size, true); ?>
 	<?php echo form_public_flag($val, isset($profile) ? $profile->default_public_flag : null, false, $label_size, false, 'default_public_flag'); ?>
 	<?php echo form_radio($val, 'is_unique', isset($profile) ? $profile->is_unique : 0, $label_size, true, 'この設定はフォームタイプが「テキスト」または「テキスト（複数行）」の場合のみ適用されます。'); ?>
-	<?php echo form_radio($val, 'is_disp_regist', isset($profile) ? $profile->is_unique : 0, $label_size, true); ?>
-	<?php echo form_radio($val, 'is_disp_config', isset($profile) ? $profile->is_unique : 0, $label_size, true); ?>
-	<?php echo form_radio($val, 'is_disp_search', isset($profile) ? $profile->is_unique : 0, $label_size, true); ?>
+	<?php echo form_radio($val, 'is_disp_regist', isset($profile) ? $profile->is_disp_regist : 1, $label_size, true); ?>
+	<?php echo form_radio($val, 'is_disp_config', isset($profile) ? $profile->is_disp_config : 1, $label_size, true); ?>
+	<?php echo form_radio($val, 'is_disp_search', isset($profile) ? $profile->is_disp_search : 1, $label_size, true); ?>
 	<?php echo form_select($val, 'form_type', isset($profile) ? $profile->form_type : 'input', 6, $label_size); ?>
 	<?php echo form_select($val, 'value_type', isset($profile) ? $profile->value_type : 'input', 6, $label_size); ?>
 
@@ -52,6 +52,6 @@ unset($field_value_min, $field_value_max);
 	</div>
 
 	<?php echo form_textarea($val, 'value_regexp', isset($profile) ? $profile->value_regexp : '', $label_size); ?>
-	<?php echo form_button(empty($is_edit) ? '作成する' : '編集する', 'submit', 'submit', array(), $label_size); ?>
+	<?php echo form_button(empty($is_edit) ? '作成する' : '編集する', 'submit', 'submit', array(), $label_size, true, '入力値タイプで「正規表現」を選んだ場合のみ有効(PHPのPerl互換(PCRE)正規表現関数を使用)<br>例： /^[a-c]\d+$/'); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

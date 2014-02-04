@@ -10,7 +10,16 @@
 <?php foreach ($profiles as $profile): ?>
 <tr>
 	<td><?php echo $profile->id; ?></td>
+	<td><?php echo $profile->caption; ?></td>
 	<td><?php echo $profile->name; ?></td>
+	<td><?php echo $profile->is_required ? '◯' : '×'; ?></td>
+	<td><?php echo $profile->is_edit_public_flag ? '◯' : '×'; ?></td>
+	<td><?php echo \Site_Form::get_public_flag_options($profile->default_public_flag); ?></td>
+	<td><?php echo $profile->is_unique ? '×' : '◯'; ?></td>
+	<td><?php echo \Site_Profile::get_form_type_options($profile->form_type); ?></td>
+	<td><?php echo $profile->is_disp_regist ? '◯' : '×'; ?></td>
+	<td><?php echo $profile->is_disp_config ? '◯' : '×'; ?></td>
+	<td><?php echo $profile->is_disp_search ? '◯' : '×'; ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

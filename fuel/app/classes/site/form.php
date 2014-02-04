@@ -1,7 +1,7 @@
 <?php
 class Site_Form
 {
-	public static function get_public_flag_options()
+	public static function get_public_flag_options($key = null)
 	{
 		$options = array();
 		$public_flags = Site_Util::get_public_flags();
@@ -9,6 +9,8 @@ class Site_Form
 		{
 			$options[$public_flag] = Config::get('term.public_flag.options.'.$public_flag);
 		}
+
+		if (isset($key)) return $options[$key];
 
 		return $options;
 	}

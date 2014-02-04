@@ -68,7 +68,7 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 	return render('_parts/form/file', $data);
 }
 
-function form_textarea(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $is_autogrow = true)
+function form_textarea(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $is_autogrow = true, $help = '')
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array(
@@ -86,6 +86,7 @@ function form_textarea(Validation $val, $name, $default_value = '', $label_col_s
 		'atter' => $atter,
 		'is_required' => $field->get_attribute('required') == 'required',
 		'label_col_sm_size' => $label_col_sm_size,
+		'help' => $help,
 	);
 
 	return render('_parts/form/textarea', $data);

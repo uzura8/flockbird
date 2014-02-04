@@ -108,6 +108,7 @@ class Validation extends Fuel\Core\Validation
 	{
 		return is_numeric($val) && in_array($val, Site_Util::get_public_flags());
 	}
+
 	public static function _validation_alpha_small_char_numeric($val)
 	{
 		return (bool)preg_match('/^[a-z0-9]*$/', $val);
@@ -174,5 +175,17 @@ class Validation extends Fuel\Core\Validation
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
 		return Util_Date::check_is_futer($val, $base, $max ?: Config::get('site.posted_value_rule_default.time.default.max'));
+	}
+
+	public static function _validation_unique($val, $options)
+	{
+		list($table, $field) = explode('.', $options);
+		if (!$table || !$field) throw new InvalidArgumentException("Second parameter must be format 'table.field'.");
+
+		$result = DB::select("LOWER (\"$field\")")
+		->where($field, '=', Str::lower($val))
+		->from($table)->execute();
+
+		return ! ($result->count() > 0);
 	}
 }

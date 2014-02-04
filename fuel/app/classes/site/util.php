@@ -238,4 +238,13 @@ class Site_Util
 
 		return Arr::previous_by_key($sizes, $size);
 	}
+
+	public static function get_next_sort_order_num($num, $min_interval = 10)
+	{
+		$num += $min_interval;
+		$ext_num = $num % 10;
+		if (!$ext_num) return $num;
+
+		return $num + (10 - $ext_num);
+	}
 }

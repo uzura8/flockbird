@@ -9,7 +9,12 @@ class Model_Profile extends \Orm\Model
 		'name' => array(
 			'data_type' => 'varchar',
 			'label' => '識別名',
-			'validation' => array('trim', 'required', 'max_length' => array(32)),
+			'validation' => array(
+				'trim', 'required',
+				'max_length' => array(32),
+				'match_pattern' => array('/^[a-z0-9_]*[a-z]+[a-z0-9_]*$/i'),
+				'unique' => array('profile.name')
+			),
 			'form' => array('type' => 'text'),
 		),
 		'caption' => array(
@@ -27,14 +32,15 @@ class Model_Profile extends \Orm\Model
 		'is_required' => array(
 			'data_type' => 'integer',
 			'label' => '必須',
-			'validation' => array('in_array' => array(0,1)),
+			'validation' => array(),
 			'form' => array('type' => 'checkbox'),
+			'default' => 0,
 		),
 		'is_unique' => array(
 			'data_type' => 'integer',
 			'label' => '重複の可否',
-			'validatimn' => array('required', 'in_array' => array(0,1)),
-			'form' => array('type' => 'checkbox'),
+			'validation' => array('required'),
+			'form' => array('type' => 'radio'),
 		),
 		'is_edit_public_flag' => array(
 			'data_type' => 'integer',
@@ -51,21 +57,20 @@ class Model_Profile extends \Orm\Model
 		'is_disp_regist' => array(
 			'data_type' => 'integer',
 			'label' => '新規登録',
-			'validation' => array('in_array' => array(0,1)),
+			'validation' => array('required'),
 			'form' => array('type' => 'radio'),
 		),
 		'is_disp_config' => array(
 			'data_type' => 'integer',
 			'label' => 'プロフィール変更',
-			'validation' => array('required', 'in_array' => array(0,1)),
+			'validation' => array('required'),
 			'form' => array('type' => 'radio'),
 		),
 		'is_disp_search' => array(
 			'data_type' => 'integer',
 			'label' => 'メンバー検索',
-			'validation' => array('required', 'in_array' => array(0,1)),
-			//'form' => array('type' => 'radio'),
-			'form' => array('type' => false),
+			'validation' => array('required'),
+			'form' => array('type' => 'radio'),
 		),
 		'form_type' => array(
 			'data_type' => 'varchar',
@@ -114,6 +119,9 @@ class Model_Profile extends \Orm\Model
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
