@@ -69,18 +69,7 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 
 <?php echo render('_parts/template/load_common_js'); ?>
 <?php echo render('_parts/template/common_footer_script'); ?>
-<script>
-function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
-</script>
-<?php echo Asset::js('util.js');?>
-<?php echo Asset::js('site.js');?>
-<?php if (!Auth::check()): ?>
-<?php $destination = Session::get_flash('destination') ?: urlencode(Input::server('REQUEST_URI'));?>
-<script>
-	var inputs = new Array('#form_email', '#form_password');
-	load_popover('#insecure_user_menu', '#insecure_user_popover', '<?php echo Uri::create('auth/api/login').'?destination='.$destination; ?>', inputs);
-</script>
-<?php endif; ?>
+<?php echo render('_parts/template/site_footer_script'); ?>
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
 <?php echo site_htmltag_include_js_module();?>
 <?php echo site_htmltag_include_js_action();?>

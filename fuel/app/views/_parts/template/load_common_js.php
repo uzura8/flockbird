@@ -9,3 +9,9 @@
 <?php echo Asset::js('moment.lang_ja.js');?>
 <?php echo Asset::js('livestamp.min.js');?>
 <?php echo Asset::js('js-url/js-url.min.js');?>
+
+<?php echo Asset::js('util.js');?>
+<?php echo Asset::js('site.js');?>
+<script>
+function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
+</script>
