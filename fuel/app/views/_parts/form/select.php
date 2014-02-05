@@ -22,7 +22,7 @@ if (!$col_sm_size || $col_sm_size == 12)
 	$error_sm_size = 12;
 }
 ?>
-<div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>">
+<div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>" id="<?php echo $atter['id']; ?>_block">
 	<?php echo Form::label($label, $name, array('class' => $label_class)); ?>
 	<div class="col-sm-<?php echo $input_col_sm_size; ?>">
 		<div class="row">

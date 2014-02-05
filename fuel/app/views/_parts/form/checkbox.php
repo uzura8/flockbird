@@ -16,7 +16,7 @@ else
 	$label_class .= ' control-label';
 }
 ?>
-<div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>">
+<div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>" id="<?php echo $atter['id']; ?>_block">
 	<?php echo Form::label($label, $name, array('class' => $label_class)); ?>
 	<div class="col-sm-<?php echo $input_col_sm_size; ?>">
 		<div class="checkbox">
