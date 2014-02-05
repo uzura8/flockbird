@@ -22,6 +22,7 @@
 <div class="container">
 	<div class="row row-offcanvas row-offcanvas-right">
 		<div class="col-sm-<?php if ($layout == 'wide'): ?>12<?php else: ?>9<?php endif; ?>">
+
 <?php if (!empty($breadcrumbs) && !IS_SP): ?>
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
 <?php endif; ?>
@@ -45,8 +46,9 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
 <?php endif; ?>
 
-<?php if ($layout == 'normal'): ?>
 		</div><!--/span-->
+
+<?php if ($layout == 'normal'): ?>
 		<div class="col-sm-3" id="sidebar" role="navigation">
 <?php if (Auth::check()): ?>
 				<?php echo render('_parts/nav_list', array('header' => 'Member', 'list' => Config::get('navigation.admin.secure_side'))); ?>
@@ -67,7 +69,10 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 
 <?php echo render('_parts/template/load_common_js'); ?>
 <?php echo render('_parts/template/common_footer_script'); ?>
+<?php echo render('_parts/template/site_footer_script'); ?>
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
+<?php echo site_htmltag_include_js_module();?>
+<?php echo site_htmltag_include_js_action();?>
 
 </body>
 </html>

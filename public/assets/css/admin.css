@@ -17,3 +17,15 @@
 	color: #C7C4C4;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
+
+#admin_profile_index table th,
+#admin_profile_list table th
+{
+	font-size: 11px;
+	text-align: center;
+}
+#admin_profile_index table td,
+#admin_profile_list table td
+{
+	text-align: center;
+}

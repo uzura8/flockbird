@@ -276,4 +276,35 @@ function small_tag($str, $is_enclose_small_tag = true)
 	return sprintf('%s%s%s', $is_enclose_small_tag ? '<small>' : '', $str, $is_enclose_small_tag ? '</small>' : '');
 }
 
+function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = 'default', $attr = array(), $exception_label = '')
+{
+	switch ($type)
+	{
+		case 'edit':
+			$label_text = '編集';
+			$label_icon  = 'glyphicon glyphicon-edit';
+			break;
+		case 'delete':
+			$label_text = '削除';
+			$label_icon  = 'glyphicon glyphicon-trash';
+			break;
+		default :
+			throw new \InvalidArgumentException("First parameter must be 'edit' or 'delete'.");
+			break;
+	}
+
+	$label  = sprintf('<i class="%s"></i>', $label_icon);
+	$label .= $with_text ? ' '.$label_text : '';
+
+	$class_items   = array();
+	$class_items[] = 'btn';
+	$class_items[] = 'btn-'.$btn_type;
+	if ($class_name) $class_items[] = $class_name;
+	if ($size) $class_items[] = 'btn-'.$size;
+	if (isset($attr['class'])) $class_items[] = $attr['class'];
+	$attr['class'] = implode(' ', $class_items);
+
+	return Html::anchor($href, $label, $attr);
+}
+
 ?>

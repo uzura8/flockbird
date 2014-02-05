@@ -22,7 +22,7 @@ $field_value_max = $val->fieldset()->field('value_max');
 $label = sprintf('%s〜%s', $field_value_min->get_attribute('label'), $field_value_max->get_attribute('label'));
 unset($field_value_min, $field_value_max);
 ?>
-	<div class="form-group<?php if ($val->error('value_min') || $val->error('value_max')): ?> has-error<?php endif; ?>">
+	<div class="form-group<?php if ($val->error('value_min') || $val->error('value_max')): ?> has-error<?php endif; ?>" id="form_value_min_max_block">
 		<?php echo Form::label($label, '', array('class' => 'col-sm-'.$label_size.' control-label')); ?>
 		<div class="col-sm-<?php echo (12 - $label_size); ?>">
 			<div class="row">

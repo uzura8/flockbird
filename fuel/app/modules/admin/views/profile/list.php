@@ -2,13 +2,20 @@
 <?php if ($profiles): ?>
 <table class="table">
 <tr>
+	<th colspan="3">操作</th>
 	<th>ID</th>
 <?php foreach ($labels as $label): ?>
-	<th><?php echo $label; ?></th>
+	<th class="font-size-small"><?php echo $label; ?></th>
 <?php endforeach; ?>
 </tr>
 <?php foreach ($profiles as $profile): ?>
 <tr>
+	<td><span class="glyphicon glyphicon-sort"></span></td>
+	<td><?php echo btn('edit', 'admin/profile/edit/'.$profile->id, '', false, 'xs'); ?></td>
+<?php /*
+function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = 'default', $attr = array(), $exception_label = '')
+*/ ?>
+	<td><?php echo btn('delete', '#', 'btn_profile_delete', false, 'xs', 'default', array('data-id' => $profile->id)); ?></td>
 	<td><?php echo $profile->id; ?></td>
 	<td><?php echo $profile->caption; ?></td>
 	<td><?php echo $profile->name; ?></td>
