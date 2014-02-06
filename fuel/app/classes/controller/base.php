@@ -1,4 +1,5 @@
 <?php
+class ApiNotAuthorizedException extends \FuelException {}
 
 class Controller_Base extends Controller_Hybrid
 {
@@ -34,6 +35,21 @@ class Controller_Base extends Controller_Hybrid
 		if (!$redirect_uri) $redirect_uri = Site_Util::get_login_page_uri();
 		Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
 		Response::redirect($redirect_uri);
+	}
+
+	public function auth_check_api($is_force_response = false)
+	{
+		if (!$this->auth_check(true))
+		{
+			if ($is_force_response)
+			{
+				$this->force_response(0, 401);
+			}
+			else
+			{
+				throw new ApiNotAuthorizedException;
+			}
+		}
 	}
 
 	protected function force_response($body = null, $status = 200)

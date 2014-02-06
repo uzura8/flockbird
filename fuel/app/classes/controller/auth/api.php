@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Auth_Api extends Controller_Base_Site_Api
+class Controller_Auth_Api extends Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
 		'get_login',
