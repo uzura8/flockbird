@@ -239,8 +239,9 @@ class Site_Util
 		return Arr::previous_by_key($sizes, $size);
 	}
 
-	public static function get_next_sort_order_num($num, $min_interval = 10)
+	public static function get_next_sort_order_num($num, $min_interval = null)
 	{
+		if (is_null($min_interval)) $min_interval = Config::get('site.sort_order.interval');
 		$num += $min_interval;
 		$ext_num = $num % 10;
 		if (!$ext_num) return $num;

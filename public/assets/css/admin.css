@@ -24,6 +24,11 @@
 	font-size: 11px;
 	text-align: center;
 }
+#admin_profile_index table th i,
+#admin_profile_list table th i
+{
+	font-size: 14px;
+}
 #admin_profile_index table td,
 #admin_profile_list table td
 {

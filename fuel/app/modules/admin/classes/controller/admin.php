@@ -1,7 +1,7 @@
 <?php
 namespace Admin;
 
-class Controller_Admin extends \Controller_Base {
+class Controller_Admin extends Controller_Base {
 
 	//public $template = 'admin/template';
 	protected $check_not_auth_action = array(
@@ -15,21 +15,10 @@ class Controller_Admin extends \Controller_Base {
 		$this->auth_check();
 		$this->set_current_user();
 
-		$this->template->layout = 'normal';
-		$this->template->header_keywords = '';
-		$this->template->header_description = '';
-	}
-
-	private function set_current_user()
-	{
-		$this->u = null;
-		if (\Auth::check())
+		if (!IS_API)
 		{
-			$auth = \Auth::instance();
-			$user_id = $auth->get_user_id();
-			$this->u = Model_User::query()->where('id', $user_id[1])->get_one();
+			$this->template->layout = 'normal';
 		}
-		\View::set_global('u', $this->u);
 	}
 	
 	public function action_login()

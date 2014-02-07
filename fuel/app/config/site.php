@@ -100,6 +100,9 @@ $config = array(
 			'max' => '+ 50 years',
 		),
 	),
+	'sort_order' => array(
+		'interval' => 10,
+	),
 	'public_flag' => array(
 		'default' => PRJ_PUBLIC_FLAG_ALL,
 	),

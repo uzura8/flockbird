@@ -20,6 +20,7 @@ class Controller_Profile extends Controller_Admin {
 		$profiles = \Model_Profile::query()->order_by('sort_order')->get();
 		$this->set_title_and_breadcrumbs(term('profile').'項目一覧');
 		$this->template->layout = 'wide';
+		$this->template->post_footer = \View::forge('profile/_parts/index_footer');
 		$this->template->content = \View::forge('profile/list', array('profiles' => $profiles, 'labels' => $labels));
 	}
 
@@ -69,7 +70,7 @@ class Controller_Profile extends Controller_Admin {
 
 		$this->set_title_and_breadcrumbs(term('profile').'項目作成');
 		$this->template->layout = 'wide';
-		$this->template->post_footer = \View::forge('_parts/load_js_files', array('files' => 'site/modules/admin/profile/common/form.js'));
+		$this->template->post_footer = \View::forge('_parts/load_asset_files', array('type' => 'js', 'files' => 'site/modules/admin/profile/common/form.js'));
 		$this->template->content = \View::forge('profile/_parts/form', array('val' => $val));
 	}
 
@@ -115,7 +116,7 @@ class Controller_Profile extends Controller_Admin {
 
 		$this->set_title_and_breadcrumbs(term('profile').'項目編集');
 		$this->template->layout = 'wide';
-		$this->template->post_footer = \View::forge('_parts/load_js_files', array('files' => 'site/modules/admin/profile/common/form.js'));
+		$this->template->post_footer = \View::forge('_parts/load_asset_filess', array('type' => 'js', 'files' => 'site/modules/admin/profile/common/form.js'));
 		$this->template->content = \View::forge('profile/_parts/form', array('val' => $val, 'profile' => $profile));
 	}
 

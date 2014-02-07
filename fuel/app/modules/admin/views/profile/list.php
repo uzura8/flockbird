@@ -1,20 +1,18 @@
 <p><?php echo Html::anchor('admin/profile/create', '<i class="ls-icon-edit"></i> 新規作成', array('class' => 'btn btn-default')); ?></p>
 <?php if ($profiles): ?>
-<table class="table">
+<table class="table" id="jqui-sortable">
 <tr>
-	<th colspan="3">操作</th>
+	<th><i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="ドラッグ・アンド・ドロップで並び順を変更できます"></i></th>
+	<th colspan="2">操作</th>
 	<th>ID</th>
 <?php foreach ($labels as $label): ?>
 	<th class="font-size-small"><?php echo $label; ?></th>
 <?php endforeach; ?>
 </tr>
 <?php foreach ($profiles as $profile): ?>
-<tr>
-	<td><span class="glyphicon glyphicon-sort"></span></td>
+<tr class="jqui-sortable-item" id="<?php echo $profile->id; ?>">
+	<td><i class="glyphicon glyphicon-sort jqui-sortable-handle"></i></td>
 	<td><?php echo btn('edit', 'admin/profile/edit/'.$profile->id, '', false, 'xs'); ?></td>
-<?php /*
-function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = 'default', $attr = array(), $exception_label = '')
-*/ ?>
 	<td><?php echo btn('delete', '#', 'btn_profile_delete', false, 'xs', 'default', array('data-id' => $profile->id)); ?></td>
 	<td><?php echo $profile->id; ?></td>
 	<td><?php echo $profile->caption; ?></td>
