@@ -182,6 +182,69 @@ class Controller_Profile extends Controller_Admin {
 		));
 	}
 
+	/**
+	 * The edit_options action.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_edit_options($id = null)
+	{		
+		if (!$id || !$profile = \Model_Profile::find($id))
+		{
+			throw new \HttpNotFoundException;
+		}
+		if (!in_array($profile->form_type, \Site_Profile::get_form_types_having_profile_options()))
+		{
+			throw new \HttpInvalidInputException;
+		}
+		$profile_options = \Model_ProfileOption::get4profile_id($id);
+
+		$posted_vals = array();
+		if (\Input::method() == 'POST')
+		{
+			try
+			{
+				\Util_security::check_csrf();
+				$posted_vals = \Input::post('labels');
+				if (count($posted_vals) != count($profile_options)) throw new \httpinvalidinputexception;
+
+				\DB::start_transaction();
+				foreach ($profile_options as $profile_option)
+				{
+					$value = $posted_vals[$profile_option->id];
+					if (!strlen($value)) throw new \httpinvalidinputexception('未入力の項目があります。');
+					if ($value !== $profile_option->label)
+					{
+						$profile_option->label = $value;
+						$profile_option->save();
+					}
+				}
+				\DB::commit_transaction();
+
+				\Session::set_flash('message', term('profile').'選択肢を編集しました。');
+				\Response::redirect('admin/profile/show_options/'.$profile->id);
+			}
+			catch(\FuelException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				\Session::set_flash('error', $e->getMessage());
+			}
+		}
+		$vals = array();
+		foreach ($profile_options as $profile_option)
+		{
+			$vals[$profile_option->id] = isset($posted_vals[$profile_option->id]) ? $posted_vals[$profile_option->id] : $profile_option->label;
+		}
+
+		$this->set_title_and_breadcrumbs(sprintf('%s 編集: %s', term('profile'), $profile->caption));
+		$this->template->content = \View::forge('profile/edit_options', array(
+			'profile' => $profile,
+			'vals' => $vals,
+			'profile_options' => $profile_options
+		));
+	}
+
 	private static function get_list_labels()
 	{	
 		$cols = array(
