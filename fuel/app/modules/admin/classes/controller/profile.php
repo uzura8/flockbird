@@ -116,7 +116,7 @@ class Controller_Profile extends Controller_Admin {
 
 		$this->set_title_and_breadcrumbs(term('profile').'項目編集');
 		$this->template->layout = 'wide';
-		$this->template->post_footer = \View::forge('_parts/load_asset_filess', array('type' => 'js', 'files' => 'site/modules/admin/profile/common/form.js'));
+		$this->template->post_footer = \View::forge('_parts/load_asset_files', array('type' => 'js', 'files' => 'site/modules/admin/profile/common/form.js'));
 		$this->template->content = \View::forge('profile/_parts/form', array('val' => $val, 'profile' => $profile));
 	}
 
@@ -149,6 +149,37 @@ class Controller_Profile extends Controller_Admin {
 		}
 
 		\Response::redirect('admin/profile');
+	}
+
+	/**
+	 * The show_options action.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_show_options($id = null)
+	{		
+		if (!$id || !$profile = \Model_Profile::find($id))
+		{
+			throw new \HttpNotFoundException;
+		}
+		if (!in_array($profile->form_type, \Site_Profile::get_form_types_having_profile_options()))
+		{
+			throw new \HttpInvalidInputException;
+		}
+		$val = \Validation::forge()->add_model($profile);
+		$profile_options = \Model_ProfileOption::get4profile_id($id);
+
+		$this->set_title_and_breadcrumbs(sprintf('%s選択肢一覧: %s', term('profile'), $profile->caption));
+		$this->template->post_footer = \View::forge('_parts/load_asset_files', array('type' => 'js', 'files' => array(
+			'jquery-ui-1.10.3.custom.min.js',
+			'util/jquery-ui.js',
+		)));
+		$this->template->content = \View::forge('profile/show_options', array(
+			'profile' => $profile,
+			'val' => $val,
+			'profile_options' => $profile_options
+		));
 	}
 
 	private static function get_list_labels()

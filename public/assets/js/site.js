@@ -539,3 +539,42 @@ function load_more_timeline(selfDomElement)
 	show_list(get_uri, '#article_list', limit, $('.timelineBox').last().attr('id'), false, selfDomElement);
 	return false;
 }
+
+function send_article(btnObj, post_data, post_uri, parent_box_attr) {
+	var add_before  = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
+	var input_attr  = (arguments.length > 5 && arguments[5]) ? arguments[5] : '';
+	var msg_success = (arguments.length > 6 && arguments[6]) ? arguments[6] : '投稿に成功しました。';
+	var msg_error   = (arguments.length > 7 && arguments[7]) ? arguments[7] : '投稿に失敗しました。';
+
+	post_data = set_token(post_data);
+	var btn_html = $(btnObj).html();
+	$.ajax({
+		url : get_url(post_uri),
+		type : 'POST',
+		dataType : 'text',
+		data : post_data,
+		timeout: 10000,
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			$(btnObj).attr('disabled', true);
+			$(btnObj).html(get_loading_image_tag());
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			$(btnObj).attr('disabled', false);
+			$(btnObj).html(btn_html);
+		},
+		success: function(result) {
+			if (add_before) {
+				$(parent_box_attr).prepend(result).fadeIn();
+			} else {
+				$(parent_box_attr).append(result).fadeIn();
+			}
+			if (input_attr.length > 0) $(input_attr).val('');
+			$.jGrowl('profile 選択肢を作成しました。');
+		},
+		error: function(result){
+			$.jGrowl(get_error_message(result['status'], 'profile 選択肢の作成に失敗しました。'));
+		}
+	});
+}

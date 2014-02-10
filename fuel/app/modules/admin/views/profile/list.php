@@ -8,6 +8,7 @@
 <?php foreach ($labels as $label): ?>
 	<th class="font-size-small"><?php echo $label; ?></th>
 <?php endforeach; ?>
+	<th>選択肢</th>
 </tr>
 <?php foreach ($profiles as $profile): ?>
 <tr class="jqui-sortable-item" id="<?php echo $profile->id; ?>">
@@ -19,12 +20,13 @@
 	<td><?php echo $profile->name; ?></td>
 	<td><?php echo $profile->is_required ? '◯' : '×'; ?></td>
 	<td><?php echo $profile->is_edit_public_flag ? '◯' : '×'; ?></td>
-	<td><?php echo \Site_Form::get_public_flag_options($profile->default_public_flag); ?></td>
+	<td><?php echo Site_Form::get_public_flag_options($profile->default_public_flag); ?></td>
 	<td><?php echo $profile->is_unique ? '×' : '◯'; ?></td>
-	<td><?php echo \Site_Profile::get_form_type_options($profile->form_type); ?></td>
+	<td><?php echo Site_Profile::get_form_type_options($profile->form_type); ?></td>
 	<td><?php echo $profile->is_disp_regist ? '◯' : '×'; ?></td>
 	<td><?php echo $profile->is_disp_config ? '◯' : '×'; ?></td>
 	<td><?php echo $profile->is_disp_search ? '◯' : '×'; ?></td>
+	<td><?php if (in_array($profile->form_type, Site_Profile::get_form_types_having_profile_options())): ?><?php echo Html::anchor('admin/profile/show_options/'.$profile->id, '一覧'); ?><?php else: ?>-<?php endif; ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

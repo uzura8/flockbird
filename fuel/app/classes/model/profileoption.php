@@ -2,7 +2,7 @@
 
 class Model_ProfileOption extends \Orm\Model
 {
-	protected static $_table_name = 'profile';
+	protected static $_table_name = 'profile_option';
 
 	protected static $_belongs_to = array(
 		'profile' => array(
@@ -27,4 +27,18 @@ class Model_ProfileOption extends \Orm\Model
 			'form' => array('type' => false),
 		),
 	);
+
+	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
+	);
+
+	public static function get4profile_id($profile_id)
+	{
+		return self::query()
+			->where('profile_id', $profile_id)
+			->order_by('sort_order')
+			->get();
+	}
 }

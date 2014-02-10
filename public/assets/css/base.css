@@ -456,3 +456,6 @@ div.alert ul {
 	margin-left: -5px;
 	margin-right: 5px;
 }
+
+table th.small,
+table td.small {width: 30px;}

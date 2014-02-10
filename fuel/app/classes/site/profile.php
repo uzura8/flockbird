@@ -68,4 +68,13 @@ class Site_Profile
 
 		return $options;
 	}
+
+	public static function get_form_types_having_profile_options()
+	{
+		return array(
+			'select',
+			'radio',
+			'checkbox',
+		);
+	}
 }
