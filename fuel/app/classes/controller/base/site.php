@@ -19,6 +19,7 @@ class Controller_Base_Site extends Controller_Base
 	{
 		$is_mypage = false;
 		$member    = null;
+		$member_id = (int)$member_id;
 
 		if (!$member_id)
 		{
