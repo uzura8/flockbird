@@ -96,8 +96,7 @@ class Controller_Base extends Controller_Hybrid
 				}
 				else
 				{
-					$prefix = $member_obj->name.'さんの';
-					$name = $prefix.Config::get('term.profile');
+					$name = $member_obj->name.'さんのページ';
 					$breadcrumbs['/member/'.$member_obj->id] = $name;
 					if ($module)
 					{

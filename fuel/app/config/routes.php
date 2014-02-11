@@ -6,6 +6,7 @@ $routes = array(
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
 	'member/(\d+)'  => 'member/home/$1',
 	'member/profile/(\d+)'  => 'member/profile/index/$1',
+	'member/profile/image/(\d+)'  => 'member/profile/image/index/$1',
 );
 
 $modules = Module::loaded();
