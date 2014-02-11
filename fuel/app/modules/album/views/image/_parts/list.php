@@ -65,23 +65,23 @@ $menus = array();
 if (!empty($is_setting_profile_image) && $album_image->album->member_id == $u->id)
 {
 	$menus[] = Html::anchor(
-		'member/profile/set_image/'.$album_image->id.get_csrf_query_str(),
-		sprintf('<span class="glyphicon glyphicon-setting"></span> %s写真に設定する', Config::get('term.profile'))
+		'member/profile/image/set/'.$album_image->id.get_csrf_query_str(),
+		sprintf('<i class="glyphicon glyphicon-setting"></i> %s写真に設定する', term('profile'))
 	);
 	$menus[] = Html::anchor(
-		'#', '<span class="glyphicon glyphicon-trash"></span> 削除',
-		array('onclick' => sprintf("delete_item('member/profile/delete_image/%d');return false;", $album_image->id))
+		'#', '<i class="glyphicon glyphicon-trash"></i> '.term('form.delete'),
+		array('onclick' => sprintf("delete_item('member/profile/image/delete/%d');return false;", $album_image->id))
 	);
 }
 elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && $member->id == $u->id)))
 {
-	$menus[] = Html::anchor('album/image/edit/'.$album_image->id, '<i class="glyphicon glyphicon-pencil"></i> 編集');
+	$menus[] = Html::anchor('album/image/edit/'.$album_image->id, '<i class="glyphicon glyphicon-pencil"></i> '.term('form.edit'));
 	$menus[] = Html::anchor(
 		'#', '<i class="glyphicon glyphicon-book"></i> カバーに指定',
 		array('class' => 'link_album_image_set_cover', 'id' => 'link_album_image_set_cover_'.$album_image->id)
 	);
 	$menus[] = Html::anchor(
-		'#', '<i class="glyphicon glyphicon-trash"></i> 削除',
+		'#', '<i class="glyphicon glyphicon-trash"></i> '.term('form.delete'),
 		array('onclick' => sprintf("delete_item('album/image/api/delete.json', %d, '#main_item');return false;", $album_image->id))
 	);
 }

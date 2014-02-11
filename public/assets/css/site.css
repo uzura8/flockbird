@@ -104,9 +104,9 @@ form .popover.bottom .arrow:after {
 	right: 8px;
 }
 
-#member_profile_setting_image .imgBox {
+#member_profile_image_index .imgBox {
 	margin-bottom: 10px;
 }
-#member_profile_setting_image .imgBox .delete_image {
+#member_profile_image_index .imgBox .delete_image {
 	vertical-align: bottom;
 }
