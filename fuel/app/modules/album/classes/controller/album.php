@@ -329,7 +329,7 @@ class Controller_Album extends \Controller_Site
 					Model_AlbumImage::update_public_flag4album_id($album->id, $post['public_flag']);
 				}
 				// timeline の public_flag の更新
-				if ($is_update_public_flagif && \Module::loaded('timeline'))
+				if ($is_update_public_flag && \Module::loaded('timeline'))
 				{
 					\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($post['public_flag'], 'album', $album->id, \Config::get('timeline.types.album'));
 				}

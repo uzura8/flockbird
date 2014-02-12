@@ -44,6 +44,10 @@ class Controller_Member_Profile extends Controller_Member
 			try
 			{
 				self::validate_public_flag($profiles);
+
+				// 識別名の変更がない場合は unique を確認しない
+				$val = self::check_value_updated_for_unique($val, $profiles, $member_profiles_profile_id_indexed);
+
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 				\DB::start_transaction();
@@ -118,7 +122,7 @@ class Controller_Member_Profile extends Controller_Member
 			if (is_null($member_profile)) $member_profile = Model_MemberProfile::forge();
 			$member_profile->member_id = $member_id;
 			$member_profile->profile_id = $profile->id;
-			if ($profile->is_edit_public_flag) $member_profile->public_flag = (int)$member_profile_public_flags[$profile->id];
+			if ($profile->is_edit_public_flag) $member_profile->public_flag = $member_profile_public_flags[$profile->id];
 			switch ($profile->form_type)
 			{
 				case 'input':
@@ -151,7 +155,7 @@ class Controller_Member_Profile extends Controller_Member
 			if ($profile->is_required) $rules[] = 'required';
 			if ($profile->is_unique)
 			{
-				//$rules[] = ;
+				$rules[] = array('unique', 'member_profile.value', array(array('profile_id', $profile->id)));
 			}
 			switch ($profile->form_type)
 			{
@@ -196,6 +200,21 @@ class Controller_Member_Profile extends Controller_Member
 					);
 					break;
 			}
+		}
+
+		return $val;
+	}
+
+	private static function check_value_updated_for_unique($val, $profiles, $member_profiles_profile_id_indexed)
+	{
+		foreach ($profiles as $profile)
+		{
+			if (!$profile->is_unique) continue;
+			if (!in_array($profile->form_type, array('input', 'textarea'))) continue;
+			if (!$member_profile = $member_profiles_profile_id_indexed[$profile->id]) continue;
+			if (trim(\Input::post($profile->name)) != $member_profile->value) continue;
+
+			$val->fieldset()->field($profile->name)->delete_rule('unique');
 		}
 
 		return $val;

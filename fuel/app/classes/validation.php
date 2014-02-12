@@ -177,14 +177,20 @@ class Validation extends Fuel\Core\Validation
 		return Util_Date::check_is_futer($val, $base, $max ?: Config::get('site.posted_value_rule_default.time.default.max'));
 	}
 
-	public static function _validation_unique($val, $options)
+	public static function _validation_unique($val, $options, array $additional_conds_list = array())
 	{
 		list($table, $field) = explode('.', $options);
 		if (!$table || !$field) throw new InvalidArgumentException("Second parameter must be format 'table.field'.");
 
-		$result = DB::select("LOWER (\"$field\")")
-		->where($field, '=', Str::lower($val))
-		->from($table)->execute();
+		$query = DB::select("LOWER (\"$field\")")
+		->from($table)
+		->where($field, '=', Str::lower($val));
+
+		foreach ($additional_conds_list as $additional_conds)
+		{
+			$query = $query->and_where($additional_conds[0], $additional_conds[1]);
+		}
+		$result = $query->execute();
 
 		return ! ($result->count() > 0);
 	}
