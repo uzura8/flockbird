@@ -51,7 +51,7 @@ unset($field_value_min, $field_value_max);
 		</div>
 	</div>
 
-	<?php echo form_textarea($val, 'value_regexp', isset($profile) ? $profile->value_regexp : '', $label_size); ?>
-	<?php echo form_button(empty($is_edit) ? '作成する' : '編集する', 'submit', 'submit', array(), $label_size, true, '入力値タイプで「正規表現」を選んだ場合のみ有効(PHPのPerl互換(PCRE)正規表現関数を使用)<br>例： /^[a-c]\d+$/'); ?>
+	<?php echo form_textarea($val, 'value_regexp', isset($profile) ? $profile->value_regexp : '', $label_size, true, '入力値タイプで「正規表現」を選んだ場合のみ有効(PHPのPerl互換(PCRE)正規表現関数を使用)'); ?>
+	<?php echo form_button(empty($is_edit) ? '作成する' : '編集する', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

@@ -11,14 +11,14 @@ if ($profile->is_edit_public_flag)
 }
 ?>
 <?php if ($profile->form_type == 'input'): ?>
-	<?php echo form_input($val, $profile->name, '', 6, $label_size, $profile->information, $optional_public_flag); ?>
+	<?php echo form_input($val, $profile->name, '', 7, $label_size, $profile->information, $optional_public_flag); ?>
+<?php elseif ($profile->form_type == 'textarea'): ?>
+	<?php echo form_textarea($val, $profile->name, '', $label_size, true, $profile->information, $optional_public_flag); ?>
+<?php elseif ($profile->form_type == 'select'): ?>
+	<?php echo form_select($val, $profile->name, 0, 7, $label_size, $profile->information, $optional_public_flag); ?>
 <?php endif; ?>
 
 <?php /*
-	<?php echo form_input($val, 'name', isset($profile) ? $profile->name : '', 6, $label_size, 'アンダースコアと半角英数字のみが使えます。識別名にはアルファベットが含まれていなければなりません。'); ?>
-	<?php echo form_input($val, 'caption', isset($profile) ? $profile->caption : '', 6, $label_size); ?>
-	<?php echo form_textarea($val, 'information', isset($profile) ? $profile->information : '', $label_size); ?>
-	<?php echo form_input($val, 'placeholder', isset($profile) ? $profile->placeholder : '', 12, $label_size); ?>
 	<?php echo form_checkbox($val, 'is_required', isset($profile) ? $profile->is_required : array(), $label_size); ?>
 	<?php echo form_radio($val, 'is_edit_public_flag', isset($profile) ? $profile->is_edit_public_flag : 0, $label_size, true); ?>
 	<?php echo form_public_flag($val, isset($profile) ? $profile->default_public_flag : null, false, $label_size, false, 'default_public_flag'); ?>
@@ -26,8 +26,6 @@ if ($profile->is_edit_public_flag)
 	<?php echo form_radio($val, 'is_disp_regist', isset($profile) ? $profile->is_disp_regist : 1, $label_size, true); ?>
 	<?php echo form_radio($val, 'is_disp_config', isset($profile) ? $profile->is_disp_config : 1, $label_size, true); ?>
 	<?php echo form_radio($val, 'is_disp_search', isset($profile) ? $profile->is_disp_search : 1, $label_size, true); ?>
-	<?php echo form_select($val, 'form_type', isset($profile) ? $profile->form_type : 'input', 6, $label_size); ?>
-	<?php echo form_select($val, 'value_type', isset($profile) ? $profile->value_type : 'input', 6, $label_size); ?>
 
 <?php
 $input_atter = array('class' => 'form-control');
@@ -64,8 +62,6 @@ unset($field_value_min, $field_value_max);
 <?php endif; ?>
 		</div>
 	</div>
-
-	<?php echo form_textarea($val, 'value_regexp', isset($profile) ? $profile->value_regexp : '', $label_size); ?>
 */ ?>
 
 

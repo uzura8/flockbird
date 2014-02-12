@@ -23,6 +23,13 @@ else
 <?php if ($val->error($name)): ?>
 		<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
 <?php endif; ?>
+<?php if ($optional_public_flag): ?>
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-8">
+				<?php echo field_public_flag($optional_public_flag['value'], 'select', array(), $optional_public_flag['name']); ?>
+			</div>
+		</div>
+<?php endif; ?>
 <?php if (!empty($help)): ?>
 		<span class="help-block"><?php echo $help; ?></span>
 <?php endif; ?>

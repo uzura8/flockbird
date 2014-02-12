@@ -83,7 +83,7 @@ class Controller_Member_Profile extends Controller_Member
 	{
 		foreach ($profiles as $profile)
 		{
-			if (!in_array($profile->form_type, array('input'))) continue;// !!!!!!!開発用!!!!!
+			if (!in_array($profile->form_type, array('input', 'textarea', 'select'))) continue;// !!!!!!!開発用!!!!!
 
 			if (!$profile->is_edit_public_flag) continue;
 			$values = Input::post($post_key);
@@ -116,17 +116,25 @@ class Controller_Member_Profile extends Controller_Member
 	{
 		foreach ($profiles as $profile)
 		{
-			if (!in_array($profile->form_type, array('input'))) continue;// !!!!!!!開発用!!!!!
+			if (!in_array($profile->form_type, array('input', 'textarea', 'select'))) continue;// !!!!!!!開発用!!!!!
 
 			$member_profile = $member_profiles_profile_id_indexed[$profile->id];
 			if (is_null($member_profile)) $member_profile = Model_MemberProfile::forge();
 			$member_profile->member_id = $member_id;
 			$member_profile->profile_id = $profile->id;
 			if ($profile->is_edit_public_flag) $member_profile->public_flag = $member_profile_public_flags[$profile->id];
+
+			$profile_options = $profile->profile_option;
 			switch ($profile->form_type)
 			{
 				case 'input':
+				case 'textarea':
 					$member_profile->value = $posted_values[$profile->name];
+					break;
+				case 'select':
+					$profile_option_id = $posted_values[$profile->name];
+					$member_profile->profile_option_id = $profile_option_id;
+					$member_profile->value = $profile_options[$profile_option_id]->label;
 					break;
 			}
 			$member_profile->save();
@@ -146,20 +154,16 @@ class Controller_Member_Profile extends Controller_Member
 	private static function get_validation_object($profiles, $member_profiles_profile_id_indexed)
 	{
 		$val = \Validation::forge();
-		//$val->add_model($note);
 		foreach ($profiles as $profile)
 		{
 			$member_profile = $member_profiles_profile_id_indexed[$profile->id];
 			$value = !is_null($member_profile) ? $member_profile->value : '';
 			$rules = array();
 			if ($profile->is_required) $rules[] = 'required';
-			if ($profile->is_unique)
-			{
-				$rules[] = array('unique', 'member_profile.value', array(array('profile_id', $profile->id)));
-			}
 			switch ($profile->form_type)
 			{
 				case 'input':
+				case 'textarea':
 					$type = 'text';
 					if ($profile->value_type == 'email')
 					{
@@ -180,6 +184,7 @@ class Controller_Member_Profile extends Controller_Member
 					{
 						$rules[] = array('match_pattern', $profile->value_regexp);
 					}
+					if ($profile->form_type == 'textarea') $type = 'textarea';
 
 					if ($profile->value_min)
 					{
@@ -192,10 +197,36 @@ class Controller_Member_Profile extends Controller_Member
 						$rules[] = array($rule_name, $profile->value_max);
 					}
 
+					if ($profile->is_unique)
+					{
+						$rules[] = array('unique', 'member_profile.value', array(array('profile_id', $profile->id)));
+					}
+
 					$val->add(
 						$profile->name,
 						$profile->caption,
 						array('type' => $type, 'value' => $value, 'placeholder' => $profile->placeholder),
+						$rules
+					);
+					break;
+
+				case 'select':
+					$type = 'select';
+					$options = Util_Orm::conv_cols2assoc($profile->profile_option, 'id', 'label');
+
+					$value = !is_null($member_profile) ? $member_profile->profile_option_id : 0;
+					$rules[] = array('valid_string', 'numeric');
+					$rules[] = array('in_array', array_keys($options));
+
+					if ($profile->is_unique)
+					{
+						$rules[] = array('unique', 'member_profile.profile_option_id', array(array('profile_id', $profile->id)));
+					}
+
+					$val->add(
+						$profile->name,
+						$profile->caption,
+						array('type' => $type, 'value' => $value, 'options' => $options, 'placeholder' => $profile->placeholder),
 						$rules
 					);
 					break;
@@ -210,9 +241,12 @@ class Controller_Member_Profile extends Controller_Member
 		foreach ($profiles as $profile)
 		{
 			if (!$profile->is_unique) continue;
-			if (!in_array($profile->form_type, array('input', 'textarea'))) continue;
+			if (!in_array($profile->form_type, array('input', 'textarea', 'select'))) continue;
 			if (!$member_profile = $member_profiles_profile_id_indexed[$profile->id]) continue;
-			if (trim(\Input::post($profile->name)) != $member_profile->value) continue;
+
+			$check_field = 'value';
+			if ($profile->form_type == 'select') $check_field = 'profile_option_id';
+			if (trim(\Input::post($profile->name)) != $member_profile->$check_field) continue;
 
 			$val->fieldset()->field($profile->name)->delete_rule('unique');
 		}

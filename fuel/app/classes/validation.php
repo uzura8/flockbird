@@ -69,10 +69,7 @@ class Validation extends Fuel\Core\Validation
 		
 		foreach ($val as $value)
 		{
-			if ( ! in_array($value, $compare))
-			{
-				throw new HttpInvalidInputException('Invalid input data');
-			}
+			if ( ! in_array($value, $compare)) return false;
 		}
 
 		return true;

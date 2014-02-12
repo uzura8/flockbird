@@ -64,7 +64,7 @@ class Controller_FileTmp_Api extends Controller_Site_Api
 			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
 
 			$thumbnail_size = \Input::post('thumbnail_size');
-			\Validation::_validation_in_array($thumbnail_size, array('M', 'S'));
+			if (!\Validation::_validation_in_array($thumbnail_size, array('M', 'S'))) throw new HttpInvalidInputException('Invalid input data');;
 
 			$options = Site_Upload::get_upload_handler_options($this->u->id);
 			$uploadhandler = new MyUploadHandler($options, false);

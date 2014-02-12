@@ -74,15 +74,21 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 	return render('_parts/form/file', $data);
 }
 
-function form_textarea(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $is_autogrow = true, $help = '')
+function form_textarea(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $is_autogrow = true, $help = '', $optional_public_flag = array())
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array(
 		'id'    => 'form_'.$name,
 		'rows'  => $field->get_attribute('rows'),
 		'class' => 'form-control',
+		'placeholder' => $field->get_attribute('placeholder'),
 	);
 	if ($is_autogrow) $atter['class'] .= ' autogrow';
+
+	if (empty($default_value) && $field->get_attribute('value'))
+	{
+		$default_value = $field->get_attribute('value');
+	}
 
 	$data = array(
 		'val'   => $val,
@@ -93,18 +99,23 @@ function form_textarea(Validation $val, $name, $default_value = '', $label_col_s
 		'is_required' => $field->get_attribute('required') == 'required',
 		'label_col_sm_size' => $label_col_sm_size,
 		'help' => $help,
+		'optional_public_flag' => $optional_public_flag,
 	);
 
 	return render('_parts/form/textarea', $data);
 }
 
-function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $help = '')
+function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array(
 		'id'    => 'form_'.$name,
 		'class' => 'form-control',
 	);
+	if (empty($default_value) && $field->get_attribute('value'))
+	{
+		$default_value = $field->get_attribute('value');
+	}
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,
@@ -116,6 +127,7 @@ function form_select(Validation $val, $name, $default_value = '', $col_sm_size =
 		'col_sm_size' => $col_sm_size,
 		'label_col_sm_size' => $label_col_sm_size,
 		'help' => $help,
+		'optional_public_flag' => $optional_public_flag,
 	);
 
 	return render('_parts/form/select', $data);

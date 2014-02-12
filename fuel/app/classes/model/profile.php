@@ -102,7 +102,7 @@ class Model_Profile extends \Orm\Model
 			'data_type' => 'varchar',
 			'label' => '正規表現',
 			'validation' => array(),
-			'form' => array('type' => 'textarea'),
+			'form' => array('type' => 'textarea', 'placeholder' => '例: /^[a-c]\d+$/'),
 		),
 		'value_min' => array(
 			'data_type' => 'integer',
