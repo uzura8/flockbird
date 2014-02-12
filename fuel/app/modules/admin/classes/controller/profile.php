@@ -117,7 +117,7 @@ class Controller_Profile extends Controller_Admin {
 		$this->set_title_and_breadcrumbs(term('profile').'項目編集');
 		$this->template->layout = 'wide';
 		$this->template->post_footer = \View::forge('_parts/load_asset_files', array('type' => 'js', 'files' => 'site/modules/admin/profile/common/form.js'));
-		$this->template->content = \View::forge('profile/_parts/form', array('val' => $val, 'profile' => $profile));
+		$this->template->content = \View::forge('profile/_parts/form', array('val' => $val, 'profile' => $profile, 'is_edit' => true));
 	}
 
 	/**
@@ -277,7 +277,7 @@ class Controller_Profile extends Controller_Admin {
 			if (in_array($col, array('id', 'sort_order', 'created_at', 'updated_at'))) continue;
 			$obj->$col = $values[$col];	
 		}
-		if (!isset($obj->sort_order)) $obj->sort_order = \Site_Model::get_next_sort_order('profile');
+		if (!isset($obj->sort_order) || is_null($obj->sort_order)) $obj->sort_order = \Site_Model::get_next_sort_order('profile');
 
 		return $obj;
 	}

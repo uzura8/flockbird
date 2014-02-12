@@ -246,6 +246,7 @@ CREATE TABLE `member_profile` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_profile_id_UNIQUE_idx` (`member_id`,`profile_id`),
   KEY `member_id_idx` (`member_id`),
   KEY `profile_id_idx` (`profile_id`),
   KEY `profile_option_id_idx` (`profile_option_id`),

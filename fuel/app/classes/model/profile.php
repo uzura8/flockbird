@@ -4,6 +4,14 @@ class Model_Profile extends \Orm\Model
 {
 	protected static $_table_name = 'profile';
 
+	protected static $_has_many = array(
+		'profile_option' => array(
+			'key_from' => 'id',
+			'model_to' => 'Model_ProfileOption',
+			'key_to' => 'profile_id',
+		)
+	);
+
 	protected static $_properties = array(
 		'id',
 		'name' => array(
@@ -162,5 +170,15 @@ class Model_Profile extends \Orm\Model
 		$form_type_options = Site_Profile::$get_options_method();
 		static::$_properties[$property]['form']['options'] = $form_type_options;
 		static::$_properties[$property]['validation']['in_array'][] = array_keys($form_type_options);
+	}
+
+	public static function get4page_type($page_type)
+	{
+		if (!in_array($page_type, array('regist', 'config', 'search')))
+		{
+			throw new InvalidArgumentException('First parameter is invalid.');
+		}
+
+		return self::query()->where('is_disp_'.$page_type, 1)->order_by('sort_order')->get();
 	}
 }

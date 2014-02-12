@@ -26,14 +26,19 @@ function form_close()
 	return render('_parts/form/close');
 }
 
-function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $help = '')
+function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
 {
 	$field = $val->fieldset()->field($name);
 	$input_atter = array(
 		'type'  => $field->get_attribute('type'),
 		'id'    => 'form_'.$name,
 		'class' => 'form-control',
+		'placeholder' => $field->get_attribute('placeholder'),
 	);
+	if (empty($default_value) && $field->get_attribute('value'))
+	{
+		$default_value = $field->get_attribute('value');
+	}
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,
@@ -44,6 +49,7 @@ function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 
 		'col_sm_size'   => $col_sm_size,
 		'label_col_sm_size' => $label_col_sm_size,
 		'help' => $help,
+		'optional_public_flag' => $optional_public_flag,
 	);
 
 	return render('_parts/form/input', $data);

@@ -17,7 +17,7 @@ else
 }
 
 $error_sm_size = 12 - $col_sm_size;
-if (!$col_sm_size || $col_sm_size == 12)
+if (!$col_sm_size || $col_sm_size == 12 || $optional_public_flag)
 {
 	$error_sm_size = 12;
 }
@@ -29,12 +29,24 @@ if (!$col_sm_size || $col_sm_size == 12)
 			<div class="col-sm-<?php echo $col_sm_size; ?>">
 				<?php echo Form::input($name, Input::post($name, $default_value), $input_atter); ?>
 			</div>
-<?php if ($val->error($name)): ?>
+<?php if ($optional_public_flag): ?>
+			<div class="col-sm-3 col-sm-offset-<?php echo (9 - $col_sm_size); ?>">
+				<?php echo field_public_flag($optional_public_flag['value'], 'select', array(), $optional_public_flag['name']); ?>
+			</div>
+<?php endif; ?>
+<?php if ($val->error($name) && $error_sm_size < 12): ?>
 			<div class="col-sm-<?php echo $error_sm_size; ?>">
 				<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
 			</div>
 <?php endif; ?>
 		</div>
+<?php if ($val->error($name) && $error_sm_size == 12): ?>
+		<div class="row">
+			<div class="col-sm-12">
+				<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
+			</div>
+		</div>
+<?php endif; ?>
 <?php if (!empty($help)): ?>
 		<div class="row">
 			<div class="col-sm-12">
