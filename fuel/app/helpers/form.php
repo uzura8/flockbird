@@ -150,12 +150,18 @@ function form_checkbox(Validation $val, $name, $default_value = '', $label_col_s
 	return render('_parts/form/checkbox', $data);
 }
 
-function form_radio(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $is_inline_options = false, $help = '')
+function form_radio(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array())
 {
+	if (!in_array($layout_type, array('block', 'inline', 'grid'))) throw new InvalidArgumentException('Fifth parameter is invalid.');
+
 	$field = $val->fieldset()->field($name);
 	$atter = array(
 		'id'    => 'form_'.$name,
 	);
+	if (empty($default_value) && $field->get_attribute('value'))
+	{
+		$default_value = $field->get_attribute('value');
+	}
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,
@@ -165,8 +171,9 @@ function form_radio(Validation $val, $name, $default_value = '', $label_col_sm_s
 		'default_value' => $default_value,
 		'is_required'   => $field->get_attribute('required') == 'required',
 		'label_col_sm_size' => $label_col_sm_size,
-		'is_inline_options' => $is_inline_options,
+		'layout_type' => $layout_type,
 		'help' => $help,
+		'optional_public_flag' => $optional_public_flag,
 	);
 
 	return render('_parts/form/radio', $data);
@@ -230,6 +237,7 @@ function form_public_flag(Validation $val, $default_value = null, $is_select = f
 		'default_value' => $default_value,
 		'is_required'   => $field->get_attribute('required') == 'required',
 		'label_col_sm_size' => $label_col_sm_size,
+		'optional_public_flag' => false,
 	);
 
 	if ($is_select)
@@ -242,7 +250,7 @@ function form_public_flag(Validation $val, $default_value = null, $is_select = f
 
 		return render('_parts/form/select', $data);
 	}
-	$data['is_inline_options'] = $is_inline_options;
+	$data['layout_type'] = 'block';
 
 	return render('_parts/form/radio', $data);
 }

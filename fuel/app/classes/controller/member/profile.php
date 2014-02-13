@@ -83,7 +83,7 @@ class Controller_Member_Profile extends Controller_Member
 	{
 		foreach ($profiles as $profile)
 		{
-			if (!in_array($profile->form_type, array('input', 'textarea', 'select'))) continue;// !!!!!!!開発用!!!!!
+			if (!in_array($profile->form_type, array('input', 'textarea', 'select', 'radio'))) continue;// !!!!!!!開発用!!!!!
 
 			if (!$profile->is_edit_public_flag) continue;
 			$values = Input::post($post_key);
@@ -116,7 +116,7 @@ class Controller_Member_Profile extends Controller_Member
 	{
 		foreach ($profiles as $profile)
 		{
-			if (!in_array($profile->form_type, array('input', 'textarea', 'select'))) continue;// !!!!!!!開発用!!!!!
+			if (!in_array($profile->form_type, array('input', 'textarea', 'select', 'radio'))) continue;// !!!!!!!開発用!!!!!
 
 			$member_profile = $member_profiles_profile_id_indexed[$profile->id];
 			if (is_null($member_profile)) $member_profile = Model_MemberProfile::forge();
@@ -132,6 +132,7 @@ class Controller_Member_Profile extends Controller_Member
 					$member_profile->value = $posted_values[$profile->name];
 					break;
 				case 'select':
+				case 'radio':
 					$profile_option_id = $posted_values[$profile->name];
 					$member_profile->profile_option_id = $profile_option_id;
 					$member_profile->value = $profile_options[$profile_option_id]->label;
@@ -211,7 +212,8 @@ class Controller_Member_Profile extends Controller_Member
 					break;
 
 				case 'select':
-					$type = 'select';
+				case 'radio':
+					$type = $profile->form_type;
 					$options = Util_Orm::conv_cols2assoc($profile->profile_option, 'id', 'label');
 
 					$value = !is_null($member_profile) ? $member_profile->profile_option_id : 0;
@@ -226,7 +228,7 @@ class Controller_Member_Profile extends Controller_Member
 					$val->add(
 						$profile->name,
 						$profile->caption,
-						array('type' => $type, 'value' => $value, 'options' => $options, 'placeholder' => $profile->placeholder),
+						array('type' => $type, 'value' => $value, 'options' => $options),
 						$rules
 					);
 					break;
@@ -241,7 +243,7 @@ class Controller_Member_Profile extends Controller_Member
 		foreach ($profiles as $profile)
 		{
 			if (!$profile->is_unique) continue;
-			if (!in_array($profile->form_type, array('input', 'textarea', 'select'))) continue;
+			if (!in_array($profile->form_type, array('input', 'textarea', 'select', 'radio'))) continue;
 			if (!$member_profile = $member_profiles_profile_id_indexed[$profile->id]) continue;
 
 			$check_field = 'value';

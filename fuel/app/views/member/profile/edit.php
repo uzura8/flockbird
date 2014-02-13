@@ -16,6 +16,8 @@ if ($profile->is_edit_public_flag)
 	<?php echo form_textarea($val, $profile->name, '', $label_size, true, $profile->information, $optional_public_flag); ?>
 <?php elseif ($profile->form_type == 'select'): ?>
 	<?php echo form_select($val, $profile->name, 0, 7, $label_size, $profile->information, $optional_public_flag); ?>
+<?php elseif ($profile->form_type == 'radio'): ?>
+	<?php echo form_radio($val, $profile->name, 0, $label_size, 'grid', $profile->information, $optional_public_flag); ?>
 <?php endif; ?>
 
 <?php /*
