@@ -269,8 +269,8 @@ class Controller_Member_Profile extends Controller_Member
 					$type = $profile->form_type;
 					$options = Util_Orm::conv_cols2assoc($profile->profile_option, 'id', 'label');
 					$value = !is_null($member_profile) ? Util_Orm::conv_col2array($member_profile, 'profile_option_id') : array();
-					//$rules[] = array('valid_string', 'numeric');
-					//$rules[] = array('in_array', array_keys($options));
+					$rules[] = array('checkbox_val', $options);
+					if ($profile->is_required) $rules[] = array('checkbox_require', 1);
 
 					$val->add(
 						$profile->name,

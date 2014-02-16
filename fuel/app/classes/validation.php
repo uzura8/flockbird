@@ -191,4 +191,36 @@ class Validation extends Fuel\Core\Validation
 
 		return ! ($result->count() > 0);
 	}
+
+	/**
+	 * 値の正当性チェック
+	 */
+	public static function _validation_checkbox_val($val, $options)
+	{
+		if ($val) {
+			if (!is_array($val)) {
+				return false;
+			}
+			foreach ($val as $v) {
+				if (!array_key_exists($v, $options)) return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * 必須チェック
+	 *
+	 * $minで最低チェック数を指定
+	 */
+	public static function _validation_checkbox_require($val, $min = null)
+	{
+		if (!$val || !is_array($val)) {
+			return false;
+		}
+		$min_count = $min ? $min : 1;
+
+		return count($val) >= $min_count;
+	}
 }

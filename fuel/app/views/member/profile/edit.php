@@ -19,7 +19,7 @@ if ($profile->is_edit_public_flag)
 <?php elseif ($profile->form_type == 'radio'): ?>
 	<?php echo form_radio($val, $profile->name, 0, $label_size, 'grid', $profile->information, $optional_public_flag); ?>
 <?php elseif ($profile->form_type == 'checkbox'): ?>
-	<?php echo form_checkbox($val, $profile->name, 0, $label_size, 'grid', $profile->information, $optional_public_flag); ?>
+	<?php echo form_checkbox($val, $profile->name, array(), $label_size, 'grid', $profile->information, $optional_public_flag); ?>
 <?php endif; ?>
 
 <?php endforeach; ?>

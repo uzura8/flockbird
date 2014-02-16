@@ -133,7 +133,7 @@ function form_select(Validation $val, $name, $default_value = '', $col_sm_size =
 	return render('_parts/form/select', $data);
 }
 
-function form_checkbox(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array())
+function form_checkbox(Validation $val, $name, $default_value = array(), $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array())
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array('id' => 'form_'.$name);

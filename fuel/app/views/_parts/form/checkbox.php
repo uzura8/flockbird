@@ -2,7 +2,6 @@
 if ($is_required)
 {
 	$label .= '<span class="required">*</span>';
-	$atter['required'] = 'required';
 }
 
 $label_class = 'col-sm-'.$label_col_sm_size;
@@ -29,7 +28,7 @@ if ($optional_public_flag) $col_sm_size = 8;
 <?php foreach ($options as $value => $label): ?>
 <?php
 $atter['id'] = sprintf('form_%s_%s', $name, $value);
-$is_checked = in_array($value, (array)Input::post($name, $default_value));
+$is_checked = in_array($value, (Input::method() == 'POST') ? (array)Input::post($name) : $default_value);
 ?>
 <?php if ($layout_type == 'block'): ?>
 				<div class="checkbox">
