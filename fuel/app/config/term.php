@@ -4,8 +4,12 @@ $config = array(
 	'form' => array(
 		'submit' => '送信',
 		'edit' => '編集',
+		'do_edit' => '編集する',
 		'delete' => '削除',
 		'upload' => 'アップロード',
+	),
+	'member' => array(
+		'name' => 'ニックネーム',
 	),
 	'toppage' => 'Top',
 	'myhome'  => 'Home',

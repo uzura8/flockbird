@@ -37,7 +37,7 @@ class Controller_Member_Profile extends Controller_Member
 		$member_profiles = Model_MemberProfile::get4member_id($this->u->id);
 		$member_profiles_profile_id_indexed = self::convert2member_profiles_profile_id_indexed($profiles, $member_profiles);
 		$member_profile_public_flags = self::get_member_profile_public_flags($profiles, $member_profiles_profile_id_indexed);
-		$val = self::get_validation_object($profiles, $member_profiles_profile_id_indexed);
+		$val = self::get_validation_object($profiles, $member_profiles_profile_id_indexed, $this->u->name);
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
@@ -51,7 +51,7 @@ class Controller_Member_Profile extends Controller_Member
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 				\DB::start_transaction();
-				self::seve_member_profile($this->u->id, $profiles, $member_profiles_profile_id_indexed, $post, $member_profile_public_flags);
+				self::seve_member_profile($this->u->id, $profiles, $member_profiles_profile_id_indexed, $post, $member_profile_public_flags, true);
 				\DB::commit_transaction();
 
 				\Session::set_flash('message', term('profile').'を編集しました。');
@@ -114,7 +114,7 @@ class Controller_Member_Profile extends Controller_Member
 		return $public_flags;
 	}
 
-	private static function seve_member_profile($member_id, $profiles, $member_profiles_profile_id_indexed, $posted_values, $member_profile_public_flags)
+	private static function seve_member_profile($member_id, $profiles, $member_profiles_profile_id_indexed, $posted_values, $member_profile_public_flags, $is_save_member_name = false)
 	{
 		foreach ($profiles as $profile)
 		{
@@ -163,6 +163,12 @@ class Controller_Member_Profile extends Controller_Member
 				$member_profile->save();
 			}
 		}
+
+		if ($is_save_member_name && $member = Model_Member::check_authority($member_id))
+		{
+			$member->name = $posted_values['member_name'];
+			$member->save();
+		}
 	}
 
 	private static function get_member_profile($member_profiles, $profile_id, $is_array = false)
@@ -182,9 +188,18 @@ class Controller_Member_Profile extends Controller_Member
 		return false;
 	}
 
-	private static function get_validation_object($profiles, $member_profiles_profile_id_indexed)
+	private static function get_validation_object($profiles, $member_profiles_profile_id_indexed, $member_name = '')
 	{
 		$val = \Validation::forge();
+		if ($member_name)
+		{
+			$val->add(
+				'member_name',
+				term('member.name'),
+				array('type' => 'text', 'value' => $member_name),
+				array('required')	
+			);
+		}
 		foreach ($profiles as $profile)
 		{
 			$member_profile = $member_profiles_profile_id_indexed[$profile->id];

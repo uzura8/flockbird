@@ -1,6 +1,7 @@
 <div class="well">
-<?php $label_size = 2; ?>
+<?php $label_size = 3; ?>
 <?php echo form_open(); ?>
+	<?php echo form_input($val, 'member_name', '', 7, $label_size); ?>
 <?php foreach ($profiles as $profile): ?>
 <?php
 $optional_public_flag = array();
@@ -21,8 +22,7 @@ if ($profile->is_edit_public_flag)
 <?php elseif ($profile->form_type == 'checkbox'): ?>
 	<?php echo form_checkbox($val, $profile->name, array(), $label_size, 'grid', $profile->information, $optional_public_flag); ?>
 <?php endif; ?>
-
 <?php endforeach; ?>
-	<?php echo form_button(term('form.edit')); ?>
+	<?php echo form_button(term('form.do_edit'), 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->
