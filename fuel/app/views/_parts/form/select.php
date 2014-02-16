@@ -30,7 +30,7 @@ if (!$col_sm_size || $col_sm_size == 12 || $optional_public_flag)
 				<?php echo Form::select($name, Input::post($name, $default_value), $options, $atter); ?>
 			</div>
 <?php if ($optional_public_flag): ?>
-			<div class="col-sm-4 col-sm-offset-<?php echo (8 - $col_sm_size); ?>">
+			<div class="col-xs-4 col-sm-offset-<?php echo (8 - $col_sm_size); ?> pull-right">
 				<?php echo field_public_flag($optional_public_flag['value'], 'select', array(), $optional_public_flag['name']); ?>
 			</div>
 <?php endif; ?>

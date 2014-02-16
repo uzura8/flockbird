@@ -25,7 +25,7 @@ else
 <?php endif; ?>
 <?php if ($optional_public_flag): ?>
 		<div class="row">
-			<div class="col-sm-4 col-sm-offset-8">
+			<div class="col-xs-4 col-sm-offset-8 pull-right">
 				<?php echo field_public_flag($optional_public_flag['value'], 'select', array(), $optional_public_flag['name']); ?>
 			</div>
 		</div>

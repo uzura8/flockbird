@@ -66,7 +66,7 @@ $is_checked = in_array($value, (Input::method() == 'POST') ? (array)Input::post(
 			</div>
 
 <?php if ($optional_public_flag): ?>
-			<div class="col-sm-4">
+			<div class="col-xs-4 pull-right">
 				<?php echo field_public_flag($optional_public_flag['value'], 'select', array(), $optional_public_flag['name']); ?>
 			</div>
 <?php endif; ?>
