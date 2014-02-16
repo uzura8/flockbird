@@ -31,7 +31,11 @@ else
 		</div>
 <?php endif; ?>
 <?php if (!empty($help)): ?>
-		<span class="help-block"><?php echo $help; ?></span>
+		<div class="row">
+			<div class="col-sm-12">
+				<span class="help-block"><?php echo $help; ?></span>
+			</div>
+		</div>
 <?php endif; ?>
 	</div>
 </div>

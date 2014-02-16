@@ -141,7 +141,7 @@ class Site_Model
 		$params['select'] = $column;
 		$query = self::get_list_query($table, $params, $namespace);
 
-		return Util_Orm::conv_col2array($column, $query->get());
+		return Util_Orm::conv_col2array($query->get(), $column);
 	}
 
 	public static function get_pager_list($table, $last_id = 0, $params = array(), $namespace = '', $is_check_next = false, $is_over = false, $primary_key = 'id')

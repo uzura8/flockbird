@@ -1,7 +1,7 @@
 <?php
 class Util_Orm
 {
-	public static function conv_col2array($column, $objs)
+	public static function conv_col2array($objs, $column)
 	{
 		$return = array();
 		foreach ($objs as $obj)

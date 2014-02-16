@@ -40,9 +40,8 @@ class Model_Profile extends \Orm\Model
 		'is_required' => array(
 			'data_type' => 'integer',
 			'label' => '必須',
-			'validation' => array(),
-			'form' => array('type' => 'checkbox'),
-			'default' => 0,
+			'validation' => array('intval', 'valid_string' => array('numeric')),
+			'form' => array('type' => 'checkbox', 'options' => array('1' => '')),
 		),
 		'is_unique' => array(
 			'data_type' => 'integer',

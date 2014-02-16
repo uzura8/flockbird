@@ -25,6 +25,7 @@ if ($optional_public_flag) $col_sm_size = 8;
 		<div class="row">
 			<div class="col-sm-<?php echo $col_sm_size; ?>">
 
+<?php if ($options): ?>
 <?php $i = 0; ?>
 <?php foreach ($options as $value => $label): ?>
 <?php $atter['id'] = sprintf('form_%s_%s', $name, $value); ?>
@@ -58,8 +59,9 @@ if ($optional_public_flag) $col_sm_size = 8;
 <?php endif; ?>
 <?php $i++; ?>
 <?php endforeach; ?>
-<?php if ($layout_type == 'grid' && $i % 3 != 2): ?>
+<?php if ($layout_type == 'grid' && ($i && ($i % 3 != 0))): ?>
 				</div>
+<?php endif; ?>
 <?php endif; ?>
 			</div>
 
@@ -72,10 +74,18 @@ if ($optional_public_flag) $col_sm_size = 8;
 		</div>
 
 <?php if ($val->error($name)): ?>
-		<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
+		<div class="row">
+			<div class="col-sm-12">
+				<span class="help-block error_msg"><?php echo $val->error($name)->get_message(); ?></span>
+			</div>
+		</div>
 <?php endif; ?>
 <?php if (!empty($help)): ?>
-		<span class="help-block"><?php echo $help; ?></span>
+		<div class="row">
+			<div class="col-sm-12">
+				<span class="help-block"><?php echo $help; ?></span>
+			</div>
+		</div>
 <?php endif; ?>
 	</div>
 </div>

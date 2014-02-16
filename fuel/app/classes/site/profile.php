@@ -10,7 +10,7 @@ class Site_Profile
 			'select' => '単一選択(プルダウン)',
 			'radio' => '単一選択(ラジオボタン)',
 			'checkbox' => '複数選択(チェックボックス)',
-			'date' => '日付',
+			//'date' => '日付',
 		);
 
 		if ($key) return $options[$key];

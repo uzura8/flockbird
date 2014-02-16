@@ -72,7 +72,7 @@ class Controller_Member_Profile extends Controller_Member
 		$member_profiles_profile_id_indexed = array();
 		foreach ($profiles as $profile)
 		{
-			$member_profile = self::get_member_profile($member_profiles, $profile->id) ?: null;
+			$member_profile = self::get_member_profile($member_profiles, $profile->id, $profile->form_type == 'checkbox') ?: null;
 			$member_profiles_profile_id_indexed[$profile->id] = $member_profile;
 		}
 
@@ -83,8 +83,6 @@ class Controller_Member_Profile extends Controller_Member
 	{
 		foreach ($profiles as $profile)
 		{
-			if (!in_array($profile->form_type, array('input', 'textarea', 'select', 'radio'))) continue;// !!!!!!!開発用!!!!!
-
 			if (!$profile->is_edit_public_flag) continue;
 			$values = Input::post($post_key);
 			if (is_null($values[$profile->id]) || !in_array($values[$profile->id], Site_Util::get_public_flags()))
@@ -103,6 +101,10 @@ class Controller_Member_Profile extends Controller_Member
 			if (!$profile->is_edit_public_flag) continue;
 
 			$member_profile = $member_profiles_profile_id_indexed[$profile->id];
+			if (is_array($member_profile))
+			{
+				$member_profile = array_shift($member_profile);
+			}
 			$public_flag = isset($member_profile->public_flag) ? $member_profile->public_flag : $profile->default_public_flag;
 			if (isset($posted_public_flags[$profile->id])) $public_flag = $posted_public_flags[$profile->id];
 
@@ -116,38 +118,66 @@ class Controller_Member_Profile extends Controller_Member
 	{
 		foreach ($profiles as $profile)
 		{
-			if (!in_array($profile->form_type, array('input', 'textarea', 'select', 'radio'))) continue;// !!!!!!!開発用!!!!!
-
-			$member_profile = $member_profiles_profile_id_indexed[$profile->id];
-			if (is_null($member_profile)) $member_profile = Model_MemberProfile::forge();
-			$member_profile->member_id = $member_id;
-			$member_profile->profile_id = $profile->id;
-			if ($profile->is_edit_public_flag) $member_profile->public_flag = $member_profile_public_flags[$profile->id];
-
 			$profile_options = $profile->profile_option;
-			switch ($profile->form_type)
+			if ($profile->form_type == 'checkbox')
 			{
-				case 'input':
-				case 'textarea':
-					$member_profile->value = $posted_values[$profile->name];
-					break;
-				case 'select':
-				case 'radio':
+				$member_profiles = (array)$member_profiles_profile_id_indexed[$profile->id];
+				foreach ($profile_options as $profile_option)
+				{
+					if (in_array($profile_option->id, $posted_values[$profile->name]))
+					{
+						$member_profile = isset($member_profiles[$profile_option->id]) ? $member_profiles[$profile_option->id] : Model_MemberProfile::forge();
+						$member_profile->member_id = $member_id;
+						$member_profile->profile_id = $profile->id;
+						$member_profile->profile_option_id = $profile_option->id;
+						if ($profile->is_edit_public_flag) $member_profile->public_flag = $member_profile_public_flags[$profile->id];
+						$member_profile->value = $profile_option->label;
+						$member_profile->save();
+					}
+					else
+					{
+						if (!isset($member_profiles[$profile_option->id])) continue;
+						$member_profiles[$profile_option->id]->delete();
+					}
+				}
+			}
+			else
+			{
+				$member_profile = $member_profiles_profile_id_indexed[$profile->id];
+				if (is_null($member_profile)) $member_profile = Model_MemberProfile::forge();
+				$member_profile->member_id = $member_id;
+				$member_profile->profile_id = $profile->id;
+				if ($profile->is_edit_public_flag) $member_profile->public_flag = $member_profile_public_flags[$profile->id];
+
+				if ($profile->form_type == 'radio')
+				{
 					$profile_option_id = $posted_values[$profile->name];
 					$member_profile->profile_option_id = $profile_option_id;
 					$member_profile->value = $profile_options[$profile_option_id]->label;
-					break;
+				}
+				else
+				{
+					$member_profile->value = $posted_values[$profile->name];
+				}
+
+				$member_profile->save();
 			}
-			$member_profile->save();
 		}
 	}
 
-	private static function get_member_profile($member_profiles, $profile_id)
+	private static function get_member_profile($member_profiles, $profile_id, $is_array = false)
 	{
 		foreach ($member_profiles as $member_profile)
 		{
-			if ($member_profile->profile_id == $profile_id) return $member_profile;
+			if ($member_profile->profile_id == $profile_id)
+			{
+				if (!$is_array) return $member_profile;
+
+				if (!isset($member_profile_list)) $member_profile_list = array();
+				$member_profile_list[$member_profile->profile_option_id] = $member_profile;
+			}
 		}
+		if (isset($member_profile_list)) return $member_profile_list;
 
 		return false;
 	}
@@ -158,7 +188,6 @@ class Controller_Member_Profile extends Controller_Member
 		foreach ($profiles as $profile)
 		{
 			$member_profile = $member_profiles_profile_id_indexed[$profile->id];
-			$value = !is_null($member_profile) ? $member_profile->value : '';
 			$rules = array();
 			if ($profile->is_required) $rules[] = 'required';
 			switch ($profile->form_type)
@@ -203,6 +232,8 @@ class Controller_Member_Profile extends Controller_Member
 						$rules[] = array('unique', 'member_profile.value', array(array('profile_id', $profile->id)));
 					}
 
+					$value = !is_null($member_profile) ? $member_profile->value : '';
+
 					$val->add(
 						$profile->name,
 						$profile->caption,
@@ -215,15 +246,31 @@ class Controller_Member_Profile extends Controller_Member
 				case 'radio':
 					$type = $profile->form_type;
 					$options = Util_Orm::conv_cols2assoc($profile->profile_option, 'id', 'label');
-
-					$value = !is_null($member_profile) ? $member_profile->profile_option_id : 0;
+					if (is_null($member_profile))
+					{
+						$options_keys = array_keys($options);
+						$value = array_shift($options_keys);
+					}
+					else
+					{
+						$value = $member_profile->profile_option_id;
+					}
 					$rules[] = array('valid_string', 'numeric');
 					$rules[] = array('in_array', array_keys($options));
 
-					if ($profile->is_unique)
-					{
-						$rules[] = array('unique', 'member_profile.profile_option_id', array(array('profile_id', $profile->id)));
-					}
+					$val->add(
+						$profile->name,
+						$profile->caption,
+						array('type' => $type, 'value' => $value, 'options' => $options),
+						$rules
+					);
+					break;
+				case 'checkbox':
+					$type = $profile->form_type;
+					$options = Util_Orm::conv_cols2assoc($profile->profile_option, 'id', 'label');
+					$value = !is_null($member_profile) ? Util_Orm::conv_col2array($member_profile, 'profile_option_id') : array();
+					//$rules[] = array('valid_string', 'numeric');
+					//$rules[] = array('in_array', array_keys($options));
 
 					$val->add(
 						$profile->name,
@@ -243,7 +290,7 @@ class Controller_Member_Profile extends Controller_Member
 		foreach ($profiles as $profile)
 		{
 			if (!$profile->is_unique) continue;
-			if (!in_array($profile->form_type, array('input', 'textarea', 'select', 'radio'))) continue;
+			if (!in_array($profile->form_type, array('input', 'textarea'))) continue;
 			if (!$member_profile = $member_profiles_profile_id_indexed[$profile->id]) continue;
 
 			$check_field = 'value';
