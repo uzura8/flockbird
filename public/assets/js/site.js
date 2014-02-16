@@ -578,3 +578,20 @@ function send_article(btnObj, post_data, post_uri, parent_box_attr) {
 		}
 	});
 }
+
+function display_form4value(value, target_values, disp_target_forms) {
+	var prefix  = (arguments.length > 3 && arguments[3]) ? arguments[3] : '#form_';
+	var suffix  = (arguments.length > 4 && arguments[4]) ? arguments[4] : '_block';
+
+	if ($.inArray(value, target_values) == -1) {
+		disp_target_forms.forEach(function(target) {
+			var block = $(prefix + target + suffix);
+			if (block.hasClass('hidden') == false) block.addClass('hidden');
+		});
+	} else {
+		disp_target_forms.forEach(function(target) {
+			var block = $(prefix + target + suffix);
+			if (block.hasClass('hidden') == true) block.removeClass('hidden');
+		});
+	}
+}
