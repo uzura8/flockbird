@@ -6,7 +6,7 @@ class Controller_Member extends Controller_Site
 
 	protected $check_not_auth_action = array(
 		'signup',
-		'confirm_register',
+		'confirm_signup',
 		'register',
 		'home',
 		'resend_password',
@@ -55,9 +55,9 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_signup()
 	{
-		if (!$form = Fieldset::instance('confirm_register'))
+		if (!$form = Fieldset::instance('confirm_signup'))
 		{
-			$form = $this->form();
+			$form = $this->get_form_signup();
 		}
 
 		if (Input::method() === 'POST')
@@ -66,7 +66,7 @@ class Controller_Member extends Controller_Site
 		}
 		$this->set_title_and_breadcrumbs(Config::get('term.signup'));
 		$this->template->content = View::forge('member/signup', array('form' => $form));
-		$this->template->content->set_safe('html_form', $form->build('/member/confirm_register'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('/member/confirm_signup'));// form の action に入る
 	}
 
 	/**
@@ -75,14 +75,14 @@ class Controller_Member extends Controller_Site
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_confirm_register()
+	public function action_confirm_signup()
 	{
 		Util_security::check_method('POST');
 		Util_security::check_csrf();
 
-		if (!$form = Fieldset::instance('confirm_register'))
+		if (!$form = Fieldset::instance('confirm_signup'))
 		{
-			$form = $this->form();
+			$form = $this->get_form_signup();
 		}
 		$val = $form->validation();
 
@@ -94,37 +94,42 @@ class Controller_Member extends Controller_Site
 			{
 				if (Model_MemberAuth::query()->where('email', $post['email'])->get_one())
 				{
-					throw new Exception('そのメールアドレスは登録できません。');
+					throw new FuelException('そのメールアドレスは登録できません。');
 				}
 				$data = array();
-				$data['name'] = $post['name'];
+				//$data['name'] = $post['name'];
 				$data['email']    = $post['email'];
 				$data['password'] = $post['password'];
+				\DB::start_transaction();
 				$token = $this->save_member_pre($data);
 
 				$maildata = array();
 				$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
 				$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-				$maildata['subject']      = \Config::get('site.member_confirm_register_mail.subject');
+				$maildata['subject']      = \Config::get('site.member_confirm_signup_mail.subject');
 				$maildata['to_address']   = $post['email'];
-				$maildata['to_name']      = $post['name'];
+				//$maildata['to_name']      = $post['name'];
 				$maildata['password']     = $post['password'];
 				$maildata['token']        = $token;
-				$this->send_confirm_register_mail($maildata);
+				$this->send_confirm_signup_mail($maildata);
+				\DB::commit_transaction();
 
 				Session::set_flash('message', '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。');
 				Response::redirect(Config::get('site.login_uri.site'));
 			}
 			catch(EmailValidationFailedException $e)
 			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
 				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
 				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
-			catch(Exception $e)
+			catch(FuelException $e)
 			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
 				Session::set_flash('error', $e->getMessage());
 				$this->action_signup();
 			}
@@ -519,27 +524,18 @@ END;
 		$this->template->content->set_safe('html_form', $form->build('/member/reset_password'));// form の action に入る
 	}
 
-	public function form()
+	public function get_form_signup()
 	{
-		$add_fields = array(
-			'name' => array(
-				'label' => '名前',
-				'attributes' => array('class' => 'input-xlarge form-control'),
-				'rules' => array('trim', 'required', array('max_length', 50)),
-			),
-			'email' => array(
-				'label' => 'メールアドレス',
-				'attributes' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
-				'rules' => array('trim', 'required', 'valid_email'),
-			),
-			'password' => array(
-				'label' => 'パスワード',
-				'attributes' => array('type' => 'password', 'class' => 'input-xlarge form-control'),
-				'rules' => array('trim', 'required', array('min_length', 6), array('max_length', 20)),
-			),
-		);
+		//$add_fields = array(
+		//	'name' => array(
+		//		'label' => '名前',
+		//		'attributes' => array('class' => 'input-xlarge form-control'),
+		//		'rules' => array('trim', 'required', array('max_length', 50)),
+		//	),
+		//);
+		$member_auth = Model_MemberAuth::forge();
 
-		return Site_Util::get_form_instance('confirm_register', null, true, $add_fields, 'submit');
+		return Site_Util::get_form_instance('confirm_signup', $member_auth, true, null, 'submit');
 	}
 
 	public function form_leave()
@@ -612,7 +608,7 @@ END;
 	private function save_member_pre($data)
 	{
 		$member_pre = new Model_MemberPre();
-		$member_pre->name = $data['name'];
+		//$member_pre->name = $data['name'];
 		$member_pre->email = $data['email'];
 		$member_pre->password = $data['password'];
 		$member_pre->token = Util_toolkit::create_hash();
@@ -634,7 +630,7 @@ END;
 		return $member_password_pre->token;
 	}
 
-	private function send_confirm_register_mail($data)
+	private function send_confirm_signup_mail($data)
 	{
 		if (!is_array($data)) $data = (array)$data;
 
@@ -642,12 +638,10 @@ END;
 		$site_name = PRJ_SITE_NAME;
 
 		$data['body'] = <<< END
-こんにちは、{$data['to_name']}さん
-
-仮登録が完了しました。
+{$site_name} の仮登録が完了しました。
 まだ登録は完了しておりません。
 
-以下のアドレスをクリックすることにより、{$site_name}アカウントの登録確認が完了します。
+以下のアドレスをクリックすることにより、{$site_name} アカウントの登録確認が完了します。
 {$register_url}
 
 上記の確認作業が完了しないと、{$site_name} のサービスが利用できません。

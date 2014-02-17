@@ -226,7 +226,7 @@ CREATE TABLE `member_password_pre` (
 
 CREATE TABLE `member_pre` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL,

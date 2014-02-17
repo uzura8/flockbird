@@ -110,7 +110,7 @@ $config = array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
 		'from_mail_address' => PRJ_ADMIN_MAIL,
 	),
-	'member_confirm_register_mail' => array(
+	'member_confirm_signup_mail' => array(
 		'subject'           => 'メンバー仮登録完了のお知らせ',
 	),
 	'member_register_mail' => array(

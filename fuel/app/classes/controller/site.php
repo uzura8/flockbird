@@ -28,8 +28,7 @@ class Controller_Site extends Controller_Base_Site
 		if ($messsage_log) \Log::error($messsage_log);
 		if ($message_display)
 		{
-			$this->template->title = $message_display;
-			$this->template->header_title = site_title($this->template->title);
+			$this->set_title_and_breadcrumbs($message_display);
 		}
 		$this->template->content = View::forge($action);
 		if ($status) $this->response->status = $status;

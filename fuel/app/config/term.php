@@ -10,6 +10,8 @@ $config = array(
 	),
 	'member' => array(
 		'name' => 'ニックネーム',
+		'email' => 'メールアドレス',
+		'password' => 'パスワード',
 	),
 	'toppage' => 'Top',
 	'myhome'  => 'Home',

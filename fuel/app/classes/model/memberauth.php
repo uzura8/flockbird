@@ -1,5 +1,5 @@
 <?php
-class Model_Memberauth extends \Orm\Model
+class Model_MemberAuth extends \Orm\Model
 {
 	protected static $_table_name = 'member_auth';
 	protected static $_has_one = array(
@@ -14,29 +14,41 @@ class Model_Memberauth extends \Orm\Model
 	protected static $_properties = array(
 		'id',
 		'member_id' => array(
+			'data_type' => 'integer',
+			'validation' => array('valid_string' => array('numeric')),
+			'form' => array('type' => false),
+		),
+		'email' => array(
+			'data_type' => 'varchar',
+			'label' => 'メールアドレス',
+			'validation' => array('trim', 'required', 'max_length' => array(255), 'valid_email'),
+			'form' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
+		),
+		'password' => array(
+			'data_type' => 'varchar',
+			'label' => 'パスワード',
 			'validation' => array(
 				'trim',
 				'required',
-				'valid_string' => array('integer'),
+				'min_length' => array(6),
+				'max_length' => array(128),
 			),
+			'form' => array('type' => 'password', 'class' => 'input-xlarge form-control'),
 		),
-		'email' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'password' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'created_at',
-		'updated_at'
+		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
 	);
 
+	public static function _init()
+	{
+		static::$_properties['email']['label'] = term('member.email');
+		static::$_properties['password']['label'] = term('member.password');
+	}
+
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
