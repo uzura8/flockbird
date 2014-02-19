@@ -33,17 +33,17 @@ class Controller_Member_Profile extends Controller_Member
 	 */
 	public function action_edit()
 	{
-		$member_profile = new Site_MemberProfile('config', $this->u->id, $this->u->name);
+		$form_member_profile = new Form_MemberProfile('config', $this->u->id, $this->u->name);
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
 			try
 			{
-				$member_profile->validate_public_flag();
-				$member_profile->remove_unique_restraint_for_updated_value();
-				if (!$member_profile->validate()) throw new \FuelException($member_profile->get_validation_errors());
+				$form_member_profile->validate_public_flag();
+				$form_member_profile->remove_unique_restraint_for_updated_value();
+				if (!$form_member_profile->validate()) throw new \FuelException($form_member_profile->get_validation_errors());
 				\DB::start_transaction();
-				$member_profile->seve(true);
+				$form_member_profile->seve(true);
 				\DB::commit_transaction();
 
 				\Session::set_flash('message', term('profile').'を編集しました。');
@@ -57,9 +57,9 @@ class Controller_Member_Profile extends Controller_Member
 		}
 		$this->set_title_and_breadcrumbs(term('profile').term('form.edit'), array('member/profile' => '自分の'.term('profile')), $this->u);
 		$this->template->content = View::forge('member/profile/edit', array(
-			'val' => $member_profile->get_validation($this->u->name),
-			'profiles' => $member_profile->get_profiles(),
-			'public_flags' => $member_profile->get_member_profile_public_flags(),
+			'val' => $form_member_profile->get_validation($this->u->name),
+			'profiles' => $form_member_profile->get_profiles(),
+			'public_flags' => $form_member_profile->get_member_profile_public_flags(),
 		));
 	}
 }

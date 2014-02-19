@@ -1,6 +1,6 @@
 <?php
 
-class Site_MemberProfile
+class Form_MemberProfile
 {
 	private $profiles = null;
 	private $member_id = 0;
