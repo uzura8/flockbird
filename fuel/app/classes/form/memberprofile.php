@@ -3,24 +3,28 @@
 class Form_MemberProfile
 {
 	private $profiles = null;
-	private $member_id = 0;
+	private $member_obj = null;
 	private $member_profiles_profile_id_indexed = array();
 	private $member_profile_public_flags = array();
 	private $validation = null;
 	private $validated_values = array();
 
-	public function __construct($page_type, $member_id, $member_name = null)
+	public function __construct($page_type, Model_Member $member_obj = null)
 	{
-		$this->member_id = $member_id;
+		$this->member_obj = $member_obj;
 		$this->profiles = Model_Profile::get4page_type($page_type);
-		$this->set_member_profiles_profile_id_indexed($member_id);
+		$this->set_member_profiles_profile_id_indexed();
 		$this->set_member_profile_public_flags();
-		$this->set_validation($member_name);
 	}
 
-	public function set_member_profiles_profile_id_indexed($member_id = null)
+	public function set_member_obj(Model_Member $member_obj)
 	{
-		$member_profiles = $member_id ? Model_MemberProfile::get4member_id($member_id) : array();
+		$this->member_obj = $member_obj;
+	}
+
+	public function set_member_profiles_profile_id_indexed()
+	{
+		$member_profiles = $this->member_obj ? Model_MemberProfile::get4member_id($this->member_obj->id) : array();
 		$this->member_profiles_profile_id_indexed = self::convert2member_profiles_profile_id_indexed($this->profiles, $member_profiles);
 	}
 
@@ -54,6 +58,8 @@ class Form_MemberProfile
 
 	public function seve()
 	{
+		if (!$this->member_obj) throw new FuelException('Member Object is not set.');;
+
 		foreach ($this->profiles as $profile)
 		{
 			$profile_options = $profile->profile_option;
@@ -65,7 +71,7 @@ class Form_MemberProfile
 					if (in_array($profile_option->id, $this->validated_values[$profile->name]))
 					{
 						$member_profile = isset($member_profiles[$profile_option->id]) ? $member_profiles[$profile_option->id] : Model_MemberProfile::forge();
-						$member_profile->member_id = $this->member_id;
+						$member_profile->member_id = $this->member_obj->id;
 						$member_profile->profile_id = $profile->id;
 						$member_profile->profile_option_id = $profile_option->id;
 						if ($profile->is_edit_public_flag) $member_profile->public_flag = $this->member_profile_public_flags[$profile->id];
@@ -83,7 +89,7 @@ class Form_MemberProfile
 			{
 				$member_profile = $this->member_profiles_profile_id_indexed[$profile->id];
 				if (is_null($member_profile)) $member_profile = Model_MemberProfile::forge();
-				$member_profile->member_id = $this->member_id;
+				$member_profile->member_id = $this->member_obj->id;
 				$member_profile->profile_id = $profile->id;
 				if ($profile->is_edit_public_flag) $member_profile->public_flag = $this->member_profile_public_flags[$profile->id];
 
@@ -102,22 +108,27 @@ class Form_MemberProfile
 			}
 		}
 
-		if ($this->validation->fieldset()->field('member_name') && $member = Model_Member::check_authority($this->member_id))
+		if ($this->validation->fieldset()->field('member_name') && $this->member_obj->id)
 		{
-			$member->name = $this->validated_values['member_name'];
-			$member->save();
+			$this->member_obj->name = $this->validated_values['member_name'];
+			$this->member_obj->save();
 		}
 	}
 
-	public function set_validation($member_name = '')
+	public function set_validation_message($rule, $message)
+	{
+		$this->validation->set_message($rule, $message);
+	}
+
+	public function set_validation($is_set_member_name = false, $add_fields = array())
 	{
 		$this->validation = \Validation::forge();
-		if ($member_name)
+		if ($is_set_member_name)
 		{
 			$this->validation->add(
 				'member_name',
 				term('member.name'),
-				array('type' => 'text', 'value' => $member_name),
+				array('type' => 'text', 'value' => $this->member_obj ? $this->member_obj->name : ''),
 				array('required')	
 			);
 		}
@@ -217,6 +228,20 @@ class Form_MemberProfile
 					break;
 			}
 		}
+		foreach ($add_fields as $name => $params)
+		{
+			$this->add_field($name, $params);
+		}
+	}
+
+	public function add_field($name, $params = array())
+	{
+		$this->validation->add(
+			$name,
+			isset($params['label']) ? $params['label'] : '',
+			isset($params['attributes']) ? $params['attributes'] : array(),
+			isset($params['rules']) ? $params['rules'] : array()
+		);
 	}
 
 	// 識別名の変更がない場合は unique を確認しない
@@ -244,6 +269,11 @@ class Form_MemberProfile
 	public function get_validation_errors()
 	{
 		return $this->validation->show_errors();
+	}
+
+	public function get_validated_values()
+	{
+		return $this->validated_values;
 	}
 
 	private static function convert2member_profiles_profile_id_indexed($profiles, $member_profiles)

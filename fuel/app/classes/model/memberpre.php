@@ -7,7 +7,6 @@ class Model_MemberPre extends \Orm\Model
 		'name' => array(
 			'validation' => array(
 				'trim',
-				'required',
 				'max_length' => array(255),
 			),
 		),
@@ -34,6 +33,9 @@ class Model_MemberPre extends \Orm\Model
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -44,11 +46,8 @@ class Model_MemberPre extends \Orm\Model
 		),
 	);
 
-	public static function validate($factory)
+	public static function get4token($token)
 	{
-		$val = Validation::forge($factory);
-		//$val->add_field('title', 'Title', 'required|max_length[255]');
-
-		return $val;
+		return self::query()->where('token', $token)->get_one();
 	}
 }
