@@ -23,6 +23,7 @@ class Model_MemberPre extends \Orm\Model
 			),
 		),
 		'token' => array(
+			'form' => array('type' => 'hidden'),
 			'validation' => array(
 				'trim',
 				'max_length' => array(255),

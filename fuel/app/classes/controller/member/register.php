@@ -31,22 +31,9 @@ class Controller_Member_Register extends Controller_Site
 		}
 
 		$form_member_profile = new Form_MemberProfile('regist');
-		$add_fields = array(
-			'password' => array(
-				'label' => 'パスワード',
-				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
-				'rules' => array(
-					'trim',
-					'required',
-					array('min_length', 6), array('max_length', 128),
-					array('match_value', $member_pre->password),
-				),
-			),
-			'token' => array(
-				'attributes' => array('type'=>'hidden'),
-				'rules' => array('required'),
-			),
-		);
+		$add_fields = array();
+		$add_fields['password'] = Form_Util::get_model_field('member_auth', 'password');
+		$add_fields['token']    = Form_Util::get_model_field('member_pre', 'token');
 		$form_member_profile->set_validation(true, $add_fields);
 		$form_member_profile->set_validation_message('match_value', ':labelが正しくありません。');
 
