@@ -11,30 +11,25 @@ class Model_MemberConfig extends \Orm\Model
 	);
 	protected static $_properties = array(
 		'id',
-		'member_id' => array(
-			'validation' => array(
-				'trim',
-				'required',
-				'valid_string' => array('integer'),
-			),
-		),
+		'member_id',
 		'name' => array(
-			'validation' => array(
-				'trim',
-				'required',
-				'max_length' => array(64),
-			),
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'required', 'max_length' => array(64)),
+			'form' => array('type' => false),
 		),
 		'value' => array(
-			'validation' => array(
-				'required',
-			),
+			'data_type' => 'varchar',
+			'validation' => array(),
+			'form' => array('type' => false),
 		),
-		'created_at',
-		'updated_at'
+		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -44,6 +39,11 @@ class Model_MemberConfig extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 	);
+
+	public static function _init()
+	{
+		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
+	}
 
 	public static function validate($factory)
 	{

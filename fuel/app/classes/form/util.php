@@ -4,10 +4,7 @@ class Form_Util
 {
 	public static function get_model_field($table, $column, $namespace = '')
 	{
-		$model = Site_Model::get_model_name($table, $namespace);
-		$model_obj = $model::forge();
-		$properties = $model_obj::property($column);
-		unset($model_obj);
+		$properties = Util_Orm::get_prop($table, $column, $namespace);
 		if (!$properties || empty($properties['form']))
 		{
 			throw new \InvalidArgumentException('Second parameter is invalid.');

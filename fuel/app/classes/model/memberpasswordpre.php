@@ -14,30 +14,17 @@ class Model_MemberPasswordPre extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'member_id' => array(
-			'validation' => array(
-				'trim',
-				'required',
-				'valid_string' => array('integer'),
-			),
-		),
-		'email' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'token' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'created_at',
-		'updated_at'
+		'member_id',
+		'email',
+		'token',
+		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -47,6 +34,13 @@ class Model_MemberPasswordPre extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 	);
+
+	public static function _init()
+	{
+		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
+		static::$_properties['email'] = Util_Orm::get_prop('member_auth', 'email');
+		static::$_properties['token'] = Util_Orm::get_token_prop();
+	}
 
 	public static function validate($factory)
 	{

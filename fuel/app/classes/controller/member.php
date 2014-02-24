@@ -70,7 +70,7 @@ class Controller_Member extends Controller_Site
 	}
 
 	/**
-	 * Execute confirm register
+	 * Execute confirm signup
 	 * 
 	 * @access  public
 	 * @return  Response
@@ -427,13 +427,6 @@ END;
 
 	public function get_form_signup()
 	{
-		//$add_fields = array(
-		//	'name' => array(
-		//		'label' => '名前',
-		//		'attributes' => array('class' => 'input-xlarge form-control'),
-		//		'rules' => array('trim', 'required', array('max_length', 50)),
-		//	),
-		//);
 		$member_auth = Model_MemberAuth::forge();
 
 		return Site_Util::get_form_instance('confirm_signup', $member_auth, true, null, 'submit');

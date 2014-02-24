@@ -125,11 +125,14 @@ class Form_MemberProfile
 		$this->validation = \Validation::forge();
 		if ($is_set_member_name)
 		{
+			$member_field_properties = Form_Util::get_model_field('member', 'name');
+			$member_field_attrs = $member_field_properties['attributes'];
+			$member_field_attrs['value'] = $this->member_obj ? $this->member_obj->name : '';
 			$this->validation->add(
 				'member_name',
-				term('member.name'),
-				array('type' => 'text', 'value' => $this->member_obj ? $this->member_obj->name : ''),
-				array('required')	
+				$member_field_properties['label'],
+				$member_field_attrs,
+				$member_field_properties['rules']
 			);
 		}
 		foreach ($this->profiles as $profile)

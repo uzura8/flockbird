@@ -4,33 +4,12 @@ class Model_MemberPre extends \Orm\Model
 	protected static $_table_name = 'member_pre';
 	protected static $_properties = array(
 		'id',
-		'name' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'email' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'password' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'token' => array(
-			'form' => array('type' => 'hidden'),
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'created_at',
-		'updated_at'
+		'name',
+		'email',
+		'password',
+		'token',
+		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
@@ -46,6 +25,14 @@ class Model_MemberPre extends \Orm\Model
 			'mysql_timestamp' => true,
 		),
 	);
+
+	public static function _init()
+	{
+		static::$_properties['name']  = Util_Orm::get_prop('member', 'name');
+		static::$_properties['email'] = Util_Orm::get_prop('member_auth', 'email');
+		static::$_properties['password'] = Util_Orm::get_prop('member_auth', 'password');
+		static::$_properties['token'] = Util_Orm::get_token_prop(true);
+	}
 
 	public static function get4token($token)
 	{

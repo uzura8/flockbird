@@ -22,4 +22,30 @@ class Util_Orm
 
 		return $return;
 	}
+
+	public static function get_prop($table, $column, $namespace = '')
+	{
+		$model = Site_Model::get_model_name($table, $namespace);
+		$model_obj = $model::forge();
+
+		return $model_obj::property($column);
+	}
+
+	public static function get_relational_numeric_key_prop()
+	{
+		return array(
+			'data_type' => 'integer',
+			'validation' => array('required', 'valid_string' => array('numeric')),
+			'form' => array('type' => false),
+		);
+	}
+
+	public static function get_token_prop($is_hidden_form = false)
+	{
+		return array(
+			'data_type' => 'varchar',
+			'form' => array('type' => $is_hidden_form ? 'hidden' : false),
+			'validation' => array('trim', 'max_length' => array(255)),
+		),
+	}
 }

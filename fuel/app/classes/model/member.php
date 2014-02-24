@@ -10,16 +10,17 @@ class Model_Member extends \Orm\Model
 			'model_to' => 'Model_MemberAuth',
 			'key_to' => 'member_id',
 			'cascade_save' => false,
-			//'cascade_delete' => false,
+			'cascade_delete' => false,
 		),
 		'file' => array(
 			'key_from' => 'file_id',
 			'model_to' => 'Model_File',
 			'key_to' => 'id',
 			'cascade_save' => false,
-			//'cascade_delete' => false,
+			'cascade_delete' => false,
 		),
 	);
+
 	protected static $_properties = array(
 		'id',
 		'name' => array(
@@ -28,40 +29,32 @@ class Model_Member extends \Orm\Model
 				'required',
 				'max_length' => array(255),
 			),
+			'form' => array('type' => 'text'),
 		),
 		'login_hash' => array(
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
+			'validation' => array('required', 'valid_string' => array('alpha', 'numeric'), 'max_length' => array(255)),
+			'form' => array('type' => false),
 		),
-		'last_login',
 		'register_type' => array(
-			'validation' => array(
-				'trim',
-				'required',
-				'valid_string' => array('integer'),
-				'max_length' => array(1),
-			),
+			'validation' => array('required', 'valid_string' => array('numeric'), 'max_length' => array(1)),
+			'form' => array('type' => false),
 		),
 		'file_id' => array(
-			'validation' => array(
-				'trim',
-				'required',
-				'valid_string' => array('integer'),
-			),
+			'validation' => array('required', 'valid_string' => array('numeric')),
+			'form' => array('type' => false),
 		),
 		'filesize_total' => array(
-			'validation' => array(
-				'trim',
-				'valid_string' => array('integer'),
-			),
+			'validation' => array('valid_string' => array('numeric')),
+			'form' => array('type' => false),
 		),
-		'created_at',
-		'updated_at'
+		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -72,12 +65,9 @@ class Model_Member extends \Orm\Model
 		),
 	);
 
-	public static function validate($factory)
+	public static function _init()
 	{
-		$val = Validation::forge($factory);
-		//$val->add_field('title', 'Title', 'required|max_length[255]');
-
-		return $val;
+		static::$_properties['name']['label'] = term('member.name');
 	}
 
 	public function get_image()

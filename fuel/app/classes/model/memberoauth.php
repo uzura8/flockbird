@@ -11,7 +11,45 @@ class Model_MemberOauth extends \Orm\Model
 			'cascade_delete' => true,
 		)
 	);
+
+	protected static $_properties = array(
+		'id',
+		'member_id',
+		'oauth_provider_id' => array(
+			'data_type' => 'integer',
+			'validation' => array('trim'),
+			'form' => array('type' => false),
+		),
+		'uid' => array(
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'required', 'max_length' => array(255)),
+			'form' => array('type' => false),
+		),
+		'token',
+		'secret',
+		'expires' => array(
+			'data_type' => 'integer',
+			'validation' => array('trim'),
+			'form' => array('type' => false),
+		),
+		'service_name' => array(
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'max_length' => array(255)),
+			'form' => array('type' => false),
+		),
+		'service_url' => array(
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'max_length' => array(255), 'valid_url'),
+			'form' => array('type' => false),
+		),
+		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
+	);
+
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -20,59 +58,14 @@ class Model_MemberOauth extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-			'Orm\Observer_Validation'=> array('events'=>array('before_save')),
 	);
 
-	protected static $_properties = array(
-		'id',
-		'member_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('trim'),
-			'form' => array('type' => false),
-		),
-		'oauth_provider_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('trim'),
-			'form' => array('type' => false),
-		),
-		'uid' => array(
-			'data_type' => 'varchar',
-			'validation' => array(
-				'trim',
-				'required',
-				'max_length' => array(255),
-			),
-		),
-		'token' => array(
-			'data_type' => 'varchar',
-			'validation' => array(
-				'trim',
-				'required',
-				'max_length' => array(255),
-			),
-		),
-		'secret' => array(
-			'data_type' => 'varchar',
-			'validation' => array(
-				'trim',
-				'max_length' => array(255),
-			),
-		),
-		'expires' => array(
-			'data_type' => 'integer',
-			'validation' => array('trim'),
-		),
-		'service_name' => array(
-			'data_type' => 'varchar',
-			'validation' => array('trim', 'max_length' => array(255)),
-		),
-		'service_url' => array(
-			'data_type' => 'varchar',
-			'validation' => array('trim', 'max_length' => array(255), 'valid_url'),
-		),
-		'created_at',
-		'updated_at',
-	);
+	public static function _init()
+	{
+		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
+		static::$_properties['token']  = Util_Orm::get_token_prop();
+		static::$_properties['secret'] = Util_Orm::get_token_prop();
+	}
 
 	/**
 	 * Create new member from Oauth response.
