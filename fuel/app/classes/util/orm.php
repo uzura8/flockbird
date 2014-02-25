@@ -39,13 +39,4 @@ class Util_Orm
 			'form' => array('type' => false),
 		);
 	}
-
-	public static function get_token_prop($is_hidden_form = false)
-	{
-		return array(
-			'data_type' => 'varchar',
-			'form' => array('type' => $is_hidden_form ? 'hidden' : false),
-			'validation' => array('trim', 'max_length' => array(255)),
-		),
-	}
 }

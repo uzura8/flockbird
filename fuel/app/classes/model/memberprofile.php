@@ -24,9 +24,9 @@ class Model_MemberProfile extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'member_id',
-		'profile_id',
-		'profile_option_id',
+		'member_id' => array('form' => array('type' => false)),
+		'profile_id' => array('form' => array('type' => false)),
+		'profile_option_id' => array('form' => array('type' => false)),
 		'value',
 		'public_flag' => array(
 			'data_type' => 'integer',

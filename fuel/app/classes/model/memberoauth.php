@@ -14,7 +14,7 @@ class Model_MemberOauth extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'member_id',
+		'member_id' => array('form' => array('type' => false)),
 		'oauth_provider_id' => array(
 			'data_type' => 'integer',
 			'validation' => array('trim'),
@@ -63,8 +63,10 @@ class Model_MemberOauth extends \Orm\Model
 	public static function _init()
 	{
 		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
-		static::$_properties['token']  = Util_Orm::get_token_prop();
-		static::$_properties['secret'] = Util_Orm::get_token_prop();
+		static::$_properties['token'] = Util_Orm::get_prop('member_pre', 'token');
+		static::$_properties['token']['form']['type'] = false;
+		static::$_properties['secret'] = Util_Orm::get_prop('member_pre', 'token');
+		static::$_properties['secret']['form']['type'] = false;
 	}
 
 	/**

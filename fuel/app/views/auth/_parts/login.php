@@ -52,7 +52,7 @@ $label_col_sm_size = IS_API ? 12 : 3;
 		IS_API ? 0 : 3
 	); ?>
 <?php endif; ?>
-	<?php echo form_anchor('member/signup', '新規登録', array('class' => 'btn btn-default btn-warning'), IS_API ? 0 : 3); ?>
+	<?php echo form_anchor('member/register/signup', '新規登録', array('class' => 'btn btn-default btn-warning'), IS_API ? 0 : 3); ?>
 
 <?php echo form_close(); ?>
 <?php if (!IS_API): ?></div><?php endif; ?>

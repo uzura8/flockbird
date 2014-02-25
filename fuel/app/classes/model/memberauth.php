@@ -1,4 +1,5 @@
 <?php
+
 class Model_MemberAuth extends \Orm\Model
 {
 	protected static $_table_name = 'member_auth';
@@ -13,7 +14,7 @@ class Model_MemberAuth extends \Orm\Model
 	);
 	protected static $_properties = array(
 		'id',
-		'member_id',
+		'member_id' => array('form' => array('type' => false)),
 		'email' => array(
 			'data_type' => 'varchar',
 			'label' => 'メールアドレス',
@@ -37,7 +38,10 @@ class Model_MemberAuth extends \Orm\Model
 
 	public static function _init()
 	{
-		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
+		//static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
+		static::$_properties['member_id'] =  array(
+			'form' => array('type' => false),
+		);
 		static::$_properties['email']['label'] = term('member.email');
 		static::$_properties['password']['label'] = term('member.password');
 	}

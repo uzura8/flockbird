@@ -6,6 +6,8 @@ class Controller_Member_Register extends Controller_Site
 
 	protected $check_not_auth_action = array(
 		'index',
+		'signup',
+		'confirm_signup',
 	);
 
 	public function before()
@@ -114,6 +116,129 @@ class Controller_Member_Register extends Controller_Site
 		));
 	}
 
+	/**
+	 * Mmeber signup
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_signup()
+	{
+		if (!$form = Fieldset::instance('confirm_signup'))
+		{
+			$form = $this->get_form_signup();
+		}
+
+		if (Input::method() === 'POST')
+		{
+			$form->repopulate();
+		}
+		$this->set_title_and_breadcrumbs(Config::get('term.signup'));
+		$this->template->content = View::forge('member/register/signup', array('form' => $form));
+		$this->template->content->set_safe('html_form', $form->build('member/register/confirm_signup'));// form の action に入る
+	}
+
+	/**
+	 * Execute confirm signup
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_confirm_signup()
+	{
+		Util_security::check_method('POST');
+		Util_security::check_csrf();
+
+		if (!$form = Fieldset::instance('confirm_signup'))
+		{
+			$form = $this->get_form_signup();
+		}
+		$val = $form->validation();
+
+		if ($val->run())
+		{
+			$post = $val->validated();
+
+			try
+			{
+				if (Model_MemberAuth::query()->where('email', $post['email'])->get_one())
+				{
+					throw new FuelException('そのメールアドレスは登録できません。');
+				}
+				$data = array();
+				//$data['name'] = $post['name'];
+				$data['email']    = $post['email'];
+				$data['password'] = $post['password'];
+				\DB::start_transaction();
+				$token = $this->save_member_pre($data);
+
+				$maildata = array();
+				$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
+				$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
+				$maildata['subject']      = \Config::get('site.member_confirm_signup_mail.subject');
+				$maildata['to_address']   = $post['email'];
+				//$maildata['to_name']      = $post['name'];
+				$maildata['password']     = $post['password'];
+				$maildata['token']        = $token;
+				$this->send_confirm_signup_mail($maildata);
+				\DB::commit_transaction();
+
+				Session::set_flash('message', '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。');
+				Response::redirect(Config::get('site.login_uri.site'));
+			}
+			catch(EmailValidationFailedException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+			}
+			catch(FuelException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				Session::set_flash('error', $e->getMessage());
+				$this->action_signup();
+			}
+		}
+		else
+		{
+			Session::set_flash('error', $val->show_errors());
+			$this->action_signup();
+		}
+	}
+
+	public function get_form_signup()
+	{
+		$member_auth = Model_MemberAuth::forge();
+
+		return Site_Util::get_form_instance('confirm_signup', $member_auth, true, null, 'submit');
+	}
+
+	private function check_token()
+	{
+		if ($member_pre = Model_MemberPre::query()->where('token', Input::param('token'))->get_one())
+		{
+			return $member_pre;
+		}
+
+		return false;
+	}
+
+	private function save_member_pre($data)
+	{
+		$member_pre = new Model_MemberPre();
+		//$member_pre->name = $data['name'];
+		$member_pre->email = $data['email'];
+		$member_pre->password = $data['password'];
+		$member_pre->token = Util_toolkit::create_hash();
+		$member_pre->save();
+
+		return $member_pre->token;
+	}
+
 	private function send_register_mail($data)
 	{
 		if (!is_array($data)) $data = (array)$data;
@@ -126,6 +251,27 @@ class Controller_Member_Register extends Controller_Site
 メールアドレス: {$data['to_address']}
 パスワード: {$data['password']}
 ====================
+
+END;
+
+		Util_toolkit::sendmail($data);
+	}
+
+	private function send_confirm_signup_mail($data)
+	{
+		if (!is_array($data)) $data = (array)$data;
+
+		$register_url = sprintf('%s?token=%s', Uri::create('member/register'), $data['token']);
+		$site_name = PRJ_SITE_NAME;
+
+		$data['body'] = <<< END
+{$site_name} の仮登録が完了しました。
+まだ登録は完了しておりません。
+
+以下のアドレスをクリックすることにより、{$site_name} アカウントの登録確認が完了します。
+{$register_url}
+
+上記の確認作業が完了しないと、{$site_name} のサービスが利用できません。
 
 END;
 

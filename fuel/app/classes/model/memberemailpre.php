@@ -14,7 +14,7 @@ class Model_MemberEmailPre extends \Orm\Model
 
 	protected static $_properties = array(
 		'id',
-		'member_id',
+		'member_id' => array('form' => array('type' => false)),
 		'email',
 		'token',
 		'created_at' => array('form' => array('type' => false)),
@@ -39,7 +39,8 @@ class Model_MemberEmailPre extends \Orm\Model
 	{
 		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
 		static::$_properties['email'] = Util_Orm::get_prop('member_auth', 'email');
-		static::$_properties['token'] = Util_Orm::get_token_prop();
+		static::$_properties['token'] = Util_Orm::get_prop('member_pre', 'token');
+		static::$_properties['token']['form']['type'] = false;
 	}
 
 	public static function validate($factory)

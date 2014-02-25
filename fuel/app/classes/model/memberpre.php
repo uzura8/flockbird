@@ -7,7 +7,11 @@ class Model_MemberPre extends \Orm\Model
 		'name',
 		'email',
 		'password',
-		'token',
+		'token' => array(
+			'data_type' => 'varchar',
+			'form' => array('type' => 'hidden'),
+			'validation' => array('trim', 'max_length' => array(255)),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
@@ -31,7 +35,6 @@ class Model_MemberPre extends \Orm\Model
 		static::$_properties['name']  = Util_Orm::get_prop('member', 'name');
 		static::$_properties['email'] = Util_Orm::get_prop('member_auth', 'email');
 		static::$_properties['password'] = Util_Orm::get_prop('member_auth', 'password');
-		static::$_properties['token'] = Util_Orm::get_token_prop(true);
 	}
 
 	public static function get4token($token)

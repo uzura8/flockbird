@@ -32,7 +32,7 @@ class Model_Member extends \Orm\Model
 			'form' => array('type' => 'text'),
 		),
 		'login_hash' => array(
-			'validation' => array('required', 'valid_string' => array('alpha', 'numeric'), 'max_length' => array(255)),
+			'validation' => array('required', 'valid_string' => array('alpha_numeric'), 'max_length' => array(255)),
 			'form' => array('type' => false),
 		),
 		'register_type' => array(

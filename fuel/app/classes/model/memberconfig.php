@@ -11,7 +11,7 @@ class Model_MemberConfig extends \Orm\Model
 	);
 	protected static $_properties = array(
 		'id',
-		'member_id',
+		'member_id' => array('form' => array('type' => false)),
 		'name' => array(
 			'data_type' => 'varchar',
 			'validation' => array('trim', 'required', 'max_length' => array(64)),
