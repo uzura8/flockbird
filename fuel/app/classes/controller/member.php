@@ -2,8 +2,6 @@
 
 class Controller_Member extends Controller_Site
 {
-	//public $template = 'admin/template';
-
 	protected $check_not_auth_action = array(
 		'home',
 		'resend_password',
@@ -42,121 +40,6 @@ class Controller_Member extends Controller_Site
 		$this->template->subtitle = View::forge('_parts/home_subtitle', array('member' => $member));
 		$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		$this->template->content = \View::forge('member/home', array('member' => $member, 'list' => $list, 'is_next' => $is_next));
-	}
-
-	/**
-	 * Mmeber leave
-	 * 
-	 * @access  public
-	 * @return  Response
-	 */
-	public function action_leave()
-	{
-		if (!$form = Fieldset::instance('leave'))
-		{
-			$form = $this->form_leave();
-		}
-		if (Input::method() === 'POST')
-		{
-			$form->repopulate();
-		}
-		$this->set_title_and_breadcrumbs(Config::get('term.member_leave'), array('/member/setting/' => '設定変更'), $this->u);
-		$this->template->content = View::forge('member/leave');
-		$this->template->content->set_safe('html_form', $form->build('/member/leave_confirm'));// form の action に入る
-	}
-
-	/**
-	 * Mmeber leave_confirm
-	 * 
-	 * @access  public
-	 * @return  Response
-	 */
-	public function action_leave_confirm()
-	{
-		$form = $this->form_leave();
-		$val  = $form->validation();
-
-		$auth = Auth::instance();
-		if ($val->run() && $auth->check_password())
-		{
-			$this->set_title_and_breadcrumbs(
-				Config::get('term.member_leave').'確認',
-				array('/member/setting/' => '設定変更', '/member/leave/' => Config::get('term.member_leave')),
-				$this->u
-			);
-			$this->template->content = View::forge('member/leave_confirm', array('input' => $val->validated()));
-		}
-		else
-		{
-			if ($val->show_errors())
-			{
-				Session::set_flash('error', $val->show_errors());
-			}
-			else
-			{
-				Session::set_flash('error', 'パスワードが正しくありません');
-			}
-			$this->action_leave();
-		}
-	}
-
-	public function action_delete()
-	{
-		Util_security::check_method('POST');
-		Util_security::check_csrf();
-
-		$form = $this->form_leave();
-		$val  = $form->validation();
-
-		$auth = Auth::instance();
-		if ($val->run() && $auth->check_password())
-		{
-			$data = array();
-			$data['to_name']      = $this->u->name;
-			$data['to_address']   = $this->u->member_auth->email;
-			$data['from_name']    = \Config::get('site.member_leave_mail.from_name');
-			$data['from_address'] = \Config::get('site.member_leave_mail.from_mail_address');
-			$data['subject']      = \Config::get('site.member_leave_mail.subject');
-
-			$data['body'] = <<< END
-{$data['to_name']} 様
-
-退会が完了しました。
-END;
-
-			try
-			{
-				$this->delete_user($this->u->id);
-				Util_toolkit::sendmail($data);
-				Session::set_flash('message', '退会が完了しました。');
-				Response::redirect(Config::get('site.login_uri.site'));
-			}
-			catch(EmailValidationFailedException $e)
-			{
-				$this->display_error('メンバー退会: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-			}
-			catch(EmailSendingFailedException $e)
-			{
-				$this->display_error('メンバー退会: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-			}
-			catch(Exception $e)
-			{
-				Session::set_flash('error', '退会に失敗しました。');
-				$this->action_leave();
-			}
-		}
-		else
-		{
-			if ($val->show_errors())
-			{
-				Session::set_flash('error', $val->show_errors());
-			}
-			else
-			{
-				Session::set_flash('error', 'パスワードが正しくありません');
-			}
-			$this->action_leave();
-		}
 	}
 
 	/**
@@ -328,20 +211,6 @@ END;
 		$this->template->content->set_safe('html_form', $form->build('/member/reset_password'));// form の action に入る
 	}
 
-	public function form_leave()
-	{
-		$add_fields = array(
-			'password' => array(
-				'label' => 'パスワード',
-				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
-				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20)),
-			),
-		);
-		$form = \Site_Util::get_form_instance('leave', null, true, $add_fields, array('value' => '確認'));
-
-		return $form;
-	}
-
 	public function form_resend_password()
 	{
 		$add_fields = array(
@@ -377,12 +246,6 @@ END;
 		$form = \Site_Util::get_form_instance('reset_password', null, true, $add_fields, array('value' => '変更'));
 
 		return $form;
-	}
-
-	protected function delete_user($member_id)
-	{
-		$auth = Auth::instance();
-		return $auth->delete_user($member_id) && $auth->logout();
 	}
 
 	private function save_member_password_pre($data)
