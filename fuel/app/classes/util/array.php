@@ -74,6 +74,6 @@ class Util_Array
 			}
 		}
 
-		return $values;
+		return $return;
 	}
 }
