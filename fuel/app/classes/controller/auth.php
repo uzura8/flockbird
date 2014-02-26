@@ -33,10 +33,11 @@ class Controller_Auth extends Controller_Site
 		if ($_provider) return $this->opauth_login_start($_provider, $method);
 
 		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
+
 		$val = Validation::forge();
-		$val->add(\Config::get('security.csrf_token_key'), '', array('type'=>'hidden', 'value' => \Util_security::get_csrf()));
-		$val->add('email', 'メールアドレス', array('type' => 'email'))->add_rule('required');
-		$val->add('password', 'パスワード', array('type' => 'password'))->add_rule('required');
+		$val->add_model(Model_MemberAuth::forge());
+		$options = array('1' => '次回から自動的にログイン');
+		$val->add('rememberme', '', array('type' => 'checkbox', 'options' => $options))->add_rule('checkbox_val', $options);
 
 		if (Input::method() == 'POST')
 		{

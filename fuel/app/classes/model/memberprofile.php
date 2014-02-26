@@ -59,12 +59,6 @@ class Model_MemberProfile extends \Orm\Model
 		static::$_properties['public_flag']['validation']['in_array'][] = Site_Util::get_public_flags();
 	}
 
-	public static function _init()
-	{
-		static::$_properties['public_flag']['form'] = Site_Form::get_public_flag_configs();
-		static::$_properties['public_flag']['validation']['in_array'][] = Site_Util::get_public_flags();
-	}
-
 	public static function get4member_id($member_id)
 	{
 		return self::query()->where('member_id', $member_id)->get();

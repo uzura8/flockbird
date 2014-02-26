@@ -55,4 +55,25 @@ class Util_Array
 
 		return $return;
 	}
+
+	public static function convert_for_callback(array $array)
+	{
+		$return = array();
+		foreach ($array as $key => $values)
+		{
+			if (is_string($key))
+			{
+				$each = array($key);
+				$max = count($values);
+				for ($i = 0; $i < $max; $i++) $each[] = $values[$i];
+				$return[] = $each;
+			}
+			else
+			{
+				$return[] = $values;
+			}
+		}
+
+		return $values;
+	}
 }

@@ -19,22 +19,25 @@ $col_sm_size = 12;
 if ($optional_public_flag) $col_sm_size = 8;
 ?>
 <div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>" id="<?php echo $atter['id']; ?>_block">
+<?php if (strlen($label)): ?>
 	<?php echo Form::label($label, $name, array('class' => $label_class)); ?>
-	<div class="col-sm-<?php echo $input_col_sm_size; ?>">
+<?php endif; ?>
+	<div class="col-sm-<?php echo $input_col_sm_size; ?><?php if (!strlen($label) && $label_col_sm_size < 12): ?> col-sm-offset-<?php echo $label_col_sm_size; ?><?php endif; ?>">
 		<div class="row">
 			<div class="col-sm-<?php echo $col_sm_size; ?>">
 
 <?php $i = 0; ?>
-<?php foreach ($options as $value => $label): ?>
+<?php foreach ($options as $value => $each_label): ?>
 <?php
 $atter['id'] = sprintf('form_%s_%s', $name, $value);
 $is_checked = in_array($value, (Input::method() == 'POST') ? (array)Input::post($name) : (array)$default_value);
+$each_label = $is_small_tag ? small_tag($each_label) : $each_label;
 ?>
 <?php if ($layout_type == 'block'): ?>
 				<div class="checkbox">
 					<label>
 						<?php echo Form::checkbox($name.'[]', $value, $is_checked, $atter); ?>
-						<?php echo $label; ?>
+						<?php echo $each_label; ?>
 					</label>
 				</div>
 <?php elseif ($layout_type == 'grid'): ?>
@@ -45,7 +48,7 @@ $is_checked = in_array($value, (Input::method() == 'POST') ? (array)Input::post(
 						<div class="checkbox">
 							<label>
 								<?php echo Form::checkbox($name.'[]', $value, $is_checked, $atter); ?>
-								<?php echo $label; ?>
+								<?php echo $each_label; ?>
 							</label>
 						</div>
 					</div>
@@ -55,7 +58,7 @@ $is_checked = in_array($value, (Input::method() == 'POST') ? (array)Input::post(
 <?php else: ?>
 				<label class="checkbox-inline">
 					<?php echo Form::checkbox($name.'[]', $value, $is_checked, $atter); ?>
-					<?php echo $label; ?>
+					<?php echo $each_label; ?>
 				</label>
 <?php endif; ?>
 <?php $i++; ?>

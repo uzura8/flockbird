@@ -18,7 +18,7 @@ class Model_MemberAuth extends \Orm\Model
 		'email' => array(
 			'data_type' => 'varchar',
 			'label' => 'メールアドレス',
-			'validation' => array('trim', 'required', array('max_length', 255), 'valid_email'),
+			'validation' => array('trim', 'required', 'max_length' => array(255), 'valid_email'),
 			'form' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
 		),
 		'password' => array(
@@ -27,8 +27,8 @@ class Model_MemberAuth extends \Orm\Model
 			'validation' => array(
 				'trim',
 				'required',
-				array('min_length', 6),
-				array('max_length', 128),
+				'min_length' => array(6),
+				'max_length' => array(128),
 			),
 			'form' => array('type' => 'password', 'class' => 'input-xlarge form-control'),
 		),

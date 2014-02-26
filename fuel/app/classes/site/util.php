@@ -96,7 +96,7 @@ class Site_Util
 					$btn_field = array('attributes' => $tmp);
 				}
 				if (empty($btn_field['attributes']['type'])) $btn_field['attributes']['type'] = 'submit';
-				if (empty($btn_field['attributes']['value'])) $btn_field['attributes']['value'] = '送信';
+				if (empty($btn_field['attributes']['value'])) $btn_field['attributes']['value'] = term('form.submit');
 				if (empty($btn_field['attributes']['class'])) $btn_field['attributes']['class'] = 'btn btn-default btn-primary';
 				$btn_attr = $btn_field['attributes'];
 
