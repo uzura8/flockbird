@@ -47,11 +47,3 @@
 
 	RewriteBase /(設置パス/)
 	----
-
-
-5. auth package をカスタマイズしたものに変更
-
-	----
-	cd fuel/packages/auth/
-	git checkout master
-	----
