@@ -16,7 +16,7 @@ class Controller_Member_Register extends Controller_Site
 	}
 
 	/**
-	 * Execute register
+	 * Execute index
 	 * 
 	 * @access  public
 	 * @return  Response
@@ -167,10 +167,9 @@ class Controller_Member_Register extends Controller_Site
 				}
 				$data = array();
 				//$data['name'] = $post['name'];
-				$data['email']    = $post['email'];
-				$data['password'] = $post['password'];
-				\DB::start_transaction();
-				$token = $this->save_member_pre($data);
+				DB::start_transaction();
+				$token = $this->save_member_pre($post['email'], $post['password']);
+				DB::commit_transaction();
 
 				$maildata = array();
 				$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
@@ -181,24 +180,21 @@ class Controller_Member_Register extends Controller_Site
 				$maildata['password']     = $post['password'];
 				$maildata['token']        = $token;
 				$this->send_confirm_signup_mail($maildata);
-				\DB::commit_transaction();
 
 				Session::set_flash('message', '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。');
 				Response::redirect(Config::get('site.login_uri.site'));
 			}
 			catch(EmailValidationFailedException $e)
 			{
-				if (\DB::in_transaction()) \DB::rollback_transaction();
 				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
-				if (\DB::in_transaction()) \DB::rollback_transaction();
 				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(FuelException $e)
 			{
-				if (\DB::in_transaction()) \DB::rollback_transaction();
+				if (DB::in_transaction()) DB::rollback_transaction();
 				Session::set_flash('error', $e->getMessage());
 				$this->action_signup();
 			}
@@ -212,9 +208,7 @@ class Controller_Member_Register extends Controller_Site
 
 	public function get_form_signup()
 	{
-		$member_auth = Model_MemberAuth::forge();
-
-		return Site_Util::get_form_instance('confirm_signup', $member_auth, true, null, 'submit');
+		return Site_Util::get_form_instance('confirm_signup', Model_MemberAuth::forge(), true, null, 'submit');
 	}
 
 	private function check_token()
@@ -227,12 +221,11 @@ class Controller_Member_Register extends Controller_Site
 		return false;
 	}
 
-	private function save_member_pre($data)
+	private function save_member_pre($email, $password)
 	{
-		$member_pre = new Model_MemberPre();
-		//$member_pre->name = $data['name'];
-		$member_pre->email = $data['email'];
-		$member_pre->password = $data['password'];
+		$member_pre = Model_MemberPre::forge();
+		$member_pre->email = $email;
+		$member_pre->password = $password;
 		$member_pre->token = Util_toolkit::create_hash();
 		$member_pre->save();
 

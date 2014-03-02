@@ -60,14 +60,6 @@ class Model_MemberAuth extends \Orm\Model
 		),
 	);
 
-	public static function validate($factory)
-	{
-		$val = Validation::forge($factory);
-		//$val->add_field('title', 'Title', 'required|max_length[255]');
-
-		return $val;
-	}
-
 	public static function save_email($val, $member_id)
 	{
 		if (!$val = filter_var($val, FILTER_VALIDATE_EMAIL)) return false;
@@ -78,5 +70,10 @@ class Model_MemberAuth extends \Orm\Model
 		$obj->email = $val;
 
 		return $obj->save();
+	}
+
+	public static function get4email($email)
+	{
+		return self::query()->where('email', $email)->related('member')->get_one();
 	}
 }

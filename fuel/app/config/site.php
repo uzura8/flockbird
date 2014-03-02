@@ -5,6 +5,11 @@ $config = array(
 		'site'  => 'auth/login',
 		'admin' => 'admin/login',
 	),
+	'member' => array(
+		'password_pre' => array(
+			'token_lifetime' => '1 day',
+		),
+	),
 	'upload' => array(
 		'remove_exif_data' => true,
 		'num_of_split_dirs' => 10,

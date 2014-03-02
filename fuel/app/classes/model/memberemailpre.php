@@ -49,4 +49,14 @@ class Model_MemberEmailPre extends \Orm\Model
 
 		return $val;
 	}
+
+	public static function get4member_id($member_id)
+	{
+		return self::query()->where('member_id', $member_id)->get_one();
+	}
+
+	public static function get4token($token)
+	{
+		return self::query()->where('token', $token)->get_one();
+	}
 }

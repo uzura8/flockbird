@@ -43,10 +43,13 @@ class Model_MemberPasswordPre extends \Orm\Model
 		static::$_properties['token']['form']['type'] = false;
 	}
 
-	public static function validate($factory)
+	public static function get4member_id($member_id)
 	{
-		$val = Validation::forge($factory);
+		return self::query()->where('member_id', $member_id)->get_one();
+	}
 
-		return $val;
+	public static function get4token($token)
+	{
+		return self::query()->where('token', $token)->related('member')->get_one();
 	}
 }

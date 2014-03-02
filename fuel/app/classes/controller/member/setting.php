@@ -1,7 +1,5 @@
 <?php
 
-class WrongPasswordException extends \FuelException {}
-
 class Controller_Member_setting extends Controller_Member
 {
 	protected $check_not_auth_action = array(
@@ -42,9 +40,9 @@ class Controller_Member_setting extends Controller_Member
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs('パスワード変更', array('/member/setting/' => '設定変更'), $this->u);
+		$this->set_title_and_breadcrumbs('パスワード変更', array('member/setting/' => '設定変更'), $this->u);
 		$this->template->content = View::forge('member/setting/password');
-		$this->template->content->set_safe('html_form', $form->build('/member/setting/change_password'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('member/setting/change_password'));// form の action に入る
 	}
 
 	public function action_change_password()
@@ -71,14 +69,13 @@ class Controller_Member_setting extends Controller_Member
 
 パスワードを変更しました。
 
-================================
-新しいパスワード: {$post['password']}
-================================
 END;
 
 			try
 			{
+				DB::start_transaction();
 				$this->change_password($post['old_password'], $post['password']);
+				DB::commit_transaction();
 				Util_toolkit::sendmail($data);
 				Session::set_flash('message', 'パスワードを変更しました。再度ログインしてください。');
 				Response::redirect(Config::get('site.login_uri.site'));
@@ -91,10 +88,19 @@ END;
 			{
 				$this->display_error('パスワード変更: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
-			catch(WrongPasswordException $e)
+			catch(\Auth\SimpleUserWrongPassword $e)
 			{
+				if (DB::in_transaction()) \DB::rollback_transaction();
 				Session::set_flash('error', '現在のパスワードが正しくありません。');
 				$this->action_password();
+				return;
+			}
+			catch(FuelException $e)
+			{
+				if (DB::in_transaction()) \DB::rollback_transaction();
+				Session::set_flash('error', $e->getMessage());
+				$this->action_password();
+				return;
 			}
 		}
 		else
@@ -121,9 +127,9 @@ END;
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs('メールアドレス変更', array('/member/setting/' => '設定変更'), $this->u);
+		$this->set_title_and_breadcrumbs(term('member.email').'変更', array('member/setting' => '設定変更'), $this->u);
 		$this->template->content = View::forge('member/setting/email');
-		$this->template->content->set_safe('html_form', $form->build('/member/setting/confirm_change_email'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('member/setting/confirm_change_email'));// form の action に入る
 	}
 
 	/**
@@ -148,7 +154,7 @@ END;
 		}
 		$post = $val->validated();
 
-		if (Model_MemberAuth::query()->where('email', $post['email'])->get_one())
+		if (Model_MemberAuth::get4email($post['email']))
 		{
 			Session::set_flash('error', 'そのアドレスは登録できません。');
 			$this->action_email();
@@ -158,12 +164,14 @@ END;
 		try
 		{
 			$maildata = array();
+			DB::start_transaction();
+			$maildata['token'] = $this->save_member_email_pre($this->u->id, $post['email']);
+			DB::commit_transaction();
 			$maildata['to_name']      = $this->u->name;
 			$maildata['to_address']   = $post['email'];
 			$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
 			$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
 			$maildata['subject']      = \Config::get('site.member_confirm_change_email.subject');
-			$maildata['token']        = $this->save_member_email_pre($this->u->id, $post);
 			$this->send_confirm_change_email_mail($maildata);
 
 			Session::set_flash('message', '新しいアドレス宛に確認用メールを送信しました。受信したメール内に記載された URL よりアドレスの変更を完了してください。');
@@ -177,6 +185,13 @@ END;
 		{
 			$this->display_error('メールアドレス変更: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 		}
+		catch(FuelException $e)
+		{
+			if (DB::in_transaction())\DB::rollback_transaction();
+			Session::set_flash('error', $e->getMessage());
+			$this->action_email();
+			return;
+		}
 	}
 
 	/**
@@ -187,21 +202,15 @@ END;
 	 */
 	public function action_change_email()
 	{
-		$member_email_pre = Model_MemberEmailPre::query()->where('token', Input::param('token'))->get_one();
+		$member_email_pre = Model_MemberEmailPre::get4token(Input::param('token'));
 		if (!$member_email_pre || (Auth::check() && $member_email_pre->member_id != $this->u->id))
 		{
 			$this->display_error(null, null, 'error/403', 403);
 			return;
 		}
 
-		$val = Validation::forge('change_email');
-		$val->add('password', 'パスワード', array('type'=>'password'))
-			->add_rule('trim')
-			->add_rule('required')
-			->add_rule('min_length', 6)
-			->add_rule('max_length', 20);
-		$val->add('token', '', array('type'=>'hidden'))
-			->add_rule('required');
+		$form = $this->form_change_email();
+		$val  = $form->validation();
 
 		if (Input::method() == 'POST')
 		{
@@ -211,22 +220,26 @@ END;
 			{
 				try
 				{
+					DB::start_transaction();
 					if (!$auth->update_user(array('email' => $member_email_pre->email)))
 					{
-						throw new Exception('change email error.');
+						throw new FuelException('change email error.');
 					}
-					$member = Model_Member::find($member_email_pre->member_id);
+					if (!$member = Model_Member::check_authority($member_email_pre->member_id))
+					{
+						throw new FuelException('change email error.');
+					}
+					$email = $member_email_pre->email;
+					$member_email_pre->delete();// 仮登録情報の削除
+					DB::commit_transaction();
 
 					$maildata = array();
 					$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
 					$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
 					$maildata['subject']      = \Config::get('site.member_change_email.subject');
-					$maildata['to_address']   = $member_email_pre->email;
+					$maildata['to_address']   = $email;
 					$maildata['to_name']      = $member->name;
 					$this->send_change_email_mail($maildata);
-
-					// 仮登録情報の削除
-					$member_email_pre->delete();
 
 					Session::set_flash('message', 'メールアドレスを変更しました。');
 					Response::redirect('member');
@@ -241,9 +254,15 @@ END;
 					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 					return;
 				}
-				catch(Auth\SimpleUserUpdateException $e)
+				catch(\Auth\SimpleUserUpdateException $e)
 				{
-					Session::set_flash('error', 'そのアドレスは登録できません');
+					if (DB::in_transaction())\DB::rollback_transaction();
+					Session::set_flash('error', 'そのアドレスは登録できません。');
+				}
+				catch(FuelException $e)
+				{
+					if (DB::in_transaction())\DB::rollback_transaction();
+					Session::set_flash('error', 'メールアドレスの変更に失敗しました。');
 				}
 			}
 			else
@@ -254,63 +273,54 @@ END;
 				}
 				else
 				{
-					Session::set_flash('error', 'パスワードが正しくありません');
+					Session::set_flash('error', 'パスワードが正しくありません。');
 				}
 			}
 		}
 
 		if (Auth::check())
 		{
-			$this->set_title_and_breadcrumbs('メールアドレス変更確認', array('/member/setting/' => '設定変更', '/member/setting/email' => 'メールアドレス変更'), $this->u);
+			$this->set_title_and_breadcrumbs('メールアドレス変更確認', array('member/setting' => '設定変更', 'member/setting/email' => 'メールアドレス変更'), $this->u);
 		}
 		else
 		{
 			$this->set_title_and_breadcrumbs('メールアドレス変更確認');
 		}
-		$this->template->content = View::forge('member/setting/change_email', array('val' => $val, 'member_email_pre' => $member_email_pre));
+
+		$this->template->content = View::forge('member/setting/change_email', array('val' => $val,'member_email_pre' => $member_email_pre));
 	}
 
 	public function form_setting_password()
 	{
 		$add_fields = array(
-			'old_password' => array(
-				'label' => '現在のパスワード',
-				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
-				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20)),
-			),
-			'password' => array(
-				'label' => '新しいパスワード',
-				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
-				'rules' => array('trim', 'required', array('min_length', 6),  array('max_length', 20), array('unmatch_field', 'old_password')),
-			),
-			'password_confirm' => array(
-				'label' => '新しいパスワード(確認)',
-				'attributes' => array('type'=>'password', 'class' => 'form-control input-xlarge'),
-				'rules' => array('trim', 'required', array('match_field', 'password')),
-			),
+			'old_password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('現在の%s', term('member.password'))),
+			'password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s', term('member.password'))),
+			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s(確認用)', term('member.password'))),
 		);
-		$form = \Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => '変更'));
 
-		return $form;
+		return Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => '変更'));
 	}
 
 	public function form_setting_email()
 	{
 		$add_fields = array(
-			'email' => array(
-				'label' => 'メールアドレス',
-				'attributes' => array('type'=>'email', 'class' => 'form-control input-xlarge'),
-				'rules' => array('trim', 'required', 'valid_email'),
-			),
-			'email_confirm' => array(
-				'label' => 'メールアドレス(確認)',
-				'attributes' => array('type'=>'email', 'class' => 'form-control input-xlarge'),
-				'rules' => array('trim', 'required', array('match_field', 'email')),
-			),
+			'email' => Form_Util::get_model_field('member_auth', 'email', '', sprintf('新しい%s', term('member.email'))),
+			'email_confirm' => Form_Util::get_model_field('member_auth', 'email', '', sprintf('新しい%s(確認用)', term('member.email'))),
 		);
 		$form = \Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => '変更'));
 
 		return $form;
+	}
+
+	public function form_change_email()
+	{
+		$add_fields = array(
+			'password' => Form_Util::get_model_field('member_auth', 'password'),
+			'token' => Form_Util::get_model_field('member_pre', 'token'),
+		);
+		$add_fields['token']['attributes'] = array('type'=>'hidden', 'value' => Input::param('token'));
+
+		return Site_Util::get_form_instance('change_email', null, true, $add_fields, array('value' => '変更'));
 	}
 
 	protected function change_password($old_password, $password)
@@ -324,13 +334,13 @@ END;
 		return $auth->logout();
 	}
 
-	private function save_member_email_pre($member_id, $data)
+	private function save_member_email_pre($member_id, $email)
 	{
-		$member_email_pre = Model_MemberEmailPre::find($member_id);
-		if (!$member_email_pre) $member_email_pre = new Model_MemberEmailPre;
+		$member_email_pre = Model_MemberEmailPre::get4member_id($member_id);
+		if (!$member_email_pre) $member_email_pre = Model_MemberEmailPre::forge();
 
 		$member_email_pre->member_id = $member_id;
-		$member_email_pre->email     = $data['email'];
+		$member_email_pre->email     = $email;
 		$member_email_pre->token     = Util_toolkit::create_hash();
 		$member_email_pre->save();
 
