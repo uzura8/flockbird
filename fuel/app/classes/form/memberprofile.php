@@ -68,7 +68,7 @@ class Form_MemberProfile
 				$member_profiles = (array)$this->member_profiles_profile_id_indexed[$profile->id];
 				foreach ($profile_options as $profile_option)
 				{
-					if (in_array($profile_option->id, $this->validated_values[$profile->name]))
+					if (isset($this->validated_values[$profile->name]) && in_array($profile_option->id, $this->validated_values[$profile->name]))
 					{
 						$member_profile = isset($member_profiles[$profile_option->id]) ? $member_profiles[$profile_option->id] : Model_MemberProfile::forge();
 						$member_profile->member_id = $this->member_obj->id;
@@ -93,7 +93,7 @@ class Form_MemberProfile
 				$member_profile->profile_id = $profile->id;
 				if ($profile->is_edit_public_flag) $member_profile->public_flag = $this->member_profile_public_flags[$profile->id];
 
-				if ($profile->form_type == 'radio')
+				if (in_array($profile->form_type, array('radio', 'select')))
 				{
 					$profile_option_id = $this->validated_values[$profile->name];
 					$member_profile->profile_option_id = $profile_option_id;

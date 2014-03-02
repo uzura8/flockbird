@@ -3,6 +3,7 @@
 <?php echo form_open(); ?>
 	<?php echo form_input($val, 'caption', isset($profile) ? $profile->caption : '', 6, $label_size); ?>
 	<?php echo form_input($val, 'name', isset($profile) ? $profile->name : '', 6, $label_size, 'アンダースコアと半角英数字のみが使えます。識別名にはアルファベットが含まれていなければなりません。'); ?>
+	<?php echo form_select($val, 'display_type', isset($profile) ? $profile->display_type : 0, 6, $label_size); ?>
 	<?php echo form_textarea($val, 'information', isset($profile) ? $profile->information : '', $label_size); ?>
 	<?php echo form_checkbox($val, 'is_required', isset($profile) ? $profile->is_required : array(), $label_size); ?>
 	<?php echo form_radio($val, 'is_edit_public_flag', isset($profile) ? $profile->is_edit_public_flag : 0, $label_size, 'inline'); ?>

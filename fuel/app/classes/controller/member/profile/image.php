@@ -19,7 +19,8 @@ class Controller_Member_Profile_Image extends Controller_Member
 	 */
 	public function action_index($member_id = null)
 	{
-		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
+		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($member_id);
+		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
 		$this->set_title_and_breadcrumbs(Config::get('term.profile').'写真設定', array('/member/profile/' => Config::get('term.profile')), $member);
 
 		$images = array();
@@ -29,7 +30,13 @@ class Controller_Member_Profile_Image extends Controller_Member
 			$images = \Album\Model_AlbumImage::query()->related('album')->related('file')->where('album_id', $album_id)->order_by('id', 'desc')->get();
 			$this->template->post_footer = \View::forge('_parts/load_masonry');
 		}
-		$this->template->content = View::forge('member/profile/image/index', array('is_mypage' => $is_mypage, 'member' => $member, 'images' => $images));
+		$this->template->content = View::forge('member/profile/image/index', array(
+			'is_mypage' => $is_mypage,
+			'member' => $member,
+			'access_from' => $access_from,
+			'images' => $images,
+			'member_profiles' => $member_profiles
+		));
 	}
 
 	/**

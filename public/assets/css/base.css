@@ -458,4 +458,14 @@ div.alert ul {
 }
 
 table th.small,
-table td.small {width: 30px;}
+table td.small {width: 40px;}
+
+div.profile {
+	position: relative;
+	padding-top: 25px;
+}
+div.profile .btnEdit {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}

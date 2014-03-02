@@ -55,7 +55,7 @@ class Model_MemberProfile extends \Orm\Model
 	{
 		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
 		static::$_properties['profile_id'] = Util_Orm::get_relational_numeric_key_prop();
-		static::$_properties['profile_option_id'] = Util_Orm::get_relational_numeric_key_prop();
+		static::$_properties['profile_option_id'] = Util_Orm::get_relational_numeric_key_prop(false);
 		static::$_properties['public_flag']['validation']['in_array'][] = Site_Util::get_public_flags();
 	}
 

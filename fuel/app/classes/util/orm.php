@@ -31,12 +31,15 @@ class Util_Orm
 		return $model_obj::property($column);
 	}
 
-	public static function get_relational_numeric_key_prop()
+	public static function get_relational_numeric_key_prop($is_required = true)
 	{
-		return array(
+		$field = array(
 			'data_type' => 'integer',
-			'validation' => array('required', 'valid_string' => array('numeric')),
+			'validation' => array('valid_string' => array('numeric')),
 			'form' => array('type' => false),
 		);
+		if ($is_required) $field['validation'][] = 'required';
+
+		return $field;
 	}
 }

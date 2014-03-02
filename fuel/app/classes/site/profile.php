@@ -18,6 +18,19 @@ class Site_Profile
 		return $options;
 	}
 
+	public static function get_display_type_options($key = null)
+	{
+		$options = array(
+			'0' => '詳細画面のみ表示',
+			'1' => ' summery にも表示',
+			'2' => '常に表示',
+		);
+
+		if ($key) return $options[$key];
+
+		return $options;
+	}
+
 	public static function get_value_type_options($key = null)
 	{
 		$options = array(

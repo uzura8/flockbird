@@ -334,9 +334,16 @@ function check_profile_public_flag($public_flag, $access_from)
 
 function profile_value(Model_MemberProfile $member_profile)
 {
-	if (in_array($member_profile->profile->form_type, array('checkbox', 'select', 'radio')))
+	switch ($member_profile->profile->form_type)
 	{
-		return $member_profile->profile_option->label;
+		case 'checkbox':
+		case 'select':
+		case 'radio':
+			return $member_profile->profile_option->label;
+			break;
+		case 'textarea':
+			return nl2br($member_profile->value);
+			break;
 	}
 
 	return $member_profile->value;

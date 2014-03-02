@@ -31,6 +31,12 @@ class Model_Profile extends \Orm\Model
 			'validation' => array('trim', 'required'),
 			'form' => array('type' => 'text'),
 		),
+		'display_type' => array(
+			'data_type' => 'integer',
+			'label' => '表示場所',
+			'validation' => array('valid_string' => array('numeric')),
+			'form' => array('type' => 'select'),
+		),
 		'information' => array(
 			'data_type' => 'text',
 			'label' => '説明',
@@ -146,6 +152,7 @@ class Model_Profile extends \Orm\Model
 
 		$option_keys = array(
 			'form_type',
+			'display_type',
 			'value_type',
 			'is_edit_public_flag',
 			'is_unique',
