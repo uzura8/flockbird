@@ -19,10 +19,16 @@ class Controller_Member_Profile extends Controller_Member
 	 */
 	public function action_index($id = null)
 	{
-		list($is_mypage, $member) = $this->check_auth_and_is_mypage($id);
+		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($id);
+		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('profile')), null, $member);
 		$this->template->subtitle = $is_mypage ? \View::forge('member/profile/_parts/profile_subtitle') : '';
-		$this->template->content = View::forge('member/profile/index', array('member' => $member, 'is_mypage' => $is_mypage));
+		$this->template->content = View::forge('member/profile/index', array(
+			'member' => $member,
+			'is_mypage' => $is_mypage,
+			'access_from' => $access_from,
+			'member_profiles' => $member_profiles,
+		));
 	}
 
 	/**

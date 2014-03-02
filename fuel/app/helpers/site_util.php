@@ -79,13 +79,17 @@ function site_get_screen_name($u)
 
 function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false, $is_img_responsive = false, $anchor_attrs = array())
 {
-	$option = array();
+	$option = array('class' => '');
 	if ($is_img_responsive) $option['class'] = 'img-responsive';
 	$is_raw = $size == 'raw';
 	list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
 
 	$file_cate  = Util_string::get_exploded($filepath, 0, '/');
-	if ($is_profile_image) $option['class'] = 'profile_image';
+	if ($is_profile_image)
+	{
+		if (!empty($option['class'])) $option['class'] .= ' ';
+		$option['class'] .= 'profile_image';
+	}
 
 	$is_noimage = false;
 	if (empty($filename)) $is_noimage = true;
@@ -305,6 +309,37 @@ function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '
 	$attr['class'] = implode(' ', $class_items);
 
 	return Html::anchor($href, $label, $attr);
+}
+
+function check_profile_public_flag($public_flag, $access_from)
+{
+	switch ($public_flag)
+	{
+		case PRJ_PUBLIC_FLAG_PRIVATE:
+			if ($access_from == 'self') return true;
+			break;
+		//case PRJ_PUBLIC_FLAG_FRIEND:
+		//	if (in_array($access_from, array('self', 'friend'))) return true;
+		//	break;
+		case PRJ_PUBLIC_FLAG_MEMBER:
+			if (in_array($access_from, array('self', 'friend', 'member'))) return true;
+			break;
+		default :
+			return true;
+			break;
+	}
+
+	return false;
+}
+
+function profile_value(Model_MemberProfile $member_profile)
+{
+	if (in_array($member_profile->profile->form_type, array('checkbox', 'select', 'radio')))
+	{
+		return $member_profile->profile_option->label;
+	}
+
+	return $member_profile->value;
 }
 
 ?>

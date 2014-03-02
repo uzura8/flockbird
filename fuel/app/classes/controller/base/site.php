@@ -18,6 +18,7 @@ class Controller_Base_Site extends Controller_Base
 	protected function check_auth_and_is_mypage($member_id = 0, $is_api = false)
 	{
 		$is_mypage = false;
+		$access_from = 'guest';
 		$member    = null;
 		$member_id = (int)$member_id;
 
@@ -33,18 +34,27 @@ class Controller_Base_Site extends Controller_Base
 			}
 			$is_mypage = true;
 			$member = $this->u;
+			$access_from = 'self';
+
+			return array($is_mypage, $member, $access_from);
 		}
 		elseif ($this->check_is_mypage($member_id))
 		{
 			$is_mypage = true;
 			$member = $this->u;
+			$access_from = 'self';
+
+			return array($is_mypage, $member, $access_from);
 		}
 		elseif (!$member = Model_Member::check_authority($member_id))
 		{
 			throw new \HttpNotFoundException;
 		}
 
-		return array($is_mypage, $member);
+		$is_mypage = false;
+		$access_from = Auth::check() ? 'member' : 'guest';
+
+		return array($is_mypage, $member, $access_from);
 	}
 
 	protected function check_is_mypage($member_id)

@@ -59,8 +59,14 @@ class Model_MemberProfile extends \Orm\Model
 		static::$_properties['public_flag']['validation']['in_array'][] = Site_Util::get_public_flags();
 	}
 
-	public static function get4member_id($member_id)
+	public static function get4member_id($member_id, $with_relations = false)
 	{
-		return self::query()->where('member_id', $member_id)->get();
+		$obj = self::query()->where('member_id', $member_id);
+		if ($with_relations)
+		{
+			$obj = $obj->related(array('profile', 'profile_option'))->order_by('profile.sort_order');
+		}
+
+		return $obj->get();
 	}
 }
