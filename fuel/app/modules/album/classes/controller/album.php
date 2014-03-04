@@ -500,11 +500,11 @@ class Controller_Album extends \Controller_Site
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_upload_image()
+	public function action_upload_image($album_id = null)
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		$album_id = (int)\Input::post('id');
+		$album_id = (int)$album_id;
 		if (!$album_id || !$album = Model_Album::find($album_id))
 		{
 			throw new \HttpNotFoundException;

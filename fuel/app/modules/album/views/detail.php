@@ -26,12 +26,7 @@
 <?php if (!empty($val)): ?>
 <div class="well">
 <h5><?php echo Config::get('term.album_image').term('form.upload'); ?></h5>
-<?php echo form_open(false, true, array('action' => 'album/upload_image'), array('id' => $id)); ?>
-<?php echo form_file('image'); ?>
-<?php echo form_public_flag($val); ?>
-<?php echo form_button(); ?>
-<?php echo form_close(); ?>
-<?php echo Form::close(); ?>
+<?php echo render('_parts/form/upload_form', array('form_attrs' => array('action' => 'album/upload_image/'.$id), 'with_public_flag' => true, 'val' => $val)); ?>
 </div><!-- well -->
 <?php endif; ?>
 

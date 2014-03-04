@@ -18,6 +18,7 @@
 	<td><?php echo $profile->id; ?></td>
 	<td><?php echo $profile->caption; ?></td>
 	<td><?php echo $profile->name; ?></td>
+	<td><?php echo Site_Profile::get_display_type_options($profile->display_type, true); ?></td>
 	<td><?php echo $profile->is_required ? '◯' : '×'; ?></td>
 	<td><?php echo $profile->is_edit_public_flag ? '◯' : '×'; ?></td>
 	<td><?php echo Site_Form::get_public_flag_options($profile->default_public_flag); ?></td>

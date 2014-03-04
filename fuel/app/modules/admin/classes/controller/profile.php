@@ -250,6 +250,7 @@ class Controller_Profile extends Controller_Admin {
 		$cols = array(
 			'caption',
 			'name',
+			'display_type',
 			'is_required',
 			'is_edit_public_flag',
 			'default_public_flag',

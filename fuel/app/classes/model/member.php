@@ -40,7 +40,7 @@ class Model_Member extends \Orm\Model
 			'form' => array('type' => false),
 		),
 		'file_id' => array(
-			'validation' => array('required', 'valid_string' => array('numeric')),
+			'validation' => array('valid_string' => array('numeric')),
 			'form' => array('type' => false),
 		),
 		'filesize_total' => array(

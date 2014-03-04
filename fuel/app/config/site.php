@@ -9,6 +9,13 @@ $config = array(
 		'password_pre' => array(
 			'token_lifetime' => '1 day',
 		),
+		'profile' => array(
+			'display_type' => array(
+				'detail' => '0',
+				'summery' => '1',
+				'always' => '3',
+			),
+		),
 	),
 	'upload' => array(
 		'remove_exif_data' => true,

@@ -99,7 +99,7 @@ class Site_Util
 				break;
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
 				$is_safe = true;
-				$body = $foreign_table_obj ? render('_parts/body_for_add_album_image', array(
+				$body = $foreign_table_obj ? render('timeline::_parts/body_for_add_album_image', array(
 					'album_id' => $foreign_table_obj->id,
 					'name' => $foreign_table_obj->name,
 					'count' => isset($optional_info['count']) ? $optional_info['count'] : 0,
