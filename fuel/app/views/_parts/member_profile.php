@@ -15,9 +15,9 @@ if (!isset($with_image_upload_form)) $with_image_upload_form = false;
 <?php endif; ?>
 	<div class="row">
 		<div class="col-md-4">
-			<div><?php echo img($member->get_image(), '180x180xc', $profile_page_uri, $is_link2raw_file, site_get_screen_name($member), true, true); ?></div>
+			<div class="imgBox"><?php echo img($member->get_image(), '180x180xc', $profile_page_uri, $is_link2raw_file, site_get_screen_name($member), true, true); ?></div>
 <?php if (!empty($with_link2profile_image)): ?>
-			<div><?php echo Html::anchor(sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), '<i class="glyphicon glyphicon-camera"></i> '.term('profile').'写真', array('class' => 'btn btn-default')); ?></div>
+			<div class="btnBox"><?php echo Html::anchor(sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), '<i class="glyphicon glyphicon-camera"></i> '.term('profile').'写真', array('class' => 'btn btn-default btn-sm')); ?></div>
 <?php endif; ?>
 <?php if ($is_mypage && $with_image_upload_form  && $member->file_id): ?>
 				<?php echo Html::anchor('#', '<i class="glyphicon glyphicon-trash"></i> '.term('form.delete'), array(

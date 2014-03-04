@@ -469,3 +469,11 @@ div.profile .btnEdit {
 	top: 10px;
 	right: 10px;
 }
+
+div.imgBox img {
+	margin: 0 auto;
+}
+div.btnBox {
+	text-align: center;
+	margin-top: 5px;
+}

@@ -1,6 +1,7 @@
 <?php foreach ($member_profiles as $member_profile): ?>
 <?php if (!empty($display_type) && $member_profile->profile->display_type < Config::get('site.member.profile.display_type.'.$display_type)) continue; ?>
 <?php if (!check_profile_public_flag($member_profile->public_flag, $access_from)) continue; ?>
+<?php if (!$value = profile_value($member_profile)) continue; ?>
 			<div class="row">
 <?php
 $is_checkbox = $member_profile->profile->form_type == 'checkbox';
@@ -13,6 +14,6 @@ if ($is_checkbox)
 $is_checkbox_before = $is_checkbox;
 ?>
 				<div class="col-sm-4"><?php if ($is_view_label): ?><label><?php echo $member_profile->profile->caption; ?></label><?php endif; ?></div>
-				<div class="col-sm-8"><?php echo profile_value($member_profile); ?></div>
+				<div class="col-sm-8"><?php echo $value; ?></div>
 			</div>
 <?php endforeach; ?>

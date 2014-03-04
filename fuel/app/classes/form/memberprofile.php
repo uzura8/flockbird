@@ -74,7 +74,14 @@ class Form_MemberProfile
 						$member_profile->member_id = $this->member_obj->id;
 						$member_profile->profile_id = $profile->id;
 						$member_profile->profile_option_id = $profile_option->id;
-						if ($profile->is_edit_public_flag) $member_profile->public_flag = $this->member_profile_public_flags[$profile->id];
+						if ($profile->is_edit_public_flag)
+						{
+							$member_profile->public_flag = $this->member_profile_public_flags[$profile->id];
+						}
+						else
+						{
+							$member_profile->public_flag = $profile->default_public_flag;
+						}
 						$member_profile->value = $profile_option->label;
 						$member_profile->save();
 					}
@@ -91,7 +98,14 @@ class Form_MemberProfile
 				if (is_null($member_profile)) $member_profile = Model_MemberProfile::forge();
 				$member_profile->member_id = $this->member_obj->id;
 				$member_profile->profile_id = $profile->id;
-				if ($profile->is_edit_public_flag) $member_profile->public_flag = $this->member_profile_public_flags[$profile->id];
+				if ($profile->is_edit_public_flag)
+				{
+					$member_profile->public_flag = $this->member_profile_public_flags[$profile->id];
+				}
+				else
+				{
+					$member_profile->public_flag = $profile->default_public_flag;
+				}
 
 				if (in_array($profile->form_type, array('radio', 'select')))
 				{
