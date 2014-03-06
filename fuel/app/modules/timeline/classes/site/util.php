@@ -51,6 +51,9 @@ class Site_Util
 			case 'member_register':
 				$foreign_table = 'member';
 				break;
+			case 'member_name':
+				$foreign_table = 'member';
+				break;
 			case 'profile_image':
 				$foreign_table = 'file';
 				break;
@@ -83,6 +86,7 @@ class Site_Util
 		switch ($type)
 		{
 			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
+			case \Config::get('timeline.types.member_name'):// ニックネーム変更
 				break;
 			case \Config::get('timeline.types.member_register'):// SNS への参加
 				$body = PRJ_SITE_NAME.' に参加しました。';
@@ -114,8 +118,6 @@ class Site_Util
 						$body = sprintf('%sに写真を %d 枚投稿しました。', \Config::get('term.timeline'), $optional_info['count']);
 					}
 				}
-				break;
-			default :
 				break;
 		}
 
@@ -299,10 +301,13 @@ class Site_Util
 
 	public static function get_timeline_object($type_key, $foreign_id)
 	{
-		if ($type_key == 'album' || $type_key == 'album_image')
+		if (in_array($type_key, array('album', 'album_image', 'member_name')))
 		{
-			$since_datetime = date('Y-m-d H:i:s', strtotime('- '.\Config::get('timeline.periode_to_update.album')));
-			if ($timeline = Model_Timeline::get4latest_foreign_data('album', $foreign_id, $since_datetime))
+			$table = $type_key;
+			if ($type_key == 'album_image') $table = 'album';
+			if ($type_key == 'member_name') $table = 'member';
+			$since_datetime = date('Y-m-d H:i:s', strtotime('- '.\Config::get('timeline.periode_to_update.'.$type_key)));
+			if ($timeline = Model_Timeline::get4latest_foreign_data($table, $foreign_id, $since_datetime))
 			{
 				return $timeline;
 			}
@@ -374,6 +379,7 @@ class Site_Util
 				$info['child_model'] = 'album_image';
 				break;
 			case \Config::get('timeline.types.member_register'):
+			case \Config::get('timeline.types.member_name'):
 			case \Config::get('timeline.types.profile_image'):
 			case \Config::get('timeline.types.album_image_profile'):
 			case \Config::get('timeline.types.album_image'):
@@ -386,13 +392,14 @@ class Site_Util
 		return $info;
 	}
 
-	public static function get_article_view($timeline_cache_id, $timeline_id)
+	public static function get_article_view($timeline_cache_id, $timeline_id, $self_member_id)
 	{
 		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));
 
 		return render('timeline::_parts/article', array(
 			'timeline_cache_id' => $timeline_cache_id,
 			'timeline' => $timeline,
+			'self_member_id' => $self_member_id,
 			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),
 		));
 	}

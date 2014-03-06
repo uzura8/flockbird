@@ -92,10 +92,10 @@ class Site_Model
 		if (!$limit) $limit = \Config::get('timeline.articles.comment.limit');
 		switch ($type)
 		{
-			case \Config::get('timeline.types.note'):// note 投稿
+			case \Config::get('timeline.types.note'):
 				return \Note\Model_NoteComment::get_comments($foreign_id, $limit);
 
-			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
+			case \Config::get('timeline.types.album_image_profile'):
 				return \Album\Model_AlbumImageComment::get_comments($foreign_id, $limit);
 		}
 
@@ -132,7 +132,7 @@ class Site_Model
 	{
 		list($type, $foreign_table, $child_foreign_table) = Site_Util::get_timeline_save_values($type_key);
 		if (!$timeline) $timeline = Site_Util::get_timeline_object($type_key, $foreign_id);
-		$is_new = empty($timeline->id) ? true : false;
+		$is_new = empty($timeline->id);
 
 		if ($is_new)
 		{

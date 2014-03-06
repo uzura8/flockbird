@@ -162,7 +162,7 @@ class Site_Util
 
 	public static function get_have_public_flags_models()
 	{
-		return array('note', 'album', 'album_image', 'timeline');
+		return array('note', 'album', 'album_image', 'timeline', 'member_profile');
 	}
 
 	public static function validate_posted_public_flag($current_public_flag = null, $posted_key = 'public_flag')

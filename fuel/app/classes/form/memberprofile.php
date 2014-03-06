@@ -60,6 +60,19 @@ class Form_MemberProfile
 	{
 		if (!$this->member_obj) throw new FuelException('Member Object is not set.');;
 
+		if ($this->validation->fieldset()->field('member_name') && $this->member_obj->id)
+		{
+			$this->member_obj->name = $this->validated_values['member_name'];
+			$is_changeed = $this->member_obj->is_changed('name');
+			$this->member_obj->save();
+			// timeline 投稿
+			if (\Module::loaded('timeline') && $is_changeed)
+			{
+				$body = sprintf('%sを %s に変更しました。', term('member.name'), $this->member_obj->name);
+				\Timeline\Site_Model::save_timeline($this->member_obj->id, PRJ_PUBLIC_FLAG_ALL, 'member_name', $this->member_obj->id, $body);
+			}
+		}
+
 		foreach ($this->profiles as $profile)
 		{
 			$profile_options = $profile->profile_option;
@@ -120,12 +133,6 @@ class Form_MemberProfile
 
 				$member_profile->save();
 			}
-		}
-
-		if ($this->validation->fieldset()->field('member_name') && $this->member_obj->id)
-		{
-			$this->member_obj->name = $this->validated_values['member_name'];
-			$this->member_obj->save();
 		}
 	}
 

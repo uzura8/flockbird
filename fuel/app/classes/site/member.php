@@ -39,4 +39,12 @@ class Site_Member
 
 		return $file;
 	}
+
+	public static function get_access_from($target_member_id, $self_member_id = 0)
+	{
+		if (!$self_member_id) return 'guest';
+		if ($target_member_id == $self_member_id) return 'self';
+
+		return 'member';
+	}
 }

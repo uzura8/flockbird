@@ -57,6 +57,25 @@ class Test_Model_Timeline extends \TestCase
 		}
 	}
 
+	public function test_check_type_member_name()
+	{
+		if (!$list = Model_Timeline::get4type_key('member_name'))
+		{
+			$this->markTestSkipped();
+		}
+
+		foreach ($list as $obj)
+		{
+			// check for reference data.
+			$this->assertEquals('member', $obj->foreign_table);
+			$this->assertEquals($obj->member_id, $obj->foreign_id);
+			$this->assertNotEmpty(\Model_Member::check_authority($obj->foreign_id));
+
+			// check for public_flag.
+			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
+		}
+	}
+
 	public function test_check_type_album_image_profile()
 	{
 		if (!$list = Model_Timeline::get4type_key('album_image_profile'))

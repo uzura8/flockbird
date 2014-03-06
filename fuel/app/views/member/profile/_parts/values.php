@@ -9,7 +9,7 @@ $is_view_label = true;
 if ($is_checkbox)
 {
 	$is_view_label = false;
-	if (!$is_checkbox_before) $is_view_label = true;
+	if (empty($is_checkbox_before)) $is_view_label = true;
 }
 $is_checkbox_before = $is_checkbox;
 ?>

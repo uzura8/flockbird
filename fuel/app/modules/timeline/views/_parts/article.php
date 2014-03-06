@@ -16,7 +16,7 @@ $images = \Timeline\Site_Util::get_timeline_images(
 	$timeline->foreign_id,
 	$timeline->id,
 	$timeline->member_id,
-	\Auth::check() ? $u->id : 0
+	$self_member_id
 );
 $public_flag_info = \Timeline\Site_Util::get_public_flag_info($timeline);
 $data = array(
@@ -56,7 +56,12 @@ $foreign_table_obj = \Timeline\Site_Model::get_foreign_table_obj($timeline->type
 $optional_info = array();
 if (isset($images['count'])) $optional_info['count'] = $images['count'];
 if (isset($images['count_all'])) $optional_info['count_all'] = $images['count_all'];
-list($content, $is_safe_content) = \Timeline\Site_Util::get_timeline_body($timeline->type, $timeline->body, $foreign_table_obj, $optional_info);
+list($content, $is_safe_content) = \Timeline\Site_Util::get_timeline_body(
+	$timeline->type,
+	$timeline->body,
+	$foreign_table_obj,
+	$optional_info
+);
 $method = $is_safe_content ? 'set_safe' : 'set';
 $view_member_contents_box->$method('content', $content);
 $view_member_contents_box->set('is_output_raw_content', $is_safe_content);
@@ -72,7 +77,7 @@ if ($quote_article) $view_member_contents_box->set_safe('quote_article', $quote_
 
 echo $view_member_contents_box->render();
 
-if (Auth::check() && $timeline->member_id == $u->id && \Timeline\Site_Util::check_is_editable($timeline->type))
+if ($self_member_id && $timeline->member_id == $self_member_id && \Timeline\Site_Util::check_is_editable($timeline->type))
 {
 	list($post_id, $post_uri) = \Timeline\Site_Util::get_delete_api_info($timeline);
 	$attr = array(

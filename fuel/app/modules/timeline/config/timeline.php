@@ -33,10 +33,12 @@ return array(
 		'album_image' => 6,
 		'album_image_profile' => 7,
 		'album_image_timeline' => 8,
+		'member_name' => 9,
 	),
 	'periode_to_update' => array(
-		'album' => '10 minute',
-		//'album' => '3 day',
+		'album' => '1 day',
+		'album_image' => '1 day',
+		'member_name' => '60 minute',// 短いスパンの変更は上書きする
 	),
 	'display_setting' => array(
 	),
