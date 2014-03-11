@@ -17,4 +17,9 @@ class Form_Util
 			'rules' => !empty($props['validation']) ? Util_Array::convert_for_callback($props['validation']) : array(),
 		);
 	}
+
+	public static function get_field_names(\Validation $val)
+	{
+		return array_keys($val->Fieldset()->field());
+	}
 }

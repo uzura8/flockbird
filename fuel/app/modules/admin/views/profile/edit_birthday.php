@@ -1,13 +1,15 @@
 <div class="well">
 <?php $label_size = 4; ?>
 <?php echo form_open(); ?>
-<?php foreach ($site_configs_form_config as $name => $form_config): ?>
-<?php if ($form_config['form'] == 'radio'): ?>
-	<?php echo form_radio($val, $name, $site_configs[$name], $label_size, 'inline'); ?>
-<?php elseif ($form_config['form'] == 'select'): ?>
-	<?php echo form_select($val, $name, $site_configs[$name], 6, $label_size); ?>
-<?php elseif ($form_config['form'] == 'public_flag'): ?>
-	<?php echo form_public_flag($val, $site_configs[$name], false, $label_size, false, $name); ?>
+<?php $fields = $val->fieldset()->field(); ?>
+<?php foreach ($fields as $name => $field_obj): ?>
+<?php $type = $field_obj->get_attribute('type'); ?>
+<?php if (in_array($name, array('profile_birthday_default_public_flag_birthyear', 'profile_birthday_default_public_flag_birthday'))): ?>
+	<?php echo form_public_flag($val, Input::post($name), false, $label_size, false, $name); ?>
+<?php elseif ($type == 'select'): ?>
+	<?php echo form_select($val, $name, Input::post($name), 6, $label_size); ?>
+<?php elseif ($type == 'radio'): ?>
+	<?php echo form_radio($val, $name, Input::post($name), $label_size, 'inline'); ?>
 <?php endif; ?>
 <?php endforeach; ?>
 	<?php echo form_button('編集する', 'submit', 'submit', array(), $label_size); ?>
