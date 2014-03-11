@@ -39,6 +39,12 @@ class Form_SiteConfig
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', array_keys($options_display_type));
 
+		$name = 'profile_sex_is_required';
+		$value = $is_set_saved_value ? self::get_site_config_values($name, 0) : 0;
+		$options_is_required = array('1' => '');
+		$val->add($name, '必須', array('type' => 'checkbox', 'options' => $options_is_required, 'value' => $value))
+				->add_rule('checkbox_val', $options_is_required);
+
 		$name = 'profile_sex_is_edit_public_flag';
 		$value = $is_set_saved_value ? self::get_site_config_values($name, 0) : 0;
 		$options_is_edit_public_flag = array('0' => '固定', '1' => 'メンバー選択');
@@ -98,6 +104,12 @@ class Form_SiteConfig
 		$val->add($name, '年代区切り', array('type' => 'radio', 'options' => $options, 'value' => $value))
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', array_keys($options));
+
+		$name = 'profile_birthday_is_required';
+		$value = $is_set_saved_value ? self::get_site_config_values($name, 0) : 0;
+		$options_is_required = array('1' => '');
+		$val->add($name, '必須', array('type' => 'checkbox', 'options' => $options_is_required, 'value' => $value))
+				->add_rule('checkbox_val', $options_is_required);
 
 		$name = 'profile_birthday_birthyear_view_type';
 		$value = $is_set_saved_value ? self::get_site_config_values($name, 0) : 0;

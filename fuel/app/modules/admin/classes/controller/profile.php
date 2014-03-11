@@ -16,19 +16,14 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_index()
 	{		
+		$site_config_names = array_merge(\Form_SiteConfig::get_site_config_names('sex'), \Form_SiteConfig::get_site_config_names('birthday'));
+		$site_configs = \Model_SiteConfig::get4names_as_assoc($site_config_names);
 		$labels = self::get_list_labels();
 		$profiles = \Model_Profile::query()->order_by('sort_order')->get();
-		$site_configs_sex = \Model_SiteConfig::get4names_as_assoc(\Form_SiteConfig::get_site_config_names('sex'));
-		$site_configs_birthday = \Model_SiteConfig::get4names_as_assoc(\Form_SiteConfig::get_site_config_names('birthday'));
 		$this->set_title_and_breadcrumbs(term('profile').'設定');
 		$this->template->layout = 'wide';
 		$this->template->post_footer = \View::forge('profile/_parts/index_footer');
-		$this->template->content = \View::forge('profile/list', array(
-			'profiles' => $profiles,
-			'site_configs_sex' => $site_configs_sex,
-			'site_configs_birthday' => $site_configs_birthday,
-			'labels' => $labels
-		));
+		$this->template->content = \View::forge('profile/list', array('profiles' => $profiles, 'site_configs' => $site_configs, 'labels' => $labels));
 	}
 
 	/**

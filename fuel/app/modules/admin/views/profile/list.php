@@ -4,7 +4,7 @@
 	<?php echo term('member.sex'); ?>設定
 	<?php echo Html::anchor('admin/profile/edit_sex', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
 </h3>
-<?php if (empty($site_configs_sex['profile_sex_is_enable'])): ?>
+<?php if (empty($site_configs['profile_sex_is_enable'])): ?>
 <p>使用しない</p>
 <?php else: ?>
 <table class="table">
@@ -12,17 +12,19 @@
 	<th>新規登録</th>
 	<th>プロフィール変更</th>
 	<th>メンバー検索</th>
+	<th>必須</th>
 	<th>場所</th>
 	<th>公開範囲の選択</th>
 	<th>公開設定デフォルト値</th>
 </tr>
 <tr>
-	<td><?php echo !empty($site_configs_sex['profile_sex_is_disp_regist']) ? '◯' : '×'; ?></td>
-	<td><?php echo !empty($site_configs_sex['profile_sex_is_disp_config']) ? '◯' : '×'; ?></td>
-	<td><?php echo !empty($site_configs_sex['profile_sex_is_disp_search']) ? '◯' : '×'; ?></td>
-	<td><?php echo Site_Profile::get_display_type_options($site_configs_sex['profile_sex_display_type'], true); ?></td>
+	<td><?php echo !empty($site_configs['profile_sex_is_disp_regist']) ? '◯' : '×'; ?></td>
+	<td><?php echo !empty($site_configs['profile_sex_is_disp_config']) ? '◯' : '×'; ?></td>
+	<td><?php echo !empty($site_configs['profile_sex_is_disp_search']) ? '◯' : '×'; ?></td>
+	<td><?php echo !empty($site_configs['profile_sex_is_required']) ? '◯' : '×'; ?></td>
+	<td><?php echo Site_Profile::get_display_type_options($site_configs['profile_sex_display_type'], true); ?></td>
 	<td><?php echo !empty($site_configs['profile_sex_is_edit_public_flag']) ? '◯' : '×'; ?></td>
-	<td><?php echo Site_Form::get_public_flag_options($site_configs_sex['profile_sex_default_public_flag']); ?></td>
+	<td><?php echo Site_Form::get_public_flag_options($site_configs['profile_sex_default_public_flag']); ?></td>
 </tr>
 </table>
 <?php endif; ?>
@@ -31,7 +33,7 @@
 	<?php echo term('member.birthday'); ?>設定
 	<?php echo Html::anchor('admin/profile/edit_birthday', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
 </h3>
-<?php if (empty($site_configs_birthday['profile_birthday_is_enable'])): ?>
+<?php if (empty($site_configs['profile_birthday_is_enable'])): ?>
 <p>使用しない</p>
 <?php else: ?>
 <table class="table">
@@ -39,7 +41,8 @@
 	<th rowspan="2">新規登録</th>
 	<th rowspan="2">プロフィール変更</th>
 	<th rowspan="2">メンバー検索</th>
-	<th colspan="2">年代</th>
+	<th colspan="3">年代</th>
+	<th rowspan="2">必須</th>
 	<th colspan="4">生年</th>
 	<th colspan="3">誕生日</th>
 </tr>
@@ -55,18 +58,19 @@
 	<th>公開設定デフォルト値</th>
 </tr>
 <tr>
-	<td><?php echo !empty($site_configs_birthday['profile_birthday_is_disp_regist']) ? '◯' : '×'; ?></td>
-	<td><?php echo !empty($site_configs_birthday['profile_birthday_is_disp_config']) ? '◯' : '×'; ?></td>
-	<td><?php echo !empty($site_configs_birthday['profile_birthday_is_disp_search']) ? '◯' : '×'; ?></td>
-	<td><?php echo !empty($site_configs_birthday['profile_birthday_is_enable_generation_view']) ? '◯' : '×'; ?></td>
-	<td><?php echo !empty($site_configs_birthday['profile_birthday_generation_unit']) ? '5年' : '10年'; ?></td>
-	<td><?php echo !empty($site_configs_birthday['profile_birthday_birthyear_view_type']) ? '年齢' : '生年'; ?></td>
-	<td><?php echo Site_Profile::get_display_type_options($site_configs_birthday['profile_birthday_display_type_birthyear'], true); ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_is_disp_regist']) ? '◯' : '×'; ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_is_disp_config']) ? '◯' : '×'; ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_is_disp_search']) ? '◯' : '×'; ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_is_enable_generation_view']) ? '◯' : '×'; ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_generation_unit']) ? '5年' : '10年'; ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_birthyear_view_type']) ? '年齢' : '生年'; ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_is_required']) ? '◯' : '×'; ?></td>
+	<td><?php echo Site_Profile::get_display_type_options($site_configs['profile_birthday_display_type_birthyear'], true); ?></td>
 	<td><?php echo !empty($site_configs['profile_birthday_is_edit_public_flag_birthyear']) ? '◯' : '×'; ?></td>
-	<td><?php echo Site_Form::get_public_flag_options($site_configs_birthday['profile_birthday_default_public_flag_birthyear']); ?></td>
-	<td><?php echo Site_Profile::get_display_type_options($site_configs_birthday['profile_birthday_display_type_birthday'], true); ?></td>
-	<td><?php echo !empty($site_configs_birthday['profile_birthday_is_edit_public_flag_birthday']) ? '◯' : '×'; ?></td>
-	<td><?php echo Site_Form::get_public_flag_options($site_configs_birthday['profile_birthday_default_public_flag_birthday']); ?></td>
+	<td><?php echo Site_Form::get_public_flag_options($site_configs['profile_birthday_default_public_flag_birthyear']); ?></td>
+	<td><?php echo Site_Profile::get_display_type_options($site_configs['profile_birthday_display_type_birthday'], true); ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_is_edit_public_flag_birthday']) ? '◯' : '×'; ?></td>
+	<td><?php echo Site_Form::get_public_flag_options($site_configs['profile_birthday_default_public_flag_birthday']); ?></td>
 </tr>
 </table>
 <?php endif; ?>

@@ -10,6 +10,8 @@
 	<?php echo form_select($val, $name, Input::post($name), 6, $label_size); ?>
 <?php elseif ($type == 'radio'): ?>
 	<?php echo form_radio($val, $name, Input::post($name), $label_size, 'inline'); ?>
+<?php elseif ($type == 'checkbox'): ?>
+	<?php echo form_checkbox($val, $name, Input::post($name), $label_size, 'inline'); ?>
 <?php endif; ?>
 <?php endforeach; ?>
 	<?php echo form_button(term('form.do_edit'), 'submit', 'submit', array(), $label_size); ?>
