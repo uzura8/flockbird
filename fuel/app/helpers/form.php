@@ -167,10 +167,7 @@ function form_radio(Validation $val, $name, $default_value = '', $label_col_sm_s
 	$atter = array(
 		'id'    => 'form_'.$name,
 	);
-	if (empty($default_value) && $field->get_attribute('value'))
-	{
-		$default_value = $field->get_attribute('value');
-	}
+	if (is_null($default_value)) $default_value = $field->get_attribute('value', 0);
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,

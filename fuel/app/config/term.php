@@ -3,6 +3,7 @@
 $config = array(
 	'form' => array(
 		'submit' => '送信',
+		'create' => '新規作成',
 		'edit' => '編集',
 		'do_edit' => '編集する',
 		'delete' => '削除',
@@ -12,6 +13,8 @@ $config = array(
 		'name' => 'ニックネーム',
 		'email' => 'メールアドレス',
 		'password' => 'パスワード',
+		'sex' => '性別',
+		'birthday' => '生年月日',
 	),
 	'toppage' => 'Top',
 	'myhome'  => 'Home',

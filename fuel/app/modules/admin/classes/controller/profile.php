@@ -18,11 +18,17 @@ class Controller_Profile extends Controller_Admin {
 	{		
 		$labels = self::get_list_labels();
 		$profiles = \Model_Profile::query()->order_by('sort_order')->get();
-		$site_configs = \Model_SiteConfig::get4names_as_assoc(\Form_SiteConfig::get_site_configs_birthday_names());
-		$this->set_title_and_breadcrumbs(term('profile').'項目一覧');
+		$site_configs_sex = \Model_SiteConfig::get4names_as_assoc(\Form_SiteConfig::get_site_config_names('sex'));
+		$site_configs_birthday = \Model_SiteConfig::get4names_as_assoc(\Form_SiteConfig::get_site_config_names('birthday'));
+		$this->set_title_and_breadcrumbs(term('profile').'設定');
 		$this->template->layout = 'wide';
 		$this->template->post_footer = \View::forge('profile/_parts/index_footer');
-		$this->template->content = \View::forge('profile/list', array('profiles' => $profiles, 'site_configs' => $site_configs, 'labels' => $labels));
+		$this->template->content = \View::forge('profile/list', array(
+			'profiles' => $profiles,
+			'site_configs_sex' => $site_configs_sex,
+			'site_configs_birthday' => $site_configs_birthday,
+			'labels' => $labels
+		));
 	}
 
 	/**
@@ -120,6 +126,41 @@ class Controller_Profile extends Controller_Admin {
 		$this->template->post_footer = \View::forge('_parts/load_asset_files', array('type' => 'js', 'files' => 'site/modules/admin/profile/common/form.js'));
 		$this->template->content = \View::forge('profile/_parts/form', array('val' => $val, 'profile' => $profile, 'is_edit' => true));
 	}
+
+	/**
+	 * The edit_sex action.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_edit_sex()
+	{	
+		$val = \Form_SiteConfig::get_validation4edit_sex(true);
+		if (\Input::method() == 'POST')
+		{
+			\Util_security::check_csrf();
+
+			try
+			{
+				if (!$val->run()) throw new \FuelException($val->show_errors());
+				$post = $val->validated();
+				\DB::start_transaction();
+				\Form_SiteConfig::save_site_configs($val, $post);
+				\DB::commit_transaction();
+
+				\Session::set_flash('message', term('member.sex').'を変更しました。');
+				\Response::redirect('admin/profile');
+			}
+			catch(\FuelException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				\Session::set_flash('error', $e->getMessage());
+			}
+		}
+		$this->set_title_and_breadcrumbs(term('member.sex').'設定');
+		$this->template->content = \View::forge('profile/_parts/form_basic', array('val' => $val));
+	}
+
 	/**
 	 * The edit_birthday action.
 	 * 
@@ -138,10 +179,10 @@ class Controller_Profile extends Controller_Admin {
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 				\DB::start_transaction();
-				\Form_SiteConfig::save_site_configs_birthday($val, $post);
+				\Form_SiteConfig::save_site_configs($val, $post);
 				\DB::commit_transaction();
 
-				\Session::set_flash('message', '生年月日設定を変更しました。');
+				\Session::set_flash('message', term('member.birthday').'を変更しました。');
 				\Response::redirect('admin/profile');
 			}
 			catch(\FuelException $e)
@@ -150,10 +191,8 @@ class Controller_Profile extends Controller_Admin {
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
-		$this->set_title_and_breadcrumbs('生年月日設定');
-		$this->template->content = \View::forge('profile/edit_birthday', array(
-			'val' => $val,
-		));
+		$this->set_title_and_breadcrumbs(term('member.birthday').'設定');
+		$this->template->content = \View::forge('profile/_parts/form_basic', array('val' => $val));
 	}
 
 	/**
