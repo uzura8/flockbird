@@ -16,7 +16,7 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_index()
 	{		
-		$site_config_names = array_merge(\Form_SiteConfig::get_site_config_names('sex'), \Form_SiteConfig::get_site_config_names('birthday'));
+		$site_config_names = array_merge(\Form_SiteConfig::get_names('profile_sex'), \Form_SiteConfig_Profile::get_names('profile_birthday'));
 		$site_configs = \Model_SiteConfig::get4names_as_assoc($site_config_names);
 		$labels = self::get_list_labels();
 		$profiles = \Model_Profile::query()->order_by('sort_order')->get();
@@ -130,7 +130,7 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_edit_sex()
 	{	
-		$val = \Form_SiteConfig::get_validation4edit_sex(true);
+		$val = \Form_SiteConfig::get_validation('profile_sex', true);
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
@@ -140,7 +140,7 @@ class Controller_Profile extends Controller_Admin {
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 				\DB::start_transaction();
-				\Form_SiteConfig::save_site_configs($val, $post);
+				\Form_SiteConfig::save($val, $post);
 				\DB::commit_transaction();
 
 				\Session::set_flash('message', term('member.sex').'を変更しました。');
@@ -164,7 +164,7 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_edit_birthday()
 	{	
-		$val = \Form_SiteConfig::get_validation4edit_birthday(true);
+		$val = \Form_SiteConfig::get_validation('profile_birthday', true);
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
@@ -174,7 +174,7 @@ class Controller_Profile extends Controller_Admin {
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 				\DB::start_transaction();
-				\Form_SiteConfig::save_site_configs($val, $post);
+				\Form_SiteConfig::save($val, $post);
 				\DB::commit_transaction();
 
 				\Session::set_flash('message', term('member.birthday').'を変更しました。');
