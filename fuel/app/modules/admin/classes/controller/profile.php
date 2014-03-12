@@ -16,7 +16,7 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_index()
 	{		
-		$site_config_names = array_merge(\Form_SiteConfig::get_names('profile_sex'), \Form_SiteConfig_Profile::get_names('profile_birthday'));
+		$site_config_names = array_merge(\Form_SiteConfig::get_names('profile_name'), \Form_SiteConfig::get_names('profile_sex'), \Form_SiteConfig_Profile::get_names('profile_birthday'));
 		$site_configs = \Model_SiteConfig::get4names_as_assoc($site_config_names);
 		$labels = self::get_list_labels();
 		$profiles = \Model_Profile::query()->order_by('sort_order')->get();
@@ -120,6 +120,40 @@ class Controller_Profile extends Controller_Admin {
 		$this->template->layout = 'wide';
 		$this->template->post_footer = \View::forge('_parts/load_asset_files', array('type' => 'js', 'files' => 'site/modules/admin/profile/common/form.js'));
 		$this->template->content = \View::forge('profile/_parts/form', array('val' => $val, 'profile' => $profile, 'is_edit' => true));
+	}
+
+	/**
+	 * The edit_name action.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_edit_name()
+	{	
+		$val = \Form_SiteConfig::get_validation('profile_name', true);
+		if (\Input::method() == 'POST')
+		{
+			\Util_security::check_csrf();
+
+			try
+			{
+				if (!$val->run()) throw new \FuelException($val->show_errors());
+				$post = $val->validated();
+				\DB::start_transaction();
+				\Form_SiteConfig::save($val, $post);
+				\DB::commit_transaction();
+
+				\Session::set_flash('message', term('member.name').'を変更しました。');
+				\Response::redirect('admin/profile');
+			}
+			catch(\FuelException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				\Session::set_flash('error', $e->getMessage());
+			}
+		}
+		$this->set_title_and_breadcrumbs(term('member.name').'設定');
+		$this->template->content = \View::forge('profile/_parts/form_basic', array('val' => $val));
 	}
 
 	/**

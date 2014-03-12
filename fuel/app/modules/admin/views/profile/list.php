@@ -1,6 +1,21 @@
 <h2><?php echo sprintf('基本%s設定', term('profile')); ?></h2>
 
 <h3 class="clearfix">
+	<?php echo term('member.name'); ?>設定
+	<?php echo Html::anchor('admin/profile/edit_name', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
+</h3>
+<table class="table">
+<tr>
+	<th>プロフィール変更</th>
+	<th>メンバー検索</th>
+</tr>
+<tr>
+	<td><?php echo !empty($site_configs['profile_name_is_disp_config']) ? '◯' : '×'; ?></td>
+	<td><?php echo !empty($site_configs['profile_name_is_disp_search']) ? '◯' : '×'; ?></td>
+</tr>
+</table>
+
+<h3 class="clearfix">
 	<?php echo term('member.sex'); ?>設定
 	<?php echo Html::anchor('admin/profile/edit_sex', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
 </h3>

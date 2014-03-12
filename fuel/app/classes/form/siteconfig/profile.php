@@ -2,6 +2,26 @@
 
 class Form_SiteConfig_Profile extends Form_SiteConfig
 {
+	public static function get_validation_name($is_set_saved_value = false)
+	{
+		$val = \Validation::forge('site_config_profile_name');
+
+		$options_is_disp = array('1' => '表示する', '0' => '表示しない');
+		$name = 'profile_name_is_disp_config';
+		$value = $is_set_saved_value ? self::get_values($name, 1) : 1;
+		$val->add($name, 'プロフィール変更', array('type' => 'radio', 'options' => $options_is_disp, 'value' => $value))
+				->add_rule('valid_string', 'numeric', 'required')
+				->add_rule('in_array', array_keys($options_is_disp));
+
+		$name = 'profile_name_is_disp_search';
+		$value = $is_set_saved_value ? self::get_values($name, 1) : 1;
+		$val->add($name, 'メンバー検索', array('type' => 'radio', 'options' => $options_is_disp, 'value' => $value))
+				->add_rule('valid_string', 'numeric', 'required')
+				->add_rule('in_array', array_keys($options_is_disp));
+
+		return $val;
+	}
+
 	public static function get_validation_sex($is_set_saved_value = false)
 	{
 		$val = \Validation::forge('site_config_profile_sex');
