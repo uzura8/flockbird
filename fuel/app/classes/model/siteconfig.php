@@ -38,7 +38,7 @@ class Model_SiteConfig extends \Orm\Model
 		return false;
 	}
 
-	public static function get4names_as_assoc(array $names)
+	public static function get4names_as_assoc(array $names, $remove_prefix = null)
 	{
 		if (empty(self::$values)) self::set_values_as_assoc();
 		if (empty(self::$values)) return array();
@@ -47,6 +47,7 @@ class Model_SiteConfig extends \Orm\Model
 		foreach (self::$values as $name => $value)
 		{
 			if (!in_array($name, $names)) continue;
+			if ($remove_prefix) $name = str_replace($remove_prefix.'_', '', $name);
 			$return[$name] = $value;
 		}
 

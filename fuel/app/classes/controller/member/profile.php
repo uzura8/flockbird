@@ -39,7 +39,7 @@ class Controller_Member_Profile extends Controller_Member
 	public function action_edit()
 	{
 		$form_member_profile = new Form_MemberProfile('config', $this->u);
-		$form_member_profile->set_validation(true);
+		$form_member_profile->set_validation();
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
@@ -64,8 +64,10 @@ class Controller_Member_Profile extends Controller_Member
 		$this->set_title_and_breadcrumbs(term('profile').term('form.edit'), array('member/profile' => '自分の'.term('profile')), $this->u);
 		$this->template->content = View::forge('member/profile/edit', array(
 			'val' => $form_member_profile->get_validation(),
+			'site_configs_profile' => $form_member_profile->get_site_configs_profile(),
+			'member_public_flags' => $form_member_profile->get_member_public_flags(),
 			'profiles' => $form_member_profile->get_profiles(),
-			'public_flags' => $form_member_profile->get_member_profile_public_flags(),
+			'member_profile_public_flags' => $form_member_profile->get_member_profile_public_flags(),
 		));
 	}
 }

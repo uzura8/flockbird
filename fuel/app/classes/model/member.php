@@ -47,6 +47,16 @@ class Model_Member extends \Orm\Model
 			'validation' => array('valid_string' => array('numeric')),
 			'form' => array('type' => false),
 		),
+		'sex' => array(
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'required', 'max_length' => array(16)),
+			'form' => array('type' => 'select'),
+		),
+		'sex_public_flag' => array(
+			'data_type' => 'integer',
+			'validation' => array('required'),
+			'form' => array('type' => 'radio'),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
@@ -68,6 +78,26 @@ class Model_Member extends \Orm\Model
 	public static function _init()
 	{
 		static::$_properties['name']['label'] = term('member.name');
+
+		static::$_properties['sex']['label'] = term('member.sex');
+		static::$_properties['sex']['form']['options'] = self::get_sex_options();
+		static::$_properties['sex']['validation']['in_array'][] = array_keys(self::get_sex_options());
+
+		static::$_properties['sex_public_flag']['label'] = sprintf('%sの%s', term('member.sex'), term('public_flag'));
+		static::$_properties['sex_public_flag']['form'] = Site_Form::get_public_flag_configs();
+		static::$_properties['sex_public_flag']['validation']['in_array'][] = Site_Util::get_public_flags();
+	}
+
+	public static function get_sex_options($key = null)
+	{
+		$options = array(
+			'male'   => '男性',
+			'female' => '女性',
+		);
+
+		if ($key) return $options[$key];
+
+		return $options;
 	}
 
 	public function get_image()

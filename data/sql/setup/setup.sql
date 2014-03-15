@@ -133,6 +133,8 @@ CREATE TABLE `member` (
   `file_id` varchar(255) DEFAULT NULL,
   `filesize_total` int(11) NOT NULL DEFAULT '0' COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
+  `sex` varchar(16) DEFAULT NULL,
+  `sex_public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)

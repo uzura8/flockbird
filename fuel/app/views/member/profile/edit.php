@@ -1,14 +1,29 @@
 <div class="well">
 <?php $label_size = 3; ?>
 <?php echo form_open(); ?>
+<?php if ($val->fieldset()->field('member_name')): ?>
 	<?php echo form_input($val, 'member_name', '', 7, $label_size); ?>
+<?php endif; ?>
+<?php if ($val->fieldset()->field('member_sex')): ?>
+<?php
+$optional_public_flag = array();
+if (!empty($site_configs_profile['sex_is_edit_public_flag']))
+{
+	$value = Config::get('site.public_flag.default');
+	if (isset($site_configs_profile['sex_default_public_flag'])) $value = $site_configs_profile['sex_default_public_flag'];
+	if (isset($member_public_flags['sex'])) $value = $member_public_flags['sex'];
+	$optional_public_flag = array('name' => 'member_public_flag[sex]', 'value' => $value);
+}
+?>
+	<?php echo form_radio($val, 'member_sex', 'male', $label_size, 'grid', null, $optional_public_flag); ?>
+<?php endif; ?>
 <?php foreach ($profiles as $profile): ?>
 <?php
 $optional_public_flag = array();
 if ($profile->is_edit_public_flag)
 {
-	$value = isset($public_flags[$profile->id]) ? $public_flags[$profile->id] : $profile->default_public_flag;
-	$optional_public_flag = array('name' => sprintf('public_flag[%s]', $profile->id), 'value' => $value);
+	$value = isset($member_profile_public_flags[$profile->id]) ? $member_profile_public_flags[$profile->id] : $profile->default_public_flag;
+	$optional_public_flag = array('name' => sprintf('member_profile_public_flag[%s]', $profile->id), 'value' => $value);
 }
 ?>
 <?php if ($profile->form_type == 'input'): ?>

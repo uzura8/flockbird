@@ -26,7 +26,7 @@ function form_close()
 	return render('_parts/form/close');
 }
 
-function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
+function form_input(Validation $val, $name, $default_value = null, $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
 {
 	$field = $val->fieldset()->field($name);
 	$input_atter = array(
@@ -35,7 +35,7 @@ function form_input(Validation $val, $name, $default_value = '', $col_sm_size = 
 		'class' => 'form-control',
 		'placeholder' => $field->get_attribute('placeholder'),
 	);
-	if (empty($default_value) && $field->get_attribute('value'))
+	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
 	}
@@ -74,7 +74,7 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 	return render('_parts/form/file', $data);
 }
 
-function form_textarea(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $is_autogrow = true, $help = '', $optional_public_flag = array())
+function form_textarea(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $is_autogrow = true, $help = '', $optional_public_flag = array())
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array(
@@ -85,7 +85,7 @@ function form_textarea(Validation $val, $name, $default_value = '', $label_col_s
 	);
 	if ($is_autogrow) $atter['class'] .= ' autogrow';
 
-	if (empty($default_value) && $field->get_attribute('value'))
+	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
 	}
@@ -112,7 +112,7 @@ function form_select(Validation $val, $name, $default_value = '', $col_sm_size =
 		'id'    => 'form_'.$name,
 		'class' => 'form-control',
 	);
-	if (empty($default_value) && $field->get_attribute('value'))
+	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
 	}
@@ -133,11 +133,11 @@ function form_select(Validation $val, $name, $default_value = '', $col_sm_size =
 	return render('_parts/form/select', $data);
 }
 
-function form_checkbox(Validation $val, $name, $default_value = array(), $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array(), $is_small_tag = false)
+function form_checkbox(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array(), $is_small_tag = false)
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array('id' => 'form_'.$name);
-	if (empty($default_value) && $field->get_attribute('value'))
+	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
 	}
@@ -159,7 +159,7 @@ function form_checkbox(Validation $val, $name, $default_value = array(), $label_
 	return render('_parts/form/checkbox', $data);
 }
 
-function form_radio(Validation $val, $name, $default_value = '', $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array())
+function form_radio(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array())
 {
 	if (!in_array($layout_type, array('block', 'inline', 'grid'))) throw new InvalidArgumentException('Fifth parameter is invalid.');
 
@@ -167,7 +167,10 @@ function form_radio(Validation $val, $name, $default_value = '', $label_col_sm_s
 	$atter = array(
 		'id'    => 'form_'.$name,
 	);
-	if (is_null($default_value)) $default_value = $field->get_attribute('value', 0);
+	if (!is_null($field->get_attribute('value')))
+	{
+		$default_value = $field->get_attribute('value');
+	}
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,

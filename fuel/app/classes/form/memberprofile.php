@@ -2,19 +2,26 @@
 
 class Form_MemberProfile
 {
+	private $page_type = null;
 	private $profiles = null;
 	private $member_obj = null;
+	private $site_configs_profile = array();
 	private $member_profiles_profile_id_indexed = array();
+	private $member_public_flags = array();
 	private $member_profile_public_flags = array();
 	private $validation = null;
 	private $validated_values = array();
 
 	public function __construct($page_type, Model_Member $member_obj = null)
 	{
+		if (!in_array($page_type, array('regist', 'config'))) throw new InvalidArgumentException('First parameter is invalid.');
+		$this->page_type = $page_type;
 		$this->member_obj = $member_obj;
+		$names = Form_SiteConfig::get_names(array('profile_name', 'profile_sex', 'profile_birthday'));
+		$this->site_configs_profile = Model_SiteConfig::get4names_as_assoc($names, 'profile');
 		$this->profiles = Model_Profile::get4page_type($page_type);
 		$this->set_member_profiles_profile_id_indexed();
-		$this->set_member_profile_public_flags();
+		$this->set_public_flags();
 	}
 
 	public function set_member_obj(Model_Member $member_obj)
@@ -38,41 +45,86 @@ class Form_MemberProfile
 		return $this->validation;
 	}
 
+	public function get_member_public_flags()
+	{
+		return $this->member_public_flags;
+	}
+
 	public function get_member_profile_public_flags()
 	{
 		return $this->member_profile_public_flags;
 	}
 
-	public function validate_public_flag($post_key = 'public_flag')
+	public function get_site_configs_profile()
+	{
+		return $this->site_configs_profile;
+	}
+
+	public function validate_public_flag()
+	{
+		$this->validate_public_flag_member('sex');
+		$this->validate_public_flag_member_profile();
+	}
+
+	private function validate_public_flag_member($name)
+	{
+		if (!$this->check_is_enabled_member_field($name)) return;
+		$this->validate_public_flag_each('member_public_flag', $name);
+	}
+
+	private function validate_public_flag_member_profile()
 	{
 		foreach ($this->profiles as $profile)
 		{
 			if (!$profile->is_edit_public_flag) continue;
-			$values = Input::post($post_key);
-			if (is_null($values[$profile->id]) || !in_array($values[$profile->id], Site_Util::get_public_flags()))
-			{
-				throw new HttpInvalidInputException('公開範囲の値が不正です。');
-			}
+			$this->validate_public_flag_each('member_profile_public_flag', $profile->id);
 		}
+	}
+
+	private function validate_public_flag_each($post_param, $key)
+	{
+		$values = Input::post($post_param);
+		if (!is_null($values[$key])) return;
+		if (in_array($values[$key], Site_Util::get_public_flags())) return;
+
+		throw new HttpInvalidInputException('公開範囲の値が不正です。');
 	}
 
 	public function seve()
 	{
 		if (!$this->member_obj) throw new FuelException('Member Object is not set.');;
+		$this->save_member();
+		$this->save_member_profile();
+	}
 
-		if ($this->validation->fieldset()->field('member_name') && $this->member_obj->id)
+	private function save_member()
+	{
+		$is_changeed = array();
+		if ($this->validation->fieldset()->field('member_name'))
 		{
 			$this->member_obj->name = $this->validated_values['member_name'];
-			$is_changeed = $this->member_obj->is_changed('name');
-			$this->member_obj->save();
-			// timeline 投稿
-			if (\Module::loaded('timeline') && $is_changeed)
-			{
-				$body = sprintf('%sを %s に変更しました。', term('member.name'), $this->member_obj->name);
-				\Timeline\Site_Model::save_timeline($this->member_obj->id, PRJ_PUBLIC_FLAG_ALL, 'member_name', $this->member_obj->id, $body);
-			}
+			if ($this->member_obj->is_changed('name')) $is_changeed[] = 'name';
 		}
+		if ($this->validation->fieldset()->field('member_sex'))
+		{
+			$this->member_obj->sex = $this->validated_values['member_sex'];
+			if ($this->member_obj->is_changed('sex')) $is_changeed[] = 'sex';
 
+			$this->member_obj->sex_public_flag = $this->member_public_flags['sex'];
+			if ($this->member_obj->is_changed('sex_public_flag')) $is_changeed[] = 'sex_public_flag';
+		}
+		if (!$is_changeed) return;
+		$this->member_obj->save();
+
+		// timeline 投稿
+		if (!Module::loaded('timeline')) return;
+		if (!in_array('name', $is_changeed)) return;
+		$body = sprintf('%sを %s に変更しました。', term('member.name'), $this->member_obj->name);
+		\Timeline\Site_Model::save_timeline($this->member_obj->id, PRJ_PUBLIC_FLAG_ALL, 'member_name', $this->member_obj->id, $body);
+	}
+
+	private function save_member_profile()
+	{
 		foreach ($this->profiles as $profile)
 		{
 			$profile_options = $profile->profile_option;
@@ -141,21 +193,41 @@ class Form_MemberProfile
 		$this->validation->set_message($rule, $message);
 	}
 
-	public function set_validation($is_set_member_name = false, $add_fields = array())
+	private function check_is_enabled_member_field($name)
+	{
+		if ($name != 'name' && empty($this->site_configs_profile[$name.'_is_enable'])) return false;
+		if ($name == 'name' && $this->page_type == 'regist') return true;
+
+		$is_disp_key = sprintf('%s_is_disp_%s', $name, $this->page_type);
+		if (!isset($this->site_configs_profile[$is_disp_key])) return true;
+
+		return (bool)$this->site_configs_profile[$is_disp_key];
+	}
+
+	private function set_validation_member_field($name)
+	{
+		if (!$this->check_is_enabled_member_field($name)) return false;
+
+		$member_field_properties = Form_Util::get_model_field('member', $name);
+		$member_field_attrs = $member_field_properties['attributes'];
+		$member_field_attrs['value'] = $this->member_obj ? $this->member_obj->$name : '';
+		$this->validation->add(
+			'member_'.$name,
+			$member_field_properties['label'],
+			$member_field_attrs,
+			$member_field_properties['rules']
+		);
+	}
+
+	public function set_validation($add_fields = array())
 	{
 		$this->validation = \Validation::forge();
-		if ($is_set_member_name)
-		{
-			$member_field_properties = Form_Util::get_model_field('member', 'name');
-			$member_field_attrs = $member_field_properties['attributes'];
-			$member_field_attrs['value'] = $this->member_obj ? $this->member_obj->name : '';
-			$this->validation->add(
-				'member_name',
-				$member_field_properties['label'],
-				$member_field_attrs,
-				$member_field_properties['rules']
-			);
-		}
+
+		// member
+		$this->set_validation_member_field('name');
+		$this->set_validation_member_field('sex');
+
+		// member_profile
 		foreach ($this->profiles as $profile)
 		{
 			$member_profile = $this->member_profiles_profile_id_indexed[$profile->id];
@@ -312,9 +384,44 @@ class Form_MemberProfile
 		return $member_profiles_profile_id_indexed;
 	}
 
-	private function set_member_profile_public_flags()
+	private function set_public_flags()
 	{
-		$posted_public_flags = Input::post('public_flag');
+		$this->set_member_public_flag('sex');
+		$this->set_member_profile_public_flag();
+	}
+
+	private function set_member_public_flag($name)
+	{
+		if (!$this->check_is_editable_member_field_public_flag($name)) return;
+
+		$posted_public_flags = Input::post('member_public_flag');
+
+		$default_public_flag = (!is_null($this->site_configs_profile[$name.'_default_public_flag'])) ?
+			$this->site_configs_profile[$name.'_default_public_flag'] : Config::get('site.public_flag.default');
+		$this->member_public_flags[$name] = $default_public_flag;
+
+		$prop = $name.'_public_flag';
+		if ($this->member_obj && !is_null($this->member_obj->$prop))
+		{
+			$this->member_public_flags[$name] = $this->member_obj->$prop;
+		}
+		if (isset($posted_public_flags[$name]))
+		{
+			$this->member_public_flags[$name] = $posted_public_flags[$name];
+		}
+	}
+
+	private function check_is_editable_member_field_public_flag($name)
+	{
+		if (!$this->check_is_enabled_member_field($name)) return false;
+		if (empty($this->site_configs_profile[$name.'_is_edit_public_flag'])) return false;
+
+		return true;
+	}
+
+	private function set_member_profile_public_flag()
+	{
+		$posted_public_flags = Input::post('member_profile_public_flag');
 		foreach ($this->profiles as $profile)
 		{
 			if (!$profile->is_edit_public_flag) continue;

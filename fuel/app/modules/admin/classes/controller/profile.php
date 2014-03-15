@@ -16,8 +16,7 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_index()
 	{		
-		$site_config_names = array_merge(\Form_SiteConfig::get_names('profile_name'), \Form_SiteConfig::get_names('profile_sex'), \Form_SiteConfig_Profile::get_names('profile_birthday'));
-		$site_configs = \Model_SiteConfig::get4names_as_assoc($site_config_names);
+		$site_configs = \Model_SiteConfig::get4names_as_assoc(\Form_SiteConfig::get_names(array('profile_name', 'profile_sex', 'profile_birthday')));
 		$labels = self::get_list_labels();
 		$profiles = \Model_Profile::query()->order_by('sort_order')->get();
 		$this->set_title_and_breadcrumbs(term('profile').'設定');

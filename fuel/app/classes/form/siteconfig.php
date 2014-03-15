@@ -10,9 +10,16 @@ class Form_SiteConfig
 		return $saved_value;
 	}
 
-	public static function get_names($prefix = '')
+	public static function get_names($prefixes)
 	{
-		return \Form_Util::get_field_names(self::get_validation($prefix));
+		if (!is_array($prefixes)) $prefixes = (array)$prefixes;
+		$names = array();
+		foreach ($prefixes as $prefix)
+		{
+			$names = array_merge($names, \Form_Util::get_field_names(self::get_validation($prefix)));
+		}
+
+		return $names;
 	}
 
 	public static function get_validation($prefix, $is_set_saved_value = false)
