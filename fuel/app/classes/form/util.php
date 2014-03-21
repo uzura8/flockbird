@@ -22,4 +22,23 @@ class Form_Util
 	{
 		return array_keys($val->Fieldset()->field());
 	}
+
+	public static function get_int_options($min, $max)
+	{
+		$options = array();
+		for ($i = $min; $i <= $max; $i++)
+		{
+			$options[$i] = $i;
+		}
+
+		return $options;
+	}
+
+	public static function get_year_options($year_from = -100, $year_to = 0)
+	{
+		$from = (int)date('Y', strtotime($year_from.' year'));
+		$to = (int)date('Y', strtotime($year_to.' year'));
+
+		return self::get_int_options($from, $to);
+	}
 }

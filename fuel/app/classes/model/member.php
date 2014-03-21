@@ -49,10 +49,30 @@ class Model_Member extends \Orm\Model
 		),
 		'sex' => array(
 			'data_type' => 'varchar',
-			'validation' => array('trim', 'required', 'max_length' => array(16)),
+			'validation' => array('trim', 'max_length' => array(16)),
 			'form' => array('type' => 'select'),
 		),
 		'sex_public_flag' => array(
+			'data_type' => 'integer',
+			'validation' => array('required'),
+			'form' => array('type' => 'radio'),
+		),
+		'birthyear' => array(
+			'data_type' => 'integer',
+			'validation' => array('trim', 'numeric_min' => array(1900), 'numeric_max' => array(2100)),
+			'form' => array('type' => 'input'),
+		),
+		'birthyear_public_flag' => array(
+			'data_type' => 'integer',
+			'validation' => array('required'),
+			'form' => array('type' => 'radio'),
+		),
+		'birthday' => array(
+			'data_type' => 'varchar',
+			'validation' => array('date_string'),
+			'form' => array('type' => false),
+		),
+		'birthday_public_flag' => array(
 			'data_type' => 'integer',
 			'validation' => array('required'),
 			'form' => array('type' => 'radio'),
@@ -83,9 +103,25 @@ class Model_Member extends \Orm\Model
 		static::$_properties['sex']['form']['options'] = self::get_sex_options();
 		static::$_properties['sex']['validation']['in_array'][] = array_keys(self::get_sex_options());
 
+		$options_public_flag = Site_Util::get_public_flags();
 		static::$_properties['sex_public_flag']['label'] = sprintf('%sの%s', term('member.sex'), term('public_flag'));
 		static::$_properties['sex_public_flag']['form'] = Site_Form::get_public_flag_configs();
-		static::$_properties['sex_public_flag']['validation']['in_array'][] = Site_Util::get_public_flags();
+		static::$_properties['sex_public_flag']['validation']['in_array'][] = $options_public_flag;
+
+		static::$_properties['birthyear']['label'] = term('member.birthyear');
+		$options = Form_Util::get_year_options(Config::get('site.member.profile.birthday.year_from'), Config::get('site.member.profile.birthday.year_to'));
+		static::$_properties['birthyear']['form']['options'] = $options;
+		static::$_properties['birthyear']['validation']['in_array'][] = array_keys($options);
+
+		static::$_properties['birthyear_public_flag']['label'] = sprintf('%sの%s', term('member.birthyear'), term('public_flag'));
+		static::$_properties['birthyear_public_flag']['form'] = Site_Form::get_public_flag_configs();
+		static::$_properties['birthyear_public_flag']['validation']['in_array'][] = $options_public_flag;
+
+		static::$_properties['birthday']['label'] = term('member.birthday');
+
+		static::$_properties['birthday_public_flag']['label'] = sprintf('%sの%s', term('member.birthday'), term('public_flag'));
+		static::$_properties['birthday_public_flag']['form'] = Site_Form::get_public_flag_configs();
+		static::$_properties['birthday_public_flag']['validation']['in_array'][] = $options_public_flag;
 	}
 
 	public static function get_sex_options($key = null)

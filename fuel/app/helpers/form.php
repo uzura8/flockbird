@@ -264,6 +264,51 @@ function form_public_flag(Validation $val, $default_value = null, $is_select = f
 	return render('_parts/form/radio', $data);
 }
 
+function form_date(Validation $val, $label, $name_month, $name_day, $label_col_sm_size = 2, $help = '', $optional_public_flag = array(), $def_val_month = null, $def_val_day = null)
+{
+	$fields = array();
+	$atters = array();
+	$options = array();
+	$names = array('month', 'day');
+	foreach ($names as $name)
+	{
+		$val_name = 'name_'.$name;
+		$val_name = 'name_'.$name;
+		$fields[$name] = $val->fieldset()->field($$val_name);
+		$atters[$name] = array(
+			'id'    => 'form_'.$name,
+			'class' => 'form-control',
+		);
+		if ($fields[$name]->get_attribute('required') == 'required') $atters[$name]['required'] = 'required';
+		$val_name = 'def_val_'.$name;
+		if (!is_null($fields[$name]->get_attribute('value')))
+		{
+			$$val_name = $fields[$name]->get_attribute('value');
+		}
+		elseif (is_null($$val_name))
+		{
+			$$val_name = 1;
+		}
+		$options[$name] = !is_null($fields[$name]->get_options()) ? $fields[$name]->get_options() : Form_Util::get_int_options(1, ($name == 'month') ? 12 : 31);
+	}
+	$data = array(
+		'val'   => $val,
+		'name_month' => $name_month,
+		'name_day' => $name_day,
+		'def_val_month' => $def_val_month,
+		'def_val_day' => $def_val_day,
+		'label' => $label,
+		'options' => $options,
+		'atters' => $atters,
+		'is_required' => (!empty($atters['month']['required']) && !empty($atters['day']['required'])),
+		'label_col_sm_size' => $label_col_sm_size,
+		'help' => $help,
+		'optional_public_flag' => $optional_public_flag,
+	);
+
+	return render('_parts/form/date', $data);
+}
+
 function form_text($value, $label, $label_col_sm_size = 2)
 {
 	$data = array(
@@ -285,4 +330,9 @@ function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is
 		'thumbnail_size' => $thumbnail_size,
 		'selects' => $selects,
 	));
+}
+
+function form_required_tag($mark = '*')
+{
+	return '<span class="required">'.$mark.'</span>';
 }

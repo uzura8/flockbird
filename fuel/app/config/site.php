@@ -13,7 +13,11 @@ $config = array(
 			'display_type' => array(
 				'detail' => '0',
 				'summery' => '1',
-				'always' => '3',
+				'always' => '2',
+			),
+			'birthday' => array(
+				'year_from' => -100,// years
+				'year_to' => 0,// years
 			),
 		),
 	),

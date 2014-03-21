@@ -135,9 +135,14 @@ CREATE TABLE `member` (
   `register_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
   `sex` varchar(16) DEFAULT NULL,
   `sex_public_flag` tinyint(2) NOT NULL DEFAULT '0',
+  `birthyear` int(4) DEFAULT NULL,
+  `birthyear_public_flag` tinyint(2) NOT NULL DEFAULT '0',
+  `birthday` varchar(5) DEFAULT NULL,
+  `birthday_public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `birthday_id` (`birthday`,`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

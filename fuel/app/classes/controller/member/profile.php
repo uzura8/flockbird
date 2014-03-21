@@ -45,9 +45,7 @@ class Controller_Member_Profile extends Controller_Member
 			\Util_security::check_csrf();
 			try
 			{
-				$form_member_profile->validate_public_flag();
-				$form_member_profile->remove_unique_restraint_for_updated_value();
-				if (!$form_member_profile->validate()) throw new \FuelException($form_member_profile->get_validation_errors());
+				$form_member_profile->validate();
 				\DB::start_transaction();
 				$form_member_profile->seve();
 				\DB::commit_transaction();

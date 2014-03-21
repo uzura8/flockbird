@@ -63,6 +63,7 @@ class Form_MemberProfile
 	public function validate_public_flag()
 	{
 		$this->validate_public_flag_member('sex');
+		$this->validate_public_flag_member('birthday');
 		$this->validate_public_flag_member_profile();
 	}
 
@@ -84,7 +85,7 @@ class Form_MemberProfile
 	private function validate_public_flag_each($post_param, $key)
 	{
 		$values = Input::post($post_param);
-		if (!is_null($values[$key])) return;
+		if (!isset($values[$key])) return;
 		if (in_array($values[$key], Site_Util::get_public_flags())) return;
 
 		throw new HttpInvalidInputException('公開範囲の値が不正です。');
@@ -112,6 +113,22 @@ class Form_MemberProfile
 
 			$this->member_obj->sex_public_flag = $this->member_public_flags['sex'];
 			if ($this->member_obj->is_changed('sex_public_flag')) $is_changeed[] = 'sex_public_flag';
+		}
+		if ($this->validation->fieldset()->field('member_birthyear'))
+		{
+			$this->member_obj->birthyear = $this->validated_values['member_birthyear'];
+			if ($this->member_obj->is_changed('birthyear')) $is_changeed[] = 'birthyear';
+
+			$this->member_obj->birthyear_public_flag = $this->member_public_flags['birthyear'];
+			if ($this->member_obj->is_changed('birthyear_public_flag')) $is_changeed[] = 'birthyear_public_flag';
+		}
+		if ($this->validation->fieldset()->field('member_birthday_month') && $this->validation->fieldset()->field('member_birthday_day'))
+		{
+			$this->member_obj->birthday = sprintf('%02d-%02d', $this->validated_values['member_birthday_month'], $this->validated_values['member_birthday_day']);
+			if ($this->member_obj->is_changed('birthday')) $is_changeed[] = 'birthday';
+
+			$this->member_obj->birthday_public_flag = $this->member_public_flags['birthday'];
+			if ($this->member_obj->is_changed('birthday_public_flag')) $is_changeed[] = 'birthday_public_flag';
 		}
 		if (!$is_changeed) return;
 		$this->member_obj->save();
@@ -195,11 +212,14 @@ class Form_MemberProfile
 
 	private function check_is_enabled_member_field($name)
 	{
-		if ($name != 'name' && empty($this->site_configs_profile[$name.'_is_enable'])) return false;
+		if (self::check_is_site_configs_profile_birthday_item($name)) $name = 'birthday';
+
 		if ($name == 'name' && $this->page_type == 'regist') return true;
+		if ($name != 'name' && empty($this->site_configs_profile[$name.'_is_enable'])) return false;
+		if ($name != 'name' && empty($this->site_configs_profile[$name.'_is_enable'])) return false;
 
 		$is_disp_key = sprintf('%s_is_disp_%s', $name, $this->page_type);
-		if (!isset($this->site_configs_profile[$is_disp_key])) return true;
+		if (!isset($this->site_configs_profile[$is_disp_key])) return false;
 
 		return (bool)$this->site_configs_profile[$is_disp_key];
 	}
@@ -219,6 +239,32 @@ class Form_MemberProfile
 		);
 	}
 
+	private function set_validation_member_field_birthday()
+	{
+		if (!$this->check_is_enabled_member_field('birthday')) return false;
+
+		$member_field_properties = Form_Util::get_model_field('member', 'birthyear');
+		$member_field_attrs = $member_field_properties['attributes'];
+		$member_field_attrs['value'] = !empty($this->member_obj->birthyear) ? $this->member_obj->birthyear : date('Y');
+		$this->validation->add(
+			'member_birthyear',
+			$member_field_properties['label'],
+			$member_field_attrs,
+			$member_field_properties['rules']
+		);
+
+		list($month, $day) = !empty($this->member_obj->birthday) ?
+			Util_Date::sprit_date_str($this->member_obj->birthday) : array(1, 1);
+		$options = Form_Util::get_int_options(1, 12);
+		$this->validation->add('member_birthday_month', '', array('type' => 'select', 'options' => $options, 'value' => $month))
+				->add_rule('valid_string', 'numeric')
+				->add_rule('in_array', array_keys($options));
+		$options = Form_Util::get_int_options(1, 31);
+		$this->validation->add('member_birthday_day', '', array('type' => 'select', 'options' => $options, 'value' => $day))
+				->add_rule('valid_string', 'numeric')
+				->add_rule('in_array', array_keys($options));
+	}
+
 	public function set_validation($add_fields = array())
 	{
 		$this->validation = \Validation::forge();
@@ -226,6 +272,7 @@ class Form_MemberProfile
 		// member
 		$this->set_validation_member_field('name');
 		$this->set_validation_member_field('sex');
+		$this->set_validation_member_field_birthday();
 
 		// member_profile
 		foreach ($this->profiles as $profile)
@@ -354,12 +401,25 @@ class Form_MemberProfile
 		}
 	}
 
+	public function validate_birthday()
+	{
+		if (!$this->check_is_enabled_member_field('birthday')) return;
+
+		if (!checkdate($this->validated_values['member_birthday_month'], $this->validated_values['member_birthday_day'], $this->validated_values['member_birthyear']))
+		{
+			throw new \FuelException(term('member.birthyear_birthday').'の日付が正しくありません。');
+		}
+	}
+
 	public function validate()
 	{
-		$result = $this->validation->run();
+		if ($this->page_type == 'config') $this->remove_unique_restraint_for_updated_value();
+
+		if (!$this->validation->run()) throw new \FuelException($this->get_validation_errors());
 		$this->validated_values = $this->validation->validated();
 
-		return $result;
+		$this->validate_birthday();
+		$this->validate_public_flag();
 	}
 
 	public function get_validation_errors()
@@ -387,36 +447,61 @@ class Form_MemberProfile
 	private function set_public_flags()
 	{
 		$this->set_member_public_flag('sex');
+		$this->set_member_public_flag('birthyear');
+		$this->set_member_public_flag('birthday');
 		$this->set_member_profile_public_flag();
 	}
 
 	private function set_member_public_flag($name)
 	{
-		if (!$this->check_is_editable_member_field_public_flag($name)) return;
-
-		$posted_public_flags = Input::post('member_public_flag');
-
-		$default_public_flag = (!is_null($this->site_configs_profile[$name.'_default_public_flag'])) ?
-			$this->site_configs_profile[$name.'_default_public_flag'] : Config::get('site.public_flag.default');
-		$this->member_public_flags[$name] = $default_public_flag;
+		$this->member_public_flags[$name] = $this->get_member_field_default_public_flag($name);
 
 		$prop = $name.'_public_flag';
 		if ($this->member_obj && !is_null($this->member_obj->$prop))
 		{
 			$this->member_public_flags[$name] = $this->member_obj->$prop;
 		}
-		if (isset($posted_public_flags[$name]))
-		{
-			$this->member_public_flags[$name] = $posted_public_flags[$name];
-		}
+
+		if (!$this->check_is_editable_member_field_public_flag($name)) return;
+
+		$posted_public_flags = Input::post('member_public_flag');
+		if (!isset($posted_public_flags[$name])) return;
+		$this->member_public_flags[$name] = $posted_public_flags[$name];
 	}
 
 	private function check_is_editable_member_field_public_flag($name)
 	{
 		if (!$this->check_is_enabled_member_field($name)) return false;
-		if (empty($this->site_configs_profile[$name.'_is_edit_public_flag'])) return false;
+
+		$key = $name.'_is_edit_public_flag';
+		if (self::check_is_site_configs_profile_birthday_item($name))
+		{
+			$key = 'birthday_is_edit_public_flag_'.$name;
+		}
+		if (empty($this->site_configs_profile[$key])) return false;
 
 		return true;
+	}
+
+	private function get_member_field_default_public_flag($name)
+	{
+		$key = $name.'_default_public_flag';
+		if (self::check_is_site_configs_profile_birthday_item($name))
+		{
+			$key = 'birthday_default_public_flag_'.$name;
+		}
+		if (!isset($this->site_configs_profile[$key]))  return Config::get('site.public_flag.default');
+		if (is_null($this->site_configs_profile[$key])) return Config::get('site.public_flag.default');
+
+		return $this->site_configs_profile[$key];
+	}
+
+	private static function check_is_site_configs_profile_birthday_item($name)
+	{
+		if ($name == 'birthyear') return true;
+		if ($name == 'birthday')  return true;
+
+		return false;
 	}
 
 	private function set_member_profile_public_flag()

@@ -192,6 +192,31 @@ class Validation extends Fuel\Core\Validation
 		return ! ($result->count() > 0);
 	}
 
+	public function _validation_date_string($val, $year_field = null, $delimiter = '-')
+	{
+		if (empty($val)) return true;// if $val is empty, uncheck;
+
+		$date_items = Util_Date::sprit_date_str($val, true, $delimiter);
+		$month = $date_items['month'];
+		$date = $date_items['date'];
+
+		$year = 2000;// 閏年の年を初期値としてセット
+		if (!empty($date_items['year']))
+		{
+			$year = $date_items['year'];
+		}
+		elseif ($year_field && $this->input($year_field))
+		{
+			$year = $this->input($year_field);
+		}
+
+		if ($month < 1 || $month > 12) return false;
+		if ($date < 1) return false;
+		if ($date > Date::days_in_month($month, $year)) return false;
+
+		return checkdate($month, $date, $year);
+	}
+
 	/**
 	 * 値の正当性チェック
 	 */

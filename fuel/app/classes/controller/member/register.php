@@ -36,7 +36,7 @@ class Controller_Member_Register extends Controller_Site
 		$add_fields = array();
 		$add_fields['password'] = Form_Util::get_model_field('member_auth', 'password');
 		$add_fields['token']    = Form_Util::get_model_field('member_pre', 'token');
-		$form_member_profile->set_validation(true, $add_fields);
+		$form_member_profile->set_validation($add_fields);
 		$form_member_profile->set_validation_message('match_value', ':labelが正しくありません。');
 
 		if (Input::method() == 'POST')
@@ -44,8 +44,7 @@ class Controller_Member_Register extends Controller_Site
 			Util_security::check_csrf();
 			try
 			{
-				$form_member_profile->validate_public_flag();
-				if (!$form_member_profile->validate()) throw new FuelException($form_member_profile->get_validation_errors());
+				$form_member_profile->validate();
 				DB::start_transaction();
 				$post = $form_member_profile->get_validated_values();
 				
@@ -110,8 +109,10 @@ class Controller_Member_Register extends Controller_Site
 		$this->set_title_and_breadcrumbs('メンバー登録確認', array('member/signup' => Config::get('term.signup')));
 		$this->template->content = View::forge('member/register/index', array(
 			'val' => $form_member_profile->get_validation(),
+			'site_configs_profile' => $form_member_profile->get_site_configs_profile(),
+			'member_public_flags' => $form_member_profile->get_member_public_flags(),
 			'profiles' => $form_member_profile->get_profiles(),
-			'public_flags' => $form_member_profile->get_member_profile_public_flags(),
+			'member_profile_public_flags' => $form_member_profile->get_member_profile_public_flags(),
 			'member_pre' => $member_pre,
 		));
 	}

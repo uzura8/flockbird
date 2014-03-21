@@ -49,4 +49,29 @@ class Util_Date
 
 		return true;
 	}
+
+	public static function sprit_date_str($date, $is_return_assoc = false, $delimiter = '-')
+	{
+		$items = explode($delimiter, $date);
+		$count = count($items);
+		if ($count < 2 || $count > 3) throw new InvalidArgumentException('Date format is invalid.');
+
+		if ($count == 3)
+		{
+			if (!$is_return_assoc) return array((int)$items[0], (int)$items[1], (int)$items[2]);
+
+			return array(
+				'year' => (int)$items[0],
+				'month' => (int)$items[1],
+				'date' => (int)$items[2],
+			);
+		}
+
+		if (!$is_return_assoc) return array((int)$items[0], (int)$items[1]);
+
+		return array(
+			'month' => (int)$items[0],
+			'date' => (int)$items[1],
+		);
+	}
 }
