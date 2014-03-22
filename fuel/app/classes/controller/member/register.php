@@ -68,9 +68,9 @@ class Controller_Member_Register extends Controller_Site
 				DB::commit_transaction();
 
 				$maildata = array();
-				$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
-				$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-				$maildata['subject']      = \Config::get('site.member_register_mail.subject');
+				$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
+				$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
+				$maildata['subject']      = \Config::get('mail.member_register_mail.subject');
 				$maildata['to_address']   = $member_pre->email;
 				$maildata['to_name']      = $member_pre->name;
 				$maildata['password']     = $member_pre->password;
@@ -173,9 +173,9 @@ class Controller_Member_Register extends Controller_Site
 				DB::commit_transaction();
 
 				$maildata = array();
-				$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
-				$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-				$maildata['subject']      = \Config::get('site.member_confirm_signup_mail.subject');
+				$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
+				$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
+				$maildata['subject']      = \Config::get('mail.member_confirm_signup_mail.subject');
 				$maildata['to_address']   = $post['email'];
 				//$maildata['to_name']      = $post['name'];
 				$maildata['password']     = $post['password'];

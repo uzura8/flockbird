@@ -60,9 +60,9 @@ class Controller_Member_setting extends Controller_Member
 			$data = array();
 			$data['to_name']      = $this->u->name;
 			$data['to_address']   = $this->u->member_auth->email;
-			$data['from_name']    = \Config::get('site.member_setting_common.from_name');
-			$data['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-			$data['subject']      = \Config::get('site.member_setting_password.subject');
+			$data['from_name']    = \Config::get('mail.member_setting_common.from_name');
+			$data['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
+			$data['subject']      = \Config::get('mail.member_setting_password.subject');
 
 			$data['body'] = <<< END
 {$data['to_name']} 様
@@ -169,9 +169,9 @@ END;
 			DB::commit_transaction();
 			$maildata['to_name']      = $this->u->name;
 			$maildata['to_address']   = $post['email'];
-			$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
-			$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-			$maildata['subject']      = \Config::get('site.member_confirm_change_email.subject');
+			$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
+			$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
+			$maildata['subject']      = \Config::get('mail.member_confirm_change_email.subject');
 			$this->send_confirm_change_email_mail($maildata);
 
 			Session::set_flash('message', '新しいアドレス宛に確認用メールを送信しました。受信したメール内に記載された URL よりアドレスの変更を完了してください。');
@@ -234,9 +234,9 @@ END;
 					DB::commit_transaction();
 
 					$maildata = array();
-					$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
-					$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-					$maildata['subject']      = \Config::get('site.member_change_email.subject');
+					$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
+					$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
+					$maildata['subject']      = \Config::get('mail.member_change_email.subject');
 					$maildata['to_address']   = $email;
 					$maildata['to_name']      = $member->name;
 					$this->send_change_email_mail($maildata);

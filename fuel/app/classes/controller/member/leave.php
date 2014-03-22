@@ -80,9 +80,9 @@ class Controller_Member_Leave extends Controller_Site
 			$data = array();
 			$data['to_name']      = $this->u->name;
 			$data['to_address']   = $this->u->member_auth->email;
-			$data['from_name']    = \Config::get('site.member_leave_mail.from_name');
-			$data['from_address'] = \Config::get('site.member_leave_mail.from_mail_address');
-			$data['subject']      = \Config::get('site.member_leave_mail.subject');
+			$data['from_name']    = \Config::get('mail.member_leave_mail.from_name');
+			$data['from_address'] = \Config::get('mail.member_leave_mail.from_mail_address');
+			$data['subject']      = \Config::get('mail.member_leave_mail.subject');
 
 			$data['body'] = <<< END
 {$data['to_name']} 様

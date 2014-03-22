@@ -76,9 +76,9 @@ class Controller_Member_Recover extends Controller_Site
 			DB::commit_transaction();
 			$maildata['to_name']      = $member_auth->member->name;
 			$maildata['to_address']   = $post['email'];
-			$maildata['from_name']    = \Config::get('site.member_setting_common.from_name');
-			$maildata['from_address'] = \Config::get('site.member_setting_common.from_mail_address');
-			$maildata['subject']      = \Config::get('site.member_resend_password.subject');
+			$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
+			$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
+			$maildata['subject']      = \Config::get('mail.member_resend_password.subject');
 			$this->send_confirm_reset_password_mail($maildata);
 
 			Session::set_flash('message', $message);
@@ -133,9 +133,9 @@ class Controller_Member_Recover extends Controller_Site
 				try
 				{
 					$maildata = array();
-					$maildata['from_name']    = Config::get('site.member_setting_common.from_name');
-					$maildata['from_address'] = Config::get('site.member_setting_common.from_mail_address');
-					$maildata['subject']      = Config::get('site.member_reset_password.subject');
+					$maildata['from_name']    = Config::get('mail.member_setting_common.from_name');
+					$maildata['from_address'] = Config::get('mail.member_setting_common.from_mail_address');
+					$maildata['subject']      = Config::get('mail.member_reset_password.subject');
 					$maildata['to_address']   = $member_password_pre->email;
 					$maildata['to_name']      = $member_password_pre->member->name;
 					DB::start_transaction();
