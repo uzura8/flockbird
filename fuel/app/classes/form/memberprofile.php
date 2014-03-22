@@ -98,38 +98,48 @@ class Form_MemberProfile
 		$this->save_member_profile();
 	}
 
+	private function check_is_set_field($field)
+	{
+		return $this->validation->fieldset()->field($field);
+	}
+
+	private function set_member_obj_value($prop)
+	{
+		$field = 'member_'.$prop;
+		if (!$this->check_is_set_field($field)) return false;
+
+		$this->member_obj->$prop = $this->validated_values[$field];
+
+		return $this->member_obj->is_changed($prop);
+	}
+
+	private function set_member_obj_public_flag($prop, $public_flag_prop = null)
+	{
+		$field = 'member_'.$prop;
+		if (!$this->check_is_set_field($field)) return false;
+
+		if (!$public_flag_prop) $public_flag_prop = $prop.'_public_flag';
+		$this->member_obj->$public_flag_prop = $this->member_public_flags[$prop];
+
+		return $this->member_obj->is_changed($public_flag_prop);
+	}
+
 	private function save_member()
 	{
 		$is_changeed = array();
-		if ($this->validation->fieldset()->field('member_name'))
-		{
-			$this->member_obj->name = $this->validated_values['member_name'];
-			if ($this->member_obj->is_changed('name')) $is_changeed[] = 'name';
-		}
-		if ($this->validation->fieldset()->field('member_sex'))
-		{
-			$this->member_obj->sex = $this->validated_values['member_sex'];
-			if ($this->member_obj->is_changed('sex')) $is_changeed[] = 'sex';
+		if ($this->set_member_obj_value('name')) $is_changeed[] = 'name';
+		if ($this->set_member_obj_value('sex'))  $is_changeed[] = 'sex';
+		if ($this->set_member_obj_public_flag('sex')) $is_changeed[] = 'sex_public_flag';
+		if ($this->set_member_obj_value('birthyear'))  $is_changeed[] = 'birthyear';
+		if ($this->set_member_obj_public_flag('birthyear')) $is_changeed[] = 'birthyear_public_flag';
 
-			$this->member_obj->sex_public_flag = $this->member_public_flags['sex'];
-			if ($this->member_obj->is_changed('sex_public_flag')) $is_changeed[] = 'sex_public_flag';
-		}
-		if ($this->validation->fieldset()->field('member_birthyear'))
+		if ($this->check_is_set_field('member_birthday_month') && $this->check_is_set_field('member_birthday_day'))
 		{
-			$this->member_obj->birthyear = $this->validated_values['member_birthyear'];
-			if ($this->member_obj->is_changed('birthyear')) $is_changeed[] = 'birthyear';
-
-			$this->member_obj->birthyear_public_flag = $this->member_public_flags['birthyear'];
-			if ($this->member_obj->is_changed('birthyear_public_flag')) $is_changeed[] = 'birthyear_public_flag';
-		}
-		if ($this->validation->fieldset()->field('member_birthday_month') && $this->validation->fieldset()->field('member_birthday_day'))
-		{
-			$this->member_obj->birthday = sprintf('%02d-%02d', $this->validated_values['member_birthday_month'], $this->validated_values['member_birthday_day']);
+			$this->member_obj->birthday = Util_Date::combine_date_str($this->validated_values['member_birthday_month'], $this->validated_values['member_birthday_day']);
 			if ($this->member_obj->is_changed('birthday')) $is_changeed[] = 'birthday';
-
-			$this->member_obj->birthday_public_flag = $this->member_public_flags['birthday'];
-			if ($this->member_obj->is_changed('birthday_public_flag')) $is_changeed[] = 'birthday_public_flag';
 		}
+		if ($this->set_member_obj_public_flag('birthday')) $is_changeed[] = 'birthday_public_flag';
+
 		if (!$is_changeed) return;
 		$this->member_obj->save();
 
@@ -231,6 +241,13 @@ class Form_MemberProfile
 		$member_field_properties = Form_Util::get_model_field('member', $name);
 		$member_field_attrs = $member_field_properties['attributes'];
 		$member_field_attrs['value'] = $this->member_obj ? $this->member_obj->$name : '';
+
+		$key = $name.'_is_required';
+		if (!empty($this->site_configs_profile[$key]))
+		{
+			$member_field_properties['rules'][] = 'required';
+		}
+
 		$this->validation->add(
 			'member_'.$name,
 			$member_field_properties['label'],
@@ -246,6 +263,7 @@ class Form_MemberProfile
 		$member_field_properties = Form_Util::get_model_field('member', 'birthyear');
 		$member_field_attrs = $member_field_properties['attributes'];
 		$member_field_attrs['value'] = !empty($this->member_obj->birthyear) ? $this->member_obj->birthyear : date('Y');
+
 		$this->validation->add(
 			'member_birthyear',
 			$member_field_properties['label'],
@@ -466,6 +484,7 @@ class Form_MemberProfile
 
 		$posted_public_flags = Input::post('member_public_flag');
 		if (!isset($posted_public_flags[$name])) return;
+		if (!in_array($posted_public_flags[$name], Site_Util::get_public_flags())) return;
 		$this->member_public_flags[$name] = $posted_public_flags[$name];
 	}
 

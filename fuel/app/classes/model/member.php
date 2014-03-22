@@ -32,7 +32,7 @@ class Model_Member extends \Orm\Model
 			'form' => array('type' => 'text'),
 		),
 		'login_hash' => array(
-			'validation' => array('required', 'valid_string' => array('alpha_numeric'), 'max_length' => array(255)),
+			'validation' => array('valid_string' => array('alpha_numeric'), 'max_length' => array(255)),
 			'form' => array('type' => false),
 		),
 		'register_type' => array(
@@ -54,7 +54,6 @@ class Model_Member extends \Orm\Model
 		),
 		'sex_public_flag' => array(
 			'data_type' => 'integer',
-			'validation' => array('required'),
 			'form' => array('type' => 'radio'),
 		),
 		'birthyear' => array(
@@ -64,7 +63,6 @@ class Model_Member extends \Orm\Model
 		),
 		'birthyear_public_flag' => array(
 			'data_type' => 'integer',
-			'validation' => array('required'),
 			'form' => array('type' => 'radio'),
 		),
 		'birthday' => array(
@@ -74,7 +72,6 @@ class Model_Member extends \Orm\Model
 		),
 		'birthday_public_flag' => array(
 			'data_type' => 'integer',
-			'validation' => array('required'),
 			'form' => array('type' => 'radio'),
 		),
 		'created_at' => array('form' => array('type' => false)),

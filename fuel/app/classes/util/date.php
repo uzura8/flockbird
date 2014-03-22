@@ -74,4 +74,12 @@ class Util_Date
 			'date' => (int)$items[1],
 		);
 	}
+
+	public static function combine_date_str($month, $date, $year = null, $delimiter = '-')
+	{
+		$date_str = sprintf('%02d%s%02d', $month, $delimiter, $date);
+		if ($year) $date_str = sprintf('%04d%s', $year, $delimiter).$date_str;
+
+		return $date_str;
+	}
 }
