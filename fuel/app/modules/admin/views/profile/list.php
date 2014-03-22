@@ -6,8 +6,8 @@
 </h3>
 <table class="table">
 <tr>
-	<th>プロフィール変更</th>
-	<th>メンバー検索</th>
+	<th>変更</th>
+	<th>検索</th>
 </tr>
 <tr>
 	<td><?php echo !empty($site_configs['profile_name_is_disp_config']) ? '◯' : '×'; ?></td>
@@ -25,8 +25,8 @@
 <table class="table">
 <tr>
 	<th>新規登録</th>
-	<th>プロフィール変更</th>
-	<th>メンバー検索</th>
+	<th>変更</th>
+	<th>検索</th>
 	<th>必須</th>
 	<th>場所</th>
 	<th>公開範囲の選択</th>
@@ -54,21 +54,22 @@
 <table class="table">
 <tr>
 	<th rowspan="2">新規登録</th>
-	<th rowspan="2">プロフィール変更</th>
-	<th rowspan="2">メンバー検索</th>
+	<th rowspan="2">変更</th>
+	<th rowspan="2">検索</th>
 	<th colspan="3">年代</th>
-	<th rowspan="2">必須</th>
 	<th colspan="4">生年</th>
-	<th colspan="3">誕生日</th>
+	<th colspan="4">誕生日</th>
 </tr>
 <tr>
 	<th>表示</th>
 	<th>区切り</th>
 	<th>形式</th>
 	<th>場所</th>
+	<th>必須</th>
 	<th>公開範囲の選択</th>
 	<th>公開設定デフォルト値</th>
 	<th>場所</th>
+	<th>必須</th>
 	<th>公開範囲の選択</th>
 	<th>公開設定デフォルト値</th>
 </tr>
@@ -79,11 +80,12 @@
 	<td><?php echo !empty($site_configs['profile_birthday_is_enable_generation_view']) ? '◯' : '×'; ?></td>
 	<td><?php echo !empty($site_configs['profile_birthday_generation_unit']) ? '5年' : '10年'; ?></td>
 	<td><?php echo !empty($site_configs['profile_birthday_birthyear_view_type']) ? '年齢' : '生年'; ?></td>
-	<td><?php echo !empty($site_configs['profile_birthday_is_required']) ? '◯' : '×'; ?></td>
 	<td><?php echo Site_Profile::get_display_type_options($site_configs['profile_birthday_display_type_birthyear'], true); ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_is_required_birthyear']) ? '◯' : '×'; ?></td>
 	<td><?php echo !empty($site_configs['profile_birthday_is_edit_public_flag_birthyear']) ? '◯' : '×'; ?></td>
 	<td><?php echo Site_Form::get_public_flag_options($site_configs['profile_birthday_default_public_flag_birthyear']); ?></td>
 	<td><?php echo Site_Profile::get_display_type_options($site_configs['profile_birthday_display_type_birthday'], true); ?></td>
+	<td><?php echo !empty($site_configs['profile_birthday_is_required_birthday']) ? '◯' : '×'; ?></td>
 	<td><?php echo !empty($site_configs['profile_birthday_is_edit_public_flag_birthday']) ? '◯' : '×'; ?></td>
 	<td><?php echo Site_Form::get_public_flag_options($site_configs['profile_birthday_default_public_flag_birthday']); ?></td>
 </tr>

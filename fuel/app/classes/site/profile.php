@@ -26,7 +26,7 @@ class Site_Profile
 			Config::get('site.member.profile.display_type.always')  => $is_simple ? '常に' : '常に表示',// 2
 		);
 
-		if ($key && strlen($key)) return $options[$key];
+		if (isset($key) && strlen($key)) return $options[$key];
 
 		return $options;
 	}

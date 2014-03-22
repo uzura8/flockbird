@@ -113,10 +113,10 @@ class Form_MemberProfile
 		return $this->member_obj->is_changed($prop);
 	}
 
-	private function set_member_obj_public_flag($prop, $public_flag_prop = null)
+	private function set_member_obj_public_flag($prop, $is_check_set_field = true, $public_flag_prop = null)
 	{
 		$field = 'member_'.$prop;
-		if (!$this->check_is_set_field($field)) return false;
+		if ($is_check_set_field && !$this->check_is_set_field($field)) return false;
 
 		if (!$public_flag_prop) $public_flag_prop = $prop.'_public_flag';
 		$this->member_obj->$public_flag_prop = $this->member_public_flags[$prop];
@@ -138,7 +138,7 @@ class Form_MemberProfile
 			$this->member_obj->birthday = Util_Date::combine_date_str($this->validated_values['member_birthday_month'], $this->validated_values['member_birthday_day']);
 			if ($this->member_obj->is_changed('birthday')) $is_changeed[] = 'birthday';
 		}
-		if ($this->set_member_obj_public_flag('birthday')) $is_changeed[] = 'birthday_public_flag';
+		if ($this->set_member_obj_public_flag('birthday', false)) $is_changeed[] = 'birthday_public_flag';
 
 		if (!$is_changeed) return;
 		$this->member_obj->save();
@@ -264,6 +264,11 @@ class Form_MemberProfile
 		$member_field_attrs = $member_field_properties['attributes'];
 		$member_field_attrs['value'] = !empty($this->member_obj->birthyear) ? $this->member_obj->birthyear : date('Y');
 
+		if (!empty($this->site_configs_profile['birthday_is_required_birthyear']))
+		{
+			$member_field_properties['rules'][] = 'required';
+		}
+
 		$this->validation->add(
 			'member_birthyear',
 			$member_field_properties['label'],
@@ -273,14 +278,26 @@ class Form_MemberProfile
 
 		list($month, $day) = !empty($this->member_obj->birthday) ?
 			Util_Date::sprit_date_str($this->member_obj->birthday) : array(1, 1);
+		$rules = array('valid_string' => array('numeric'));
+		if (!empty($this->site_configs_profile['birthday_is_required_birthday'])) $rules[] = 'required';
+
 		$options = Form_Util::get_int_options(1, 12);
-		$this->validation->add('member_birthday_month', '', array('type' => 'select', 'options' => $options, 'value' => $month))
-				->add_rule('valid_string', 'numeric')
-				->add_rule('in_array', array_keys($options));
-		$options = Form_Util::get_int_options(1, 31);
-		$this->validation->add('member_birthday_day', '', array('type' => 'select', 'options' => $options, 'value' => $day))
-				->add_rule('valid_string', 'numeric')
-				->add_rule('in_array', array_keys($options));
+		$rules['in_array'] = array(array_keys($options));
+		$this->validation->add(
+			'member_birthday_month',
+			'誕生日(月)',
+			array('type' => 'select', 'options' => $options, 'value' => $month),
+			$rules
+		);
+
+		$options = Form_Util::get_int_options(1, 12);
+		$rules['in_array'] = array(array_keys($options));
+		$this->validation->add(
+			'member_birthday_day',
+			'誕生日(日)',
+			array('type' => 'select', 'options' => $options, 'value' => $month),
+			$rules
+		);
 	}
 
 	public function set_validation($add_fields = array())

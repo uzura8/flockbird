@@ -125,12 +125,6 @@ class Form_SiteConfig_Profile extends Form_SiteConfig
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', array_keys($options));
 
-		$name = 'profile_birthday_is_required';
-		$value = $is_set_saved_value ? self::get_values($name, 0) : 0;
-		$options_is_required = array('1' => '');
-		$val->add($name, '必須', array('type' => 'checkbox', 'options' => $options_is_required, 'value' => $value))
-				->add_rule('checkbox_val', $options_is_required);
-
 		$name = 'profile_birthday_birthyear_view_type';
 		$value = $is_set_saved_value ? self::get_values($name, 0) : 0;
 		$options = array('0' => '生年表示', '1' => '年齢表示');
@@ -144,6 +138,12 @@ class Form_SiteConfig_Profile extends Form_SiteConfig
 		$val->add($name, '表示場所(生年)', array('type' => 'select', 'options' => $options_display_type, 'value' => $value))
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', array_keys($options_display_type));
+
+		$name = 'profile_birthday_is_required_birthyear';
+		$value = $is_set_saved_value ? self::get_values($name, 0) : 0;
+		$options_is_required = array('1' => '');
+		$val->add($name, '必須(生年)', array('type' => 'checkbox', 'options' => $options_is_required, 'value' => $value))
+				->add_rule('checkbox_val', $options_is_required);
 
 		$name = 'profile_birthday_is_edit_public_flag_birthyear';
 		$value = $is_set_saved_value ? self::get_values($name, 0) : 0;
@@ -165,6 +165,12 @@ class Form_SiteConfig_Profile extends Form_SiteConfig
 		$val->add($name, '表示場所(誕生日)', array('type' => 'select', 'options' => $options_display_type, 'value' => $value))
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', array_keys($options_display_type));
+
+		$name = 'profile_birthday_is_required_birthday';
+		$value = $is_set_saved_value ? self::get_values($name, 0) : 0;
+		$options_is_required = array('1' => '');
+		$val->add($name, '必須(誕生日)', array('type' => 'checkbox', 'options' => $options_is_required, 'value' => $value))
+				->add_rule('checkbox_val', $options_is_required);
 
 		$name = 'profile_birthday_is_edit_public_flag_birthday';
 		$value = $is_set_saved_value ? self::get_values($name, 0) : 0;
