@@ -141,6 +141,19 @@ class Site_Util
 		return $config;
 	}
 
+	public static function merge_db_configs($configs, $table)
+	{
+		$class = 'Model_'.Inflector::camelize($table);
+		$db_configs = $class::get_valueas_assoc();
+		foreach ($db_configs as $name => $value)
+		{
+			$key = str_replace('_', '.', $name);
+			Arr::set($configs, $key, $value);
+		}
+
+		return $configs;
+	}
+
 	public static function html_entity_decode($value, $flags = null, $encoding = null)
 	{
 		is_null($flags) and $flags = \Config::get('security.htmlentities_flags', ENT_QUOTES);

@@ -4,10 +4,7 @@ class Form_SiteConfig
 {
 	public static function get_values($name, $default_value = null)
 	{
-		$saved_value = \Model_SiteConfig::get_value4name_as_assoc($name);
-		if (false === $saved_value) return $default_value;
-
-		return $saved_value;
+		return conf($name, 'site', $default_value, '_');
 	}
 
 	public static function get_names($prefixes)
@@ -22,13 +19,13 @@ class Form_SiteConfig
 		return $names;
 	}
 
-	public static function get_validation($prefix, $is_set_saved_value = false)
+	public static function get_validation($prefix)
 	{
 		$parts = explode('_', $prefix);
 		$class = self::get_class_name((count($parts) > 1) ? array_shift($parts) : '');
 		$method = 'get_validation_'.implode('_', $parts);
 
-		return $class::$method($is_set_saved_value);
+		return $class::$method();
 	}
 
 	protected static function get_class_name($prefix = '')

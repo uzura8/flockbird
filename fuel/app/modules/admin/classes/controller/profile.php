@@ -16,13 +16,12 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_index()
 	{		
-		$site_configs = \Model_SiteConfig::get4names_as_assoc(\Form_SiteConfig::get_names(array('profile_name', 'profile_sex', 'profile_birthday')));
 		$labels = self::get_list_labels();
 		$profiles = \Model_Profile::query()->order_by('sort_order')->get();
 		$this->set_title_and_breadcrumbs(term('profile').'設定');
 		$this->template->layout = 'wide';
 		$this->template->post_footer = \View::forge('profile/_parts/index_footer');
-		$this->template->content = \View::forge('profile/list', array('profiles' => $profiles, 'site_configs' => $site_configs, 'labels' => $labels));
+		$this->template->content = \View::forge('profile/list', array('profiles' => $profiles, 'labels' => $labels));
 	}
 
 	/**
@@ -129,7 +128,7 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_edit_name()
 	{	
-		$val = \Form_SiteConfig::get_validation('profile_name', true);
+		$val = \Form_SiteConfig::get_validation('profile_name');
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
@@ -163,7 +162,7 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_edit_sex()
 	{	
-		$val = \Form_SiteConfig::get_validation('profile_sex', true);
+		$val = \Form_SiteConfig::get_validation('profile_sex');
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
@@ -197,7 +196,7 @@ class Controller_Profile extends Controller_Admin {
 	 */
 	public function action_edit_birthday()
 	{	
-		$val = \Form_SiteConfig::get_validation('profile_birthday', true);
+		$val = \Form_SiteConfig::get_validation('profile_birthday');
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();

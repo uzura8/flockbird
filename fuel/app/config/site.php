@@ -122,6 +122,49 @@ $config = array(
 	'public_flag' => array(
 		'default' => PRJ_PUBLIC_FLAG_ALL,
 	),
+	// site_config default
+	'profile' => array(
+		'name' => array(
+			'isDispConfig' => 1,
+			'isDispSearch' => 0,
+		),
+		'sex' => array(
+			'isEnable' => 1,
+			'isDispRegist' => 1,
+			'isDispConfig' => 1,
+			'isDispSearch' => 0,
+			'displayType' => 0,
+			'isRequired' => 0,
+			'publicFlag' => array(
+				'isEdit' => 1,
+				'default' => 1,
+			),
+		),
+		'birthday' => array(
+			'isEnable' => 1,
+			'isDispRegist' => 1,
+			'isDispConfig' => 1,
+			'isDispSearch' => 0,
+			'birthyear' => array(
+				'displayType' => 0,
+				'isRequired' => 0,
+				'publicFlag' => array(
+					'isEdit' => 1,
+					'default' => 1,
+				),
+			),
+			'birthday' => array(
+				'displayType' => 0,
+				'isRequired' => 0,
+				'publicFlag' => array(
+					'isEdit' => 1,
+					'default' => 1,
+				),
+			),
+		),
+	),
 );
+$config = Site_Util::merge_module_configs($config, 'site');
+$config = Site_Util::merge_db_configs($config, 'site_config');
 
-return Site_Util::merge_module_configs($config, 'site');
+return $config;

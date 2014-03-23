@@ -349,4 +349,19 @@ function profile_value(Model_MemberProfile $member_profile)
 	return $member_profile->value;
 }
 
+function conf($item, $file = null, $default = null, $replace_delimitter = null)
+{
+	if (!$file) $file = 'site';
+	if ($replace_delimitter) $item = str_replace($replace_delimitter, '.', $item);
+
+	return Config::get(sprintf('%s.%s', $file, $item), $default);
+}
+
+function flag_state($flag, $on_symbol = null, $off_symbol = null)
+{
+	if (!$on_symbol) $on_symbol = '◯';
+	if (!$off_symbol) $off_symbol = '×';
+
+	return $flag ? $on_symbol : $off_symbol;
+}
 ?>

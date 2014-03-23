@@ -30,6 +30,13 @@ class Model_SiteConfig extends \Orm\Model
 		self::$values = Util_Orm::conv_cols2assoc($objs, 'name', 'value');
 	}
 
+	public static function get_valueas_assoc()
+	{
+		if (empty(self::$values)) self::set_values_as_assoc();
+
+		return self::$values;
+	}
+
 	public static function get_value4name_as_assoc($name)
 	{
 		if (empty(self::$values)) self::set_values_as_assoc();
