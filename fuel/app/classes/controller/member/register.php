@@ -109,7 +109,6 @@ class Controller_Member_Register extends Controller_Site
 		$this->set_title_and_breadcrumbs('メンバー登録確認', array('member/signup' => Config::get('term.signup')));
 		$this->template->content = View::forge('member/register/index', array(
 			'val' => $form_member_profile->get_validation(),
-			'site_configs_profile' => $form_member_profile->get_site_configs_profile(),
 			'member_public_flags' => $form_member_profile->get_member_public_flags(),
 			'profiles' => $form_member_profile->get_profiles(),
 			'member_profile_public_flags' => $form_member_profile->get_member_profile_public_flags(),

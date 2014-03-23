@@ -62,7 +62,6 @@ class Controller_Member_Profile extends Controller_Member
 		$this->set_title_and_breadcrumbs(term('profile').term('form.edit'), array('member/profile' => '自分の'.term('profile')), $this->u);
 		$this->template->content = View::forge('member/profile/edit', array(
 			'val' => $form_member_profile->get_validation(),
-			'site_configs_profile' => $form_member_profile->get_site_configs_profile(),
 			'member_public_flags' => $form_member_profile->get_member_public_flags(),
 			'profiles' => $form_member_profile->get_profiles(),
 			'member_profile_public_flags' => $form_member_profile->get_member_profile_public_flags(),

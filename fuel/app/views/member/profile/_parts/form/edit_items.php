@@ -5,10 +5,9 @@
 <?php if ($val->fieldset()->field('member_sex')): ?>
 <?php
 $optional_public_flag = array();
-if (!empty($site_configs_profile['sex_is_edit_public_flag']))
+if (conf('profile.sex.publicFlag.isEdit'))
 {
-	$value = Config::get('site.public_flag.default');
-	if (isset($site_configs_profile['sex_default_public_flag'])) $value = $site_configs_profile['sex_default_public_flag'];
+	$value = conf('profile.sex.publicFlag.default', null, conf('public_flag.default'));
 	if (isset($member_public_flags['sex'])) $value = $member_public_flags['sex'];
 	$optional_public_flag = array('name' => 'member_public_flag[sex]', 'value' => $value);
 }
@@ -19,10 +18,9 @@ if (!empty($site_configs_profile['sex_is_edit_public_flag']))
 <?php if ($val->fieldset()->field('member_birthyear')): ?>
 <?php
 $optional_public_flag = array();
-if (!empty($site_configs_profile['birthday_is_edit_public_flag_birthyear']))
+if (conf('profile.birthday.birthyear.publicFlag.isEdit'))
 {
-	$value = Config::get('site.public_flag.default');
-	if (isset($site_configs_profile['birthday_is_edit_public_flag_birthyear'])) $value = $site_configs_profile['birthday_is_edit_public_flag_birthyear'];
+	$value = conf('profile.birthday.birthyear.publicFlag.default', null, conf('public_flag.default'));
 	if (isset($member_public_flags['birthyear'])) $value = $member_public_flags['birthyear'];
 	$optional_public_flag = array('name' => 'member_public_flag[birthyear]', 'value' => $value);
 }
@@ -33,10 +31,9 @@ if (!empty($site_configs_profile['birthday_is_edit_public_flag_birthyear']))
 <?php if ($val->fieldset()->field('member_birthday_month') && $val->fieldset()->field('member_birthday_month')): ?>
 <?php
 $optional_public_flag = array();
-if (!empty($site_configs_profile['birthday_is_edit_public_flag_birthday']))
+if (conf('profile.birthday.birthday.publicFlag.isEdit'))
 {
-	$value = Config::get('site.public_flag.default');
-	if (isset($site_configs_profile['birthday_is_edit_public_flag_birthday'])) $value = $site_configs_profile['birthday_is_edit_public_flag_birthday'];
+	$value = conf('profile.birthday.birthday.publicFlag.default', null, conf('public_flag.default'));
 	if (isset($member_public_flags['birthday'])) $value = $member_public_flags['birthday'];
 	$optional_public_flag = array('name' => 'member_public_flag[birthday]', 'value' => $value);
 }

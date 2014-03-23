@@ -59,7 +59,7 @@ class Model_Member extends \Orm\Model
 		'birthyear' => array(
 			'data_type' => 'integer',
 			'validation' => array('trim', 'numeric_min' => array(1900), 'numeric_max' => array(2100)),
-			'form' => array('type' => 'input'),
+			'form' => array('type' => 'select'),
 		),
 		'birthyear_public_flag' => array(
 			'data_type' => 'integer',

@@ -4,7 +4,6 @@
 	<?php echo render('member/profile/_parts/form/edit_items', array(
 		'label_size' => $label_size,
 		'val' => $val,
-		'site_configs_profile' => $site_configs_profile,
 		'member_public_flags' => $member_public_flags,
 		'profiles' => $profiles,
 		'member_profile_public_flags' => $member_profile_public_flags,
