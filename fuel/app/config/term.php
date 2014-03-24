@@ -13,10 +13,17 @@ $config = array(
 		'name' => 'ニックネーム',
 		'email' => 'メールアドレス',
 		'password' => 'パスワード',
-		'sex' => '性別',
+		'sex' => array(
+			'label' => '性別',
+			'options' => array(
+				'male' => '男性',
+				'femail' => '女性',
+			),
+		),
 		'birthyear' => '生年',
 		'birthday' => '誕生日',
 		'birthyear_birthday' => '生年月日',
+		'age' => '年齢',
 	),
 	'toppage' => 'Top',
 	'myhome'  => 'Home',

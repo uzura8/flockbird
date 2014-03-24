@@ -37,7 +37,7 @@ class Form_SiteConfig_Profile extends Form_SiteConfig
 		$name = self::get_name($name_prefix, 'isEnable');
 		$value = self::get_values($name, 0);
 		$options_enable = array('0' => '無効', '1' => '有効');
-		$val->add($name, term('member.sex').'設定を有効にするか', array('type' => 'radio', 'options' => $options_enable, 'value' => $value))
+		$val->add($name, term('member.sex.label').'設定を有効にするか', array('type' => 'radio', 'options' => $options_enable, 'value' => $value))
 				->add_rule('valid_string', 'numeric', 'required')
 				->add_rule('in_array', array_keys($options_enable));
 

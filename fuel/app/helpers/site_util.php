@@ -311,7 +311,7 @@ function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '
 	return Html::anchor($href, $label, $attr);
 }
 
-function check_profile_public_flag($public_flag, $access_from)
+function check_public_flag($public_flag, $access_from)
 {
 	switch ($public_flag)
 	{
@@ -330,6 +330,24 @@ function check_profile_public_flag($public_flag, $access_from)
 	}
 
 	return false;
+}
+
+function check_public_flags($public_flags, $access_from, $strict_cond = true)
+{
+	foreach ($public_flags as $public_flag)
+	{
+		if (!$strict_cond && check_public_flag($public_flag, $access_from)) return true;
+		if ($strict_cond && !check_public_flag($public_flag, $access_from)) return false;
+	}
+
+	return $strict_cond ? true : false;
+}
+
+function check_display_type($contents_display_type, $page_display_type_str = 'detail')
+{
+	$page_display_type = conf('member.profile.display_type.'.$page_display_type_str, 0);
+
+	return $contents_display_type >= $page_display_type;
 }
 
 function profile_value(Model_MemberProfile $member_profile)

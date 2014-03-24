@@ -146,6 +146,7 @@ $config = array(
 			'isDispConfig' => 1,
 			'isDispSearch' => 0,
 			'birthyear' => array(
+				'viewType' => 0,// 0:生年 1:年齢
 				'displayType' => 0,
 				'isRequired' => 0,
 				'publicFlag' => array(

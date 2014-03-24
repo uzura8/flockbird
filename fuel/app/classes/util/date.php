@@ -82,4 +82,21 @@ class Util_Date
 
 		return $date_str;
 	}
+
+	public static function conv_date_format($date_str, $format = '%d/%d')
+	{
+		list($month, $date) = self::sprit_date_str($date_str);
+
+		return sprintf($format, $month, $date);
+	}
+
+	public static function calc_age($year, $date_str = null)
+	{
+		if (!$date_str) $date_str = '1231';// 日付がない場合は最も遅い日付で年齢計算する
+		if (strpos($date_str, '-') !== false) $date_str = str_replace('-', '', $date_str);
+		$target_date = $year.$date_str;
+		$now = date('Ymd');
+
+		return floor(($now - $target_date) / 10000);
+	}
 }

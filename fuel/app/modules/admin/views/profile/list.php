@@ -18,7 +18,7 @@
 
 <?php $prefix = 'profile.sex.'; ?>
 <h3 class="clearfix">
-	<?php echo term('member.sex'); ?>設定
+	<?php echo term('member.sex.label'); ?>設定
 	<?php echo Html::anchor('admin/profile/edit_sex', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
 </h3>
 <?php if (!conf($prefix.'isEnable')): ?>

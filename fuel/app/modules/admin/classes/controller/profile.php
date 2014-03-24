@@ -175,7 +175,7 @@ class Controller_Profile extends Controller_Admin {
 				\Form_SiteConfig::save($val, $post);
 				\DB::commit_transaction();
 
-				\Session::set_flash('message', term('member.sex').'を変更しました。');
+				\Session::set_flash('message', term('member.sex.label').'を変更しました。');
 				\Response::redirect('admin/profile');
 			}
 			catch(\FuelException $e)
@@ -184,7 +184,7 @@ class Controller_Profile extends Controller_Admin {
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
-		$this->set_title_and_breadcrumbs(term('member.sex').'設定');
+		$this->set_title_and_breadcrumbs(term('member.sex.label').'設定');
 		$this->template->content = \View::forge('profile/_parts/form_basic', array('val' => $val));
 	}
 

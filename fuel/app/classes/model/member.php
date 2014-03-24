@@ -96,12 +96,12 @@ class Model_Member extends \Orm\Model
 	{
 		static::$_properties['name']['label'] = term('member.name');
 
-		static::$_properties['sex']['label'] = term('member.sex');
+		static::$_properties['sex']['label'] = term('member.sex.label');
 		static::$_properties['sex']['form']['options'] = self::get_sex_options();
 		static::$_properties['sex']['validation']['in_array'][] = array_keys(self::get_sex_options());
 
 		$options_public_flag = Site_Util::get_public_flags();
-		static::$_properties['sex_public_flag']['label'] = sprintf('%sの%s', term('member.sex'), term('public_flag'));
+		static::$_properties['sex_public_flag']['label'] = sprintf('%sの%s', term('member.sex.label'), term('public_flag'));
 		static::$_properties['sex_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['sex_public_flag']['validation']['in_array'][] = $options_public_flag;
 
@@ -123,10 +123,7 @@ class Model_Member extends \Orm\Model
 
 	public static function get_sex_options($key = null)
 	{
-		$options = array(
-			'male'   => '男性',
-			'female' => '女性',
-		);
+		$options = term('member.sex.options');
 
 		if ($key) return $options[$key];
 
