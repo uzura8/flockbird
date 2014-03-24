@@ -186,33 +186,36 @@ class Form_SiteConfig_Profile extends Form_SiteConfig
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', \Site_Util::get_public_flags());
 
-		$name_prefix = 'birthday_generationView';
-		$name = self::get_name($name_prefix, 'isEnable');
-		$value = self::get_values($name, 0);
-		$val->add($name, '年代表示を有効にするか', array('type' => 'radio', 'options' => $options_enable, 'value' => $value))
-				->add_rule('valid_string', 'numeric')
-				->add_rule('in_array', array_keys($options_enable));
+		if (conf('member.profile.birthday.use_generation_view'))
+		{
+			$name_prefix = 'birthday_generationView';
+			$name = self::get_name($name_prefix, 'isEnable');
+			$value = self::get_values($name, 0);
+			$val->add($name, '年代表示を有効にするか', array('type' => 'radio', 'options' => $options_enable, 'value' => $value))
+					->add_rule('valid_string', 'numeric')
+					->add_rule('in_array', array_keys($options_enable));
 
-		$name = self::get_name($name_prefix, 'unit');
-		$value = self::get_values($name, 0);
-		$options = array('0' => '10年単位', '1' => '5年単位');
-		$val->add($name, '年代区切り', array('type' => 'radio', 'options' => $options, 'value' => $value))
-				->add_rule('valid_string', 'numeric')
-				->add_rule('in_array', array_keys($options));
+			$name = self::get_name($name_prefix, 'unit');
+			$value = self::get_values($name, 0);
+			$options = array('0' => '10年単位', '1' => '5年単位');
+			$val->add($name, '年代区切り', array('type' => 'radio', 'options' => $options, 'value' => $value))
+					->add_rule('valid_string', 'numeric')
+					->add_rule('in_array', array_keys($options));
 
-		$name_prefix .= '_publicFlag';
-		$name = self::get_name($name_prefix, 'isEdit');
-		$value = self::get_values($name, 0);
-		$val->add($name, '公開設定の選択(年代)', array('type' => 'radio', 'options' => $options_is_edit_public_flag, 'value' => $value))
-				->add_rule('valid_string', 'numeric')
-				->add_rule('in_array', array_keys($options_is_edit_public_flag));
+			$name_prefix .= '_publicFlag';
+			$name = self::get_name($name_prefix, 'isEdit');
+			$value = self::get_values($name, 0);
+			$val->add($name, '公開設定の選択(年代)', array('type' => 'radio', 'options' => $options_is_edit_public_flag, 'value' => $value))
+					->add_rule('valid_string', 'numeric')
+					->add_rule('in_array', array_keys($options_is_edit_public_flag));
 
-		$name = self::get_name($name_prefix, 'default');
-		$atters = \Site_Form::get_public_flag_configs();
-		$atters['value'] = self::get_values($name, conf('public_flag.default'));
-		$val->add($name, '公開設定デフォルト値(年代)', $atters)
-				->add_rule('valid_string', 'numeric')
-				->add_rule('in_array', \Site_Util::get_public_flags());
+			$name = self::get_name($name_prefix, 'default');
+			$atters = \Site_Form::get_public_flag_configs();
+			$atters['value'] = self::get_values($name, conf('public_flag.default'));
+			$val->add($name, '公開設定デフォルト値(年代)', $atters)
+					->add_rule('valid_string', 'numeric')
+					->add_rule('in_array', \Site_Util::get_public_flags());
+		}
 
 		return $val;
 	}

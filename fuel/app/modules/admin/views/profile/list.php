@@ -62,7 +62,9 @@
 	<th rowspan="2">検索</th>
 	<th colspan="5">生年</th>
 	<th colspan="4">誕生日</th>
+<?php if (conf('member.profile.birthday.use_generation_view')): ?>
 	<th colspan="4">年代</th>
+<?php endif; ?>
 </tr>
 <tr>
 	<th>形式</th>
@@ -74,10 +76,12 @@
 	<th>必須</th>
 	<th>公開範囲の選択</th>
 	<th>公開設定デフォルト値</th>
+<?php if (conf('member.profile.birthday.use_generation_view')): ?>
 	<th>有効</th>
 	<th>区切り</th>
 	<th>公開範囲の選択</th>
 	<th>公開設定デフォルト値</th>
+<?php endif; ?>
 </tr>
 <tr>
 	<td><?php echo flag_state(conf($prefix.'isDispRegist')); ?></td>
@@ -94,11 +98,13 @@
 	<td><?php echo flag_state(conf($prefix.'isRequired')); ?></td>
 	<td><?php echo flag_state(conf($prefix.'publicFlag.isEdit')); ?></td>
 	<td><?php echo Site_Form::get_public_flag_options(conf($prefix.'publicFlag.default')); ?></td>
+<?php if (conf('member.profile.birthday.use_generation_view')): ?>
 <?php $prefix = 'profile.birthday.generationView.'; ?>
 	<td><?php echo flag_state(conf($prefix.'isEnable')); ?></td>
 	<td><?php echo flag_state(conf($prefix.'unit'), '5年', '10年'); ?></td>
 	<td><?php echo flag_state(conf($prefix.'publicFlag.isEdit')); ?></td>
 	<td><?php echo Site_Form::get_public_flag_options(conf($prefix.'publicFlag.default')); ?></td>
+<?php endif; ?>
 </tr>
 </table>
 <?php endif; ?>

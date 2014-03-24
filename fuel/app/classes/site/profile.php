@@ -23,8 +23,9 @@ class Site_Profile
 		$options = array(
 			Config::get('site.member.profile.display_type.detail')  => $is_simple ? '詳細' : '詳細画面のみ表示',// 0
 			Config::get('site.member.profile.display_type.summery') => $is_simple ? '概要' : 'summery にも表示',// 1
-			Config::get('site.member.profile.display_type.always')  => $is_simple ? '常に' : '常に表示',// 2
 		);
+		$key_always = Config::get('site.member.profile.display_type.always');
+		if ($key_always) $options[$key_always] = $is_simple ? '常に' : '常に表示';// 2
 
 		if (!is_null($key) && isset($options[$key])) return $options[$key];
 

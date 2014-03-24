@@ -13,11 +13,12 @@ $config = array(
 			'display_type' => array(
 				'detail' => '0',
 				'summery' => '1',
-				'always' => '2',
+				//'always' => '2',// (未実装のため無効)
 			),
 			'birthday' => array(
 				'year_from' => -100,// years
 				'year_to' => 0,// years
+				'use_generation_view' => false,// 「年代」表示の使用するかどうか(未実装のため無効)
 			),
 		),
 	),
