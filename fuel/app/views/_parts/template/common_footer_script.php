@@ -8,6 +8,9 @@ function is_sp() {return <?php echo (IS_SP)? 'true' : 'false'; ?>;}
 function get_term(key) {
 	var terms = {};
 	terms['public_flag'] = '<?php echo term('public_flag.label'); ?>';
+<?php if (conf('memberRelation.follow.isEnabled')): ?>
+	terms['follow'] = '<?php echo term('follow'); ?>';
+<?php endif; ?>
 <?php if (Module::loaded('album')): ?>
 	terms['album']       = '<?php echo term('album'); ?>';
 	terms['album_image'] = '<?php echo term('album_image'); ?>';

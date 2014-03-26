@@ -1,5 +1,11 @@
 $('textarea.autogrow').autogrow();
 
+$(document).on('click','.btn_follow', function(){
+	if (GL.execute_flg) return false;
+	update_follow_status(this);
+	return false;
+});
+
 function get_id_from_url()
 {
 	var is_parseInt = (arguments.length > 0) ? arguments[0] : true;
@@ -594,4 +600,52 @@ function display_form4value(value, target_values, disp_target_forms) {
 			if (block.hasClass('hidden') == true) block.removeClass('hidden');
 		});
 	}
+}
+
+function update_follow_status(selfDomElement) {
+	var id = $(selfDomElement).data('id');
+	var selfDomElement_html = $(selfDomElement).html();
+
+	var post_data = {'id': id};
+	post_url = get_url('member/relation/api/update/follow.json');
+	post_data = set_token(post_data);
+
+	var ret = false;
+	$.ajax({
+		url : post_url,
+		type : 'POST',
+		dataType : 'text',
+		data : post_data,
+		timeout: 10000,
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			if (selfDomElement) {
+				$(selfDomElement).attr('disabled', true);
+				$(selfDomElement).html(get_loading_image_tag());
+			}
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			$(selfDomElement).attr('disabled', false);
+		},
+		success: function(result){
+			var message
+					resData = $.parseJSON(result);
+			if (resData.status) {
+				$(selfDomElement).addClass('btn-primary');
+				selfDomElement_html = '<span class="glyphicon glyphicon-ok"></span> ' + get_term('follow') + '中';
+				msg = get_term('follow') + 'しました。';
+			} else {
+				$(selfDomElement).removeClass('btn-primary');
+				selfDomElement_html = get_term('follow') + 'する';
+				msg = get_term('follow') + 'を解除しました。';
+			}
+			$.jGrowl(msg);
+			$(selfDomElement).html(selfDomElement_html);
+		},
+		error: function(result){
+			$(selfDomElement).html(selfDomElement_html);
+			$.jGrowl(get_term('follow') + 'に失敗しました。');
+		}
+	});
 }

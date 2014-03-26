@@ -112,4 +112,14 @@ class Util_string
 
 		return array($body, $is_truncated);
 	}
+
+	public static function combine_nums(array $nums, $is_sort = false, $delimitter = '_')
+	{
+		if (empty($nums)) throw new InvalidArgumentException('First parameter is empty array.');
+		if (count($nums) == 1) return $num;
+
+		if ($is_sort) sort($nums, SORT_NUMERIC);
+
+		return implode($delimitter, $nums);
+	}
 }

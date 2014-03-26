@@ -261,6 +261,27 @@ CREATE TABLE `member_profile` (
   CONSTRAINT `member_profile_profile_option_id_profile_option_id` FOREIGN KEY (`profile_option_id`) REFERENCES `profile_option` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves informations of every member''''s profile';
 
+
+CREATE TABLE `member_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `member_id_to` int(11) NOT NULL COMMENT 'Target member id',
+  `member_id_from` int(11) NOT NULL COMMENT 'Subject member id',
+  `is_follow` tinyint(1) DEFAULT NULL COMMENT 'The subject member is followed the target',
+  `is_friend` tinyint(1) DEFAULT NULL COMMENT 'The members are friends',
+  `is_friend_pre` tinyint(1) DEFAULT NULL COMMENT 'The members are going to be friends',
+  `is_access_block` tinyint(1) DEFAULT NULL COMMENT 'The subject member is blocked the target',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_to_from_UNIQUE_idx` (`member_id_to`,`member_id_from`),
+  UNIQUE KEY `member_id_from_to_UNIQUE_idx` (`member_id_from`,`member_id_to`),
+  KEY `member_id_to_idx` (`member_id_to`),
+  KEY `member_id_from_idx` (`member_id_from`),
+  CONSTRAINT `member_relationship_member_id_from_member_id` FOREIGN KEY (`member_id_from`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_relationship_member_id_to_member_id` FOREIGN KEY (`member_id_to`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8 COMMENT='Saves ralationships of each members';
+
+
 CREATE TABLE `migration` (
   `name` varchar(50) NOT NULL,
   `type` varchar(25) NOT NULL,

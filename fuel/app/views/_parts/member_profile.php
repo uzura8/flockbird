@@ -33,6 +33,9 @@ if (!isset($with_image_upload_form)) $with_image_upload_form = false;
 			<div class="row">
 				<h3>
 					<?php if (empty($link_uri)): ?><?php echo site_get_screen_name($member); ?><?php else: ?><?php echo Html::anchor($link_uri, site_get_screen_name($member)); ?><?php endif; ?>
+<?php if (conf('memberRelation.follow.isEnabled') && !$is_mypage): ?>
+					<?php echo render('_parts/button_follow', array('member_id_from' => $u->id, 'member_id_to' => $member->id, 'attrs' => array('class' => array('ml10')))); ?>
+<?php endif; ?>
 				</h3>
 			</div>
 <?php if (check_display_type(conf('profile.sex.displayType'), $display_type) && check_public_flag($member->sex_public_flag, $access_from)): ?>

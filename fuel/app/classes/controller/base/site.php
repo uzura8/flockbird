@@ -46,6 +46,13 @@ class Controller_Base_Site extends Controller_Base
 
 			return array($is_mypage, $member, $access_from);
 		}
+		elseif (Model_MemberRelation::check_relation('friend', $this->u->id, $member_id))
+		{
+			$is_mypage = false;
+			$access_from = 'friend';
+
+			return array($is_mypage, $member, $access_from);
+		}
 		elseif (!$member = Model_Member::check_authority($member_id))
 		{
 			throw new \HttpNotFoundException;

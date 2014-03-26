@@ -76,4 +76,16 @@ class Util_Array
 
 		return $return;
 	}
+
+	public static function conv_arrays2str($list, $delimitter = ' ')
+	{
+		if (!is_array($list)) $list = (array)$list;
+		foreach ($list as $key => $values)
+		{
+			if (!is_array($values)) continue;
+			$list[$key] = implode($delimitter, $values);
+		}
+
+		return $list;
+	}
 }

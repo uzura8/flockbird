@@ -5,6 +5,11 @@ $config = array(
 		'site'  => 'auth/login',
 		'admin' => 'admin/login',
 	),
+	'memberRelation' => array(
+		'follow' => array(
+			'isEnabled'  => 1,
+		),
+	),
 	'member' => array(
 		'password_pre' => array(
 			'token_lifetime' => '1 day',
