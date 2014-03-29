@@ -26,7 +26,7 @@ class Controller_Member_Leave extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('member_leave'), array('member/setting' => '設定変更'), $this->u);
+		$this->set_title_and_breadcrumbs(term('site.left'), array('member/setting' => term(array('site.setting', 'form.update'))), $this->u);
 		$this->template->content = View::forge('member/leave/index');
 		$this->template->content->set_safe('html_form', $form->build('member/leave/confirm'));// form の action に入る
 	}
@@ -46,8 +46,8 @@ class Controller_Member_Leave extends Controller_Site
 		if ($val->run() && $auth->check_password())
 		{
 			$this->set_title_and_breadcrumbs(
-				term('member_leave').'確認',
-				array('member/setting' => '設定変更', 'member/leave' => term('member_leave')),
+				term(array('site.left', 'form.confirm')),
+				array('member/setting' => term(array('site.setting', 'form.update')), 'member/leave' => term('site.left')),
 				$this->u
 			);
 			$this->template->content = View::forge('member/leave/confirm', array('input' => $val->validated()));
@@ -60,7 +60,7 @@ class Controller_Member_Leave extends Controller_Site
 			}
 			else
 			{
-				Session::set_flash('error', 'パスワードが正しくありません');
+				Session::set_flash('error', term('site.password').'が正しくありません');
 			}
 			$this->action_index();
 		}
@@ -97,7 +97,7 @@ END;
 				DB::commit_transaction();
 				$auth->logout();
 				Util_toolkit::sendmail($data);
-				Session::set_flash('message', term('member_leave').'が完了しました。');
+				Session::set_flash('message', term('site.left').'が完了しました。');
 				Response::redirect(Config::get('site.login_uri.site'));
 			}
 			catch(EmailValidationFailedException $e)

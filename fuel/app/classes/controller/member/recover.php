@@ -30,7 +30,7 @@ class Controller_Member_Recover extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('member.password').'の再設定');
+		$this->set_title_and_breadcrumbs(term('site.password').'の再設定');
 		$this->template->content = View::forge('member/recover/resend_password');
 		$this->template->content->set_safe('html_form', $form->build('member/recover/send_reset_password_mail'));// form の action に入る
 	}
@@ -113,7 +113,7 @@ class Controller_Member_Recover extends Controller_Site
 		Auth::check() and Response::redirect('member');
 
 		$member_password_pre = Model_MemberPasswordPre::get4token(Input::param('token'));
-		if (!$member_password_pre || $member_password_pre->created_at < date('Y-m-d H:i:s', strtotime('-'.Config::get('member.password_pre.token_lifetime'))))
+		if (!$member_password_pre || $member_password_pre->created_at < date('Y-m-d H:i:s', strtotime('-'.Config::get('site.password_pre.token_lifetime'))))
 		{
 			$this->display_error('メンバー登録: 不正なURL');
 			return;
@@ -193,8 +193,8 @@ class Controller_Member_Recover extends Controller_Site
 	public function form_reset_password()
 	{
 		$add_fields = array(
-			'password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s', term('member.password'))),
-			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s(確認用)', term('member.password'))),
+			'password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s', term('site.password'))),
+			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s(確認用)', term('site.password'))),
 			'token' => Form_Util::get_model_field('member_pre', 'token'),
 		);
 		$add_fields['token']['attributes'] = array('type'=>'hidden', 'value' => Input::param('token'));

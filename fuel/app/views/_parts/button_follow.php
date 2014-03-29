@@ -1,6 +1,7 @@
 <?php
+if (empty($size)) $size = 'sm';
 $default_attrs = array(
-	'class' => array('btn', 'btn_follow', 'btn-sm'),
+	'class' => array('btn', 'btn_follow', 'btn-'.$size),
 	'id' => 'btn_follow_'.$member_id_to,
 	'data-id' => $member_id_to,
 );

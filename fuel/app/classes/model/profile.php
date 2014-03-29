@@ -187,4 +187,11 @@ class Model_Profile extends \Orm\Model
 
 		return self::query()->where('is_disp_'.$page_type, 1)->order_by('sort_order')->get();
 	}
+
+	public static function get_ids4display_type($display_type)
+	{
+		$result = \DB::select('id')->from('profile')->where('display_type', $display_type)->execute()->as_array();
+
+		return \Util_db::conv_col($result);
+	}
 }

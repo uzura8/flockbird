@@ -110,3 +110,7 @@ form .popover.bottom .arrow:after {
 #member_profile_image_index .imgBox .delete_image {
 	vertical-align: bottom;
 }
+
+div.profile .col-xs-4 {
+	text-align: right;
+}

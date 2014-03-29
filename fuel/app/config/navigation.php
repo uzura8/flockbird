@@ -3,19 +3,19 @@
 return array(
 	'site' => array(
 		'secure_global_head' => array(
-			'Top' => '/',
 			'Home' => 'member/',
 			Config::get('term.timeline') => 'timeline/',
 			Config::get('term.note') => 'note/',
-			Config::get('term.album') => 'album/',
+			Config::get('term.album_image') => 'album/image/',
+			term('member.view') => 'member/list/',
 			//'Sitemap' => 'sitemap/',
 			//'About' => 'about/',
 		),
 		'insecure_global_head' => array(
-			'Top' => '/',
+			term('member.view') => 'member/list/',
 			Config::get('term.timeline') => 'timeline/',
 			Config::get('term.note') => 'note/',
-			Config::get('term.album') => 'album/',
+			Config::get('term.album_image') => 'album/image/',
 			//'Sitemap' => 'sitemap/',
 			//'About' => 'about/',
 		),
@@ -29,7 +29,8 @@ return array(
 			'Top' => '/',
 			Config::get('term.timeline') => 'timeline/',
 			Config::get('term.note') => 'note/',
-			Config::get('term.album') => 'album/',
+			Config::get('term.album_image') => 'album/image/',
+			term('member.view') => 'member/list/',
 			'Sitemap' => 'sitemap/',
 			'About' => 'about/',
 			'Contact' => 'contact/',

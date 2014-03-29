@@ -373,7 +373,8 @@ CREATE TABLE `profile` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+  UNIQUE KEY `name_UNIQUE_idx` (`name`),
+  KEY `display_type_id` (`display_type`,`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves input/select items for the member profile';
 
 CREATE TABLE `profile_option` (

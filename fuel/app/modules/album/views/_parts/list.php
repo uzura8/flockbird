@@ -51,7 +51,7 @@
 							<li><a href="#" onclick="delete_item('album/api/delete.json', <?php echo $album->id; ?>, '#main_item');return false;"><i class="glyphicon glyphicon-trash"></i> <?php echo term('form.delete'); ?></a></li>
 						</ul>
 <?php else: ?>
-					<?php echo Html::anchor('#', '<i class="glyphicon glyphicon-edit mrlr10"></i>', array('class' => 'album_edit_link btn btn-default btn-xs', 'data-id' => $album->id)); ?>
+					<?php echo Html::anchor('#', '<i class="glyphicon glyphicon-edit mlr10"></i>', array('class' => 'album_edit_link btn btn-default btn-xs', 'data-id' => $album->id)); ?>
 <?php endif; ?>
 					</div><!-- /btn-group -->
 <?php endif; ?>

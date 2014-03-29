@@ -74,6 +74,7 @@ class Model_Member extends \Orm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => 'radio'),
 		),
+		'last_login' => array('form' => array('type' => false)),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);

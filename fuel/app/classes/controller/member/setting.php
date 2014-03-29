@@ -127,7 +127,7 @@ END;
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('member.email').'変更', array('member/setting' => '設定変更'), $this->u);
+		$this->set_title_and_breadcrumbs(term('site.email').'変更', array('member/setting' => '設定変更'), $this->u);
 		$this->template->content = View::forge('member/setting/email');
 		$this->template->content->set_safe('html_form', $form->build('member/setting/confirm_change_email'));// form の action に入る
 	}
@@ -293,9 +293,9 @@ END;
 	public function form_setting_password()
 	{
 		$add_fields = array(
-			'old_password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('現在の%s', term('member.password'))),
-			'password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s', term('member.password'))),
-			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s(確認用)', term('member.password'))),
+			'old_password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('現在の%s', term('site.password'))),
+			'password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s', term('site.password'))),
+			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s(確認用)', term('site.password'))),
 		);
 
 		return Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => '変更'));
@@ -304,8 +304,8 @@ END;
 	public function form_setting_email()
 	{
 		$add_fields = array(
-			'email' => Form_Util::get_model_field('member_auth', 'email', '', sprintf('新しい%s', term('member.email'))),
-			'email_confirm' => Form_Util::get_model_field('member_auth', 'email', '', sprintf('新しい%s(確認用)', term('member.email'))),
+			'email' => Form_Util::get_model_field('member_auth', 'email', '', sprintf('新しい%s', term('site.email'))),
+			'email_confirm' => Form_Util::get_model_field('member_auth', 'email', '', sprintf('新しい%s(確認用)', term('site.email'))),
 		);
 		$form = \Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => '変更'));
 

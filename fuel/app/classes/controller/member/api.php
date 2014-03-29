@@ -3,6 +3,7 @@
 class Controller_Member_Api extends Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
+		'get_list',
 	);
 
 	public function before()
@@ -56,6 +57,40 @@ class Controller_Member_Api extends Controller_Site_Api
 		catch(\FuelException $e)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
+	 * Api list
+	 * 
+	 * @access  public
+	 * @return  Response (html)
+	 */
+	public function get_list()
+	{
+		if ($this->format != 'html') throw new \HttpNotFoundException();
+
+		$page = (int)\Input::get('page', 1);
+
+		$response = '';
+		try
+		{
+			$sort = conf('member.view_params.list.sort');
+			$data = \Site_Model::get_simple_pager_list('member', $page, array(
+				'order_by' => array($sort['property'] => $sort['direction']),
+				'limit'    => conf('member.view_params.list.limit'),
+			));
+
+			$response = \View::forge('member/_parts/list', $data);
+			$status_code = 200;
+
+			return \Response::forge($response, $status_code);
+		}
+		catch(\FuelException $e)
+		{
 			$status_code = 400;
 		}
 

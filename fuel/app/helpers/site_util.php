@@ -265,9 +265,18 @@ function anchor_button($href, $icon_class = '', $text = '', $class_attr_add = ''
 	return Html::anchor($href, $element, $attr);
 }
 
-function term($key)
+function term($keys, $delimitter = '')
 {
-	return Config::get('term.'.$key);
+	if (!is_array($keys)) return Config::get('term.'.$keys, $keys);
+
+	$return = '';
+	foreach ($keys as $key)
+	{
+		if ($return) $return .= $delimitter;
+		$return .= Config::get('term.'.$key, $key);
+	}
+
+	return $return;	
 }
 
 function alert($message, $type = 'info', $with_dismiss_btn = false)

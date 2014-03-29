@@ -1,8 +1,4 @@
-<ul class="nav nav-tabs">
-	<li><?php echo Html::anchor('member/setting/email', 'メールアドレス変更'); ?></li>
-	<li><?php echo Html::anchor('member/setting/password', 'パスワード変更'); ?></li>
-	<li><?php echo Html::anchor('member/leave', Config::get('term.member_leave')); ?></li>
-</ul>
+<?php echo render('member/setting/_parts/navi'); ?>
 <div class="well">
-	<p>設定変更ページです</p>
+	<p><?php echo term(array('site.setting', 'form.update')); ?>ページです</p>
 </div>

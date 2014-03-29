@@ -26,6 +26,16 @@ $config = array(
 				'use_generation_view' => false,// 「年代」表示の使用するかどうか(未実装のため無効)
 			),
 		),
+		'view_params' => array(
+			'list' => array(
+				'sort' => array(
+					'property' => 'created_at',
+					'direction' => 'desc',
+				),
+				'limit' => 3,
+				'limit_max' => 5,
+			),
+		),
 	),
 	'upload' => array(
 		'remove_exif_data' => true,
@@ -82,6 +92,7 @@ $config = array(
 							'SS' => '20x20xc',
 							'S' => '30x30xc',
 							'M' => '50x50xc',
+							'ML' => '120x120xc',
 							'L' => '180x180xc',
 							'LL' => '600x600',
 						),

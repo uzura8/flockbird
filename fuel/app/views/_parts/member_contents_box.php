@@ -8,7 +8,7 @@ $img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 	<?php echo empty($member) ? img('m', $img_size, '', false, '', true) : img($member->get_image(), $img_size, 'member/'.$member->id, false, site_get_screen_name($member), true); ?>
 	<div class="content">
 		<div class="main">
-			<b class="fullname"><?php echo empty($member) ? Config::get('term.left_member') : Html::anchor('member/'.$member->id, $member->name); ?></b>
+			<b class="fullname"><?php echo empty($member) ? term('member.left') : Html::anchor('member/'.$member->id, $member->name); ?></b>
 <?php
 if (isset($content) && strlen($content))
 {

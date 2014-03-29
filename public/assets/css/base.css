@@ -195,13 +195,19 @@ h4#comments {
 .mr10 {
   margin-right: 10px;
 }
-.mrlr5 {
+.mlr5 {
 	margin-left:  5px;
 	margin-right: 5px;
 }
-.mrlr10 {
+.mlr10 {
 	margin-left:  10px;
 	margin-right: 10px;
+}
+.mt {
+  margin-top: 5px;
+}
+.mt10 {
+  margin-top: 10px;
 }
 
 .w90 {width: 90%;}

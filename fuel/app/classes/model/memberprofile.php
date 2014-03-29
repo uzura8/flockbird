@@ -59,14 +59,19 @@ class Model_MemberProfile extends \Orm\Model
 		static::$_properties['public_flag']['validation']['in_array'][] = Site_Util::get_public_flags();
 	}
 
-	public static function get4member_id($member_id, $with_relations = false)
+	public static function get4member_id($member_id, $with_relations = false, $profile_display_type_str = null)
 	{
-		$obj = self::query()->where('member_id', $member_id);
+		$query = self::query()->where('member_id', $member_id);
+		if ($profile_display_type_str && $profile_display_type = conf('member.profile.display_type.'.$profile_display_type_str))
+		{
+			$profile_ids = Model_Profile::get_ids4display_type($profile_display_type);
+			$query = $query->where('profile_id', 'in', $profile_ids);
+		}
 		if ($with_relations)
 		{
-			$obj = $obj->related(array('profile', 'profile_option'))->order_by('profile.sort_order');
+			$query = $query->related(array('profile', 'profile_option'))->order_by('profile.sort_order');
 		}
 
-		return $obj->get();
+		return $query->get();
 	}
 }

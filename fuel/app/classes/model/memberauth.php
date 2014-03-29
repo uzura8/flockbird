@@ -42,8 +42,8 @@ class Model_MemberAuth extends \Orm\Model
 		static::$_properties['member_id'] =  array(
 			'form' => array('type' => false),
 		);
-		static::$_properties['email']['label'] = term('member.email');
-		static::$_properties['password']['label'] = term('member.password');
+		static::$_properties['email']['label'] = term('site.email');
+		static::$_properties['password']['label'] = term('site.password');
 	}
 
 	protected static $_observers = array(
