@@ -309,15 +309,19 @@ function form_date(Validation $val, $label, $name_month, $name_day, $label_col_s
 	return render('_parts/form/date', $data);
 }
 
-function form_text($value, $label, $label_col_sm_size = 2)
+function form_text($value, $label, $label_col_sm_size = 2, $is_safe_value = false, $optional_link = array())
 {
 	$data = array(
 		'value' => $value,
 		'label' => $label,
 		'label_col_sm_size' => $label_col_sm_size,
+		'optional_link' => $optional_link,
 	);
+	$view = View::forge('_parts/form/text', $data);
+	if ($is_safe_value) $view->set_safe('value', $value);
+	if (!empty($optional_link['is_safe_text'])) $view->set_safe('optional_link_text', $optional_link['text']);
 
-	return render('_parts/form/text', $data);
+	return $view->render();
 }
 
 function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array())
