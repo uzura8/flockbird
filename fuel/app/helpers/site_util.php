@@ -391,4 +391,19 @@ function flag_state($flag, $on_symbol = null, $off_symbol = null)
 
 	return $flag ? $on_symbol : $off_symbol;
 }
+
+function icon($icon_key, $class_prefix = 'glyphicon glyphicon-', $tag = 'span')
+{
+	$attr = array('class' => $class_prefix.$icon_key);
+
+	return html_tag($tag, $attr, '');
+}
+
+function is_enabled($module_name)
+{
+	if (!Module::loaded($module_name)) return false;
+	if (!conf($module_name.'.isEnabled')) return false;
+
+	return true;
+}
 ?>

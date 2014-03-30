@@ -1,6 +1,6 @@
-<?php echo render('member/setting/_parts/navi', array('active_action' => 'leave')); ?>
-<?php echo alert(term.('site.password')'を入力してください。'); ?>
+<?php echo alert(term('site.password').'を入力してください。'); ?>
 <div class="well">
 <?php echo render('_parts/form/description', array('exists_required_fields' => true)); ?>
 <?php echo $html_form; ?>
 </div>
+<?php echo render('member/setting/_parts/footer_navi'); ?>

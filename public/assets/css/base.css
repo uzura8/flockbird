@@ -3,10 +3,6 @@
 	position: relative;
 }
 
-#main_column {
-	border-right: 1px solid #CCCCCC;
-}
-
 img.profile_image {
 	border-radius: 4px;
 }

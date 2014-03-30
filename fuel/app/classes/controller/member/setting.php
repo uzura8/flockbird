@@ -19,7 +19,7 @@ class Controller_Member_setting extends Controller_Member
 	 */
 	public function action_index()
 	{
-		$this->set_title_and_breadcrumbs('設定変更', null, $this->u);
+		$this->set_title_and_breadcrumbs(term(array('site.setting', 'site.item', 'site.list')), null, $this->u);
 		$this->template->content = View::forge('member/setting/index');
 	}
 
@@ -288,6 +288,41 @@ END;
 		}
 
 		$this->template->content = View::forge('member/setting/change_email', array('val' => $val,'member_email_pre' => $member_email_pre));
+	}
+
+	/**
+	 * Mmeber setting timeline_view
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_timeline_viewType()
+	{
+		$page_name = term(array('timeline', 'site.view', 'site.setting'));
+		$val = Form_MemberConfig::get_validation($this->u->id, 'timeline_viewType');
+		if (Input::method() == 'POST')
+		{
+			Util_security::check_csrf();
+
+			try
+			{
+				if (!$val->run()) throw new FuelException($val->show_errors());
+				$post = $val->validated();
+				DB::start_transaction();
+				Form_MemberConfig::save($this->u->id, $val, $post);
+				DB::commit_transaction();
+
+				Session::set_flash('message', $page_name.'を変更しました。');
+				Response::redirect('member/setting');
+			}
+			catch(FuelException $e)
+			{
+				if (DB::in_transaction()) DB::rollback_transaction();
+				Session::set_flash('error', $e->getMessage());
+			}
+		}
+		$this->set_title_and_breadcrumbs($page_name, array('member/setting' => '設定変更'), $this->u);
+		$this->template->content = View::forge('member/setting/timeline_viewtype', array('val' => $val));
 	}
 
 	public function form_setting_password()
