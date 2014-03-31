@@ -18,11 +18,11 @@
 
 <?php if (is_enabled('timeline')): ?>
 	<?php echo form_text(
-		Form_MemberConfig_Timeline::get_viewType_options($u->timeline_viewType),
+		\Timeline\Form_MemberConfig::get_viewType_options($u->timeline_viewType),
 		term(array('timeline', 'site.view', 'site.setting')),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/timeline_viewtype', 'text' => icon('edit').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/timeline/viewtype', 'text' => icon('edit').' '.term('form.edit'), 'is_safe_text' => true)
 	); ?>
 <?php endif; ?>
 

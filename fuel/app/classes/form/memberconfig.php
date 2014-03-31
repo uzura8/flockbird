@@ -21,20 +21,21 @@ class Form_MemberConfig
 		return $names;
 	}
 
-	public static function get_validation($member_id, $prefix)
+	public static function get_validation($member_id, $prefix, $namespace = null)
 	{
 		$parts = explode('_', $prefix);
-		$class = self::get_class_name((count($parts) > 1) ? array_shift($parts) : '');
+		$class = self::get_class_name((count($parts) > 1) ? array_shift($parts) : '', $namespace);
 		$method = 'get_validation_'.implode('_', $parts);
 
 		return $class::$method($member_id);
 	}
 
-	protected static function get_class_name($prefix = '')
+	protected static function get_class_name($prefix = '', $namespace = null)
 	{
-		if (!$prefix) return __CLASS__;
+		$namespace_prefix = $namespace ? sprintf('\\%s\\', $namespace) : '';
+		if (!$prefix) return $namespace_prefix.__CLASS__;
 
-		return sprintf('%s_%s', __CLASS__, Inflector::classify($prefix));
+		return sprintf('%s%s_%s', $namespace_prefix, __CLASS__, Inflector::classify($prefix));
 	}
 
 	public static function save($member_id, Validation $val, $posted_values)

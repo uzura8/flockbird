@@ -1,6 +1,7 @@
 <?php
+namespace Timeline;
 
-class Form_MemberConfig_Timeline extends Form_MemberConfig
+class Form_MemberConfig extends \Form_MemberConfig
 {
 
 	private static function get_name($item)

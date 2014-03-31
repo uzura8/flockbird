@@ -23,6 +23,7 @@ $config = array(
 		'setting' => '設定',
 		'set_already' => '設定済',
 		'unset' => '未設定',
+		'mail' => 'メール',
 		'email' => 'メールアドレス',
 		'password' => 'パスワード',
 		'item' => '項目',
