@@ -34,16 +34,11 @@ class Controller_Api extends \Controller_Site_Api
 		$response = '';
 		try
 		{
-			$is_mypage = false;
 			$member = null;
-			if ($member_id)
-			{
-				if (!$member = \Model_Member::check_authority($member_id)) 	throw new \HttpNotFoundException;;
-				$is_mypage = $this->check_is_mypage($member_id);
-			}
+			if ($member_id && !$member = \Model_Member::check_authority($member_id)) 	throw new \HttpNotFoundException;;
 			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
-
-			list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mypage, $is_mytimeline, $last_id, $is_over, $limit);
+			$timeline_viewType = $is_mytimeline ? $this->u->timeline_viewType : null;
+			list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $last_id, $is_over, $limit);
 			$data = array('list' => $list, 'is_next' => $is_next);
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;

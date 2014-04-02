@@ -10,7 +10,7 @@ class Controller_Base_Site extends Controller_Base
 	protected function set_current_user()
 	{
 		$auth = Auth::instance();
-		$this->u = Auth::check() ? $auth->get_member() : null;
+		$this->u = Auth::check() ? Model_Member::set_member_config_property_default_value($auth->get_member()) : null;
 
 		View::set_global('u', $this->u);
 	}

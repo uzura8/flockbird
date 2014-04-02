@@ -139,6 +139,8 @@ $config = array(
 	'public_flag' => array(
 		'default' => PRJ_PUBLIC_FLAG_ALL,
 	),
+	'member_config_default' => array(
+	),
 	// site_config default
 	'profile' => array(
 		'name' => array(

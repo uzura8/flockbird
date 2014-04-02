@@ -185,4 +185,15 @@ class Model_Member extends \Orm\Model
 			->where('id', intval($member_id))
 			->execute();
 	}
+
+	public static function set_member_config_property_default_value(self $obj)
+	{
+		$default_values = Form_MemberConfig::get_default_values();
+		foreach ($default_values as $name => $value)
+		{
+			if (!isset($obj->$name)) $obj->$name = $value;
+		}
+
+		return $obj;
+	}
 }

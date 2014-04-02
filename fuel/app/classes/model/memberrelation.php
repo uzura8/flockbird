@@ -104,4 +104,21 @@ class Model_MemberRelation extends \Orm\Model
 
 		return;
 	}
+
+	public static function get_member_ids($member_id, $relation_type = null, $target_col = 'member_id_to')
+	{
+		$where_col = ($target_col == 'member_id_to') ? 'member_id_from' : 'member_id_to';
+
+		if (substr($relation_type, 0, 3) != 'is_') $relation_type = 'is_'.$relation_type;
+		if ($relation_type && !in_array($relation_type, array('is_follow', 'is_friend', 'is_access_block')))
+		{
+			throw new InvalidArgumentException('Second parameter is invalid.');
+		}
+
+		$query = \DB::select($target_col)->from(self::$_table_name)->where($where_col, $member_id);
+		if ($relation_type) $query = $query->and_where($relation_type, 1);
+		$result = $query->execute()->as_array();
+
+		return \Util_db::conv_col($result);
+	}
 }

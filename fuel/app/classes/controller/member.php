@@ -32,7 +32,7 @@ class Controller_Member extends Controller_Site
 	{
 		$id = (int)$id;
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($id);
-		list($list, $is_next) = \Timeline\Site_Model::get_list(Auth::check() ? $this->u->id : 0, $id, $is_mypage);
+		list($list, $is_next) = \Timeline\Site_Model::get_list(Auth::check() ? $this->u->id : 0, $id);
 		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
 
 		$this->set_title_and_breadcrumbs($member->name.' さんのページ');

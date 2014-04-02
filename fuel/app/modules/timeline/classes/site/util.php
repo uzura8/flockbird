@@ -403,4 +403,29 @@ class Site_Util
 			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),
 		));
 	}
+
+	public static function get_member_relation_member_ids($member_id_from, $timeline_viewType = null)
+	{
+		$follow_member_ids = null;
+		$friend_member_ids = null;
+		$timeline_viewType = Site_Model::validate_timeline_viewType($timeline_viewType);
+		switch ($timeline_viewType)
+		{
+			case 1:
+				$follow_member_ids = \Model_MemberRelation::get_member_ids($member_id_from, 'is_follow');
+				break;
+			case 2:
+				$friend_member_ids = \Model_MemberRelation::get_member_ids($member_id_from, 'is_friend');
+				break;
+			case 3:
+				$follow_member_ids = \Model_MemberRelation::get_member_ids($member_id_from, 'is_follow');
+				$friend_member_ids = \Model_MemberRelation::get_member_ids($member_id_from, 'is_friend');
+				break;
+			case 0:
+			default :
+				break;
+		}
+
+		return array($follow_member_ids, $friend_member_ids);
+	}
 }

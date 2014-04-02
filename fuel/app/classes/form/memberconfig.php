@@ -2,6 +2,16 @@
 
 class Form_MemberConfig
 {
+	public static function get_default_values()
+	{
+		return conf('member_config_default');
+	}
+
+	public static function get_default_value($key, $default = null)
+	{
+		return conf('member_config_default.'.$key, $default);
+	}
+
 	public static function get_value($member_id, $name, $default_value = null)
 	{
 		$value = Model_MemberConfig::get_value($member_id, $name);
