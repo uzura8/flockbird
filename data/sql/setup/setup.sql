@@ -189,6 +189,14 @@ CREATE TABLE `member_email_pre` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `oauth_provider` (
+  `id` tinyint(2) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE `member_oauth` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
@@ -206,14 +214,6 @@ CREATE TABLE `member_oauth` (
   KEY `oauth_provider_id_uid_member_idx` (`oauth_provider_id`,`uid`,`member_id`),
   CONSTRAINT `member_oauth_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
   CONSTRAINT `oauth_provider_id_oauth_provider_id` FOREIGN KEY (`oauth_provider_id`) REFERENCES `oauth_provider` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `oauth_provider` (
-  `id` tinyint(2) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE_idx` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -243,24 +243,6 @@ CREATE TABLE `member_pre` (
   UNIQUE KEY `token_UNIQUE_idx` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `member_profile` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `member_id` int(11) NOT NULL COMMENT 'Member id',
-  `profile_id` int(11) NOT NULL COMMENT 'Profile id',
-  `profile_option_id` int(11) DEFAULT NULL COMMENT 'Profile option id',
-  `value` text NOT NULL COMMENT 'Text content for this profile item',
-  `public_flag` tinyint(4) DEFAULT NULL COMMENT 'Public flag',
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `member_id_idx` (`member_id`),
-  KEY `profile_id_idx` (`profile_id`),
-  KEY `profile_option_id_idx` (`profile_option_id`),
-  CONSTRAINT `member_profile_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `member_profile_profile_id_profile_id` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `member_profile_profile_option_id_profile_option_id` FOREIGN KEY (`profile_option_id`) REFERENCES `profile_option` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves informations of every member''''s profile';
-
 
 CREATE TABLE `member_relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
@@ -279,7 +261,7 @@ CREATE TABLE `member_relation` (
   KEY `member_id_from_idx` (`member_id_from`),
   CONSTRAINT `member_relationship_member_id_from_member_id` FOREIGN KEY (`member_id_from`) REFERENCES `member` (`id`) ON DELETE CASCADE,
   CONSTRAINT `member_relationship_member_id_to_member_id` FOREIGN KEY (`member_id_to`) REFERENCES `member` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8 COMMENT='Saves ralationships of each members';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves ralationships of each members';
 
 
 CREATE TABLE `migration` (
@@ -388,6 +370,24 @@ CREATE TABLE `profile_option` (
   KEY `profile_id_idx` (`profile_id`),
   CONSTRAINT `profile_option_profile_id_profile_id` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves options of profile items';
+
+CREATE TABLE `member_profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `member_id` int(11) NOT NULL COMMENT 'Member id',
+  `profile_id` int(11) NOT NULL COMMENT 'Profile id',
+  `profile_option_id` int(11) DEFAULT NULL COMMENT 'Profile option id',
+  `value` text NOT NULL COMMENT 'Text content for this profile item',
+  `public_flag` tinyint(4) DEFAULT NULL COMMENT 'Public flag',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id_idx` (`member_id`),
+  KEY `profile_id_idx` (`profile_id`),
+  KEY `profile_option_id_idx` (`profile_option_id`),
+  CONSTRAINT `member_profile_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_profile_profile_id_profile_id` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_profile_profile_option_id_profile_option_id` FOREIGN KEY (`profile_option_id`) REFERENCES `profile_option` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves informations of every member''''s profile';
 
 CREATE TABLE `timeline` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

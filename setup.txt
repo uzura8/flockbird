@@ -3,14 +3,12 @@
 ================
 
 
-1. セットアップスクリプトの実施
+
+1. 設定ファイルの設置と編集 (config.php)
 
 	----
-	sh setup.sh
+	cp config.php.sample config.php
 	----
-
-
-2. 設定ファイルの編集 (config.php)
 
 	----
 	define('PRJ_ENVIRONMENT', 'DEVELOPMENT');
@@ -32,11 +30,18 @@
 	----
 
 
-3. DBの作成 & セットアップSQLの実行
+2. DBの作成 & セットアップSQLの実行
 
 	----
 	echo "CREATE DATABASE DB-name DEFAULT CHARACTER SET utf8" | mysql -u root -p
 	mysql -u root -p DB-name < data/sql/setup/setup.sql
+	----
+
+
+3. セットアップスクリプトの実行
+
+	----
+	sh setup.sh
 	----
 
 

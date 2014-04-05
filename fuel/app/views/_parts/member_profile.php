@@ -103,7 +103,7 @@ elseif ($page_type != 'detail')
 <?php endif; ?>
 			<?php echo render('member/profile/_parts/values', array('member' => $member, 'member_profiles' => $member_profiles, 'access_from' => $access_from, 'display_type' => $display_type)); ?>
 			<ul class="list-inline mt10">
-				<li><small><label><?php echo term('site.registlation'); ?>:</label> <?php echo site_get_time($member->created_at) ?></small></li>
+				<li><small><label><?php echo term('site.registration'); ?>:</label> <?php echo site_get_time($member->created_at) ?></small></li>
 				<?php if ($member->last_login): ?><li><small><label>最終<?php echo term('site.login'); ?>:</label> <?php echo site_get_time($member->last_login) ?></small></li><?php endif; ?>
 			</ul>
 		</div>
