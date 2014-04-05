@@ -19,4 +19,10 @@
 	'uri_for_update_public_flag' => 'member/api/update_config/timeline_public_flag.html',
 )); ?>
 </div>
-<?php echo render('_parts/list', array('list' => $list, 'is_next' => $is_next, 'mytimeline' => true)); ?>
+
+<div id="timeline_setting" class="text-right">
+	<span class="text-muted">表示設定:</span>
+	<?php echo render('member/_parts/timeline_viewType_selecter', array('id' => $u->id, 'timeline_viewType' => $u->timeline_viewType)); ?>
+</div>
+
+<div id="article_list"></div>

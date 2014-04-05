@@ -529,20 +529,38 @@ function load_masonry_item(container_attribute, item_attribute)
 	}
 }
 
+function load_default_timeline()
+{
+	var mytimeline = (arguments.length > 0) ? arguments[0] : false;
+	var member_id = (arguments.length > 1) ? arguments[1] : 0;
+
+	load_timeline(mytimeline, member_id);
+}
+
 function load_more_timeline(selfDomElement)
 {
-	var last_id    = $(selfDomElement).data('last_id') ?    parseInt($(selfDomElement).data('last_id')) : 0;
 	var mytimeline = $(selfDomElement).data('mytimeline') ? parseInt($(selfDomElement).data('mytimeline')) : 0;
 	var member_id  = $(selfDomElement).data('member_id') ?  parseInt($(selfDomElement).data('member_id')) : 0;
 
-	var limit = get_config('timeline_list_limit');
+	load_timeline(mytimeline, member_id, selfDomElement);
+}
+
+function load_timeline()
+{
+	var mytimeline = (arguments.length > 0) ? arguments[0] : false;
+	var member_id  = (arguments.length > 1) ? arguments[1] : 0;
+	var clickDomElement = (arguments.length > 2) ? arguments[2] : '';
+	var limit = (arguments.length > 3) ? arguments[3] : 0;
+
+	if (limit == 0) limit = get_config('timeline_list_limit');
 	var get_uri = 'timeline/api/list.html';
 	if (mytimeline) get_uri += '?mytimeline=1';
 	if (member_id > 0) {
 		var delimitter = mytimeline ? '&' : '?';
 		get_uri += delimitter + 'member_id=' + member_id;
 	}
-	show_list(get_uri, '#article_list', limit, $('.timelineBox').last().attr('id'), false, selfDomElement);
+	show_list(get_uri, '#article_list', limit, $('.timelineBox').last().attr('id'), false, clickDomElement);
+
 	return false;
 }
 

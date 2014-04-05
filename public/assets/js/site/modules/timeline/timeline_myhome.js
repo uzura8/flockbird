@@ -1,6 +1,7 @@
 $(function() {
 	$('textarea.input_timeline').css('height', '50px');
 	$('#form_public_flag').val($('#public_flag_selector').data('public_flag'));
+	load_default_timeline(true);
 
 	$(document).on('click','.display_upload_form', function(){
 		$('.upload').removeClass('hidden');
@@ -76,5 +77,49 @@ $(function() {
 		$('#album_id').val('0')
 		$('#progress .progress-bar').css('width', 0);
 		$('#album_id').html('<option selected="selected" value="0">' + get_term('timeline') + '用' + get_term('album') + '</option>');
+	});
+
+	$(document).on('click','.timeline_viewType', function(){
+		var member_id = $(this).data('member_id') ? parseInt($(this).data('member_id')) : 0;
+		var value = $(this).data('value') ? parseInt($(this).data('value')) : 0;
+
+		var text = $(this).html();
+		var parentElement = $(this).parent('li');
+		var buttonElement = $(parentElement).parents('div.btn-group');
+
+		var post_data = {
+			'id'    : member_id,
+			'value' : value,
+		};
+		uri = 'member/api/update_config/timeline_viewType.html';
+		post_data = set_token(post_data);
+		$.ajax({
+			url : get_url(uri),
+			type : 'POST',
+			dataType : 'text',
+			data : post_data,
+			beforeSend: function(xhr, settings) {
+				GL.execute_flg = true;
+				$(this).remove();
+				$(parentElement).html('<span>' + get_loading_image_tag( + '</span>'));
+			},
+			complete: function(xhr, textStatus) {
+				GL.execute_flg = false;
+			},
+			success: function(result, status, xhr){
+				$(buttonElement).html(result);
+				$(buttonElement).removeClass('open');
+				$.jGrowl('表示設定を変更しました。');
+			},
+			error: function(result){
+				$(parentElement).html(this);
+				$.jGrowl('表示設定の変更に失敗しました。');
+			}
+		});
+
+		$('#article_list').empty();
+		load_default_timeline(true);
+
+		return false;
 	});
 })

@@ -144,4 +144,11 @@ class Util_toolkit
 
 	 return !$bool;
 	}
+
+	public static function convert_to_attr($attrs, $default_attrs = array())
+	{
+		$attrs = array_merge_recursive($default_attrs, $attrs);
+
+		return Util_Array::conv_arrays2str($attrs);
+	}
 }

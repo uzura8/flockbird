@@ -50,6 +50,10 @@ class Controller_Member_Api extends Controller_Site_Api
 
 			return \Response::forge($response, $status_code);
 		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 401;
+		}
 		catch(\HttpInvalidInputException $e)
 		{
 			$status_code = 400;
@@ -102,6 +106,7 @@ class Controller_Member_Api extends Controller_Site_Api
 		switch ($name)
 		{
 			case 'timeline_public_flag':
+			case 'timeline_viewType':
 				if ($this->format != 'html') throw new \HttpNotFoundException();
 				break;
 			default :
@@ -111,17 +116,19 @@ class Controller_Member_Api extends Controller_Site_Api
 
 	private static function check_name_format_for_update_config($name)
 	{
-		$accept_names = array('timeline_public_flag');
+		$accept_names = array('timeline_public_flag', 'timeline_viewType');
 		if (!in_array($name, $accept_names)) throw new \HttpNotFoundException();
 	}
 
-	private static function validate_posted_value($name, $posted_key = null, $curret_value = null)
+	private static function validate_posted_value($name, $curret_value = null)
 	{
-		if (!$posted_key) $posted_key = $name;
 		switch ($name)
 		{
 			case 'timeline_public_flag':
 				$value = Site_Util::validate_posted_public_flag($curret_value);
+				break;
+			case 'timeline_viewType':
+				$value = \Timeline\Site_Model::validate_timeline_viewType(\Input::post('value'));
 				break;
 			default :
 				break;
@@ -145,6 +152,11 @@ class Controller_Member_Api extends Controller_Site_Api
 				unset($data[$name]);
 
 				return View::forge('_parts/public_flag_selecter', $data);
+				break;
+			case 'timeline_viewType':
+				$data['timeline_viewType'] = $data[$name];
+
+				return View::forge('timeline::member/_parts/timeline_viewType_selecter', $data);
 				break;
 			default :
 				break;

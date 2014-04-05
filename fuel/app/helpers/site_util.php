@@ -77,6 +77,28 @@ function site_get_screen_name($u)
 	return (!empty($u->name)) ? $u->name : 'メンバーID:'.$u->id;
 }
 
+function conf($item, $file = null, $default = null, $replace_delimitter = null)
+{
+	if (!$file) $file = 'site';
+	if ($replace_delimitter) $item = str_replace($replace_delimitter, '.', $item);
+
+	return Config::get(sprintf('%s.%s', $file, $item), $default);
+}
+
+function term($keys, $delimitter = '')
+{
+	if (!is_array($keys)) return Config::get('term.'.$keys, $keys);
+
+	$return = '';
+	foreach ($keys as $key)
+	{
+		if ($return) $return .= $delimitter;
+		$return .= Config::get('term.'.$key, $key);
+	}
+
+	return $return;	
+}
+
 function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false, $is_img_responsive = false, $anchor_attrs = array())
 {
 	$option = array('class' => '');
@@ -242,84 +264,6 @@ function conv_data_atter($list = array(), $is_html = false)
 	return $output;
 }
 
-function anchor_button($href, $icon_class = '', $text = '', $class_attr_add = '', $attr = array(), $is_mini_btn = false, $is_sp = false, $is_force_btn = false, $is_force_loud_color = false)
-{
-	$class_attrs  = array('btn', 'btn-default');
-	if ($is_mini_btn) $class_attrs[] = 'btn-xs';
-
-	if ($is_sp && !$is_force_btn)
-	{
-		$class_attrs = array();
-		if (!$is_force_loud_color) $class_attrs = array('cl-modest');
-	}
-	$class_attr = implode(' ', $class_attrs);
-	if ($class_attr_add) $class_attr .= ' '.$class_attr_add;
-
-	if (!empty($attr['class'])) $class_attr .= ' '.$attr['class'];
-	$attr['class'] = $class_attr;
-
-	$element = '';
-	if ($icon_class) $element = sprintf('<i class="%s"></i>', $icon_class);
-	if ($text) $element .= ' '.$text;
-
-	return Html::anchor($href, $element, $attr);
-}
-
-function term($keys, $delimitter = '')
-{
-	if (!is_array($keys)) return Config::get('term.'.$keys, $keys);
-
-	$return = '';
-	foreach ($keys as $key)
-	{
-		if ($return) $return .= $delimitter;
-		$return .= Config::get('term.'.$key, $key);
-	}
-
-	return $return;	
-}
-
-function alert($message, $type = 'info', $with_dismiss_btn = false)
-{
- return render('_parts/alerts', array('message' => $message, 'type' => $type, 'with_dismiss_btn' => $with_dismiss_btn));
-}
-
-function small_tag($str, $is_enclose_small_tag = true)
-{
-	return sprintf('%s%s%s', $is_enclose_small_tag ? '<small>' : '', $str, $is_enclose_small_tag ? '</small>' : '');
-}
-
-function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = 'default', $attr = array(), $exception_label = '')
-{
-	switch ($type)
-	{
-		case 'edit':
-			$label_text = '編集';
-			$label_icon  = 'glyphicon glyphicon-edit';
-			break;
-		case 'delete':
-			$label_text = '削除';
-			$label_icon  = 'glyphicon glyphicon-trash';
-			break;
-		default :
-			throw new \InvalidArgumentException("First parameter must be 'edit' or 'delete'.");
-			break;
-	}
-
-	$label  = sprintf('<i class="%s"></i>', $label_icon);
-	$label .= $with_text ? ' '.$label_text : '';
-
-	$class_items   = array();
-	$class_items[] = 'btn';
-	$class_items[] = 'btn-'.$btn_type;
-	if ($class_name) $class_items[] = $class_name;
-	if ($size) $class_items[] = 'btn-'.$size;
-	if (isset($attr['class'])) $class_items[] = $attr['class'];
-	$attr['class'] = implode(' ', $class_items);
-
-	return Html::anchor($href, $label, $attr);
-}
-
 function check_public_flag($public_flag, $access_from)
 {
 	switch ($public_flag)
@@ -376,27 +320,12 @@ function profile_value(Model_MemberProfile $member_profile)
 	return $member_profile->value;
 }
 
-function conf($item, $file = null, $default = null, $replace_delimitter = null)
-{
-	if (!$file) $file = 'site';
-	if ($replace_delimitter) $item = str_replace($replace_delimitter, '.', $item);
-
-	return Config::get(sprintf('%s.%s', $file, $item), $default);
-}
-
 function flag_state($flag, $on_symbol = null, $off_symbol = null)
 {
 	if (!$on_symbol) $on_symbol = '◯';
 	if (!$off_symbol) $off_symbol = '×';
 
 	return $flag ? $on_symbol : $off_symbol;
-}
-
-function icon($icon_key, $class_prefix = 'glyphicon glyphicon-', $tag = 'span')
-{
-	$attr = array('class' => $class_prefix.$icon_key);
-
-	return html_tag($tag, $attr, '');
 }
 
 function is_enabled($module_name)
@@ -406,4 +335,3 @@ function is_enabled($module_name)
 
 	return true;
 }
-?>

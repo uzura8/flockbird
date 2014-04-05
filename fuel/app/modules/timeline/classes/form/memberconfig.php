@@ -24,14 +24,21 @@ class Form_MemberConfig extends \Form_MemberConfig
 		return $val;
 	}
 
-	public static function get_viewType_options($value = null)
+	public static function get_viewType_options($value = null, $is_simple = false)
 	{
-		$options = array('0' => sprintf('%s全体の%sを表示する', term('site.site'), term('timeline')));
-		if (conf('memberRelation.follow.isEnabled')) $options['1'] = sprintf('%sの%sの%sのみ表示する', term('followed'), term('member.view'), term('timeline'));
-		if (conf('memberRelation.friend.isEnabled')) $options['2'] = sprintf('%sの%sのみ表示する', term('friend'), term('timeline'));
+		$options = array('0' => $is_simple ? term('site.site').'全体' : sprintf('%s全体の%sを表示する', term('site.site'), term('timeline')));
+		if (conf('memberRelation.follow.isEnabled'))
+		{
+			$options['1'] = $is_simple ? sprintf('%sの%sのみ', term('followed'), term('member.view')) : sprintf('%sの%sの%sのみ表示する', term('followed'), term('member.view'), term('timeline'));
+		}
+		if (conf('memberRelation.friend.isEnabled'))
+		{
+			$options['2'] = $is_simple ? sprintf('%sのみ', term('firiend')) : sprintf('%sの%sのみ表示する', term('friend'), term('timeline'));
+		}
 		if (conf('memberRelation.follow.isEnabled') && conf('memberRelation.friend.isEnabled'))
 		{
-			$options['3'] = sprintf('%sの%sと%sの%sを表示する', term('followed'), term('member.view'), term('friend'), term('timeline'));
+			$options['3'] = sprintf('%sの%sと%s', term('followed'), term('member.view'), term('friend'));
+			if (!$is_simple) $options['3'] .= sprintf('の%sを表示する', term('timeline'));
 		}
 
 		if (!is_null($value) && isset($options[$value])) return $options[$value];
