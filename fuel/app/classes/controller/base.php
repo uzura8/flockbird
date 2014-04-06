@@ -83,12 +83,12 @@ class Controller_Base extends Controller_Hybrid
 		$breadcrumbs = array();
 		if (!$is_no_breadcrumbs)
 		{
-			$breadcrumbs = array('/' => Config::get('term.toppage'));
+			$breadcrumbs = array('/' => term('page.top'));
 			if ($member_obj)
 			{
 				if ($this->check_is_mypage($member_obj->id))
 				{
-					$breadcrumbs['/member'] = Config::get('term.myhome');
+					$breadcrumbs['/member'] = term('page.myhome');
 					if ($module)
 					{
 						$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';

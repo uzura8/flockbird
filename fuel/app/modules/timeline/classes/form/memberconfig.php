@@ -26,7 +26,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 
 	public static function get_viewType_options($value = null, $is_simple = false)
 	{
-		$options = array('0' => $is_simple ? term('site.site').'全体' : sprintf('%s全体の%sを表示する', term('site.site'), term('timeline')));
+		$options = array('0' => $is_simple ? term('site.view').'全体' : sprintf('%s全体の%sを表示する', term('site.view'), term('timeline')));
 		if (conf('memberRelation.follow.isEnabled'))
 		{
 			$options['1'] = $is_simple ? sprintf('%sの%sのみ', term('followed'), term('member.view')) : sprintf('%sの%sの%sのみ表示する', term('followed'), term('member.view'), term('timeline'));

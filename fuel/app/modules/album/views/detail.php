@@ -38,7 +38,7 @@
 <?php if (!$disabled_to_update): ?>
 <?php echo Html::anchor('album/upload/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn btn-default mr')); ?>
 <?php endif; ?>
-<?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s管理', \Config::get('term.album_image')), array('class' => 'btn btn-default')); ?>
+<?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s', term(array('album_image', 'site.management')), array('class' => 'btn btn-default')); ?>
 <?php endif; ?>
 </div>
 

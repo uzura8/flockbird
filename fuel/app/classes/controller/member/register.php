@@ -106,7 +106,7 @@ class Controller_Member_Register extends Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs('メンバー登録確認', array('member/signup' => Config::get('term.signup')));
+		$this->set_title_and_breadcrumbs(term(array('member.view', 'site.registration', 'form.confirm')), array('member/signup' => term('site.signup')));
 		$this->template->content = View::forge('member/register/index', array(
 			'val' => $form_member_profile->get_validation(),
 			'member_public_flags' => $form_member_profile->get_member_public_flags(),
@@ -133,7 +133,7 @@ class Controller_Member_Register extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(Config::get('term.signup'));
+		$this->set_title_and_breadcrumbs(term('site.signup'));
 		$this->template->content = View::forge('member/register/signup', array('form' => $form));
 		$this->template->content->set_safe('html_form', $form->build('member/register/confirm_signup'));// form の action に入る
 	}
@@ -163,7 +163,7 @@ class Controller_Member_Register extends Controller_Site
 			{
 				if (Model_MemberAuth::query()->where('email', $post['email'])->get_one())
 				{
-					throw new FuelException('そのメールアドレスは登録できません。');
+					throw new FuelException('その'.term('site.email').'は登録できません。');
 				}
 				$data = array();
 				//$data['name'] = $post['name'];
@@ -186,11 +186,11 @@ class Controller_Member_Register extends Controller_Site
 			}
 			catch(EmailValidationFailedException $e)
 			{
-				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+				$this->display_error(term(array('member.view', 'site.registration')).': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
-				$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+				$this->display_error(term(array('member.view', 'site.registration')).': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(FuelException $e)
 			{
