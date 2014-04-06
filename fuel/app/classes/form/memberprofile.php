@@ -143,7 +143,7 @@ class Form_MemberProfile
 		$this->member_obj->save();
 
 		// timeline 投稿
-		if (!Module::loaded('timeline')) return;
+		if (!is_enabled('timeline')) return;
 		if (!in_array('name', $is_changeed)) return;
 		$body = sprintf('%sを %s に変更しました。', term('member.name'), $this->member_obj->name);
 		\Timeline\Site_Model::save_timeline($this->member_obj->id, PRJ_PUBLIC_FLAG_ALL, 'member_name', $this->member_obj->id, $body);
@@ -256,7 +256,7 @@ class Form_MemberProfile
 
 		$properties = Form_Util::get_model_field('member', 'birthyear');
 		$attrs = $properties['attributes'];
-		$attrs['value'] = $this->member_obj->birthyear ?: date('Y');
+		$attrs['value'] = isset($this->member_obj->birthyear) ? $this->member_obj->birthyear : date('Y');
 		if (self::conf('birthday', 'birthyear.isRequired')) $properties['rules'][] = 'required';
 		$this->validation->add(
 			'member_birthyear',
@@ -265,7 +265,7 @@ class Form_MemberProfile
 			$properties['rules']
 		);
 
-		list($month, $day) = $this->member_obj->birthday ? Util_Date::sprit_date_str($this->member_obj->birthday) : array(1, 1);
+		list($month, $day) = isset($this->member_obj->birthday) ? Util_Date::sprit_date_str($this->member_obj->birthday) : array(1, 1);
 		if (self::conf('birthday', 'birthday.isRequired')) $rules[] = 'required';
 
 		$options = Form_Util::get_int_options(1, 12);
@@ -431,11 +431,26 @@ class Form_MemberProfile
 
 	public function validate_birthday()
 	{
+		if (!$this->check_is_enabled_member_field('birthyear')) return;
 		if (!$this->check_is_enabled_member_field('birthday')) return;
+		if (!$this->validated_values['member_birthyear']) return;
+		if (!$this->validated_values['member_birthday_month']) return;
+		if (!$this->validated_values['member_birthday_day']) return;
 
 		if (!checkdate($this->validated_values['member_birthday_month'], $this->validated_values['member_birthday_day'], $this->validated_values['member_birthyear']))
 		{
 			throw new \FuelException(term('member.birthyear_birthday').'の日付が正しくありません。');
+		}
+
+		$birthday_datatime = sprintf(
+			'%04d-%02d-%02d 00:00:00',
+			$this->validated_values['member_birthyear'],
+			$this->validated_values['member_birthday_month'],
+			$this->validated_values['member_birthday_day']
+		);
+		if (!Validation::_validation_datetime_is_past($birthday_datatime))
+		{
+			throw new \FuelException(term('member.birthyear_birthday').'に未来の日付は登録できません。');
 		}
 	}
 

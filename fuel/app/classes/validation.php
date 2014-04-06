@@ -160,7 +160,7 @@ class Validation extends Fuel\Core\Validation
 		return true;
 	}
 
-	public function _validation_datetime_is_past($val, $base = '', $min = '')
+	public static function _validation_datetime_is_past($val, $base = '', $min = '')
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
