@@ -3,13 +3,23 @@ class ApiNotAuthorizedException extends \FuelException {}
 
 class Controller_Base extends Controller_Hybrid
 {
+	protected $is_admin = false;
+	protected $auth_driver;
+	protected $auth_instance;
+	protected $auth = 'check_auth';
+
 	public function before()
 	{
 		parent::before();
 
-		if (!defined('IS_ADMIN')) define('IS_ADMIN', Site_Util::get_module_name() == 'admin');
+		if (!defined('IS_ADMIN')) define('IS_ADMIN', $this->check_is_admin_request());
 		if (!defined('IS_SP')) define('IS_SP', Agent::is_smartphone());
 		if (!defined('IS_API')) define('IS_API', Input::is_ajax());
+
+		$this->auth_instance = Auth::forge($this->auth_driver);
+		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
+		$this->set_current_user();
+		$this->check_auth_and_redirect();
 
 		if (!IS_API)
 		{
@@ -19,37 +29,58 @@ class Controller_Base extends Controller_Hybrid
 		}
 	}
 
-	protected function check_not_auth_action($is_api = false)
+	protected function check_auth($is_return_true_for_not_auth_action = true)
 	{
-		$action = $is_api ? sprintf('%s_%s', Str::lower(Request::main()->get_method()), Request::active()->action) : Request::active()->action;
-		return in_array($action, $this->check_not_auth_action);
+		if ($is_return_true_for_not_auth_action && $this->check_not_auth_action()) return true;
+
+		if ($this->auth_instance->check($this->auth_driver) === false) return false;
+		if ($this->auth_instance->get_user_id() === false) return false;
+		list($driver, $user_id) = $this->auth_instance->get_user_id();
+		if (!$user_id) return false;
+
+		return true;
 	}
 
-	protected function auth_check($is_api = false, $redirect_uri = '', $is_check_not_auth_action = true)
+	protected function set_current_user()
 	{
-		if ($is_check_not_auth_action && $this->check_not_auth_action($is_api)) return true;
-		if (Auth::check()) return true;
+		$this->u = null;
+		View::set_global('u', $this->u);
+		if ($this->auth_instance->get_user_id() === false) return;
 
-		if ($is_api) return false;
+		list($driver, $user_id) = $this->auth_instance->get_user_id();
+		$this->u = $this->get_current_user($user_id);
+		View::set_global('u', $this->u);
+	}
 
-		if (!$redirect_uri) $redirect_uri = Site_Util::get_login_page_uri();
+	protected function check_auth_and_redirect($redirect_uri = '')
+	{
+		if ($this->check_not_auth_action()) return;
+		if (IS_AUTH) return;
+
+		if (!$redirect_uri) $redirect_uri = $this->get_login_page_uri();
 		Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
 		Response::redirect($redirect_uri);
 	}
 
-	public function auth_check_api($is_force_response = false)
+	protected function check_not_auth_action()
 	{
-		if (!$this->auth_check(true))
-		{
-			if ($is_force_response)
-			{
-				$this->force_response(0, 401);
-			}
-			else
-			{
-				throw new ApiNotAuthorizedException;
-			}
-		}
+		$action = IS_API ? sprintf('%s_%s', Str::lower(Request::main()->get_method()), Request::active()->action) : Request::active()->action;
+		return in_array($action, $this->check_not_auth_action);
+	}
+
+	protected function check_is_admin_request()
+	{
+		if ($this->is_admin) return true;
+		if (Module::loaded('admin') && Request::main()->route->module == 'admin') return true;
+
+		return false;
+	}
+
+	protected function get_login_page_uri()
+	{
+		if (IS_ADMIN) return Config::get('site.login_uri.admin');
+
+		return Config::get('site.login_uri.site');
 	}
 
 	protected function force_response($body = null, $status = 200)

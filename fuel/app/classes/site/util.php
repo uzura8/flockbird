@@ -18,16 +18,6 @@ class Site_Util
 		return (isset(Request::main()->route->action))? Request::main()->route->action : 'index';
 	}
 
-	public static function check_is_admin_request()
-	{
-		if (Module::loaded('admin') && Request::main()->route->module == 'admin')
-		{
-			return true;
-		}
-
-		return false;
-	}
-
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())
 	{
 		$form = Fieldset::forge($name);
@@ -119,13 +109,6 @@ class Site_Util
 		$ids = Util_db::get_ids_from_model_objects($model_objects);
 
 		return Util_Array::array_in_array($target_ids, $ids);
-	}
-
-	public static function get_login_page_uri()
-	{
-		if (Site_Util::check_is_admin_request()) return Config::get('site.login_uri.admin');
-
-		return Config::get('site.login_uri.site');
 	}
 
 	public static function merge_module_configs($config, $config_name)

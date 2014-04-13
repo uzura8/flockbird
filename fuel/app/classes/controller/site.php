@@ -18,9 +18,6 @@ class Controller_Site extends Controller_Base_Site
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check();
-		$this->set_current_user();
 	}
 
 	protected function display_error($message_display = '', $messsage_log = '', $action = 'error/500', $status = 500)

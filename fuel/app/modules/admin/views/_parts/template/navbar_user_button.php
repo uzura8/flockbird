@@ -1,7 +1,7 @@
 <?php if (Auth::check()): ?>
 			<div class="pull-right navbar-btn btn-group">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<i class="icon-user"></i> <?php echo $u->username; ?>
+					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">

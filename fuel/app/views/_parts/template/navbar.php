@@ -8,10 +8,10 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="<?php echo Uri::create('/'); ?>"><?php echo PRJ_SITE_NAME; ?></a>
-<?php echo render('_parts/template/navbar_user_button', isset($path) ? array('path' => $path) : array()); ?>
+<?php echo render_module('_parts/template/navbar_user_button', isset($path) ? array('path' => $path) : array(), IS_ADMIN ? 'admin' : ''); ?>
 		</div>
 		<div class="collapse navbar-collapse">
-<?php echo render('_parts/template/navbar_menu_global_head', isset($path) ? array('path' => $path) : array()); ?>
+<?php echo render_module('_parts/template/navbar_menu_global_head', isset($path) ? array('path' => $path) : array(), IS_ADMIN ? 'admin' : ''); ?>
 		</div><!-- /.nav-collapse -->
 	</div><!-- /.container -->
 </div><!-- /.navbar -->

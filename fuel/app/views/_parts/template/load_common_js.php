@@ -12,6 +12,8 @@
 
 <?php echo Asset::js('util.js');?>
 <?php echo Asset::js('site.js');?>
+<?php if (!IS_ADMIN): ?>
 <script>
 function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
 </script>
+<?php endif; ?>

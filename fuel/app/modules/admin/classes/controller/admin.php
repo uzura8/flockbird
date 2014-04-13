@@ -3,7 +3,6 @@ namespace Admin;
 
 class Controller_Admin extends Controller_Base {
 
-	//public $template = 'admin/template';
 	protected $check_not_auth_action = array(
 		'login',
 	);
@@ -12,13 +11,7 @@ class Controller_Admin extends Controller_Base {
 	{
 		parent::before();
 
-		$this->auth_check();
-		$this->set_current_user();
-
-		if (!IS_API)
-		{
-			$this->template->layout = 'normal';
-		}
+		if (!IS_API) $this->template->layout = 'normal';
 	}
 	
 	public function action_login()

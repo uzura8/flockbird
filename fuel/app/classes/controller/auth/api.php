@@ -9,9 +9,6 @@ class Controller_Auth_Api extends Controller_Site_Api
 	public function before()
 	{
 		parent::before();
-
-		$this->auth_check_api(true);
-		$this->set_current_user();
 	}
 
 	/**

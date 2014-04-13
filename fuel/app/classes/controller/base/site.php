@@ -2,17 +2,16 @@
 
 class Controller_Base_Site extends Controller_Base
 {
+	protected $auth_driver = 'UzuraAuth';
+
 	public function before()
 	{
 		parent::before();
 	}
 
-	protected function set_current_user()
+	protected function get_current_user($member_id = null)
 	{
-		$auth = Auth::instance();
-		$this->u = Auth::check() ? Model_Member::set_member_config_property_default_value($auth->get_member()) : null;
-
-		View::set_global('u', $this->u);
+		return Model_Member::set_member_config_property_default_value($this->auth_instance->get_member());
 	}
 
 	protected function check_auth_and_is_mypage($member_id = 0, $is_api = false)
@@ -24,14 +23,8 @@ class Controller_Base_Site extends Controller_Base
 
 		if (!$member_id)
 		{
-			if ($is_api)
-			{
-				$this->auth_check_api();
-			}
-			else
-			{
-				$this->auth_check(false, '', false);
-			}
+			$this->check_auth_and_redirect();
+
 			$is_mypage = true;
 			$member = $this->u;
 			$access_from = 'self';
@@ -59,14 +52,14 @@ class Controller_Base_Site extends Controller_Base
 		}
 
 		$is_mypage = false;
-		$access_from = Auth::check() ? 'member' : 'guest';
+		$access_from = IS_AUTH ? 'member' : 'guest';
 
 		return array($is_mypage, $member, $access_from);
 	}
 
 	protected function check_is_mypage($member_id)
 	{
-		return (Auth::check() && $member_id == $this->u->id);
+		return (IS_AUTH && $this->u->id && $member_id == $this->u->id);
 	}
 
 	protected function add_member_filesize_total($size)

@@ -74,7 +74,15 @@ function site_get_screen_name($u)
 {
 	if (!$u) return Config::get('term.guest');
 
-	return (!empty($u->name)) ? $u->name : 'メンバーID:'.$u->id;
+	if (!empty($u->name)) return $u->name;
+	if (!empty($u->username)) return $u->username;
+
+	return 'ID:'.$u->id;
+}
+
+function auth_check()
+{
+	return defined('IS_AUTH') && IS_AUTH;
 }
 
 function conf($item, $file = null, $default = null, $replace_delimitter = null)
@@ -335,3 +343,13 @@ function is_enabled($module_name)
 
 	return true;
 }
+
+function render_module($view_file_path, $data = array(), $module_name = null)
+{
+	if ($module_name) $view_file_path = $module_name.'::'.$view_file_path;
+
+	return render($view_file_path, $data);
+}
+
+
+
