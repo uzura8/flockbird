@@ -287,7 +287,7 @@ return array(
 		 *
 		 * A path must be set in module_paths for this to work.
 		 */
-		'modules'  => array('admin', 'note', 'album', 'timeline', 'bird'),
+		'modules'  => array('admin', 'note', 'album', 'timeline', 'news', 'bird'),
 
 		/**
 		 * Classes to autoload & initialize even when not used

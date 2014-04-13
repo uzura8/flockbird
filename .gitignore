@@ -28,3 +28,5 @@ public/media/img/ai/*
 public/media/img/general/*
 
 fuel/app/views/welcome/*
+fuel/app/classes/controller/test.php
+fuel/app/views/test/*

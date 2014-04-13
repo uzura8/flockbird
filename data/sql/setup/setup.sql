@@ -320,6 +320,34 @@ CREATE TABLE `note_album_image` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `news_category_id` int(11) DEFAULT NULL COMMENT 'News category id',
+  `title` text NOT NULL,
+  `body` text NOT NULL,
+  `importance_level` tinyint(2) NOT NULL DEFAULT '0',
+  `is_published` tinyint(2) NOT NULL DEFAULT '0',
+  `published_at` datetime NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_at_idx` (`created_at`),
+  KEY `published_at_idx` (`published_at`),
+  KEY `is_published_published_at_idx` (`is_published`,`published_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `news_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `name` varchar(64) NOT NULL COMMENT 'Category name',
+  `label` text NOT NULL COMMENT 'Category label',
+  `sort_order` int(11) DEFAULT NULL COMMENT 'Order to sort',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`),
+  KEY `sort_order_idx` (`sort_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves categories of news';
+
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,

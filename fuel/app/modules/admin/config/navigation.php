@@ -7,7 +7,10 @@ return array(
 			'Member' => array(
 				'Member list' => 'admin/member',
 			),
-			'SNS settings' => array(
+			'Contents settings' => array(
+				'News' => 'admin/news',
+			),
+			'Site settings' => array(
 				'Profile setting' => 'admin/profile',
 			),
 			'Admin settings' => array(
