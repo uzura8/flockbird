@@ -269,6 +269,7 @@ function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
 
 function set_datetimepicker(attribute)
 {
+	var is_accept_futer = (arguments.length > 1) ? arguments[1] : false;
 	$(attribute).datetimepicker({
 		dateFormat: 'yy-mm-dd',
 		hourMax: 23,
@@ -281,7 +282,7 @@ function set_datetimepicker(attribute)
 		minuteGrid: 15,
 		addSliderAccess: true,
 		sliderAccessArgs: { touchonly: false },
-		maxDateTime: new Date()
+		maxDateTime: is_accept_futer ? null : new Date()
 	});
 }
 

@@ -351,5 +351,10 @@ function render_module($view_file_path, $data = array(), $module_name = null)
 	return render($view_file_path, $data);
 }
 
+function icon_label($icon_key, $term, $is_raw_label = false, $class_prefix = 'glyphicon glyphicon-', $tag = 'i', $delimitter = ' ')
+{
+	$label = $is_raw_label ? $term : term($term);
 
+	return sprintf('%s%s%s', icon($icon_key, $class_prefix, $tag), $delimitter, $label);
+}
 

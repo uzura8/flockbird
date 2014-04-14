@@ -119,6 +119,15 @@ img.profile_image {
 	bottom: 0;
 }
 
+.btn span.hidden-xs {
+	display: inline !important;
+}
+@media (max-width: 768px) {
+	.btn span.hidden-xs {
+		display: none !important;
+	}
+}
+
 .btn_timeline_delete {
 	position: absolute;
 	right: 0;
@@ -393,13 +402,19 @@ span.required {
 	top: -0.2em;
 }
 
+.page-header {
+	margin-top: 10px !important;
+}
 .page-header h1,
 .header h4
 {
+	margin-top: 0 !important;
 	word-break:break-all;
 	word-wrap:break-word;
 	overflow:hidden;
+	z-index: 3;
 }
+/*
 .page-header h1.has_label,
 #article_list .article .header h4.has_label
 {
@@ -416,6 +431,7 @@ span.required {
 	right: 0;
 	top: 2px;
 }
+*/
 
 div.alert ul {
 	margin-bottom: 0;

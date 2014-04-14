@@ -6,20 +6,26 @@ class Model_News extends \Orm\Model
 	protected static $_table_name = 'news';
 
 	protected static $_belongs_to = array(
-		'news_category' => array(
-			'key_from' => 'news_category_id',
-			'model_to' => 'Model_NewsCategory',
+		'users' => array(
+			'key_from' => 'users_id',
+			'model_to' => '\Admin\Model_User',
 			'key_to' => 'id',
-		)
+		),
+		//'news_category' => array(
+		//	'key_from' => 'news_category_id',
+		//	'model_to' => 'Model_NewsCategory',
+		//	'key_to' => 'id',
+		//)
 	);
 
 	protected static $_properties = array(
 		'id',
 		'news_category_id' => array(
-			'data_type' => 'varchar',
-			'label' => 'ニュースカテゴリ',
-			'validation' => array('trim', 'valid_string' => array('numeric')),
-			'form' => array('type' => 'select'),
+			//'data_type' => 'varchar',
+			//'label' => 'ニュースカテゴリ',
+			//'validation' => array('trim', 'valid_string' => array('numeric')),
+			//'form' => array('type' => 'select'),
+			'form' => array('type' => false),
 		),
 		'title' => array(
 			'data_type' => 'varchar',
@@ -35,7 +41,7 @@ class Model_News extends \Orm\Model
 		),
 		'is_published' => array(
 			'data_type' => 'integer',
-			'validation' => array('in_array' => array(0,1)),
+			'validation' => array('in_array' => array(array(0,1))),
 			'form' => array('type' => false),
 		),
 		'published_at' => array(
@@ -43,6 +49,10 @@ class Model_News extends \Orm\Model
 			'label' => '公開日時',
 			'validation' => array('trim', 'valid_date' => array('Y-m-d H:i:s')),
 			'form' => array('type' => 'text'),
+		),
+		'users_id' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
 		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
@@ -64,16 +74,16 @@ class Model_News extends \Orm\Model
 
 	public static function _init()
 	{
-		if (\Config::get('news.category.isEnabled'))
-		{
-			$news_category_id_options = array();
-			static::$_properties['news_category_id']['form']['options'] = $news_category_id_options;
-			static::$_properties['news_category_id']['validation']['in_array'][] = array_keys($news_category_id_options);
-		}
-		else
-		{
-			static::$_properties['news_category_id']['form']['type'] = false;
-		}
+		//if (\Config::get('news.category.isEnabled'))
+		//{
+		//	$news_category_id_options = array();
+		//	static::$_properties['news_category_id']['form']['options'] = $news_category_id_options;
+		//	static::$_properties['news_category_id']['validation']['in_array'][] = array_keys($news_category_id_options);
+		//}
+		//else
+		//{
+		//	static::$_properties['news_category_id']['form']['type'] = false;
+		//}
 	}
 
 	public static function check_authority($id)

@@ -1,6 +1,6 @@
 <?php
 
-function icon($icon_key, $class_prefix = 'glyphicon glyphicon-', $tag = 'span')
+function icon($icon_key, $class_prefix = 'glyphicon glyphicon-', $tag = 'i')
 {
 	$attr = array('class' => $class_prefix.$icon_key);
 
@@ -38,17 +38,21 @@ function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '
 	return Html::anchor($href, $label, $attr);
 }
 
-function btn_dropdown($btn_label, $menus = array(), $btn_size = '', $btn_type = 'default', $attrs = array(), $btn_group_attrs = array())
+function btn_dropdown($btn_label, $menus = array(), $btn_size = '', $btn_type = 'default', $is_popover_align_right = false, $attrs = array(), $btn_group_attrs = array())
 {
 	if (!$btn_type) $btn_type = 'default';
-	return render('_parts/btn_dropdown', array(
-		'btn_label' => $btn_label,
+	$data = array(
 		'btn_size' => $btn_size,
 		'btn_type' => $btn_type,
+		'is_popover_align_right' => $is_popover_align_right,
 		'attrs' => $attrs,
 		'menus' => $menus,
 		'btn_group_attrs' => $btn_group_attrs,
-	));
+	);
+	$view = View::forge('_parts/btn_dropdown', $data);
+	$view->set_safe('btn_label', $btn_label);
+
+	return $view->render();
 }
 
 function anchor_button($href, $icon_class = '', $text = '', $class_attr_add = '', $attr = array(), $is_mini_btn = false, $is_sp = false, $is_force_btn = false, $is_force_loud_color = false)
@@ -82,4 +86,9 @@ function alert($message, $type = 'info', $with_dismiss_btn = false)
 function small_tag($str, $is_enclose_small_tag = true)
 {
 	return sprintf('%s%s%s', $is_enclose_small_tag ? '<small>' : '', $str, $is_enclose_small_tag ? '</small>' : '');
+}
+
+function create_anchor_button($href, $class_attr_add = '', $attr = array(), $is_mini_btn = false, $is_sp = false, $is_force_btn = false, $is_force_loud_color = false)
+{
+	return anchor_button($href, 'glyphicon glyphicon-edit', term('form.create'), $class_attr_add, $attr, $is_mini_btn, $is_sp, $is_force_btn, $is_force_loud_color);
 }
