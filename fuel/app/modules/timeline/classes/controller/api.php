@@ -107,7 +107,7 @@ class Controller_Api extends \Controller_Site_Api
 					$type_key = 'album_image_timeline';
 					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'timeline');
 				}
-				list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $post['public_flag']);
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $post['public_flag']);
 			}
 			else
 			{

@@ -151,7 +151,7 @@ class Controller_Note extends \Controller_Site
 				if (\Module::loaded('album'))
 				{
 					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
-					list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $note->public_flag);
+					list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $note->public_flag);
 					\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
 				}
 
@@ -241,7 +241,7 @@ class Controller_Note extends \Controller_Site
 				$note->save();
 				if (\Module::loaded('album'))
 				{
-					list($moved_files, $album_image_ids) = \Site_FileTmp::save_as_album_images($file_tmps, $album_id, $note->public_flag);
+					list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $note->public_flag);
 					\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
 					\Album\Site_Util::update_album_images4file_objects($album_images, $files, $note->public_flag);
 				}

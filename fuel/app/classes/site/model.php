@@ -4,7 +4,7 @@ class Site_Model
 	public static function get_model_name($table, $namespace = '')
 	{
 		$model = '\Model_'.Inflector::camelize($table);
-		if ($namespace) $model = sprintf('\%s%s', $namespace, $model);
+		if ($namespace) $model = sprintf('\%s%s', ucfirst($namespace), $model);
 
 		return $model;
 	}

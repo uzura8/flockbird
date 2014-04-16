@@ -2,15 +2,15 @@
 
 class Site_FileTmp
 {
-	public static function get_file_tmps_and_check_filesize($member_id, $filesize_total)
+	public static function get_file_tmps_and_check_filesize($member_id = null, $filesize_total = null)
 	{
 		$file_tmps = self::get_file_tmps_uploaded($member_id);
-		self::check_uploaded_under_accepted_filesize($file_tmps, $filesize_total, Site_Upload::get_accepted_filesize($member_id));
+		if ($member_id) self::check_uploaded_under_accepted_filesize($file_tmps, $filesize_total, Site_Upload::get_accepted_filesize($member_id));
 
 		return $file_tmps;
 	}
 
-	public static function get_file_tmps_uploaded($member_id, $is_check_select_files = false, $is_throw_exception_not_exists_file = true, $is_delete_record_not_exists_file = false)
+	public static function get_file_tmps_uploaded($member_id = null, $is_check_select_files = false, $is_throw_exception_not_exists_file = true, $is_delete_record_not_exists_file = false)
 	{
 		$file_tmps = array();
 		if (!$file_tmps_posted = Input::post('file_tmp'))
@@ -30,7 +30,7 @@ class Site_FileTmp
 
 		foreach ($file_tmps as $key => $file_tmp)
 		{
-			if ($file_tmp->member_id != $member_id) throw new HttpForbiddenException;
+			if ($member_id && $file_tmp->member_id != $member_id) throw new HttpForbiddenException;
 			if ($file_tmps_posted[$file_tmp->id] != $file_tmp->name) throw new HttpInvalidInputException('Invalid input data.');
 
 			$file_tmps_description_posted = Input::post('file_tmp_description');
@@ -61,13 +61,15 @@ class Site_FileTmp
 		return true;
 	}
 
-	public static function save_as_album_images($file_tmps, $album_id, $public_flag)
+	public static function save_images($file_tmps, $parent_id, $parent_id_field, $related_table, $namespace = null, $public_flag = null)
 	{
 		$moved_files     = array();
-		$album_image_ids = array();
-		if (!$file_tmps) return array($moved_files, $album_image_ids);
+		$related_table_ids = array();
+		if (!$file_tmps) return array($moved_files, $related_table_ids);
 
-		$new_filepath = Site_Upload::get_filepath('ai', $album_id);
+		$file_cate = Site_Upload::get_file_cate_from_table($related_table);
+		if (!$file_cate) throw new \InvalidArgumentException('Parameter $related_table is invalid.');
+		$new_filepath = Site_Upload::get_filepath($file_cate, $parent_id);
 		$new_file_dir  = Config::get('site.upload.types.img.raw_file_path').$new_filepath;
 		if (!Site_Upload::check_and_make_uploaded_dir($new_file_dir, Config::get('site.upload.check_and_make_dir_level'), Config::get('site.upload.mkdir_mode')))
 		{
@@ -88,18 +90,19 @@ class Site_FileTmp
 			);
 
 			$file = Model_File::move_from_file_tmp($file_tmp, $new_filepath);
+			$model = Site_Model::get_model_name($related_table, $namespace);
 
-			$album_image = \Album\Model_AlbumImage::forge();
-			$album_image->album_id    = $album_id;
-			$album_image->file_id     = $file->id;
-			$album_image->name        = $file_tmp->description;
-			$album_image->public_flag = $public_flag;
-			$album_image->shot_at     = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
-			$album_image->save();
-			$album_image_ids[] = $album_image->id;
+			$related_table_obj = $model::forge();
+			$related_table_obj->{$parent_id_field} = $parent_id;
+			$related_table_obj->file_id = $file->id;
+			$related_table_obj->name = $file_tmp->description;
+			$related_table_obj->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
+			if (!is_null($public_flag)) $related_table_obj->public_flag = $public_flag;
+			$related_table_obj->save();
+			$related_table_ids[] = $related_table_obj->id;
 		}
 
-		return array($moved_files, $album_image_ids);
+		return array($moved_files, $related_table_ids);
 	}
 
 	public static function make_and_remove_thumbnails($moved_files, $additional_sizes_key = null)
@@ -119,9 +122,9 @@ class Site_FileTmp
 		}
 	}
 
-	public static function get_file_objects($file_tmps, $member_id)
+	public static function get_file_objects($file_tmps, $member_id, $is_admin = false)
 	{
-		$options = Site_Upload::get_upload_handler_options($member_id);
+		$options = Site_Upload::get_upload_handler_options($member_id, $is_admin);
 		$uploadhandler = new MyUploadHandler($options, false);
 
 		return $uploadhandler->get_file_objects_from_file_tmps($file_tmps);

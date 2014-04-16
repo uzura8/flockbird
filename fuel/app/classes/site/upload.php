@@ -102,6 +102,26 @@ class Site_Upload
 		return $parts[0];
 	}
 
+	public static function get_file_cate_from_table($table)
+	{
+		switch ($table)
+		{
+			case 'member':
+				return 'm';
+				break;
+			case 'album_image':
+				return 'ai';
+				break;
+			case 'news_image':
+				return 'nw';
+				break;
+			default :
+				break;
+		}
+
+		return false;
+	}
+
 	public static function get_name_cate_from_file_path($file_path)
 	{
 		$parts = explode('/', $file_path);
@@ -254,9 +274,10 @@ class Site_Upload
 		return $options;
 	}
 
-	public static function get_upload_handler_options($member_id, $is_tmp = true, $file_cate = 'm', $split_criterion_id = 0, $is_multiple_upload = true, $with_thumbnail = true)
+	public static function get_upload_handler_options($member_id, $is_admin = false, $is_tmp = true, $file_cate = null, $split_criterion_id = 0, $is_multiple_upload = true, $with_thumbnail = true)
 	{
 		if (!$split_criterion_id) $split_criterion_id = $member_id;
+		if (!$file_cate) $file_cate = $is_admin ? 'au' : 'm';
 		$uploader_info = self::get_uploader_info($file_cate, $split_criterion_id, $is_tmp, true);
 		$options = array(
 			'max_file_size'  => PRJ_UPLOAD_MAX_FILESIZE,
@@ -267,6 +288,7 @@ class Site_Upload
 			'upload_uri'     => $uploader_info['upload_uri'],
 			'mkdir_mode'     => Config::get('site.upload.mkdir_mode'),
 			'member_id'      => $member_id,
+			'user_type'      => $is_admin ? 1 : 0,
 			'filepath'       => $uploader_info['filepath'],
 			'image_versions' => array(
 				'' => array(

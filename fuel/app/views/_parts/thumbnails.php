@@ -2,7 +2,7 @@
 <div class="row">
 <?php $col_num = empty($images['column_count']) ? 3 : floor(12 / $images['column_count']); ?>
 <?php foreach ($images['list'] as $image): ?>
-	<div class="col-sm-<?php echo $col_num; ?>">
+	<div class="col-sm-<?php echo $col_num; ?> thumbnail_box">
 <?php
 $file_cate = !empty($images['file_cate']) ? $images['file_cate'] : 'ai';
 if ($file_cate == 'ai' && $image)
@@ -12,6 +12,13 @@ if ($file_cate == 'ai' && $image)
 	$link_uri = 'album/image/'.$image->id;
 	$image_name = $image->name;
 	$is_link2raw_file = false;
+}
+elseif ($file_cate == 'nw' && $image)
+{
+	$file_obj = $image->file;
+	$link_uri = '';
+	$image_name = $image->name;
+	$is_link2raw_file = true;
 }
 else
 {

@@ -4,7 +4,7 @@ class MyUploadHandler extends UploadHandler
 {
 	public function get_file_objects_from_file_tmps($file_tmps)
 	{
-		if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
+		//if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
 
 		$thumbnail_dir_uri = $this->options['upload_uri'].'thumbnail/';
 		$files = array();
@@ -58,7 +58,7 @@ class MyUploadHandler extends UploadHandler
 		if (!$file_name) throw new \FuelException('Not requested file_name.');
 
 		if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
-		if (!$file_tmp = \Model_FileTmp::get4name_and_member_id($file_name, $this->options['member_id']))
+		if (!$file_tmp = \Model_FileTmp::get4name_and_member_id($file_name, $this->options['member_id'], $this->options['user_type']))
 		{
 			throw new \FuelException('Not exists file_tmp data.');
 		}
@@ -240,7 +240,7 @@ class MyUploadHandler extends UploadHandler
 
 		// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
 		$file_size_before = $file->size;
-		if ($max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
+		if ($this->options['member_id'] && $this->options['user_type'] === 0 && $max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
 		{
 			$file->size = Site_Upload::check_max_size_and_resize($file_path, $max_size);
 		}
@@ -271,6 +271,7 @@ class MyUploadHandler extends UploadHandler
 		$model_file_tmp->type = $file->type;
 		$model_file_tmp->original_filename = $file->original_name;
 		$model_file_tmp->member_id = $this->options['member_id'];
+		$model_file_tmp->user_type = $this->options['user_type'];
 		if ($exif)
 		{
 			$model_file_tmp->exif = serialize($exif);

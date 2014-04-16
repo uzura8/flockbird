@@ -1,4 +1,5 @@
 <?php
+
 class Model_FileTmp extends \Orm\Model
 {
 	protected static $_table_name = 'file_tmp';
@@ -28,6 +29,9 @@ class Model_FileTmp extends \Orm\Model
 		),
 		'member_id' => array(
 			'validation' => array('trim', 'valid_string' => array('integer')),
+		),
+		'user_type' => array(
+			'validation' => array('valid_string' => array('integer'), 'in_array' => array(array(0, 1))),
 		),
 		'description' => array(
 			'data_type' => 'text',
@@ -61,24 +65,31 @@ class Model_FileTmp extends \Orm\Model
 		),
 	);
 
-	public static function check_authority($id, $target_member_id = 0)
+	public static function check_authority($id, $target_member_id = 0, $user_type = 0)
 	{
 		if (!$id) return false;
 
 		$obj = self::find($id);
 		if (!$obj) return false;
 
-		if ($target_member_id && $obj->member_id != $target_member_id) return false;
+		if ($target_member_id)
+		{
+			if ($obj->member_id != $target_member_id) return false;
+			if ($obj->user_type != $user_type) return false;
+		}
 
 		return $obj;
 	}
 
-	public static function get4name_and_member_id($name, $member_id)
+	public static function get4name_and_member_id($name, $member_id, $user_type)
 	{
-		return self::query()
-			->where('name', $name)
-			->where('member_id', $member_id)
-			->get_one();
+		$query = self::query()->where('name', $name);
+		if ($member_id)
+		{
+			$query = $query->where('user_type', $user_type)->where('member_id', $member_id);
+		}
+
+		return $query->get_one();
 	}
 
 	public static function get4name($name)

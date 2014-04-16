@@ -2,7 +2,8 @@
 /*global window, $ */
 $(function () {
 	'use strict';
-	var post_url = get_url('filetmp/api/upload.html');
+	var uri = check_is_admin() ? 'admin/filetmp/api/upload.html' : 'filetmp/api/upload.html';
+	var post_url = get_url(uri);
 	// Change this to the location of your server-side upload handler:
 	$('#fileupload').fileupload({
 		url: post_url,
@@ -29,6 +30,7 @@ $(function () {
 		var file_type = $(this).data('type') ? $(this).data('type') : 'file_tmp';
 
 		var delete_uri = (file_type == 'file_tmp') ? 'filetmp/api/upload.json' : 'album/image/api/delete.json';
+		if (check_is_admin()) delete_uri = 'admin/' + delete_uri;
 		delete_item(delete_uri, file_id, '#' + file_type);
 		return false;
 	});

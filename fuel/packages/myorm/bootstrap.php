@@ -10,6 +10,7 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_AddMemberFilesizeTotal' => __DIR__.'/classes/observer/addmemberfilesizetotal.php',
 	'MyOrm\\Observer_SubtractMemberFilesizeTotal' => __DIR__.'/classes/observer/subtractmemberfilesizetotal.php',
 	'MyOrm\\Observer_DeleteAlbumImage' => __DIR__.'/classes/observer/deletealbumimage.php',
+	'MyOrm\\Observer_DeleteNewsImage' => __DIR__.'/classes/observer/deletenewsimage.php',
 	'MyOrm\\Observer_InsertTimelineCache' => __DIR__.'/classes/observer/inserttimelinecache.php',
 	'MyOrm\\Observer_UpdateTimelineCache' => __DIR__.'/classes/observer/updatetimelinecache.php',
 	'MyOrm\\Observer_DeleteOrUpdateTimeline4ChildData' => __DIR__.'/classes/observer/deleteorupdatetimeline4childdata.php',

@@ -54,12 +54,19 @@ class Model_AlbumImage extends \Orm\Model
 			'validation' => array('required'),
 			'form' => array('type' => 'radio', 'options' => array()),
 		),
-		'shot_at'    => array('form' => array('type' => false)),
+		'shot_at' => array(
+			'data_type' => 'datetime',
+			'validation' => array('trim', 'valid_date' => array('Y-m-d H:i:s')),
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -68,7 +75,6 @@ class Model_AlbumImage extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'Orm\\Observer_Validation',
 		'MyOrm\Observer_DeleteAlbumImage' => array(
 			'events' => array('before_delete'),
 		),
