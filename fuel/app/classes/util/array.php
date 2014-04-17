@@ -88,4 +88,11 @@ class Util_Array
 
 		return $list;
 	}
+
+	public static function get_first_key(array $array)
+	{
+		$row = each($array);
+
+		return $row['key'];
+	}
 }

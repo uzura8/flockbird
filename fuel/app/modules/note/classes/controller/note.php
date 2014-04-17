@@ -91,7 +91,7 @@ class Controller_Note extends \Controller_Site
 		if (!$note = Model_Note::check_authority($id)) throw new \HttpNotFoundException;
 		$this->check_public_flag($note->public_flag, $note->member_id);
 
-		$images = \Module::loaded('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
+		$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
 
 		$record_limit = \Config::get('site.view_params_default.detail.comment.limit');
 		if (\Input::get('all_comment', 0)) $record_limit = \Config::get('site.view_params_default.detail.comment.limit_max');
@@ -148,7 +148,7 @@ class Controller_Note extends \Controller_Site
 				}
 				\DB::start_transaction();
 				$note->save();
-				if (\Module::loaded('album'))
+				if (is_enabled('album'))
 				{
 					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
 					list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $note->public_flag);
@@ -156,7 +156,7 @@ class Controller_Note extends \Controller_Site
 				}
 
 				// timeline 投稿
-				if ($note->is_published && \Module::loaded('timeline'))
+				if ($note->is_published && is_enabled('timeline'))
 				{
 					\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
 				}
@@ -200,13 +200,13 @@ class Controller_Note extends \Controller_Site
 		}
 
 		$val = self::get_validation_object($note, true);
-		if (\Module::loaded('album'))
+		if (is_enabled('album'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
 			$album_images = Model_NoteAlbumImage::get_album_image4note_id($note->id);
 		}
+		$files = is_enabled('album') ? \Site_Upload::get_file_objects($album_images, $album_id, false, $this->u->id) : array();
 
-		$files = \Module::loaded('album') ? \Album\Site_Util::get_file_objects($album_images, $this->u->id, $album_id) : array();
 		$file_tmps = array();
 		if (\Input::method() == 'POST')
 		{
@@ -215,7 +215,7 @@ class Controller_Note extends \Controller_Site
 			$moved_files = array();
 			try
 			{
-				if (\Module::loaded('album')) $file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
+				if (is_enabled('album')) $file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
 
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
@@ -239,15 +239,15 @@ class Controller_Note extends \Controller_Site
 
 				\DB::start_transaction();
 				$note->save();
-				if (\Module::loaded('album'))
+				if (is_enabled('album'))
 				{
 					list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $note->public_flag);
 					\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
-					\Album\Site_Util::update_album_images4file_objects($album_images, $files, $note->public_flag);
+					\Site_Upload::update_image_objs4file_objects($album_images, $files, $note->public_flag);
 				}
 
 				// timeline 投稿
-				if (\Module::loaded('timeline'))
+				if (is_enabled('timeline'))
 				{
 					if ($is_published)
 					{
@@ -307,7 +307,7 @@ class Controller_Note extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $note->id);
+			if (is_enabled('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $note->id);
 			$deleted_files = $note->delete_with_relations();
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
@@ -350,7 +350,7 @@ class Controller_Note extends \Controller_Site
 			$note->save();
 
 			// album_image の public_flag を update
-			if (\Module::loaded('album'))
+			if (is_enabled('album'))
 			{
 				$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
 				foreach ($album_images as $album_image)
@@ -360,7 +360,7 @@ class Controller_Note extends \Controller_Site
 				}
 			}
 			// timeline 投稿
-			if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
 			\DB::commit_transaction();
 			\Session::set_flash('message', \Config::get('term.note').'を公開しました。');
 		}

@@ -16,8 +16,15 @@ switch ($thumbnail_size)
 		$is_subinfo_pull_right = false;
 		break;
 }
+
+$prefix = $file->is_tmp ? 'file_tmp' : 'file';
+$delete_btn_attr = array(
+	'class' => 'btn btn-xs btn-default delete_file_tmp',
+	'data-id' => $file->id,
+	'data-type' => $prefix,
+);
+if (!$file->is_tmp && !empty($model)) $delete_btn_attr['data-model'] = $model;
 ?>
-<?php $prefix = $file->is_tmp ? 'file_tmp' : 'file'; ?>
 <div id="<?php echo $prefix; ?>_<?php echo $file->id; ?>" class="<?php echo $box_class_attr; ?>">
 <?php if (!empty($file->error)): ?>
 	<div class="caption">
@@ -33,11 +40,7 @@ switch ($thumbnail_size)
 <?php endif; ?>
 			<p class="subinfo<?php if ($is_subinfo_pull_right): ?> pull-right<?php endif; ?>">
 				<?php echo Num::format_bytes($file->size); ?>
-				<?php echo Html::anchor('#', '<i class="glyphicon glyphicon-trash"></i>', array(
-					'class' => 'btn btn-xs btn-default delete_file_tmp',
-					'data-id' => $file->id,
-					'data-type' => $prefix,
-				)); ?>
+				<?php echo Html::anchor('#', '<i class="glyphicon glyphicon-trash"></i>', $delete_btn_attr); ?>
 			</p>
 <?php if ($is_display_textarea): ?>
 			<p><?php echo Form::textarea(

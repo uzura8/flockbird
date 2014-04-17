@@ -308,6 +308,38 @@ class Site_Upload
 		return $options;
 	}
 
+	public static function get_file_objects($model_objs, $parent_id, $is_admin = null, $member_id = null)
+	{
+		$key = Util_Array::get_first_key($model_objs);
+		$table = $model_objs[$key]->table();
+		$file_cate = Site_Upload::get_file_cate_from_table($table);
+
+		$options = self::get_upload_handler_options($member_id, $is_admin, false, $file_cate, $parent_id);
+		$uploadhandler = new \MyUploadHandler($options, false);
+
+		return $uploadhandler->get_file_objects_from_related_model($model_objs, \Input::post('file_description'));
+	}
+
+	public static function update_image_objs4file_objects($image_objs, $files, $public_flag = null)
+	{
+		foreach ($files as $file)
+		{
+			if(empty($image_objs[$file->id])) continue;
+			$image_obj = $image_objs[$file->id];
+
+			if ($image_obj->name !== $file->description)
+			{
+				$image_obj->name = $file->description;
+			}
+			if (!is_null($public_flag) && $image_obj->public_flag != $public_flag)
+			{
+				$image_obj->public_flag = $public_flag;
+			}
+
+			$image_obj->save();
+		}
+	}
+
 	public static function make_thumbnails($raw_file_path, $filepath, $is_check_and_make_dir = true, $additional_sizes_key = null)
 	{
 		$file_cate = self::get_file_cate_from_filepath($filepath);

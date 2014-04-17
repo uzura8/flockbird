@@ -22,25 +22,32 @@ class MyUploadHandler extends UploadHandler
 		return $files;
 	}
 
-	public function get_file_objects_from_album_images($album_images, $album_image_names_posted)
+	public function get_file_objects_from_related_model($model_objs, $image_names_posted = array())
 	{
-		if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
-
-		$cache_dir_uri = Config::get('site.upload.types.img.root_path.cache_dir');
-		$cache_size    = Config::get('site.upload.types.img.types.ai.sizes.thumbnail');
 		$files = array();
-		foreach ($album_images as $album_image)
+		if (!$model_objs) return $files;
+
+		$key = Util_Array::get_first_key($model_objs);
+		$table = $model_objs[$key]->table();
+		$need_member_id_tables = array('album_image');
+		if (in_array($table, $need_member_id_tables) && !$this->options['member_id']) throw new \FuelException('Need member_id.');
+
+		$file_cate = Site_Upload::get_file_cate_from_table($table);
+		$cache_size    = Config::get('site.upload.types.img.types.'.$file_cate.'.sizes.thumbnail');
+		$cache_dir_uri = Config::get('site.upload.types.img.root_path.cache_dir');
+
+		foreach ($model_objs as $model_obj)
 		{
-			$file = $this->get_file_object($album_image->file->name);
+			$file = $this->get_file_object($model_obj->file->name);
 			$file->is_tmp = false;
-			$file->id = (int)$album_image->id;
-			$file->original_name = $album_image->file->original_filename;
-			$file->thumbnail_uri = sprintf('%s%s/%s%s', $cache_dir_uri, $cache_size, $album_image->file->path, $album_image->file->name);
+			$file->id = (int)$model_obj->id;
+			$file->original_name = $model_obj->file->original_filename;
+			$file->thumbnail_uri = sprintf('%s%s/%s%s', $cache_dir_uri, $cache_size, $model_obj->file->path, $model_obj->file->name);
 			
-			$file->description   = $album_image->name;
-			if (!is_null($album_image_names_posted[$album_image->id]) && strlen($album_image_names_posted[$album_image->id]))
+			$file->description   = $model_obj->name;
+			if (!is_null($image_names_posted[$model_obj->id]) && strlen($image_names_posted[$model_obj->id]))
 			{
-				$file->description = $album_image_names_posted[$album_image->id];
+				$file->description = $image_names_posted[$model_obj->id];
 			}
 			$files[] = $file;
 		}

@@ -7,6 +7,7 @@
 	'hide_form' => $hide_form,
 	'thumbnail_size' => empty($thumbnail_size) ? 'M' : $thumbnail_size,
 	'selects' => $selects,
+	'model' => $model,
 )); ?>
 <?php if (!$is_raw_form): ?>
 </div>

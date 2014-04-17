@@ -28,9 +28,17 @@ $(function () {
 	$(document).on('click','.delete_file_tmp', function(){
 		var file_id   = $(this).data('id') ? parseInt($(this).data('id')) : 0;
 		var file_type = $(this).data('type') ? $(this).data('type') : 'file_tmp';
+		var model = $(this).data('model') ? $(this).data('model') : 'album';
 
-		var delete_uri = (file_type == 'file_tmp') ? 'filetmp/api/upload.json' : 'album/image/api/delete.json';
+		if (model.length > 0 && model != 'album' && model != 'news') model = 'album';
+		var delete_uri = '';
+		if (file_type == 'file_tmp') {
+			delete_uri = 'filetmp/api/upload.json';
+		} else {
+			delete_uri = model + '/image/api/delete.json';
+		}
 		if (check_is_admin()) delete_uri = 'admin/' + delete_uri;
+
 		delete_item(delete_uri, file_id, '#' + file_type);
 		return false;
 	});

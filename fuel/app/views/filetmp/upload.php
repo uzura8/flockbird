@@ -3,7 +3,7 @@
 <div id="upload_files" class="<?php if ($hide_form): ?> hidden<?php endif; ?>">
 <div id="files" class="files row">
 <?php if (!empty($files)): ?>
-<?php echo render('filetmp/_parts/upload_images', array('files' => $files, 'thumbnail_size' => $thumbnail_size)); ?>
+<?php echo render('filetmp/_parts/upload_images', array('files' => $files, 'thumbnail_size' => $thumbnail_size, 'model' => $model)); ?>
 <?php endif; ?>
 </div><!-- #files -->
 <!-- The global progress bar -->
