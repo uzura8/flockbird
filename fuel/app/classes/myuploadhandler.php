@@ -206,7 +206,7 @@ class MyUploadHandler extends UploadHandler
 			}
 			else
 			{
-				move_uploaded_file($uploaded_file, $file_path);
+				$res = move_uploaded_file($uploaded_file, $file_path);
 			}
 		}
 		else
@@ -254,6 +254,7 @@ class MyUploadHandler extends UploadHandler
 		if (Config::get('site.upload.remove_exif_data') && $file_size_before == $file->size)
 		{
 			Util_file::resave($file_path);
+			$file->size = File::get_size($file_path);
 		}
 
 		try
@@ -287,7 +288,7 @@ class MyUploadHandler extends UploadHandler
 				$model_file_tmp->shot_at = $exif_time;
 			}
 		}
-		$model_file_tmp->save();
+		if (!$model_file_tmp->save()) throw new \FuelException('Failed to save file.');
 
 		return $model_file_tmp->id;
 	}

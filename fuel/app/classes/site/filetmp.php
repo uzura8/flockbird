@@ -61,7 +61,7 @@ class Site_FileTmp
 		return true;
 	}
 
-	public static function save_images($file_tmps, $parent_id, $parent_id_field, $related_table, $namespace = null, $public_flag = null)
+	public static function save_images($file_tmps, $parent_id, $parent_id_field, $related_table, $namespace = null, $public_flag = null, $is_ignore_member_id = false)
 	{
 		$moved_files     = array();
 		$related_table_ids = array();
@@ -88,10 +88,9 @@ class Site_FileTmp
 				'from_thumbnail' => $thumbnail_file_path,
 				'filepath' => $new_filepath,
 			);
+			$file = Model_File::move_from_file_tmp($file_tmp, $new_filepath, $is_ignore_member_id);
 
-			$file = Model_File::move_from_file_tmp($file_tmp, $new_filepath);
 			$model = Site_Model::get_model_name($related_table, $namespace);
-
 			$related_table_obj = $model::forge();
 			$related_table_obj->{$parent_id_field} = $parent_id;
 			$related_table_obj->file_id = $file->id;

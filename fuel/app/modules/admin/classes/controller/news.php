@@ -127,7 +127,7 @@ class Controller_News extends Controller_Admin
 				$news->save();
 				if ($is_enabled_image)
 				{
-					list($moved_files, $news_image_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_image', 'News');
+					list($moved_files, $news_image_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
 				}
 
 				//// timeline 投稿
@@ -215,7 +215,7 @@ class Controller_News extends Controller_Admin
 				$news->save();
 				if ($is_enabled_image)
 				{
-					list($moved_files, $news_image_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_image', 'News');
+					list($moved_files, $news_image_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
 					//\News\Model_NewsImage::save_multiple($news->id, $news_image_ids);
 					\Site_Upload::update_image_objs4file_objects($news_images, $files);
 				}

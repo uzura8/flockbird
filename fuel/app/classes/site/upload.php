@@ -310,7 +310,7 @@ class Site_Upload
 
 	public static function get_file_objects($model_objs, $parent_id, $is_admin = null, $member_id = null)
 	{
-		$key = Util_Array::get_first_key($model_objs);
+		if (!$key = Util_Array::get_first_key($model_objs)) return array();
 		$table = $model_objs[$key]->table();
 		$file_cate = Site_Upload::get_file_cate_from_table($table);
 

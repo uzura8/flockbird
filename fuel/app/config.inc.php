@@ -23,7 +23,10 @@ if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.PRJ_UPLO
 //if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', APPPATH.'cache');
 
 // アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum) K/M/G 使用可能
-if (!defined('PRJ_UPLOAD_MAX_FILESIZE')) define('PRJ_UPLOAD_MAX_FILESIZE', _convert2bytes(ini_get('upload_max_filesize')));
+$upload_max_filesize = _convert2bytes(ini_get('upload_max_filesize'));
+if (!defined('PRJ_UPLOAD_MAX_FILESIZE')) define('PRJ_UPLOAD_MAX_FILESIZE', $upload_max_filesize);
+if (PRJ_UPLOAD_MAX_FILESIZE > $upload_max_filesize) die('PRJ_UPLOAD_MAX_FILESIZE is over than php ini setting upload_max_filesize.');
+if (PRJ_UPLOAD_MAX_FILESIZE > _convert2bytes(ini_get('post_max_size'))) die('PRJ_UPLOAD_MAX_FILESIZE is over than php ini setting post_max_size.');
 
 // 一度にアップロードできるファイル数
 if (!defined('PRJ_MAX_FILE_UPLOADS')) define('PRJ_MAX_FILE_UPLOADS', ini_get('max_file_uploads'));
@@ -72,7 +75,6 @@ foreach ($default_configs as $key => $value)
 
 	define($key, $value);
 }
-
 
 
 

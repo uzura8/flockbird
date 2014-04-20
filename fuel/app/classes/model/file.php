@@ -120,7 +120,7 @@ class Model_File extends \Orm\Model
 		return $deleted_filesize;
 	}
 
-	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filepath)
+	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filepath, $is_ignore_member_id = false)
 	{
 		$file = new self;
 		$file->name = $file_tmp->name;
@@ -128,7 +128,7 @@ class Model_File extends \Orm\Model
 		$file->filesize = $file_tmp->filesize;
 		$file->original_filename = $file_tmp->original_filename;
 		$file->type = $file_tmp->type;
-		$file->member_id = $file_tmp->member_id;
+		if (!$is_ignore_member_id) $file->member_id = $file_tmp->member_id;
 		if (!is_null($file_tmp->exif)) $file->exif = $file_tmp->exif;
 		if (!empty($file_tmp->shot_at)) $file->shot_at = $file_tmp->shot_at;
 		$file->save();

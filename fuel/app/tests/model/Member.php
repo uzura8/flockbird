@@ -8,27 +8,22 @@
  */
 class Test_Model_Memeber extends TestCase
 {
-	/**
-	* @dataProvider recalculate_filesize_total_provider
-	*/
-	public function test_recalculate_filesize_total($member_id = null, $expected = null)
+	protected $member;
+
+	protected function setUp()
 	{
-		$test = Model_Member::recalculate_filesize_total($member_id);
-		$this->assertEquals($expected, $test);
+		if (!$this->members = \Model_Member::find('all'))
+		{
+			$this->markTestSkipped('No data.');
+		}
 	}
 
-	public function recalculate_filesize_total_provider()
+	public function test_recalculate_filesize_total($member_id = null, $expected = null)
 	{
-		$data = array();
-		$members = Model_Member::find('all');
-		foreach ($members as $member)
+		foreach ($this->members as $member)
 		{
-			$data[] = array(
-				$member->id,
-				$member->filesize_total,
-			);
+			$test = Model_Member::recalculate_filesize_total($member->id);
+			$this->assertEquals($member->filesize_total, $test);
 		}
-
-		return $data;
 	}
 }

@@ -27,9 +27,9 @@ class FileTmp
 	 *
 	 * @return string
 	 */
-	public static function clean()
+	public static function clean($lifetime = null)
 	{
-		$lifetime = \Config::get('site.upload.tmp_file.lifetime');
+		if (is_null($lifetime)) $lifetime = \Config::get('site.upload.tmp_file.lifetime');
 		$limit = \Config::get('site.upload.tmp_file.delete_record_limit');
 		$file_tmps = \Model_FileTmp::query()
 			->where('created_at', '<', date('Y-m-d H:i:s', time() - $lifetime))
