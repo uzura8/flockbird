@@ -1,17 +1,3 @@
-<?php echo create_anchor_button('admin/news/create'); ?>
-<ul class="nav nav-pills">
-	<li<?php if (!$is_draft): ?> class="disabled"<?php endif; ?>><?php echo Html::anchor(
-		$is_draft ? 'news/list' : '#',
-		term('form.published'),
-		$is_draft ? array() : array('onclick' => 'return false;')
-	); ?></li>
-	<li<?php if ($is_draft): ?> class="disabled"<?php endif; ?>><?php echo Html::anchor(
-		$is_draft ? '#' : 'news/list?is_draft=1',
-		term('form.draft'),
-		$is_draft ? array('onclick' => 'return false;') : array()
-	); ?></li>
-</ul>
-
 <?php //echo render('news/_parts/list', array('list' => $list, 'page' => $page, 'is_next' => $is_next, 'member' => $member, 'is_draft' => $is_draft)); ?>
 <?php if (!$list): ?>
 <?php echo term('news.view'); ?>がありません。

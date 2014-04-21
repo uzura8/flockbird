@@ -44,6 +44,7 @@ class Controller_News extends Controller_Admin
 
 		//$this->template->layout = 'wide';
 		$this->set_title_and_breadcrumbs(term(array('news.view', 'site.management')));
+		$this->template->subtitle = \View::forge('news/_parts/list_subtitle');
 		$this->template->content = \View::forge('news/list', $data);
 		//$this->template->post_footer = \View::forge('_parts/load_item');
 	}
@@ -76,7 +77,6 @@ class Controller_News extends Controller_Admin
 		$header_info = array();
 		if (!$news->is_published)
 		{
-			$title['label'] = array('name' => term('form.draft'));
 			$header_info = array('body' => sprintf('この%sはまだ%sされていません。', term('news.view'), term('form.publish')));
 		}
 		//$this->template->layout = 'wide';

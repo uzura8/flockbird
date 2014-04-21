@@ -17,6 +17,13 @@ class Model_News extends \Orm\Model
 		//	'key_to' => 'id',
 		//)
 	);
+	protected static $_has_many = array(
+		'news_image' => array(
+			'key_from' => 'id',
+			'model_to' => '\News\Model_NewsImage',
+			'key_to' => 'news_id',
+		)
+	);
 
 	protected static $_properties = array(
 		'id',

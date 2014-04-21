@@ -69,7 +69,7 @@ class Controller_Timeline extends \Controller_Site
 		list($list, $is_next) = Site_Model::get_list($this->u->id, 0, true, $this->u->timeline_viewType);
 		$this->template->post_header = \View::forge('member/_parts/myhome_header');
 		$this->template->post_footer = \View::forge('member/_parts/myhome_footer');
-		$this->set_title_and_breadcrumbs(\Config::get('term.myhome'), null, null, null, null, true, true);
+		$this->set_title_and_breadcrumbs(term('page.myhome'), null, null, null, null, true, true);
 		$this->template->content = \View::forge('member/myhome', array('list' => $list, 'is_next' => $is_next, 'public_flag' => $this->u->timeline_public_flag));
 	}
 

@@ -112,7 +112,8 @@ img.profile_image {
 	padding-right: 0;
 }
 
-#subtitle .edit,
+#subtitle .btn,
+#subtitle .btn-group,
 .list_subtitle .edit {
 	position: absolute;
 	right: 0;
