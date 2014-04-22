@@ -7,7 +7,7 @@
 	<?php echo render('_parts/button_edit'); ?>
 	<ul class="dropdown-menu pull-right" role="menu">
 <?php if (!$news->is_published): ?>
-		<li><?php echo Html::anchor('#', icon_label('globe', 'form.do_publish')); ?></li>
+		<li><?php echo render('_parts/anchor_publish', array('uri' => 'admin/news/publish/'.$news->id)); ?></li>
 <?php endif; ?>
 		<li><?php echo Html::anchor('admin/news/edit/'.$news->id, icon_label('pencil', 'form.do_edit')); ?></li>
 		<li><?php echo Html::anchor('#', icon_label('trash', 'form.do_delete')); ?></li>

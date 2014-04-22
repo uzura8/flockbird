@@ -2,12 +2,12 @@
 <ul class="nav nav-pills">
 	<li<?php if (!$is_draft): ?> class="disabled"<?php endif; ?>><?php echo Html::anchor(
 		$is_draft ? 'note/member' : '#',
-		term(array('published', 'note')),
+		term('form.published', 'note'),
 		$is_draft ? array() : array('onclick' => 'return false;')
 	); ?></li>
 	<li<?php if ($is_draft): ?> class="disabled"<?php endif; ?>><?php echo Html::anchor(
 		$is_draft ? '#' : 'note/member?is_draft=1',
-		Config::get('term.draft'),
+		term('draft'),
 		$is_draft ? array('onclick' => 'return false;') : array()
 	); ?></li>
 </ul>

@@ -2,6 +2,11 @@ $(function(){
 	var parent_id = get_id_from_url();
 	//show_list('note/comment/api/list/' + parent_id + '.html', '#comment_list', 5);
 
+	$(document).on('click','#link_publish', function(){
+		post_submit(this);
+		return false;
+	});
+
 	$('#btn_comment').click(function(){
 		if (GL.execute_flg) return false;
 		create_comment(

@@ -167,7 +167,7 @@ class Controller_News extends Controller_Admin
 	 */
 	public function action_edit($id = null)
 	{
-		if (!$news = \News\Model_News::check_authority($id))
+		if (!$id || !$news = \News\Model_News::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -259,6 +259,51 @@ class Controller_News extends Controller_Admin
 			'is_edit' => true,
 			'files' => $files,
 		));
+	}
+
+	/**
+	 * News publish
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_publish($id = null)
+	{
+		\Util_security::check_method('POST');
+		\Util_security::check_csrf();
+		if (!$id || !$news = \News\Model_News::check_authority($id))
+		{
+			throw new \HttpNotFoundException;
+		}
+
+		$redirect_uri = 'admin/news/'.$id;
+		if ($news->is_published)
+		{
+			\Session::set_flash('error', '既に公開されています。');
+			\Response::redirect($redirect_uri);
+		}
+
+		try
+		{
+
+			\DB::start_transaction();
+			$news->is_published = 1;
+			if (!$news->published_at) $news->published_at = date('Y-m-d H:i:s');
+			$news->save();
+
+			//// timeline 投稿
+			//if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+			\DB::commit_transaction();
+			\Session::set_flash('message', term('news.view').'を公開しました。');
+		}
+		catch(\FuelException $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			\Session::set_flash('error', $e->getMessage());
+		}
+
+		\Response::redirect($redirect_uri);
 	}
 
 	private static function get_validation_object(\News\Model_News $news, $is_edit = false)

@@ -331,6 +331,7 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_publish($id = null)
 	{
+		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
 		if (!$note = Model_Note::check_authority($id, $this->u->id))
 		{
@@ -362,7 +363,7 @@ class Controller_Note extends \Controller_Site
 			// timeline 投稿
 			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
 			\DB::commit_transaction();
-			\Session::set_flash('message', \Config::get('term.note').'を公開しました。');
+			\Session::set_flash('message', term('note').'を公開しました。');
 		}
 		catch(\FuelException $e)
 		{
