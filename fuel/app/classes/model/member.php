@@ -137,7 +137,7 @@ class Model_Member extends \Orm\Model
 
 	public static function get_sex_options($key = null)
 	{
-		$options = term('member.sex.options');
+		$options = Config::get('term.member.sex.options');
 
 		if ($key) return $options[$key];
 

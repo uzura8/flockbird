@@ -39,14 +39,12 @@ class Controller_News extends Controller_Admin
 			->rows_limit($pagination->per_page)
 			->rows_offset($pagination->offset)
 			->get();
-		//$data['pagination'] = $pagination;
 		$data['pagination'] = $pagination->render();
 
 		//$this->template->layout = 'wide';
 		$this->set_title_and_breadcrumbs(term(array('news.view', 'site.management')));
 		$this->template->subtitle = \View::forge('news/_parts/list_subtitle');
 		$this->template->content = \View::forge('news/list', $data);
-		//$this->template->post_footer = \View::forge('_parts/load_item');
 	}
 
 	/**
@@ -80,7 +78,7 @@ class Controller_News extends Controller_Admin
 			$header_info = array('body' => sprintf('この%sはまだ%sされていません。', term('news.view'), term('form.publish')));
 		}
 		//$this->template->layout = 'wide';
-		$this->set_title_and_breadcrumbs($title, null, null, null, $header_info);
+		$this->set_title_and_breadcrumbs($title, array('admin/news' => term('news.view', 'admin.view')), null, null, $header_info);
 		$this->template->subtitle = \View::forge('news/_parts/detail_subtitle', array('news' => $news));
 		$this->template->content = \View::forge('news/detail', array('news' => $news, 'images' => $images));
 	}
@@ -154,7 +152,7 @@ class Controller_News extends Controller_Admin
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(term(array('news.view', 'form.create')));
+		$this->set_title_and_breadcrumbs(term('news.view', 'form.create'), array('admin/news' => term('news.view', 'admin.view')));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
 		$this->template->post_footer = \View::forge('news/_parts/form_footer');
 		$this->template->content = \View::forge('news/_parts/form', array('val' => $val, 'files' => $files));
@@ -252,7 +250,7 @@ class Controller_News extends Controller_Admin
 		}
 		$files += $file_tmps;
 
-		$this->set_title_and_breadcrumbs(sprintf('%sを%sする', term('news.view'), term('form.edit')));
+		$this->set_title_and_breadcrumbs(term('form.edit'), array('admin/news' => term('news.view', 'admin.view'), 'admin/news/'.$news->id => $news->title));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
 		$this->template->post_footer = \View::forge('news/_parts/form_footer');
 		$this->template->content = \View::forge('news/_parts/form', array(

@@ -95,51 +95,31 @@ class Controller_Base extends Controller_Hybrid
 		$title_name = '';
 		if ($title)
 		{
-			if (is_array($title))
-			{
-				$title_name  = !empty($title['name'])  ? $title['name'] : '';
-				$title_label = !empty($title['label']) ? $title['label'] : array();
-			}
-			else
-			{
-				$title_name  = $title;
-				$title_label = array();
-			}
+			list($title_name, $title_label) = static::get_title_parts($title);
 			$this->template->title = $is_no_title ? '' : View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
 		}
 		$this->template->header_title = $title_name ? site_title($title_name) : '';
 
 		if ($info) $this->template->header_info = View::forge('_parts/information', $info);
 
-		$breadcrumbs = array();
-		if (!$is_no_breadcrumbs)
+		$this->template->breadcrumbs = $is_no_breadcrumbs ? array() :
+			static::get_breadcrumbs($title_name, $middle_breadcrumbs, $member_obj, $member_obj ? $this->check_is_mypage($member_obj->id) : false, $module);
+	}
+
+	protected static function get_title_parts($title = array())
+	{
+		if (is_array($title))
 		{
-			$breadcrumbs = array('/' => term('page.top'));
-			if ($member_obj)
-			{
-				if ($this->check_is_mypage($member_obj->id))
-				{
-					$breadcrumbs['/member'] = term('page.myhome');
-					if ($module)
-					{
-						$breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
-					}
-				}
-				else
-				{
-					$name = $member_obj->name.'さんのページ';
-					$breadcrumbs['/member/'.$member_obj->id] = $name;
-					if ($module)
-					{
-						$key = sprintf('/%s/member/%d', $module, $member_obj->id);
-						$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
-					}
-				}
-			}
-			if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
-			$breadcrumbs[''] = $title_name;
+			$title_name  = !empty($title['name'])  ? $title['name'] : '';
+			$title_label = !empty($title['label']) ? $title['label'] : array();
 		}
-		$this->template->breadcrumbs = $breadcrumbs;
+		else
+		{
+			$title_name  = $title;
+			$title_label = array();
+		}
+
+		return array($title_name, $title_label);
 	}
 
 

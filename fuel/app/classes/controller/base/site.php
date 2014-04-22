@@ -62,6 +62,33 @@ class Controller_Base_Site extends Controller_Base
 		return (IS_AUTH && $this->u->id && $member_id == $this->u->id);
 	}
 
+	protected static function get_breadcrumbs($title_name = '', $middle_breadcrumbs = array(), $member_obj = null, $is_mypage = false, $module = null)
+	{
+		$breadcrumbs = array('/' => term('page.top'));
+		if ($member_obj)
+		{
+			if ($is_mypage)
+			{
+				$breadcrumbs['/member'] = term('page.myhome');
+				if ($module) $breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
+			}
+			else
+			{
+				$name = $member_obj->name.'さんのページ';
+				$breadcrumbs['/member/'.$member_obj->id] = $name;
+				if ($module)
+				{
+					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
+					$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
+				}
+			}
+		}
+		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
+		$breadcrumbs[''] = $title_name;
+
+		return $breadcrumbs;
+	}
+
 	protected function add_member_filesize_total($size)
 	{
 		if (!$this->u) throw new Exception('Not authenticated.');

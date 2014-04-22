@@ -93,18 +93,28 @@ function conf($item, $file = null, $default = null, $replace_delimitter = null)
 	return Config::get(sprintf('%s.%s', $file, $item), $default);
 }
 
-function term($keys, $delimitter = '')
+function term()
 {
-	if (!is_array($keys)) return Config::get('term.'.$keys, $keys);
+	$keys = func_get_args();
+	if (count($keys) === 1 && is_array($keys[0])) $keys = $keys[0];
 
 	$return = '';
 	foreach ($keys as $key)
 	{
-		if ($return) $return .= $delimitter;
 		$return .= Config::get('term.'.$key, $key);
 	}
 
 	return $return;	
+}
+
+function symbol($key)
+{
+	return Config::get('term.symbol.'.$key);	
+}
+
+function symbol_bool($bool)
+{
+	return $bool ? symbol('bool.true') : symbol('bool.false');
 }
 
 function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false, $is_img_responsive = false, $anchor_attrs = array())
@@ -326,14 +336,6 @@ function profile_value(Model_MemberProfile $member_profile)
 	}
 
 	return $member_profile->value;
-}
-
-function flag_state($flag, $on_symbol = null, $off_symbol = null)
-{
-	if (!$on_symbol) $on_symbol = '◯';
-	if (!$off_symbol) $off_symbol = '×';
-
-	return $flag ? $on_symbol : $off_symbol;
 }
 
 function is_enabled($module_name)
