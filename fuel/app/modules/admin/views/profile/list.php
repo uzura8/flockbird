@@ -155,7 +155,7 @@
 	<td><?php echo symbol_bool($profile->is_disp_regist); ?></td>
 	<td><?php echo symbol_bool($profile->is_disp_config); ?></td>
 	<td><?php echo symbol_bool($profile->is_disp_search); ?></td>
-	<td><?php if (in_array($profile->form_type, Site_Profile::get_form_types_having_profile_options())): ?><?php echo Html::anchor('admin/profile/options/'.$profile->id, term('site.list')); ?><?php else: ?><?php echo term('symbol.outOfTarget'); ?><?php endif; ?></td>
+	<td><?php if (in_array($profile->form_type, Site_Profile::get_form_types_having_profile_options())): ?><?php echo Html::anchor('admin/profile/options/'.$profile->id, term('site.list')); ?><?php else: ?><?php echo symbol('noValue'); ?><?php endif; ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

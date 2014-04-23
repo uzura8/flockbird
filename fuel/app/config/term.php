@@ -84,7 +84,7 @@ $config = array(
 			'true' => '◯',
 			'false' => '×',
 		),
-		'outOfTarget' => '-',
+		'noValue' => '-',
 	),
 	'profile' => 'Profile',
 	'guest'   => 'Guest',

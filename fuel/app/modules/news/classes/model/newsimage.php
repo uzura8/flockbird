@@ -134,16 +134,17 @@ class Model_NewsImage extends \Orm\Model
 		return self::query()->where('file_id', $file_id)->get_one();
 	}
 
-	public static function delete_multiple($ids, \News\Model_News $news)
+	public static function delete_multiple4news_id($news_id)
 	{
-		$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('news_image')->where('id', 'in', $ids)->execute()->as_array());
+		if (!$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('news_image')->where('news_id', $news_id)->execute()->as_array()))
+		{
+			return array(true, array());
+		}
+
 		$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
 
-		//// timeline_child_data の削除
-		//if (\Module::loaded('timeline')) \Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('news_image', $ids);
-
 		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
-		if (!$result = \DB::delete('news_image')->where('id', 'in', $ids)->execute()) throw new \FuelException('News images delete error.');
+		if (!$result = \DB::delete('news_image')->where('news_id', $news_id)->execute()) throw new \FuelException('News images delete error.');
 
 		return array($result, $deleted_files);
 	}

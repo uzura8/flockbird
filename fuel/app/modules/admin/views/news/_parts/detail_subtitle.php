@@ -10,6 +10,6 @@
 		<li><?php echo render('_parts/anchor_publish', array('uri' => 'admin/news/publish/'.$news->id)); ?></li>
 <?php endif; ?>
 		<li><?php echo Html::anchor('admin/news/edit/'.$news->id, icon_label('pencil', 'form.do_edit')); ?></li>
-		<li><?php echo Html::anchor('#', icon_label('trash', 'form.do_delete')); ?></li>
+		<li><?php echo render('_parts/anchor_delete', array('uri' => 'admin/news/delete/'.$news->id)); ?></li>
 	</ul>
 </div><!-- /btn-group -->

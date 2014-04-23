@@ -86,7 +86,7 @@ if ($self_member_id && $timeline->member_id == $self_member_id && \Timeline\Site
 		'data-post_id' => $post_id,
 		'data-uri'     => $post_uri,
 	);
-	echo anchor_button('#', 'glyphicon glyphicon-trash', '', 'boxBtn btn_timeline_delete', $attr, true, IS_SP);
+	echo anchor_button('#', 'trash', '', 'boxBtn btn_timeline_delete', $attr, true);
 }
 ?>
 </div><!-- timelineBox -->

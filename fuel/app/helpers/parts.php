@@ -7,24 +7,40 @@ function icon($icon_key, $class_prefix = 'glyphicon glyphicon-', $tag = 'i')
 	return html_tag($tag, $attr, '');
 }
 
+function icon_label($icon_key, $term = '', $is_raw_label = false, $is_hidden_xs = true, $class_prefix = 'glyphicon glyphicon-', $tag = 'i', $delimitter = ' ')
+{
+	if (!$term) return icon($icon_key, $class_prefix, $tag);
+
+	if (!$is_raw_label) $term = term($term);
+	$label = $is_hidden_xs ? sprintf('<span class="hidden-xs-inline">%s%s</span>', $delimitter, $term) : $term;
+
+	return icon($icon_key, $class_prefix, $tag).$label;
+}
+
 function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = 'default', $attr = array(), $exception_label = '')
 {
 	switch ($type)
 	{
 		case 'edit':
-			$label_text = '編集';
-			$label_icon  = 'glyphicon glyphicon-edit';
+			$label_text = term('form.edit');
+			$label_icon  = 'edit';
 			break;
 		case 'delete':
 			$label_text = '削除';
-			$label_icon  = 'glyphicon glyphicon-trash';
+			$label_text = term('form.delete');
+			$label_icon  = 'trash';
+			break;
+		case 'publish':
+			$label_text = '';
+			$label_text = term('form.publish');
+			$label_icon  = 'globe';
 			break;
 		default :
-			throw new \InvalidArgumentException("First parameter must be 'edit' or 'delete'.");
+			throw new \InvalidArgumentException("First parameter is invalid.");
 			break;
 	}
 
-	$label  = sprintf('<i class="%s"></i>', $label_icon);
+	$label  = icon($label_icon);
 	$label .= $with_text ? ' '.$label_text : '';
 
 	$class_items   = array();
@@ -55,25 +71,18 @@ function btn_dropdown($btn_label, $menus = array(), $btn_size = '', $btn_type = 
 	return $view->render();
 }
 
-function anchor_button($href, $icon_class = '', $text = '', $class_attr_add = '', $attr = array(), $is_mini_btn = false, $is_sp = false, $is_force_btn = false, $is_force_loud_color = false)
+function anchor_button($href, $icon_key = '', $text = '', $class_attr_add = '', $attr = array(), $is_mini_btn = false)
 {
 	$class_attrs  = array('btn', 'btn-default');
 	if ($is_mini_btn) $class_attrs[] = 'btn-xs';
 
-	if ($is_sp && !$is_force_btn)
-	{
-		$class_attrs = array();
-		if (!$is_force_loud_color) $class_attrs = array('cl-modest');
-	}
 	$class_attr = implode(' ', $class_attrs);
 	if ($class_attr_add) $class_attr .= ' '.$class_attr_add;
 
 	if (!empty($attr['class'])) $class_attr .= ' '.$attr['class'];
 	$attr['class'] = $class_attr;
 
-	$element = '';
-	if ($icon_class) $element = sprintf('<i class="%s"></i>', $icon_class);
-	if ($text) $element .= ' '.$text;
+	$element = icon_label($icon_key, $text, true, true);
 
 	return Html::anchor($href, $element, $attr);
 }
@@ -88,7 +97,7 @@ function small_tag($str, $is_enclose_small_tag = true)
 	return sprintf('%s%s%s', $is_enclose_small_tag ? '<small>' : '', $str, $is_enclose_small_tag ? '</small>' : '');
 }
 
-function create_anchor_button($href, $class_attr_add = '', $attr = array(), $is_mini_btn = false, $is_sp = false, $is_force_btn = false, $is_force_loud_color = false)
+function create_anchor_button($href, $class_attr_add = 'btn-warning', $attr = array(), $is_mini_btn = false)
 {
-	return anchor_button($href, 'glyphicon glyphicon-edit', term('form.create'), $class_attr_add, $attr, $is_mini_btn, $is_sp, $is_force_btn, $is_force_loud_color);
+	return anchor_button($href, 'plus', term('form.create'), $class_attr_add, $attr, $is_mini_btn);
 }

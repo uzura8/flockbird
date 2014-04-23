@@ -6,16 +6,16 @@
 	<?php echo form_upload_files($files, $files ? false : true, false, true, 'M', array(), 'news'); ?>
 <?php endif; ?>
 	<?php echo form_input($val, 'published_at_time', (!empty($news->published_at)) ? substr($news->published_at, 0, 16) : '', 6); ?>
+<?php if (empty($news->is_published)): ?>
+	<?php echo form_button(term('form.draft'), 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
+<?php endif; ?>
 <?php if (!empty($is_edit)): ?>
 	<?php echo form_button(empty($news->is_published) ? term('form.do_publish') : term('form.do_edit')); ?>
 <?php else: ?>
 	<?php echo form_button(term('form.do_publish')); ?>
 <?php endif; ?>
-<?php if (empty($news->is_published)): ?>
-	<?php echo form_button(term('form.draft'), 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
-<?php endif; ?>
 <?php if (!empty($is_edit)): ?>
-	<?php echo form_anchor(sprintf('news/delete/%d%s', $news->id, get_csrf_query_str()), term('form.do_delete'), array('class' => 'btn btn-default btn-danger')); ?>
+	<?php echo form_anchor_delete('admin/news/delete/'.$news->id); ?>
 <?php endif; ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

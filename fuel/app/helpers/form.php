@@ -227,6 +227,26 @@ function form_anchor($href, $label, $atter = array(), $offset_size = 2, $secure 
 	return $view;
 }
 
+function form_anchor_delete($post_uri, $label = null, $attr = null, $offset_size = 2, $secure = null, $is_enclose_small_tag = false)
+{
+	if (is_null($label)) $label = term('form.do_delete');
+	if (is_null($attr))  $attr = array('id' => 'btn_delete', 'class' => 'btn btn-default btn-danger');
+	$attr['data-uri'] = $post_uri;
+	$attr['data-msg'] = '削除します。よろしいですか？';
+
+	$data = array(
+		'href'   => '#',
+		'atter'  => $attr,
+		'secure' => $secure,
+		'offset_size' => $offset_size,
+		'is_enclose_small_tag' => $is_enclose_small_tag,
+	);
+	$view = \View::forge('_parts/form/anchor', $data);
+	$view->set_safe('label', $label);
+
+	return $view;
+}
+
 function form_public_flag(Validation $val, $default_value = null, $is_select = false, $label_col_sm_size = 2, $with_no_change_option = false, $name = 'public_flag', $is_inline_options = false)
 {
 	$field = $val->fieldset()->field($name);

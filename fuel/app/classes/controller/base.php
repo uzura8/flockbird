@@ -57,7 +57,11 @@ class Controller_Base extends Controller_Hybrid
 		if ($this->check_not_auth_action()) return;
 		if (IS_AUTH) return;
 
-		if (!$redirect_uri) $redirect_uri = $this->get_login_page_uri();
+		if (!$redirect_uri || !Util_string::check_uri_for_redilrect($redirect_uri))
+		{
+			$redirect_uri = $this->get_login_page_uri();
+		}
+
 		Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
 		Response::redirect($redirect_uri);
 	}

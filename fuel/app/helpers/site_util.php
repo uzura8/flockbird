@@ -177,16 +177,21 @@ function img_size($file_cate, $size, $additional_table = '')
 	return Config::get(sprintf('site.upload.types.img.types.%s.sizes.%s', $file_cate, $size));
 }
 
-function site_get_time($mysql_datetime, $format = 'Y年n月j日 H:i', $is_normal_timestamp = false, $is_display_both = false)
+function site_get_time($mysql_datetime, $display_type = 'past', $format = 'Y年n月j日 H:i', $is_normal_timestamp = false)
 {
+	$accept_display_types = array('past', 'normal', 'both');
+	if (!in_array($display_type, $accept_display_types)) throw new InvalidArgumentException('Second parameter is invalid.');
+
 	$time = $mysql_datetime;
 	if (!$is_normal_timestamp) $time = strtotime($mysql_datetime);
 
 	$normal_time = date($format, $time);
-	$past_time   = sprintf('<span data-livestamp="%s"></span>', date(DATE_ISO8601, $time));
+	if ($display_type == 'normal') return $normal_time;
+
+	$past_time = sprintf('<span data-livestamp="%s"></span>', date(DATE_ISO8601, $time));
 
 	$display = '';
-	if ($is_display_both)
+	if ($display_type == 'both')
 	{
 		$display = sprintf('%s (%s)', $normal_time, $past_time);
 	}
@@ -351,12 +356,5 @@ function render_module($view_file_path, $data = array(), $module_name = null)
 	if ($module_name) $view_file_path = $module_name.'::'.$view_file_path;
 
 	return render($view_file_path, $data);
-}
-
-function icon_label($icon_key, $term, $is_raw_label = false, $class_prefix = 'glyphicon glyphicon-', $tag = 'i', $delimitter = ' ')
-{
-	$label = $is_raw_label ? $term : term($term);
-
-	return sprintf('%s%s%s', icon($icon_key, $class_prefix, $tag), $delimitter, $label);
 }
 

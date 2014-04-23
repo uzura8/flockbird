@@ -41,7 +41,7 @@ class Controller_News extends Controller_Admin
 			->get();
 		$data['pagination'] = $pagination->render();
 
-		//$this->template->layout = 'wide';
+		$this->template->layout = 'wide';
 		$this->set_title_and_breadcrumbs(term(array('news.view', 'site.management')));
 		$this->template->subtitle = \View::forge('news/_parts/list_subtitle');
 		$this->template->content = \View::forge('news/list', $data);
@@ -197,8 +197,12 @@ class Controller_News extends Controller_Admin
 				$news->title = $post['title'];
 				$news->body  = $post['body'];
 
-				$is_published = !$news->is_published && empty($post['is_draft']);
-				if ($is_published) $news->is_published = 1;
+				$message = sprintf('%sを%sしました。', term('news.view'), term('form.edit'));
+				if ($is_published = (!$news->is_published && empty($post['is_draft'])))
+				{
+					$news->is_published = 1;
+					$message = sprintf('%sを%sしました。', term('news.view'), term('form.publish'));
+				}
 
 				if ($post['published_at_time'] && !\Util_Date::check_is_same_minute($post['published_at_time'], $news->published_at))
 				{
@@ -236,7 +240,7 @@ class Controller_News extends Controller_Admin
 				// thumbnail 作成 & tmp_file thumbnail 削除
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
-				\Session::set_flash('message', sprintf('%sを%sしました。', term('news.view'), term('form.edit')));
+				\Session::set_flash('message', $message);
 				\Response::redirect('admin/news/detail/'.$news->id);
 			}
 			catch(\FuelException $e)
@@ -296,6 +300,45 @@ class Controller_News extends Controller_Admin
 			//if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
 			\DB::commit_transaction();
 			\Session::set_flash('message', term('news.view').'を公開しました。');
+		}
+		catch(\FuelException $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			\Session::set_flash('error', $e->getMessage());
+		}
+
+		\Response::redirect($redirect_uri);
+	}
+
+	/**
+	 * News delete
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_delete($id = null)
+	{
+		\Util_security::check_method('POST');
+		\Util_security::check_csrf();
+		if (!$id || !$news = \News\Model_News::check_authority($id))
+		{
+			throw new \HttpNotFoundException;
+		}
+
+		$redirect_uri = \Input::post('destination');
+		if (!$redirect_uri || !Util_string::check_uri_for_redilrect($redirect_uri))
+		{
+			$redirect_uri = 'admin/news';
+		}
+
+		try
+		{
+			\DB::start_transaction();
+			$deleted_files = $news->delete_with_relations();
+			\DB::commit_transaction();
+			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
+			\Session::set_flash('message', term('news.view').'を削除しました。');
 		}
 		catch(\FuelException $e)
 		{

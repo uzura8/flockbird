@@ -307,7 +307,6 @@ class Controller_Note extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			if (is_enabled('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $note->id);
 			$deleted_files = $note->delete_with_relations();
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
