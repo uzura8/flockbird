@@ -3,6 +3,7 @@
 class Controller_Base_Site extends Controller_Base
 {
 	protected $auth_driver = 'UzuraAuth';
+	protected $after_auth_uri = 'member';
 
 	public function before()
 	{

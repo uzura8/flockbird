@@ -7,6 +7,7 @@ class Controller_Base extends Controller_Hybrid
 	protected $auth_driver;
 	protected $auth_instance;
 	protected $auth = 'check_auth';
+	protected $after_auth_uri;
 
 	public function before()
 	{
@@ -64,6 +65,17 @@ class Controller_Base extends Controller_Hybrid
 
 		Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
 		Response::redirect($redirect_uri);
+	}
+
+	public function login_succeeded($destination = null)
+	{
+		Session::set_flash('message', 'ログインしました');
+		$redirect_uri = urldecode($destination);
+		if ($redirect_uri && Util_string::check_uri_for_redilrect($redirect_uri))
+		{
+			Response::redirect($redirect_uri);
+		}
+		Response::redirect($this->after_auth_uri);
 	}
 
 	protected function check_not_auth_action()

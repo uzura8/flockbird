@@ -157,17 +157,6 @@ class Controller_Auth extends Controller_Site
 		return $this->provider_login($provider, $response);
 	}
 
-	public function login_succeeded($destination = null)
-	{
-		Session::set_flash('message', 'ログインしました');
-		$redirect_uri = urldecode($destination);
-		if ($redirect_uri && Util_string::check_uri_for_redilrect($redirect_uri))
-		{
-			Response::redirect($redirect_uri);
-		}
-		Response::redirect('member');
-	}
-
 	protected function login_failed($is_redirect = true)
 	{
 		Session::set_flash('error', 'ログインに失敗しました');

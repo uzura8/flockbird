@@ -35,12 +35,11 @@ class Controller_Admin extends Controller_Base {
 				if (\Auth::check() or $auth->login(\Input::post('email'), \Input::post('password')))
 				{
 					// credentials ok, go right in
-					\Session::set_flash('message', 'Welcome, '.$auth->get_screen_name());
-					\Response::redirect('admin');
+					return $this->login_succeeded($destination);
 				}
 				else
 				{
-					\Session::set_flash('error', 'Fail');
+					\Session::set_flash('error', 'ログインに失敗しました');
 				}
 			}
 		}
