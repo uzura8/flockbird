@@ -39,7 +39,7 @@ class Controller_Base_Site extends Controller_Base
 
 			return array($is_mypage, $member, $access_from);
 		}
-		elseif (Model_MemberRelation::check_relation('friend', $this->u->id, $member_id))
+		elseif ($this->u && Model_MemberRelation::check_relation('friend', $this->u->id, $member_id))
 		{
 			$is_mypage = false;
 			$access_from = 'friend';
@@ -79,7 +79,7 @@ class Controller_Base_Site extends Controller_Base
 				if ($module)
 				{
 					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
-					$breadcrumbs[$key] = $prefix.\Config::get('term.'.$module).'一覧';
+					$breadcrumbs[$key] = \Config::get('term.'.$module).'一覧';
 				}
 			}
 		}
