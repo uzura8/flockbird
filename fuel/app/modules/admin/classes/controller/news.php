@@ -344,7 +344,7 @@ class Controller_News extends Controller_Admin
 		$redirect_uri = \Input::post('destination');
 		if (!$redirect_uri || !\Util_string::check_uri_for_redilrect($redirect_uri))
 		{
-			$redirect_uri = 'admin/news'.$id;
+			$redirect_uri = 'admin/news/'.$id;
 		}
 
 		if ($news->is_published == $target_status)
