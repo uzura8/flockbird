@@ -20,7 +20,7 @@
 <tr id="<?php echo $news->id; ?>" class="<?php echo \News\Site_Util::get_status_label_type($status); ?>">
 	<td class="small"><?php echo $news->id; ?></td>
 	<td><?php echo Html::anchor('admin/news/'.$news->id, strim($news->title, Config::get('news.viewParams.admin.list.trim_width.title'))); ?></td>
-	<td class="small"><?php echo btn('preview', 'news/preview/'.$news->id, '', false, 'xs'); ?></td>
+	<td class="small"><?php echo btn('preview', 'news/preview/'.$news->id.'?token='.$news->token, '', false, 'xs'); ?></td>
 	<td class="small"><?php echo btn('edit', 'admin/news/edit/'.$news->id, '', false, 'xs'); ?></td>
 <?php $attr = array('data-destination' => Uri::string_with_query()); ?>
 <?php if ($news->is_published): ?>

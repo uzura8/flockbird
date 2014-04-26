@@ -61,6 +61,11 @@ class Model_News extends \Orm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
+		'token' => array(
+			'data_type' => 'varchar',
+			'form' => array('type' => false),
+			'validation' => array('trim', 'max_length' => array(255)),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);

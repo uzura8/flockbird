@@ -330,6 +330,7 @@ CREATE TABLE `news` (
   `is_published` tinyint(2) NOT NULL DEFAULT '0',
   `published_at` datetime NULL,
   `users_id` int(11) NOT NULL,
+  `token` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),

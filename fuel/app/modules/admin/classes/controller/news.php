@@ -112,6 +112,7 @@ class Controller_News extends Controller_Admin
 				$news->title        = $post['title'];
 				$news->body         = $post['body'];
 				$news->users_id     = $this->u->id;
+				$news->token        = \Util_toolkit::create_hash();
 				$news->is_published = $post['is_draft'] ? 0 : 1;
 				if ($post['published_at_time'])
 				{
