@@ -29,13 +29,13 @@ class Controller_News extends Controller_Admin
 		$config = array(
 			'uri_segment' => 'page',
 			'total_items' => $query->count(),
-			'per_page' => 2,
+			'per_page' => \Config::get('news.viewParams.admin.list.limit'),
 			'num_links' => 4,
 			'show_first' => true,
 			'show_last' => true,
 		);
 		$pagination = \Pagination::forge('mypagination', $config);
-		$data['list'] = $query->order_by('updated_at', 'desc')
+		$data['list'] = $query->order_by('created_at', 'desc')
 			->rows_limit($pagination->per_page)
 			->rows_offset($pagination->offset)
 			->get();
@@ -266,51 +266,6 @@ class Controller_News extends Controller_Admin
 	}
 
 	/**
-	 * News publish
-	 * 
-	 * @access  public
-	 * @params  integer
-	 * @return  Response
-	 */
-	public function action_publish($id = null)
-	{
-		\Util_security::check_method('POST');
-		\Util_security::check_csrf();
-		if (!$id || !$news = \News\Model_News::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
-
-		$redirect_uri = 'admin/news/'.$id;
-		if ($news->is_published)
-		{
-			\Session::set_flash('error', '既に公開されています。');
-			\Response::redirect($redirect_uri);
-		}
-
-		try
-		{
-
-			\DB::start_transaction();
-			$news->is_published = 1;
-			if (!$news->published_at) $news->published_at = date('Y-m-d H:i:s');
-			$news->save();
-
-			//// timeline 投稿
-			//if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
-			\DB::commit_transaction();
-			\Session::set_flash('message', term('news.view').'を公開しました。');
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			\Session::set_flash('error', $e->getMessage());
-		}
-
-		\Response::redirect($redirect_uri);
-	}
-
-	/**
 	 * News delete
 	 * 
 	 * @access  public
@@ -327,7 +282,7 @@ class Controller_News extends Controller_Admin
 		}
 
 		$redirect_uri = \Input::post('destination');
-		if (!$redirect_uri || !Util_string::check_uri_for_redilrect($redirect_uri))
+		if (!$redirect_uri || !\Util_string::check_uri_for_redilrect($redirect_uri))
 		{
 			$redirect_uri = 'admin/news';
 		}
@@ -339,6 +294,75 @@ class Controller_News extends Controller_Admin
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 			\Session::set_flash('message', term('news.view').'を削除しました。');
+		}
+		catch(\FuelException $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			\Session::set_flash('error', $e->getMessage());
+		}
+
+		\Response::redirect($redirect_uri);
+	}
+
+	/**
+	 * News publish
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_publish($id = null)
+	{
+		$this->change_publish_status($id, 1);
+	}
+
+	/**
+	 * News unpublish
+	 * 
+	 * @access  public
+	 * @params  integer
+	 * @return  Response
+	 */
+	public function action_unpublish($id = null)
+	{
+		$this->change_publish_status($id, 0);
+	}
+
+	private function change_publish_status($id, $target_status)
+	{
+		$target_status = \Util_string::cast_bool_int($target_status);
+
+		\Util_security::check_method('POST');
+		\Util_security::check_csrf();
+		if (!$id || !$news = \News\Model_News::check_authority($id))
+		{
+			throw new \HttpNotFoundException;
+		}
+
+		$msg_status = $target_status ? term('form.publish') : term('form.unpublish').'に';
+		$redirect_uri = \Input::post('destination');
+		if (!$redirect_uri || !\Util_string::check_uri_for_redilrect($redirect_uri))
+		{
+			$redirect_uri = 'admin/news'.$id;
+		}
+
+		if ($news->is_published == $target_status)
+		{
+			\Session::set_flash('error', sprintf('既に%sされています。', $msg_status));
+			\Response::redirect($redirect_uri);
+		}
+
+		try
+		{
+			\DB::start_transaction();
+			$news->is_published = $target_status;
+			if (!$news->published_at) $news->published_at = date('Y-m-d H:i:s');
+			$news->save();
+
+			//// timeline 投稿
+			//if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+			\DB::commit_transaction();
+			\Session::set_flash('message', sprintf('%sを%sしました。', term('news.view'), $msg_status));
 		}
 		catch(\FuelException $e)
 		{

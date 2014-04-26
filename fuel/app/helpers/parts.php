@@ -17,32 +17,44 @@ function icon_label($icon_key, $term = '', $is_raw_label = false, $is_hidden_xs 
 	return icon($icon_key, $class_prefix, $tag).$label;
 }
 
-function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = 'default', $attr = array(), $exception_label = '')
+function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = null, $attr = array(), $exception_label = '')
 {
+	$label_text = term('form.'.$type);
 	switch ($type)
 	{
 		case 'edit':
-			$label_text = term('form.edit');
-			$label_icon  = 'edit';
+		case 'do_edit':
+			$label_icon = 'edit';
 			break;
 		case 'delete':
-			$label_text = '削除';
-			$label_text = term('form.delete');
-			$label_icon  = 'trash';
+		case 'do_delete':
+			$label_icon = 'trash';
+			if (is_null($btn_type)) $btn_type = 'danger';
+			if (!isset($attr['data-msg'])) $attr['data-msg'] = '削除します。よろしいですか？';
 			break;
 		case 'publish':
-			$label_text = '';
-			$label_text = term('form.publish');
-			$label_icon  = 'globe';
+		case 'do_publish':
+			$label_icon = 'globe';
+			//if (is_null($btn_type)) $btn_type = 'warning';
+			if (!isset($attr['data-msg'])) $attr['data-msg'] = '公開します。よろしいですか？';
+			break;
+		case 'unpublish':
+		case 'do_unpublish':
+			$label_icon  = 'lock';
+			if (!isset($attr['data-msg'])) $attr['data-msg'] = '非公開にします。よろしいですか？';
+			break;
+		case 'preview':
+			$label_icon  = 'eye-open';
+			$attr['target'] = '_blank';
 			break;
 		default :
 			throw new \InvalidArgumentException("First parameter is invalid.");
 			break;
 	}
 
-	$label  = icon($label_icon);
-	$label .= $with_text ? ' '.$label_text : '';
+	$label = $with_text ? icon_label($label_icon, $label_text) : icon($label_icon);
 
+	if (is_null($btn_type)) $btn_type = 'default';
 	$class_items   = array();
 	$class_items[] = 'btn';
 	$class_items[] = 'btn-'.$btn_type;
@@ -100,4 +112,9 @@ function small_tag($str, $is_enclose_small_tag = true)
 function create_anchor_button($href, $class_attr_add = 'btn-warning', $attr = array(), $is_mini_btn = false)
 {
 	return anchor_button($href, 'plus', term('form.create'), $class_attr_add, $attr, $is_mini_btn);
+}
+
+function label($name, $type = 'default', $attrs = array())
+{
+ return render('_parts/label', array('name' => $name, 'type' => $type, 'attrs' => $attrs));
 }

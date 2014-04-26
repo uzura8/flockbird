@@ -7,7 +7,7 @@
 		<h4 class="list-group-item-heading">
 			<?php echo strim($news->title, term('view_params_default.list.trim_width.title')); ?>
 <?php if (!$news->is_published): ?>
-			<?php echo render('_parts/label', array('name' => Config::get('term.draft'), 'attr' => 'label-inverse')); ?>
+			<?php echo label(term('draft')); ?>
 <?php endif; ?>
 		</h4>
 		<p class="list-group-item-text">

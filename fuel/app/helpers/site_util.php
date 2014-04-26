@@ -177,9 +177,9 @@ function img_size($file_cate, $size, $additional_table = '')
 	return Config::get(sprintf('site.upload.types.img.types.%s.sizes.%s', $file_cate, $size));
 }
 
-function site_get_time($mysql_datetime, $display_type = 'past', $format = 'Y年n月j日 H:i', $is_normal_timestamp = false)
+function site_get_time($mysql_datetime, $display_type = 'relative', $format = 'Y年n月j日 H:i', $display_both_length = '+7 day', $is_normal_timestamp = false)
 {
-	$accept_display_types = array('past', 'normal', 'both');
+	$accept_display_types = array('relative', 'normal', 'both');
 	if (!in_array($display_type, $accept_display_types)) throw new InvalidArgumentException('Second parameter is invalid.');
 
 	$time = $mysql_datetime;
@@ -191,7 +191,8 @@ function site_get_time($mysql_datetime, $display_type = 'past', $format = 'Y年n
 	$past_time = sprintf('<span data-livestamp="%s"></span>', date(DATE_ISO8601, $time));
 
 	$display = '';
-	if ($display_type == 'both')
+	if ($display_type == 'both'
+		&& (is_null($display_both_length) || !is_null($display_both_length) && (time() < strtotime($normal_time.' '.$display_both_length))))
 	{
 		$display = sprintf('%s (%s)', $normal_time, $past_time);
 	}

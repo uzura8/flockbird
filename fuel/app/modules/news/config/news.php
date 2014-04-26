@@ -7,7 +7,7 @@ return array(
 	'image' => array(
 		'isEnabled' => true,
 	),
-	'view_params' => array(
+	'viewParams' => array(
 		'site' => array(
 			'list' => array(
 				'limit' => 5,
@@ -23,10 +23,10 @@ return array(
 		),
 		'admin' => array(
 			'list' => array(
-				'limit' => 3,
-				'limit_max' => 5,
+				'limit' => 5,
+				'limit_max' => 10,
 				'trim_width' => array(
-					'title' => 30,
+					'title' => 50,
 					'body'  => 100,
 				),
 				'truncate_lines' => array(

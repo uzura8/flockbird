@@ -215,8 +215,9 @@ h4#comments {
 .mt10 {
   margin-top: 10px;
 }
-
 .w90 {width: 90%;}
+.fs9 {font-size: 9px;}
+.fs10 {font-size: 10px;}
 
 .article .body {
 	padding-top: 5px;
@@ -482,7 +483,11 @@ div.alert ul {
 }
 
 table th.small,
-table td.small {width: 40px;}
+table td.small {width: 40px; text-align: center}
+table th.datetime,
+table td.datetime {width: 130px;}
+table th.datetime_both,
+table td.datetime_both {width: 180px;}
 
 div.profile {
 	position: relative;

@@ -685,8 +685,11 @@ function execute_post(uri){
 
 function post_submit(selfDomElement) {
 	var post_data = (arguments.length > 1) ? arguments[1] : {};
-	var uri = $(selfDomElement).data('uri') ?  $(selfDomElement).data('uri') : '';
-	var confirm_msg = $(selfDomElement).data('msg') ?  $(selfDomElement).data('msg') : '';
+	var uri = $(selfDomElement).data('uri') ? $(selfDomElement).data('uri') : '';
+	var confirm_msg = $(selfDomElement).data('msg') ? $(selfDomElement).data('msg') : '';
+	var destination = $(selfDomElement).data('destination') ? $(selfDomElement).data('destination') : '';
+
+	if (destination.length > 0) post_data['destination'] = destination;
 
 	if (confirm_msg.length > 0) {
 		apprise(confirm_msg, {'confirm':true}, function(r) {

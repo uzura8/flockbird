@@ -101,7 +101,7 @@ class Controller_Note extends \Controller_Site
 		$header_info = array();
 		if (!$note->is_published)
 		{
-			$title['label'] = array('name' => \Config::get('term.draft'));
+			$title['label'] = array('name' => term('draft'));
 			$header_info = array('body' => sprintf('この%sはまだ公開されていません。',  \Config::get('term.note')));
 		}
 		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info);
