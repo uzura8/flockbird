@@ -240,4 +240,20 @@ class Site_Model
 
 		return Site_Util::get_next_sort_order_num($max);
 	}
+
+	public static function update_sort_order($ids, \Orm\Model $model, $sort_order_prop_name = 'sort_order', $id_prop_name = 'id')
+	{
+		$sort_order = 0;
+		$sort_order_interval = Config::get('site.sort_order.interval');
+		foreach ($ids as $id)
+		{
+			if (!$obj = $model::query()->where($id_prop_name, $id)->get_one())
+			{
+				throw new \HttpInvalidInputException('Invalid input data.');
+			}
+			$obj->{$sort_order_prop_name} = $sort_order;
+			$obj->save();
+			$sort_order += $sort_order_interval;
+		}
+	}
 }

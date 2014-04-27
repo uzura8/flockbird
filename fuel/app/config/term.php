@@ -34,6 +34,8 @@ $config = array(
 		'place' => '場所',
 		'enabled' => '有効',
 		'disabled' => '無効',
+		'add' => '追加',
+		'do_add' => '追加する',
 	),
 	'site' => array(
 		'view' => 'サイト',

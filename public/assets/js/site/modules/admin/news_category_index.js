@@ -2,13 +2,9 @@ $('#btn_create').click(function(){
 	if (GL.execute_flg) return false;
 
 	var label = $('#input_label').val().trim();
-	var id = parseInt($(this).data('id'));
-	if (label.length == 0 || id == 0) return false;
-
-	var post_uri = 'admin/profile/option/api/create.html';
+	var post_uri = 'admin/news/category/api/create.html';
 	var post_data = {};
-	post_data['id'] = id;
-	post_data['label'] = label;
+	post_data['name'] = label;
 	var msg_success = '作成しました。';
 	var msg_error = '作成に失敗しました。';
 	send_article(this, post_data, post_uri, '#jqui-sortable', false, '#input_label', msg_success, msg_error);
@@ -16,17 +12,17 @@ $('#btn_create').click(function(){
 	return false;
 });
 
-$(document).on('click','.btn_profile_delete', function(){
+$(document).on('click','.btn_delete', function(){
 	var post_id  = parseInt($(this).data('id'));
-	if (!post_id) return false;
+	var post_uri  = $(this).data('uri');
+	if (!post_id || !post_uri) return false;
 
-	var post_uri = 'admin/profile/option/api/delete.json';
 	delete_item(post_uri, post_id, '', '#' + post_id);
 
 	return false;
 });
 
-jqui_sort('admin/profile/option/api/update_sort_order.json');
+jqui_sort('admin/news/category/api/update/sort_order.json');
 $('body').tooltip({
 	selector: 'a[data-toggle=tooltip]',
 	placement: 'top'

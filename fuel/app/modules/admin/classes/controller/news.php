@@ -42,7 +42,7 @@ class Controller_News extends Controller_Admin
 		$data['pagination'] = $pagination->render();
 
 		$this->template->layout = 'wide';
-		$this->set_title_and_breadcrumbs(term(array('news.view', 'site.management')));
+		$this->set_title_and_breadcrumbs(term('news.view', 'site.management'));
 		$this->template->subtitle = \View::forge('news/_parts/list_subtitle');
 		$this->template->content = \View::forge('news/list', $data);
 	}

@@ -1,5 +1,5 @@
 <?php echo form_open(false, false, array('class' => 'form-inline')); ?>
-<table class="table" id="jqui-sortable">
+<table class="table">
 <tr>
 	<th class="small">ID</th>
 	<th>項目名</th>

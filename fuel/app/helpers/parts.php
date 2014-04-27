@@ -114,6 +114,11 @@ function create_anchor_button($href, $class_attr_add = 'btn-warning', $attr = ar
 	return anchor_button($href, 'plus', term('form.create'), $class_attr_add, $attr, $is_mini_btn);
 }
 
+function edit_anchor_button($href, $class_attr_add = null, $attr = array(), $is_mini_btn = false)
+{
+	return anchor_button($href, 'edit', term('form.edit'), $class_attr_add, $attr, $is_mini_btn);
+}
+
 function label($name, $type = 'default', $attrs = array())
 {
  return render('_parts/label', array('name' => $name, 'type' => $type, 'attrs' => $attrs));

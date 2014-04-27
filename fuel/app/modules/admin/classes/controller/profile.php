@@ -342,7 +342,7 @@ class Controller_Profile extends Controller_Admin {
 			$vals[$profile_option->id] = isset($posted_vals[$profile_option->id]) ? $posted_vals[$profile_option->id] : $profile_option->label;
 		}
 
-		$this->set_title_and_breadcrumbs(sprintf('%s 編集: %s', term('profile'), $profile->caption));
+		$this->set_title_and_breadcrumbs(sprintf('%s %s: %s', term('profile'), term('form.edit'), $profile->caption));
 		$this->template->content = \View::forge('profile/edit_options', array(
 			'profile' => $profile,
 			'vals' => $vals,

@@ -9,6 +9,7 @@ return array(
 			),
 			'Contents settings' => array(
 				'News' => 'admin/news',
+				'News category' => 'admin/news/category',
 			),
 			'Site settings' => array(
 				'Profile setting' => 'admin/profile',

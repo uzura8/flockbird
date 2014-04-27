@@ -356,8 +356,7 @@ CREATE TABLE `news_image` (
 
 CREATE TABLE `news_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(64) NOT NULL COMMENT 'Category name',
-  `label` text NOT NULL COMMENT 'Category label',
+  `name` text NOT NULL COMMENT 'Category label',
   `sort_order` int(11) DEFAULT NULL COMMENT 'Order to sort',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,

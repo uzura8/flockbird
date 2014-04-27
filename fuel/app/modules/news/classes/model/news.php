@@ -10,12 +10,18 @@ class Model_News extends \Orm\Model
 			'key_from' => 'users_id',
 			'model_to' => '\Admin\Model_User',
 			'key_to' => 'id',
+			'cascade_save' => true,
+			'cascade_delete' => false,
 		),
-		//'news_category' => array(
-		//	'key_from' => 'news_category_id',
-		//	'model_to' => 'Model_NewsCategory',
-		//	'key_to' => 'id',
-		//)
+	);
+	protected static $_has_one = array(
+		'news_category' => array(
+			'key_from' => 'news_category_id',
+			'model_to' => '\News\Model_NewsCategory',
+			'key_to' => 'id',
+			'cascade_save' => true,
+			'cascade_delete' => false,
+		)
 	);
 	protected static $_has_many = array(
 		'news_image' => array(
@@ -28,11 +34,10 @@ class Model_News extends \Orm\Model
 	protected static $_properties = array(
 		'id',
 		'news_category_id' => array(
-			//'data_type' => 'varchar',
-			//'label' => 'ニュースカテゴリ',
-			//'validation' => array('trim', 'valid_string' => array('numeric')),
-			//'form' => array('type' => 'select'),
-			'form' => array('type' => false),
+			'data_type' => 'integer',
+			'label' => 'ニュースカテゴリ',
+			'validation' => array('valid_string' => array('numeric')),
+			'form' => array('type' => 'select'),
 		),
 		'title' => array(
 			'data_type' => 'varchar',
