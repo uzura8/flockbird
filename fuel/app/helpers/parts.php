@@ -17,11 +17,20 @@ function icon_label($icon_key, $term = '', $is_raw_label = false, $is_hidden_xs 
 	return icon($icon_key, $class_prefix, $tag).$label;
 }
 
-function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = null, $attr = array(), $exception_label = '')
+function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = null, $attr = array(), $tag = null, $form_name = null)
 {
+	if (!$tag) $tag = 'a';
+	if (!in_array($tag, array('a', 'button'))) throw new \InvalidArgumentException('Parameter tag is invalid.');
+
 	$label_text = term('form.'.$type);
 	switch ($type)
 	{
+		case 'add':
+		case 'do_add':
+		case 'create':
+		case 'do_create':
+			$label_icon = 'plus';
+			break;
 		case 'edit':
 		case 'do_edit':
 			$label_icon = 'edit';
@@ -62,6 +71,12 @@ function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '
 	if ($size) $class_items[] = 'btn-'.$size;
 	if (isset($attr['class'])) $class_items[] = $attr['class'];
 	$attr['class'] = implode(' ', $class_items);
+
+	if ($tag == 'button')
+	{
+		if (!$form_name) $form_name = 'button';
+		return Form::button($form_name, $label, $attr);
+	}
 
 	return Html::anchor($href, $label, $attr);
 }

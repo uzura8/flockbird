@@ -19,8 +19,8 @@ class Controller_Base extends Controller_Hybrid
 
 		$this->auth_instance = Auth::forge($this->auth_driver);
 		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
-		$this->set_current_user();
 		$this->check_auth_and_redirect();
+		$this->set_current_user();
 
 		if (!IS_API)
 		{
@@ -57,6 +57,8 @@ class Controller_Base extends Controller_Hybrid
 	{
 		if ($this->check_not_auth_action()) return;
 		if (IS_AUTH) return;
+
+		if (IS_API) throw new ApiNotAuthorizedException;
 
 		if (!$redirect_uri || !Util_string::check_uri_for_redilrect($redirect_uri))
 		{

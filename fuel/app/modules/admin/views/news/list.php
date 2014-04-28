@@ -4,7 +4,7 @@
 <?php else: ?>
 <?php echo Pagination::instance('mypagination')->render(); ?>
 
-<table class="table table-hover table-responsive" id="jqui-sortable">
+<table class="table table-hover table-responsive">
 <tr>
 	<th class="small">id</th>
 	<th>タイトル</th>

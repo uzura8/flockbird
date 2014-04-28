@@ -16,11 +16,10 @@ class Controller_Profile_Option_Api extends Controller_Admin
 	 */
 	public function post_create()
 	{
-		if (!in_array($this->format, array('html', 'json'))) throw new \HttpNotFoundException();
-
 		$response = array('status' => 0);
 		try
 		{
+			if (!in_array($this->format, array('html', 'json'))) throw new \HttpNotFoundException();
 			\Util_security::check_csrf();
 			$profile_id = (int)\Input::post('id');
 			$profile = $this->check_id_and_get_profile($profile_id);
@@ -41,7 +40,12 @@ class Controller_Profile_Option_Api extends Controller_Admin
 			$status_code = 200;
 			if ($this->format == 'html')
 			{
-				$response = \View::forge('profile/option/_parts/table_row', array('profile_option' => $profile_option));
+				$response = \View::forge('_parts/table/simple_row_sortable', array(
+					'id' => $profile_option->id,
+					'name' => $profile_option->label,
+					'delete_uri' => 'admin/profile/option/api/delete.json',
+				));
+
 				return \Response::forge($response, $status_code);
 			}
 			else
@@ -49,6 +53,14 @@ class Controller_Profile_Option_Api extends Controller_Admin
 				$response['status'] = 1;
 				$response['id'] = $profile_option->id;
 			}
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
 		}
 		catch(\FuelException $e)
 		{

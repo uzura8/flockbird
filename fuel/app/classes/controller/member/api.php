@@ -52,7 +52,7 @@ class Controller_Member_Api extends Controller_Site_Api
 		}
 		catch(\HttpNotFoundException $e)
 		{
-			$status_code = 401;
+			$status_code = 404;
 		}
 		catch(\HttpInvalidInputException $e)
 		{

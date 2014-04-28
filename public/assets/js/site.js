@@ -700,3 +700,33 @@ function post_submit(selfDomElement) {
 
 	execute_post(uri, post_data);
 }
+
+function execute_simple_delete(selfDomElement) {
+	var post_id  = parseInt($(selfDomElement).data('id'));
+	var post_uri  = $(selfDomElement).data('uri');
+	if (!post_id || !post_uri) return false;
+
+	delete_item(post_uri, post_id, '', '#' + post_id);
+}
+
+function execute_simple_post(selfDomElement) {
+	var post_data = (arguments.length > 1) ? arguments[1] : {};
+	var id = $(selfDomElement).data('id') ? parseInt($(selfDomElement).data('id')) : 0;
+	if (id > 0) post_data['id'] = id;
+
+	var post_uri   = $(selfDomElement).data('uri');
+	if (!post_uri) return false;
+
+	var parent_box = $(selfDomElement).data('parent_box') ? $(selfDomElement).data('parent_box') : 'jqui-sortable';
+	var input_name = $(selfDomElement).data('input_name') ? $(selfDomElement).data('input_name') : 'name';
+
+	var input_attr = '#input_' + input_name;
+	var value = $(input_attr).val().trim();
+	if (!value.length) return false;
+
+	post_data[input_name] = value;
+	var msg_success = '作成しました。';
+	var msg_error = '作成に失敗しました。';
+	send_article(selfDomElement, post_data, post_uri, '#' + parent_box, false, input_attr, msg_success, msg_error);
+}
+

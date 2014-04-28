@@ -38,7 +38,12 @@ class Controller_News_Category_Api extends Controller_Admin
 			$status_code = 200;
 			if ($this->format == 'html')
 			{
-				$response = \View::forge('news/category/_parts/table_row', array('news_category' => $news_category));
+				$response = \View::forge('_parts/table/simple_row_sortable', array(
+					'id' => $news_category->id,
+					'name' => $news_category->name,
+					'delete_uri' => 'admin/news/category/api/delete.json',
+				));
+
 				return \Response::forge($response, $status_code);
 			}
 			else

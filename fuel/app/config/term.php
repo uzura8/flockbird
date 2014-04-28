@@ -59,6 +59,7 @@ $config = array(
 		'date' => '日',
 		'datetime' => '日時',
 		'option' => 'オプション',
+		'id' => 'ID',
 	),
 	'member' => array(
 		'view' => 'メンバー',

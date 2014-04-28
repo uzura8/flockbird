@@ -1,22 +1,17 @@
-<table class="table" id="jqui-sortable">
+<table class="table table-hover table-responsive" id="jqui-sortable">
 <tr>
 	<th class="small"><i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="ドラッグ・アンド・ドロップで並び順を変更できます"></i></th>
-	<th class="small">削除</th>
-	<th class="small">ID</th>
-	<th>項目名</th>
+	<th class="small"><?php echo term('form.delete'); ?></th>
+	<th class="small"><?php echo term('site.id'); ?></th>
+	<th><?php echo term('news.category.name'); ?></th>
 </tr>
 <?php foreach ($news_categories as $news_category): ?>
-<?php echo render('news/category/_parts/table_row', array('news_category' => $news_category)); ?>
+<?php echo render('_parts/table/simple_row_sortable', array(
+	'id' => $news_category->id,
+	'name' => $news_category->name,
+	'delete_uri' => 'admin/news/category/api/delete.json',
+)); ?>
 <?php endforeach; ?>
 </table>
 
-<div class="well">
-<?php echo Form::open(array('class' => 'form-inline')); ?>
-<div class="form-group">
-	<?php echo Form::input('label', '', array('id' => 'input_label', 'class' => 'form-control input-xlarge')); ?>
-</div>
-<div class="form-group">
-	<?php echo Form::button('button', icon_label('plus', 'form.do_add'), array('class' => 'btn btn-default', 'id' => 'btn_create')); ?>
-</div>
-<?php echo Form::close(); ?>
-</div><!-- well -->
+<?php echo render('_parts/form/simple_post', array('btn_attr' => array('data-uri' => 'admin/news/category/api/create.html'))); ?>
