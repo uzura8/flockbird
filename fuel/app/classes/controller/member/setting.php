@@ -1,4 +1,5 @@
 <?php
+class WrongPasswordException extends \FuelException {}
 
 class Controller_Member_setting extends Controller_Member
 {
@@ -78,8 +79,8 @@ END;
 				$this->change_password($post['old_password'], $post['password']);
 				DB::commit_transaction();
 				Util_toolkit::sendmail($data);
-				Session::set_flash('message', sprintf('%sを変更しました。再度%sしてください。', term('site.password'), term('site.login')));
-				Response::redirect(Config::get('site.login_uri.site'));
+				Session::set_flash('message', term('site.password').'を変更しました。');
+				Response::redirect('member/setting');
 			}
 			catch(EmailValidationFailedException $e)
 			{
@@ -89,7 +90,7 @@ END;
 			{
 				$this->display_error(term(array('site.password', 'form.update')).': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
-			catch(\Auth\SimpleUserWrongPassword $e)
+			catch(WrongPasswordException $e)
 			{
 				if (DB::in_transaction()) \DB::rollback_transaction();
 				Session::set_flash('error', sprintf('現在の%sが正しくありません。', term('site.password')));
@@ -303,6 +304,8 @@ END;
 			'password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s', term('site.password'))),
 			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s(確認用)', term('site.password'))),
 		);
+		$add_fields['password']['rules'][] = array('unmatch_field', 'old_password');
+		$add_fields['password_confirm']['rules'][] = array('match_field', 'password');
 
 		return Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => term('form.update')));
 	}
@@ -336,8 +339,6 @@ END;
 		{
 			throw new WrongPasswordException('change password error.');
 		}
-
-		return $auth->logout();
 	}
 
 	private function save_member_email_pre($member_id, $email)
