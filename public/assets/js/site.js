@@ -664,7 +664,7 @@ function update_follow_status(selfDomElement) {
 		},
 		error: function(result){
 			$(selfDomElement).html(selfDomElement_html);
-			$.jGrowl(get_term('follow') + 'に失敗しました。');
+			$.jGrowl(get_error_message(result['status'], get_term('follow') + 'に失敗しました。'));
 		}
 	});
 }

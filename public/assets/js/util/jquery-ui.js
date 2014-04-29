@@ -20,7 +20,7 @@ function jqui_sort(uri){
 					$.jGrowl('並び順を変更しました。');
 				},
 				error: function(data){
-					$.jGrowl('並び順を変更できませんでした。');
+					$.jGrowl(get_error_message(data['status'], '並び順を変更できませんでした。'));
 				}
 			});
 		}
