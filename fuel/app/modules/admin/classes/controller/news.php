@@ -35,7 +35,8 @@ class Controller_News extends Controller_Admin
 			'show_last' => true,
 		);
 		$pagination = \Pagination::forge('mypagination', $config);
-		$data['list'] = $query->order_by('created_at', 'desc')
+		$data['list'] = $query->related('news_category')
+			->order_by('created_at', 'desc')
 			->rows_limit($pagination->per_page)
 			->rows_offset($pagination->offset)
 			->get();
@@ -109,6 +110,7 @@ class Controller_News extends Controller_Admin
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 
+				$news->news_category_id = $post['news_category_id'];
 				$news->title        = $post['title'];
 				$news->body         = $post['body'];
 				$news->users_id     = $this->u->id;
@@ -195,6 +197,7 @@ class Controller_News extends Controller_Admin
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 
+				$news->news_category_id = $post['news_category_id'];
 				$news->title = $post['title'];
 				$news->body  = $post['body'];
 

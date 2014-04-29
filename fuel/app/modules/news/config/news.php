@@ -2,7 +2,7 @@
 
 return array(
 	'category' => array(
-		'isEnabled' => false,
+		'isEnabled' => true,
 	),
 	'image' => array(
 		'isEnabled' => true,

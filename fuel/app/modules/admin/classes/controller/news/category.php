@@ -18,7 +18,7 @@ class Controller_News_Category extends Controller_Admin {
 	{		
 		$news_category = \News\Model_NewsCategory::forge();
 		$val = \Validation::forge()->add_model($news_category);
-		$news_categories = \News\Model_NewsCategory::query()->order_by('sort_order', 'asc')->get();
+		$news_categories = \News\Model_NewsCategory::get_all();
 
 		$this->set_title_and_breadcrumbs(
 			term('news.category.view', 'site.management'),
@@ -43,7 +43,7 @@ class Controller_News_Category extends Controller_Admin {
 	 */
 	public function action_edit_all()
 	{		
-		$news_categories = \News\Model_NewsCategory::query()->order_by('sort_order')->get();
+		$news_categories = \News\Model_NewsCategory::get_all();
 
 		$posted_vals = array();
 		if (\Input::method() == 'POST')

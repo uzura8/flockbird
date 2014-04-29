@@ -91,16 +91,17 @@ class Model_News extends \Orm\Model
 
 	public static function _init()
 	{
-		//if (\Config::get('news.category.isEnabled'))
-		//{
-		//	$news_category_id_options = array();
-		//	static::$_properties['news_category_id']['form']['options'] = $news_category_id_options;
-		//	static::$_properties['news_category_id']['validation']['in_array'][] = array_keys($news_category_id_options);
-		//}
-		//else
-		//{
-		//	static::$_properties['news_category_id']['form']['type'] = false;
-		//}
+		if (\Config::get('news.category.isEnabled'))
+		{
+			static::$_properties['news_category_id']['label'] = term('news.category.simple');
+			$news_category_id_options = \Util_Orm::conv_cols2assoc(Model_NewsCategory::get_all(), 'id', 'name');
+			static::$_properties['news_category_id']['form']['options'] = $news_category_id_options;
+			static::$_properties['news_category_id']['validation']['in_array'][] = array_keys($news_category_id_options);
+		}
+		else
+		{
+			static::$_properties['news_category_id']['form']['type'] = false;
+		}
 	}
 
 	public static function check_authority($id)

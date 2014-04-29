@@ -487,7 +487,7 @@ table td.small {width: 40px; text-align: center}
 table th.datetime,
 table td.datetime {width: 130px;}
 table th.datetime_both,
-table td.datetime_both {width: 180px;}
+table td.datetime_both {width: 190px;}
 
 div.profile {
 	position: relative;

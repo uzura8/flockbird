@@ -7,18 +7,20 @@
 <table class="table table-hover table-responsive">
 <tr>
 	<th class="small">id</th>
+	<th class="small"><?php echo term('news.category.simple'); ?></th>
 	<th>タイトル</th>
 	<th class="small fs9"><?php echo term('form.preview'); ?></th>
 	<th class="small"><?php echo term('form.edit'); ?></th>
 	<th class="small"><?php echo term('form.publish', 'form.operation'); ?></th>
 	<th class="small">状態</th>
-	<th class="datetime_both">公開日時</th>
+	<th class="datetime">公開日時</th>
 	<th class="datetime">最終更新</th>
 </tr>
 <?php foreach ($list as $id => $news): ?>
 <?php $status = \News\Site_Util::get_status($news->is_published, $news->published_at); ?>
 <tr id="<?php echo $news->id; ?>" class="<?php echo \News\Site_Util::get_status_label_type($status); ?>">
 	<td class="small"><?php echo $news->id; ?></td>
+	<td class="small fs10"><?php echo $news->news_category->name; ?></td>
 	<td><?php echo Html::anchor('admin/news/'.$news->id, strim($news->title, Config::get('news.viewParams.admin.list.trim_width.title'))); ?></td>
 	<td class="small"><?php echo btn('preview', 'news/preview/'.$news->id.'?token='.$news->token, '', false, 'xs'); ?></td>
 	<td class="small"><?php echo btn('edit', 'admin/news/edit/'.$news->id, '', false, 'xs'); ?></td>

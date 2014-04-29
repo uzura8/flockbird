@@ -10,6 +10,7 @@ return array(
 		),
 		'category' => array(
 			'view' => 'お知らせカテゴリ',
+			'simple' => 'カテゴリ',
 			'name' => 'カテゴリ名',
 		),
 	),

@@ -1,5 +1,6 @@
 <div class="well">
 <?php echo form_open(true); ?>
+	<?php echo form_select($val, 'news_category_id', isset($news) ? $news->news_category_id : 0, 6); ?>
 	<?php echo form_input($val, 'title', isset($news) ? $news->title : ''); ?>
 	<?php echo form_textarea($val, 'body', isset($news) ? $news->body : ''); ?>
 <?php if (Config::get('news.image.isEnabled')): ?>
