@@ -1,6 +1,6 @@
 <?php
 
-return array(
+$config = array(
 	'member_setting_common' => array(
 		'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
 		'from_mail_address' => PRJ_ADMIN_MAIL,
@@ -32,3 +32,5 @@ return array(
 		'subject'           => 'パスワードの再登録完了のお知らせ',
 	),
 );
+
+return Site_Util::merge_module_configs($config, 'mail');

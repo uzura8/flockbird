@@ -67,13 +67,13 @@ class Controller_News_Category_Api extends Controller_Admin
 	 * @access  public
 	 * @return  Response
 	 */
-	public function post_delete()
+	public function post_delete($news_category_id = null)
 	{
 		$response = array('status' => 0);
 		try
 		{
 			\Util_security::check_csrf();
-			$news_category_id = (int)\Input::post('id');
+			$news_category_id = (int)$news_category_id;
 			if (!$news_category_id || !$news_category = \News\Model_NewsCategory::find($news_category_id))
 			{
 				throw new \HttpNotFoundException;

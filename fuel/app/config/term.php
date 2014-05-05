@@ -4,6 +4,7 @@ $config = array(
 	'form' => array(
 		'submit' => '送信',
 		'create' => '新規作成',
+		'do_create' => '作成する',
 		'edit' => '編集',
 		'do_edit' => '編集する',
 		'delete' => '削除',
@@ -39,7 +40,6 @@ $config = array(
 	),
 	'site' => array(
 		'view' => 'サイト',
-		'view' => '表示',
 		'signup'  => 'Sign Up',
 		'login' => 'ログイン',
 		'register' => '登録する',

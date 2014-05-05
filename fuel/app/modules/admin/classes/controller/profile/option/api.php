@@ -77,13 +77,13 @@ class Controller_Profile_Option_Api extends Controller_Admin
 	 * @access  public
 	 * @return  Response
 	 */
-	public function post_delete()
+	public function post_delete($profile_option_id = null)
 	{
 		$response = array('status' => 0);
 		try
 		{
 			\Util_security::check_csrf();
-			$profile_option_id = (int)\Input::post('id');
+			$profile_option_id = (int)$profile_option_id;
 			if (!$profile_option_id || !$profile_option = \Model_ProfileOption::find($profile_option_id, array('related' => 'profile')))
 			{
 				throw new \HttpNotFoundException;

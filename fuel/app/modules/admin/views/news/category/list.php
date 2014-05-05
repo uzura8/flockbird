@@ -9,7 +9,7 @@
 <?php echo render('_parts/table/simple_row_sortable', array(
 	'id' => $news_category->id,
 	'name' => $news_category->name,
-	'delete_uri' => 'admin/news/category/api/delete.json',
+	'delete_uri' => sprintf('admin/news/category/api/delete/%d.json', $news_category->id),
 )); ?>
 <?php endforeach; ?>
 </table>

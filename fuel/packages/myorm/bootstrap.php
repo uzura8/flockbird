@@ -1,5 +1,6 @@
 <?php
 Autoloader::add_classes(array(
+	'MyOrm\\Model' => __DIR__.'/classes/model.php',
 	'MyOrm\\Observer_CopyValue' => __DIR__.'/classes/observer/copyvalue.php',
 	//'MyOrm\\Observer_InsertCache' => __DIR__.'/classes/observer/insertcache.php',
 	//'MyOrm\\Observer_InsertCacheDuplicate' => __DIR__.'/classes/observer/insertcacheduplicate.php',

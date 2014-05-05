@@ -1,4 +1,3 @@
-<?php //echo render('news/_parts/list', array('list' => $list, 'page' => $page, 'is_next' => $is_next, 'member' => $member, 'is_draft' => $is_draft)); ?>
 <?php if (!$list): ?>
 <?php echo term('news.view'); ?>がありません。
 <?php else: ?>
@@ -6,7 +5,7 @@
 
 <table class="table table-hover table-responsive">
 <tr>
-	<th class="small">id</th>
+	<th class="small"><?php echo term('site.id'); ?></th>
 	<th class="small"><?php echo term('news.category.simple'); ?></th>
 	<th>タイトル</th>
 	<th class="small fs9"><?php echo term('form.preview'); ?></th>

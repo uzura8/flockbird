@@ -6,6 +6,16 @@ $(document).on('click','.btn_follow', function(){
 	return false;
 });
 
+$(document).on('click','.js-simplePost', function(){
+	post_submit(this);
+	return false;
+});
+
+$(document).on('click','.js-ajax-delete', function(){
+	execute_simple_delete(this);
+	return false;
+});
+
 function get_id_from_url()
 {
 	var is_parseInt = (arguments.length > 0) ? arguments[0] : true;

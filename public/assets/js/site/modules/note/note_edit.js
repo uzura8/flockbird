@@ -25,8 +25,3 @@ $('#form_button').click(function() {
 		$('#form_note_edit').submit();
 	}
 });
-
-$(document).on('click','#btn_delete', function(){
-	post_submit(this);
-	return false;
-});

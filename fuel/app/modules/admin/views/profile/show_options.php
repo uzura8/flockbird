@@ -10,7 +10,7 @@
 <?php echo render('_parts/table/simple_row_sortable', array(
 	'id' => $profile_option->id,
 	'name' => $profile_option->label,
-	'delete_uri' => 'admin/profile/option/api/delete.json',
+	'delete_uri' => sprintf('admin/profile/option/api/delete/%d.json', $profile_option->id),
 )); ?>
 <?php endforeach; ?>
 </table>

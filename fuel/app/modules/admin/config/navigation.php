@@ -15,8 +15,7 @@ return array(
 				'Profile setting' => 'admin/profile',
 			),
 			'Admin settings' => array(
-				'Account management' => 'admin/setting/account',
-				'Change password' => 'admin/setting/change_password',
+				'Account management' => 'admin/account',
 			),
 			'Site' => '/',
 		),
@@ -25,6 +24,7 @@ return array(
 			'Site' => '/',
 		),
 		'secure_user_dropdown' => array(
+			'Setting' => 'admin/setting',
 			'Sign out' => 'admin/logout',
 		),
 		'insecure_user_dropdown' => array(

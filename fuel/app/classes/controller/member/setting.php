@@ -1,10 +1,8 @@
 <?php
-class WrongPasswordException extends \FuelException {}
 
 class Controller_Member_setting extends Controller_Member
 {
 	protected $check_not_auth_action = array(
-		'change_email',
 	);
 
 	public function before()
@@ -42,7 +40,7 @@ class Controller_Member_setting extends Controller_Member
 			$form->repopulate();
 		}
 		$this->set_title_and_breadcrumbs(term(array('site.password', 'form.update')), array('member/setting/' => term(array('site.setting', 'form.update'))), $this->u);
-		$this->template->content = View::forge('member/setting/password');
+		$this->template->content = View::forge('_parts/setting/password');
 		$this->template->content->set_safe('html_form', $form->build('member/setting/change_password'));
 	}
 
@@ -130,7 +128,7 @@ END;
 			$form->repopulate();
 		}
 		$this->set_title_and_breadcrumbs(term(array('site.email', 'form.update')), array('member/setting' => term(array('site.setting', 'form.update'))), $this->u);
-		$this->template->content = View::forge('member/setting/email');
+		$this->template->content = View::forge('_parts/setting/email');
 		$this->template->content->set_safe('html_form', $form->build('member/setting/confirm_change_email'));// form の action に入る
 	}
 
@@ -156,8 +154,17 @@ END;
 		}
 		$post = $val->validated();
 
+		$email = term('site.email');
+		$message = sprintf("新しい{$email}宛に確認用%sを送信しました。受信した{$email}内に記載された URL より{$email}の変更を完了してください。", term('site.mail'));
+		$redirect_uri = 'member/setting';
 		if (Model_MemberAuth::get4email($post['email']))
 		{
+			if (conf('member.setting.email.hideUniqueCheck'))
+			{
+				Session::set_flash('message', $message);
+				Response::redirect($redirect_uri);
+			}
+
 			Session::set_flash('error', sprintf('その%sは登録できません。', term('site.email')));
 			$this->action_email();
 			return;
@@ -176,8 +183,8 @@ END;
 			$maildata['subject']      = \Config::get('mail.member_confirm_change_email.subject');
 			$this->send_confirm_change_email_mail($maildata);
 
-			Session::set_flash('message', sprintf('新しい%s宛に確認用%sを送信しました。受信した%s内に記載された URL より%sの変更を完了してください。', term('site.email'), term('site.mail'), term('site.mail'), term('site.email')));
-			Response::redirect('member/setting');
+			Session::set_flash('message', $message);
+			Response::redirect($redirect_uri);
 		}
 		catch(EmailValidationFailedException $e)
 		{
@@ -204,8 +211,7 @@ END;
 	 */
 	public function action_change_email()
 	{
-		$member_email_pre = Model_MemberEmailPre::get4token(Input::param('token'));
-		if (!$member_email_pre || (Auth::check() && $member_email_pre->member_id != $this->u->id))
+		if (!$member_email_pre = $this->check_token_change_email())
 		{
 			$this->display_error(null, null, 'error/403', 403);
 			return;
@@ -280,19 +286,12 @@ END;
 			}
 		}
 
-		if (Auth::check())
-		{
-			$this->set_title_and_breadcrumbs(
-				term(array('site.email', 'form.update', 'form.confirm')),
-				array('member/setting' => term(array('site.setting', 'form.update')),
-				'member/setting/email' => term(array('site.email', 'form.update'))),
-				$this->u
-			);
-		}
-		else
-		{
-			$this->set_title_and_breadcrumbs(term(array('site.email', 'form.update', 'form.confirm')));
-		}
+		$this->set_title_and_breadcrumbs(
+			term('site.email', 'form.update', 'form.confirm'),
+			array('member/setting' => term('site.setting', 'form.update'),
+			'member/setting/email' => term('site.email', 'form.update')),
+			$this->u
+		);
 
 		$this->template->content = View::forge('member/setting/change_email', array('val' => $val,'member_email_pre' => $member_email_pre));
 	}
@@ -314,11 +313,14 @@ END;
 	{
 		$add_fields = array(
 			'email' => Form_Util::get_model_field('member_auth', 'email', '', sprintf('新しい%s', term('site.email'))),
-			'email_confirm' => Form_Util::get_model_field('member_auth', 'email', '', sprintf('新しい%s(確認用)', term('site.email'))),
+			'email_confirm' => array(
+				'label' => sprintf('新しい%s(確認用)', term('site.email')),
+				'attributes' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
+				'rules' => array('required', array('match_field', 'email')),
+			),
 		);
-		$form = \Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => term('form.update')));
 
-		return $form;
+		return Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => term('form.update')));
 	}
 
 	public function form_change_email()
@@ -332,13 +334,22 @@ END;
 		return Site_Util::get_form_instance('change_email', null, true, $add_fields, array('value' => term('form.update')));
 	}
 
-	protected function change_password($old_password, $password)
+	private function change_password($old_password, $password)
 	{
 		$auth = Auth::instance();
 		if (!$auth->change_password($old_password, $password))
 		{
 			throw new WrongPasswordException('change password error.');
 		}
+	}
+
+	private function check_token_change_email()
+	{
+		if (!$member_email_pre = Model_MemberEmailPre::get4token(Input::param('token'))) return false;
+		if (Site_Util::check_token_lifetime($member_email_pre->created_at, term('member.setting.email.token_lifetime'))) return false;
+		if ($member_email_pre->member_id != $this->u->id) return false;
+
+		return $member_email_pre;
 	}
 
 	private function save_member_email_pre($member_id, $email)
@@ -383,11 +394,6 @@ END;
 こんにちは、{$data['to_name']}さん
 
 {$term_email}の変更が完了しました。
-
-====================
-新しい{$term_email}:
-{$data['to_address']}
-====================
 
 END;
 

@@ -26,7 +26,7 @@ class Controller_Member_Register extends Controller_Site
 		// Already logged in
 		Auth::check() and Response::redirect('member');
 
-		if (!$member_pre = Model_MemberPre::get4token(Input::param('token')))
+		if (!$this->check_token())
 		{
 			$this->display_error('メンバー登録: 不正なURL');
 			return;
@@ -47,7 +47,7 @@ class Controller_Member_Register extends Controller_Site
 				$form_member_profile->validate();
 				DB::start_transaction();
 				$post = $form_member_profile->get_validated_values();
-				
+
 				// create new member
 				$auth = Auth::instance();
 				if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $post['member_name']))
@@ -159,10 +159,17 @@ class Controller_Member_Register extends Controller_Site
 		{
 			$post = $val->validated();
 
+			$redirect_uri = Config::get('site.login_uri.site');
+			$message = '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。';
 			try
 			{
-				if (Model_MemberAuth::query()->where('email', $post['email'])->get_one())
+				if (Model_MemberAuth::get4email($post['email']))
 				{
+					if (conf('member.register.email.hideUniqueCheck'))
+					{
+						Session::set_flash('message', $message);
+						Response::redirect($redirect_uri);
+					}
 					throw new FuelException('その'.term('site.email').'は登録できません。');
 				}
 				$data = array();
@@ -181,8 +188,8 @@ class Controller_Member_Register extends Controller_Site
 				$maildata['token']        = $token;
 				$this->send_confirm_signup_mail($maildata);
 
-				Session::set_flash('message', '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。');
-				Response::redirect(Config::get('site.login_uri.site'));
+				Session::set_flash('message', $message);
+				Response::redirect($redirect_uri);
 			}
 			catch(EmailValidationFailedException $e)
 			{
@@ -213,12 +220,10 @@ class Controller_Member_Register extends Controller_Site
 
 	private function check_token()
 	{
-		if ($member_pre = Model_MemberPre::query()->where('token', Input::param('token'))->get_one())
-		{
-			return $member_pre;
-		}
+		if (!$member_pre = Model_MemberPre::get4token(Input::param('token'))) return false;
+		if (Site_Util::check_token_lifetime($member_pre->created_at, term('member.register.token_lifetime'))) return false;
 
-		return false;
+		return $member_pre;
 	}
 
 	private function save_member_pre($email, $password)
@@ -242,7 +247,6 @@ class Controller_Member_Register extends Controller_Site
 ====================
 お名前: {$data['to_name']}
 メールアドレス: {$data['to_address']}
-パスワード: {$data['password']}
 ====================
 
 END;

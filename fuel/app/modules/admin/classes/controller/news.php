@@ -280,15 +280,9 @@ class Controller_News extends Controller_Admin
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		if (!$id || !$news = \News\Model_News::check_authority($id))
+		if (!$news = \News\Model_News::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
-		}
-
-		$redirect_uri = \Input::post('destination');
-		if (!$redirect_uri || !\Util_string::check_uri_for_redilrect($redirect_uri))
-		{
-			$redirect_uri = 'admin/news';
 		}
 
 		try
@@ -305,7 +299,7 @@ class Controller_News extends Controller_Admin
 			\Session::set_flash('error', $e->getMessage());
 		}
 
-		\Response::redirect($redirect_uri);
+		\Response::redirect(\Site_Util::get_redirect_uri('admin/news'));
 	}
 
 	/**
@@ -338,17 +332,13 @@ class Controller_News extends Controller_Admin
 
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		if (!$id || !$news = \News\Model_News::check_authority($id))
+		if (!$news = \News\Model_News::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
 		}
 
 		$msg_status = $target_status ? term('form.publish') : term('form.unpublish').'に';
-		$redirect_uri = \Input::post('destination');
-		if (!$redirect_uri || !\Util_string::check_uri_for_redilrect($redirect_uri))
-		{
-			$redirect_uri = 'admin/news/'.$id;
-		}
+		$redirect_uri = \Site_Util::get_redirect_uri('admin/news/'.$id);
 
 		if ($news->is_published == $target_status)
 		{
@@ -377,7 +367,7 @@ class Controller_News extends Controller_Admin
 		\Response::redirect($redirect_uri);
 	}
 
-	private static function get_validation_object(\News\Model_News $news, $is_edit = false)
+	private static function get_validation_object(\News\Model_News $news)
 	{
 		$val = \Validation::forge();
 		$val->add_model($news);

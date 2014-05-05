@@ -1,7 +1,7 @@
 <?php
 namespace News;
 
-class Model_News extends \Orm\Model
+class Model_News extends \MyOrm\Model
 {
 	protected static $_table_name = 'news';
 
@@ -10,16 +10,14 @@ class Model_News extends \Orm\Model
 			'key_from' => 'users_id',
 			'model_to' => '\Admin\Model_User',
 			'key_to' => 'id',
-			'cascade_save' => true,
+			'cascade_save' => false,
 			'cascade_delete' => false,
 		),
-	);
-	protected static $_has_one = array(
 		'news_category' => array(
 			'key_from' => 'news_category_id',
 			'model_to' => '\News\Model_NewsCategory',
 			'key_to' => 'id',
-			'cascade_save' => true,
+			'cascade_save' => false,
 			'cascade_delete' => false,
 		)
 	);
@@ -102,14 +100,6 @@ class Model_News extends \Orm\Model
 		{
 			static::$_properties['news_category_id']['form']['type'] = false;
 		}
-	}
-
-	public static function check_authority($id)
-	{
-		if (!$id) return false;
-		if (!$obj = self::find($id)) return false;
-
-		return $obj;
 	}
 
 	public function delete_with_relations()

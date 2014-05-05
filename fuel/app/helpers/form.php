@@ -230,7 +230,7 @@ function form_anchor($href, $label, $atter = array(), $offset_size = 2, $secure 
 function form_anchor_delete($post_uri, $label = null, $attr = null, $offset_size = 2, $secure = null, $is_enclose_small_tag = false)
 {
 	if (is_null($label)) $label = term('form.do_delete');
-	if (is_null($attr))  $attr = array('id' => 'btn_delete', 'class' => 'btn btn-default btn-danger');
+	if (is_null($attr))  $attr = array('id' => 'btn_delete', 'class' => 'btn btn-default btn-danger js-simplePost');
 	$attr['data-uri'] = $post_uri;
 	$attr['data-msg'] = '削除します。よろしいですか？';
 

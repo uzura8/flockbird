@@ -1,4 +1,4 @@
-<?php $label_col_size = 3; ?>
+<?php $label_col_size = 4; ?>
 <div class="well form-horizontal">
 	<?php echo form_text(
 		$u->member_auth->email ?: sprintf('<span class="text-danger">%s</span>', term('unset')),

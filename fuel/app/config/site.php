@@ -1,9 +1,14 @@
 <?php
 
 $config = array(
+	'default' => array(
+		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
+	),
 	'login_uri' => array(
 		'site'  => 'auth/login',
-		'admin' => 'admin/login',
+	),
+	'original_user_id' => array(
+		'site'  => 1,
 	),
 	'memberRelation' => array(
 		'follow' => array(
@@ -11,8 +16,22 @@ $config = array(
 		),
 	),
 	'member' => array(
-		'password_pre' => array(
-			'token_lifetime' => '1 day',
+		'register' => array(
+			'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
+			'email' => array(
+				'hideUniqueCheck' => true,
+			),
+		),
+		'recover' => array(
+			'password' => array(
+				'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
+			),
+		),
+		'setting' => array(
+			'email' => array(
+				'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
+				'hideUniqueCheck' => true,
+			),
 		),
 		'profile' => array(
 			'display_type' => array(

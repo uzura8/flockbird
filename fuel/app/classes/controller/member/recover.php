@@ -113,7 +113,7 @@ class Controller_Member_Recover extends Controller_Site
 		Auth::check() and Response::redirect('member');
 
 		$member_password_pre = Model_MemberPasswordPre::get4token(Input::param('token'));
-		if (!$member_password_pre || $member_password_pre->created_at < date('Y-m-d H:i:s', strtotime('-'.Config::get('site.password_pre.token_lifetime'))))
+		if (!$member_password_pre || Site_Util::check_token_lifetime($member_password_pre->created_at, term('member.recover.password.token_lifetime')))
 		{
 			$this->display_error('メンバー登録: 不正なURL');
 			return;
@@ -198,6 +198,7 @@ class Controller_Member_Recover extends Controller_Site
 			'token' => Form_Util::get_model_field('member_pre', 'token'),
 		);
 		$add_fields['token']['attributes'] = array('type'=>'hidden', 'value' => Input::param('token'));
+		$add_fields['password_confirm']['rules'][] = array('match_field', 'password');
 
 		return Site_Util::get_form_instance('reset_password', null, true, $add_fields, array('value' => '変更'));
 	}

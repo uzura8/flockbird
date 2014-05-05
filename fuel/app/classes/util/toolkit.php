@@ -1,5 +1,5 @@
 <?php
-class Util_toolkit
+class Util_Toolkit
 {
 	public static function include_php_files($dir)
 	{

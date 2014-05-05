@@ -244,4 +244,25 @@ class Site_Util
 
 		return $num + (10 - $ext_num);
 	}
+
+	public static function get_redirect_uri($default_uri = '')
+	{
+		$redirect_uri = Input::post('destination');
+		if (!$redirect_uri || !Util_string::check_uri_for_redilrect($redirect_uri))
+		{
+			$redirect_uri = $default_uri;
+		}
+
+		return $redirect_uri;
+	}
+
+	public static function check_token_lifetime($target_datetime, $lifetime = null)
+	{
+		if ($lifetime === false) return true;
+
+		if (is_null($lifetime)) $lifetime = conf('default.token_lifetime');
+		$lifetime_datetime = date('Y-m-d H:i:s', strtotime('-'.$lifetime));
+
+		return $target_datetime < $lifetime_datetime;
+	}
 }
