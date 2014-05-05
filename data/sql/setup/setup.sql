@@ -534,7 +534,8 @@ CREATE TABLE `users` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY `username_UNIQUE_idx` (`username`),
+  UNIQUE KEY `email_UNIQUE_idx` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 INSERT INTO `users` VALUES (1,'admin','RTRQWLQkWXL5w3v651COdjbiK6j5/Trs1El8UYDL5q8=',100,'admin@example.jp','','','a:0:{}','0000-00-00 00:00:00','0000-00-00 00:00:00');
