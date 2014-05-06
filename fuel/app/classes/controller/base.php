@@ -83,8 +83,7 @@ class Controller_Base extends Controller_Hybrid
 
 	protected function check_not_auth_action()
 	{
-		$action = IS_API ? sprintf('%s_%s', Str::lower(Request::main()->get_method()), Request::active()->action) : Request::active()->action;
-		return in_array($action, $this->check_not_auth_action);
+		return in_array(Site_Util::get_action_name(IS_API), $this->check_not_auth_action);
 	}
 
 	protected function check_is_admin_request()

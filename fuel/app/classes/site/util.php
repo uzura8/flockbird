@@ -13,9 +13,11 @@ class Site_Util
 		return Str::lower(preg_replace('/^([a-zA-Z0-9_]+\\\)?Controller_/', '', Request::main()->route->controller));
 	}
 
-	public static function get_action_name()
+	public static function get_action_name($is_api = false)
 	{
-		return (isset(Request::main()->route->action))? Request::main()->route->action : 'index';
+		if ($is_api) return sprintf('%s_%s', Str::lower(Request::main()->get_method()), Request::active()->action);
+
+		return Request::active()->action;
 	}
 
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())
