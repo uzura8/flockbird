@@ -19,7 +19,7 @@
 <?php $status = \News\Site_Util::get_status($news->is_published, $news->published_at); ?>
 <tr id="<?php echo $news->id; ?>" class="<?php echo \News\Site_Util::get_status_label_type($status); ?>">
 	<td class="small"><?php echo $news->id; ?></td>
-	<td class="small fs10"><?php echo $news->news_category->name; ?></td>
+	<td class="small fs10"><?php echo isset($news->news_category->name) ? $news->news_category->name : sprintf('<span class="text-danger">%s</span>', term('site.unset')); ?></td>
 	<td><?php echo Html::anchor('admin/news/'.$news->id, strim($news->title, Config::get('news.viewParams.admin.list.trim_width.title'))); ?></td>
 	<td class="small"><?php echo btn('preview', 'news/preview/'.$news->id.'?token='.$news->token, '', false, 'xs'); ?></td>
 	<td class="small"><?php echo btn('edit', 'admin/news/edit/'.$news->id, '', false, 'xs'); ?></td>
