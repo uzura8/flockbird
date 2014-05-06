@@ -3,40 +3,38 @@
 return array(
 	'admin' => array(
 		'secure_global_head' => array(
-			'Top' => 'admin/',
-			'Member' => array(
-				'Member list' => 'admin/member',
+			term('member.view', 'site.management') => array(
+				term('member.view', 'site.list') => 'admin/member',
 			),
-			'Contents settings' => array(
-				'News' => 'admin/news',
-				'News category' => 'admin/news/category',
+			term('news.view', 'site.management') => array(
+				term('news.view', 'site.list') => 'admin/news',
+				term('news.category.view') => 'admin/news/category',
 			),
-			'Site settings' => array(
-				'Profile setting' => 'admin/profile',
+			term('site.view', 'site.management') => array(
+				term('profile', 'site.setting') => 'admin/profile',
 			),
-			'Admin settings' => array(
-				'Account management' => 'admin/account',
+			term('admin.view', 'page.view', 'site.setting') => array(
+				term('admin.account.view', 'site.management') => 'admin/account',
 			),
-			'Site' => '/',
+			term('site.view') => '/',
 		),
 		'insecure_global_head' => array(
-			'Top' => 'admin/',
-			'Site' => '/',
+			term('site.view') => '/',
 		),
 		'secure_user_dropdown' => array(
-			'Setting' => 'admin/setting',
-			'Sign out' => 'admin/logout',
+			term('site.setting', 'form.update') => 'admin/setting',
+			term('site.logout') => 'admin/logout',
 		),
 		'insecure_user_dropdown' => array(
-			'Sign in' => 'admin/login',
+			term('site.login') => 'admin/login',
 		),
 		'global_side' => array(
-			'Top' => 'admin/',
-			'Site' => '/',
+			term('admin.view', 'page.top') => 'admin/',
+			term('site.view') => '/',
 		),
 		'secure_side' => array(
-			'Member' => 'admin/member',
-			'Settings' => 'admin/setting',
+			term('site.setting', 'form.update') => 'admin/setting',
+			term('site.logout') => 'admin/logout',
 		),
 	),
 );

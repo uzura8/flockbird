@@ -68,7 +68,7 @@ class Controller_Admin extends Controller_Base {
 	 */
 	public function action_index()
 	{		
-		$this->set_title_and_breadcrumbs(term(array('admin.view', 'page.view')).' Dashboard', null, null, null, null, true);
+		$this->set_title_and_breadcrumbs(term('admin.view', 'page.view').' Dashboard', null, null, null, null, true);
 		$this->template->content = \View::forge('dashboard');
 	}
 }

@@ -19,7 +19,7 @@ class Controller_Setting extends Controller_Admin
 	 */
 	public function action_index()
 	{
-		$this->set_title_and_breadcrumbs(term('site.setting'));
+		$this->set_title_and_breadcrumbs(term('site.setting', 'form.update'));
 		$this->template->content = \View::forge('setting/index');
 	}
 
@@ -40,7 +40,7 @@ class Controller_Setting extends Controller_Admin
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('site.password', 'form.update'), array('admin/setting' => term('site.setting')));
+		$this->set_title_and_breadcrumbs(term('site.password', 'form.update'), array('admin/setting' => term('site.setting', 'form.update')));
 		$this->template->content = \View::forge('_parts/setting/password');
 		$this->template->content->set_safe('html_form', $form->build('admin/setting/change_password'));
 	}
@@ -125,7 +125,7 @@ END;
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('site.email', 'form.update'), array('admin/setting' => term('site.setting')));
+		$this->set_title_and_breadcrumbs(term('site.email', 'form.update'), array('admin/setting' => term('site.setting', 'form.update')));
 		$this->template->content = \View::forge('_parts/setting/email');
 		$this->template->content->set_safe('html_form', $form->build('admin/setting/change_email'));
 	}
