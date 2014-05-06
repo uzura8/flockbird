@@ -3,6 +3,10 @@ namespace Admin;
 
 class Site_AdminUser
 {
+	const GROUP_USER      = 1;
+	const GROUP_MODERATOR = 50;
+	const GROUP_ADMIN     = 100;
+
 	public static function check_gruop($target_group_key, $more_than = 0, $is_equal = false)
 	{
 		if ($is_equal) return $target_group_key == $more_than;

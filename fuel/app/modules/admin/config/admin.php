@@ -2,6 +2,10 @@
 
 return array(
 	'user' => array(
-		'acceptedGroup' => array(1, 50, 100),
+		'acceptedGroup' => array(
+			\Admin\Site_AdminUser::GROUP_USER,
+			\Admin\Site_AdminUser::GROUP_MODERATOR,
+			\Admin\Site_AdminUser::GROUP_ADMIN,
+		),
 	),
 );
