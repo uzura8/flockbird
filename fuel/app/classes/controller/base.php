@@ -54,20 +54,15 @@ class Controller_Base extends Controller_Hybrid
 		View::set_global('u', $this->u);
 	}
 
-	protected function check_auth_and_redirect($redirect_uri = '')
+	protected function check_auth_and_redirect($is_check_not_auth_action = true)
 	{
-		if ($this->check_not_auth_action()) return;
+		if ($is_check_not_auth_action && $this->check_not_auth_action()) return;
 		if (IS_AUTH) return;
 
 		if (IS_API) return Response::forge(null, 401);
 
-		if (!$redirect_uri || !Util_string::check_uri_for_redilrect($redirect_uri))
-		{
-			$redirect_uri = $this->get_login_page_uri();
-		}
-
-		Session::set_flash('destination', urlencode(Input::server('REQUEST_URI')));
-		Response::redirect($redirect_uri);
+		Session::set_flash('destination', urlencode(Uri::string_with_query()));
+		Response::redirect($this->get_login_page_uri());
 	}
 
 	public function login_succeeded($destination = null)

@@ -24,7 +24,7 @@ class Controller_Base_Site extends Controller_Base
 
 		if (!$member_id)
 		{
-			$this->check_auth_and_redirect();
+			$this->check_auth_and_redirect(false);
 
 			$is_mypage = true;
 			$member = $this->u;

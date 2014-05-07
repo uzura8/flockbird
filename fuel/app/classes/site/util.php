@@ -214,7 +214,7 @@ class Site_Util
 
 	public static function get_uri_last_real_segment($check_string = '', $extends = array())
 	{
-		$last_real_segment = Util_string::get_exploded_last(Input::server('REQUEST_URI'), '/');
+		$last_real_segment = Util_string::get_exploded_last(Uri::string(), '/');
 		if ($check_string)
 		{
 			$ext_pattern = '[^\.]+';

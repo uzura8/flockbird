@@ -222,7 +222,7 @@ class Util_file
 		return true;
 	}
 
-	public static function make_dir_recursive($path, $mode = 0777, $is_output_exception = false)
+	public static function make_dir_recursive($path, $mode = 0777)
 	{
 		if (file_exists($path)) return true;
 
