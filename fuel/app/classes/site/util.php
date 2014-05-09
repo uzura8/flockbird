@@ -267,4 +267,18 @@ class Site_Util
 
 		return $target_datetime < $lifetime_datetime;
 	}
+
+	public static function check_ext_uri($uri, $is_admin = false)
+	{
+		if ($is_admin && strncmp($uri, 'admin', 5) !== 0)
+		{
+			return true;
+		}
+		elseif (preg_match('#(https?\:)?//#', $uri))
+		{
+			return true;
+		}
+
+		return false;
+	}
 }

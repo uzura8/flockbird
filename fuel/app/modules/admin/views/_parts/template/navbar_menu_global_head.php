@@ -8,12 +8,12 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#menu<?php echo $i; ?>"><?php echo $name; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 <?php 		foreach ($value as $item_name => $item_path): ?>
-							<li><?php echo Html::anchor($item_path, $item_name); ?></li>
+							<li><?php echo anchor($item_path, $item_name, true); ?></li>
 <?php 		endforeach; ?>
 						</ul>
 						</li>
 <?php 	else: ?>
-					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($value, $name); ?></li>
+					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo anchor($value, $name, true); ?></li>
 <?php 	endif; ?>
 <?php		$i++; ?>
 <?php endforeach; ?>
@@ -29,12 +29,12 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#menu<?php echo $i; ?>"><?php echo $name; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 <?php 		foreach ($value as $item_name => $item_path): ?>
-							<li><?php echo Html::anchor($item_path, $item_name); ?></li>
+							<li><?php echo anchor($item_path, $item_name, true); ?></li>
 <?php 		endforeach; ?>
 						</ul>
 						</li>
 <?php 	else: ?>
-					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($value, $name); ?></li>
+					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo anchor($value, $name, true); ?></li>
 <?php 	endif; ?>
 <?php		$i++; ?>
 <?php endforeach; ?>

@@ -114,6 +114,17 @@ function anchor_button($href, $icon_key = '', $text = '', $class_attr_add = '', 
 	return Html::anchor($href, $element, $attr);
 }
 
+function anchor($href, $element, $is_admin, $attr = array(), $is_absolute_ext = false)
+{
+	if ($is_absolute_ext || Site_Util::check_ext_uri($href, $is_admin))
+	{
+		$attr['target'] = '_blank';
+		$element .= ' '.icon('new-window');
+	}
+
+	return Html::anchor($href, $element, $attr);
+}
+
 function alert($message, $type = 'info', $with_dismiss_btn = false)
 {
  return render('_parts/alerts', array('message' => $message, 'type' => $type, 'with_dismiss_btn' => $with_dismiss_btn));
