@@ -241,24 +241,36 @@ function truncate_lines($body, $line, $read_more_uri = '', $is_convert_nl2br = t
 	));
 }
 
-function get_public_flag_label($public_flag, $view_icon_only = false, $is_return_string = false)
+function get_public_flag_label($public_flag, $view_icon_only = false, $is_return_string = false, $is_hiden_xs = false)
 {
 	switch ($public_flag)
 	{
 		case PRJ_PUBLIC_FLAG_ALL:
 			$btn_color = ' btn-info';
-			$icon      = '<i class="ls-icon-globe"></i> ';
+			$icon      = '<i class="ls-icon-globe"></i>';
 			break;
 		case PRJ_PUBLIC_FLAG_MEMBER:
 			$btn_color = ' btn-success';
-			$icon      = '<i class="ls-icon-group"></i> ';
+			$icon      = '<i class="ls-icon-group"></i>';
 			break;
 		default :
 			$btn_color = ' btn-danger';
-			$icon      = '<i class="ls-icon-lock"></i> ';
+			$icon      = '<i class="ls-icon-lock"></i>';
 			break;
 	}
-	$name = $view_icon_only ? '' : \Config::get('term.public_flag.options.'.$public_flag);
+
+	if ($view_icon_only)
+	{
+		$name = '';
+	}
+	elseif ($is_hiden_xs)
+	{
+		$name = sprintf('<span class="hidden-xs-inline"> %s</span>', term('public_flag.options.'.$public_flag));
+	}
+	else
+	{
+		$name = ' '.term('public_flag.options.'.$public_flag);
+	}
 
 	if ($is_return_string) return $icon.$name;
 
