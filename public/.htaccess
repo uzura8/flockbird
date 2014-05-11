@@ -10,7 +10,7 @@
 	# NOTICE: If you get a 404 play with combinations of the following commented out lines
 	#AllowOverride All
 	#RewriteBase /wherever/fuel/is
-	RewriteBase /
+	RewriteBase /shizuoka/
 
 	# Restrict your site to only one domain
 	# !important USE ONLY ONE OPTION

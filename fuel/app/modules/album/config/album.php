@@ -15,7 +15,7 @@ return array(
 	),
 	'display_setting' => array(
 		'member' => array(
-			'display_delete_link' => false,
+			'display_delete_link' => true,
 		),
 		'detail' => array(
 			'display_upload_form' => true,

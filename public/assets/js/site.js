@@ -7,11 +7,13 @@ $(document).on('click','.btn_follow', function(){
 });
 
 $(document).on('click','.js-simplePost', function(){
+	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
 	post_submit(this);
 	return false;
 });
 
 $(document).on('click','.js-ajax-delete', function(){
+	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
 	execute_simple_delete(this);
 	return false;
 });
@@ -151,13 +153,10 @@ function delete_item(uri)
 	var target_attribute_prefix = (arguments.length > 2) ? arguments[2] : '';
 	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
 	var item_term = (arguments.length > 4) ? arguments[4] : '';
+	var confirm_msg = (arguments.length > 5) ? arguments[5] : '削除します。よろしいですか?';
 
-	apprise('削除しますか?', {'confirm':true}, function(r) {
-		if (id) {
-			if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, target_attribute_id, true, item_term);
-		} else {
-			if (r == true) delete_item_execute(uri);
-		}
+	apprise(confirm_msg, {'confirm':true}, function(r) {
+		if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, target_attribute_id, true, item_term);
 	});
 }
 
@@ -177,7 +176,7 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 
 	var token_key = get_token_key();
 	var post_data = {};
-	post_data['id'] = id;
+	if (id) post_data['id'] = id;
 	post_data['_method'] = 'DELETE';
 	post_data[token_key] = get_token();
 
@@ -714,9 +713,13 @@ function post_submit(selfDomElement) {
 function execute_simple_delete(selfDomElement) {
 	var post_id  = parseInt($(selfDomElement).data('id'));
 	var post_uri  = $(selfDomElement).data('uri');
-	if (!post_id || !post_uri) return false;
+	var parent_id = $(selfDomElement).data('parent');
+	var msg = $(selfDomElement).data('msg') ? $(selfDomElement).data('msg') : '';
+	if (!post_id && !post_uri) return false;
 
-	delete_item(post_uri, post_id, '', '#' + post_id);
+	var parent_attr = parent_id ? '#' + parent_id : '#' + post_id;
+
+	delete_item(post_uri, post_id, '', parent_attr, '', msg);
 }
 
 function execute_simple_post(selfDomElement) {

@@ -10,16 +10,23 @@ echo render('_parts/member_contents_box', array(
 	'date'        => array('datetime' => $date, 'label' => '撮影')
 )); ?>
 <?php if (isset($u) && $u->id == $album_image->album->member_id): ?>
-<div class="edit btn-group" data-toggle="dropdown">
-	<?php echo render('_parts/button_edit'); ?>
-	<ul class="dropdown-menu pull-right">
-		<li><?php echo Html::anchor('album/image/edit/'.$album_image->id, '<i class="glyphicon glyphicon-pencil"></i> 編集'); ?></li>
-<?php if ($album_image->album->cover_album_image_id == $album_image->id): ?>
-		<li><span class="disabled"><i class="glyphicon glyphicon-book"></i> カバーに設定済み</span></li>
-<?php else: ?>
-		<li><a href="#" class="link_album_image_set_cover" id="link_album_image_set_cover_<?php echo $album_image->id; ?>"><i class="glyphicon glyphicon-book"></i> カバーに指定</a></li>
-<?php endif; ?>
-		<li><a href="#" onclick="delete_item('album/image/delete/<?php echo $album_image->id; ?>');return false;"><i class="glyphicon glyphicon-trash"></i> 削除</a></li>
-	</ul>
-</div><!-- /btn-group -->
+<?php
+$menus = array(array('icon_term' => 'form.do_edit', 'href' => 'album/image/edit/'.$album_image->id));
+if ($album_image->album->cover_album_image_id == $album_image->id)
+{
+	$menus[] = array('tag' => 'disabled', 'icon_term' => 'form.set_cover');
+}
+else
+{
+	$menus[] = array('icon_term' => 'form.set_cover', 'attr' => array(
+		'class' => 'link_album_image_set_cover',
+		'id' => 'link_album_image_set_cover_'.$album_image->id,
+	));
+}
+$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
+	'class' => 'js-simplePost',
+	'data-uri' => 'album/image/delete/'.$album_image->id,
+));
+echo btn_dropdown('edit', $menus, true, null, null, true, array('class' => 'edit'));
+?>
 <?php endif; ?>

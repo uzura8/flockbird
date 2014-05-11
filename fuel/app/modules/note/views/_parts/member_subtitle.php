@@ -1,1 +1,1 @@
-<?php echo create_anchor_button('note/create'); ?>
+<?php echo btn('create', 'note/create', 'edit'); ?>

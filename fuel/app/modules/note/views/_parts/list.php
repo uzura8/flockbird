@@ -23,16 +23,17 @@
 	'date' => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at)
 )); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>
-				<div class="btn-group edit" id="btn_edit_<?php echo $id ?>">
-					<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-						<span class="glyphicon glyphicon-edit"></span><span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu pull-right" role="menu">
-						<li><?php echo Html::anchor('note/edit/'.$id, '<i class="glyphicon glyphicon-pencil"></i> 編集'); ?></li>
-						<li><a href="#" onclick="delete_item('note/api/delete.json', <?php echo $id; ?>, '#article');return false;"><i class="glyphicon glyphicon-trash"></i> 削除</a></li>
-					</ul>
-				</div><!-- /btn-group -->
-
+<?php
+$menus = array(
+	array('icon_term' => 'form.do_edit', 'href' => 'note/edit/'.$id),
+	array('icon_term' => 'form.do_delete', 'href' => '#', 'attr' => array(
+		'class' => 'js-ajax-delete',
+		'data-parent' => 'article_'.$id,
+		'data-uri' => 'note/api/delete/'.$id.'.json',
+	)),
+);
+echo btn_dropdown('edit', $menus, false, 'xs', null, true, array('class' => 'edit', 'id' => 'btn_edit_'.$id));
+?>
 <?php endif; ?>
 			</div>
 		</div>

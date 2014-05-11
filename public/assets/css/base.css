@@ -112,9 +112,11 @@ img.profile_image {
 	padding-right: 0;
 }
 
-#subtitle .btn,
-#subtitle .btn-group,
-.list_subtitle .edit {
+#subtitle .btn.edit,
+#subtitle .btn-group.edit,
+.list_subtitle .btn.edit,
+.list_subtitle .btn-group.edit
+{
 	position: absolute;
 	right: 0;
 	bottom: 0;
@@ -250,7 +252,9 @@ div#main div.row div#main_container {
 #main_container .main_item div.imgBox {
 	position: relative;
 }
-#main_container .main_item div.imgBox .btn-group {
+#main_container .main_item div.imgBox .btn-group,
+#main_container .main_item div.imgBox .btn_album_edit
+{
 	position: absolute;
 	right: 8px;
 	bottom: 0;

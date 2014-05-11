@@ -54,10 +54,7 @@ elseif ($page_type != 'detail')
 			<div class="btnBox"><?php echo Html::anchor(sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), '<i class="glyphicon glyphicon-camera"></i> '.term('profile').'写真', array('class' => 'btn btn-default btn-sm')); ?></div>
 <?php endif; ?>
 <?php if ($is_mypage && $with_image_upload_form  && $member->file_id): ?>
-				<?php echo Html::anchor('#', '<i class="glyphicon glyphicon-trash"></i> '.term('form.delete'), array(
-					'class' => 'btn btn-default btn-sm delete_image',
-					'onclick' => "delete_item('member/profile/image/unset');return false;",
-				)); ?>
+				<?php echo btn('delete', '#', 'js-simplePost', true, 'sm', 'default', array('data-uri' => 'member/profile/image/unset')); ?>
 <?php endif; ?>
 <?php if ($is_mypage && $with_image_upload_form): ?>
 <?php echo render('_parts/form/upload_form', array('form_attrs' => array('action' => 'member/profile/image/edit'))); ?>

@@ -43,17 +43,20 @@
 				<div class="body"><?php echo nl2br(strim($album->body, \Config::get('album.articles.trim_width.body'))) ?></div>
 				<small><?php echo render('_parts/image_count_link', array('count' => $album_image_count, 'uri' => 'album/slide/'.$album->id.'#slidetop')); ?></small>
 <?php if (!$disable_to_update && Auth::check() && $album->member_id == $u->id): ?>
-					<div class="btn_album_edit btn-group" data-toggle="dropdown" id="btn_album_edit_<?php echo $album->id ?>">
-<?php if (\Config::get('album.display_setting.member.display_delete_link')): ?>
-						<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="glyphicon glyphicon-edit"></span><span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<li><?php echo Html::anchor('album/edit/'.$album->id, '<i class="glyphicon glyphicon-pencil"></i> '.term('form.edit')); ?></li>
-							<li><a href="#" onclick="delete_item('album/api/delete.json', <?php echo $album->id; ?>, '#main_item');return false;"><i class="glyphicon glyphicon-trash"></i> <?php echo term('form.delete'); ?></a></li>
-						</ul>
-<?php else: ?>
-					<?php echo Html::anchor('#', '<i class="glyphicon glyphicon-edit mlr10"></i>', array('class' => 'album_edit_link btn btn-default btn-xs', 'data-id' => $album->id)); ?>
-<?php endif; ?>
-					</div><!-- /btn-group -->
+
+<?php 	if (\Config::get('album.display_setting.member.display_delete_link')): ?>
+<?php
+$menus = array(array('icon_term' => 'form.do_edit', 'href' => 'album/edit/'.$album->id));
+$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
+	'class' => 'js-ajax-delete',
+	'data-parent' => 'main_item_'.$album->id,
+	'data-uri' => 'album/api/delete/'.$album->id.'.json',
+));
+?>
+				<?php echo btn_dropdown('edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_edit', 'id' => 'btn_album_edit_'.$album->id)); ?>
+<?php 	else: ?>
+				<?php echo btn('edit', 'album/edit/'.$album->id, 'btn_album_edit', false, 'xs', null, array('id' => 'btn_album_edit_'.$album->id)); ?>
+<?php 	endif; ?>
 <?php endif; ?>
 			</div><!-- article -->
 		</div><!-- img_box -->

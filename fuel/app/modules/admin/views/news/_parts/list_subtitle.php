@@ -1,1 +1,1 @@
-<?php echo create_anchor_button('admin/news/create'); ?>
+<?php echo btn('create', 'admin/news/create', 'edit'); ?>

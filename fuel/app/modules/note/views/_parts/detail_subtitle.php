@@ -7,16 +7,22 @@
 	'size' => 'M',
 	'date'        => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at, 'label' => $note->published_at ? '日時' : '更新日時')
 )); ?>
+
 <?php if (isset($u) && $u->id == $note->member_id): ?>
-<div class="edit btn-group">
-	<?php echo render('_parts/button_edit'); ?>
-	<ul class="dropdown-menu pull-right" role="menu">
-<?php if (!$note->is_published): ?>
-		<li><?php echo render('_parts/anchor_publish', array('uri' => 'note/publish/'.$note->id)); ?></li>
-<?php endif; ?>
-		<li><?php echo Html::anchor('note/edit/'.$note->id, '<i class="glyphicon glyphicon-pencil"></i> 編集'); ?></li>
-		<li><a href="#" onclick="delete_item('note/delete/<?php echo $note->id; ?>');return false;"><i class="glyphicon glyphicon-trash"></i> 削除</a></li>
-	</ul>
-</div><!-- /btn-group -->
+<?php
+$menus = array(array('icon_term' => 'form.do_edit', 'href' => 'note/edit/'.$note->id));
+if (!$note->is_published)
+{
+	$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
+		'class' => 'js-simplePost',
+		'data-uri' => 'note/publish/'.$note->id,
+	));
+}
+$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
+	'class' => 'js-simplePost',
+	'data-uri' => 'note/delete/'.$note->id,
+));
+echo btn_dropdown('edit', $menus, true, null, null, true, array('class' => 'edit'));
+?>
 <?php endif; ?>
 

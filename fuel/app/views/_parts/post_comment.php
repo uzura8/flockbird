@@ -29,11 +29,9 @@ $img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 <?php endif; ?>
 				<div class="clearfix">
 <?php if (!empty($with_uploader)): ?>
-					<button type="button" name="display_fileinput-button" class="btn btn-default btn-ms pull-left display_upload_form">
-						<?php echo icon('camera'); ?><span class="hidden-xs"> 写真を追加</span>
-					</button>
+					<?php echo btn('add_picture', null, 'display_upload_form', true, 'ms', null, array('class' => 'pull-left'), 'button', 'display_fileinput-button'); ?>
 <?php endif; ?>
-					<?php echo Form::button('btn_comment', '送信', $button_attrs); ?>
+					<?php echo Form::button('btn_comment', term('form.submit'), $button_attrs); ?>
 <?php if (!empty($with_public_flag_selector)): ?>
 <?php
 if (!isset($public_flag)) $public_flag = Config::get('site.public_flag.default');

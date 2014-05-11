@@ -7,61 +7,56 @@ function icon($icon_key, $class_prefix = 'glyphicon glyphicon-', $tag = 'i')
 	return html_tag($tag, $attr, '');
 }
 
-function icon_label($icon_key, $term = '', $is_raw_label = false, $is_hidden_xs = true, $class_prefix = 'glyphicon glyphicon-', $tag = 'i', $delimitter = ' ')
+function icon_label($icon_term, $type = 'both', $is_hidden_xs = true, $absolute_icon_key = null, $class_prefix = 'glyphicon glyphicon-', $tag = 'i', $delimitter = ' ')
 {
-	if (!$term) return icon($icon_key, $class_prefix, $tag);
+	if (!in_array($type, array('both', 'icon', 'label'))) throw new \InvalidArgumentException('Second parameter is invalid.');
 
-	if (!$is_raw_label) $term = term($term);
-	$label = $is_hidden_xs ? sprintf('<span class="hidden-xs-inline">%s%s</span>', $delimitter, $term) : $term;
+	$term = term($icon_term);
+	if ($type == 'label') return $label;
 
-	return icon($icon_key, $class_prefix, $tag).$label;
+	$label = $is_hidden_xs ? sprintf('<span class="hidden-xs-inline">%s%s</span>', $delimitter, $term) : $delimitter.$term;
+
+	if ($absolute_icon_key)	
+	{
+		$icon_key = $absolute_icon_key;
+	}
+	else
+	{
+		$icon_key = Config::get('icon.'.$icon_term);
+	}
+	$icon = $icon_key ? icon($icon_key, $class_prefix, $tag) : '';
+	if ($type == 'icon') return $icon;
+
+	return $icon.$label;
 }
 
-function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '', $btn_type = null, $attr = array(), $tag = null, $form_name = null)
+function btn($type, $href = '#', $class_name = '', $with_text = true, $size = '', $btn_type = null, $attr = array(), $tag = null, $form_name = null, $with_caret = false)
 {
 	if (!$tag) $tag = 'a';
 	if (!in_array($tag, array('a', 'button'))) throw new \InvalidArgumentException('Parameter tag is invalid.');
 
-	$label_text = term('form.'.$type);
+	$icon_label_key = 'form.'.$type;
+	$label = icon_label($icon_label_key, $with_text ? 'both' : 'icon');
+	if (!$label) throw new \InvalidArgumentException('First parameter is invalid.');
+	if ($with_caret) $label .= '<span class="caret"></span>';
+
 	switch ($type)
 	{
-		case 'add':
-		case 'do_add':
-		case 'create':
-		case 'do_create':
-			$label_icon = 'plus';
-			break;
-		case 'edit':
-		case 'do_edit':
-			$label_icon = 'edit';
-			break;
 		case 'delete':
 		case 'do_delete':
-			$label_icon = 'trash';
 			if (is_null($btn_type)) $btn_type = 'danger';
-			if (!isset($attr['data-msg'])) $attr['data-msg'] = '削除します。よろしいですか？';
 			break;
-		case 'publish':
-		case 'do_publish':
-			$label_icon = 'globe';
-			//if (is_null($btn_type)) $btn_type = 'warning';
-			if (!isset($attr['data-msg'])) $attr['data-msg'] = '公開します。よろしいですか？';
-			break;
-		case 'unpublish':
-		case 'do_unpublish':
-			$label_icon  = 'lock';
-			if (!isset($attr['data-msg'])) $attr['data-msg'] = '非公開にします。よろしいですか？';
+		case 'create':
+			if (is_null($btn_type)) $btn_type = 'warning';
 			break;
 		case 'preview':
-			$label_icon  = 'eye-open';
 			$attr['target'] = '_blank';
 			break;
-		default :
-			throw new \InvalidArgumentException("First parameter is invalid.");
-			break;
 	}
-
-	$label = $with_text ? icon_label($label_icon, $label_text) : icon($label_icon);
+	if (empty($attr['data-msg']) && $msg = Site_Util::get_confirm_msg($type))
+	{
+		$attr['data-msg'] = $msg;
+	}
 
 	if (is_null($btn_type)) $btn_type = 'default';
 	$class_items   = array();
@@ -81,48 +76,39 @@ function btn($type, $href = '#', $class_name = '', $with_text = false, $size = '
 	return Html::anchor($href, $label, $attr);
 }
 
-function btn_dropdown($btn_label, $menus = array(), $btn_size = '', $btn_type = 'default', $is_popover_align_right = false, $attrs = array(), $btn_group_attrs = array())
+function btn_dropdown($type = null, $menus = array(), $btn_with_text = true, $btn_size = '', $btn_type = 'default', $is_popover_align_right = false, $btn_group_attrs = array())
 {
 	if (!$btn_type) $btn_type = 'default';
 	$data = array(
+		'type' => $type,
+		'btn_with_text' => $btn_with_text,
 		'btn_size' => $btn_size,
 		'btn_type' => $btn_type,
 		'is_popover_align_right' => $is_popover_align_right,
-		'attrs' => $attrs,
 		'menus' => $menus,
 		'btn_group_attrs' => $btn_group_attrs,
 	);
 	$view = View::forge('_parts/btn_dropdown', $data);
-	$view->set_safe('btn_label', $btn_label);
 
 	return $view->render();
 }
 
-function anchor_button($href, $icon_key = '', $text = '', $class_attr_add = '', $attr = array(), $is_mini_btn = false)
+function anchor($href, $text, $is_admin, $attr = array(), $is_absolute_ext_uri = false)
 {
-	$class_attrs  = array('btn', 'btn-default');
-	if ($is_mini_btn) $class_attrs[] = 'btn-xs';
-
-	$class_attr = implode(' ', $class_attrs);
-	if ($class_attr_add) $class_attr .= ' '.$class_attr_add;
-
-	if (!empty($attr['class'])) $class_attr .= ' '.$attr['class'];
-	$attr['class'] = $class_attr;
-
-	$element = icon_label($icon_key, $text, true, true);
-
-	return Html::anchor($href, $element, $attr);
-}
-
-function anchor($href, $element, $is_admin, $attr = array(), $is_absolute_ext = false)
-{
-	if ($is_absolute_ext || Site_Util::check_ext_uri($href, $is_admin))
+	if ($is_absolute_ext_uri || Site_Util::check_ext_uri($href, $is_admin))
 	{
 		$attr['target'] = '_blank';
-		$element .= ' '.icon('new-window');
+		$text .= ' '.icon('new-window');
 	}
 
-	return Html::anchor($href, $element, $attr);
+	return Html::anchor($href, $text, $attr);
+}
+
+function anchor_icon($href, $icon_term, $attr = array(), $type = 'both', $is_hidden_xs = false, $absolute_icon_key = null, $is_admin = false, $is_absolute_ext_uri = false, $class_prefix = 'glyphicon glyphicon-', $tag = 'i', $delimitter = ' ')
+{
+	$element = icon_label($icon_term, $type, $is_hidden_xs, $absolute_icon_key, $class_prefix, $tag, $delimitter);
+
+	return anchor($href, $element, $is_admin, $attr, $is_absolute_ext_uri);
 }
 
 function alert($message, $type = 'info', $with_dismiss_btn = false)
@@ -133,16 +119,6 @@ function alert($message, $type = 'info', $with_dismiss_btn = false)
 function small_tag($str, $is_enclose_small_tag = true)
 {
 	return sprintf('%s%s%s', $is_enclose_small_tag ? '<small>' : '', $str, $is_enclose_small_tag ? '</small>' : '');
-}
-
-function create_anchor_button($href, $class_attr_add = 'btn-warning', $attr = array(), $is_mini_btn = false)
-{
-	return anchor_button($href, 'plus', term('form.create'), $class_attr_add, $attr, $is_mini_btn);
-}
-
-function edit_anchor_button($href, $class_attr_add = null, $attr = array(), $is_mini_btn = false)
-{
-	return anchor_button($href, 'edit', term('form.edit'), $class_attr_add, $attr, $is_mini_btn);
 }
 
 function label($name, $type = 'default', $attrs = array())

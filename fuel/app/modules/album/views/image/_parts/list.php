@@ -64,38 +64,41 @@
 $menus = array();
 if (!empty($is_setting_profile_image) && $album_image->album->member_id == $u->id)
 {
-	$menus[] = Html::anchor(
-		'member/profile/image/set/'.$album_image->id.get_csrf_query_str(),
-		sprintf('<i class="glyphicon glyphicon-setting"></i> %s写真に設定する', term('profile'))
-	);
-	$menus[] = Html::anchor(
-		'#', '<i class="glyphicon glyphicon-trash"></i> '.term('form.delete'),
-		array('onclick' => sprintf("delete_item('member/profile/image/delete/%d');return false;", $album_image->id))
-	);
+	if ($album_image->file->id != $u->file_id)
+	{
+		$menus[] = array('icon_term' => 'form.set_profile_image', 'href' => '#', 'attr' => array(
+			'class' => 'js-simplePost',
+			'data-uri' => 'member/profile/image/set/'.$album_image->id,
+			'data-msg' => 'プロフィール写真に設定しますか？',
+		));
+	}
+	$menus[] = array('icon_term' => 'form.do_delete', 'href' => '#', 'attr' => array(
+		'class' => 'js-simplePost',
+		'data-uri' => 'member/profile/image/delete/'.$album_image->id,
+	));
 }
 elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && $member->id == $u->id)))
 {
-	$menus[] = Html::anchor('album/image/edit/'.$album_image->id, '<i class="glyphicon glyphicon-pencil"></i> '.term('form.edit'));
-	$menus[] = Html::anchor(
-		'#', '<i class="glyphicon glyphicon-book"></i> カバーに指定',
-		array('class' => 'link_album_image_set_cover', 'id' => 'link_album_image_set_cover_'.$album_image->id)
-	);
-	$menus[] = Html::anchor(
-		'#', '<i class="glyphicon glyphicon-trash"></i> '.term('form.delete'),
-		array('onclick' => sprintf("delete_item('album/image/api/delete.json', %d, '#main_item');return false;", $album_image->id))
-	);
+	$menus[] = array('icon_term' => 'form.do_edit', 'href' => 'album/image/edit/'.$album_image->id);
+	if ($album_image->album->cover_album_image_id == $album_image->id)
+	{
+		$menus[] = array('tag' => 'disabled', 'icon_term' => 'form.set_cover');
+	}
+	else
+	{
+		$menus[] = array('icon_term' => 'form.set_cover', 'attr' => array(
+			'class' => 'link_album_image_set_cover',
+			'id' => 'link_album_image_set_cover_'.$album_image->id,
+		));
+	}
+	$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
+		'class' => 'js-ajax-delete',
+		'data-parent' => 'main_item_'.$album_image->id,
+		'data-uri' => 'album/image/api/delete/'.$album_image->id.'.json',
+	));
 }
+echo btn_dropdown('edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_image_edit', 'id' => 'btn_album_image_edit_'.$album_image->id));
 ?>
-<?php if ($menus): ?>
-				<div class="btn_album_image_edit btn-group" id="btn_album_image_edit_<?php echo $album_image->id ?>">
-					<button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><i class="glyphicon glyphicon-edit"></i><i class="caret"></i></button>
-					<ul class="dropdown-menu pull-right">
-<?php foreach ($menus as $menu): ?>
-						<li><?php echo $menu; ?></li>
-<?php endforeach; ?>
-					</ul>
-				</div><!-- btn-group -->
-<?php endif; ?>
 <?php endif; ?>
 		</div><!-- imgBox -->
 

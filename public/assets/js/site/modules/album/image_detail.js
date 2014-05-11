@@ -35,11 +35,6 @@ $(function(){
 		return false;
 	});
 
-	$(document).on('click','.btn_comment_delete', function(){
-		delete_item('album/image/comment/api/delete.json', get_id_num($(this).attr('id')), '#commentBox');
-		return false;
-	});
-
 	if (!is_sp()) {
 		$(document).on({
 			mouseenter:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},

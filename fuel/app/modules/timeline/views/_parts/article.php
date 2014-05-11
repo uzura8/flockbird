@@ -81,12 +81,13 @@ if ($self_member_id && $timeline->member_id == $self_member_id && \Timeline\Site
 {
 	list($post_id, $post_uri) = \Timeline\Site_Util::get_delete_api_info($timeline);
 	$attr = array(
+		'class'        => 'boxBtn',
 		'id'           => 'btn_timeline_delete_'.$timeline_cache_id,
 		'data-id'      => $timeline->id,
 		'data-post_id' => $post_id,
 		'data-uri'     => $post_uri,
 	);
-	echo anchor_button('#', 'trash', '', 'boxBtn btn_timeline_delete', $attr, true);
+	echo btn('delete', '#', 'btn_timeline_delete', false, 'xs', 'default', $attr);
 }
 ?>
 </div><!-- timelineBox -->

@@ -281,4 +281,25 @@ class Site_Util
 
 		return false;
 	}
+
+	public static function get_confirm_msg($type)
+	{
+		switch ($type)
+		{
+			case 'delete':
+			case 'do_delete':
+				return '削除します。よろしいですか？';
+				break;
+			case 'publish':
+			case 'do_publish':
+				return term('form.publish').'します。よろしいですか？';
+				break;
+			case 'unpublish':
+			case 'do_unpublish':
+				return term('form.unpublish').'にします。よろしいですか？';
+				break;
+		}
+
+		return false;
+	}
 }

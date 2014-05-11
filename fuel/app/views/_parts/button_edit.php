@@ -1,1 +1,0 @@
-<button data-toggle="dropdown" class="btn btn-default dropdown-toggle<?php if (IS_SP): ?> btn-xs<?php endif; ?>"><?php echo icon('edit'); ?><span class="hidden-xs"> <?php echo term('form.edit'); ?></span><span class="caret"></span></button>

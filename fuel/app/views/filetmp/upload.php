@@ -40,5 +40,5 @@ echo Form::select($selects['name'], $selects['value'], $selects['options'], $att
 </div><!-- fileinput -->
 </div><!-- #upload_files -->
 <?php if ($hide_form): ?>
-<button type="button" class="btn btn-default btn-ms display_fileinput-button"><?php echo icon('camera'); ?><span class="hidden-xs"> 写真を追加</span></button>
+<?php echo btn('add_picture', null, 'display_fileinput-button', true, 'ms', null, array(), 'button'); ?>
 <?php endif; ?>

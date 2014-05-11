@@ -8,11 +8,6 @@ $(document).on('click','.link_album_image_set_cover', function(){
 	return false;
 });
 
-$('.btn_comment_delete').on('click', function(){
-	delete_item('album/image/comment/api/delete.json', get_id_num($(this).attr('id')), '#commentBox');
-	return false;
-});
-
 if (!is_sp()) {
 	$('.commentBox').on({
 		mouseenter:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
