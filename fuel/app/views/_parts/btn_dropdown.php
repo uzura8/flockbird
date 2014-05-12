@@ -29,7 +29,7 @@ $label = isset($menu['label']) ? $menu['label'] : '';
 <?php elseif ($menu['tag'] == 'divider'): ?>
 		<li class="divider"></li>
 <?php else: ?>
-		<li><?php echo html_tag($menu['tag'], $attr, $menu['label']); ?></li>
+		<li><?php echo html_tag($menu['tag'], $menu['attr'], $menu['label']); ?></li>
 <?php endif; ?>
 <?php endforeach; ?>
 	</ul>
