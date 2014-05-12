@@ -95,7 +95,7 @@ $config = array(
 	//	),
 	//	'noValue' => '-',
 	//),
-	//'profile' => 'プロフィール',
+	'profile' => 'user',
 	//'guest'   => 'Guest',
 	//'follow'  => 'フォロー',
 	//'do_follow' => 'フォローする',

@@ -6,7 +6,7 @@
 				</button>
 				<ul class="dropdown-menu" role="menu">
 <?php foreach (Config::get('navigation.admin.secure_user_dropdown') as $name => $path): ?>
-					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo anchor_icon($path, $name); ?></li>
 <?php endforeach; ?>
 				</ul>
 			</div>
@@ -18,7 +18,7 @@
 				</a>
 				<ul class="dropdown-menu">
 <?php foreach (Config::get('navigation.admin.insecure_user_dropdown') as $name => $path): ?>
-					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo Html::anchor($path, $name); ?></li>
+					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo anchor_icon($path, $name); ?></li>
 <?php endforeach; ?>
 				</ul>
 			</div>

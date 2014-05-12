@@ -9,6 +9,7 @@ function icon($icon_key, $class_prefix = 'glyphicon glyphicon-', $tag = 'i')
 
 function icon_label($icon_term, $type = 'both', $is_hidden_xs = true, $absolute_icon_key = null, $class_prefix = 'glyphicon glyphicon-', $tag = 'i', $delimitter = ' ')
 {
+	if (empty($type)) $type = 'both';
 	if (!in_array($type, array('both', 'icon', 'label'))) throw new \InvalidArgumentException('Second parameter is invalid.');
 
 	$term = term($icon_term);
