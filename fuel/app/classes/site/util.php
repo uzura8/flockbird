@@ -163,6 +163,23 @@ class Site_Util
 		return array('note', 'album', 'album_image', 'timeline', 'member_profile');
 	}
 
+	public static function get_public_flag_btn_coloer_class($public_flag)
+	{
+		switch ($public_flag)
+		{
+			case PRJ_PUBLIC_FLAG_ALL:
+				return 'btn-info';
+				break;
+			case PRJ_PUBLIC_FLAG_MEMBER:
+				return 'btn-success';
+				break;
+			default :
+				break;
+		}
+
+		return 'btn-danger';
+	}
+
 	public static function validate_posted_public_flag($current_public_flag = null, $posted_key = 'public_flag')
 	{
 		$public_flag = \Input::post($posted_key, null);

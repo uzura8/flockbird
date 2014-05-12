@@ -13,9 +13,8 @@ function icon_label($icon_term, $type = 'both', $is_hidden_xs = true, $absolute_
 	if (!in_array($type, array('both', 'icon', 'label'))) throw new \InvalidArgumentException('Second parameter is invalid.');
 
 	$term = term($icon_term);
-	if ($type == 'label') return $label;
-
 	$label = $is_hidden_xs ? sprintf('<span class="hidden-xs-inline">%s%s</span>', $delimitter, $term) : $delimitter.$term;
+	if ($type == 'label') return $label;
 
 	if ($absolute_icon_key)	
 	{

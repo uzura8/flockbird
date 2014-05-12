@@ -241,38 +241,13 @@ function truncate_lines($body, $line, $read_more_uri = '', $is_convert_nl2br = t
 	));
 }
 
-function get_public_flag_label($public_flag, $view_icon_only = false, $is_return_string = false, $is_hiden_xs = false)
+function get_public_flag_label($public_flag, $view_icon_only = false, $is_return_label = false, $is_hidden_xs = false)
 {
-	switch ($public_flag)
-	{
-		case PRJ_PUBLIC_FLAG_ALL:
-			$btn_color = ' btn-info';
-			$icon      = '<i class="ls-icon-globe"></i>';
-			break;
-		case PRJ_PUBLIC_FLAG_MEMBER:
-			$btn_color = ' btn-success';
-			$icon      = '<i class="ls-icon-group"></i>';
-			break;
-		default :
-			$btn_color = ' btn-danger';
-			$icon      = '<i class="ls-icon-lock"></i>';
-			break;
-	}
+	$icon = icon_label('public_flag.options.'.$public_flag, 'icon', $is_hidden_xs, null, 'ls-icon-', 'i');
+	$name = $view_icon_only ? '' : icon_label('public_flag.options.'.$public_flag, 'label', $is_hidden_xs, null, 'ls-icon-', 'i');
+	if ($is_return_label) return $icon.$name;
 
-	if ($view_icon_only)
-	{
-		$name = '';
-	}
-	elseif ($is_hiden_xs)
-	{
-		$name = sprintf('<span class="hidden-xs-inline"> %s</span>', term('public_flag.options.'.$public_flag));
-	}
-	else
-	{
-		$name = ' '.term('public_flag.options.'.$public_flag);
-	}
-
-	if ($is_return_string) return $icon.$name;
+	$btn_color = Site_Util::get_public_flag_btn_coloer_class($public_flag);
 
 	return array($name, $icon, $btn_color);
 }
