@@ -135,11 +135,12 @@ class Model_Member extends \Orm\Model
 		static::$_properties['birthday_public_flag']['validation']['in_array'][] = $options_public_flag;
 	}
 
-	public static function get_sex_options($key = null)
+	public static function get_sex_options($key = null, $is_return_false_not_set_key = false)
 	{
 		$options = Config::get('term.member.sex.options');
 
 		if ($key) return $options[$key];
+		if ($is_return_false_not_set_key) return false;
 
 		return $options;
 	}

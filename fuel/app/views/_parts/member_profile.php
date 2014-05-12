@@ -76,10 +76,12 @@ elseif ($page_type != 'detail')
 					)); ?>
 <?php endif; ?>
 				</<?php echo $member_name_tag; ?>>
-<?php if (check_display_type(conf('profile.sex.displayType'), $display_type) && check_public_flag($member->sex_public_flag, $access_from)): ?>
+<?php if (check_display_type(conf('profile.sex.displayType'), $display_type)
+				&& check_public_flag($member->sex_public_flag, $access_from)
+				&& $sex = Model_Member::get_sex_options($member->sex, true)): ?>
 			<div class="row">
 				<div class="col-xs-4"><label><?php echo term('member.sex.label'); ?></label></div>
-				<div class="col-xs-8"><?php echo Model_Member::get_sex_options($member->sex); ?></div>
+				<div class="col-xs-8"><?php echo $sex; ?></div>
 			</div>
 <?php endif; ?>
 <?php if ($member->birthyear && check_display_type(conf('profile.birthday.birthyear.displayType'), $display_type) && check_public_flag($member->birthyear_public_flag, $access_from)): ?>
