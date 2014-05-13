@@ -18,7 +18,7 @@ class Controller_Member_setting extends Controller_Member
 	 */
 	public function action_index()
 	{
-		$this->set_title_and_breadcrumbs(term(array('site.setting', 'site.item', 'site.list')), null, $this->u);
+		$this->set_title_and_breadcrumbs(term('site.setting', 'site.item', 'site.list'), null, $this->u);
 		$this->template->content = View::forge('member/setting/index');
 	}
 
@@ -39,7 +39,7 @@ class Controller_Member_setting extends Controller_Member
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term(array('site.password', 'form.update')), array('member/setting/' => term(array('site.setting', 'form.update'))), $this->u);
+		$this->set_title_and_breadcrumbs(term('site.password', 'form.update'), array('member/setting/' => term('site.setting', 'form.update')), $this->u);
 		$this->template->content = View::forge('_parts/setting/password');
 		$this->template->content->set_safe('html_form', $form->build('member/setting/change_password'));
 	}
@@ -82,11 +82,11 @@ END;
 			}
 			catch(EmailValidationFailedException $e)
 			{
-				$this->display_error(term(array('site.password', 'form.update')).': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+				$this->display_error(term('site.password', 'form.update').': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
-				$this->display_error(term(array('site.password', 'form.update')).': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+				$this->display_error(term('site.password', 'form.update').': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(WrongPasswordException $e)
 			{
@@ -127,7 +127,7 @@ END;
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term(array('site.email', 'form.update')), array('member/setting' => term(array('site.setting', 'form.update'))), $this->u);
+		$this->set_title_and_breadcrumbs(term('site.email', 'form.update'), array('member/setting' => term('site.setting', 'form.update')), $this->u);
 		$this->template->content = View::forge('_parts/setting/email');
 		$this->template->content->set_safe('html_form', $form->build('member/setting/confirm_change_email'));// form の action に入る
 	}
@@ -188,11 +188,11 @@ END;
 		}
 		catch(EmailValidationFailedException $e)
 		{
-			$this->display_error(term(array('site.email', 'form.update')).': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+			$this->display_error(term('site.email', 'form.update').': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 		}
 		catch(EmailSendingFailedException $e)
 		{
-			$this->display_error(term(array('site.email', 'form.update')).': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+			$this->display_error(term('site.email', 'form.update').': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 		}
 		catch(FuelException $e)
 		{

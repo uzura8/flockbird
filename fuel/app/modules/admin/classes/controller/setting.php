@@ -83,11 +83,11 @@ END;
 			}
 			catch(\EmailValidationFailedException $e)
 			{
-				$this->display_error(term(array('site.password', 'form.update')).': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+				$this->display_error(term('site.password', 'form.update').': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(\EmailSendingFailedException $e)
 			{
-				$this->display_error(term(array('site.password', 'form.update')).': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+				$this->display_error(term('site.password', 'form.update').': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(\WrongPasswordException $e)
 			{

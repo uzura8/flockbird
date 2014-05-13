@@ -56,7 +56,7 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(term(array('member.view', 'site.list')));
+		$this->set_title_and_breadcrumbs(term('member.view', 'site.list'));
 		$sort = conf('member.view_params.list.sort');
 		$data = Site_Model::get_simple_pager_list('member', 1, array(
 			'order_by' => array($sort['property'] => $sort['direction']),

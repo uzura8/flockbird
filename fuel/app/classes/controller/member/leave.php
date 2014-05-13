@@ -26,7 +26,7 @@ class Controller_Member_Leave extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('site.left'), array('member/setting' => term(array('site.setting', 'form.update'))), $this->u);
+		$this->set_title_and_breadcrumbs(term('site.left'), array('member/setting' => term('site.setting', 'form.update')), $this->u);
 		$this->template->content = View::forge('member/leave/index');
 		$this->template->content->set_safe('html_form', $form->build('member/leave/confirm'));// form の action に入る
 	}
@@ -46,8 +46,8 @@ class Controller_Member_Leave extends Controller_Site
 		if ($val->run() && $auth->check_password())
 		{
 			$this->set_title_and_breadcrumbs(
-				term(array('site.left', 'form.confirm')),
-				array('member/setting' => term(array('site.setting', 'form.update')), 'member/leave' => term('site.left')),
+				term('site.left', 'form.confirm'),
+				array('member/setting' => term('site.setting', 'form.update'), 'member/leave' => term('site.left')),
 				$this->u
 			);
 			$this->template->content = View::forge('member/leave/confirm', array('input' => $val->validated()));

@@ -106,7 +106,7 @@ class Controller_Member_Register extends Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(term(array('member.view', 'site.registration', 'form.confirm')), array('member/signup' => term('site.signup')));
+		$this->set_title_and_breadcrumbs(term('member.view', 'site.registration', 'form.confirm'), array('member/signup' => term('site.signup')));
 		$this->template->content = View::forge('member/register/index', array(
 			'val' => $form_member_profile->get_validation(),
 			'member_public_flags' => $form_member_profile->get_member_public_flags(),
@@ -193,11 +193,11 @@ class Controller_Member_Register extends Controller_Site
 			}
 			catch(EmailValidationFailedException $e)
 			{
-				$this->display_error(term(array('member.view', 'site.registration')).': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+				$this->display_error(term('member.view', 'site.registration').': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 			}
 			catch(EmailSendingFailedException $e)
 			{
-				$this->display_error(term(array('member.view', 'site.registration')).': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+				$this->display_error(term('member.view', 'site.registration').': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 			}
 			catch(FuelException $e)
 			{

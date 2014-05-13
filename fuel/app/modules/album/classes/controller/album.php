@@ -442,7 +442,7 @@ class Controller_Album extends \Controller_Site
 			if ($error) \Session::set_flash('error', $error);
 		}
 
-		$this->set_title_and_breadcrumbs(term(array('album_image', 'site.management')), array('/album/'.$id => $album->name), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(term('album_image', 'site.management'), array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
 		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_shot_at'));
 
