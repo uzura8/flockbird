@@ -303,16 +303,16 @@ class Site_Util
 	{
 		switch ($type)
 		{
-			case 'delete':
-			case 'do_delete':
+			case 'form.delete':
+			case 'form.do_delete':
 				return '削除します。よろしいですか？';
 				break;
-			case 'publish':
-			case 'do_publish':
+			case 'form.publish':
+			case 'form.do_publish':
 				return term('form.publish').'します。よろしいですか？';
 				break;
-			case 'unpublish':
-			case 'do_unpublish':
+			case 'form.unpublish':
+			case 'form.do_unpublish':
 				return term('form.unpublish').'にします。よろしいですか？';
 				break;
 		}

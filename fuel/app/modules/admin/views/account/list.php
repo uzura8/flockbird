@@ -16,7 +16,7 @@
 <?php if ($user->id == conf('original_user_id.admin') || !\Admin\Site_AdminUser::check_gruop($u->group, 100)): ?>
 	<td class="small"><?php echo symbol('noValue'); ?></td>
 <?php else: ?>
-	<td class="small"><?php echo btn('delete', '#', 'js-simplePost', false, 'xs', null, array('data-uri' => 'admin/account/delete/'.$user->id)); ?></td>
+	<td class="small"><?php echo btn('form.delete', '#', 'js-simplePost', false, 'xs', null, array('data-uri' => 'admin/account/delete/'.$user->id)); ?></td>
 <?php endif; ?>
 	<td class="small"><?php echo $user->id; ?></td>
 	<td><?php echo $user->username; ?></td>

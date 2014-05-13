@@ -30,30 +30,28 @@ function icon_label($icon_term, $type = 'both', $is_hidden_xs = true, $absolute_
 	return $icon.$label;
 }
 
-function btn($type, $href = '#', $class_name = '', $with_text = true, $size = '', $btn_type = null, $attr = array(), $tag = null, $form_name = null, $with_caret = false)
+function btn($term_key, $href = '#', $class_name = '', $with_text = true, $size = '', $btn_type = null, $attr = array(), $tag = null, $form_name = null, $with_caret = false)
 {
 	if (!$tag) $tag = 'a';
 	if (!in_array($tag, array('a', 'button'))) throw new \InvalidArgumentException('Parameter tag is invalid.');
 
-	$icon_label_key = 'form.'.$type;
-	$label = icon_label($icon_label_key, $with_text ? 'both' : 'icon');
-	if (!$label) throw new \InvalidArgumentException('First parameter is invalid.');
-	if ($with_caret) $label .= '<span class="caret"></span>';
+	$label = icon_label($term_key, $with_text ? 'both' : 'icon');
+	if ($with_caret) $label .= ' <span class="caret"></span>';
 
-	switch ($type)
+	switch ($term_key)
 	{
-		case 'delete':
-		case 'do_delete':
+		case 'form.delete':
+		case 'form.do_delete':
 			if (is_null($btn_type)) $btn_type = 'danger';
 			break;
-		case 'create':
+		case 'form.create':
 			if (is_null($btn_type)) $btn_type = 'warning';
 			break;
-		case 'preview':
+		case 'form.preview':
 			$attr['target'] = '_blank';
 			break;
 	}
-	if (empty($attr['data-msg']) && $msg = Site_Util::get_confirm_msg($type))
+	if (empty($attr['data-msg']) && $msg = Site_Util::get_confirm_msg($term_key))
 	{
 		$attr['data-msg'] = $msg;
 	}

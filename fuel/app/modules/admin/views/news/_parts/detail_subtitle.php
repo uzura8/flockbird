@@ -16,5 +16,5 @@ $menus = array(
 		'data-uri' => 'admin/news/delete/'.$news->id,
 	)),
 );
-echo btn_dropdown('edit', $menus, true, null, null, true, array('class' => 'edit'));
+echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));
 ?>

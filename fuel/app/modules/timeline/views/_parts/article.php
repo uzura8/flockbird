@@ -87,7 +87,7 @@ if ($self_member_id && $timeline->member_id == $self_member_id && \Timeline\Site
 		'data-post_id' => $post_id,
 		'data-uri'     => $post_uri,
 	);
-	echo btn('delete', '#', 'btn_timeline_delete', false, 'xs', 'default', $attr);
+	echo btn('form.delete', '#', 'btn_timeline_delete', false, 'xs', 'default', $attr);
 }
 ?>
 </div><!-- timelineBox -->

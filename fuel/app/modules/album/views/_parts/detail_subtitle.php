@@ -19,6 +19,6 @@ $menus = array(
 		'data-uri' => 'album/delete/'.$album->id,
 	)),
 );
-echo btn_dropdown('edit', $menus, true, null, null, true, array('class' => 'edit'));
+echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));
 ?>
 <?php endif; ?>

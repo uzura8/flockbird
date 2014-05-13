@@ -53,9 +53,9 @@ $menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
 	'data-uri' => 'album/api/delete/'.$album->id.'.json',
 ));
 ?>
-				<?php echo btn_dropdown('edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_edit', 'id' => 'btn_album_edit_'.$album->id)); ?>
+				<?php echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_edit', 'id' => 'btn_album_edit_'.$album->id)); ?>
 <?php 	else: ?>
-				<?php echo btn('edit', 'album/edit/'.$album->id, 'btn_album_edit', false, 'xs', null, array('id' => 'btn_album_edit_'.$album->id)); ?>
+				<?php echo btn('form.edit', 'album/edit/'.$album->id, 'btn_album_edit', false, 'xs', null, array('id' => 'btn_album_edit_'.$album->id)); ?>
 <?php 	endif; ?>
 <?php endif; ?>
 			</div><!-- article -->

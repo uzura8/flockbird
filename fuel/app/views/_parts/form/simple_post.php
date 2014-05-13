@@ -13,7 +13,7 @@ $btn_attr = array_merge($btn_attr_default, $btn_attr);
 	<?php echo Form::input($input_name, '', array('id' => 'input_'.$input_name, 'class' => 'form-control input-xlarge')); ?>
 </div>
 <div class="form-group">
-	<?php echo btn('do_add', null, null, true, null, null, $btn_attr, 'button'); ?>
+	<?php echo btn('form.do_add', null, null, true, null, null, $btn_attr, 'button'); ?>
 </div>
 <?php echo Form::close(); ?>
 </div><!-- well -->

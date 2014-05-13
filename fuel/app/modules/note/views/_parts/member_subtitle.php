@@ -1,1 +1,1 @@
-<?php echo btn('create', 'note/create', 'edit'); ?>
+<?php echo btn('form.create', 'note/create', 'edit'); ?>

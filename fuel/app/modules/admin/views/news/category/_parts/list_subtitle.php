@@ -1,1 +1,1 @@
-<?php echo btn('edit', 'admin/news/category/edit_all', 'edit'); ?>
+<?php echo btn('form.edit', 'admin/news/category/edit_all', 'edit'); ?>

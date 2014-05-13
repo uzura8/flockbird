@@ -27,6 +27,6 @@ $menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
 	'class' => 'js-simplePost',
 	'data-uri' => 'album/image/delete/'.$album_image->id,
 ));
-echo btn_dropdown('edit', $menus, true, null, null, true, array('class' => 'edit'));
+echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));
 ?>
 <?php endif; ?>

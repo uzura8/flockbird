@@ -21,13 +21,13 @@
 	<td class="small"><?php echo $news->id; ?></td>
 	<td class="small fs10"><?php echo isset($news->news_category->name) ? $news->news_category->name : sprintf('<span class="text-danger">%s</span>', term('site.unset')); ?></td>
 	<td><?php echo Html::anchor('admin/news/'.$news->id, strim($news->title, Config::get('news.viewParams.admin.list.trim_width.title'))); ?></td>
-	<td class="small"><?php echo btn('preview', 'news/preview/'.$news->id.'?token='.$news->token, '', false, 'xs'); ?></td>
-	<td class="small"><?php echo btn('edit', 'admin/news/edit/'.$news->id, '', false, 'xs'); ?></td>
+	<td class="small"><?php echo btn('form.preview', 'news/preview/'.$news->id.'?token='.$news->token, '', false, 'xs'); ?></td>
+	<td class="small"><?php echo btn('form.edit', 'admin/news/edit/'.$news->id, '', false, 'xs'); ?></td>
 <?php $attr = array('data-destination' => Uri::string_with_query()); ?>
 <?php if ($news->is_published): ?>
-	<td class="small"><?php echo btn('do_unpublish', '#', 'btn_publish', true, 'xs', null, $attr + array('data-uri' => 'admin/news/unpublish/'.$news->id)); ?></td>
+	<td class="small"><?php echo btn('form.do_unpublish', '#', 'btn_publish', true, 'xs', null, $attr + array('data-uri' => 'admin/news/unpublish/'.$news->id)); ?></td>
 <?php else: ?>
-	<td class="small"><?php echo btn('do_publish', '#', 'btn_publish', true, 'xs', null, $attr + array('data-uri' => 'admin/news/publish/'.$news->id)); ?></td>
+	<td class="small"><?php echo btn('form.do_publish', '#', 'btn_publish', true, 'xs', null, $attr + array('data-uri' => 'admin/news/publish/'.$news->id)); ?></td>
 <?php endif; ?>
 	<td><?php echo label(term('news.status.'.$status), \News\Site_Util::get_status_label_type($status)); ?></td>
 	<td class="text-<?php if ($status == 'reserved'): ?>warning<?php elseif ($status == 'closed'): ?>muted<?php else: ?>normal<?php endif; ?>">

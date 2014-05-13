@@ -32,7 +32,7 @@ $menus = array(
 		'data-uri' => 'note/api/delete/'.$id.'.json',
 	)),
 );
-echo btn_dropdown('edit', $menus, false, 'xs', null, true, array('class' => 'edit', 'id' => 'btn_edit_'.$id));
+echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'edit', 'id' => 'btn_edit_'.$id));
 ?>
 <?php endif; ?>
 			</div>
