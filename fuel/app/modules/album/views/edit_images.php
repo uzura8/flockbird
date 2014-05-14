@@ -3,13 +3,13 @@
 <div class="well">
 	<h4><?php echo \Config::get('term.album_image'); ?>一括操作</h4>
 	<?php echo Form::hidden('clicked_btn', '', array('id' => 'clicked_btn')); ?>
-	<?php echo form_input($val, 'name', 'タイトル'); ?>
+	<?php echo form_input($val, 'name', ''); ?>
 <?php if (!$is_disabled_to_update_public_flag): ?>
 	<?php echo form_public_flag($val, 99, false, 2, true); ?>
 <?php endif; ?>
 	<?php echo form_input($val, 'shot_at', null, 5); ?>
-	<?php echo form_button('<i class="glyphicon glyphicon-edit"></i> 一括編集', 'button', 'post', array('id' => 'submit_post', 'class' => 'btn btn-default btn-primary')); ?>
-	<?php echo form_button('<i class="glyphicon glyphicon-trash"></i> 一括削除', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-default btn-danger')); ?>
+	<?php echo form_button('form.edit_all', 'button', 'post', array('id' => 'submit_post')); ?>
+	<?php echo form_button('form.delete_all', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-default btn-danger')); ?>
 </div><!-- well -->
 
 <label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>

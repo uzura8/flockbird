@@ -45,13 +45,13 @@ elseif ($page_type != 'detail')
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
 <?php if (!empty($with_edit_btn) && $is_mypage): ?>
-	<?php echo Html::anchor('member/profile/edit', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-xs btnEdit')); ?>
+	<?php echo btn('form.edit', 'member/profile/edit', 'btnEdit', true, 'xs'); ?>
 <?php endif; ?>
 	<div class="row">
 		<div class="col-<?php echo $col_class; ?>-<?php echo $image_col_size; ?>">
 			<div class="imgBox"><?php echo img($member->get_image(), conf('upload.types.img.types.m.sizes.'.$image_size), $profile_page_uri, $is_link2raw_file, site_get_screen_name($member), true, true); ?></div>
 <?php if (!empty($with_link2profile_image)): ?>
-			<div class="btnBox"><?php echo Html::anchor(sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), '<i class="glyphicon glyphicon-camera"></i> '.term('profile').'写真', array('class' => 'btn btn-default btn-sm')); ?></div>
+			<div class="btnBox"><?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera'); ?></div>
 <?php endif; ?>
 <?php if ($is_mypage && $with_image_upload_form  && $member->file_id): ?>
 				<?php echo btn('form.delete', '#', 'js-simplePost', true, 'sm', 'default', array('data-uri' => 'member/profile/image/unset')); ?>

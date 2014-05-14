@@ -328,7 +328,7 @@ class Controller_Profile extends Controller_Admin {
 				\DB::commit_transaction();
 
 				\Session::set_flash('message', term('profile', 'form.choices').'を編集しました。');
-				\Response::redirect('admin/profile/show_options/'.$profile->id);
+				\Response::redirect('admin/profile/options/'.$profile->id);
 			}
 			catch(\FuelException $e)
 			{

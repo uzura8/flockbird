@@ -9,7 +9,7 @@ $btn_group_attrs = Util_toolkit::convert_to_attr($btn_group_attrs, $default_btn_
 if (empty($btn_with_text)) $btn_with_text = false;
 ?>
 <div <?php echo array_to_attr($btn_group_attrs); ?>>
-	<?php echo btn($type, null, 'dropdown-toggle', $btn_with_text, $btn_size, $btn_type, array('data-toggle' => 'dropdown'), 'button', null, true); ?>
+	<?php echo btn($type, null, 'dropdown-toggle', $btn_with_text, $btn_size, $btn_type, array('data-toggle' => 'dropdown'), null, 'button', null, null, true, true); ?>
 	<ul class="dropdown-menu<?php if ($is_popover_align_right): ?> pull-right<?php endif; ?>" role="menu">
 <?php foreach ($menus as $menu): ?>
 <?php if (empty($menu['tag']) || $menu['tag'] == 'a' || $menu['tag'] == 'anchor'): ?>

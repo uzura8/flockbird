@@ -25,20 +25,20 @@
 
 <?php if (!empty($val)): ?>
 <div class="well">
-<h5><?php echo Config::get('term.album_image').term('form.upload'); ?></h5>
+<h4><?php echo term('album_image', 'form.upload'); ?></h4>
 <?php echo render('_parts/form/upload_form', array('form_attrs' => array('action' => 'album/upload_image/'.$id), 'with_public_flag' => true, 'val' => $val)); ?>
 </div><!-- well -->
 <?php endif; ?>
 
 <div id="btn_menu">
 <?php if ($list): ?>
-<?php echo Html::anchor('album/slide/'.$album->id, sprintf('<i class="icon-picture"></i> %sを見る', Config::get('term.album_image')), array('class' => 'btn btn-default mr')); ?>
+<?php echo btn(sprintf('%sを見る', term('site.picture')), 'album/slide/'.$album->id, 'mr', true, null, null, null, 'picture'); ?>
 <?php endif; ?>
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
 <?php if (!$disabled_to_update): ?>
-<?php echo Html::anchor('album/upload/'.$album->id, '<i class="icon-upload"></i> 写真をアップロード', array('class' => 'btn btn-default mr')); ?>
+<?php echo btn(sprintf('%sを%s', term('site.picture'), term('form.upload')), 'album/upload/'.$album->id, 'mr', true, null, null, null, 'upload'); ?>
 <?php endif; ?>
-<?php echo Html::anchor('album/edit_images/'.$album->id, sprintf('<i class="icon-th-list"></i> %s', term('album_image', 'site.management')), array('class' => 'btn btn-default')); ?>
+<?php echo btn(term('album_image', 'site.management'), 'album/edit_images/'.$album->id, null, true, null, null, null, 'th-list'); ?>
 <?php endif; ?>
 </div>
 

@@ -11,6 +11,6 @@
 	)); ?>
 	<?php echo form_input($val, 'password', '', 6, 3); ?>
 	<?php echo Form::hidden('token', Input::param('token')); ?>
-	<?php echo form_button(term('form.do_edit'), 'submit', 'submit', array(), $label_size); ?>
+	<?php echo form_button('form.do_edit', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

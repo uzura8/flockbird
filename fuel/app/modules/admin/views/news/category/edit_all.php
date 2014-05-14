@@ -19,5 +19,5 @@
 </tr>
 <?php endforeach; ?>
 </table>
-<?php echo Form::button('submit', term('form.do_edit'), array('type' => 'submit', 'class' => 'btn btn-default', 'id' => 'btn_create')); ?>
+<p><?php echo btn('form.do_edit', null, null, true, null, 'primary', array('id' => 'btn_create'), null, 'button', 'submit', false); ?></p>
 <?php echo Form::close(); ?>

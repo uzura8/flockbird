@@ -8,7 +8,9 @@ $config = array(
 		'edit' => '編集',
 		'do_edit' => '編集する',
 		'delete' => '削除',
+		'edit_all' => '一括編集',
 		'do_delete' => '削除する',
+		'delete_all' => '一括削除',
 		'upload' => 'アップロード',
 		'update' => '変更',
 		'updated' => '更新',
@@ -63,6 +65,7 @@ $config = array(
 		'option' => 'オプション',
 		'id' => 'ID',
 		'user' => 'ユーザ',
+		'picture' => '写真',
 	),
 	'member' => array(
 		'view' => 'メンバー',

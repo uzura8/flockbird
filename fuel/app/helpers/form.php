@@ -188,9 +188,11 @@ function form_radio(Validation $val, $name, $default_value = null, $label_col_sm
 	return render('_parts/form/radio', $data);
 }
 
-function form_button($label = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2)
+function form_button($term_key = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2)
 {
-	if (!strlen($label)) $label = term('form.submit');
+	if (!$term_key) $term_key = 'form.submit';
+	$label = icon_label($term_key, 'both', false);
+
 	$atter_default = array(
 		'class' => 'btn btn-default btn-primary',
 		'id'    => 'form_'.$type,
@@ -229,7 +231,7 @@ function form_anchor($href, $label, $atter = array(), $offset_size = 2, $secure 
 
 function form_anchor_delete($post_uri, $label = null, $attr = null, $offset_size = 2, $secure = null, $is_enclose_small_tag = false)
 {
-	if (is_null($label)) $label = term('form.do_delete');
+	if (is_null($label)) $label = icon_label('form.do_delete');
 	if (is_null($attr))  $attr = array('id' => 'btn_delete', 'class' => 'btn btn-default btn-danger js-simplePost');
 	$attr['data-uri'] = $post_uri;
 	$attr['data-msg'] = '削除します。よろしいですか？';

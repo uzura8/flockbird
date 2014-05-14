@@ -14,6 +14,6 @@
 	<?php echo form_checkbox($val, $name, Input::post($name), $label_size); ?>
 <?php endif; ?>
 <?php endforeach; ?>
-	<?php echo form_button(term('form.do_edit'), 'submit', 'submit', array(), $label_size); ?>
+	<?php echo form_button('form.do_edit', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

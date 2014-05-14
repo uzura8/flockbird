@@ -2,13 +2,15 @@
 
 $config = array(
 	'form' => array(
-		//'submit' => '送信',
+		'submit' => 'edit',
 		'create' => 'plus',
 		'do_create' => 'plus',
 		'edit' => 'edit',
 		'do_edit' => 'pencil',
+		'edit_all' => 'edit',
 		'delete' => 'trash',
 		'do_delete' => 'trash',
+		'delete_all' => 'trash',
 		'upload' => 'upload',
 		'update' => 'refresh',
 		'updated' => 'refresh',
@@ -46,7 +48,7 @@ $config = array(
 		'logout' => 'log-out',
 		'register' => 'plus',
 		'registration' => 'plus',
-		//'leave' => '退会する',
+		'leave' => 'exclamation-sign',
 		//'left' => '退会',
 		'setting' => 'cog',
 		//'set_already' => '設定済',

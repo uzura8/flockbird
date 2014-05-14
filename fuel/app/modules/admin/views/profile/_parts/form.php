@@ -53,6 +53,6 @@ unset($field_value_min, $field_value_max);
 	<?php echo form_textarea($val, 'value_regexp', isset($profile) ? $profile->value_regexp : '', $label_size, true, '入力値タイプで「正規表現」を選んだ場合のみ有効(PHPのPerl互換(PCRE)正規表現関数を使用)'); ?>
 	<?php echo form_input($val, 'placeholder', isset($profile) ? $profile->placeholder : '', 12, $label_size); ?>
 	<?php echo form_radio($val, 'is_unique', isset($profile) ? $profile->is_unique : 0, $label_size, 'inline'); ?>
-	<?php echo form_button(empty($is_edit) ? '作成する' : '編集する', 'submit', 'submit', array(), $label_size); ?>
+	<?php echo form_button(empty($is_edit) ? 'form.do_create' : 'form.do_edit', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

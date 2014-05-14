@@ -12,12 +12,12 @@ $label_col_sm_size = IS_API ? 12 : 3;
 	<?php echo form_input($val, 'password', '', $col_sm_size, $label_col_sm_size); ?>
 	<?php echo form_checkbox($val, 'rememberme', array(), IS_API ? 12 : $label_col_sm_size, 'block', '', array(), IS_API); ?>
 	<?php echo form_anchor('member/recover/resend_password', 'パスワードを忘れた場合はこちら', array(), IS_API ? 0 : 3, null, true); ?>
-	<?php echo form_button('ログイン', 'submit', null, null, IS_API ? 0 : 3); ?>
+	<?php echo form_button('site.login', 'submit', null, null, IS_API ? 0 : 3); ?>
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
 	<?php echo form_anchor(
 		Config::get('site.login_uri.site').'/facebook',
-		'<i class="ls-icon-facebook"></i> facebookでログイン',
+		icon_label('Facebookで'.term('site.login'), 'both', false, 'facebook', 'ls-icon-'),
 		array('class' => 'btn btn-default'),
 		IS_API ? 0 : 3
 	); ?>
@@ -38,7 +38,7 @@ $label_col_sm_size = IS_API ? 12 : 3;
 		IS_API ? 0 : 3
 	); ?>
 <?php endif; ?>
-	<?php echo form_anchor('member/register/signup', '新規登録', array('class' => 'btn btn-default btn-warning'), IS_API ? 0 : 3); ?>
+	<?php echo form_anchor('member/register/signup', icon_label('form.create'), array('class' => 'btn btn-default btn-warning'), IS_API ? 0 : 3); ?>
 
 <?php echo form_close(); ?>
 <?php if (!IS_API): ?></div><?php endif; ?>

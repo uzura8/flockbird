@@ -29,9 +29,9 @@ $img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 <?php endif; ?>
 				<div class="clearfix">
 <?php if (!empty($with_uploader)): ?>
-					<?php echo btn('form.add_picture', null, 'display_upload_form', true, 'ms', null, array('class' => 'pull-left'), 'button', 'display_fileinput-button'); ?>
+					<?php echo btn('form.add_picture', null, 'display_upload_form', true, 'ms', null, array('class' => 'pull-left'), null, 'button', 'display_fileinput-button'); ?>
 <?php endif; ?>
-					<?php echo Form::button('btn_comment', term('form.submit'), $button_attrs); ?>
+					<?php echo btn('form.submit', '#', 'btn_comment', true, null, null, $button_attrs, null, null, 'btn_comment'); ?>
 <?php if (!empty($with_public_flag_selector)): ?>
 <?php
 if (!isset($public_flag)) $public_flag = Config::get('site.public_flag.default');

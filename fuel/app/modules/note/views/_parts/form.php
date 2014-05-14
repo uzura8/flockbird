@@ -9,12 +9,12 @@
 	<?php echo form_input($val, 'published_at_time', (!empty($note->published_at)) ? substr($note->published_at, 0, 16) : '', 6); ?>
 	<?php echo form_public_flag($val, isset($note) ? $note->public_flag : null); ?>
 <?php if (empty($note->is_published)): ?>
-	<?php echo form_button(Config::get('term.draft'), 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
+	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
 <?php endif; ?>
 <?php if (!empty($is_edit)): ?>
-	<?php echo form_button(empty($note->is_published) ? term('form.do_publish') : term('form.do_edit')); ?>
+	<?php echo form_button(empty($note->is_published) ? 'form.do_publish' : 'form.do_edit'); ?>
 <?php else: ?>
-	<?php echo form_button(term('form.do_publish')); ?>
+	<?php echo form_button('form.do_publish'); ?>
 <?php endif; ?>
 <?php if (!empty($is_edit)): ?>
 	<?php echo form_anchor_delete('note/delete/'.$note->id); ?>

@@ -1,25 +1,17 @@
 <div id="btn_menu">
 <?php if ($is_mypage) : ?>
-<?php echo Html::anchor('album/create', sprintf('<i class="glyphicon glyphicon-edit"></i> %s新規作成', Config::get('term.album')), array('class' => 'btn btn-default mr')); ?>
+<?php echo btn(term('album', 'form.create'), 'album/create', 'mr', true, null, null, null, 'plus'); ?>
 <?php endif; ?>
 <?php
 $name = $is_mypage ? '自分' : $member->name.'さん';
 $controller = Site_Util::get_controller_name();
 if ($controller == 'album')
 {
-	echo Html::anchor(
-		sprintf('album/member/%d/images', $member->id),
-		sprintf('<i class="glyphicon glyphicon-picture"></i> %sの%sを全て見る', $name, Config::get('term.album_image')),
-		array('class' => 'btn btn-default mr')
-	);
+	echo btn(sprintf('%sの%sを全て見る', $name, term('album_image')), sprintf('album/member/%d/images', $member->id), 'mr', true, null, null, null, 'picture');
 }
 elseif ($controller == 'image')
 {
-	echo Html::anchor(
-		sprintf('album/member/%d', $member->id),
-		sprintf('<i class="glyphicon glyphicon-picture"></i> %sの%sを全て見る', $name, Config::get('term.album')),
-		array('class' => 'btn btn-default mr')
-	);
+	echo btn(sprintf('%sの%sを全て見る', $name, term('album')), sprintf('album/member/%d', $member->id), 'mr', true, null, null, null, 'picture');
 }
 ?>
 </div>

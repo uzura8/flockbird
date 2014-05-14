@@ -19,5 +19,5 @@
 </tr>
 <?php endforeach; ?>
 </table>
-<?php echo Form::button('submit', '編集する', array('type' => 'submit', 'class' => 'btn btn-default', 'id' => 'btn_create', 'data-id' => $profile->id)); ?>
+<p><?php echo btn('form.do_edit', null, null, true, null, 'primary', array('id' => 'btn_create', 'data-id' => $profile->id), null, 'button', 'submit', false); ?></p>
 <?php echo Form::close(); ?>

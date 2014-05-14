@@ -8,6 +8,6 @@
 		'profiles' => $profiles,
 		'member_profile_public_flags' => $member_profile_public_flags,
 	)); ?>
-	<?php echo form_button(term('form.do_edit'), 'submit', 'submit', array(), $label_size); ?>
+	<?php echo form_button('form.do_edit', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->
