@@ -1,6 +1,6 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php if (!IS_API): ?><?php echo \Config::get('term.album'); ?>がありません。<?php endif; ?>
+<?php if (!IS_API): ?><?php echo term('album'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div class="row">
 <div id="main_container">

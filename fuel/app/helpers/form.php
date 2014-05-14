@@ -254,7 +254,7 @@ function form_public_flag(Validation $val, $default_value = null, $is_select = f
 	$field = $val->fieldset()->field($name);
 	$atter = array('id' => 'form_'.$name);
 	if (is_null($default_value)) $default_value = $field->get_attribute('value', Config::get('site.public_flag.default'));
-	$label = $field->get_attribute('label', Config::get('term.public_flag.label'));
+	$label = $field->get_attribute('label', term('public_flag.label'));
 
 	$options = $field->get_options();
 	if ($with_no_change_option) $options = array(99 => '変更しない') + $options;

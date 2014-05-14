@@ -93,7 +93,7 @@ function btn_dropdown($type = null, $menus = array(), $btn_with_text = true, $bt
 	return $view->render();
 }
 
-function anchor($href, $text, $is_admin, $attr = array(), $is_absolute_ext_uri = false)
+function anchor($href, $text, $is_admin = false, $attr = array(), $is_absolute_ext_uri = false)
 {
 	if ($is_absolute_ext_uri || Site_Util::check_ext_uri($href, $is_admin))
 	{

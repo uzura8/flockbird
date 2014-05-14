@@ -1,6 +1,6 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php echo \Config::get('term.note'); ?>がありません。
+<?php echo term('note'); ?>がありません。
 <?php else: ?>
 <div id="article_list">
 <?php foreach ($list as $id => $note): ?>
@@ -9,7 +9,7 @@
 			<h4<?php if (!$note->is_published): ?> class="has_label"<?php endif; ?>>
 				<?php echo Html::anchor('note/'.$id, strim($note->title, Config::get('site.view_params_default.list.trim_width.title'))); ?>
 <?php if (!$note->is_published): ?>
-				<?php echo render('_parts/label', array('name' => Config::get('term.draft'), 'attr' => 'label-inverse')); ?>
+				<?php echo render('_parts/label', array('name' => term('form.draft'), 'attr' => 'label-inverse')); ?>
 <?php endif; ?>
 			</h4>
 			<div class="list_subtitle">

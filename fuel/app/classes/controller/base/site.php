@@ -71,7 +71,7 @@ class Controller_Base_Site extends Controller_Base
 			if ($is_mypage)
 			{
 				$breadcrumbs['/member'] = term('page.myhome');
-				if ($module) $breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.\Config::get('term.'.$module).'一覧';
+				if ($module) $breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.term($module, 'site.list');
 			}
 			else
 			{
@@ -80,7 +80,7 @@ class Controller_Base_Site extends Controller_Base
 				if ($module)
 				{
 					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
-					$breadcrumbs[$key] = \Config::get('term.'.$module).'一覧';
+					$breadcrumbs[$key] = term($module, 'site.list');
 				}
 			}
 		}

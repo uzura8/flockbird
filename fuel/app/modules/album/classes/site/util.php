@@ -37,7 +37,7 @@ class Site_Util
 
 	public static function get_album_image_page_title($album_image_name, $original_filename)
 	{
-		$title = sprintf(\Config::get('term.album_image'), \Config::get('term.album_image'));
+		$title = term('album_image');
 		if ($album_image_name)
 		{
 			$title = $album_image_name;
@@ -60,20 +60,20 @@ class Site_Util
 		switch ($album_foreign_table)
 		{
 			case 'note':
-				$message_prefix = sprintf('%s用%sの', \Config::get('term.note'), \Config::get('term.album'));
+				$message_prefix = sprintf('%s用%sの', term('note'), term('album'));
 				break;
 			case 'member':
-				$message_prefix = sprintf('%s用%sの', \Config::get('term.profile'), \Config::get('term.album'));
+				$message_prefix = sprintf('%s用%sの', term('profile'), term('album'));
 				break;
 			case 'timeline':
-				$message_prefix = sprintf('%s用%sの', \Config::get('term.timeline'), \Config::get('term.album'));
+				$message_prefix = sprintf('%s用%sの', term('timeline'), term('album'));
 				break;
 			default :
 				$message_prefix = '';
 				break;
 		}
 
-		return array('message' => sprintf('%s%sは変更できません。', $message_prefix, \Config::get('term.public_flag.label')));
+		return array('message' => sprintf('%s%sは変更できません。', $message_prefix, term('public_flag.label')));
 	}
 
 	public static function get_album_foreign_tables()
@@ -87,14 +87,14 @@ class Site_Util
 		switch ($table_name)
 		{
 			case 'note':
-				$info['name'] = sprintf('%s用%s', \Config::get('term.note'), \Config::get('term.album'));
+				$info['name'] = sprintf('%s用%s', term('note'), term('album'));
 				break;
 			case 'member':
-				$info['name'] = sprintf('%s用%s', \Config::get('term.profile'), \Config::get('term.album'));
+				$info['name'] = sprintf('%s用%s', term('profile'), term('album'));
 				$info['public_flag'] = PRJ_PUBLIC_FLAG_ALL;
 				break;
 			case 'timeline':
-				$info['name'] = sprintf('%s用%s', \Config::get('term.timeline'), \Config::get('term.album'));
+				$info['name'] = sprintf('%s用%s', term('timeline'), term('album'));
 				break;
 			default :
 				break;

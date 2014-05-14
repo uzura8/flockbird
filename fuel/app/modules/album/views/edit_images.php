@@ -1,7 +1,7 @@
 <?php if ($album_images): ?>
 <?php echo form_open(false, false, array(), array(), '', false); ?>
 <div class="well">
-	<h4><?php echo \Config::get('term.album_image'); ?>一括操作</h4>
+	<h4><?php echo term('album_image', 'form.operation_all'); ?></h4>
 	<?php echo Form::hidden('clicked_btn', '', array('id' => 'clicked_btn')); ?>
 	<?php echo form_input($val, 'name', ''); ?>
 <?php if (!$is_disabled_to_update_public_flag): ?>
@@ -17,9 +17,9 @@
 <table id="album_image_list" class="table table-striped">
 <tr>
 	<th class="formParts span2">対象選択</th>
-	<th class="span3"><?php echo \Config::get('term.album_image'); ?></th>
-	<th>タイトル</th>
-	<th class="span2">公開範囲</th>
+	<th class="span3"><?php echo term('album_image'); ?></th>
+	<th><?php echo term('site.title'); ?></th>
+	<th class="span2"><?php echo term('public_flag.label'); ?></th>
 	<th class="span3">撮影日時</th>
 </tr>
 <?php foreach ($album_images as $album_image): ?>
@@ -36,7 +36,7 @@
 
 <label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
 <?php else: ?>
-	<p><?php echo \Config::get('term.album_image'); ?>がありません。</p>
+	<p><?php echo term('album_image'); ?>がありません。</p>
 <?php endif; ?>
 
 <?php echo form_close(); ?>

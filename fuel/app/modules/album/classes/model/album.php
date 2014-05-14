@@ -73,7 +73,7 @@ class Model_Album extends \Orm\Model
 
 	public static function _init()
 	{
-		static::$_properties['name']['label'] = \Config::get('term.album').'名';
+		static::$_properties['name']['label'] = term('album').'名';
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_album_foreign_tables();

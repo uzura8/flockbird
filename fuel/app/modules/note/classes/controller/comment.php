@@ -67,7 +67,7 @@ class Controller_Comment extends \Controller_Site
 		$note_id = $comment->note_id;
 		$comment->delete();
 
-		\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
+		\Session::set_flash('message', term('note').'を削除しました。');
 		\Response::redirect('note/detail/'.$note_id);
 	}
 }

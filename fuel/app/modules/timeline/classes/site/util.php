@@ -93,13 +93,13 @@ class Site_Util
 				break;
 			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				$body = \Config::get('term.profile').'写真を設定しました。';
+				$body = term('profile', 'site.picture').'を設定しました。';
 				break;
 			case \Config::get('timeline.types.note'):// note 投稿
-				$body = \Config::get('term.note').'を投稿しました。';
+				$body = term('note').'を投稿しました。';
 				break;
 			case \Config::get('timeline.types.album'):// album 作成
-				$body = \Config::get('term.album').'を作成しました。';
+				$body = term('album').'を作成しました。';
 				break;
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
 				$is_safe = true;
@@ -112,10 +112,10 @@ class Site_Util
 			case \Config::get('timeline.types.album_image_timeline'):
 				if (!strlen($body))
 				{
-					$body = sprintf('%sに写真を投稿しました。', \Config::get('term.timeline'));
+					$body = sprintf('%sに%sを投稿しました。', term('timeline'), term('site.picture'));
 					if (!empty($optional_info['count']))
 					{
-						$body = sprintf('%sに写真を %d 枚投稿しました。', \Config::get('term.timeline'), $optional_info['count']);
+						$body = sprintf('%sに%sを %d 枚投稿しました。', term('timeline'), term('site.picture'), $optional_info['count']);
 					}
 				}
 				break;

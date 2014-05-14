@@ -36,7 +36,7 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.album')));
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s', term('site.latest'), term('album', 'site.list')));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related'  => 'member',
@@ -59,7 +59,7 @@ class Controller_Album extends \Controller_Site
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.album')), null, $member);
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('album', 'site.list')), null, $member);
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
 
@@ -158,7 +158,7 @@ class Controller_Album extends \Controller_Site
 				// thumbnail 作成 & tmp_file thumbnail 削除
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
-				$message = sprintf('%sをアップロードしました。', \Config::get('term.album_image'));
+				$message = sprintf('%sをアップロードしました。', term('album_image'));
 				\Session::set_flash('message', $message);
 				\Response::redirect('album/detail/'.$album->id);
 			}
@@ -175,7 +175,7 @@ class Controller_Album extends \Controller_Site
 		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/upload_footer');
 		$this->set_title_and_breadcrumbs(
-			\Config::get('term.album_image').'アップロード',
+			term('album_image', 'form.upload'),
 			array('/album/'.$id => $album->name),
 			$album->member,
 			'album'
@@ -213,7 +213,7 @@ class Controller_Album extends \Controller_Site
 		$data['disabled_to_update'] = $disabled_to_update;
 
 		$this->set_title_and_breadcrumbs(
-			sprintf('%sの%s', $album->name, \Config::get('term.album_image')),
+			sprintf('%sの%s', $album->name, term('album_image')),
 			array('/album/'.$id => $album->name),
 			$album->member,
 			'album'
@@ -262,7 +262,7 @@ class Controller_Album extends \Controller_Site
 				// thumbnail 作成 & tmp_file thumbnail 削除
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
-				$message = sprintf('%sを作成しました。', \Config::get('term.album'));
+				$message = sprintf('%sを作成しました。', term('album'));
 				\Session::set_flash('message', $message);
 				\Response::redirect('album/detail/'.$album->id);
 			}
@@ -276,7 +276,7 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を作成する', null, $this->u, 'album');
+		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('album'), term('site.do_create')), null, $this->u, 'album');
 		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/create_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
@@ -335,7 +335,7 @@ class Controller_Album extends \Controller_Site
 				}
 				\DB::commit_transaction();
 
-				\Session::set_flash('message', \Config::get('term.album').'を編集をしました。');
+				\Session::set_flash('message', term('album').'を編集をしました。');
 				\Response::redirect('album/'.$album->id);
 			}
 			catch(Exception $e)
@@ -345,7 +345,7 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('term.album').'を編集する', array('/album/'.$id => $album->name), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('album'), term('site.do_edit')), array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->content = \View::forge('_parts/form', array(
 			'val' => $val,
 			'album' => $album,
@@ -483,7 +483,7 @@ class Controller_Album extends \Controller_Site
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
-			\Session::set_flash('message', \Config::get('term.album').'を削除しました。');
+			\Session::set_flash('message', term('album').'を削除しました。');
 		}
 		catch(Exception $e)
 		{
@@ -583,7 +583,7 @@ class Controller_Album extends \Controller_Site
 		if (!$is_disabled_to_update_public_flag)
 		{
 			$options = \Site_Form::get_public_flag_options();
-			$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
+			$val->add('public_flag', term('public_flag.label'), array('options' => $options, 'type' => 'radio'))
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
 		}
@@ -600,7 +600,7 @@ class Controller_Album extends \Controller_Site
 	{
 		$val = \Validation::forge();
 		$options = \Site_Form::get_public_flag_options();
-		$val->add('public_flag', \Config::get('term.public_flag.label'), array('options' => $options, 'type' => 'radio'))
+		$val->add('public_flag', term('public_flag.label'), array('options' => $options, 'type' => 'radio'))
 			->add_rule('required')
 			->add_rule('in_array', array_keys($options));
 

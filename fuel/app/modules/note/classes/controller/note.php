@@ -34,7 +34,7 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.note')));
+		$this->set_title_and_breadcrumbs(term('site.latest', 'note', 'site.list'));
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
@@ -59,7 +59,7 @@ class Controller_Note extends \Controller_Site
 		$is_draft = $is_mypage ? \Util_string::cast_bool_int(\Input::get('is_draft', 0)) : 0;
 		$is_published = \Util_toolkit::reverse_bool($is_draft, true);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.note')), null, $member);
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('note', 'site.list')), null, $member);
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
 			'where'    => \Site_Model::get_where_params4list(
@@ -101,8 +101,8 @@ class Controller_Note extends \Controller_Site
 		$header_info = array();
 		if (!$note->is_published)
 		{
-			$title['label'] = array('name' => term('draft'));
-			$header_info = array('body' => sprintf('この%sはまだ公開されていません。',  \Config::get('term.note')));
+			$title['label'] = array('name' => term('form.draft'));
+			$header_info = array('body' => sprintf('この%sはまだ公開されていません。',  term('note')));
 		}
 		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
@@ -165,7 +165,7 @@ class Controller_Note extends \Controller_Site
 				// thumbnail 作成 & tmp_file thumbnail 削除
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'note');
 
-				$message = sprintf('%sを%sしました。', \Config::get('term.note'), $note->is_published ? '作成' : \Config::get('term.draft'));
+				$message = sprintf('%sを%sしました。', term('note'), $note->is_published ? term('form.create_simple') : term('form.draft'));
 				\Session::set_flash('message', $message);
 				\Response::redirect('note/detail/'.$note->id);
 			}
@@ -179,7 +179,7 @@ class Controller_Note extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を書く', null, $this->u, 'note');
+		$this->set_title_and_breadcrumbs(term('note').'を書く', null, $this->u, 'note');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
@@ -264,7 +264,7 @@ class Controller_Note extends \Controller_Site
 				// thumbnail 作成 & tmp_file thumbnail 削除
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'note');
 
-				\Session::set_flash('message', \Config::get('term.note').'を編集しました。');
+				\Session::set_flash('message', term('note').'を編集しました。');
 				\Response::redirect('note/detail/'.$note->id);
 			}
 			catch(\FuelException $e)
@@ -278,7 +278,7 @@ class Controller_Note extends \Controller_Site
 		}
 		$files += $file_tmps;
 
-		$this->set_title_and_breadcrumbs(\Config::get('term.note').'を編集する', array('/note/'.$id => $note->title), $note->member, 'note');
+		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('note'), term('form.do_edit')), array('/note/'.$id => $note->title), $note->member, 'note');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array(
@@ -310,7 +310,7 @@ class Controller_Note extends \Controller_Site
 			$deleted_files = $note->delete_with_relations();
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
-			\Session::set_flash('message', \Config::get('term.note').'を削除しました。');
+			\Session::set_flash('message', term('note').'を削除しました。');
 		}
 		catch(\FuelException $e)
 		{
@@ -383,7 +383,7 @@ class Controller_Note extends \Controller_Site
 				->add_rule('datetime_is_past');
 		if (empty($note->is_published))
 		{
-			$val->add('is_draft', \Config::get('term.draft'))
+			$val->add('is_draft', term('form.draft'))
 					->add_rule('valid_string', 'numeric')
 					->add_rule('in_array', array(0,1));
 		}

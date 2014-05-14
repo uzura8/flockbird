@@ -7,11 +7,11 @@
 	'with_public_flag_selector' => true,
 	'with_uploader' => true,
 	'uploader_selects' => array(
-		'label'  => Config::get('term.album').'選択',
+		'label'  => term('album', 'form.choice'),
 		'name'  => 'album_id',
 		'value' => 0,
 		'options' => array(
-			'0' => sprintf('%s用%s', Config::get('term.timeline'), Config::get('term.album')),
+			'0' => sprintf('%s用%s', term('timeline'), term('album')),
 		),
 		'atters' => array('id' => 'album_id'),
 	),
@@ -21,7 +21,7 @@
 </div>
 
 <div id="timeline_setting" class="text-right">
-	<span class="text-muted">表示設定:</span>
+	<span class="text-muted"><?php echo term('site.display', 'site.setting'); ?>:</span>
 	<?php echo render('member/_parts/timeline_viewType_selecter', array('id' => $u->id, 'timeline_viewType' => $u->timeline_viewType)); ?>
 </div>
 

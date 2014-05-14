@@ -376,7 +376,7 @@ class Controller_News extends Controller_Admin
 				->add_rule('datetime_except_second');
 		if (empty($news->is_published))
 		{
-			$val->add('is_draft', \Config::get('term.draft'))
+			$val->add('is_draft', term('form.draft'))
 					->add_rule('valid_string', 'numeric')
 					->add_rule('in_array', array(0,1));
 		}

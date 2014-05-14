@@ -21,7 +21,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 	{
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($member_id);
 		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
-		$this->set_title_and_breadcrumbs(Config::get('term.profile').'写真設定', array('/member/profile/' => Config::get('term.profile')), $member);
+		$this->set_title_and_breadcrumbs(term('profile', 'site.picture', 'site.setting'), array('/member/profile/' => term('profile')), $member);
 
 		$images = array();
 		if (Module::loaded('album') && Config::get('site.upload.types.img.types.m.save_as_album_image'))
@@ -61,7 +61,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 				true,
 				(Module::loaded('album') && Config::get('site.upload.types.img.types.m.save_as_album_image')) ? 'profile' : null
 			);
-			Session::set_flash('message', '写真を更新しました。');
+			Session::set_flash('message', term('site.picture').'を更新しました。');
 		}
 		catch(FuelException $e)
 		{
@@ -112,7 +112,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 			}
 			DB::commit_transaction();
 
-			Session::set_flash('message', Config::get('term.profile').'写真を更新しました。');
+			Session::set_flash('message', term('profile', 'site.picture').'を更新しました。');
 		}
 		catch(FuelException $e)
 		{
@@ -132,7 +132,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 			$this->u->save();
 			DB::commit_transaction();
 
-			Session::set_flash('message', '写真を削除しました。');
+			Session::set_flash('message', term('site.picture').'を削除しました。');
 		}
 		catch(Exception $e)
 		{
@@ -185,7 +185,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 			}
 			DB::commit_transaction();
 
-			Session::set_flash('message', Config::get('term.profile').'写真を削除しました。');
+			Session::set_flash('message', term('profile', 'site.picture').'を削除しました。');
 		}
 		catch(FuelException $e)
 		{
@@ -230,7 +230,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 			$album_image->delete();
 			DB::commit_transaction();
 
-			Session::set_flash('message', Config::get('term.profile').'写真を削除しました。');
+			Session::set_flash('message', term('profile', 'site.picture').'を削除しました。');
 		}
 		catch(FuelException $e)
 		{

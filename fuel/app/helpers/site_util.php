@@ -72,7 +72,7 @@ function site_header_keywords($keywords = '')
 
 function site_get_screen_name($u)
 {
-	if (!$u) return Config::get('term.guest');
+	if (!$u) return term('guest');
 
 	if (!empty($u->name)) return $u->name;
 	if (!empty($u->username)) return $u->username;
@@ -101,7 +101,7 @@ function term()
 	$return = '';
 	foreach ($keys as $key)
 	{
-		$return .= Config::get('term.'.$key, $key);
+		$return .= term(''.$key, $key);
 	}
 
 	return $return;	
@@ -109,7 +109,7 @@ function term()
 
 function symbol($key)
 {
-	return Config::get('term.symbol.'.$key);	
+	return term('symbol.'.$key);	
 }
 
 function symbol_bool($bool)

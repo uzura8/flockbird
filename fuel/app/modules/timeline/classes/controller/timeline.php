@@ -35,7 +35,7 @@ class Controller_Timeline extends \Controller_Site
 	public function action_list()
 	{
 		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0);
-		$this->set_title_and_breadcrumbs(sprintf('最新の%s一覧', \Config::get('term.timeline')));
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s', term('site.latest'), term('timeline', 'site.list')));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/list', array('list' => $list, 'is_next' => $is_next));
 	}
@@ -53,7 +53,7 @@ class Controller_Timeline extends \Controller_Site
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s一覧', $is_mypage ? '自分' : $member->name.'さん', \Config::get('term.timeline')), null, $member);
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('timeline', 'site.list')), null, $member);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/list', array('member' => $member, 'list' => $list, 'is_next' => $is_next));
 	}
@@ -86,7 +86,7 @@ class Controller_Timeline extends \Controller_Site
 		$this->check_public_flag($timeline->public_flag, $timeline->member_id);
 		$timeline_cache = Model_TimelineCache::get4timeline_id($id, true);
 
-		$this->set_title_and_breadcrumbs(\Config::get('term.timeline').'詳細', null, $timeline->member, 'timeline', null, false, true);
+		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/article', array(
 			'timeline_cache_id' => $timeline_cache->id,
@@ -123,7 +123,7 @@ class Controller_Timeline extends \Controller_Site
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
-			\Session::set_flash('message', \Config::get('term.timeline').'を削除しました。');
+			\Session::set_flash('message', term('timeline').'を削除しました。');
 			\Response::redirect('timeline/member');
 		}
 		catch(\FuelException $e)

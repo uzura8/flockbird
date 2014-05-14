@@ -45,7 +45,7 @@
 			<div class="article">
 <?php if (empty($album)): ?>
 				<div class="subinfo">
-					<small><?php echo Config::get('term.album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.articles.trim_width.subinfo'))); ?></small>
+					<small><?php echo term('album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.articles.trim_width.subinfo'))); ?></small>
 				</div>
 <?php endif; ?>
 
