@@ -123,7 +123,7 @@ END;
 			}
 			else
 			{
-				Session::set_flash('error', 'パスワードが正しくありません');
+				Session::set_flash('error', term('site.password').'が正しくありません');
 			}
 			$this->action_index();
 		}

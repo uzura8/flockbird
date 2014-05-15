@@ -1,4 +1,4 @@
-<?php echo alert(term('profile').'とパスワードを入力してください'); ?>
+<?php echo alert(sprintf('%sと%sを入力してください', term('profile'), term('site.password'))); ?>
 <div class="well">
 <?php $label_size = 3; ?>
 <?php echo form_open(); ?>

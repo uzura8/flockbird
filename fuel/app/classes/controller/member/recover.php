@@ -60,7 +60,7 @@ class Controller_Member_Recover extends Controller_Site
 		}
 		$post = $val->validated();
 
-		$message = 'パスワードのリセット方法をメールで送信しました。';
+		$message = term('site.password').'のリセット方法をメールで送信しました。';
 		if (!$member_auth = Model_MemberAuth::query()->where('email', $post['email'])->related('member')->get_one())
 		{
 			Session::set_flash('message', $message);
@@ -86,11 +86,11 @@ class Controller_Member_Recover extends Controller_Site
 		}
 		catch(EmailValidationFailedException $e)
 		{
-			$this->display_error('パスワードのリセット: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+			$this->display_error(term('site.password').'のリセット: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
 		}
 		catch(EmailSendingFailedException $e)
 		{
-			$this->display_error('パスワードのリセット: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+			$this->display_error(term('site.password').'のリセット: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
 		}
 		catch(FuelException $e)
 		{
@@ -145,7 +145,7 @@ class Controller_Member_Recover extends Controller_Site
 					$this->send_reset_password_mail($maildata);
 
 					$auth->login($member_password_pre->email, $post['password']);
-					Session::set_flash('message', 'パスワードを登録しました。');
+					Session::set_flash('message', term('site.password').'を登録しました。');
 					Response::redirect('member');
 				}
 				catch(EmailValidationFailedException $e)
@@ -161,7 +161,7 @@ class Controller_Member_Recover extends Controller_Site
 				catch(Auth\SimpleUserUpdateException $e)
 				{
 					if (DB::in_transaction())\DB::rollback_transaction();
-					Session::set_flash('error', 'パスワードの登録に失敗しました。');
+					Session::set_flash('error', term('site.password').'の登録に失敗しました。');
 				}
 			}
 			else
@@ -172,12 +172,12 @@ class Controller_Member_Recover extends Controller_Site
 				}
 				else
 				{
-					Session::set_flash('error', 'パスワードが正しくありません');
+					Session::set_flash('error', term('site.password').'が正しくありません');
 				}
 			}
 		}
 
-		$this->set_title_and_breadcrumbs('パスワードの再登録');
+		$this->set_title_and_breadcrumbs(term('site.password').'の再登録');
 		$data = array('val' => $val, 'member_password_pre' => $member_password_pre);
 		$this->template->content = View::forge('member/recover/reset_password', $data);
 		$this->template->content->set_safe('html_form', $form->build('member/recover/reset_password'));// form の action に入る
