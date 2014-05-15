@@ -282,7 +282,7 @@ class Site_Upload
 		$options = array(
 			'max_file_size'  => PRJ_UPLOAD_MAX_FILESIZE,
 			'max_number_of_files' => $is_multiple_upload ? PRJ_MAX_FILE_UPLOADS : 1,
-			'is_save_exif'   => PRJ_USE_EXIF_DATA,
+			'is_save_exif'   => conf('upload.types.img.exif.is_use'),
 			'upload_dir'     => $uploader_info['upload_dir'],
 			'upload_url'     => $uploader_info['upload_url'],
 			'upload_uri'     => $uploader_info['upload_uri'],
@@ -394,7 +394,7 @@ class Site_Upload
 
 	public static function get_accepted_max_size($member_id = null)
 	{
-		return Config::get('site.upload.accepted_max_size.default');
+		return conf('site.upload.types.img.accepted_max_size.default');
 	}
 
 	public static function get_accepted_filesize($member_id = null, $is_return_byte = true)

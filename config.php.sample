@@ -7,10 +7,10 @@
  * STAGE
  * PRODUCTION
  */
-define('PRJ_ENVIRONMENT', 'DEVELOPMENT');
+define('PRJ_ENVIRONMENT', 'PRODUCTION');
 
 // BASE_URL
-define('PRJ_DOMAIN', 'torilife.info');
+define('PRJ_DOMAIN', 'sns.example.com');
 define('PRJ_URI_PATH', '/');
 
 // DBサーバ接続設定
@@ -32,15 +32,11 @@ define('PRJ_PROFILING', false);
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
 
-// アップロードされた画像の Exif データを利用するかどうか
-define('PRJ_USE_EXIF_DATA', true);
-
-
 // サイト名
-define('PRJ_SITE_NAME', 'とりらいふ');
-define('PRJ_SITE_DESCRIPTION', '野鳥とバードウォッチングの総合情報サイト');
-define('PRJ_HEADER_DESCRIPTION_DEFAULT', 'とりらいふは、野鳥の特徴やバードウォッチングスポットの紹介など、鳥を愛するみなさま向けの情報を提供するサイトです。');
-define('PRJ_HEADER_KEYWORDS_DEFAULT', '野鳥,鳥,バードウォッチング,鳥見,とりライフ,トリライフ,鳥らいふ,鳥ライフ');
+define('PRJ_SITE_NAME', 'サンプルSNS');
+define('PRJ_SITE_DESCRIPTION', 'サンプルSNSです');
+define('PRJ_HEADER_DESCRIPTION_DEFAULT', 'サンプルSNSです。');
+define('PRJ_HEADER_KEYWORDS_DEFAULT', 'SNS,サンプル');
 
 
 // 運営者名 (お問い合わせフォームに表示)

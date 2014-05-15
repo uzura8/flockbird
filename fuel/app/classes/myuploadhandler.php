@@ -251,7 +251,7 @@ class MyUploadHandler extends UploadHandler
 		{
 			$file->size = Site_Upload::check_max_size_and_resize($file_path, $max_size);
 		}
-		if (Config::get('site.upload.remove_exif_data') && $file_size_before == $file->size)
+		if (conf('upload.types.img.exif.is_remove') && $file_size_before == $file->size)
 		{
 			Util_file::resave($file_path);
 			$file->size = File::get_size($file_path);

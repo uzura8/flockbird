@@ -57,7 +57,6 @@ $config = array(
 		),
 	),
 	'upload' => array(
-		'remove_exif_data' => true,
 		'num_of_split_dirs' => 10,
 		'check_and_make_dir_level' => 5,
 		'mkdir_mode' => 0755,
@@ -66,15 +65,19 @@ $config = array(
 				'limit' => '256M',
 			),
 		),
-		'accepted_max_size' => array(
-			'default' => '600x600',
-			),
 		'tmp_file' => array(
 			'lifetime' => 60 * 60 * 24,
 			'delete_record_limit' => 100,
 		),
 		'types' => array(
 			'img' => array(
+				'accepted_max_size' => array(
+					'default' => '600x600',
+				),
+				'exif' => array(
+					'is_use' => true,
+					'is_remove' => true,
+				),
 				'root_path' => array(
 					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img/',
 					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img/raw/',

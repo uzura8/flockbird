@@ -16,7 +16,7 @@ class Site_Uploader
 			'path_chmod'     => Config::get('site.upload.mkdir_mode'),
 			'path'           => APPPATH.'tmp',
 			'upload_dir'     => PRJ_UPLOAD_DIR.'img/raw/',
-			'is_save_exif'   => PRJ_USE_EXIF_DATA,
+			'is_save_exif'   => conf('upload.types.img.exif.is_use'),
 			'auto_orient'   => true,
 		);
 		if ($options)
@@ -59,7 +59,7 @@ class Site_Uploader
 				$this->file->size = Site_Upload::check_max_size_and_resize($this->file->file_path, $max_size);
 				$is_resaved = true;
 			}
-			if (Config::get('site.upload.remove_exif_data') && !$is_resaved)
+			if (conf('upload.types.img.exif.is_remove') && !$is_resaved)
 			{
 				Util_file::resave($this->file->file_path);
 			}
