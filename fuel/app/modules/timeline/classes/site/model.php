@@ -166,7 +166,7 @@ class Site_Model
 		{
 			$timeline->member_id = $member_id;
 			$timeline->type = $type;
-			$timeline->public_flag = is_null($public_flag) ? \Config::get('site.public_flag.default') : $public_flag;
+			$timeline->public_flag = is_null($public_flag) ? conf('public_flag.default') : $public_flag;
 			$timeline->foreign_table = $foreign_table;
 			$timeline->foreign_id = $foreign_id;
 			if (!is_null($body)) $timeline->body = $body;

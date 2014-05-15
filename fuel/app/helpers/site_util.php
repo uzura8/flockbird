@@ -137,7 +137,7 @@ function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = fa
 	if ($is_noimage)
 	{
 		$option['alt'] = $alt ?: 'No image.';
-		$noimage_filename  = Config::get('site.upload.types.img.noimage_filename');
+		$noimage_filename  = conf('upload.types.img.noimage_filename');
 		$noimage_tag = Asset::img('site/'.$noimage_filename, $option);
 		if ($file_cate)
 		{

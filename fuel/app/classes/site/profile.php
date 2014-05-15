@@ -21,10 +21,10 @@ class Site_Profile
 	public static function get_display_type_options($key = null, $is_simple = false)
 	{
 		$options = array(
-			Config::get('site.member.profile.display_type.detail')  => $is_simple ? '詳細' : '詳細画面のみ表示',// 0
-			Config::get('site.member.profile.display_type.summery') => $is_simple ? '概要' : 'summery にも表示',// 1
+			conf('member.profile.display_type.detail')  => $is_simple ? '詳細' : '詳細画面のみ表示',// 0
+			conf('member.profile.display_type.summery') => $is_simple ? '概要' : 'summery にも表示',// 1
 		);
-		$key_always = Config::get('site.member.profile.display_type.always');
+		$key_always = conf('member.profile.display_type.always');
 		if ($key_always) $options[$key_always] = $is_simple ? '常に' : '常に表示';// 2
 
 		if (!is_null($key) && isset($options[$key])) return $options[$key];

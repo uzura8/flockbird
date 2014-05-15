@@ -11,9 +11,9 @@ class Site_Uploader
 
 		$this->options = array(
 			'max_size'       => PRJ_UPLOAD_MAX_FILESIZE,
-			'ext_whitelist'  => array_keys(Config::get('site.upload.types.img.accept_format')),
+			'ext_whitelist'  => array_keys(conf('upload.types.img.accept_format')),
 			'type_whitelist' => array('image'),
-			'path_chmod'     => Config::get('site.upload.mkdir_mode'),
+			'path_chmod'     => conf('upload.mkdir_mode'),
 			'path'           => APPPATH.'tmp',
 			'upload_dir'     => PRJ_UPLOAD_DIR.'img/raw/',
 			'is_save_exif'   => conf('upload.types.img.exif.is_use'),
@@ -31,7 +31,7 @@ class Site_Uploader
 		{
 			if (!$tmp_file_path) $tmp_file_path = $this->upload_file();
 			$this->set_file_properties($tmp_file_path);
-			if (!Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], Config::get('site.upload.check_and_make_dir_level'), $this->options['path_chmod']))
+			if (!Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], conf('upload.check_and_make_dir_level'), $this->options['path_chmod']))
 			{
 				throw new FuelException('ディレクトリの作成に失敗しました。');
 			}

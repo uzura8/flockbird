@@ -12,7 +12,7 @@ $parts_attrs     = empty($parts_attrs) ? $parts_attrs_def : array_merge($parts_a
 $size = empty($size) ? 'S' : strtoupper($size);
 if (IS_SP) $size = Site_Util::convert_img_size_down($size) ?: $size;
 $class_name = 'member_img_box_'.strtolower($size);
-$img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
+$img_size   = conf('upload.types.img.types.m.sizes.'.$size);
 ?>
 <div<?php if (!empty($parts_attrs['class'])): ?> class="<?php echo $parts_attrs['class']; ?>"<?php endif; ?><?php if (!empty($parts_attrs['id'])): ?> id="<?php echo $parts_attrs['id']; ?>"<?php endif; ?>>
 	<div class="<?php echo $class_name; ?>">
@@ -34,7 +34,7 @@ $img_size   = Config::get('site.upload.types.img.types.m.sizes.'.$size);
 					<?php echo btn('form.submit', '#', 'btn_comment', true, null, null, $button_attrs, null, null, 'btn_comment'); ?>
 <?php if (!empty($with_public_flag_selector)): ?>
 <?php
-if (!isset($public_flag)) $public_flag = Config::get('site.public_flag.default');
+if (!isset($public_flag)) $public_flag = conf('public_flag.default');
 $data = array(
 	'id' => $u->id,
 	'is_use_in_form' => true,

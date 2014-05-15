@@ -6,7 +6,7 @@ class Site_Member
 	{
 		if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $member->file_id);
 
-		if (Module::loaded('album') && Config::get('site.upload.types.img.types.m.save_as_album_image'))
+		if (Module::loaded('album') && conf('upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
 			list($album_image, $file) = \Album\Model_AlbumImage::save_with_file($album_id, $member, PRJ_PUBLIC_FLAG_ALL, $file_path);

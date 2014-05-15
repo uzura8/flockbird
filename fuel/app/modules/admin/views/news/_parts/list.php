@@ -11,7 +11,7 @@
 <?php endif; ?>
 		</h4>
 		<p class="list-group-item-text">
-			<?php echo truncate_lines($news->body, Config::get('site.view_params_default.list.truncate_lines.body'), 'news/'.$id); ?>
+			<?php echo truncate_lines($news->body, conf('view_params_default.list.truncate_lines.body'), 'news/'.$id); ?>
 		</p>
 	</a>
 <?php endforeach; ?>

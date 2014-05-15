@@ -8,7 +8,7 @@ class Controller_Media extends Controller
 	{
 		parent::before();
 
-		static::$exts['image'] = Config::get('site.upload.types.img.accept_format');
+		static::$exts['image'] = conf('upload.types.img.accept_format');
 	}
 
 	public function action_img($size = null, $file_cate = null, $split_num = null, $filename = null)

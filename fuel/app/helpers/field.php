@@ -7,7 +7,7 @@ function field_public_flag($value = null, $type = 'select', $atter = array(), $n
 		throw new InvalidArgumentException('Second parameter is invalid.');
 	}
 
-	if (is_null($value)) $value = Config::get('site.public_flag.default');
+	if (is_null($value)) $value = conf('public_flag.default');
 	$options = Site_Form::get_public_flag_options();
 
 	$data = array(

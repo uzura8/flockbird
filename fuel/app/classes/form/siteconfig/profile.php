@@ -82,8 +82,8 @@ class Form_SiteConfig_Profile extends Form_SiteConfig
 				->add_rule('in_array', array_keys($options_is_edit_public_flag));
 
 		$name = self::get_name($name_prefix, 'default');
-		$atters = \Site_Form::get_public_flag_configs();
-		$atters['value'] = self::get_values($name, \Config::get('site.public_flag.default'));
+		$atters = Site_Form::get_public_flag_configs();
+		$atters['value'] = self::get_values($name, conf('public_flag.default'));
 		$val->add($name, '公開設定デフォルト値', $atters)
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', \Site_Util::get_public_flags());

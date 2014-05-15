@@ -64,7 +64,7 @@ class Controller_Member_Recover extends Controller_Site
 		if (!$member_auth = Model_MemberAuth::query()->where('email', $post['email'])->related('member')->get_one())
 		{
 			Session::set_flash('message', $message);
-			Response::redirect(Config::get('site.login_uri.site'));
+			Response::redirect(conf('login_uri.site'));
 			return;
 		}
 
@@ -82,7 +82,7 @@ class Controller_Member_Recover extends Controller_Site
 			$this->send_confirm_reset_password_mail($maildata);
 
 			Session::set_flash('message', $message);
-			Response::redirect(Config::get('site.login_uri.site'));
+			Response::redirect(conf('login_uri.site'));
 		}
 		catch(EmailValidationFailedException $e)
 		{

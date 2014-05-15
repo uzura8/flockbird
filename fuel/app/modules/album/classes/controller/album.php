@@ -546,8 +546,8 @@ class Controller_Album extends \Controller_Site
 		{
 			$config = array(
 				'base_path' => sprintf('img/m/%d', \Site_Upload::get_middle_dir($this->u->id)),
-				'sizes'     => \Config::get('site.upload.types.img.types.ai.sizes'),
-				'max_size'  => \Config::get('site.upload.types.img.ai.max_size', \Config::get('site.upload.types.img.defaults.max_size')),
+				'sizes'     => conf('upload.types.img.types.ai.sizes'),
+				'max_size'  => conf('upload.types.img.ai.max_size', conf('upload.types.img.defaults.max_size')),
 				'max_file_size' => PRJ_UPLOAD_MAX_FILESIZE,
 			);
 			if ($this->u->get_image()) $config['old_filename'] = $this->u->get_image();

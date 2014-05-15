@@ -98,7 +98,7 @@ END;
 				$auth->logout();
 				Util_toolkit::sendmail($data);
 				Session::set_flash('message', term('site.left').'が完了しました。');
-				Response::redirect(Config::get('site.login_uri.site'));
+				Response::redirect(conf('login_uri.site'));
 			}
 			catch(EmailValidationFailedException $e)
 			{

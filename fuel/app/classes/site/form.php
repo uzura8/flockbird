@@ -21,7 +21,7 @@ class Site_Form
 			'type'    => $is_select ? 'select' : 'radio',
 			'label'   => term('public_flag.label'),
 			'options' => self::get_public_flag_options(),
-			'value'   => Config::get('site.public_flag.default'),
+			'value'   => conf('public_flag.default'),
 		);
 	}
 }

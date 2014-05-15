@@ -83,7 +83,7 @@ class Site_Util
 
 	public static function get_foreign_table_info($table_name)
 	{
-		$info = array('public_flag' => \Config::get('site.public_flag.default'));
+		$info = array('public_flag' => conf('public_flag.default'));
 		switch ($table_name)
 		{
 			case 'note':

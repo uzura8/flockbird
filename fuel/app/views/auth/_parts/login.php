@@ -2,7 +2,7 @@
 
 <?php if (!IS_API): ?><div class="well"><?php endif; ?>
 <?php
-$form_attributes = array('action' => Config::get('site.login_uri.site'));
+$form_attributes = array('action' => conf('login_uri.site'));
 if (IS_API) $form_attributes['class'] = '';
 $col_sm_size = IS_API ? 12 : 7;
 $label_col_sm_size = IS_API ? 12 : 3;
@@ -16,7 +16,7 @@ $label_col_sm_size = IS_API ? 12 : 3;
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
 	<?php echo form_anchor(
-		Config::get('site.login_uri.site').'/facebook',
+		conf('login_uri.site').'/facebook',
 		icon_label('Facebookで'.term('site.login'), 'both', false, 'facebook', 'ls-icon-'),
 		array('class' => 'btn btn-default'),
 		IS_API ? 0 : 3
@@ -24,7 +24,7 @@ $label_col_sm_size = IS_API ? 12 : 3;
 <?php endif; ?>
 <?php if (PRJ_TWITTER_APP_ID): ?>
 	<?php echo form_anchor(
-		Config::get('site.login_uri.site').'/twitter',
+		conf('login_uri.site').'/twitter',
 		'<i class="ls-icon-twitter"></i> Twitterでログイン',
 		array('class' => 'btn btn-default'),
 		IS_API ? 0 : 3
@@ -32,7 +32,7 @@ $label_col_sm_size = IS_API ? 12 : 3;
 <?php endif; ?>
 <?php if (PRJ_GOOGLE_APP_ID): ?>
 	<?php echo form_anchor(
-		Config::get('site.login_uri.site').'/google',
+		conf('login_uri.site').'/google',
 		'<i class="ls-icon-google"></i> Googleでログイン',
 		array('class' => 'btn btn-default'),
 		IS_API ? 0 : 3

@@ -51,7 +51,7 @@ class Test_Model_File extends TestCase
 
 	private function get_file_path($filepath, $name)
 	{
-		$raw_dir_path = Config::get('site.upload.types.img.raw_file_path');
+		$raw_dir_path = conf('upload.types.img.raw_file_path');
 
 		return $raw_dir_path.$filepath.$name;
 	}

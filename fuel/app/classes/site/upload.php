@@ -6,7 +6,7 @@ class Site_Upload
 	{
 		if (!strlen($id)) return 'all';
 
-		$num_of_digits = strlen(Config::get('site.upload.num_of_split_dirs') - 1);
+		$num_of_digits = strlen(conf('upload.num_of_split_dirs') - 1);
 		if ($num_of_digits < 1) return 'all';
 
 		$cut_num = ($num_of_digits) * -1;
@@ -22,7 +22,7 @@ class Site_Upload
 
 	public static function get_accept_format($type = 'img')
 	{
-		return array_keys(Config::get('site.upload.types.'.$type.'.accept_format'));
+		return array_keys(conf('upload.types.'.$type.'.accept_format'));
 	}
 
 	public static function split_file_object2vars($file)
@@ -57,7 +57,7 @@ class Site_Upload
 
 	public static function get_filepath_format()
 	{
-		$ids = array_keys(Config::get('site.upload.types.img.types'));
+		$ids = array_keys(conf('upload.types.img.types'));
 		return '#('.implode('|', $ids).')/[0-9]+#i';
 	}
 
@@ -178,11 +178,11 @@ class Site_Upload
 	{
 		if ($size == 'row')
 		{
-			$uri_path = Config::get('site.upload.types.'.$file_type.'.root_path.raw_dir');
+			$uri_path = conf('upload.types.'.$file_type.'.root_path.raw_dir');
 		}
 		else
 		{
-			$uri_path = Config::get('site.upload.types.'.$file_type.'.root_path.cache_dir').$size.'/';
+			$uri_path = conf('upload.types.'.$file_type.'.root_path.cache_dir').$size.'/';
 		}
 		if ($filepath) $uri_path .= $filepath;
 		if ($filepath && $filename) $uri_path .= $filename;
@@ -225,8 +225,8 @@ class Site_Upload
 
 	public static function check_and_make_uploaded_dir($dir, $check_dir_level = null, $mode = null)
 	{
-		if (!$check_dir_level) $check_dir_level = Config::get('site.upload.check_and_make_dir_level');
-		if (!$mode) $mode = Config::get('site.upload.mkdir_mode');
+		if (!$check_dir_level) $check_dir_level = conf('upload.check_and_make_dir_level');
+		if (!$mode) $mode = conf('upload.mkdir_mode');
 		if ($target_path = Util_file::check_exists_file_path($dir, $check_dir_level))
 		{
 			if (false === Util_file::make_dir_recursive($dir, $mode)) return false;
@@ -242,15 +242,15 @@ class Site_Upload
 		$thumbnail_sizes = array();
 		if ($is_tmp)
 		{
-			if ($with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(Config::get('site.upload.types.img.tmp.sizes.thumbnail'));
-			$upload_dir = Config::get('site.upload.types.img.tmp.raw_file_path').$filepath;
-			$upload_uri = Config::get('site.upload.types.img.tmp.root_path.raw_dir').$filepath;
+			if ($with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.tmp.sizes.thumbnail'));
+			$upload_dir = conf('upload.types.img.tmp.raw_file_path').$filepath;
+			$upload_uri = conf('upload.types.img.tmp.root_path.raw_dir').$filepath;
 		}
 		else
 		{
-			if ($with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(Config::get('site.upload.types.img.types.'.$file_cate.'.sizes.thumbnail'));
-			$upload_dir      = Config::get('site.upload.types.img.raw_file_path').$filepath;
-			$upload_uri      = Config::get('site.upload.types.img.root_path.raw_dir').$filepath;
+			if ($with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.types.'.$file_cate.'.sizes.thumbnail'));
+			$upload_dir      = conf('upload.types.img.raw_file_path').$filepath;
+			$upload_uri      = conf('upload.types.img.root_path.raw_dir').$filepath;
 		}
 		$upload_url = Uri::create($upload_uri);
 
@@ -286,7 +286,7 @@ class Site_Upload
 			'upload_dir'     => $uploader_info['upload_dir'],
 			'upload_url'     => $uploader_info['upload_url'],
 			'upload_uri'     => $uploader_info['upload_uri'],
-			'mkdir_mode'     => Config::get('site.upload.mkdir_mode'),
+			'mkdir_mode'     => conf('upload.mkdir_mode'),
 			'member_id'      => $member_id,
 			'user_type'      => $is_admin ? 1 : 0,
 			'filepath'       => $uploader_info['filepath'],
@@ -349,7 +349,7 @@ class Site_Upload
 		{
 			$sizes += Config::get(sprintf('site.upload.types.img.types.%s.additional_sizes.%s', $file_cate, $additional_sizes_key), array());
 		}
-		$cache_dir_path = PRJ_PUBLIC_DIR.Config::get('site.upload.types.img.root_path.cache_dir');
+		$cache_dir_path = PRJ_PUBLIC_DIR.conf('upload.types.img.root_path.cache_dir');
 
 		$result = true;
 		foreach ($sizes as $size)
@@ -399,7 +399,7 @@ class Site_Upload
 
 	public static function get_accepted_filesize($member_id = null, $is_return_byte = true)
 	{
-		$value = Config::get('site.upload.accepted_filesize.small.limit');
+		$value = conf('upload.accepted_filesize.small.limit');
 		if ($is_return_byte) $value = Num::bytes($value);
 
 		return $value;
@@ -407,10 +407,10 @@ class Site_Upload
 
 	public static function get_sizes_all4file_cate($file_cate, $is_tmp = false)
 	{
-		if ($is_tmp) return Config::get('site.upload.types.img.tmp.sizes', array());
+		if ($is_tmp) return conf('upload.types.img.tmp.sizes', array());
 
-		$sizes = Config::get('site.upload.types.img.types.'.$file_cate.'.sizes', array());
-		$additional_sizes_list = Config::get('site.upload.types.img.types.'.$file_cate.'.additional_sizes', array());
+		$sizes = conf('upload.types.img.types.'.$file_cate.'.sizes', array());
+		$additional_sizes_list = conf('upload.types.img.types.'.$file_cate.'.additional_sizes', array());
 		foreach ($additional_sizes_list as $key => $additional_sizes)
 		{
 			$sizes += $additional_sizes;

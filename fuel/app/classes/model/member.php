@@ -120,7 +120,7 @@ class Model_Member extends \Orm\Model
 		static::$_properties['sex_public_flag']['validation']['in_array'][] = $options_public_flag;
 
 		static::$_properties['birthyear']['label'] = term('member.birthyear');
-		$options = Form_Util::get_year_options(Config::get('site.member.profile.birthday.year_from'), Config::get('site.member.profile.birthday.year_to'));
+		$options = Form_Util::get_year_options(conf('member.profile.birthday.year_from'), conf('member.profile.birthday.year_to'));
 		static::$_properties['birthyear']['form']['options'] = $options;
 		static::$_properties['birthyear']['validation']['in_array'][] = array_keys($options);
 

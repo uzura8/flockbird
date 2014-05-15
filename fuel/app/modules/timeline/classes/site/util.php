@@ -135,7 +135,7 @@ class Site_Util
 
 		$title = array(
 			'value' => '',
-			'truncate_count' => \Config::get('site.view_params_default.list.trim_width.title')
+			'truncate_count' => conf('view_params_default.list.trim_width.title')
 		);
 		$body = array(
 			'value' => $foreign_table_obj->body,

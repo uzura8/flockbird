@@ -56,7 +56,7 @@ class Site_image
 
 	private function check_file_cate()
 	{
-		if (!$is_correct = in_array($this->file_cate, array_keys(Config::get('site.upload.types.img.types'))))
+		if (!$is_correct = in_array($this->file_cate, array_keys(conf('upload.types.img.types'))))
 		{
 			$this->file_cate = null;
 		}
@@ -76,7 +76,7 @@ class Site_image
 
 	private function check_file()
 	{
-		if ($this->filename == Config::get('site.upload.types.img.noimage_filename'))   return false;
+		if ($this->filename == conf('upload.types.img.noimage_filename'))   return false;
 		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename)) return false;
 		if (!$this->check_filename()) return false;
 
@@ -96,7 +96,7 @@ class Site_image
 
 	private function check_size()
 	{
-		$default_size = Config::get('site.upload.types.img.defaults.default_size');
+		$default_size = conf('upload.types.img.defaults.default_size');
 		if (!$this->size)
 		{
 			$this->size = $default_size;
@@ -137,7 +137,7 @@ class Site_image
 
 	private function get_noimage_file_path()
 	{
-		$original_noimage_filename  = Config::get('site.upload.types.img.noimage_filename');
+		$original_noimage_filename  = conf('upload.types.img.noimage_filename');
 		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
 		if (!$this->file_cate) return $original_noimage_file_path;
 		if ($this->size == 'raw') return $original_noimage_file_path;

@@ -248,7 +248,7 @@ class Site_Util
 	public static function convert_img_size_down($size, $type = 'm')
 	{
 		$size  = strtoupper($size);
-		$sizes = Config::get('site.upload.types.img.types.'.$type.'.sizes');
+		$sizes = conf('upload.types.img.types.'.$type.'.sizes');
 		if (!array_key_exists($size, $sizes)) return false;
 
 		return Arr::previous_by_key($sizes, $size);
@@ -256,7 +256,7 @@ class Site_Util
 
 	public static function get_next_sort_order_num($num, $min_interval = null)
 	{
-		if (is_null($min_interval)) $min_interval = Config::get('site.sort_order.interval');
+		if (is_null($min_interval)) $min_interval = conf('sort_order.interval');
 		$num += $min_interval;
 		$ext_num = $num % 10;
 		if (!$ext_num) return $num;

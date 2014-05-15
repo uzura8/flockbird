@@ -127,7 +127,7 @@ class Controller_Profile_Option_Api extends Controller_Admin
 				throw new \HttpInvalidInputException('Invalid input data.');
 			}
 			$sort_order = 0;
-			$sort_order_interval = \Config::get('site.sort_order.interval');
+			$sort_order_interval = conf('sort_order.interval');
 			\DB::start_transaction();
 			foreach ($profile_option_ids as $profile_option_id)
 			{

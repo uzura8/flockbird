@@ -33,8 +33,8 @@ class MyUploadHandler extends UploadHandler
 		if (in_array($table, $need_member_id_tables) && !$this->options['member_id']) throw new \FuelException('Need member_id.');
 
 		$file_cate = Site_Upload::get_file_cate_from_table($table);
-		$cache_size    = Config::get('site.upload.types.img.types.'.$file_cate.'.sizes.thumbnail');
-		$cache_dir_uri = Config::get('site.upload.types.img.root_path.cache_dir');
+		$cache_size    = conf('upload.types.img.types.'.$file_cate.'.sizes.thumbnail');
+		$cache_dir_uri = conf('upload.types.img.root_path.cache_dir');
 
 		foreach ($model_objs as $model_obj)
 		{
@@ -177,7 +177,7 @@ class MyUploadHandler extends UploadHandler
 			$file->error = 'ファイル名の作成に失敗しました。';
 			return $file;
 		}
-		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], Config::get('site.upload.check_and_make_dir_level'), $this->options['mkdir_mode']))
+		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], conf('upload.check_and_make_dir_level'), $this->options['mkdir_mode']))
 		{
 			$file->error = 'ディレクトリの作成に失敗しました。';
 			return $file;

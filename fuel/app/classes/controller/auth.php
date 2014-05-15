@@ -245,7 +245,7 @@ class Controller_Auth extends Controller_Site
 	{
 		$image_url = $this->get_profile_image_url($provider, $image_url);
 		$save_file_path_tmp = sprintf('%stmp/%s_%s_%s', APPPATH, $member_obj->id, Util_string::get_unique_id(), time());
-		Site_Upload::save_image_from_url($image_url, $save_file_path_tmp, Config::get('site.upload.types.img.types.m.max_size', 0));
+		Site_Upload::save_image_from_url($image_url, $save_file_path_tmp, conf('upload.types.img.types.m.max_size', 0));
 		\DB::start_transaction();
 		Site_Member::save_profile_image($member_obj, $save_file_path_tmp, false);
 		\DB::commit_transaction();

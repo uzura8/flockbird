@@ -82,7 +82,7 @@ class Controller_Member_Register extends Controller_Site
 					Response::redirect('member');
 				}
 				Session::set_flash('error', 'ログインに失敗しました');
-				Response::redirect(Config::get('site.login_uri.site'));
+				Response::redirect(conf('login_uri.site'));
 			}
 			catch(EmailValidationFailedException $e)
 			{
@@ -159,7 +159,7 @@ class Controller_Member_Register extends Controller_Site
 		{
 			$post = $val->validated();
 
-			$redirect_uri = Config::get('site.login_uri.site');
+			$redirect_uri = conf('login_uri.site');
 			$message = '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。';
 			try
 			{

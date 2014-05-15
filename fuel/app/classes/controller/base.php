@@ -91,9 +91,9 @@ class Controller_Base extends Controller_Hybrid
 
 	protected function get_login_page_uri()
 	{
-		if (IS_ADMIN) return Config::get('site.login_uri.admin');
+		if (IS_ADMIN) return conf('login_uri.admin');
 
-		return Config::get('site.login_uri.site');
+		return conf('login_uri.site');
 	}
 
 	protected function force_response($body = null, $status = 200)

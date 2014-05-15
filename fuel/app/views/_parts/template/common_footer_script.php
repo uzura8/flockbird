@@ -22,9 +22,9 @@ function get_term(key) {
 }
 function get_config(key) {
 	var config = {};
-	config['default_list_comment_limit_max'] = <?php echo Config::get('site.view_params_default.list.comment.limit_max'); ?>;
-	config['default_detail_comment_limit_max'] = <?php echo Config::get('site.view_params_default.detail.comment.limit_max'); ?>;
-	config['site_public_flag_default'] = <?php echo Config::get('site.public_flag.default'); ?>;
+	config['default_list_comment_limit_max'] = <?php echo conf('view_params_default.list.comment.limit_max'); ?>;
+	config['default_detail_comment_limit_max'] = <?php echo conf('view_params_default.detail.comment.limit_max'); ?>;
+	config['site_public_flag_default'] = <?php echo conf('public_flag.default'); ?>;
 <?php if (Module::loaded('timeline')): ?>
 	config['timeline_list_limit'] = <?php echo Config::get('timeline.articles.limit'); ?>;
 	config['timeline_list_comment_limit_max'] = <?php echo Config::get('timeline.articles.comment.limit_max'); ?>;

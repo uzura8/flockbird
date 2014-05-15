@@ -27,8 +27,8 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		$after_id  = (int)\Input::get('after_id', 0);
 		$class_id  = (int)\Input::get('class_id', 0);
 		$is_desc   = (bool)\Input::get('is_desc', false);
-		$limit     = (int)\Input::get('limit', \Config::get('site.view_params_default.list.comment.limit'));
-		if (\Input::get('limit') == 'all') $limit = \Config::get('site.view_params_default.list.comment.max_limit', 50);
+		$limit     = (int)\Input::get('limit', conf('view_params_default.list.comment.limit'));
+		if (\Input::get('limit') == 'all') $limit = conf('view_params_default.list.comment.max_limit', 50);
 
 		$response = '';
 		try

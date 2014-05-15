@@ -39,7 +39,7 @@ class Controller_Api extends \Controller_Site_Api
 					$is_mypage,
 					array(array('is_published', $is_published))
 				),
-				'limit'    => \Config::get('site.view_params_default.list.limit'),
+				'limit'    => conf('view_params_default.list.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			), 'Note');
 			$data['is_draft'] = $is_draft;

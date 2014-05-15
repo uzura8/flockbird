@@ -24,7 +24,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 		$this->set_title_and_breadcrumbs(term('profile', 'site.picture', 'site.setting'), array('/member/profile/' => term('profile')), $member);
 
 		$images = array();
-		if (Module::loaded('album') && Config::get('site.upload.types.img.types.m.save_as_album_image'))
+		if (Module::loaded('album') && conf('upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
 			$images = \Album\Model_AlbumImage::query()->related('album')->related('file')->where('album_id', $album_id)->order_by('id', 'desc')->get();
@@ -59,7 +59,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 				$file->file_path,
 				$file->filepath,
 				true,
-				(Module::loaded('album') && Config::get('site.upload.types.img.types.m.save_as_album_image')) ? 'profile' : null
+				(Module::loaded('album') && conf('upload.types.img.types.m.save_as_album_image')) ? 'profile' : null
 			);
 			Session::set_flash('message', term('site.picture').'を更新しました。');
 		}
@@ -84,7 +84,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 
 		try
 		{
-			if (!Module::loaded('album') || !Config::get('site.upload.types.img.types.m.save_as_album_image'))
+			if (!Module::loaded('album') || !conf('upload.types.img.types.m.save_as_album_image'))
 			{
 				throw new \HttpNotFoundException;
 			}
@@ -207,7 +207,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 		try
 		{
 			Util_security::check_csrf();
-			if (!Module::loaded('album') || !Config::get('site.upload.types.img.types.m.save_as_album_image'))
+			if (!Module::loaded('album') || !conf('upload.types.img.types.m.save_as_album_image'))
 			{
 				throw new HttpNotFoundException;
 			}

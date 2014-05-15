@@ -39,7 +39,7 @@ class Site_FileTmp
 				$file_tmps[$key]->description = trim($file_tmps_description_posted[$file_tmp->id]);
 			}
 
-			if (!file_exists(Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name))
+			if (!file_exists(conf('upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name))
 			{
 				if ($is_throw_exception_not_exists_file) throw new HttpInvalidInputException('File not exists.');
 				if ($is_delete_record_not_exists_file) $file_tmp->delete();
@@ -70,16 +70,16 @@ class Site_FileTmp
 		$file_cate = Site_Upload::get_file_cate_from_table($related_table);
 		if (!$file_cate) throw new \InvalidArgumentException('Parameter $related_table is invalid.');
 		$new_filepath = Site_Upload::get_filepath($file_cate, $parent_id);
-		$new_file_dir  = Config::get('site.upload.types.img.raw_file_path').$new_filepath;
-		if (!Site_Upload::check_and_make_uploaded_dir($new_file_dir, Config::get('site.upload.check_and_make_dir_level'), Config::get('site.upload.mkdir_mode')))
+		$new_file_dir  = conf('upload.types.img.raw_file_path').$new_filepath;
+		if (!Site_Upload::check_and_make_uploaded_dir($new_file_dir, conf('upload.check_and_make_dir_level'), conf('upload.mkdir_mode')))
 		{
 			throw newFuelException('Failed to make save dirs.');
 		}
 
 		foreach ($file_tmps as $id => $file_tmp)
 		{
-			$old_file_path = Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
-			$thumbnail_file_path = Config::get('site.upload.types.img.tmp.raw_file_path').$file_tmp->path.'thumbnail/'.$file_tmp->name;
+			$old_file_path = conf('upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
+			$thumbnail_file_path = conf('upload.types.img.tmp.raw_file_path').$file_tmp->path.'thumbnail/'.$file_tmp->name;
 			$new_file_path = $new_file_dir.$file_tmp->name;
 			Util_file::move($old_file_path, $new_file_path);
 			$moved_files[$file_tmp->id] = array(

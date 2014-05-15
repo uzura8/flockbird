@@ -29,8 +29,8 @@ class FileTmp
 	 */
 	public static function clean($lifetime = null)
 	{
-		if (is_null($lifetime)) $lifetime = \Config::get('site.upload.tmp_file.lifetime');
-		$limit = \Config::get('site.upload.tmp_file.delete_record_limit');
+		if (is_null($lifetime)) $lifetime = conf('upload.tmp_file.lifetime');
+		$limit = conf('upload.tmp_file.delete_record_limit');
 		$file_tmps = \Model_FileTmp::query()
 			->where('created_at', '<', date('Y-m-d H:i:s', time() - $lifetime))
 			->order_by('id', 'asc')

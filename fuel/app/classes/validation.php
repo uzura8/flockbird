@@ -151,10 +151,10 @@ class Validation extends Fuel\Core\Validation
 
 		if (!$time = strtotime($val)) return false;
 
-		$min_time = (empty($time_range['min'])) ? Config::get('site.posted_value_rule_default.time.default.min', strtotime('- 120 years')) : strtotime($time_range['min']);
+		$min_time = (empty($time_range['min'])) ? conf('posted_value_rule_default.time.default.min', strtotime('- 120 years')) : strtotime($time_range['min']);
 		if ($time < $min_time) return false;
 
-		$max_time = (empty($time_range['max'])) ? Config::get('site.posted_value_rule_default.time.default.max', strtotime('+ 50 years')) : strtotime($time_range['max']);
+		$max_time = (empty($time_range['max'])) ? conf('posted_value_rule_default.time.default.max', strtotime('+ 50 years')) : strtotime($time_range['max']);
 		if ($time > $max_time) return false;
 
 		return true;
@@ -164,14 +164,14 @@ class Validation extends Fuel\Core\Validation
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
-		return Util_Date::check_is_past($val, $base, $min ?: Config::get('site.posted_value_rule_default.time.default.min'));
+		return Util_Date::check_is_past($val, $base, $min ?: conf('posted_value_rule_default.time.default.min'));
 	}
 
 	public function _validation_datetime_is_future($val, $base = '', $max = '', $is_return_time = false)
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
-		return Util_Date::check_is_futer($val, $base, $max ?: Config::get('site.posted_value_rule_default.time.default.max'));
+		return Util_Date::check_is_futer($val, $base, $max ?: conf('posted_value_rule_default.time.default.max'));
 	}
 
 	public static function _validation_unique($val, $options, array $additional_conds_list = array())

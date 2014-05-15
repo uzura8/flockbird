@@ -195,7 +195,7 @@ class Model_AlbumImage extends \Orm\Model
 		$self = new self;
 		$self->album_id    = $album_id;
 		$self->file_id     = $file->id;
-		$self->public_flag = is_null($public_flag) ? \Config::get('site.public_flag.default') : $public_flag;
+		$self->public_flag = is_null($public_flag) ? conf('public_flag.default') : $public_flag;
 		$self->shot_at     = $file->shot_at;
 		//$self->name = $name ?: $file->original_filename;
 		$self->save();
