@@ -96,12 +96,13 @@ function conf($item, $file = null, $default = null, $replace_delimitter = null)
 function term()
 {
 	$keys = func_get_args();
+
 	if (count($keys) === 1 && is_array($keys[0])) $keys = $keys[0];
 
 	$return = '';
 	foreach ($keys as $key)
 	{
-		$return .= term(''.$key, $key);
+		$return .= Config::get('term.'.$key, $key);
 	}
 
 	return $return;	
