@@ -6,7 +6,7 @@
  * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2013 Fuel Development Team
+ * @copyright  2010 - 2014 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -40,6 +40,10 @@ define('COREPATH', realpath(__DIR__.'/../fuel/core/').DIRECTORY_SEPARATOR);
 defined('FUEL_START_TIME') or define('FUEL_START_TIME', microtime(true));
 defined('FUEL_START_MEM') or define('FUEL_START_MEM', memory_get_usage());
 
+// Load in the Fuel autoloader
+require COREPATH.'classes'.DIRECTORY_SEPARATOR.'autoloader.php';
+class_alias('Fuel\\Core\\Autoloader', 'Autoloader');
+
 // Boot the app
 require APPPATH.'bootstrap.php';
 
@@ -72,6 +76,9 @@ catch (HttpNotFoundException $e)
 		throw $e;
 	}
 }
+
+// Render the output
+$response->body((string) $response);
 
 // This will add the execution time and memory usage to the output.
 // Comment this out if you don't use it.
