@@ -85,7 +85,7 @@ function auth_check()
 	return defined('IS_AUTH') && IS_AUTH;
 }
 
-function conf($item, $file = null, $default = null, $replace_delimitter = null)
+function conf($item, $default = null, $file = 'site', $replace_delimitter = null)
 {
 	if (!$file) $file = 'site';
 	if ($replace_delimitter) $item = str_replace($replace_delimitter, '.', $item);

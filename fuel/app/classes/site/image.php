@@ -76,7 +76,7 @@ class Site_image
 
 	private function check_file()
 	{
-		if ($this->filename == conf('upload.types.img.noimage_filename'))   return false;
+		if ($this->filename == conf('upload.types.img.noimage_filename')) return false;
 		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename)) return false;
 		if (!$this->check_filename()) return false;
 
