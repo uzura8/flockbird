@@ -9,8 +9,7 @@
 	url = git://github.com/fuel/orm.git
 [submodule "fuel/packages/auth"]
 	path = fuel/packages/auth
-#	url = git://github.com/fuel/auth.git
-	url = git@github.com:torilife/auth.git
+	url = git://github.com/fuel/auth.git
 [submodule "fuel/packages/oil"]
 	path = fuel/packages/oil
 	url = git://github.com/fuel/oil.git
@@ -24,6 +23,3 @@
 	path = fuel/packages/opauth
 	url = git@github.com:uzura8/fuel-opauth.git
 	#url = https://github.com/letsspeak/fuel-opauth.git
-[submodule "fuel/app/modules/bird"]
-	path = fuel/app/modules/bird
-	url = git@github.com:torilife/fuel_module_bird.git
