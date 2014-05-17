@@ -229,22 +229,6 @@ class Site_Util
 		return false;
 	}
 
-	public static function get_uri_last_real_segment($check_string = '', $extends = array())
-	{
-		$last_real_segment = Util_string::get_exploded_last(Uri::string(), '/');
-		if ($check_string)
-		{
-			$ext_pattern = '[^\.]+';
-			if ($extends)
-			{
-				$ext_pattern = implode('|', $extends);
-			}
-			if (!preg_match('/^'.$check_string.'\.('.$ext_pattern.')$/', $last_real_segment)) return false;
-		}
-
-		return $last_real_segment;
-	}
-
 	public static function convert_img_size_down($size, $type = 'm')
 	{
 		$size  = strtoupper($size);
