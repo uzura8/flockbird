@@ -394,7 +394,7 @@ class Site_Upload
 
 	public static function get_accepted_max_size($member_id = null)
 	{
-		return conf('site.upload.types.img.accepted_max_size.default');
+		return conf('upload.types.img.accepted_max_size.default');
 	}
 
 	public static function get_accepted_filesize($member_id = null, $is_return_byte = true)

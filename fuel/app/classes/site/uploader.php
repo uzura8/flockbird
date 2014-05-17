@@ -71,6 +71,7 @@ class Site_Uploader
 			if (isset($this->file->file_path) && file_exists($this->file->file_path))
 			{
 				Util_file::remove($this->file->file_path);
+				$this->file->size = filesize($this->file->file_path);
 			}
 			$this->file->error = $e->getMessage();
 		}
