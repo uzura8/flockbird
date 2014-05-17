@@ -22,23 +22,24 @@ class Controller_Image_api extends \Controller_Site_Api
 	 * @access  public
 	 * @return  Response (html)
 	 */
-	public function get_list()
+	public function get_list($album_id = null)
 	{
-		if (!in_array($this->format, array('html', 'json'))) throw new \HttpNotFoundException();
-
-		$page      = (int)\Input::get('page', 1);
-		$album_id  = (int)\Input::get('album_id', 0);
-		$member_id = (int)\Input::get('member_id', 0);
-		$is_member_page = (int)\Input::get('is_member_page', 0);
-		$limit = (int)\Input::get('limit', \Config::get('album.articles.limit'));
-
-		$album     = null;
-		$member    = null;
-		$is_mypage = false;
-
 		$response  = '';
 		try
 		{
+			if (!in_array($this->format, array('html', 'json'))) throw new \HttpNotFoundException();
+
+			$album_id  = (int)$album_id;
+			if (!$album_id) $album_id = (int)\Input::get('album_id', 0);
+			$page      = (int)\Input::get('page', 1);
+			$member_id = (int)\Input::get('member_id', 0);
+			$is_member_page = (int)\Input::get('is_member_page', 0);
+			$limit = (int)\Input::get('limit', \Config::get('album.articles.limit'));
+
+			$album     = null;
+			$member    = null;
+			$is_mypage = false;
+
 			if ($album_id && !$album = Model_Album::check_authority($album_id))
 			{
 				throw new \HttpNotFoundException;
@@ -85,6 +86,10 @@ class Controller_Image_api extends \Controller_Site_Api
 
 			$response = $data['list'];
 			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
 		}
 		catch(\FuelException $e)
 		{

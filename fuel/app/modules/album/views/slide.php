@@ -2,7 +2,7 @@
 
 <?php if ($list): ?>
 <div class="row" id="img_comment_box">
-	<div class="span8">
+	<div class="col-md-8">
 		<a name="slidetop" id="slidetop"></a>
 		<div id="myCarousel" class="carousel">
 			<div class="carousel-inner"></div>
@@ -12,7 +12,7 @@
 		<div id="slideNumber"></div>
 		<div id="link2detail"></div>
 	</div>
-	<div class="span4">
+	<div class="col-md-4">
 		<div id="album_image_comment"></div>
 		<h4 id="comments">Comments</h4>
 		<div id="comment_list"></div>

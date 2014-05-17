@@ -6,13 +6,13 @@ var baseUrl = get_baseUrl();
 var album_id = get_id_from_url();
 var comment_limit_default = get_comment_limit_default();
 
-var basePath = '/' + get_upload_uri_base_path(); // 画像のベースパスを指定
+var basePath = get_upload_uri_base_path(); // 画像のベースパスを指定
 var images = {}; // 画像ファイル名格納用配列
 var image_ids = []; // 画像id格納用配列
 var slideNumber = 0;
 var slideNumber_max = 0;
 
-$.get('/album/image/api/list.json', {'album_id':album_id, 'limit':0}, function(json){
+$.get(get_url('album/image/api/list.json'), {'album_id':album_id, 'limit':0}, function(json){
 	$.each(json, function(i, data){
 		images[data.id] = basePath + data.file.path + data.file.name;
 		image_ids.push(data.id);
@@ -46,7 +46,7 @@ $.get('/album/image/api/list.json', {'album_id':album_id, 'limit':0}, function(j
 	// 画像のDOMの追加
 	$('#myCarousel > .carousel-inner').html(html);
 	//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
-	$('#link2detail').html('<a href="' + baseUrl + 'album/image/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
+	$('#link2detail').html('<a href="' + get_url('album/image/' + image_ids[slideNumber]) + '" class="btn btn-default"><i class="glyphicon glyphicon-picture"></i> 詳細</a>');
 
 	show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
 },'json');
@@ -97,7 +97,7 @@ var slide = function(type) {
 		prev();
 	}
 	//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
-	$('#link2detail').html('<a href="' + baseUrl + 'album/image/' + image_ids[slideNumber] + '" class="btn"><i class="icon-picture"></i> 詳細</a>');
+	$('#link2detail').html('<a href="' + get_url('album/image/' + image_ids[slideNumber]) + '" class="btn btn-default"><i class="glyphicon glyphicon-picture"></i> 詳細</a>');
 }
 
 $('.carousel-control').click(function(event) {
@@ -117,7 +117,7 @@ $('body').keydown(function(event){
 
 $(document).on('click', '#listMoreBox_comment', function(){
 	//show_list('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', 0, $('.commentBox:first').attr('id'), true, '#' + $(this).attr('id'));
-	var uri = 'album/image/' + image_ids[slideNumber] + '?all_comment=1#comments';
+	var uri = get_url('album/image/' + image_ids[slideNumber]) + '?all_comment=1#comments';
 	redirect(uri);
 	return false;
 });
