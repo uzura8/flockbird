@@ -153,7 +153,7 @@ function delete_item(uri)
 	var target_attribute_prefix = (arguments.length > 2) ? arguments[2] : '';
 	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
 	var item_term = (arguments.length > 4) ? arguments[4] : '';
-	var confirm_msg = (arguments.length > 5) ? arguments[5] : '削除します。よろしいですか?';
+	var confirm_msg = (arguments.length > 5 && arguments[5].length > 0) ? arguments[5] : '削除します。よろしいですか?';
 
 	apprise(confirm_msg, {'confirm':true}, function(r) {
 		if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, target_attribute_id, true, item_term);
