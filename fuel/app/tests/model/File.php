@@ -61,7 +61,7 @@ class Test_Model_File extends TestCase
 		foreach ($this->files as $file)
 		{
 			$this->assertNotEquals('0000-00-00 00:00:00', $file->shot_at);
-			$this->assertGreaterThanOrEqual(strtotime('-10 years'), strtotime($file->shot_at));
+			if (!is_null($file->shot_at)) $this->assertGreaterThanOrEqual(strtotime('-10 years'), strtotime($file->shot_at));
 			$this->assertLessThanOrEqual(time(), strtotime($file->shot_at));
 		}
 	}
