@@ -173,6 +173,10 @@ class Site_Model
 		}
 		else
 		{
+			if (\Site_Util::check_is_expanded_public_flag_range($timeline->public_flag, $public_flag))
+			{
+				$timeline->public_flag = $public_flag;
+			}
 			$timeline->sort_datetime = date('Y-m-d H:i:s');
 		}
 		$timeline->save();
