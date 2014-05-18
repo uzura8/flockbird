@@ -1,8 +1,10 @@
 <?php
 namespace Admin;
 
-class Model_User extends \MyOrm\Model
+class Model_AdminUser extends \MyOrm\Model
 {
+	protected static $_table_name = 'admin_user';
+
 	protected static $_properties = array(
 		'id',
 		'username' => array(
@@ -12,7 +14,7 @@ class Model_User extends \MyOrm\Model
 				'trim', 'required',
 				'max_length' => array(255),
 				'match_pattern' => array('/^[a-z0-9_]*[a-z]+[a-z0-9_]*$/i'),
-				'unique' => array('users.username')
+				'unique' => array('admin_user.username')
 			),
 			'form' => array('type' => 'text'),
 		),
@@ -41,7 +43,7 @@ class Model_User extends \MyOrm\Model
 				'required',
 				'max_length' => array(255),
 				'valid_email',
-				'unique' => array('users.email')
+				'unique' => array('admin_user.email')
 			),
 			'form' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
 		),

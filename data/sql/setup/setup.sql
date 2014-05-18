@@ -519,10 +519,10 @@ CREATE TABLE `site_config` (
   `value` text COLLATE utf8_unicode_ci COMMENT 'Configuration value',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of this site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of this site';
 
 
-CREATE TABLE `users` (
+CREATE TABLE `admin_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -536,6 +536,6 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE_idx` (`username`),
   UNIQUE KEY `email_UNIQUE_idx` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `users` VALUES (1,'admin','RTRQWLQkWXL5w3v651COdjbiK6j5/Trs1El8UYDL5q8=',100,'admin@example.jp','','','a:0:{}','0000-00-00 00:00:00','0000-00-00 00:00:00');
+-- INSERT INTO `admin_user` VALUES (1,'admin','RTRQWLQkWXL5w3v651COdjbiK6j5/Trs1El8UYDL5q8=',100,'admin@example.jp','','','a:0:{}',NOW(),NOW());

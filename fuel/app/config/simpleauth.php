@@ -29,7 +29,7 @@ return array(
 	/**
 	 * DB table name for the user table
 	 */
-	'table_name' => 'users',
+	'table_name' => 'admin_user',
 
 	/**
 	 * Choose which columns are selected, must include: username, password, email, last_login,

@@ -14,7 +14,7 @@ class Controller_Base extends \Controller_Base
 
 	protected function get_current_user($user_id)
 	{
-		return Model_User::query()->where('id', $user_id)->get_one();
+		return Model_AdminUser::query()->where('id', $user_id)->get_one();
 	}
 
 	protected static function get_breadcrumbs($title_name = '', $middle_breadcrumbs = array())

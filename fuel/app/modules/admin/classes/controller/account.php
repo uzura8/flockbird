@@ -19,7 +19,7 @@ class Controller_Account extends Controller_Admin
 	 */
 	public function action_index()
 	{
-		$users = Model_User::query()->get();
+		$users = Model_AdminUser::query()->get();
 		$this->template->subtitle = \View::forge('account/_parts/list_subtitle');
 		$this->set_title_and_breadcrumbs(term('admin.account.view', 'site.management'));
 		$this->template->content = \View::forge('account/list', array('list' => $users));
@@ -45,7 +45,7 @@ class Controller_Account extends Controller_Admin
 	public function action_create()
 	{
 		$val = \Validation::forge();
-		$val->add_model(Model_User::forge());
+		$val->add_model(Model_AdminUser::forge());
 
 		if (\Input::method() == 'POST')
 		{
@@ -133,7 +133,7 @@ END;
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		if (!$user = Model_User::check_authority($id))
+		if (!$user = Model_AdminUser::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
 		}

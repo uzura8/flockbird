@@ -8,7 +8,7 @@ class Model_News extends \MyOrm\Model
 	protected static $_belongs_to = array(
 		'users' => array(
 			'key_from' => 'users_id',
-			'model_to' => '\Admin\Model_User',
+			'model_to' => '\Admin\Model_AdminUser',
 			'key_to' => 'id',
 			'cascade_save' => false,
 			'cascade_delete' => false,
