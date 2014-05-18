@@ -10,6 +10,18 @@ class Controller_Base extends \Controller_Base
 	public function before()
 	{
 		parent::before();
+
+		$this->check_acl();
+	}
+
+	protected function check_acl()
+	{
+		if ($this->check_not_auth_action()) return;
+		if (\Auth::has_access(sprintf('%s.%s', site_get_current_page_id(), \Input::method()))) return;
+
+		if (IS_API) return Response::forge(null, 403);
+
+		throw new \HttpForbiddenException;
 	}
 
 	protected function get_current_user($user_id)

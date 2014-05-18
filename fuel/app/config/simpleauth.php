@@ -67,9 +67,36 @@ return array(
 	 * Roles as name => array(location => rights)
 	 */
 	'roles' => array(
-		'admin' => array(),
-		'moderator' => array(),
-		'user' => array(),
+		'admin'  => true,
+		'moderator'  => array(
+			'admin_admin_index' => array('GET'),
+			'admin_admin_logout' => array('GET', 'POST'),
+			'admin_account_index' => array('GET'),
+			'admin_setting_index' => array('GET'),
+			'admin_setting_password' => array('GET', 'POST'),
+			'admin_setting_change_password' => array('POST'),
+			'admin_setting_email' => array('GET', 'POST'),
+			'admin_setting_change_email' => array('POST'),
+			'admin_news_index' => array('GET'),
+			'admin_news_list' => array('GET'),
+			'admin_news_detail' => array('GET'),
+			'admin_news_create' => array('GET', 'POST'),
+			'admin_news_edit' => array('GET', 'POST'),
+			'admin_news_publish' => array('POST'),
+			'admin_news_unpublish' => array('POST'),
+			'admin_news_category_index' => array('GET'),
+			'admin_news_category_edit_all' => array('GET', 'POST'),
+			//news_category_api
+			//news_image_api
+			//filetmp_api
+		),
+		'user' => array(
+			'admin_admin_index' => array('GET'),
+			'admin_admin_logout' => array('GET', 'POST'),
+			'admin_news_index' => array('GET'),
+			'admin_news_list' => array('GET'),
+			'admin_news_detail' => array('GET'),
+		),
 		/**
 		 * Examples
 		 * ---

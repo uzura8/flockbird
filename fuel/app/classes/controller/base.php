@@ -31,10 +31,8 @@ class Controller_Base extends Controller_Hybrid
 		}
 	}
 
-	protected function check_auth($is_return_true_for_not_auth_action = true)
+	protected function check_auth()
 	{
-		if ($is_return_true_for_not_auth_action && $this->check_not_auth_action()) return true;
-
 		if ($this->auth_instance->check($this->auth_driver) === false) return false;
 		if ($this->auth_instance->get_user_id() === false) return false;
 		list($driver, $user_id) = $this->auth_instance->get_user_id();
