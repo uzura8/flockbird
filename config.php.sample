@@ -14,7 +14,7 @@ define('PRJ_DOMAIN', 'sns.example.com');
 define('PRJ_URI_PATH', '/');
 
 // DBサーバ接続設定
-$GLOBALS['DSN']['development'] = array(
+$GLOBALS['DSN']['production'] = array(
 	'default' => array(
 		'connection'  => array(
 			'dsn'        => 'mysql:host=localhost;dbname=dbname',
