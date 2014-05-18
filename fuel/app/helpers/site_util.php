@@ -80,11 +80,6 @@ function site_get_screen_name($u)
 	return 'ID:'.$u->id;
 }
 
-function auth_check()
-{
-	return defined('IS_AUTH') && IS_AUTH;
-}
-
 function conf($item, $default = null, $file = 'site', $replace_delimitter = null)
 {
 	if (!$file) $file = 'site';
