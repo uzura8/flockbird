@@ -49,7 +49,7 @@ class Model_User extends \MyOrm\Model
 		'login_hash',
 		'profile_fields',
 		'created_at',
-		'updated_at' => array('form' => array('type' => false)),
+		'updated_at',
 	);
 
 	protected static $_observers = array(

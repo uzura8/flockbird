@@ -528,7 +528,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `group` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `last_login` int(11) NOT NULL,
+  `last_login` datetime NOT NULL,
   `login_hash` varchar(255) NOT NULL,
   `profile_fields` text NOT NULL,
   `created_at` datetime NOT NULL,

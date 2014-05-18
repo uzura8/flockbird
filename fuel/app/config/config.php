@@ -278,6 +278,7 @@ return array(
 			'parser',
 			'opauth',
 			'myorm',
+			'myauth',
 		),
 
 		/**

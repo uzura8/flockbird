@@ -4,7 +4,7 @@ namespace Admin;
 class Controller_Base extends \Controller_Base
 {
 	public $template = 'admin::template';
-	protected $auth_driver = 'SimpleAuth';
+	protected $auth_driver = 'Simpleauth';
 	protected $after_auth_uri = 'admin';
 
 	public function before()
