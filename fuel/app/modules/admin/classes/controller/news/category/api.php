@@ -1,7 +1,7 @@
 <?php
 namespace Admin;
 
-class Controller_News_Category_Api extends Controller_Admin
+class Controller_News_Category_Api extends Controller_Api
 {
 	public function before()
 	{
@@ -41,7 +41,7 @@ class Controller_News_Category_Api extends Controller_Admin
 				$response = \View::forge('_parts/table/simple_row_sortable', array(
 					'id' => $news_category->id,
 					'name' => $news_category->name,
-					'delete_uri' => 'admin/news/category/api/delete.json',
+					'delete_uri' => sprintf('admin/news/category/api/delete/%s.json', $news_category->id),
 				));
 
 				return \Response::forge($response, $status_code);
@@ -85,6 +85,10 @@ class Controller_News_Category_Api extends Controller_Admin
 
 			$response['status'] = 1;
 			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
 		}
 		catch(\FuelException $e)
 		{

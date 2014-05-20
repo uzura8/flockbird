@@ -6,11 +6,14 @@ class Site_Util
 		return (isset(Request::main()->route->module))? Request::main()->route->module : '';
 	}
 
-	public static function get_controller_name()
+	public static function get_controller_name($delimitter = null)
 	{
 		if (!isset(Request::main()->route->controller)) return '';
 
-		return Str::lower(preg_replace('/^([a-zA-Z0-9_]+\\\)?Controller_/', '', Request::main()->route->controller));
+		$controller_name = Str::lower(preg_replace('/^([a-zA-Z0-9_]+\\\)?Controller_/', '', Request::main()->route->controller));
+		if (!$delimitter) return $controller_name;
+
+		return str_replace('_', $delimitter, $controller_name);
 	}
 
 	public static function get_action_name($is_api = false)
@@ -18,6 +21,16 @@ class Site_Util
 		if ($is_api) return sprintf('%s_%s', Str::lower(Request::main()->get_method()), Request::active()->action);
 
 		return Request::active()->action;
+	}
+
+	public static function get_action_path()
+	{
+		$items = array();
+		$items[] = self::get_module_name() ?: '';
+		$items[] = self::get_controller_name('/');
+		$items[] = self::get_action_name();
+
+		return implode('/', $items);
 	}
 
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())

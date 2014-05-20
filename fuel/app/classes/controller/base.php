@@ -9,6 +9,7 @@ class Controller_Base extends Controller_Hybrid
 	protected $auth_instance;
 	protected $auth = 'check_auth';
 	protected $after_auth_uri;
+	protected $acl_has_access = true;
 
 	public function before()
 	{
@@ -39,7 +40,21 @@ class Controller_Base extends Controller_Hybrid
 		list($driver, $user_id) = $this->auth_instance->get_user_id();
 		if (!$user_id) return false;
 
+		if (IS_ADMIN && false == $this->check_acl($is_return_true_for_not_auth_action))
+		{
+			$this->acl_has_access = false;
+
+			return false;
+		}
+
 		return true;
+	}
+
+	protected function check_acl($is_return_true_for_not_auth_action = true)
+	{
+		if ($is_return_true_for_not_auth_action && $this->check_not_auth_action()) return true;
+
+		return \Auth::has_access(sprintf('%s.%s', \Site_Util::get_action_path(), \Input::method()));
 	}
 
 	protected function set_current_user()
@@ -58,7 +73,7 @@ class Controller_Base extends Controller_Hybrid
 		if ($is_check_not_auth_action && $this->check_not_auth_action()) return;
 		if (IS_AUTH) return;
 
-		if (IS_API) return Response::forge(null, 401);
+		if (!$this->acl_has_access) throw new HttpForbiddenException;
 
 		Session::set_flash('destination', urlencode(Uri::string_with_query()));
 		Response::redirect($this->get_login_page_uri());

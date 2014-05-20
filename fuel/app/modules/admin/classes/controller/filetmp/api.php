@@ -1,7 +1,7 @@
 <?php
 namespace Admin;
 
-class Controller_FileTmp_Api extends Controller_Admin
+class Controller_FileTmp_Api extends Controller_Api
 {
 	protected $check_not_auth_action = array(
 	);

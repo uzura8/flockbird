@@ -1,7 +1,7 @@
 <?php
 namespace Admin;
 
-class Controller_Profile_Option_Api extends Controller_Admin
+class Controller_Profile_Option_Api extends Controller_Api
 {
 	public function before()
 	{
