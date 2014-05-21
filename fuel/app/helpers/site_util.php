@@ -342,3 +342,14 @@ function render_module($view_file_path, $data = array(), $module_name = null)
 	return render($view_file_path, $data);
 }
 
+function check_acl($acl_path, $method = 'GET', $is_convert_acl_path = false)
+{
+	if ($is_convert_acl_path) $acl_path = Site_Util::get_acl_path($acl_path);
+
+	return Auth::has_access($acl_path.'.'.$method);
+}
+
+function check_original_user($user_id, $is_admin = false)
+{
+	return $user_id == conf(sprintf('original_user_id.%s', $is_admin ? 'admin' : 'site'));
+}

@@ -13,16 +13,16 @@
 </tr>
 <?php foreach ($list as $id => $user): ?>
 <tr>
-<?php if ($user->id == conf('original_user_id.admin') || !\Admin\Site_AdminUser::check_gruop($u->group, 100)): ?>
+<?php if (check_original_user($user->id, true) || !check_acl($uri = 'admin/account/delete', 'POST')): ?>
 	<td class="small"><?php echo symbol('noValue'); ?></td>
 <?php else: ?>
-	<td class="small"><?php echo btn('form.delete', '#', 'js-simplePost', false, 'xs', null, array('data-uri' => 'admin/account/delete/'.$user->id)); ?></td>
+	<td class="small"><?php echo btn('form.delete', '#', 'js-simplePost', false, 'xs', null, array('data-uri' => $uri.'/'.$user->id)); ?></td>
 <?php endif; ?>
 	<td class="small"><?php echo $user->id; ?></td>
 	<td><?php echo $user->username; ?></td>
 	<td><?php echo \Admin\Site_AdminUser::get_gruop_name($user->group, true); ?></td>
 	<td>
-<?php if (\Admin\Site_AdminUser::check_gruop($u->group, 100)): ?>
+<?php if (Auth::member(100)): ?>
 		<?php echo $user->email; ?>
 <?php else: ?>
 		<?php echo sprintf('<span class="text-muted">%s</span>', term('site.set_already')); ?>

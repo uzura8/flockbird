@@ -104,7 +104,7 @@ function anchor($href, $text, $is_admin = false, $attr = array(), $is_absolute_e
 
 	if ($is_admin && !$is_ext_url)
 	{
-		if (!Auth::has_access(Site_Util::get_acl_path($href).'.GET'))
+		if (Auth::check() && !Auth::has_access(Site_Util::get_acl_path($href).'.GET'))
 		{
 			$attr['class'] = empty($attr['class']) ? '' : $attr['class'].' ';
 			$attr['class'] .= 'disabled';

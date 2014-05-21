@@ -133,6 +133,10 @@ END;
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
+		if (check_original_user($id, true))
+		{
+			throw new \HttpForbiddenException;
+		}
 		if (!$user = Model_AdminUser::check_authority($id))
 		{
 			throw new \HttpNotFoundException;
