@@ -26,8 +26,12 @@ class Site_Util
 	public static function get_action_path()
 	{
 		$items = array();
-		$items[] = self::get_module_name() ?: '';
-		$items[] = self::get_controller_name('/');
+		$module_name = self::get_module_name() ?: '';
+		$controller_name = self::get_controller_name('/');
+		if ($module_name && $module_name == $controller_name) $module_name = '';
+
+		if ($module_name) $items[] = $module_name;
+		$items[] = $controller_name;
 		$items[] = self::get_action_name();
 
 		return implode('/', $items);
@@ -315,5 +319,10 @@ class Site_Util
 		}
 
 		return false;
+	}
+
+	public static function get_acl_path($path)
+	{
+		return (substr($path, -1) == '/') ? $path.'index' : $path;
 	}
 }

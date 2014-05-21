@@ -95,10 +95,22 @@ function btn_dropdown($type = null, $menus = array(), $btn_with_text = true, $bt
 
 function anchor($href, $text, $is_admin = false, $attr = array(), $is_absolute_ext_uri = false)
 {
-	if ($is_absolute_ext_uri || Site_Util::check_ext_uri($href, $is_admin))
+	if (is_null($attr)) $attr = array();
+	if ($is_absolute_ext_uri || $is_ext_url = Site_Util::check_ext_uri($href, $is_admin))
 	{
 		$attr['target'] = '_blank';
 		$text .= ' '.icon('new-window');
+	}
+
+	if ($is_admin && !$is_ext_url)
+	{
+		if (!Auth::has_access(Site_Util::get_acl_path($href).'.GET'))
+		{
+			$attr['class'] = empty($attr['class']) ? '' : $attr['class'].' ';
+			$attr['class'] .= 'disabled';
+
+			return html_tag('span', $attr, $text);
+		}
 	}
 
 	return Html::anchor($href, $text, $attr);
