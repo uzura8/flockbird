@@ -51,9 +51,12 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 <?php if ($layout == 'normal'): ?>
 		<div class="col-sm-3" id="sidebar" role="navigation">
 <?php if (Auth::check()): ?>
-				<?php echo render('_parts/nav_list', array('header' => 'Member', 'list' => Config::get('navigation.admin.secure_side'))); ?>
+				<?php echo render('_parts/nav_list', array('header' => 'admin menu', 'list' => Config::get('navigation.admin.secure_side_admin'))); ?>
+				<?php echo render('_parts/nav_list', array('header' => 'user menu', 'list' => Config::get('navigation.admin.secure_side_user'))); ?>
+<?php else: ?>
+				<?php echo render('_parts/nav_list', array('header' => 'menu', 'list' => Config::get('navigation.admin.insecure_side'))); ?>
 <?php endif; ?>
-				<?php echo render('_parts/nav_list', array('header' => 'Site', 'list' => Config::get('navigation.admin.global_side'))); ?>
+				<?php echo render('_parts/nav_list', array('header' => 'site menu', 'list' => Config::get('navigation.admin.global_side'))); ?>
 
 <?php if (isset($subside_contents)): ?>
 <?php echo $subside_contents; ?>

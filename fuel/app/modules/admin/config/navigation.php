@@ -29,10 +29,20 @@ return array(
 			'site.login' => 'admin/login',
 		),
 		'global_side' => array(
+		),
+		'insecure_side' => array(
 			term('admin.view', 'page.view', 'page.top') => 'admin/',
 			term('site.view') => '/',
 		),
-		'secure_side' => array(
+		'secure_side_admin' => array(
+			term('admin.view', 'page.view', 'page.top') => 'admin/',
+			term('member.view', 'site.management') => 'admin/member/',
+			term('news.view', 'site.management') => 'admin/news/',
+			term('profile', 'site.setting') => 'admin/profile/',
+			term('admin.view', 'page.view', 'site.setting') => 'admin/account/',
+			term('site.view') => '/',
+		),
+		'secure_side_user' => array(
 			'site.setting' => 'admin/setting/',
 			'site.logout' => 'admin/logout',
 		),
