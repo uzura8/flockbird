@@ -1,6 +1,7 @@
 <?php
 
 return array(
+	'max_articles_per_day' => 50,
 	'category' => array(
 		'isEnabled' => true,
 	),

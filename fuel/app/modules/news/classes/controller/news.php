@@ -19,13 +19,13 @@ class Controller_News extends \Controller_Site
 	 * @params  integer
 	 * @return  Response
 	 */
-	public function action_preview($id = null)
+	public function action_preview($slug = null)
 	{
-		if (!$news = Model_News::check_authority($id)) throw new \HttpNotFoundException;
+		if (!$news = Model_News::get4slug($slug)) throw new \HttpNotFoundException;
 		$token = \Input::get('token');
 		if (!$token || $token != $news->token) throw new \HttpNotFoundException;
 
-		$images = Model_NewsImage::get4news_id($id);
+		$images = Model_NewsImage::get4news_id($news->id);
 
 		$title = array('name' => $news->title);
 		$header_info = self::get_prview_header_info($news->is_published, $news->published_at);

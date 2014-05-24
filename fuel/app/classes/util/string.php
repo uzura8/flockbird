@@ -122,4 +122,40 @@ class Util_string
 
 		return implode($delimitter, $nums);
 	}
+
+	public static function split_str($str)
+	{
+		$array = array();
+		for ($i=0; $i < strlen($str); $i++) {
+			$c = $str[$i];
+			array_push($array, $c);
+		}
+
+		return $array;
+	}
+
+	public static function get_next_alphabet($str = '')
+	{
+		if (!$str) return 'a';
+
+		$num = ord($str);
+		if ($num < 97 || $num > 122) return 'a';
+
+		$num++;
+		if ($num > 122) return 'aa';
+
+		return chr($num);
+	}
+
+	public static function get_next_alpha_str($str = '')
+	{
+		if (!$str) return 'a';
+
+		$items = self::split_str($str);
+		$str = array_pop($items);
+		$str = self::get_next_alphabet($str);
+		$items[] = $str;
+
+		return implode('', $items);
+	}
 }

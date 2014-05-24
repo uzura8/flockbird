@@ -179,7 +179,7 @@ class Validation extends Fuel\Core\Validation
 		list($table, $field) = explode('.', $options);
 		if (!$table || !$field) throw new InvalidArgumentException("Second parameter must be format 'table.field'.");
 
-		$query = DB::select("LOWER (\"$field\")")
+		$query = DB::select(DB::expr("LOWER (\"$field\")"))
 		->from($table)
 		->where($field, '=', Str::lower($val));
 

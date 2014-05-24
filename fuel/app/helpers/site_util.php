@@ -353,3 +353,11 @@ function check_original_user($user_id, $is_admin = false)
 {
 	return $user_id == conf(sprintf('original_user_id.%s', $is_admin ? 'admin' : 'site'));
 }
+
+function isset_datatime($datetime)
+{
+	if (empty($datetime)) return false;
+	if ($datetime == '0000-00-00 00:00:00') return false;
+
+	return true;
+}

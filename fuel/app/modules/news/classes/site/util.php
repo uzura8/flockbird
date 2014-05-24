@@ -31,4 +31,22 @@ class Site_Util
 				break;
 		}
 	}
+
+	public static function get_slug()
+	{
+		$main = date('ymd');
+		$suffix = '';
+		$slug = $main.$suffix;
+		$max = \Config::get('news.max_articles_per_day');
+		$i = 0;
+		while(Model_News::check_exists4slug($slug))
+		{
+			if ($i > $max) throw \FuelException('Posted news exceeded the limit on par day.');
+			$suffix = \Util_string::get_next_alpha_str($suffix);
+			$slug = $main.$suffix;
+			$i++;
+		}
+
+		return $slug;
+	}
 }

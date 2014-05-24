@@ -37,6 +37,17 @@ class Model_News extends \MyOrm\Model
 			'validation' => array('valid_string' => array('numeric')),
 			'form' => array('type' => 'select'),
 		),
+		'slug' => array(
+			'data_type' => 'varchar',
+			'label' => '記事識別名',
+			'validation' => array(
+				'trim', 'required',
+				'max_length' => array(32),
+				'match_pattern' => array('/^[a-z0-9_-]*[a-z0-9]+[a-z0-9_-]*$/i'),
+				'unique' => array('news.slug')
+			),
+			'form' => array('type' => 'text'),
+		),
 		'title' => array(
 			'data_type' => 'varchar',
 			'label' => 'タイトル',
@@ -114,5 +125,15 @@ class Model_News extends \MyOrm\Model
 		$this->delete();
 
 		return $deleted_files;
+	}
+
+	public static function get4slug($slug)
+	{
+		return self::query()->where('slug', $slug)->get_one();
+	}
+
+	public static function check_exists4slug($slug)
+	{
+		return (bool)self::get4slug($slug);
 	}
 }

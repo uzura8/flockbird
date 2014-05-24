@@ -324,6 +324,7 @@ CREATE TABLE `note_album_image` (
 CREATE TABLE `news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `news_category_id` int(11) DEFAULT NULL COMMENT 'News category id',
+  `slug` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified news (ASCII)',
   `title` text NOT NULL,
   `body` text NOT NULL,
   `importance_level` tinyint(2) NOT NULL DEFAULT '0',
@@ -334,6 +335,7 @@ CREATE TABLE `news` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `slug_UNIQUE_idx` (`slug`),
   KEY `created_at_idx` (`created_at`),
   KEY `published_at_idx` (`published_at`),
   KEY `is_published_published_at_idx` (`is_published`,`published_at`)

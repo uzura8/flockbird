@@ -21,7 +21,7 @@
 	<td class="small"><?php echo $news->id; ?></td>
 	<td class="small fs10"><?php echo isset($news->news_category->name) ? $news->news_category->name : sprintf('<span class="text-danger">%s</span>', term('site.unset')); ?></td>
 	<td><?php echo Html::anchor('admin/news/'.$news->id, strim($news->title, Config::get('news.viewParams.admin.list.trim_width.title'))); ?></td>
-	<td class="small"><?php echo btn('form.preview', 'news/preview/'.$news->id.'?token='.$news->token, '', false, 'xs'); ?></td>
+	<td class="small"><?php echo btn('form.preview', 'news/preview/'.$news->slug.'?token='.$news->token, '', false, 'xs'); ?></td>
 	<td class="small"><?php echo btn('form.edit', 'admin/news/edit/'.$news->id, '', false, 'xs'); ?></td>
 <?php $attr = array('data-destination' => Uri::string_with_query()); ?>
 <?php if ($news->is_published): ?>
@@ -31,7 +31,7 @@
 <?php endif; ?>
 	<td><?php echo label(term('news.status.'.$status), \News\Site_Util::get_status_label_type($status)); ?></td>
 	<td class="text-<?php if ($status == 'reserved'): ?>warning<?php elseif ($status == 'closed'): ?>muted<?php else: ?>normal<?php endif; ?>">
-		<?php if ($news->published_at): ?><?php echo site_get_time($news->published_at, 'both', 'Y/m/d H:i'); ?><?php else: ?><?php echo symbol('noValue'); ?><?php endif; ?>
+		<?php if (isset_datatime($news->published_at)): ?><?php echo site_get_time($news->published_at, 'both', 'Y/m/d H:i'); ?><?php else: ?><?php echo symbol('noValue'); ?><?php endif; ?>
 	</td>
 	<td><?php echo site_get_time($news->updated_at, 'relative', 'Y/m/d H:i'); ?></td>
 </tr>

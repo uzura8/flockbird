@@ -111,6 +111,7 @@ class Controller_News extends Controller_Admin
 				$post = $val->validated();
 
 				$news->news_category_id = $post['news_category_id'];
+				$news->slug         = $post['slug'];
 				$news->title        = $post['title'];
 				$news->body         = $post['body'];
 				$news->users_id     = $this->u->id;
@@ -194,10 +195,15 @@ class Controller_News extends Controller_Admin
 			try
 			{
 				if ($is_enabled_image) $file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize();
+
+				// 識別名の変更がない場合は unique を確認しない
+				if (trim(\Input::post('slug')) == $news->slug) $val->fieldset()->field('slug')->delete_rule('unique');
+
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 
 				$news->news_category_id = $post['news_category_id'];
+				$news->slug  = $post['slug'];
 				$news->title = $post['title'];
 				$news->body  = $post['body'];
 

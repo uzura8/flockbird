@@ -6,7 +6,8 @@
 <?php if (Config::get('news.image.isEnabled')): ?>
 	<?php echo form_upload_files($files, $files ? false : true, false, true, 'M', array(), 'news'); ?>
 <?php endif; ?>
-	<?php echo form_input($val, 'published_at_time', (!empty($news->published_at)) ? substr($news->published_at, 0, 16) : '', 6); ?>
+	<?php echo form_input($val, 'published_at_time', (isset($news) && isset_datatime($news->published_at)) ? substr($news->published_at, 0, 16) : '', 6); ?>
+	<?php echo form_input($val, 'slug', isset($news) ? $news->slug : \News\Site_Util::get_slug(), 6); ?>
 <?php if (empty($news->is_published)): ?>
 	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
 <?php endif; ?>
