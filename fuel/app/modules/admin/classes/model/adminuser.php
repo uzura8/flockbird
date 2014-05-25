@@ -87,6 +87,8 @@ class Model_AdminUser extends \MyOrm\Model
 
 		$accepted_groups = \Config::get('admin.user.acceptedGroup');
 		$return = array();
+		if (!$groups) return $return;
+
 		foreach ($groups as $key => $group)
 		{
 			if (!in_array($key, $accepted_groups)) continue;

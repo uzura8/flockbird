@@ -96,11 +96,17 @@ class Controller_News extends Controller_Admin
 		$val = self::get_validation_object($news);
 		$files = array();
 		$is_enabled_image = \Config::get('news.image.isEnabled');
+		$is_enabled_link  = \Config::get('news.link.isEnabled');
+		$posted_links = array();
 
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
-
+			if ($is_enabled_link)
+			{
+				$posted_links = $this->get_posted_links();
+				$val = $this->add_validation_object_posted_links($val, $posted_links);
+			}
 			$file_tmps = array();
 			$moved_files = array();
 			$news_image_ids = array();
@@ -131,6 +137,10 @@ class Controller_News extends Controller_Admin
 				{
 					list($moved_files, $news_image_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
 				}
+				if ($is_enabled_link)
+				{
+					$this->save_posted_links($posted_links, $news->id);
+				}
 
 				//// timeline 投稿
 				//if ($note->is_published && is_enabled('timeline'))
@@ -159,7 +169,7 @@ class Controller_News extends Controller_Admin
 		$this->set_title_and_breadcrumbs(term('news.view', 'form.create'), array('admin/news' => term('news.view', 'admin.view')));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
 		$this->template->post_footer = \View::forge('news/_parts/form_footer');
-		$this->template->content = \View::forge('news/_parts/form', array('val' => $val, 'files' => $files));
+		$this->template->content = \View::forge('news/_parts/form', array('val' => $val, 'files' => $files, 'posted_links' => $posted_links));
 	}
 
 	/**
@@ -185,11 +195,24 @@ class Controller_News extends Controller_Admin
 			$files = \Site_Upload::get_file_objects($news_images, $news->id, true);
 		}
 
+		$posted_links = array();
+		$saved_links = array();
+		if ($is_enabled_link  = \Config::get('news.link.isEnabled'))
+		{
+			$saved_links = $this->get_saved_links($news->id);
+		}
+
 		$file_tmps = array();
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
 
+			if ($is_enabled_link)
+			{
+				$posted_links = $this->get_posted_links();
+				$val = $this->add_validation_object_posted_links($val, $saved_links, true);
+				$val = $this->add_validation_object_posted_links($val, $posted_links);
+			}
 			$moved_files = array();
 			$news_image_ids = array();
 			try
@@ -231,6 +254,11 @@ class Controller_News extends Controller_Admin
 					//\News\Model_NewsImage::save_multiple($news->id, $news_image_ids);
 					\Site_Upload::update_image_objs4file_objects($news_images, $files);
 				}
+				if ($is_enabled_link)
+				{
+					$this->save_posted_links($saved_links, $news->id, true);
+					$this->save_posted_links($posted_links, $news->id);
+				}
 
 				//// timeline 投稿
 				//if (is_enabled('timeline'))
@@ -269,6 +297,8 @@ class Controller_News extends Controller_Admin
 		$this->template->post_footer = \View::forge('news/_parts/form_footer');
 		$this->template->content = \View::forge('news/_parts/form', array(
 			'val' => $val,
+			'saved_links' => $saved_links,
+			'posted_links' => $posted_links,
 			'news' => $news,
 			'is_edit' => true,
 			'files' => $files,
@@ -373,6 +403,39 @@ class Controller_News extends Controller_Admin
 		\Response::redirect($redirect_uri);
 	}
 
+	private function get_posted_links()
+	{
+		$posted_link_uris   = \Input::post('link_uri', array());
+		$posted_link_labels = \Input::post('link_label', array());
+		$posted_links = array();
+		foreach ($posted_link_uris as $id => $uri)
+		{
+			$id = (int)$id;
+			$posted_links[$id] = array('uri' => $uri);
+			if (!empty($posted_link_labels[$id])) $posted_links[$id]['label'] = $posted_link_labels[$id];
+		}
+
+		return $posted_links;
+	}
+
+	private function get_saved_links($news_id)
+	{
+		$posted_link_uris   = \Input::post('link_uri_saved', array());
+		$posted_link_labels = \Input::post('link_label_saved', array());
+
+		$news_links = \News\Model_NewsLink::get4news_id($news_id);
+		$saved_links = array();
+		foreach ($news_links as $id => $news_link)
+		{
+			$id = (int)$id;
+			$saved_links[$id] = array();
+			$saved_links[$id]['uri']   = isset($posted_link_uris[$id]) ? $posted_link_uris[$id] : $news_link->uri;
+			$saved_links[$id]['label'] = isset($posted_link_labels[$id]) ? $posted_link_labels[$id] : $news_link->label;
+		}
+
+		return $saved_links;
+	}
+
 	private static function get_validation_object(\News\Model_News $news)
 	{
 		$val = \Validation::forge();
@@ -388,6 +451,64 @@ class Controller_News extends Controller_Admin
 		}
 
 		return $val;
+	}
+
+	private function add_validation_object_posted_links(\Validation $val, $links, $is_saved = false)
+	{
+		$posted_link_uris   = \Input::post('link_uri_saved', array());
+		$posted_link_labels = \Input::post('link_label_saved', array());
+
+		foreach ($links as $id => $values)
+		{
+			if ($is_saved && !isset($posted_link_uris[$id]) && !isset($posted_link_labels[$id])) continue;
+			if (empty($values['uri']) && empty($values['label'])) continue;
+
+			$val->add(sprintf('link_uri%s[%d]', $is_saved ? '_saved' : '', $id), 'リンクURL')
+					->add_rule('trim')
+					->add_rule('required')
+					->add_rule('valid_url');
+		}
+
+		return $val;
+	}
+
+	private function save_posted_links($links, $news_id, $is_saved = false)
+	{
+		$posted_link_uris   = \Input::post('link_uri_saved', array());
+		$posted_link_labels = \Input::post('link_label_saved', array());
+
+		$saved_ids = array();
+		foreach ($links as $id => $values)
+		{
+			$news_link = $is_saved ? \News\Model_NewsLink::check_authority($id) : \News\Model_NewsLink::forge();
+			if ($is_saved && !isset($posted_link_uris[$id]) && !isset($posted_link_labels[$id]))
+			{
+				$news_link->delete();
+				continue;
+			}
+
+			if (!$is_saved) $news_link->news_id = (int)$news_id;
+			$is_upated = false;
+
+			$uri = trim($values['uri']);
+			if ($news_link->uri != $uri)
+			{
+				$news_link->uri = $uri;
+				$is_upated = true;
+			}
+
+			$label = isset($values['label']) ? trim($values['label']) : '';
+			if ($news_link->label != $label)
+			{
+				$news_link->label = $label;
+				$is_upated = true;
+			}
+
+			if ($is_upated && !$news_link->save()) throw new \FuelException('Link url save error.');;
+			$saved_ids[] = $news_link->id;
+		}
+
+		return $saved_ids;
 	}
 }
 

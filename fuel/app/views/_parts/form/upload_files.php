@@ -1,6 +1,22 @@
+<?php
+if ($label)
+{
+	$label_class = 'col-sm-'.$offset_size;
+	$label_class .= ' control-label';
+	$offset = '';
+}
+else
+{
+	$offset = $offset_size ? 'col-sm-offset-'.$offset_size : '';
+}
+$col = 'col-sm-'.(12 - $offset_size);
+?>
 <?php if (!$is_raw_form): ?>
 <div class="form-group">
-<div class="<?php if ($is_horizontal): ?>col-sm-offset-2 col-sm-10<?php endif; ?>">
+<?php 	if ($label): ?>
+	<?php echo Form::label($label, null, array('class' => $label_class)); ?>
+<?php 	endif; ?>
+<div class="<?php if ($is_horizontal): ?><?php echo $col; ?><?php if ($offset): ?> <?php echo $offset; ?><?php endif; ?><?php endif; ?>">
 <?php endif; ?>
 <?php echo render('filetmp/upload', array(
 	'files' => $files,

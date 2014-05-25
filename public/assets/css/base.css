@@ -217,6 +217,9 @@ h4#comments {
 .mt10 {
   margin-top: 10px;
 }
+.mb10 {
+  margin-bottom: 10px;
+}
 .w90 {width: 90%;}
 .fs9 {font-size: 9px;}
 .fs10 {font-size: 10px;}

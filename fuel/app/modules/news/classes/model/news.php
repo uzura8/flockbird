@@ -26,6 +26,11 @@ class Model_News extends \MyOrm\Model
 			'key_from' => 'id',
 			'model_to' => '\News\Model_NewsImage',
 			'key_to' => 'news_id',
+		),
+		'news_link' => array(
+			'key_from' => 'id',
+			'model_to' => '\News\Model_NewsLink',
+			'key_to' => 'news_id',
 		)
 	);
 

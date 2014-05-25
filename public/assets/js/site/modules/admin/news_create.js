@@ -10,14 +10,9 @@ $(function(){
 
 	$(document).on('click','.btn_delete_link_row', function(){
 		var target_id = $(this).data('id') ? parseInt($(this).data('id')) : 0;
-		var is_saved = $(this).data('is_saved') ? parseInt($(this).data('is_saved')) : 0;
 		apprise('削除します。よろしいですか?', {'confirm':true}, function(r) {
 			if (r == true) {
-				var row_id = '#link_row_';
-				if (is_saved) row_id += 'saved_';
-				row_id += target_id;
-
-				$(row_id).remove();
+				$('#link_row_' + target_id).remove();
 			}
 		});
 		return false;

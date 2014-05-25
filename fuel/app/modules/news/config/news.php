@@ -8,6 +8,9 @@ return array(
 	'image' => array(
 		'isEnabled' => true,
 	),
+	'link' => array(
+		'isEnabled' => true,
+	),
 	'viewParams' => array(
 		'site' => array(
 			'list' => array(

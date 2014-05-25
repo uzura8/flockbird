@@ -214,7 +214,7 @@ function form_button($term_key = '', $type = 'submit', $name = '', $atter = arra
 	return $view;
 }
 
-function form_anchor($href, $label, $atter = array(), $offset_size = 2, $secure = null, $is_enclose_small_tag = false)
+function form_anchor($href, $anchor_label, $atter = array(), $offset_size = 2, $secure = null, $is_enclose_small_tag = false, $label = '')
 {
 	$data = array(
 		'href'   => $href,
@@ -222,16 +222,17 @@ function form_anchor($href, $label, $atter = array(), $offset_size = 2, $secure 
 		'secure' => $secure,
 		'offset_size' => $offset_size,
 		'is_enclose_small_tag' => $is_enclose_small_tag,
+		'label' => $label,
 	);
 	$view = \View::forge('_parts/form/anchor', $data);
-	$view->set_safe('label', $label);
+	$view->set_safe('anchor_label', $anchor_label);
 
 	return $view;
 }
 
-function form_anchor_delete($post_uri, $label = null, $attr = null, $offset_size = 2, $secure = null, $is_enclose_small_tag = false)
+function form_anchor_delete($post_uri, $anchor_label = null, $attr = null, $offset_size = 2, $secure = null, $is_enclose_small_tag = false)
 {
-	if (is_null($label)) $label = icon_label('form.do_delete');
+	if (is_null($anchor_label)) $anchor_label = icon_label('form.do_delete');
 	if (is_null($attr))  $attr = array('id' => 'btn_delete', 'class' => 'btn btn-default btn-danger js-simplePost');
 	$attr['data-uri'] = $post_uri;
 	$attr['data-msg'] = '削除します。よろしいですか？';
@@ -244,7 +245,7 @@ function form_anchor_delete($post_uri, $label = null, $attr = null, $offset_size
 		'is_enclose_small_tag' => $is_enclose_small_tag,
 	);
 	$view = \View::forge('_parts/form/anchor', $data);
-	$view->set_safe('label', $label);
+	$view->set_safe('anchor_label', $anchor_label);
 
 	return $view;
 }
@@ -346,7 +347,7 @@ function form_text($value, $label, $label_col_sm_size = 2, $is_safe_value = fals
 	return $view->render();
 }
 
-function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array(), $model = 'album')
+function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array(), $model = 'album', $label = null, $offset_size = 2)
 {
 	return render('_parts/form/upload_files', array(
 		'files' => $files,
@@ -356,6 +357,8 @@ function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is
 		'thumbnail_size' => $thumbnail_size,
 		'selects' => $selects,
 		'model' => $model,
+		'label' => $label,
+		'offset_size' => $offset_size,
 	));
 }
 

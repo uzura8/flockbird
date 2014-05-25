@@ -10,7 +10,7 @@ class Model_NewsImage extends \Orm\Model
 			'key_from' => 'news_id',
 			'model_to' => '\News\Model_News',
 			'key_to' => 'id',
-			'cascade_save' => false,
+			'cascade_save' => true,
 			'cascade_delete' => false,
 		),
 	);

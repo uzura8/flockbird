@@ -356,6 +356,18 @@ CREATE TABLE `news_image` (
   CONSTRAINT `news_image_news_id_news_id` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `news_link` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `news_id` int(11) NOT NULL,
+  `uri` text NOT NULL,
+  `label` text NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `news_id_idx` (`news_id`),
+  CONSTRAINT `news_link_news_id_news_id` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `news_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `name` text NOT NULL COMMENT 'Category label',
