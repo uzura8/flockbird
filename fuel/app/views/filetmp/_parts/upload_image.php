@@ -17,10 +17,11 @@ switch ($thumbnail_size)
 		break;
 }
 
-$prefix = $file->is_tmp ? 'file_tmp' : 'file';
+$prefix = $file->is_tmp ? 'image_tmp' : 'image';
 $delete_btn_attr = array(
 	'class' => 'btn btn-xs btn-default delete_file_tmp',
 	'data-type' => $prefix,
+	'data-file_type' => 'img',
 );
 if (!empty($file->id)) $delete_btn_attr['data-id'] = $file->id;
 if (!empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $model;
@@ -33,7 +34,9 @@ if (!empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $m
 	</div><!-- caption -->
 <?php else: ?>
 	<div class="thumbnail">
+<?php if (!empty($file->thumbnail_uri)): ?>
 		<?php echo Html::img($file->thumbnail_uri, array('class' => 'thumbnail', 'alt' => $file->original_name)); ?>
+<?php endif; ?>
 		<div class="caption clearfix">
 <?php if ($is_display_original_name): ?>
 			<h5><?php echo $file->original_name; ?></h5>

@@ -2,11 +2,11 @@
 
 class MyUploadHandler extends UploadHandler
 {
-	public function get_file_objects_from_file_tmps($file_tmps)
+	public function get_file_objects_from_file_tmps($file_tmps, $type = 'img')
 	{
+		if (!in_array($type, array('img', 'file'))) throw new InvalidArgumentException('Second parameter is invalid.');
 		//if (!$this->options['member_id']) throw new \FuelException('Need member_id.');
 
-		$thumbnail_dir_uri = $this->options['upload_uri'].'thumbnail/';
 		$files = array();
 		foreach ($file_tmps as $file_tmp)
 		{
@@ -14,8 +14,12 @@ class MyUploadHandler extends UploadHandler
 			$file->is_tmp   = true;
 			$file->id   = $file_tmp->id;
 			$file->original_name = $file_tmp->original_filename;
-			$file->thumbnail_uri = $thumbnail_dir_uri.$file_tmp->name;
 			$file->description   = $file_tmp->description;
+			if ($type == 'img')
+			{
+				$file->thumbnail_uri = $this->options['upload_uri'].'thumbnail/'.$file_tmp->name;
+			}
+
 			$files[] = $file;
 		}
 
@@ -167,7 +171,7 @@ class MyUploadHandler extends UploadHandler
 		$file->original_name = $original_name;
 		$file->size = $this->fix_integer_overflow(intval($size));
 		$file->type = $type;
-		if (!$extention = Util_file::check_image_type($uploaded_file, \Site_Upload::get_accept_format(), $type))
+		if (!$extention = Util_file::check_file_type($uploaded_file, \Site_Upload::get_accept_format($this->options['upload_type']), $type, $this->options['upload_type']))
 		{
 			$file->error = $this->get_error_message('accept_file_types');
 			return $file;
@@ -187,7 +191,7 @@ class MyUploadHandler extends UploadHandler
 			return $file;
 		}
 
-		$file->thumbnail_uri = sprintf('%sthumbnail/%s', $this->options['upload_uri'], $file->name);
+		if ($this->options['upload_type'] == 'img') $file->thumbnail_uri = sprintf('%sthumbnail/%s', $this->options['upload_uri'], $file->name);
 		$this->handle_form_data($file, $index);
 		$upload_dir = $this->get_upload_path();
 		$file_path = $this->get_upload_path($file->name);
@@ -245,16 +249,19 @@ class MyUploadHandler extends UploadHandler
 			$exif = exif_read_data($file_path) ?: array();
 		}
 
-		// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
-		$file_size_before = $file->size;
-		if ($this->options['member_id'] && $this->options['user_type'] === 0 && $max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
+		if ($this->options['upload_type'] == 'img')
 		{
-			$file->size = Site_Upload::check_max_size_and_resize($file_path, $max_size);
-		}
-		if (conf('upload.types.img.exif.is_remove') && $file_size_before == $file->size)
-		{
-			Util_file::resave($file_path);
-			$file->size = File::get_size($file_path);
+			// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
+			$file_size_before = $file->size;
+			if ($this->options['member_id'] && $this->options['user_type'] === 0 && $max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
+			{
+				$file->size = Site_Upload::check_max_size_and_resize($file_path, $max_size);
+			}
+			if (conf('upload.types.img.exif.is_remove') && $file_size_before == $file->size)
+			{
+				Util_file::resave($file_path);
+				$file->size = File::get_size($file_path);
+			}
 		}
 
 		try
@@ -264,7 +271,7 @@ class MyUploadHandler extends UploadHandler
 		catch(\FuelException $e)
 		{
 			$this->delete_file($file->name);
-			$file->error = '画像情報の保存に失敗しました。';
+			$file->error = 'ファイルの保存に失敗しました。';
 		}
 
 		return $file;

@@ -121,7 +121,8 @@ class Model_News extends \MyOrm\Model
 	public function delete_with_relations()
 	{
 		// news_image の削除
-		list($result, $deleted_files) = Model_NewsImage::delete_multiple4news_id($this->id);
+		list($result, $deleted_images) = Model_NewsImage::delete_multiple4news_id($this->id);
+		list($result, $deleted_files)  = Model_NewsFile::delete_multiple4news_id($this->id);
 
 		//// timeline 投稿の削除
 		//if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('news', $this->id);
@@ -129,7 +130,7 @@ class Model_News extends \MyOrm\Model
 		// note の削除
 		$this->delete();
 
-		return $deleted_files;
+		return array($deleted_images, $deleted_files);
 	}
 
 	public static function get4slug($slug)

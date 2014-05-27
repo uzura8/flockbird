@@ -78,7 +78,7 @@ CREATE TABLE `file` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
   `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File path',
-  `type` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
+  `type` varchar(256) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
   `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
   `member_id` int(11) DEFAULT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE `file_tmp` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
   `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File path',
-  `type` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
+  `type` varchar(256) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
   `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
   `member_id` int(11) NULL,
@@ -354,6 +354,20 @@ CREATE TABLE `news_image` (
   KEY `news_id_idx` (`news_id`),
   KEY `file_id_idx` (`file_id`),
   CONSTRAINT `news_image_news_id_news_id` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `news_file` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `news_id` int(11) NOT NULL,
+  `file_id` varchar(255) NOT NULL,
+  `name` text NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `news_id_created_at` (`news_id`,`created_at`),
+  KEY `news_id_idx` (`news_id`),
+  KEY `file_id_idx` (`file_id`),
+  CONSTRAINT `news_file_news_id_news_id` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `news_link` (

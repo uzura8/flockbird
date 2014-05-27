@@ -150,32 +150,19 @@ class Util_file
 		return false;
 	}
 
-	public static function check_image_type($file_path, $arrow_extentions = array(), $type = '')
+	public static function check_file_type($file_path, $arrow_extentions = array(), $format = '', $upload_type = 'img')
 	{
-		if (empty($arrow_extentions)) $arrow_extentions = Site_Upload::get_accept_format();
+		if (empty($arrow_extentions)) $arrow_extentions = Site_Upload::get_accept_format($upload_type);
 
-		if ($type)
+		if ($format)
 		{
-			if (!preg_match('#^image/(jpeg|gif|ping)$#i', $type, $matches)) return false;
-			switch ($matches[1])
-			{
-				case 'jpeg':
-					$extension = 'jpg';
-					break;
-				case 'gif':
-					$extension = 'gif';
-					break;
-				case 'png':
-					$extension = 'png';
-					break;
-				default :
-					return false;
-			}
+			if (!$extension = Site_Upload::check_file_format_is_accepted($format, $upload_type)) return false;
 		}
 		else
 		{
 			if (!$extension = self::check_extension($file_path, $arrow_extentions)) return false;
 		}
+		if ($upload_type == 'file') return $extension;
 
 		$imginfo = getimagesize($file_path);
 		$type = $imginfo[2];

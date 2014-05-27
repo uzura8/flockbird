@@ -2,20 +2,21 @@
 
 class Site_FileTmp
 {
-	public static function get_file_tmps_and_check_filesize($member_id = null, $filesize_total = null)
+	public static function get_file_tmps_and_check_filesize($member_id = null, $filesize_total = null, $type = 'img')
 	{
-		$file_tmps = self::get_file_tmps_uploaded($member_id);
+		$file_tmps = self::get_file_tmps_uploaded($member_id, false, $type);
 		if ($member_id) self::check_uploaded_under_accepted_filesize($file_tmps, $filesize_total, Site_Upload::get_accepted_filesize($member_id));
 
 		return $file_tmps;
 	}
 
-	public static function get_file_tmps_uploaded($member_id = null, $is_check_select_files = false, $is_throw_exception_not_exists_file = true, $is_delete_record_not_exists_file = false)
+	public static function get_file_tmps_uploaded($member_id = null, $check_selected = false, $type = 'img', $check_file_exists = true, $is_delete_not_exists_file = false)
 	{
 		$file_tmps = array();
-		if (!$file_tmps_posted = Input::post('file_tmp'))
+		$post_key = ($type == 'img') ? 'image_tmp' : 'file_tmp';
+		if (!$file_tmps_posted = Input::post($post_key))
 		{
-			if ($is_check_select_files)  throw new HttpInvalidInputException('File not selected.');
+			if ($check_selected) throw new HttpInvalidInputException('File not selected.');
 
 			return $file_tmps;
 		}
@@ -33,16 +34,16 @@ class Site_FileTmp
 			if ($member_id && $file_tmp->member_id != $member_id) throw new HttpForbiddenException;
 			if ($file_tmps_posted[$file_tmp->id] != $file_tmp->name) throw new HttpInvalidInputException('Invalid input data.');
 
-			$file_tmps_description_posted = Input::post('file_tmp_description');
-			if (!is_null($file_tmps_description_posted[$file_tmp->id]))
+			$file_tmps_description_posted = Input::post($post_key.'_description');
+			if (isset($file_tmps_description_posted[$file_tmp->id]))
 			{
 				$file_tmps[$key]->description = trim($file_tmps_description_posted[$file_tmp->id]);
 			}
 
-			if (!file_exists(conf('upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name))
+			if (!file_exists(conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.$file_tmp->name))
 			{
-				if ($is_throw_exception_not_exists_file) throw new HttpInvalidInputException('File not exists.');
-				if ($is_delete_record_not_exists_file) $file_tmp->delete();
+				if ($check_file_exists) throw new HttpInvalidInputException('File not exists.');
+				if ($is_delete_not_exists_file) $file_tmp->delete();
 				unset($file_tmps[$file_tmp->id]);
 			}
 		}
@@ -61,16 +62,20 @@ class Site_FileTmp
 		return true;
 	}
 
-	public static function save_images($file_tmps, $parent_id, $parent_id_field, $related_table, $namespace = null, $public_flag = null, $is_ignore_member_id = false)
+	public static function save_images($file_tmps, $parent_id, $parent_id_field, $related_table, $namespace = null, $public_flag = null, $is_ignore_member_id = false, $type = 'img')
 	{
+		if (!in_array($type, array('img', 'file'))) throw new InvalidArgumentException('Parameter type is invalid.');
+
 		$moved_files     = array();
 		$related_table_ids = array();
 		if (!$file_tmps) return array($moved_files, $related_table_ids);
 
-		$file_cate = Site_Upload::get_file_cate_from_table($related_table);
-		if (!$file_cate) throw new \InvalidArgumentException('Parameter $related_table is invalid.');
+		if (!$file_cate = Site_Upload::get_file_cate_from_table($related_table))
+		{
+			throw new \InvalidArgumentException('Parameter $related_table is invalid.');
+		}
 		$new_filepath = Site_Upload::get_filepath($file_cate, $parent_id);
-		$new_file_dir  = conf('upload.types.img.raw_file_path').$new_filepath;
+		$new_file_dir  = conf('upload.types.'.$type.'.raw_file_path').$new_filepath;
 		if (!Site_Upload::check_and_make_uploaded_dir($new_file_dir, conf('upload.check_and_make_dir_level'), conf('upload.mkdir_mode')))
 		{
 			throw newFuelException('Failed to make save dirs.');
@@ -78,16 +83,18 @@ class Site_FileTmp
 
 		foreach ($file_tmps as $id => $file_tmp)
 		{
-			$old_file_path = conf('upload.types.img.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
-			$thumbnail_file_path = conf('upload.types.img.tmp.raw_file_path').$file_tmp->path.'thumbnail/'.$file_tmp->name;
+			$old_file_path = conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
 			$new_file_path = $new_file_dir.$file_tmp->name;
 			Util_file::move($old_file_path, $new_file_path);
 			$moved_files[$file_tmp->id] = array(
 				'from' => $old_file_path,
 				'to'   => $new_file_path,
-				'from_thumbnail' => $thumbnail_file_path,
 				'filepath' => $new_filepath,
 			);
+			if ($type == 'img')
+			{
+				$moved_files[$file_tmp->id]['from_thumbnail'] = conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.'thumbnail/'.$file_tmp->name;
+			}
 			$file = Model_File::move_from_file_tmp($file_tmp, $new_filepath, $is_ignore_member_id);
 
 			$model = Site_Model::get_model_name($related_table, $namespace);
@@ -121,11 +128,11 @@ class Site_FileTmp
 		}
 	}
 
-	public static function get_file_objects($file_tmps, $member_id, $is_admin = false)
+	public static function get_file_objects($file_tmps, $member_id, $is_admin = false, $type = 'img')
 	{
-		$options = Site_Upload::get_upload_handler_options($member_id, $is_admin);
+		$options = Site_Upload::get_upload_handler_options($member_id, $is_admin, true, null, 0, true, $type);
 		$uploadhandler = new MyUploadHandler($options, false);
 
-		return $uploadhandler->get_file_objects_from_file_tmps($file_tmps);
+		return $uploadhandler->get_file_objects_from_file_tmps($file_tmps, $type);
 	}
 }

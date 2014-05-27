@@ -2,22 +2,40 @@
 /*global window, $ */
 $(function () {
 	'use strict';
-	var uri = check_is_admin() ? 'admin/filetmp/api/upload.html' : 'filetmp/api/upload.html';
-	var post_url = get_url(uri);
 	// Change this to the location of your server-side upload handler:
-	$('#fileupload').fileupload({
-		url: post_url,
+	$('#file_select_file').fileupload({
+		url: get_file_upload_post_uri('file'),
 		dataType: 'text',
-		formData: {thumbnail_size: $('#thumbnail_size').val()},
+		formData: {},
 		start: function (e) {
-			$('#progress .progress-bar').css('width', 0);
+			$('#progress_file .progress-bar').css('width', 0);
 		},
 		done: function (e, data) {
-			$('#files').append(data['result']).fadein('fast');
+			$('#files_file').append(data['result']).fadein('fast');
 		},
 		progressall: function (e, data) {
 			var progress = parseInt(data.loaded / data.total * 100, 10);
-			$('#progress .progress-bar').css(
+			$('#progress_file .progress-bar').css(
+				'width',
+				progress + '%'
+			);
+		}
+	}).prop('disabled', !$.support.fileInput)
+		.parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+	$('#file_select_img').fileupload({
+		url: get_file_upload_post_uri('img'),
+		dataType: 'text',
+		formData: {thumbnail_size: $('#thumbnail_size').val()},
+		start: function (e) {
+			$('#progress_img .progress-bar').css('width', 0);
+		},
+		done: function (e, data) {
+			$('#files_img').append(data['result']).fadein('fast');
+		},
+		progressall: function (e, data) {
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+			$('#progress_img .progress-bar').css(
 				'width',
 				progress + '%'
 			);
@@ -31,21 +49,24 @@ $(function () {
 		var model = $(this).data('model') ? $(this).data('model') : 'album';
 
 		if (model.length > 0 && model != 'album' && model != 'news') model = 'album';
+
 		var delete_uri = '';
-		if (file_type == 'file_tmp') {
-			delete_uri = 'filetmp/api/upload.json';
+		if (check_is_admin()) delete_uri += 'admin/';
+		if (file_type == 'file_tmp' || file_type == 'image_tmp') {
+			delete_uri += 'filetmp/api/upload';
 		} else {
-			delete_uri = model + '/image/api/delete.json';
+			delete_uri += model + '/image/api/delete';
 		}
-		if (check_is_admin()) delete_uri = 'admin/' + delete_uri;
+		if ($(this).data('file_type') == 'file') delete_uri += '/file';
+		delete_uri += '.json';
 
 		delete_item(delete_uri, file_id, '#' + file_type);
 		return false;
 	});
 });
-$('.display_fileinput-button').click(function() {
-	$('.display_fileinput-button').remove();
-	$('#upload_files').removeClass('hidden');
+$('.btn_disp_file_select').click(function() {
+	$('#btn_disp_file_select_' + $(this).data('type')).remove();
+	$('#upload_files_' + $(this).data('type')).removeClass('hidden');
 });
 
 function load_file_tmp(get_url, file_name, parent_attr) {
@@ -74,4 +95,11 @@ function load_file_tmp(get_url, file_name, parent_attr) {
 			$.jGrowl(get_error_message(result['status'], '読み込みに失敗しました。'));
 		}
 	});
+}
+
+function get_file_upload_post_uri(type) {
+console.log(type);
+	var uri = (type == 'file') ? 'filetmp/api/upload/file.html' : 'filetmp/api/upload.html';
+	if (check_is_admin()) uri = 'admin/' + uri;
+	return get_url(uri);
 }

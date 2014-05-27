@@ -8,6 +8,9 @@ return array(
 	'image' => array(
 		'isEnabled' => true,
 	),
+	'file' => array(
+		'isEnabled' => true,
+	),
 	'link' => array(
 		'isEnabled' => true,
 	),

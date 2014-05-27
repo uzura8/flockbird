@@ -115,6 +115,9 @@ class Site_Upload
 			case 'news_image':
 				return 'nw';
 				break;
+			case 'news_file':
+				return 'nf';
+				break;
 			default :
 				break;
 		}
@@ -236,21 +239,21 @@ class Site_Upload
 		return true;
 	}
 
-	public static function get_uploader_info($file_cate, $split_criterion_id, $is_tmp = false, $with_thumbnails = false)
+	public static function get_uploader_info($file_cate, $split_criterion_id, $is_tmp = false, $type = 'img', $with_thumbnails = true)
 	{
 		$filepath = \Site_Upload::get_filepath($file_cate, $split_criterion_id);
 		$thumbnail_sizes = array();
 		if ($is_tmp)
 		{
-			if ($with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.tmp.sizes.thumbnail'));
-			$upload_dir = conf('upload.types.img.tmp.raw_file_path').$filepath;
-			$upload_uri = conf('upload.types.img.tmp.root_path.raw_dir').$filepath;
+			if ($type == 'img' && $with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.tmp.sizes.thumbnail'));
+			$upload_dir = conf('upload.types.'.$type.'.tmp.raw_file_path').$filepath;
+			$upload_uri = conf('upload.types.'.$type.'.tmp.root_path.raw_dir').$filepath;
 		}
 		else
 		{
-			if ($with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.types.'.$file_cate.'.sizes.thumbnail'));
-			$upload_dir      = conf('upload.types.img.raw_file_path').$filepath;
-			$upload_uri      = conf('upload.types.img.root_path.raw_dir').$filepath;
+			if ($type == 'img' && $with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.types.'.$file_cate.'.sizes.thumbnail'));
+			$upload_dir      = conf('upload.types.'.$type.'.raw_file_path').$filepath;
+			$upload_uri      = conf('upload.types.'.$type.'.root_path.raw_dir').$filepath;
 		}
 		$upload_url = Uri::create($upload_uri);
 
@@ -265,6 +268,14 @@ class Site_Upload
 		return $info;
 	}
 
+	public static function check_file_format_is_accepted($file_format, $upload_type = 'img')
+	{
+		if (!in_array($upload_type, array('img', 'file'))) throw new InvalidArgumentException('Second parameter is invalid.');
+		$accepted_formats = conf('upload.types.'.$upload_type.'.accept_format');
+
+		return array_search($file_format, $accepted_formats);
+	}
+
 	public static function get_uploader_options($member_id, $file_cate = 'm', $split_criterion_id = 0)
 	{
 		if (!$split_criterion_id) $split_criterion_id = $member_id;
@@ -274,30 +285,33 @@ class Site_Upload
 		return $options;
 	}
 
-	public static function get_upload_handler_options($member_id, $is_admin = false, $is_tmp = true, $file_cate = null, $split_criterion_id = 0, $is_multiple_upload = true, $with_thumbnail = true)
+	public static function get_upload_handler_options($member_id, $is_admin = false, $is_tmp = true, $file_cate = null, $split_criterion_id = 0, $is_multiple_upload = true, $upload_type = 'img')
 	{
 		if (!$split_criterion_id) $split_criterion_id = $member_id;
 		if (!$file_cate) $file_cate = $is_admin ? 'au' : 'm';
-		$uploader_info = self::get_uploader_info($file_cate, $split_criterion_id, $is_tmp, true);
+		$uploader_info = self::get_uploader_info($file_cate, $split_criterion_id, $is_tmp, $upload_type);
 		$options = array(
 			'max_file_size'  => PRJ_UPLOAD_MAX_FILESIZE,
 			'max_number_of_files' => $is_multiple_upload ? PRJ_MAX_FILE_UPLOADS : 1,
-			'is_save_exif'   => conf('upload.types.img.exif.is_use'),
 			'upload_dir'     => $uploader_info['upload_dir'],
 			'upload_url'     => $uploader_info['upload_url'],
 			'upload_uri'     => $uploader_info['upload_uri'],
 			'mkdir_mode'     => conf('upload.mkdir_mode'),
 			'member_id'      => $member_id,
+			'upload_type'    => $upload_type,
 			'user_type'      => $is_admin ? 1 : 0,
 			'filepath'       => $uploader_info['filepath'],
-			'image_versions' => array(
+			'is_save_exif'   => false,
+			'image_versions' => array(),
+		);
+		if ($upload_type == 'img')
+		{
+			$options['is_save_exif'] = conf('upload.types.img.exif.is_use');
+			$options['image_versions'] = array(
 				'' => array(
 					'auto_orient' => true
 				),
-			),
-		);
-		if ($with_thumbnail)
-		{
+			);
 			$options['image_versions']['thumbnail'] = array(
 				'max_width'  => $uploader_info['thumbnail_sizes']['width'],
 				'max_height' => $uploader_info['thumbnail_sizes']['height'],

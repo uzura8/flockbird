@@ -42,6 +42,7 @@ $config = array(
 		'add' => 'plus',
 		'do_add' => 'plus',
 		'add_picture' => 'camera',
+		'add_file' => 'file',
 		'add_link' => 'link',
 	),
 	'site' => array(
@@ -69,6 +70,7 @@ $config = array(
 		//'id' => 'ID',
 		'user' => 'user',
 		'picture' => 'picture',
+		'file' => 'file',
 		//'title' => 'タイトル',
 		//'latest' => '最新の',
 		//'display' => '表示',

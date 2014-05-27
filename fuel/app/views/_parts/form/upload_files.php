@@ -1,4 +1,5 @@
 <?php
+if (empty($upload_type)) $upload_type = 'img';
 if ($label)
 {
 	$label_class = 'col-sm-'.$offset_size;
@@ -24,6 +25,7 @@ $col = 'col-sm-'.(12 - $offset_size);
 	'thumbnail_size' => empty($thumbnail_size) ? 'M' : $thumbnail_size,
 	'selects' => $selects,
 	'model' => $model,
+	'upload_type' => $upload_type,
 )); ?>
 <?php if (!$is_raw_form): ?>
 </div>

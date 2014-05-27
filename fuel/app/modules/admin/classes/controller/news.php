@@ -94,8 +94,10 @@ class Controller_News extends Controller_Admin
 	{
 		$news = \News\Model_News::forge();
 		$val = self::get_validation_object($news);
-		$files = array();
+		$images = array();
+		$files  = array();
 		$is_enabled_image = \Config::get('news.image.isEnabled');
+		$is_enabled_file  = \Config::get('news.file.isEnabled');
 		$is_enabled_link  = \Config::get('news.link.isEnabled');
 		$posted_links = array();
 
@@ -107,12 +109,16 @@ class Controller_News extends Controller_Admin
 				$posted_links = $this->get_posted_links();
 				$val = $this->add_validation_object_posted_links($val, $posted_links);
 			}
+			$image_tmps = array();
 			$file_tmps = array();
+			$moved_images = array();
 			$moved_files = array();
 			$news_image_ids = array();
+			$news_file_ids = array();
 			try
 			{
-				if ($is_enabled_image) $file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize();
+				if ($is_enabled_image) $image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize();
+				if ($is_enabled_file)  $file_tmps  = \Site_FileTmp::get_file_tmps_and_check_filesize(null, null, 'file');
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 
@@ -135,7 +141,11 @@ class Controller_News extends Controller_Admin
 				$news->save();
 				if ($is_enabled_image)
 				{
-					list($moved_files, $news_image_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
+					list($moved_images, $news_image_ids) = \Site_FileTmp::save_images($image_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
+				}
+				if ($is_enabled_file)
+				{
+					list($moved_files, $news_file_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_file', 'News', null, true, 'file');
 				}
 				if ($is_enabled_link)
 				{
@@ -150,7 +160,7 @@ class Controller_News extends Controller_Admin
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
-				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
+				\Site_FileTmp::make_and_remove_thumbnails($moved_images);
 
 				$message = sprintf('%sを%sしました。', term('news.view'), $news->is_published ? term('form.publish') : term('form.draft'));
 				\Session::set_flash('message', $message);
@@ -159,8 +169,10 @@ class Controller_News extends Controller_Admin
 			catch(\FuelException $e)
 			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
-				if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
-				$files = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id, true);
+				if ($moved_images) \Site_FileTmp::move_files_to_tmp_dir($moved_images);
+				if ($moved_files)  \Site_FileTmp::move_files_to_tmp_dir($moved_files);
+				$images = \Site_FileTmp::get_file_objects($image_tmps, $this->u->id, true, 'img');
+				$files  = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id, true, 'file');
 
 				\Session::set_flash('error', $e->getMessage());
 			}
@@ -169,7 +181,7 @@ class Controller_News extends Controller_Admin
 		$this->set_title_and_breadcrumbs(term('news.view', 'form.create'), array('admin/news' => term('news.view', 'admin.view')));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
 		$this->template->post_footer = \View::forge('news/_parts/form_footer');
-		$this->template->content = \View::forge('news/_parts/form', array('val' => $val, 'files' => $files, 'posted_links' => $posted_links));
+		$this->template->content = \View::forge('news/_parts/form', array('val' => $val, 'images' => $images, 'files' => $files, 'posted_links' => $posted_links));
 	}
 
 	/**
@@ -217,7 +229,8 @@ class Controller_News extends Controller_Admin
 			$news_image_ids = array();
 			try
 			{
-				if ($is_enabled_image) $file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize();
+				if ($is_enabled_image) $image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize(null, null, 'image_tmp');
+				if ($is_enabled_file)  $file_tmps  = \Site_FileTmp::get_file_tmps_and_check_filesize();
 
 				// 識別名の変更がない場合は unique を確認しない
 				if (trim(\Input::post('slug')) == $news->slug) $val->fieldset()->field('slug')->delete_rule('unique');
@@ -324,9 +337,11 @@ class Controller_News extends Controller_Admin
 		try
 		{
 			\DB::start_transaction();
+			list($deleted_images, $deleted_files) = $news->delete_with_relations();
 			$deleted_files = $news->delete_with_relations();
 			\DB::commit_transaction();
-			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
+			if (!empty($deleted_images)) \Site_Upload::remove_files($deleted_images);
+			if (!empty($deleted_files))  \Site_Upload::remove_files($deleted_files);
 			\Session::set_flash('message', term('news.view').'を削除しました。');
 		}
 		catch(\FuelException $e)

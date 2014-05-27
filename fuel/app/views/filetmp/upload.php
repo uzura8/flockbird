@@ -1,13 +1,13 @@
 <?php if (!isset($hide_form)) $hide_form = false; ?>
 <!-- The container for the uploaded files -->
-<div id="upload_files" class="<?php if ($hide_form): ?> hidden<?php endif; ?>">
-<div id="files" class="files row">
+<div id="upload_files_<?php echo $upload_type; ?>" class="<?php if ($hide_form): ?> hidden<?php endif; ?>">
+<div id="files_<?php echo $upload_type; ?>" class="files row">
 <?php if (!empty($files)): ?>
-<?php echo render('filetmp/_parts/upload_images', array('files' => $files, 'thumbnail_size' => $thumbnail_size, 'model' => $model)); ?>
+<?php echo render('filetmp/_parts/upload_images', array('files' => $files, 'thumbnail_size' => $thumbnail_size, 'model' => $model, 'upload_type' => $upload_type)); ?>
 <?php endif; ?>
 </div><!-- #files -->
 <!-- The global progress bar -->
-<div id="progress" class="progress">
+<div id="progress_<?php echo $upload_type; ?>" class="progress">
 		<div class="progress-bar progress-bar-success"></div>
 </div>
 <!-- The fileinput-button span is used to style the file input field as button -->
@@ -24,7 +24,7 @@
 			<i class="glyphicon glyphicon-plus"></i>
 			<span>Select files...</span>
 			<!-- The file input field used as target for the file upload widget -->
-			<input id="fileupload" type="file" name="files[]" multiple>
+			<input class="file_select" type="file" name="files[]" multiple id="file_select_<?php echo $upload_type; ?>">
 		</span>
 <?php if (!empty($selects)): ?>
 	</div><!-- .form-group -->
@@ -40,5 +40,5 @@ echo Form::select($selects['name'], $selects['value'], $selects['options'], $att
 </div><!-- fileinput -->
 </div><!-- #upload_files -->
 <?php if ($hide_form): ?>
-<?php echo btn('form.add_picture', null, 'display_fileinput-button', true, 'ms', null, array(), null, 'button'); ?>
+<?php echo btn(($upload_type == 'file') ? 'form.add_file' : 'form.add_picture', null, 'btn_disp_file_select', true, null, null, array('data-type' => $upload_type, 'id' => 'btn_disp_file_select_'.$upload_type), null, 'button'); ?>
 <?php endif; ?>

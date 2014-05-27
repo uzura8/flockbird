@@ -28,9 +28,11 @@ class Controller_FileTmp_Api extends Controller_Api
 	 * @access  public
 	 * @return  Response (html or json)
 	 */
-	public function post_upload()
+	public function post_upload($type = null)
 	{
-		return $this->common_FileTmp_post_upload();
+		if (!$type || !in_array($type, array('img', 'file'))) $type = 'img';
+
+		return $this->common_FileTmp_post_upload($type);
 	}
 
 	/**

@@ -347,7 +347,7 @@ function form_text($value, $label, $label_col_sm_size = 2, $is_safe_value = fals
 	return $view->render();
 }
 
-function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array(), $model = 'album', $label = null, $offset_size = 2)
+function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array(), $model = 'album', $label = null, $offset_size = 2, $upload_type = 'img')
 {
 	return render('_parts/form/upload_files', array(
 		'files' => $files,
@@ -359,6 +359,7 @@ function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is
 		'model' => $model,
 		'label' => $label,
 		'offset_size' => $offset_size,
+		'upload_type' => $upload_type,
 	));
 }
 

@@ -182,12 +182,12 @@ class Controller_Base extends Controller_Hybrid
 		$this->response($response, $status_code);
 	}
 
-	protected function common_FileTmp_post_upload()
+	protected function common_FileTmp_post_upload($upload_type = 'img')
 	{
 		$_method = \Input::get_post('_method');
 		if (isset($_method) && $_method === 'DELETE')
 		{
-			return $this->delete_upload();
+			return $this->common_FileTmp_delete_upload($upload_type);
 		}
 
 		$response = '';
@@ -196,13 +196,17 @@ class Controller_Base extends Controller_Hybrid
 			//Util_security::check_csrf();
 			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
 
-			$thumbnail_size = \Input::post('thumbnail_size');
-			if (!\Validation::_validation_in_array($thumbnail_size, array('M', 'S'))) throw new HttpInvalidInputException('Invalid input data');;
+			if ($upload_type == 'img')
+			{
+				$thumbnail_size = \Input::post('thumbnail_size');
+				if (!\Validation::_validation_in_array($thumbnail_size, array('M', 'S'))) throw new HttpInvalidInputException('Invalid input data');;
+			}
 
-			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN);
+			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN, true, null, 0, true, $upload_type);
 			$uploadhandler = new MyUploadHandler($options, false);
 			$files = $uploadhandler->post(false);
-			$files['thumbnail_size'] = $thumbnail_size;
+			$files['upload_type'] = $upload_type;
+			if ($upload_type == 'img') $files['thumbnail_size'] = $thumbnail_size;
 			$status_code = 200;
 
 			if ($this->format == 'html')
@@ -220,7 +224,7 @@ class Controller_Base extends Controller_Hybrid
 		return $this->response($response, $status_code);
 	}
 
-	protected function common_FileTmp_delete_upload()
+	protected function common_FileTmp_delete_upload($upload_type = 'img')
 	{
 		$response = '';
 		try
@@ -233,7 +237,7 @@ class Controller_Base extends Controller_Hybrid
 				throw new HttpNotFoundException;
 			}
 
-			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN);
+			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN, true, null, 0, true, $upload_type);
 			$uploadhandler = new MyUploadHandler($options, false);
 			$response = $uploadhandler->delete(false, $file_tmp);
 			$status_code = 200;

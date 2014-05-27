@@ -480,6 +480,12 @@ div.alert ul {
 	padding: 0;
 }
 
+#upload_files_img .file_tmp,
+#upload_files_file .file_tmp
+{
+	margin-bottom: 10px;
+}
+
 .commentPostBox .input {
 	margin-bottom: 5px;
 }

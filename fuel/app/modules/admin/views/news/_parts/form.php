@@ -4,7 +4,10 @@
 	<?php echo form_input($val, 'title', isset($news) ? $news->title : ''); ?>
 	<?php echo form_textarea($val, 'body', isset($news) ? $news->body : ''); ?>
 <?php if (Config::get('news.image.isEnabled')): ?>
-	<?php echo form_upload_files($files, $files ? false : true, false, true, 'M', array(), 'news', term('site.picture')); ?>
+	<?php echo form_upload_files($images, $images ? false : true, false, true, 'M', array(), 'news', term('site.picture')); ?>
+<?php endif; ?>
+<?php if (Config::get('news.file.isEnabled')): ?>
+	<?php echo form_upload_files($files, $files ? false : true, false, true, 'M', array(), 'news', term('site.file'), 2, 'file'); ?>
 <?php endif; ?>
 <?php if (Config::get('news.link.isEnabled')): ?>
 	<div class="form-group">
@@ -26,12 +29,12 @@
 	<?php echo form_input($val, 'published_at_time', (isset($news) && isset_datatime($news->published_at)) ? substr($news->published_at, 0, 16) : '', 6); ?>
 	<?php echo form_input($val, 'slug', isset($news) ? $news->slug : \News\Site_Util::get_slug(), 6); ?>
 <?php if (empty($news->is_published)): ?>
-	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
+	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1)); ?>
 <?php endif; ?>
 <?php if (!empty($is_edit)): ?>
-	<?php echo form_button(empty($news->is_published) ? 'form.do_publish' : 'form.do_edit'); ?>
+	<?php echo form_button(empty($news->is_published) ? 'form.do_publish' : 'form.do_edit', 'submit', 'submit', array('class' => 'btn btn-default btn-warning')); ?>
 <?php else: ?>
-	<?php echo form_button('form.do_publish'); ?>
+	<?php echo form_button('form.do_publish', 'submit', 'submit', array('class' => 'btn btn-default btn-warning')); ?>
 <?php endif; ?>
 <?php if (!empty($is_edit)): ?>
 	<?php echo form_anchor_delete('admin/news/delete/'.$news->id); ?>

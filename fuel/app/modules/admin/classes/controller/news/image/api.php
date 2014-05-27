@@ -37,6 +37,10 @@ class Controller_News_Image_Api extends Controller_Api
 			$response['status'] = 1;
 			$status_code = 200;
 		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
 		catch(\FuelException $e)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
