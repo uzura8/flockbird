@@ -42,7 +42,7 @@ class MyUploadHandler extends UploadHandler
 
 		foreach ($model_objs as $model_obj)
 		{
-			$file = $this->get_file_object($model_obj->file->name);
+			if (!$file = $this->get_file_object($model_obj->file->name)) continue;
 			$file->is_tmp = false;
 			$file->id = (int)$model_obj->id;
 			$file->original_name = $model_obj->file->original_filename;

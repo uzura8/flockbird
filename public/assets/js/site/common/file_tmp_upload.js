@@ -45,22 +45,25 @@ $(function () {
 
 	$(document).on('click','.delete_file_tmp', function(){
 		var file_id   = $(this).data('id') ? parseInt($(this).data('id')) : 0;
-		var file_type = $(this).data('type') ? $(this).data('type') : 'file_tmp';
+		var upload_type = $(this).data('type') ? $(this).data('type') : 'file_tmp';
+		var file_type = $(this).data('file_type') ? $(this).data('file_type') : 'img';
 		var model = $(this).data('model') ? $(this).data('model') : 'album';
 
 		if (model.length > 0 && model != 'album' && model != 'news') model = 'album';
 
 		var delete_uri = '';
 		if (check_is_admin()) delete_uri += 'admin/';
-		if (file_type == 'file_tmp' || file_type == 'image_tmp') {
+		if (upload_type == 'file_tmp' || upload_type == 'image_tmp') {
 			delete_uri += 'filetmp/api/upload';
+			if (file_type == 'file') delete_uri += '/file';
 		} else {
-			delete_uri += model + '/image/api/delete';
+			delete_uri += model;
+			delete_uri += (file_type == 'file') ? '/file' : '/image';
+			delete_uri += '/api/delete';
 		}
-		if ($(this).data('file_type') == 'file') delete_uri += '/file';
 		delete_uri += '.json';
 
-		delete_item(delete_uri, file_id, '#' + file_type);
+		delete_item(delete_uri, file_id, '#' + upload_type);
 		return false;
 	});
 });

@@ -6,7 +6,7 @@ $delete_btn_attr = array(
 	'data-file_type' => 'file',
 );
 if (!empty($file->id)) $delete_btn_attr['data-id'] = $file->id;
-if (!empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $model;
+if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $model;
 ?>
 <div<?php if (!empty($file->id)): ?> id="<?php echo $prefix; ?>_<?php echo $file->id; ?>"<?php endif; ?> class="col-sm-12 file_tmp">
 	<h5><?php echo $file->original_name; ?></h5>

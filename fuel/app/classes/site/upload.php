@@ -322,16 +322,16 @@ class Site_Upload
 		return $options;
 	}
 
-	public static function get_file_objects($model_objs, $parent_id, $is_admin = null, $member_id = null)
+	public static function get_file_objects($model_objs, $parent_id, $is_admin = null, $member_id = null, $type = 'img')
 	{
 		if (!$key = Util_Array::get_first_key($model_objs)) return array();
 		$table = $model_objs[$key]->table();
 		$file_cate = Site_Upload::get_file_cate_from_table($table);
 
-		$options = self::get_upload_handler_options($member_id, $is_admin, false, $file_cate, $parent_id);
+		$options = self::get_upload_handler_options($member_id, $is_admin, false, $file_cate, $parent_id, true, $type);
 		$uploadhandler = new \MyUploadHandler($options, false);
 
-		return $uploadhandler->get_file_objects_from_related_model($model_objs, \Input::post('file_description'));
+		return $uploadhandler->get_file_objects_from_related_model($model_objs, \Input::post(($type == 'img') ? 'image_description' : 'file_description'));
 	}
 
 	public static function update_image_objs4file_objects($image_objs, $files, $public_flag = null)

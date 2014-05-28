@@ -200,11 +200,18 @@ class Controller_News extends Controller_Admin
 
 		$val = self::get_validation_object($news, true);
 		$news_images = array();
-		$files = array();
+		$news_files = array();
+		$images = array();
+		$files  = array();
 		if ($is_enabled_image = \Config::get('news.image.isEnabled'))
 		{
 			$news_images = \News\Model_NewsImage::get4news_id($news->id);
-			$files = \Site_Upload::get_file_objects($news_images, $news->id, true);
+			$images = \Site_Upload::get_file_objects($news_images, $news->id, true, null, 'img');
+		}
+		if ($is_enabled_file = \Config::get('news.file.isEnabled'))
+		{
+			$news_files = \News\Model_NewsFile::get4news_id($news->id);
+			$files = \Site_Upload::get_file_objects($news_files, $news->id, true, null, 'file');
 		}
 
 		$posted_links = array();
@@ -214,6 +221,7 @@ class Controller_News extends Controller_Admin
 			$saved_links = $this->get_saved_links($news->id);
 		}
 
+		$image_tmps = array();
 		$file_tmps = array();
 		if (\Input::method() == 'POST')
 		{
@@ -225,12 +233,15 @@ class Controller_News extends Controller_Admin
 				$val = $this->add_validation_object_posted_links($val, $saved_links, true);
 				$val = $this->add_validation_object_posted_links($val, $posted_links);
 			}
+
+			$moved_images = array();
 			$moved_files = array();
 			$news_image_ids = array();
+			$news_file_ids = array();
 			try
 			{
-				if ($is_enabled_image) $image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize(null, null, 'image_tmp');
-				if ($is_enabled_file)  $file_tmps  = \Site_FileTmp::get_file_tmps_and_check_filesize();
+				if ($is_enabled_image) $image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize();
+				if ($is_enabled_file)  $file_tmps  = \Site_FileTmp::get_file_tmps_and_check_filesize(null, null, 'file');
 
 				// 識別名の変更がない場合は unique を確認しない
 				if (trim(\Input::post('slug')) == $news->slug) $val->fieldset()->field('slug')->delete_rule('unique');
@@ -263,9 +274,13 @@ class Controller_News extends Controller_Admin
 				$news->save();
 				if ($is_enabled_image)
 				{
-					list($moved_files, $news_image_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
-					//\News\Model_NewsImage::save_multiple($news->id, $news_image_ids);
-					\Site_Upload::update_image_objs4file_objects($news_images, $files);
+					list($moved_images, $news_image_ids) = \Site_FileTmp::save_images($image_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
+					\Site_Upload::update_image_objs4file_objects($news_images, $images);
+				}
+				if ($is_enabled_file)
+				{
+					list($moved_files, $news_file_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_file', 'News', null, true, 'file');
+					\Site_Upload::update_image_objs4file_objects($news_files, $files);
 				}
 				if ($is_enabled_link)
 				{
@@ -289,7 +304,7 @@ class Controller_News extends Controller_Admin
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
-				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
+				\Site_FileTmp::make_and_remove_thumbnails($moved_images);
 
 				\Session::set_flash('message', $message);
 				\Response::redirect('admin/news/detail/'.$news->id);
@@ -297,13 +312,16 @@ class Controller_News extends Controller_Admin
 			catch(\FuelException $e)
 			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
-				if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
-				$file_tmps = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id, true);
+				if ($moved_images) \Site_FileTmp::move_files_to_tmp_dir($moved_images);
+				if ($moved_files)  \Site_FileTmp::move_files_to_tmp_dir($moved_files);
+				$image_tmps = \Site_FileTmp::get_file_objects($image_tmps, $this->u->id, true, 'img');
+				$file_tmps  = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id, true, 'file');
 
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
-		$files += $file_tmps;
+		$images += $image_tmps;
+		$files  += $file_tmps;
 
 		$this->set_title_and_breadcrumbs(term('form.edit'), array('admin/news' => term('news.view', 'admin.view'), 'admin/news/'.$news->id => $news->title));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
@@ -314,6 +332,7 @@ class Controller_News extends Controller_Admin
 			'posted_links' => $posted_links,
 			'news' => $news,
 			'is_edit' => true,
+			'images' => $images,
 			'files' => $files,
 		));
 	}
