@@ -1,4 +1,7 @@
-<?php if (!isset($hide_form)) $hide_form = false; ?>
+<?php
+if (!isset($hide_form)) $hide_form = false;
+if (!isset($upload_type)) $upload_type = 'img';
+?>
 <!-- The container for the uploaded files -->
 <div id="upload_files_<?php echo $upload_type; ?>" class="<?php if ($hide_form): ?> hidden<?php endif; ?>">
 <div id="files_<?php echo $upload_type; ?>" class="files row">

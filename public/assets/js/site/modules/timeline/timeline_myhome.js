@@ -49,7 +49,7 @@ $(function() {
 
 		var body = $('#textarea_comment').val().trim();
 		var post_data_additional = {};
-		$('input[name^="file_tmp"]').each(function(){
+		$('input[name^="image_tmp"]').each(function(){
 				post_data_additional[this.name] = this.value;
 		});
 		if (body.length == 0 && Object.keys(post_data_additional).length == 0) return;
