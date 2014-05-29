@@ -25,13 +25,14 @@ class Controller_News extends \Controller_Site
 		$token = \Input::get('token');
 		if (!$token || $token != $news->token) throw new \HttpNotFoundException;
 
-		$images = Model_NewsImage::get4news_id($news->id);
+		$images = \Config::get('news.image.isEnabled') ? \News\Model_NewsImage::get4news_id($news->id) : array();
+		$files  = \Config::get('news.file.isEnabled') ? \News\Model_NewsFile::get4news_id($news->id) : array();
 
 		$title = array('name' => $news->title);
 		$header_info = self::get_prview_header_info($news->is_published, $news->published_at);
 		$this->set_title_and_breadcrumbs($title, null, null, null, $header_info, true);
 		//$this->template->subtitle = \View::forge('news/_parts/detail_subtitle', array('news' => $news));
-		$this->template->content = \View::forge('detail', array('news' => $news, 'images' => $images));
+		$this->template->content = \View::forge('detail', array('news' => $news, 'images' => $images, 'files' => $files));
 	}
 
 	private static function get_prview_header_info($is_published, $published_at)

@@ -70,7 +70,8 @@ class Controller_News extends Controller_Admin
 	{
 		if (!$news = \News\Model_News::check_authority($id)) throw new \HttpNotFoundException;
 
-		$images = \News\Model_NewsImage::get4news_id($id);
+		$images = \Config::get('news.image.isEnabled') ? \News\Model_NewsImage::get4news_id($id) : array();
+		$files  = \Config::get('news.file.isEnabled') ? \News\Model_NewsFile::get4news_id($id) : array();
 
 		$title = array('name' => $news->title);
 		$header_info = array();
@@ -81,7 +82,7 @@ class Controller_News extends Controller_Admin
 		//$this->template->layout = 'wide';
 		$this->set_title_and_breadcrumbs($title, array('admin/news' => term('news.view', 'admin.view')), null, null, $header_info);
 		$this->template->subtitle = \View::forge('news/_parts/detail_subtitle', array('news' => $news));
-		$this->template->content = \View::forge('news/detail', array('news' => $news, 'images' => $images));
+		$this->template->content = \View::forge('news/detail', array('news' => $news, 'images' => $images, 'files' => $files));
 	}
 
 	/**

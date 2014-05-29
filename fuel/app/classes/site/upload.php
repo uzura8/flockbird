@@ -116,7 +116,7 @@ class Site_Upload
 				return 'nw';
 				break;
 			case 'news_file':
-				return 'nf';
+				return 'nw';
 				break;
 			default :
 				break;
