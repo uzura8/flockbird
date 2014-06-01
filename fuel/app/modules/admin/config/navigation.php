@@ -16,10 +16,10 @@ return array(
 			term('admin.view', 'page.view', 'site.setting') => array(
 				term('admin.account.view', 'site.management') => 'admin/account/',
 			),
-			term('site.view') => '/',
+			term('site.view') => PRJ_SITE_URL ?: '/',
 		),
 		'insecure_global_head' => array(
-			term('site.view') => '/',
+			term('site.view') => PRJ_SITE_URL ?: '/',
 		),
 		'secure_user_dropdown' => array(
 			'site.setting' => 'admin/setting/',
@@ -32,7 +32,7 @@ return array(
 		),
 		'insecure_side' => array(
 			term('admin.view', 'page.view', 'page.top') => 'admin/',
-			term('site.view') => '/',
+			term('site.view') => PRJ_SITE_URL ?: '/',
 		),
 		'secure_side_admin' => array(
 			term('admin.view', 'page.view', 'page.top') => 'admin/',
@@ -40,7 +40,7 @@ return array(
 			term('news.view', 'site.management') => 'admin/news/',
 			term('profile', 'site.setting') => 'admin/profile/',
 			term('admin.view', 'page.view', 'site.setting') => 'admin/account/',
-			term('site.view') => '/',
+			term('site.view') => PRJ_SITE_URL ?: '/',
 		),
 		'secure_side_user' => array(
 			'site.setting' => 'admin/setting/',

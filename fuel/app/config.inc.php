@@ -123,16 +123,16 @@ function _make_cache($list)
 
 function _get_definition($strings)
 {
-	$pattern = "/^\s*define\(['\"]{1}([^'\"]+)['\"]{1},\s+(.+)\)/u";
+	$pattern = "#^(//)?\s*define\(['\"]{1}([^'\"]+)['\"]{1},\s+(.+)\)#u";
 	if (!preg_match($pattern, $strings, $matches)) return false;
 
-	$key   = $matches[1];
-	$value = $matches[2];
+	$key   = $matches[2];
+	$value = $matches[3];
 
 	if ('true'  === strtolower($value))  return array($key, true);
 	if ('false' === strtolower($value))  return array($key, false);
 
-	if (preg_match("/^['\"]{1}(.*)['\"]{1}$/u", $value, $matches)) return array($key, (string)$matches[1]);
+	if (preg_match("/^['\"]{1}(.*)['\"]{1}$/u", $value, $matches)) return array($key, (string)$matches[2]);
 
 	return array($key, (int)$value);
 }
