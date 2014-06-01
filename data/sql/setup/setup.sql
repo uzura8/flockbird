@@ -389,7 +389,6 @@ CREATE TABLE `news_category` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE_idx` (`name`),
   KEY `sort_order_idx` (`sort_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves categories of news';
 
