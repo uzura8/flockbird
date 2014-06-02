@@ -4,7 +4,7 @@ return array(
 	'driver'			=> 'file',
 
 	// cookie path  (optional, default = '/')
-	'cookie_path'		=> PRJ_URI_PATH.'admin/',
+	//'cookie_path'		=> PRJ_URI_PATH.'admin/',
 
 	// specific configuration settings for file based sessions
 	'file'				=> array(
