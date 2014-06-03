@@ -17,8 +17,8 @@ define('PRJ_XHPROF_URL', 'http://dev.example.com/xhprof_html');
 
 if (PRJ_XHPROF_PROFILING)
 {
-  include_once PRJ_XHPROF_ROOT_PATH.'xhprof_lib/utils/xhprof_lib.php';
-  include_once PRJ_XHPROF_ROOT_PATH.'xhprof_lib/utils/xhprof_runs.php';
+  include_once PRJ_XHPROF_LIB_PATH.'/utils/xhprof_lib.php';
+  include_once PRJ_XHPROF_LIB_PATH.'/utils/xhprof_runs.php';
   $GLOBALS['xhprof_data'] = '';
 }
 if (PRJ_XHPROF_PROFILING) xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);// start profiling
