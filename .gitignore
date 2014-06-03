@@ -20,8 +20,10 @@ nbproject/
 build
 .idea
 
-/config.php
+config.php
 public_html
+web
+public/xhprof.php
 
 fuel/app/views/welcome/*
 fuel/app/classes/controller/test.php
