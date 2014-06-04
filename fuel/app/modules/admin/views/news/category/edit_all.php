@@ -3,13 +3,15 @@
 <tr>
 	<th class="small">ID</th>
 	<th><?php echo term('news.category.name'); ?></th>
+	<th><?php echo term('news.category.label'); ?></th>
 </tr>
 <?php foreach ($news_categories as $news_category): ?>
 <tr<?php if (!strlen($vals[$news_category->id])): ?> class="has-error"<?php endif; ?>>
 	<td><?php echo $news_category->id; ?></td>
+	<td><?php echo $news_category->name; ?></td>
 	<td>
-		<?php echo Form::input(sprintf('names[%d]', $news_category->id), $vals[$news_category->id], array(
-			'id' => 'input_names_'.$news_category->id,
+		<?php echo Form::input(sprintf('labels[%d]', $news_category->id), $vals[$news_category->id], array(
+			'id' => 'input_labels_'.$news_category->id,
 			'class' => 'form-control input-xlarge'
 		)); ?>
 <?php if (!strlen($vals[$news_category->id])): ?>

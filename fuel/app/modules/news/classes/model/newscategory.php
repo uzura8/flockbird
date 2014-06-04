@@ -1,7 +1,7 @@
 <?php
 namespace News;
 
-class Model_NewsCategory extends \Orm\Model
+class Model_NewsCategory extends \MyOrm\Model
 {
 	protected static $_table_name = 'news_category';
 
@@ -14,7 +14,7 @@ class Model_NewsCategory extends \Orm\Model
 				'trim', 'required',
 				'max_length' => array(32),
 				'match_pattern' => array('/^[a-z0-9_]*[a-z]+[a-z0-9_]*$/i'),
-				'unique' => array('profile.name')
+				'unique' => array('news_category.name')
 			),
 			'form' => array('type' => 'text'),
 		),
@@ -50,7 +50,7 @@ class Model_NewsCategory extends \Orm\Model
 	public static function _init()
 	{
 		static::$_properties['name']['name'] = term('news.category.name');
-		static::$_properties['name']['label'] = term('news.category.label');
+		static::$_properties['label']['name'] = term('news.category.label');
 	}
 
 	public static function get_all($order_by = null)

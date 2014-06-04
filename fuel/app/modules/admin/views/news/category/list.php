@@ -1,6 +1,7 @@
 <table class="table table-hover table-responsive" id="jqui-sortable">
 <tr>
 	<th class="small"><i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="ドラッグ・アンド・ドロップで並び順を変更できます"></i></th>
+	<th class="small"><?php echo term('form.edit'); ?></th>
 	<th class="small"><?php echo term('form.delete'); ?></th>
 	<th class="small"><?php echo term('site.id'); ?></th>
 	<th><?php echo term('news.category.name'); ?></th>
@@ -12,6 +13,7 @@
 	'name' => $news_category->name,
 	'label' => $news_category->label,
 	'delete_uri' => sprintf('admin/news/category/api/delete/%d.json', $news_category->id),
+	'edit_uri' => sprintf('admin/news/category/edit/%d', $news_category->id),
 )); ?>
 <?php endforeach; ?>
 </table>

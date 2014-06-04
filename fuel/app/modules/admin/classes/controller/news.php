@@ -199,7 +199,7 @@ class Controller_News extends Controller_Admin
 			throw new \HttpNotFoundException;
 		}
 
-		$val = self::get_validation_object($news, true);
+		$val = self::get_validation_object($news);
 		$news_images = array();
 		$news_files = array();
 		$images = array();
