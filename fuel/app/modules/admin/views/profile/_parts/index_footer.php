@@ -2,7 +2,7 @@
 <?php echo Asset::js('util/jquery-ui.js');?>
 <script>
 $(function(){
-	jqui_sort('admin/profile/api/update_sort_order.json');
+	jqui_sort('admin/profile/api/update/sort_order.json');
 	$('body').tooltip({
 		selector: 'a[data-toggle=tooltip]',
 		placement: 'top'

@@ -4,7 +4,7 @@ $('#btn_create').click(function(){
 	return false;
 });
 
-jqui_sort('admin/profile/option/api/update_sort_order.json');
+jqui_sort('admin/profile/option/api/update/sort_order.json');
 $('body').tooltip({
 	selector: 'a[data-toggle=tooltip]',
 	placement: 'top'

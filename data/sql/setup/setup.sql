@@ -384,11 +384,13 @@ CREATE TABLE `news_link` (
 
 CREATE TABLE `news_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` text NOT NULL COMMENT 'Category label',
+  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified news category name (ASCII)',
+  `label` text NOT NULL,
   `sort_order` int(11) DEFAULT NULL COMMENT 'Order to sort',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`),
   KEY `sort_order_idx` (`sort_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves categories of news';
 

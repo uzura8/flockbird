@@ -110,47 +110,23 @@ class Controller_Profile_Option_Api extends Controller_Api
 	}
 
 	/**
-	 * update_sort_order
+	 * Api post_update
 	 * 
 	 * @access  public
 	 * @return  Response
 	 */
-	public function post_update_sort_order()
+	public function post_update($field = null)
 	{
-		$response = array('status' => 0);
-		try
+		$this->common_post_update($field, array('sort_order'));
+	}
+
+	protected function update_sort_order()
+	{
+		if (!$ids = \Util_Array::cast_values(explode(',', \Input::post('ids')), 'int', true))
 		{
-			\Util_security::check_csrf();
-
-			if (!$profile_option_ids = \Util_Array::cast_values(explode(',', \Input::post('ids')), 'int', true))
-			{
-				throw new \HttpInvalidInputException('Invalid input data.');
-			}
-			$sort_order = 0;
-			$sort_order_interval = conf('sort_order.interval');
-			\DB::start_transaction();
-			foreach ($profile_option_ids as $profile_option_id)
-			{
-				if (!$profile_option = \Model_ProfileOption::query()->where('id', $profile_option_id)->get_one())
-				{
-					throw new \HttpInvalidInputException('Invalid input data.');
-				}
-				$profile_option->sort_order = $sort_order;
-				$profile_option->save();
-				$sort_order += $sort_order_interval;
-			}
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
+			throw new \HttpInvalidInputException('Invalid input data.');
 		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		\Site_Model::update_sort_order($ids, \Model_ProfileOption::forge());
 	}
 
 	private function check_id_and_get_profile($profile_id)

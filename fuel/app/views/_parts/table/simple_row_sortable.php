@@ -3,4 +3,7 @@
 	<td><?php echo btn('form.delete', '#', 'js-ajax-delete', false, 'xs', null, array('data-id' => $id, 'data-uri' => $delete_uri)); ?></td>
 	<td><?php echo $id; ?></td>
 	<td><?php echo $name; ?></td>
+<?php if (!empty($label)): ?>
+	<td><?php echo $label; ?></td>
+<?php endif; ?>
 </tr>

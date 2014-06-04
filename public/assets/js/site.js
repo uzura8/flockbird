@@ -576,9 +576,8 @@ function load_timeline()
 
 function send_article(btnObj, post_data, post_uri, parent_box_attr) {
 	var add_before  = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
-	var input_attr  = (arguments.length > 5 && arguments[5]) ? arguments[5] : '';
-	var msg_success = (arguments.length > 6 && arguments[6]) ? arguments[6] : '投稿に成功しました。';
-	var msg_error   = (arguments.length > 7 && arguments[7]) ? arguments[7] : '投稿に失敗しました。';
+	var msg_success = (arguments.length > 5 && arguments[5]) ? arguments[5] : '投稿に成功しました。';
+	var msg_error   = (arguments.length > 6 && arguments[6]) ? arguments[6] : '投稿に失敗しました。';
 
 	post_data = set_token(post_data);
 	var btn_html = $(btnObj).html();
@@ -604,7 +603,10 @@ function send_article(btnObj, post_data, post_uri, parent_box_attr) {
 			} else {
 				$(parent_box_attr).append(result).fadeIn();
 			}
-			if (input_attr.length > 0) $(input_attr).val('');
+			$.each(post_data, function(key, val) {
+				var input_attr = '#input_' + key;
+				if ($(input_attr) != null) $(input_attr).val('');
+			});
 			$.jGrowl('profile 選択肢を作成しました。');
 		},
 		error: function(result){
@@ -723,23 +725,36 @@ function execute_simple_delete(selfDomElement) {
 }
 
 function execute_simple_post(selfDomElement) {
-	var post_data = (arguments.length > 1) ? arguments[1] : {};
-	var id = $(selfDomElement).data('id') ? parseInt($(selfDomElement).data('id')) : 0;
-	if (id > 0) post_data['id'] = id;
-
-	var post_uri   = $(selfDomElement).data('uri');
+	var post_keys = (arguments.length > 1) ? arguments[1] : [];
+	var parent_box = $(selfDomElement).data('parent_box') ? $(selfDomElement).data('parent_box') : 'jqui-sortable';
+	var post_uri = $(selfDomElement).data('uri');
 	if (!post_uri) return false;
 
-	var parent_box = $(selfDomElement).data('parent_box') ? $(selfDomElement).data('parent_box') : 'jqui-sortable';
-	var input_name = $(selfDomElement).data('input_name') ? $(selfDomElement).data('input_name') : 'name';
+	var post_data = {};
+	var has_error = false;
+	if (post_keys.length > 0) {
+		$.each(post_keys, function(i, post_key) {
+			var input_attr = '#input_' + post_key;
+			var value = $(input_attr).val().trim();
+			if (value.length == 0) {
+				has_error = true;
+				return false;
+			}
+			post_data[post_key] = value;
+		});
+	} else {
+		var input_name = $(selfDomElement).data('input_name') ? $(selfDomElement).data('input_name') : 'name';
+		var input_attr = '#input_' + input_name;
+		var value = $(input_attr).val().trim();
+		if (!value.length) return false;
+		post_data[input_name] = value;
+	}
+	if (has_error) return false;
 
-	var input_attr = '#input_' + input_name;
-	var value = $(input_attr).val().trim();
-	if (!value.length) return false;
-
-	post_data[input_name] = value;
+	var id = $(selfDomElement).data('id') ? parseInt($(selfDomElement).data('id')) : 0;
+	if (id > 0) post_data['id'] = id;
 	var msg_success = '作成しました。';
 	var msg_error = '作成に失敗しました。';
-	send_article(selfDomElement, post_data, post_uri, '#' + parent_box, false, input_attr, msg_success, msg_error);
+	send_article(selfDomElement, post_data, post_uri, '#' + parent_box, false, msg_success, msg_error);
 }
 

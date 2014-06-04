@@ -247,13 +247,12 @@ class Site_Model
 		$sort_order_interval = conf('sort_order.interval');
 		foreach ($ids as $id)
 		{
-			if (!$obj = $model::query()->where($id_prop_name, $id)->get_one())
-			{
-				throw new \HttpInvalidInputException('Invalid input data.');
-			}
+			if (!$obj = $model::query()->where($id_prop_name, $id)->get_one()) continue;
+
 			$obj->{$sort_order_prop_name} = $sort_order;
 			$obj->save();
 			$sort_order += $sort_order_interval;
 		}
+		if ($sort_order == 0) throw new \HttpInvalidInputException('Invalid input data.');
 	}
 }

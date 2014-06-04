@@ -26,6 +26,9 @@ body {
 	.input-xlarge {
 		width: 100%;
 	}
+	.input-medium {
+		width: 100%;
+	}
 	.hidden-xs-inline {
 		display: none !important;
 	}
@@ -74,14 +77,14 @@ body {
 	padding: 9px 0px;
 }
 
+/*
 .input-medium {
   width: 150px;
 }
-
 .input-xlarge {
   width: 270px;
 }
-
+*/
 /*
 body {
 	padding-top: 60px;

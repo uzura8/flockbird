@@ -11,7 +11,8 @@ return array(
 		'category' => array(
 			'view' => 'お知らせカテゴリ',
 			'simple' => 'カテゴリ',
-			'name' => 'カテゴリ名',
+			'name' => '識別名',
+			'label' => 'カテゴリ名',
 		),
 	),
 );

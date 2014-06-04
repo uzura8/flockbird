@@ -8,6 +8,17 @@ class Model_NewsCategory extends \Orm\Model
 	protected static $_properties = array(
 		'id',
 		'name' => array(
+			'data_type' => 'varchar',
+			'label' => '識別名',
+			'validation' => array(
+				'trim', 'required',
+				'max_length' => array(32),
+				'match_pattern' => array('/^[a-z0-9_]*[a-z]+[a-z0-9_]*$/i'),
+				'unique' => array('profile.name')
+			),
+			'form' => array('type' => 'text'),
+		),
+		'label' => array(
 			'data_type' => 'text',
 			'label' => 'カテゴリ名',
 			'validation' => array('trim', 'required'),
@@ -38,7 +49,8 @@ class Model_NewsCategory extends \Orm\Model
 
 	public static function _init()
 	{
-		static::$_properties['name']['label'] = term('news.category.name');
+		static::$_properties['name']['name'] = term('news.category.name');
+		static::$_properties['name']['label'] = term('news.category.label');
 	}
 
 	public static function get_all($order_by = null)

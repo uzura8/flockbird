@@ -25,10 +25,12 @@ class Controller_News_Category_Api extends Controller_Api
 			$news_category = \News\Model_NewsCategory::forge();
 
 			// Lazy validation
-			$name = trim(\Input::post('name', ''));
-			if (!strlen($name)) throw new \HttpInvalidInputException;
+			$name  = trim(\Input::post('name', ''));
+			$label = trim(\Input::post('label', ''));
+			if (!strlen($name) || !strlen($label)) throw new \HttpInvalidInputException;
 
-			$news_category->name = $name;
+			$news_category->name       = $name;
+			$news_category->label      = $label;
 			$news_category->sort_order = \Site_Model::get_next_sort_order('news_category', 'News');
 
 			\DB::start_transaction();
@@ -41,6 +43,7 @@ class Controller_News_Category_Api extends Controller_Api
 				$response = \View::forge('_parts/table/simple_row_sortable', array(
 					'id' => $news_category->id,
 					'name' => $news_category->name,
+					'label' => $news_category->label,
 					'delete_uri' => sprintf('admin/news/category/api/delete/%s.json', $news_category->id),
 				));
 
@@ -107,36 +110,15 @@ class Controller_News_Category_Api extends Controller_Api
 	 */
 	public function post_update($field = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			$accepts_fields = array('sort_order');
-			if (!$field || !in_array($field, $accepts_fields)) throw new \HttpNotFoundException;
-			\Util_security::check_csrf();
-
-			\DB::start_transaction();
-			$method = 'update_'.$field;
-			$this->$method();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->common_post_update($field, array('sort_order'));
 	}
 
-	private function update_sort_order()
+	protected function update_sort_order()
 	{
-		if (!$profile_option_ids = \Util_Array::cast_values(explode(',', \Input::post('ids')), 'int', true))
+		if (!$ids = \Util_Array::cast_values(explode(',', \Input::post('ids')), 'int', true))
 		{
 			throw new \HttpInvalidInputException('Invalid input data.');
 		}
-		\Site_Model::update_sort_order($profile_option_ids, \News\Model_NewsCategory::forge());
+		\Site_Model::update_sort_order($ids, \News\Model_NewsCategory::forge());
 	}
 }
