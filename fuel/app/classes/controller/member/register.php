@@ -26,7 +26,7 @@ class Controller_Member_Register extends Controller_Site
 		// Already logged in
 		Auth::check() and Response::redirect('member');
 
-		if (!$this->check_token())
+		if (!$member_pre = $this->check_token())
 		{
 			$this->display_error('メンバー登録: 不正なURL');
 			return;
