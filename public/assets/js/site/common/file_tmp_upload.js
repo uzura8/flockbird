@@ -101,7 +101,6 @@ function load_file_tmp(get_url, file_name, parent_attr) {
 }
 
 function get_file_upload_post_uri(type) {
-console.log(type);
 	var uri = (type == 'file') ? 'filetmp/api/upload/file.html' : 'filetmp/api/upload.html';
 	if (check_is_admin()) uri = 'admin/' + uri;
 	return get_url(uri);

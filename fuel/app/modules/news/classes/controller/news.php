@@ -33,6 +33,7 @@ class Controller_News extends \Controller_Site
 		$this->set_title_and_breadcrumbs($title, null, null, null, $header_info, true);
 		//$this->template->subtitle = \View::forge('news/_parts/detail_subtitle', array('news' => $news));
 		$this->template->content = \View::forge('detail', array('news' => $news, 'images' => $images, 'files' => $files));
+		if (\Config::get('news.form.isEnabledWysiwygEditor')) $this->template->content->set_safe('html_body', $news->body);
 	}
 
 	private static function get_prview_header_info($is_published, $published_at)

@@ -73,3 +73,11 @@
 * Ligature Symbols
   - license: SIL Open Font License 1.1
   - url: http://kudakurage.com/ligature_symbols/
+* Summernote
+  - version: 0.5.2
+  - license: MIT
+  - url: http://hackerwins.github.io/summernote/
+* Font Awesome
+  - version: 4.1.0
+  - license: http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+  - url: http://fontawesome.io/

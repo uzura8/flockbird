@@ -74,7 +74,7 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 	return render('_parts/form/file', $data);
 }
 
-function form_textarea(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $is_autogrow = true, $help = '', $optional_public_flag = array())
+function form_textarea(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $is_autogrow = true, $help = '', $optional_public_flag = array(), $use_wysiwyg_editor = false)
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array(
@@ -84,10 +84,18 @@ function form_textarea(Validation $val, $name, $default_value = null, $label_col
 		'placeholder' => $field->get_attribute('placeholder'),
 	);
 	if ($is_autogrow) $atter['class'] .= ' autogrow';
-
+	if ($use_wysiwyg_editor)
+	{
+		//$atter['id'] = 'summernote';
+		$label_col_sm_size = 12;
+	}
 	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
+	}
+	elseif (!strlen($default_value) && $use_wysiwyg_editor)
+	{
+		$default_value = "<br>\n";
 	}
 
 	$data = array(

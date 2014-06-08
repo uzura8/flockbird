@@ -520,3 +520,7 @@ div.btnBox {
 	text-align: center;
 	margin-top: 5px;
 }
+
+.note-editor .note-editable {
+	background-color: #FFF;
+}

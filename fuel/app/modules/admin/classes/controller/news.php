@@ -83,6 +83,7 @@ class Controller_News extends Controller_Admin
 		$this->set_title_and_breadcrumbs($title, array('admin/news' => term('news.view', 'admin.view')), null, null, $header_info);
 		$this->template->subtitle = \View::forge('news/_parts/detail_subtitle', array('news' => $news));
 		$this->template->content = \View::forge('news/detail', array('news' => $news, 'images' => $images, 'files' => $files));
+		if (\Config::get('news.form.isEnabledWysiwygEditor')) $this->template->content->set_safe('html_body', $news->body);
 	}
 
 	/**

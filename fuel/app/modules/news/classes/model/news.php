@@ -62,7 +62,7 @@ class Model_News extends \MyOrm\Model
 		'body' => array(
 			'data_type' => 'text',
 			'label' => '本文',
-			'validation' => array('trim', 'required'),
+			'validation' => array('trim'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
 		'is_published' => array(
@@ -115,6 +115,10 @@ class Model_News extends \MyOrm\Model
 		else
 		{
 			static::$_properties['news_category_id']['form']['type'] = false;
+		}
+		if (!\Config::get('news.form.isEnabledWysiwygEditor'))
+		{
+			static::$_properties['body']['validation'][] = 'required';
 		}
 	}
 

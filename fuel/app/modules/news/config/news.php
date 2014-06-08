@@ -14,6 +14,9 @@ return array(
 	'link' => array(
 		'isEnabled' => true,
 	),
+	'form' => array(
+		'isEnabledWysiwygEditor' => true,
+	),
 	'viewParams' => array(
 		'site' => array(
 			'list' => array(

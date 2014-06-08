@@ -2,7 +2,11 @@
 <?php echo form_open(true); ?>
 	<?php echo form_select($val, 'news_category_id', isset($news) ? $news->news_category_id : 0, 6); ?>
 	<?php echo form_input($val, 'title', isset($news) ? $news->title : ''); ?>
+<?php if (Config::get('news.form.isEnabledWysiwygEditor')): ?>
+	<?php echo form_textarea($val, 'body', isset($news) ? $news->body : '', null, false, null, null, true); ?>
+<?php else: ?>
 	<?php echo form_textarea($val, 'body', isset($news) ? $news->body : ''); ?>
+<?php endif; ?>
 <?php if (Config::get('news.image.isEnabled')): ?>
 	<?php echo form_upload_files($images, $images ? false : true, false, true, 'M', array(), 'news', term('site.picture')); ?>
 <?php endif; ?>
