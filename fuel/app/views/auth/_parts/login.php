@@ -17,7 +17,7 @@ $label_col_sm_size = IS_API ? 12 : 3;
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/facebook',
-		icon_label('Facebookで'.term('site.login'), 'both', false, 'facebook', 'ls-icon-'),
+		icon_label('Facebookで'.term('site.login'), 'both', false, 'facebook-square', 'fa fa-'),
 		array('class' => 'btn btn-default'),
 		IS_API ? 0 : 3
 	); ?>
@@ -25,7 +25,7 @@ $label_col_sm_size = IS_API ? 12 : 3;
 <?php if (PRJ_TWITTER_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/twitter',
-		'<i class="ls-icon-twitter"></i> Twitterでログイン',
+		icon_label('Twitterで'.term('site.login'), 'both', false, 'twitter', 'fa fa-'),
 		array('class' => 'btn btn-default'),
 		IS_API ? 0 : 3
 	); ?>
@@ -33,7 +33,7 @@ $label_col_sm_size = IS_API ? 12 : 3;
 <?php if (PRJ_GOOGLE_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/google',
-		'<i class="ls-icon-google"></i> Googleでログイン',
+		icon_label('Googleで'.term('site.login'), 'both', false, 'google', 'fa fa-'),
 		array('class' => 'btn btn-default'),
 		IS_API ? 0 : 3
 	); ?>

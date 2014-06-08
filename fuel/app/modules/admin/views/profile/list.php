@@ -3,7 +3,7 @@
 <?php $prefix = 'profile.name.'; ?>
 <h3 class="clearfix">
 	<?php echo term('member.name', 'site.setting'); ?>
-	<?php echo Html::anchor('admin/profile/name_setting', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
+	<?php echo btn('form.edit', 'admin/profile/name_setting', '', true, 'sm', null, array('class' => 'pull-right')); ?>
 </h3>
 <table class="table table-bordered">
 <tr>
@@ -19,7 +19,7 @@
 <?php $prefix = 'profile.sex.'; ?>
 <h3 class="clearfix">
 	<?php echo term('member.sex.label', 'site.setting'); ?>
-	<?php echo Html::anchor('admin/profile/sex_setting', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
+	<?php echo btn('form.edit', 'admin/profile/sex_setting', '', true, 'sm', null, array('class' => 'pull-right')); ?>
 </h3>
 <?php if (!conf($prefix.'isEnable')): ?>
 <p><?php echo term('form.unuse'); ?></p>
@@ -50,7 +50,7 @@
 <?php $prefix = 'profile.birthday.'; ?>
 <h3 class="clearfix">
 	<?php echo term('member.birthday', 'site.setting'); ?>
-	<?php echo Html::anchor('admin/profile/birthday_setting', '<i class="ls-icon-edit"></i> '.term('form.edit'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
+	<?php echo btn('form.edit', 'admin/profile/birthday_setting', '', true, 'sm', null, array('class' => 'pull-right')); ?>
 </h3>
 <?php if (!conf($prefix.'isEnable')): ?>
 <p><?php echo term('form.unuse'); ?></p>
@@ -111,7 +111,7 @@
 
 <h2 class="clearfix">
 	<?php echo term('site.option', 'profile', 'site.setting'); ?>
-	<?php echo Html::anchor('admin/profile/create', '<i class="ls-icon-edit"></i> '.term('form.create'), array('class' => 'btn btn-default btn-sm pull-right')); ?>
+	<?php echo btn('form.create', 'admin/profile/create', '', true, 'sm', 'default', array('class' => 'pull-right')); ?>
 </h2>
 <?php /*
 <p>

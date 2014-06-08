@@ -239,8 +239,8 @@ function truncate_lines($body, $line, $read_more_uri = '', $is_convert_nl2br = t
 
 function get_public_flag_label($public_flag, $view_icon_only = false, $is_return_label = false, $is_hidden_xs = false)
 {
-	$icon = icon_label('public_flag.options.'.$public_flag, 'icon', $is_hidden_xs, null, 'ls-icon-', 'i');
-	$name = $view_icon_only ? '' : icon_label('public_flag.options.'.$public_flag, 'label', $is_hidden_xs, null, 'ls-icon-', 'i');
+	$icon = icon_label('public_flag.options.'.$public_flag, 'icon', $is_hidden_xs, null, 'fa fa-', 'i');
+	$name = $view_icon_only ? '' : icon_label('public_flag.options.'.$public_flag, 'label', $is_hidden_xs, null, 'fa fa-', 'i');
 	if ($is_return_label) return $icon.$name;
 
 	$btn_color = Site_Util::get_public_flag_btn_coloer_class($public_flag);

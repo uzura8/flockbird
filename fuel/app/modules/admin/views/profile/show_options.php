@@ -1,4 +1,4 @@
-<p><?php echo Html::anchor('admin/profile/edit_options/'.$profile->id, '<i class="ls-icon-edit"></i> 編集', array('class' => 'btn btn-default')); ?></p>
+<p><?php echo btn('form.edit', 'admin/profile/edit_options/'.$profile->id); ?></p>
 <table class="table" id="jqui-sortable">
 <tr>
 	<th class="small"><i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="ドラッグ・アンド・ドロップで並び順を変更できます"></i></th>
