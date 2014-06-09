@@ -55,6 +55,38 @@ function form_input(Validation $val, $name, $default_value = null, $col_sm_size 
 	return render('_parts/form/input', $data);
 }
 
+function form_input_datetime(Validation $val, $name, $default_value = null, $format = null, $col_sm_size = 6, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
+{
+	if (is_null($format)) $format = 'YYYY-MM-DD HH:mm';
+
+	$field = $val->fieldset()->field($name);
+	$input_atter = array(
+		'type'  => $field->get_attribute('type'),
+		'id'    => 'form_'.$name,
+		'class' => 'form-control',
+		'placeholder' => $field->get_attribute('placeholder'),
+	);
+	if (!is_null($field->get_attribute('value')))
+	{
+		$default_value = $field->get_attribute('value');
+	}
+	$data = array(
+		'val'    => $val,
+		'name'   => $name,
+		'format' => $format,
+		'label'  => $field->get_attribute('label'),
+		'default_value' => $default_value,
+		'is_required'   => $field->get_attribute('required') == 'required',
+		'input_atter'   => $input_atter,
+		'col_sm_size'   => $col_sm_size,
+		'label_col_sm_size' => $label_col_sm_size,
+		'help' => $help,
+		'optional_public_flag' => $optional_public_flag,
+	);
+
+	return render('_parts/form/input_datetime', $data);
+}
+
 function form_file($name, $label = null, $is_required = false, $input_class = 'input-file', $default_value = null, $val_obj = null)
 {
 	$input_atter = array(

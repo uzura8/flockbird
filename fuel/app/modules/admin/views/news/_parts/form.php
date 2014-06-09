@@ -30,7 +30,7 @@
 		</div>
 	</div>
 <?php endif; ?>
-	<?php echo form_input($val, 'published_at_time', (isset($news) && isset_datatime($news->published_at)) ? substr($news->published_at, 0, 16) : '', 6); ?>
+	<?php echo form_input_datetime($val, 'published_at_time', isset($news) ? check_and_get_datatime($news->published_at, 'datetime_minutes') : ''); ?>
 	<?php echo form_input($val, 'slug', isset($news) ? $news->slug : \News\Site_Util::get_slug(), 6); ?>
 <?php if (empty($news->is_published)): ?>
 	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1)); ?>

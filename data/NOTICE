@@ -1,8 +1,12 @@
 * fuelphp1.x
 
 * bootstrap
-  - version: 3.0.2
+  - version: 3.1.1
   - license: Apache License, Version 2.0
+* bootstrap-datetimepicker
+  - version: 3.0.0
+  - license: MIT
+  - url: https://github.com/Eonasdan/bootstrap-datetimepicker
 * HTML5 Shiv
   - version: v3.7.0
   - license: MIT/GPL2 Licensed
@@ -49,6 +53,7 @@
   - license: MIT
   - http://mattbradley.github.com/livestampjs/
 * moment.js
+  - version: 2.6.0
   - license: MIT
   - url: http://momentjs.com/
 * moment.lang_ja.js

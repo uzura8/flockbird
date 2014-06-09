@@ -1,4 +1,4 @@
-<?php //echo render('_parts/date_timepicker_footer', array('attr' => '#form_published_at_time', 'is_accept_futer' => true)); ?>
+<?php echo render('_parts/datetimepicker_footer', array('attr' => '#published_at_time')); ?>
 <?php if (Config::get('news.image.isEnabled') || Config::get('news.file.isEnabled')): ?>
 <?php echo render('filetmp/_parts/upload_footer'); ?>
 <?php endif; ?>
@@ -7,7 +7,6 @@
 <?php echo Asset::js('summernote.min.js');?>
 <script type="text/javascript">
 $(document).ready(function() {
-	//$('#summernote').summernote();
 	$('#form_body').summernote({
 <?php if (\Auth::member(50)): ?>
 		toolbar: [

@@ -361,3 +361,31 @@ function isset_datatime($datetime)
 
 	return true;
 }
+
+function check_and_get_datatime($datetime, $type = null, $default_value = '')
+{
+	if (!isset_datatime($datetime)) return $default_value;
+
+	if (is_null($type)) $type = 'datetime';
+	if (!in_array($type, array('date', 'datetime', 'datetime_minutes')))
+	{
+		throw new InvalidArgumentException('Parameter type is invalid.');
+	}
+
+	switch ($type)
+	{
+		case 'date':
+			$length = 10;
+			break;
+		case 'datetime_minutes':
+			$length = 16;
+			break;
+		case 'datetime':
+		default :
+			$length = 0;
+			break;
+	}
+	if (!$length) return $datetime;
+
+	return substr($datetime, 0, $length);
+}
