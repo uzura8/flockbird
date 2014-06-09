@@ -84,7 +84,7 @@ class Model_AlbumImage extends \Orm\Model
 
 	public static function _init()
 	{
-		static::$_properties['name']['label'] = term('album_image', 'site.title');
+		static::$_properties['name']['label'] = term('site.picture', 'site.title');
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 	}

@@ -7,7 +7,7 @@
 <?php if (!$is_disabled_to_update_public_flag): ?>
 	<?php echo form_public_flag($val, 99, false, 2, true); ?>
 <?php endif; ?>
-	<?php echo form_input($val, 'shot_at', null, 5); ?>
+	<?php echo form_input_datetime($val, 'shot_at', '', null, 5); ?>
 	<?php echo form_button('form.edit_all', 'button', 'post', array('id' => 'submit_post')); ?>
 	<?php echo form_button('form.delete_all', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-default btn-danger')); ?>
 </div><!-- well -->

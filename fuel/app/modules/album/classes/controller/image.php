@@ -120,7 +120,7 @@ class Controller_Image extends \Controller_Site
 		}
 		$disabled_to_update_message = Site_Util::check_album_disabled_to_update($album_image->album->foreign_table);
 
-		$form = $this->form($album_image, $disabled_to_update_message);
+		$val = self::get_validation_object($album_image, true);
 
 		if (\Input::method() == 'POST')
 		{
@@ -128,7 +128,6 @@ class Controller_Image extends \Controller_Site
 
 			$post = array();
 			$error = '';
-			$val = $form->validation();
 			if ($val->run())
 			{
 				$post = $val->validated();
@@ -175,11 +174,6 @@ class Controller_Image extends \Controller_Site
 			{
 				\Session::set_flash('error', $error);
 			}
-			$form->repopulate();
-		}
-		else
-		{
-			$form->populate($album_image);
 		}
 
 		$album_image_page_title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
@@ -189,11 +183,10 @@ class Controller_Image extends \Controller_Site
 			$album_image->album->member,
 			'album'
 		);
-		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
-		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_shot_at_time'));
+		$this->template->post_header = \View::forge('_parts/datetimepicker_header');
+		$this->template->post_footer = \View::forge('_parts/datetimepicker_footer', array('attr' => '#shot_at_time'));
 
-		$this->template->content = \View::forge('edit', array('form' => $form, 'original_public_flag' => $album_image->public_flag));
-		$this->template->content->set_safe('html_form', $form->build('album/image/edit/'.$id));// form の action に入る
+		$this->template->content = \View::forge('image/edit', array('val' => $val, 'album_image' => $album_image));
 	}
 
 	/**
@@ -229,28 +222,19 @@ class Controller_Image extends \Controller_Site
 		\Response::redirect('album/'.$album_id);
 	}
 
-	protected function form($album_image, $without_public_flag = false)
+	private static function get_validation_object(Model_AlbumImage $album_image)
 	{
-		$shot_at = \Input::post('shot_at', '');
-		if (empty($shot_at))
-		{
-			$shot_at = substr($album_image->shot_at, 0, 16);
-		}
-		$add_fields = array(
-			'shot_at_time' => array(
-				'label' => '撮影日時',
-				'attributes' => array('value' => $shot_at, 'class' => 'input-medium form-control'),
-				'rules' => array('required', 'datetime_except_second', 'datetime_is_past'),
-			),
-			'original_public_flag' => array(
-				'attributes' => array('type' => 'hidden', 'value' => $album_image->public_flag, 'id' => 'original_public_flag'),
-				'rules' => array(array('in_array', \Site_Util::get_public_flags())),
-			),
-		);
+		$val = \Validation::forge();
+		$val->add_model($album_image);
 
-		$disable_fields = array();
-		if ($without_public_flag) $disable_fields[] = 'public_flag';
+		$val->add('shot_at_time', '撮影日時')
+				->add_rule('required')
+				->add_rule('datetime_except_second')
+				->add_rule('datetime_is_past');
 
-		return \Site_Util::get_form_instance('album_image', $album_image, true, $add_fields, 'button', array(), $disable_fields);
+		$val->add('original_public_flag')
+				->add_rule('in_array', \Site_Util::get_public_flags());
+
+		return $val;
 	}
 }

@@ -443,8 +443,8 @@ class Controller_Album extends \Controller_Site
 		}
 
 		$this->set_title_and_breadcrumbs(term('album_image', 'site.management'), array('/album/'.$id => $album->name), $album->member, 'album');
-		$this->template->post_header = \View::forge('_parts/date_timepicker_header');
-		$this->template->post_footer = \View::forge('_parts/date_timepicker_footer', array('attr' => '#form_shot_at'));
+		$this->template->post_header = \View::forge('_parts/datetimepicker_header');
+		$this->template->post_footer = \View::forge('_parts/datetimepicker_footer', array('attr' => '#shot_at', 'max_date' => 'now'));
 
 		$data = array(
 			'id' => $id, 'album' => $album,

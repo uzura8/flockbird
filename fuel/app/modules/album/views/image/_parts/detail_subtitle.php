@@ -1,5 +1,5 @@
 <?php
-$date = isset($album_image->file->shot_at) ? $album_image->file->shot_at : $album_image->created_at;
+$date = isset($album_image->shot_at) ? $album_image->shot_at : $album_image->created_at;
 echo render('_parts/member_contents_box', array(
 	'member'      => $album_image->album->member,
 	'id'          => $album_image->id,

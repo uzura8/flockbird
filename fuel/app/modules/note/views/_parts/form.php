@@ -6,7 +6,7 @@
 	<?php echo form_input($val, 'title', isset($note) ? $note->title : ''); ?>
 	<?php echo form_textarea($val, 'body', isset($note) ? $note->body : ''); ?>
 	<?php echo form_upload_files($files, $files ? false : true); ?>
-	<?php echo form_input($val, 'published_at_time', (!empty($note->published_at)) ? substr($note->published_at, 0, 16) : '', 6); ?>
+	<?php echo form_input_datetime($val, 'published_at_time', isset($note) ? check_and_get_datatime($note->published_at, 'datetime_minutes') : ''); ?>
 	<?php echo form_public_flag($val, isset($note) ? $note->public_flag : null); ?>
 <?php if (empty($note->is_published)): ?>
 	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
