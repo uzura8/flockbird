@@ -14,6 +14,7 @@ $config = array(
 		'delete_all' => '一括削除',
 		'upload' => 'アップロード',
 		'update' => '変更',
+		'do_update' => '変更する',
 		'updated' => '更新',
 		'confirm' => '確認',
 		'back' => '戻る',

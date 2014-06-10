@@ -199,20 +199,20 @@ END;
 	public function form_setting_password()
 	{
 		$add_fields = array(
-			'old_password' => \Form_Util::get_model_field('user', 'password', 'Admin', sprintf('現在の%s', term('site.password'))),
-			'password' => \Form_Util::get_model_field('user', 'password', 'Admin', sprintf('新しい%s', term('site.password'))),
-			'password_confirm' => \Form_Util::get_model_field('user', 'password', 'Admin', sprintf('新しい%s(確認用)', term('site.password'))),
+			'old_password' => \Form_Util::get_model_field('admin_user', 'password', 'Admin', sprintf('現在の%s', term('site.password'))),
+			'password' => \Form_Util::get_model_field('admin_user', 'password', 'Admin', sprintf('新しい%s', term('site.password'))),
+			'password_confirm' => \Form_Util::get_model_field('admin_user', 'password', 'Admin', sprintf('新しい%s(確認用)', term('site.password'))),
 		);
 		$add_fields['password']['rules'][] = array('unmatch_field', 'old_password');
 		$add_fields['password_confirm']['rules'][] = array('match_field', 'password');
 
-		return \Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => term('form.update')));
+		return \Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => term('form.do_update')));
 	}
 
 	private function form_setting_email()
 	{
 		$add_fields = array(
-			'email' => \Form_Util::get_model_field('user', 'email', 'Admin', sprintf('新しい%s', term('site.email'))),
+			'email' => \Form_Util::get_model_field('admin_user', 'email', 'Admin', sprintf('新しい%s', term('site.email'))),
 			'email_confirm' => array(
 				'label' => sprintf('新しい%s(確認用)', term('site.email')),
 				'attributes' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
@@ -220,7 +220,7 @@ END;
 			),
 		);
 
-		return \Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => term('form.update')));
+		return \Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => term('form.do_update')));
 	}
 
 	private function change_password($old_password, $password)
