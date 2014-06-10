@@ -16,10 +16,6 @@
 * Respond.js
   - version: v1.3.0
   - license: MIT/GPLv2
-* bootstrap-modal
-  - version: 2.1.0
-  - license: Apache License, Version 2.0
-  - url: https://github.com/jschr/bootstrap-modal
 * Font Awesome
   - version: 4.1.0
   - license: http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -29,6 +25,7 @@
   - license: MIT
   - http://jqueryui.com/
 * jquery.autogrow-textarea
+  - url: http://github.com/jaz303/jquery-grab-bag/tree/master/javascripts/jquery.autogrow-textarea.js
 * jquery.jgrowl
   - version: 1.2.12
   - license: MIT
@@ -37,10 +34,6 @@
   - version: 2.1.08
   - license: MIT
   - url: http://masonry.desandro.com
-* jQuery Masonry
-  - version: 2.0b2.120519
-  - license: MIT
-  - url: https://github.com/paulirish/infinite-scroll
 * Apprise
   - version: 1.5
   - license: MIT
@@ -71,10 +64,6 @@
 * jQuery UI Widget
   - version: 1.10.3+amd
   - license: MIT
-* Bootstrap-Image-Gallery
-* JavaScript-Canvas-to-Blob
-* JavaScript-Load-Image
-* JavaScript-Templates
 * Summernote
   - version: 0.5.2
   - license: MIT
