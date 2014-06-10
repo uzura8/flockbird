@@ -28,7 +28,6 @@ $data = array(
 	'id'      => $timeline->id,
 	'model'   => $public_flag_info['model'],
 	'public_flag' => $timeline->public_flag,
-	'public_flag_view_icon_only' => IS_SP,
 	'public_flag_target_id'  => $public_flag_info['public_flag_target_id'],
 	'have_children_public_flag' => $public_flag_info['have_children_public_flag'],
 	'child_model' => $public_flag_info['child_model'],

@@ -3,7 +3,6 @@
 	'id'          => $album->id,
 	'public_flag' => $album->public_flag,
 	'have_children_public_flag'  => true,
-	'public_flag_view_icon_only' => IS_SP,
 	'public_flag_disabled_to_update' => $disabled_to_update,
 	'is_refresh_after_update_public_flag' => true,
 	'model'       => 'album',

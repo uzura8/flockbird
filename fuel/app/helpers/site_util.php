@@ -237,15 +237,18 @@ function truncate_lines($body, $line, $read_more_uri = '', $is_convert_nl2br = t
 	));
 }
 
-function get_public_flag_label($public_flag, $view_icon_only = false, $is_return_label = false, $is_hidden_xs = false)
+function get_public_flag_label($public_flag, $view_icon_only = false, $return_type = 'array', $is_hidden_xs = false)
 {
+	if (!in_array($return_type, array('array', 'icon_term', 'label'))) throw new InvalidArgumentException('Second parameter is invalid.');
+
 	$icon = icon_label('public_flag.options.'.$public_flag, 'icon', $is_hidden_xs, null, 'fa fa-', 'i');
 	$name = $view_icon_only ? '' : icon_label('public_flag.options.'.$public_flag, 'label', $is_hidden_xs, null, 'fa fa-', 'i');
-	if ($is_return_label) return $icon.$name;
+	if ($return_type == 'icon_term') return $icon.$name;
 
-	$btn_color = Site_Util::get_public_flag_btn_coloer_class($public_flag);
+	$color = Site_Util::get_public_flag_coloer_class($public_flag);
+	if ($return_type == 'label') return html_tag('span', array('class' => 'label label-'.$color), $icon.$name);
 
-	return array($name, $icon, $btn_color);
+	return array($name, $icon, 'btn-'.$color);
 }
 
 function get_csrf_query_str($delimitter = '?')

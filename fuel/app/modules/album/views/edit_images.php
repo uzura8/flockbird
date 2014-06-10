@@ -27,8 +27,7 @@
 	<td class="formParts"><?php echo Form::checkbox('album_image_ids[]', $album_image->id, in_array($album_image->id, $album_image_ids), array('class' => 'album_image_ids')); ?></td>
 	<td class="image"><?php echo img((isset($album_image->file)) ? $album_image->file : '', '80x80', 'album/image/'.$album_image->id); ?></td>
 	<td class="span5"><?php echo $album_image->name; ?></td>
-<?php list($name, $icon, $btn_color) = get_public_flag_label($album_image->public_flag); ?>
-	<td><span class="btn btn-default btn-default btn-xs <?php echo $btn_color; ?>"><?php echo sprintf('%s%s', $icon, IS_SP ? '' : $name); ?></span></td>
+	<td><?php echo get_public_flag_label($album_image->public_flag, false, 'label', true); ?></td>
 	<td><?php if (isset($album_image->file->shot_at)) echo date('Y年n月j日 H:i', strtotime($album_image->file->shot_at)); ?></td>
 </tr>
 <?php endforeach; ?>

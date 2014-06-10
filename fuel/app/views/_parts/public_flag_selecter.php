@@ -1,5 +1,5 @@
 <?php
-list($name, $icon, $btn_color) = get_public_flag_label($public_flag, isset($view_icon_only) ? $view_icon_only : false, false, true);
+list($name, $icon, $btn_color) = get_public_flag_label($public_flag, isset($view_icon_only) ? $view_icon_only : false, 'array', true);
 if (!empty($model)) $model_uri = str_replace('_', '/', $model);
 ?>
 <?php if (!empty($disabled_to_update)): ?>
@@ -22,7 +22,7 @@ if (!empty($disabled_to_update['message']))
 	<ul class="dropdown-menu pull-right" role="menu">
 <?php $public_flags = \Site_Util::get_public_flags(); ?>
 <?php foreach ($public_flags as $public_flag_value): ?>
-<?php $label = get_public_flag_label($public_flag_value, false, true); ?>
+<?php $label = get_public_flag_label($public_flag_value, false, 'icon_term'); ?>
 <?php if ($public_flag == $public_flag_value): ?>
 		<li><span class="disabled"><?php echo $label; ?></span></li>
 <?php else: ?>

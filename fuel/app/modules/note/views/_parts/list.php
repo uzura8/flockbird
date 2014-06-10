@@ -19,7 +19,6 @@
 	'id' => $note->id,
 	'size' => 'M',
 	'public_flag' => $note->public_flag,
-	'public_flag_view_icon_only' => IS_SP,
 	'date' => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at)
 )); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>

@@ -2,7 +2,6 @@
 	'member'      => $note->member,
 	'id'          => $note->id,
 	'public_flag' => $note->public_flag,
-	'public_flag_view_icon_only' => IS_SP,
 	'model'       => 'note',
 	'size' => 'M',
 	'date'        => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at, 'label' => $note->published_at ? '日時' : '更新日時')
