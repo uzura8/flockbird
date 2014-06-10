@@ -16,7 +16,7 @@ class Controller_Base extends Controller_Hybrid
 		parent::before();
 
 		if (!defined('IS_ADMIN')) define('IS_ADMIN', $this->check_is_admin_request());
-		if (!defined('IS_SP')) define('IS_SP', Agent::is_smartphone());
+		if (!defined('IS_SP')) define('IS_SP', \MyAgent\Agent::is_mobile_device());
 		if (!defined('IS_API')) define('IS_API', Input::is_ajax());
 
 		$this->auth_instance = Auth::forge($this->auth_driver);

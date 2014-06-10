@@ -279,6 +279,7 @@ return array(
 			'opauth',
 			'myorm',
 			'myauth',
+			'myagent',
 		),
 
 		/**
