@@ -12,7 +12,7 @@ class Site_Util
 		return 'published';
 	}
 
-	public static function get_status_label_type($status, $default = null)
+	public static function get_status_label_type($status, $is_list_row = false, $default = null)
 	{
 		switch ($status)
 		{
@@ -23,6 +23,7 @@ class Site_Util
 				return 'warning';
 				break;
 			case 'published':
+				if ($is_list_row) return '';
 				return 'info';
 				break;
 			default :
