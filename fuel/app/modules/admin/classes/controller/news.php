@@ -422,7 +422,10 @@ class Controller_News extends Controller_Admin
 		{
 			\DB::start_transaction();
 			$news->is_published = $target_status;
-			if (!$news->published_at) $news->published_at = date('Y-m-d H:i:s');
+			if ($news->is_published && !isset_datatime($news->published_at))
+			{
+				$news->published_at = date('Y-m-d H:i:s');
+			}
 			$news->save();
 
 			//// timeline 投稿
