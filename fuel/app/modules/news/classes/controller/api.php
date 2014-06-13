@@ -15,15 +15,20 @@ class Controller_Api extends \Controller_Rest
 	 * @access  public
 	 * @return  Response
 	 */
-	public function get_list()
+	public function get_list($category_name = null)
 	{
-		$query = Model_News::query()
-			->related('news_image')
-			->related('news_image.file')
-			->where('is_published', 1)
-			->where('published_at', '<', \DB::expr('NOW()'))
-			->order_by('published_at', 'desc');
-		$response = $query->get();
+		$cols = array(
+			'id',
+			'news_category_id',
+			'title',
+			'published_at',
+			'slug',
+		);
+		$query = \DB::select_array($cols)->from('news');
+		$query->where('is_published', 1);
+		$query->and_where('published_at', '<', \DB::expr('NOW()'));
+		$query->order_by('published_at', 'desc');
+		$response = $query->execute()->current();
 
 		return $this->response($response);
 	}
