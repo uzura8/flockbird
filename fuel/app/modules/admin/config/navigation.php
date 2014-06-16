@@ -8,6 +8,7 @@ return array(
 			),
 			term('news.view', 'site.management') => array(
 				term('news.view', 'site.list') => 'admin/news/',
+				term('news.view', 'form.create') => 'admin/news/create',
 				term('news.category.view') => 'admin/news/category/',
 			),
 			term('site.view', 'site.management') => array(

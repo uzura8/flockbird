@@ -37,6 +37,7 @@ define('PRJ_SITE_NAME', 'サンプルSNS');
 define('PRJ_SITE_DESCRIPTION', 'サンプルSNSです');
 define('PRJ_HEADER_DESCRIPTION_DEFAULT', 'サンプルSNSです。');
 define('PRJ_HEADER_KEYWORDS_DEFAULT', 'SNS,サンプル');
+//define('PRJ_COPYRIGHT', '');
 
 // 外部サイト設定
 //define('PRJ_SITE_URL', '');

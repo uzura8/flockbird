@@ -10,10 +10,12 @@ $menus = array(
 	array('icon_term' => 'form.do_'.$publish_action, 'attr' => array(
 		'class' => 'js-simplePost',
 		'data-uri' => sprintf('admin/news/%s/%d', $publish_action, $news->id),
+		'data-msg' => sprintf('%sしますか？', $news->is_published ? term('form.unpublish').'に' : term('form.publish')),
 	)),
 	array('icon_term' => 'form.do_delete', 'attr' => array(
 		'class' => 'js-simplePost',
 		'data-uri' => 'admin/news/delete/'.$news->id,
+		'data-msg' => '削除します。よろしいですか？',
 	)),
 );
 echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));

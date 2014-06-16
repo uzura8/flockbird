@@ -359,10 +359,9 @@ class Controller_News extends Controller_Admin
 		{
 			\DB::start_transaction();
 			list($deleted_images, $deleted_files) = $news->delete_with_relations();
-			$deleted_files = $news->delete_with_relations();
 			\DB::commit_transaction();
-			if (!empty($deleted_images)) \Site_Upload::remove_files($deleted_images);
-			if (!empty($deleted_files))  \Site_Upload::remove_files($deleted_files);
+			if ($deleted_images) \Site_Upload::remove_files($deleted_images);
+			if ($deleted_files)  \Site_Upload::remove_files($deleted_files);
 			\Session::set_flash('message', term('news.view').'を削除しました。');
 		}
 		catch(\FuelException $e)

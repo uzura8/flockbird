@@ -1,18 +1,18 @@
 $('textarea.autogrow').autogrow();
 
-$(document).on('click','.btn_follow', function(){
+$(document).on('click', '.btn_follow', function(){
 	if (GL.execute_flg) return false;
 	update_follow_status(this);
 	return false;
 });
 
-$(document).on('click','.js-simplePost', function(){
+$(document).on('click', '.js-simplePost', function(){
 	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
 	post_submit(this);
 	return false;
 });
 
-$(document).on('click','.js-ajax-delete', function(){
+$(document).on('click', '.js-ajax-delete', function(){
 	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
 	execute_simple_delete(this);
 	return false;
