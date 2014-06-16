@@ -21,7 +21,7 @@ return array(
 		'site' => array(
 			'list' => array(
 				'limit' => 5,
-				'limit_max' => 50,
+				'limit_max' => 100,
 				'trim_width' => array(
 					'title' => 88,
 					'body'  => 500,

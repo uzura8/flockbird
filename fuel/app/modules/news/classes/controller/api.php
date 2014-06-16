@@ -15,8 +15,9 @@ class Controller_Api extends \Controller_Rest
 	 * @access  public
 	 * @return  Response
 	 */
-	public function get_list($category_name = null)
+	public function get_list($category_name_string = null)
 	{
+		$limit = (int)\Input::get('limit') ?: \Config::get('news.viewParams.site.list.limit_max', 100);
 		$cols = array(
 			'news.id',
 			'news.news_category_id',
@@ -30,7 +31,13 @@ class Controller_Api extends \Controller_Rest
 			->join('news_category', 'LEFT')->on('news_category.id', '=', 'news.news_category_id')
 			->where('is_published', 1)
 			->and_where('published_at', '<', \DB::expr('NOW()'))
-			->order_by('published_at', 'desc');
+			->order_by('published_at', 'desc')
+			->limit($limit);
+		if ($category_name_string)
+		{
+			$category_names = explode('-', $category_name_string);
+			$query = $query->and_where('news_category.name', 'in', $category_names);
+		}
 		$response = $query->execute();
 
 		return $this->response($response);
