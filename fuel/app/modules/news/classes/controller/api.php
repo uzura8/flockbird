@@ -76,22 +76,32 @@ class Controller_Api extends \Controller_Rest
 		$query = \DB::select_array($cols)->from('news_image')
 			->join('file', 'LEFT')->on('file.id', '=', 'news_image.file_id')
 			->where('news_id', $response['id']);
-		$response['images'] = self::add_file_url($query->execute()->as_array(), 'img');
+		$response['images'] = self::add_file_options($query->execute()->as_array(), 'img');
 
 		$cols = array(
 			'news_file.name',
 			array('file.path', 'file_path'),
 			array('file.name', 'file_name'),
+			array('file.original_filename', 'file_original_filename'),
+			array('file.type', 'file_type'),
 		);
 		$query = \DB::select_array($cols)->from('news_file')
 			->join('file', 'LEFT')->on('file.id', '=', 'news_file.file_id')
 			->where('news_id', $response['id']);
-		$response['files'] = self::add_file_url($query->execute()->as_array(), 'file');
+		$response['files'] = self::add_file_options($query->execute()->as_array(), 'file');
+
+		$cols = array(
+			'uri',
+			'label',
+		);
+		$query = \DB::select_array($cols)->from('news_link')
+			->where('news_id', $response['id']);
+		$response['links'] = $query->execute()->as_array();
 
 		return $this->response($response);
 	}
 
-	private static function add_file_url($files, $type)
+	private static function add_file_options($files, $type)
 	{
 		if (!$files) return array();
 		if (!in_array($type, array('img', 'file'))) throw new \InvalidArgumentException('Second parameter is invalid.');
@@ -106,8 +116,43 @@ class Controller_Api extends \Controller_Rest
 				$upload_uri = $confs['root_path']['cache_dir'].$confs['types']['nw']['sizes']['thumbnail'].'/'.$file['file_path'].$file['file_name'];
 				$files[$key]['file_url_thumbnail'] = \Uri::create($upload_uri);
 			}
+
+			if ($type == 'file')
+			{
+				$files[$key]['file_type_view'] = self::get_file_type_view($file['file_type']);
+			}
 		}
 
 		return $files;
+	}
+
+	private static function get_file_type_view($file_type)
+	{
+		switch ($file_type)
+		{
+			case 'image/jpeg':
+			case 'image/jpeg':
+			case 'image/png':
+			case 'image/bmp':
+				return '画像ファイル';
+			case 'text/plain':
+				return 'テキストファイル';
+			case 'text/csv':
+				return 'CSVファイル';
+			case 'application/pdf':
+				return 'PDFファイル';
+			case 'application/msword':
+			case 'application/msword':
+				return 'ワードファイル';
+			case 'application/vnd.ms-excel':
+			case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+				return '・エクセルファイル';
+			case 'application/vnd.ms-powerpoint':
+			case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+				return 'パワーポイントファイル';
+			default :
+		}
+
+		return '';
 	}
 }
