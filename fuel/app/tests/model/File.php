@@ -22,7 +22,7 @@ class Test_Model_File extends TestCase
 	{
 		foreach ($this->files as $file)
 		{
-			$this->assertFileExists($this->get_file_path($file->path, $file->name));
+			$this->assertFileExists(self::check_and_get_file_path($file->path, $file->name));
 		}
 	}
 
@@ -30,7 +30,7 @@ class Test_Model_File extends TestCase
 	{
 		foreach ($this->files as $file)
 		{
-			$test = File::get_size($this->get_file_path($file->path, $file->name));
+			$test = File::get_size(self::check_and_get_file_path($file->path, $file->name));
 			$this->assertEquals($file->filesize, $test);
 		}
 	}
@@ -49,9 +49,23 @@ class Test_Model_File extends TestCase
 		}
 	}
 
-	private function get_file_path($filepath, $name)
+	private static function check_and_get_file_path($filepath, $name, $type = null)
 	{
-		$raw_dir_path = conf('upload.types.img.raw_file_path');
+		if ($type) return self::get_file_path($filepath, $name, $type);
+
+		$types = array('file', 'img');
+		foreach ($types as $type)
+		{
+			$file_path = self::get_file_path($filepath, $name, $type);
+			if (file_exists($file_path)) return $file_path;
+		}
+
+		return false;
+	}
+
+	private static function get_file_path($filepath, $name, $type = 'img')
+	{
+		$raw_dir_path = conf('upload.types.'.$type.'.raw_file_path');
 
 		return $raw_dir_path.$filepath.$name;
 	}

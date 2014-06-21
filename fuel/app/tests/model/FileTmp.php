@@ -22,7 +22,7 @@ class Test_Model_FileTmp extends TestCase
 	{
 		foreach ($this->files as $file)
 		{
-			$this->assertFileExists($this->get_file_path($file->path, $file->name));
+			$this->assertFileExists(self::check_and_get_file_path($file->path, $file->name));
 		}
 	}
 
@@ -30,7 +30,7 @@ class Test_Model_FileTmp extends TestCase
 	{
 		foreach ($this->files as $file)
 		{
-			$file_path = $this->get_file_path($file->path, $file->name);
+			$file_path = self::check_and_get_file_path($file->path, $file->name);
 			if (!file_exists($file_path)) continue;
 
 			$test = File::get_size($file_path);
@@ -47,14 +47,28 @@ class Test_Model_FileTmp extends TestCase
 
 		foreach ($this->files as $file)
 		{
-			$test = exif_read_data($this->get_file_path($file->path, $file->name));
+			$test = exif_read_data(self::check_and_get_file_path($file->path, $file->name));
 			$this->assertFalse($test);
 		}
 	}
 
-	private function get_file_path($filepath, $name)
+	private static function check_and_get_file_path($filepath, $name, $type = null)
 	{
-		$raw_dir_path = conf('upload.types.img.tmp.raw_file_path');
+		if ($type) return self::get_file_path($filepath, $name, $type);
+
+		$types = array('file', 'img');
+		foreach ($types as $type)
+		{
+			$file_path = self::get_file_path($filepath, $name, $type);
+			if (file_exists($file_path)) return $file_path;
+		}
+
+		return false;
+	}
+
+	private static function get_file_path($filepath, $name, $type = 'img')
+	{
+		$raw_dir_path = conf('upload.types.'.$type.'.tmp.raw_file_path');
 
 		return $raw_dir_path.$filepath.$name;
 	}
@@ -63,6 +77,8 @@ class Test_Model_FileTmp extends TestCase
 	{
 		foreach ($this->files as $file)
 		{
+			if (!$file->shot_at) continue;
+
 			$this->assertNotEquals('0000-00-00 00:00:00', $file->shot_at);
 			$this->assertGreaterThanOrEqual(strtotime('-10 years'), strtotime($file->shot_at));
 			$this->assertLessThanOrEqual(time(), strtotime($file->shot_at));
