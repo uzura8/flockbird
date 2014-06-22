@@ -31,9 +31,13 @@ $(function () {
 			$('#progress_img .progress-bar').css('width', 0);
 		},
 		done: function (e, data) {
+			$('#btn_timeline').removeAttr('disabled');
+			$('#form_button').removeAttr('disabled');
 			$('#files_img').append(data['result']).fadein('fast');
 		},
 		progressall: function (e, data) {
+			$('#btn_timeline').attr('disabled', 'disabled');
+			$('#form_button').attr('disabled', 'disabled');
 			var progress = parseInt(data.loaded / data.total * 100, 10);
 			$('#progress_img .progress-bar').css(
 				'width',
