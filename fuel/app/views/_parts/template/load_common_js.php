@@ -1,4 +1,7 @@
-<?php echo Asset::js('jquery-2.0.3.min.js');?>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/jquery-2.1.1.min.js'); ?>"><\/script>')
+</script>
 <?php echo Asset::js('bootstrap.min.js');?>
 <?php echo Asset::js('apprise-1.5.min.js');?>
 <?php echo Asset::js('jquery.autogrow-textarea.js');?>

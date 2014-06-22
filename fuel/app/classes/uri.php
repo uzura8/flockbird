@@ -18,4 +18,14 @@ class Uri extends Fuel\Core\Uri
 
 		return $return;
 	}
+
+	/**
+	 * Returns the full uri path as a string
+	 *
+	 * @return  string
+	 */
+	public static function base_path($path = null)
+	{
+		return PRJ_URI_PATH.$path;
+	}
 }
