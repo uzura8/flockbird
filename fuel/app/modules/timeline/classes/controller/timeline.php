@@ -92,6 +92,7 @@ class Controller_Timeline extends \Controller_Site
 			'timeline_cache_id' => $timeline_cache->id,
 			'timeline' => $timeline,
 			'is_convert_nl2br' => true,
+			'self_member_id' => \Auth::check() ? $this->u->id : 0,
 		));
 	}
 
