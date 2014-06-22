@@ -7,3 +7,24 @@ function sleep(sleep_time)
 	}
 	return;
 }
+
+function objectSort(object) {
+	var isReverse = (arguments.length > 1) ? arguments[1] : false;
+
+	var sorted = {};
+	var array = [];
+	for (key in object) {
+		if (object.hasOwnProperty(key)) {
+			array.push(key);
+		}
+	}
+	if (isReverse) {
+		array.reverse();
+	} else {
+		array.sort();
+	}
+	for (var i = 0; i < array.length; i++) {
+		sorted[array[i]] = object[array[i]];
+	}
+	return sorted;
+}

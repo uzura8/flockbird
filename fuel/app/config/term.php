@@ -3,6 +3,7 @@
 $config = array(
 	'form' => array(
 		'submit' => '送信',
+		'do_submit' => '送信する',
 		'create' => '新規作成',
 		'create_simple' => '作成',
 		'do_create' => '作成する',

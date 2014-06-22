@@ -3,6 +3,7 @@
 $config = array(
 	'form' => array(
 		'submit' => 'edit',
+		'do_submit' => 'edit',
 		'create' => 'plus',
 		'create_simple' => 'plus',
 		'do_create' => 'plus',

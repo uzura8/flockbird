@@ -18,6 +18,7 @@ $.get(get_url('album/image/api/list.json'), {'album_id':album_id, 'limit':0}, fu
 		image_ids.push(data.id);
 	});
 	slideNumber_max = image_ids.length;
+	image_ids.reverse();
 
 	if ( slideNumber_max < 2 ) {
 		return;

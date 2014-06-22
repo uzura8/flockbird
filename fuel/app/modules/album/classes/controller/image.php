@@ -34,7 +34,7 @@ class Controller_Image extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related'  => array('file', 'album'),
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
-			'order_by' => array('shot_at' => 'desc'),
+			'order_by' => array('id' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$this->template->content = \View::forge('image/_parts/list', $data);
@@ -67,7 +67,7 @@ class Controller_Image extends \Controller_Site
 				$this->check_is_mypage($album_image->album->member_id),
 				array(array('album_id', $album_image->album->id))
 			),
-			'order_by' => array('shot_at' => 'asc'),
+			'order_by' => array('id' => 'desc'),
 		);
 		$ids = \Site_Model::get_col_array('album_image', 'id', $params, 'Album');
 		list($data['before_id'], $data['after_id']) = \Util_Array::get_neighborings($id, $ids);
@@ -98,7 +98,7 @@ class Controller_Image extends \Controller_Site
 			'related' => array('file', 'album'),
 			'where' => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id), array(), 't2.member_id'),
 			'limit' => \Config::get('album.articles.limit'),
-			'order_by' => array('shot_at' => 'desc'),
+			'order_by' => array('id' => 'desc'),
 		), 'Album');
 		$data['member'] = $member;
 		$this->template->content = \View::forge('image/_parts/list', $data);

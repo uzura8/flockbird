@@ -10,9 +10,9 @@
 	<?php echo form_upload_files($files); ?>
 <?php endif; ?>
 	<?php echo form_public_flag($val, isset($album) ? $album->public_flag : null); ?>
-	<?php echo form_button('form.submit', 'button'); ?>
+	<?php echo form_button('form.do_submit', 'button'); ?>
 <?php if (isset($is_edit) && $is_edit): ?>
-	<?php echo form_anchor(sprintf('album/delete/%d%s', $album->id, get_csrf_query_str()), term('form.delete'), array('class' => 'btn btn-default btn-danger')); ?>
+	<?php echo form_anchor(sprintf('album/delete/%d%s', $album->id, get_csrf_query_str()), term('form.do_delete'), array('class' => 'btn btn-default btn-danger')); ?>
 <?php endif; ?>
 <?php echo form_close(); ?>
 </div>

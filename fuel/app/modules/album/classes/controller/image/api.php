@@ -55,7 +55,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$data = array('album' => null, 'member' => null);
 			$params = array(
 				'related'  => array('file', 'album'),
-				'order_by' => array('shot_at' => 'asc'),
+				'order_by' => array('id' => 'desc'),
 			);
 			if ($limit) $params['limit'] = $limit;
 
@@ -120,7 +120,7 @@ class Controller_Image_api extends \Controller_Site_Api
 				'related' => array('file', 'album'),
 				'where' => array('t2.member_id', $member_id),
 				'limit' => \Config::get('album.articles.limit'),
-				'order_by' => array('created_at' => 'desc'),
+				'order_by' => array('id' => 'desc'),
 			), 'Album');
 			$data['member'] = $member;
 			$response = \View::forge('image/_parts/list', $data);

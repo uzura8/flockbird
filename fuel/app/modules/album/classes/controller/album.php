@@ -41,7 +41,7 @@ class Controller_Album extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
-			'order_by' => array('created_at' => 'desc'),
+			'order_by' => array('id' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -66,7 +66,7 @@ class Controller_Album extends \Controller_Site
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id)),
-			'order_by' => array('created_at' => 'desc'),
+			'order_by' => array('id' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
 		$data['member'] = $member;
@@ -95,7 +95,7 @@ class Controller_Album extends \Controller_Site
 				$this->check_is_mypage($album->member_id),
 				array(array('album_id', $id))
 			),
-			'order_by' => array('shot_at' => 'asc'),
+			'order_by' => array('id' => 'desc'),
 		), 'Album');
 
 		$data['album_images'] = array();
@@ -197,7 +197,7 @@ class Controller_Album extends \Controller_Site
 			throw new \HttpNotFoundException;
 		}
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
-		$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => 'created_at'));
+		//$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => array('created_at', 'desc')));
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related'  => array('file', 'album'),
@@ -207,7 +207,7 @@ class Controller_Album extends \Controller_Site
 				$this->check_is_mypage($album->member_id),
 				array(array('album_id', $id))
 			),
-			'order_by' => array('created_at' => 'desc'),
+			'order_by' => array('id' => 'desc'),
 		), 'Album');
 		$data['album'] = $album;
 		$data['disabled_to_update'] = $disabled_to_update;
@@ -276,7 +276,7 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('album'), term('site.do_create')), null, $this->u, 'album');
+		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('album'), term('form.do_create')), null, $this->u, 'album');
 		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/create_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
@@ -369,7 +369,7 @@ class Controller_Album extends \Controller_Site
 		$album_images = Model_AlbumImage::find('all', array(
 			'related'  => array('file'),
 			'where'    => array(array('album_id' => $id)),
-			'order_by' => array('created_at' => 'asc')
+			'order_by' => array('id' => 'asc')
 		));
 		$is_disabled_to_update_public_flag = Site_Util::check_album_disabled_to_update($album->foreign_table, true);
 

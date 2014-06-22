@@ -26,7 +26,7 @@ CREATE TABLE `album_image` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `album_id_public_flag_created_at` (`album_id`,`public_flag`,`created_at`),
+  KEY `album_id_public_flag_id` (`album_id`,`public_flag`,`id`),
   KEY `album_id_public_flag_shot_at` (`album_id`,`public_flag`,`shot_at`),
   KEY `album_id_idx` (`album_id`),
   KEY `file_id_idx` (`file_id`),
