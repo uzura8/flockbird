@@ -136,7 +136,7 @@ class Model_Note extends \Orm\Model
 		{
 			foreach ($album_images as $album_image)
 			{
-				$album_image->update_public_flag($public_flag);
+				$album_image->update_public_flag($public_flag, true);
 			}
 		}
 		// timeline の public_flag の更新

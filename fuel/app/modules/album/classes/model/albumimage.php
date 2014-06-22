@@ -156,9 +156,9 @@ class Model_AlbumImage extends \Orm\Model
 		return self::query()->where('file_id', $file_id)->get_one();
 	}
 
-	public function update_public_flag($public_flag)
+	public function update_public_flag($public_flag, $is_skip_check_album_disabled_to_update = false)
 	{
-		if ($result = Site_Util::check_album_disabled_to_update($this->album->foreign_table))
+		if (!$is_skip_check_album_disabled_to_update && $result = Site_Util::check_album_disabled_to_update($this->album->foreign_table))
 		{
 			throw new \DisableToUpdatePublicFlagException($result['message']);
 		}
@@ -295,7 +295,7 @@ class Model_AlbumImage extends \Orm\Model
 				&& $set_value['public_flag'] != 99
 				&& $album_image->public_flag != $set_value['public_flag'])
 			{
-				$album_image->update_public_flag($set_value['public_flag']);
+				$album_image->update_public_flag($set_value['public_flag'], true);
 				$is_set = true;
 			}
 			if ($is_set) $result++;;

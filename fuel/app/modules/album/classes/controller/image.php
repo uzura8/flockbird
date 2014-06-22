@@ -157,7 +157,7 @@ class Controller_Image extends \Controller_Site
 					$album_image->save();
 					if (!$disabled_to_update_message && isset($post['public_flag']))
 					{
-						$album_image->update_public_flag($post['public_flag']);
+						$album_image->update_public_flag($post['public_flag'], true);
 					}
 					\DB::commit_transaction();
 
