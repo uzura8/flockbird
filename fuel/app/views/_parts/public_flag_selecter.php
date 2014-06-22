@@ -19,7 +19,7 @@ if (!empty($disabled_to_update['message']))
 	<button class="btn dropdown-toggle btn-default btn-xs <?php echo $btn_color; ?>" type="button" id="<?php if (!empty($model) && !empty($id)): ?>public_flag_<?php echo $model; ?>_<?php echo $id; ?><?php else: ?>public_flag_selector<?php endif; ?>" data-toggle="dropdown" data-public_flag="<?php echo $public_flag; ?>">
 		<?php echo $icon.$name; ?> <span class="caret"></span>
 	</button>
-	<ul class="dropdown-menu pull-right" role="menu">
+	<ul class="dropdown-menu" role="menu">
 <?php $public_flags = \Site_Util::get_public_flags(); ?>
 <?php foreach ($public_flags as $public_flag_value): ?>
 <?php $label = get_public_flag_label($public_flag_value, false, 'icon_term'); ?>

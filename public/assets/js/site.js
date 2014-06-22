@@ -454,7 +454,7 @@ function get_public_flag_select_button_html(selected_value) {
 	if (!is_label_only) html += items[selected_key]['name'];
 	html += '<span class="caret"></span>' + "\n";
 	html += '</button>' + "\n";
-	html += '<ul class="dropdown-menu pull-right">' + "\n";
+	html += '<ul class="dropdown-menu">' + "\n";
 	$.each(items, function(i, val) {
 		var key = String(i);
 		if (key == selected_key) {
