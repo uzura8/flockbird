@@ -392,12 +392,11 @@ class Site_Util
 		return $info;
 	}
 
-	public static function get_article_view($timeline_cache_id, $timeline_id, $self_member_id)
+	public static function get_article_view($timeline_id, $self_member_id)
 	{
 		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));
 
 		return render('timeline::_parts/article', array(
-			'timeline_cache_id' => $timeline_cache_id,
 			'timeline' => $timeline,
 			'self_member_id' => $self_member_id,
 			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),

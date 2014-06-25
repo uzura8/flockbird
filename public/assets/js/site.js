@@ -551,8 +551,9 @@ function load_more_timeline(selfDomElement)
 {
 	var mytimeline = $(selfDomElement).data('mytimeline') ? parseInt($(selfDomElement).data('mytimeline')) : 0;
 	var member_id  = $(selfDomElement).data('member_id') ?  parseInt($(selfDomElement).data('member_id')) : 0;
+	var last_id    = $(selfDomElement).data('last_id') ?    parseInt($(selfDomElement).data('last_id')) : 0;
 
-	load_timeline(mytimeline, member_id, selfDomElement);
+	load_timeline(mytimeline, member_id, selfDomElement, last_id);
 }
 
 function load_timeline()
@@ -560,7 +561,8 @@ function load_timeline()
 	var mytimeline = (arguments.length > 0) ? arguments[0] : false;
 	var member_id  = (arguments.length > 1) ? arguments[1] : 0;
 	var clickDomElement = (arguments.length > 2) ? arguments[2] : '';
-	var limit = (arguments.length > 3) ? arguments[3] : 0;
+	var last_id = (arguments.length > 3) ? parseInt(arguments[3]) : 0;
+	var limit = (arguments.length > 4) ? arguments[4] : 0;
 
 	if (limit == 0) limit = get_config('timeline_list_limit');
 	var get_uri = 'timeline/api/list.html';
@@ -569,7 +571,7 @@ function load_timeline()
 		var delimitter = mytimeline ? '&' : '?';
 		get_uri += delimitter + 'member_id=' + member_id;
 	}
-	show_list(get_uri, '#article_list', limit, $('.timelineBox').last().attr('id'), false, clickDomElement);
+	show_list(get_uri, '#article_list', limit, '', false, clickDomElement, {}, last_id);
 
 	return false;
 }
