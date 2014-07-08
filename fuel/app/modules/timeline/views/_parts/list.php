@@ -2,7 +2,7 @@
 <?php if (!IS_API): ?><div id="article_list"><?php endif; ?>
 <?php if ($list): ?>
 <?php foreach ($list as $id => $timeline_cache): ?>
-		<?php echo \Timeline\Site_Util::get_article_view($timeline_cache->timeline_id, \Auth::check() ? $u->id : 0); ?>
+		<?php echo \Timeline\Site_Util::get_article_view($timeline_cache->timeline_id, $timeline_cache->member_id, \Auth::check() ? $u->id : 0); ?>
 <?php endforeach; ?>
 <?php endif; ?>
 

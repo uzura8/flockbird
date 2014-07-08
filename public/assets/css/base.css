@@ -98,18 +98,33 @@ img.profile_image {
 	position: relative;
 	border-bottom: 1px solid #EEEEEE;;
 }
-
 .timelineBox .content .main {
 	padding-right: 5px;
 	word-break: break-all;
 	word-wrap: break-word;
 }
+.timelineBox .content .main .thumbnails {
+	padding-top: 5px;
+}
+
 #article_list .timelineBox .member_img_box_m {
 	min-height: 55px;
 }
-
+#article_list .timelineBox .commentPostBox {
+	display: none;
+}
 #article_list .timelineBox .commentPostBox .main {
 	padding-right: 0;
+}
+
+.btn_timeline_delete {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+a.load_more_timeline {
+	margin-bottom: 20px;
 }
 
 #subtitle .btn.edit,
@@ -129,16 +144,6 @@ img.profile_image {
 	.btn span.hidden-xs {
 		display: none !important;
 	}
-}
-
-.btn_timeline_delete {
-	position: absolute;
-	right: 0;
-	top: 15px;
-}
-
-a.load_more_timeline {
-	margin-bottom: 20px;
 }
 
 .commentBox,
@@ -446,10 +451,6 @@ div.alert ul {
 
 .article_body {
 	margin-bottom: 30px;
-}
-
-#article_list .timelineBox .commentPostBox {
-	display: none;
 }
 
 .thumbnail_box {

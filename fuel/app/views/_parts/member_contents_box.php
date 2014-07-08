@@ -36,6 +36,7 @@ if (isset($content) && strlen($content))
 <?php echo render('_parts/thumbnails', array('images' => $images)); ?>
 <?php endif; ?>
 		</div>
+
 <?php if ($date || isset($public_flag, $model, $id)): ?>
 		<div class="sub_info">
 <?php if ($date): ?>

@@ -15,7 +15,7 @@ $list_more_box_attrs     = empty($list_more_box_attrs) ? $list_more_box_attrs_de
 	'content' => $comment->body,
 	'trim_width' => empty($trim_width) ? 0 : $trim_width,
 )); ?>
-<?php if (isset($u) && in_array($u->id, array($comment->member_id, $parent->member_id))): ?>
+<?php if (!empty($absolute_display_delete_btn) || (isset($u) && in_array($u->id, array($comment->member_id, $parent->member_id)))): ?>
 <?php
 $attrs = array(
 	'class' => 'btn btn-default btn-xs boxBtn btn_comment_delete',

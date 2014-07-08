@@ -129,6 +129,27 @@ class Site_Model
 		return $where;
 	}
 
+	public static function get_where_public_flag4access_from($access_from, $where = array())
+	{
+		switch ($access_from)
+		{
+			case 'others':
+				$where[] = array('public_flag', PRJ_PUBLIC_FLAG_ALL);
+				break;
+			case 'member':
+				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
+				break;
+			case 'friend':
+				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_FRIEND));
+				break;
+			case 'self':
+			default :
+				break;
+		}
+
+		return $where;
+	}
+
 	public static function get_list($table, $params = array(), $namespace = '')
 	{
 		$query = self::get_list_query($table, $params, $namespace);

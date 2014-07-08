@@ -18,5 +18,7 @@ if (isset($body['truncate_type']) && $body['truncate_type'] == 'line')
 	}
 }
 ?>
-<p><?php echo $body_value; ?></p>
+<div class="quote">
+<?php echo $body_value; ?>
+</div>
 <?php endif; ?>

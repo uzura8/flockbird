@@ -47,4 +47,14 @@ class Site_Member
 
 		return 'member';
 	}
+
+	public static function get_access_from_member_relation($member_id, $self_member_id = 0)
+	{
+		if (!$self_member_id) return 'others';
+
+		if ($member_id == $self_member_id) return 'self';
+		if (Model_MemberRelation::check_relation('friend', $self_member_id, $member_id)) return 'friend';
+
+		return 'member';
+	}
 }

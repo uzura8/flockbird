@@ -124,6 +124,29 @@ class Site_Util
 		return array($body, $is_safe);
 	}
 
+	public static function get_timeline_content(Model_Timeline $timeline, \Orm\Model $foreign_table_obj = null, $optional_info = array())
+	{
+		list($content, $is_safe_content) = self::get_timeline_body(
+			$timeline->type,
+			$timeline->body,
+			$foreign_table_obj,
+			$optional_info
+		);
+		if (strlen($content) && !$is_safe_content)
+		{
+			if ($truncate_lines = \Config::get('timeline.articles.truncate_lines.body', false))
+			{
+				$content = truncate_lines($content, $truncate_lines, 'timeline/'.$timeline->id);
+			}
+			elseif ($trim_width = \Config::get('timeline.articles.trim_width.body', false))
+			{
+				$content = strim($content, $trim_width);
+			}
+		}
+
+		return $content;
+	}
+
 	public static function get_quote_article($type, $foreign_table_obj)
 	{
 		$accept_types = array(
@@ -217,7 +240,7 @@ class Site_Util
 		return $pre_path.$common_path;
 	}
 
-	public static function get_timeline_images($type, $foreign_id, $timeline_id = null, $target_member_id = null, $self_member_id = null)
+	public static function get_timeline_images($type, $foreign_id, $timeline_id = null, $access_from = null)
 	{
 		// defaults
 		$images = array();
@@ -257,20 +280,16 @@ class Site_Util
 			case \Config::get('timeline.types.album'):
 			case \Config::get('timeline.types.album_image'):
 				list($images['list'], $images['count']) = \Site_Model::get_list_and_count('album_image', array(
-					'where'    => \Site_Model::get_where_params4list(
-						null,
-						$self_member_id,
-						($self_member_id && $target_member_id == $self_member_id),
+					'where' => \Site_Model::get_where_public_flag4access_from(
+						$access_from,
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
 					),
 					'limit'    => \Config::get('timeline.articles.thumbnail.limit.default'),
 					'order_by' => array('created_at' => 'asc'),
 				), 'Album');
 				$images['count_all'] = \Site_Model::get_count('album_image', array(
-					'where' => \Site_Model::get_where_params4list(
-						null,
-						$self_member_id,
-						($self_member_id && $target_member_id == $self_member_id),
+					'where' => \Site_Model::get_where_public_flag4access_from(
+						$access_from,
 						array(array('album_id', $foreign_id))
 					),
 				), 'Album');
@@ -279,10 +298,8 @@ class Site_Util
 
 			case \Config::get('timeline.types.album_image_timeline'):
 				list($images['list'], $images['count']) = \Site_Model::get_list_and_count('album_image', array(
-					'where' => \Site_Model::get_where_params4list(
-						null,
-						$self_member_id,
-						($self_member_id && $target_member_id == $self_member_id),
+					'where' => \Site_Model::get_where_public_flag4access_from(
+						$access_from,
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
 					),
 					'limit'    => \Config::get('timeline.articles.thumbnail.limit.album_image_timeline'),
@@ -392,14 +409,22 @@ class Site_Util
 		return $info;
 	}
 
-	public static function get_article_view($timeline_id, $self_member_id)
+	public static function get_article_view($timeline_id, $member_id, $self_member_id)
+	{
+		return render('timeline::_parts/article', array(
+			'timeline_id' => $timeline_id,
+			'member_id' => $member_id,
+			'self_member_id' => $self_member_id,
+		));
+	}
+
+	public static function get_article_main_view($timeline_id, $access_from_member_relation)
 	{
 		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));
 
-		return render('timeline::_parts/article', array(
+		return render('timeline::_parts/article_main', array(
 			'timeline' => $timeline,
-			'self_member_id' => $self_member_id,
-			'truncate_lines' =>\Config::get('timeline.articles.truncate_lines.body'),
+			'access_from_member_relation' => $access_from_member_relation,
 		));
 	}
 
