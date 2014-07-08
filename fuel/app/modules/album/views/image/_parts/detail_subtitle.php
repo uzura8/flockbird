@@ -6,7 +6,7 @@ echo render('_parts/member_contents_box', array(
 	'public_flag' => $album_image->public_flag,
 	'public_flag_disabled_to_update' => \Album\Site_Util::check_album_disabled_to_update($album_image->album->foreign_table),
 	'model'       => 'album_image',
-	'date'        => array('datetime' => $date, 'label' => '撮影')
+	'date'        => array('datetime' => $date, 'label' => term('site.shot'))
 )); ?>
 <?php if (isset($u) && $u->id == $album_image->album->member_id): ?>
 <?php

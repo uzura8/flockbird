@@ -7,7 +7,7 @@
 	'is_refresh_after_update_public_flag' => true,
 	'model'       => 'album',
 	'child_model' => 'album_image',
-	'date'        => array('datetime' => $album->created_at, 'label' => '日時')
+	'date'        => array('datetime' => $album->created_at, 'label' => term('site.datetime'))
 )); ?>
 <?php if (!$disabled_to_update && isset($u) && $u->id == $album->member_id): ?>
 <?php

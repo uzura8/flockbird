@@ -78,6 +78,7 @@ $config = array(
 		'display' => '表示',
 		'detail' => '詳細',
 		'link' => 'リンク',
+		'shot' => '撮影',
 	),
 	'member' => array(
 		'view' => 'メンバー',

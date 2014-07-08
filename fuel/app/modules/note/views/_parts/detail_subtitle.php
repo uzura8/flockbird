@@ -3,8 +3,11 @@
 	'id'          => $note->id,
 	'public_flag' => $note->public_flag,
 	'model'       => 'note',
-	'size' => 'M',
-	'date'        => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at, 'label' => $note->published_at ? '日時' : '更新日時')
+	'size'        => 'M',
+	'date'        => array(
+		'datetime' => $note->published_at ? $note->published_at : $note->updated_at,
+		'label'    => $note->published_at ? term('site.datetime') : term('form.updated', 'site.datetime'),
+	)
 )); ?>
 
 <?php if (isset($u) && $u->id == $note->member_id): ?>
