@@ -13,19 +13,6 @@
 	'page_type' => 'lerge_list',
 	'display_type' => 'summery',
 )); ?>
-<?php 
-/*
-		<div class="header">
-			<div class="list_subtitle">
-<?php echo render('_parts/member_contents_box', array(
-	'member' => $member,
-	'id' => $member->id,
-	'size' => 'M',
-	'date' => array('datetime' => $member->created_at)
-)); ?>
-			</div>
-		</div>
-*/ ?>
 	</div>
 <?php endforeach; ?>
 </div>
