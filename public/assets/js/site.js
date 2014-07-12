@@ -18,6 +18,38 @@ $(document).on('click', '.js-ajax-delete', function(){
 	return false;
 });
 
+if (!is_sp()) {
+	$(document).on({
+		mouseenter:function() {$('#' + $(this).data('hidden_btn')).fadeIn('fast')},
+		mouseleave:function() {$('#' + $(this).data('hidden_btn')).hide()}
+	},'.hide-btn');
+}
+
+$(document).on('click','.js-ajax-loadList', function(){
+	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
+	var listSelector = $(this).data('list') ? $(this).data('list') : '';
+	var limit = $(this).data('limit') ? $(this).data('limit') : 0;
+	var isInsertBefore = $(this).data('is_before') ? Boolean($(this).data('is_before')) : false;
+
+	if (GL.execute_flg) return false;
+	if (!getUri || !listSelector) return false;
+
+	var nextSelector = '#' + $(this).next().attr('id');
+	var getData = {};
+	if (isInsertBefore) getData['is_before'] = 1;
+
+	loadList(
+		getUri,
+		listSelector,
+		limit,
+		nextSelector,
+		isInsertBefore,
+		this
+	);
+
+	return false;
+});
+
 function get_id_from_url()
 {
 	var is_parseInt = (arguments.length > 0) ? arguments[0] : true;
@@ -56,16 +88,6 @@ function set_token()
 	}
 }
 
-function get_loading_image_tag()
-{
-	var is_enclose_block = (arguments.length > 0) ? arguments[0] : false;
-
-	var tag = '<img src="' + get_baseUrl() + 'assets/img/loading.gif' + '">';
-	if (is_enclose_block) tag = '<div class="loading_image">' + tag + '</div>';
-
-	return tag;
-}
-
 function redirect(uri)
 {
 	location.href = get_url(uri);
@@ -81,6 +103,62 @@ function get_error_message(status)
 			return '認証情報の取得に失敗しました。ログイン後、再度実行してください。';
 		default :
 			return default_message;
+	}
+}
+
+function showMessage(msg)
+{
+	$.jGrowl(msg);
+}
+
+function get_loading_image_tag()
+{
+	var isEncloseBlock = (arguments.length > 0) ? arguments[0] : false;
+	var blockSelector = (arguments.length > 1) ? arguments[1] : '';
+
+	var imageTag = '<img src="' + get_url('assets/img/loading.gif') + '">';
+	if (!isEncloseBlock) return imageTag;
+
+	var blockTag = '<div class="loading_image"'
+	if (blockSelector) blockTag += ' id="' + blockSelector + '"';
+	blockTag += '>' + imageTag + '</div>';
+
+	return blockTag;
+}
+
+function removeLoadingBlock()
+{
+	var blockSelector = (arguments.length > 0) ? arguments[0] : '';
+
+	if (blockSelector) {
+		$(blockSelector).remove();
+		return;
+	}
+
+	$('.loading_image').remove();
+}
+
+function setLoading(blockSelector)
+{
+	var trigerSelector = (arguments.length > 1) ? arguments[1] : '';
+	var loadingBlockSelector = (arguments.length > 2) ? arguments[2] : '';
+
+	if (trigerSelector) {
+		$(trigerSelector).html(get_loading_image_tag(true));
+	} else {
+		$(blockSelector).append(get_loading_image_tag(true, loadingBlockSelector));
+	}
+}
+
+function removeLoading(blockSelector)
+{
+	var trigerSelector = (arguments.length > 1) ? arguments[1] : '';
+	var loadingBlockSelector = (arguments.length > 2) ? arguments[2] : '';
+
+	if (trigerSelector) {
+		$(trigerSelector).remove();
+	} else {
+		removeLoadingBlock(loadingBlockSelector);
 	}
 }
 
@@ -145,6 +223,51 @@ function show_list(uri, list_block_id) {
 	});
 
 	if (!selfDomElement) $('#list_loading_image').remove();
+}
+
+function loadList(getUri, parentListSelector) {
+	var limit            = (arguments.length > 2) ? parseInt(arguments[2]) : 0;
+	var nextItemSelector = (arguments.length > 3) ? arguments[3] : '';
+	var isInsertBefore   = (arguments.length > 4) ? arguments[4] : false;
+	var trigerSelector   = (arguments.length > 5) ? arguments[5] : '';
+	var getData          = (arguments.length > 6) ? arguments[6] : {};
+
+
+	getData['limit'] = limit ? limit : get_config('default_list_limit');
+
+	var lastId =  (nextItemSelector && $(nextItemSelector).data('id')) ? parseInt($(nextItemSelector).data('id')) : 0;
+	if (lastId) getData['last_id'] = lastId;
+
+	$.ajax({
+		url : get_url(getUri),
+		type : 'GET',
+		dataType : 'text',
+		data : getData,
+		timeout: get_config('default_ajax_timeout'),
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			setLoading(parentListSelector, trigerSelector, '#list_loading_image');
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			removeLoading(parentListSelector, trigerSelector, '#list_loading_image');
+		},
+		success: function(result) {
+			if (nextItemSelector) {
+				if (isInsertBefore) {
+					$(nextItemSelector).before(result).fadeIn('fast');
+				} else {
+					$(nextItemSelector).after(result).fadeIn('fast');
+				}
+			} else {
+				$(parentListSelector).html(result).fadeIn('fast');
+			}
+			//$(parentListSelector).find('textarea').autogrow();
+		},
+		error: function(result) {
+			showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
+		}
+	});
 }
 
 function delete_item(uri)

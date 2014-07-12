@@ -4,7 +4,7 @@
 .imgBox .btn_album_image_edit {
 	display: none;
 }
-.commentBox .btn_comment_delete {
+.commentBox .js-ajax-delete {
 	display: none;
 }
 .btn_timeline_delete {

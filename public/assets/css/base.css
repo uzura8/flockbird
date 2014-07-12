@@ -178,7 +178,7 @@ div.btnBox button {
 .commentBox .boxBtn {
 	position: absolute;
 	right: 5px;
-	bottom: 5px;
+	top: 5px;
 	color: #949494;
 }
 .commentBox small {

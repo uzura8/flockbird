@@ -3,6 +3,7 @@
 $config = array(
 	'default' => array(
 		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
+		'ajax_timeout' => 10000,
 	),
 	'login_uri' => array(
 		'site'  => 'auth/login',
@@ -190,15 +191,15 @@ $config = array(
 				'body'  => 5,
 			),
 			'comment' => array(
-				'limit' => 5,
-				'limit_max' => 20,
+				'limit' => 3,
+				'limit_max' => 5,
 				'trim_width' => 200,
 			),
 		),
 		'detail' => array(
 			'comment' => array(
-				'limit' => 10,
-				'limit_max' => 30,
+				'limit' => 3,
+				'limit_max' => 5,
 			),
 		),
 	),
