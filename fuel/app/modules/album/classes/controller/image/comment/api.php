@@ -23,12 +23,15 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 		if ($this->format != 'html') throw new \HttpNotFoundException();
 
 		$album_image_id = (int)$parent_id;
-		$before_id      = (int)\Input::get('before_id', 0);
-		$after_id       = (int)\Input::get('after_id', 0);
-		$is_desc        = (bool)\Input::get('is_desc', false);
-		$show_more_link = (bool)\Input::get('disp_more', 1);
+		$last_id   = (int)\Input::get('last_id', 0);
+		$is_before = (bool)\Input::get('is_before', 0);
+		$class_id  = (int)\Input::get('class_id', 0);
+		$is_desc   = (bool)\Input::get('desc', 0);
 		$limit     = (int)\Input::get('limit', conf('view_params_default.list.comment.limit'));
-		if (\Input::get('limit') == 'all') $limit = conf('view_params_default.list.comment.max_limit', 50);
+
+		$limit_max = conf('view_params_default.list.comment.max_limit', 50);
+		if ($limit > $limit_max) $limit = $limit_max;
+		if (\Input::get('limit') == 'all') $limit = $limit_max;
 
 		$response = '';
 		try
@@ -39,16 +42,24 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			}
 
 			$params = array();
-			if ($before_id) $params[] = array('id', '>', $before_id);
-			if ($after_id)  $params[] = array('id', '<', $after_id);
+			if ($last_id)
+			{
+				$operator = $is_before ? '<' : '>';
+				$params[] = array('id', $operator, $last_id);
+			}
 			list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($album_image_id, $limit, $params, $is_desc);
 
 			$data = array(
 				'comments' => $comments,
-				'delete_uri' => 'album/image/comment/api/delete.json',
 				'parent' => $album_image->album,
 				'is_all_records' => $is_all_records,
 				'list_more_box_attrs' => array('data-parent_id' => $album_image_id),
+				'class_id' => $class_id,
+				'delete_uri' => 'album/image/comment/api/delete.json',
+				'list_more_box_attrs' => array(
+					'data-uri' => 'album/image/comment/api/list/'.$album_image_id.'.html',
+					'data-is_before' => true,
+				),
 			);
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('_parts/comment/list', $data);

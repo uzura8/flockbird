@@ -3,7 +3,7 @@
 <div class="row">
 <div id="main_container">
 <?php foreach ($list as $album_image): ?>
-	<div class="main_item" id="main_item_<?php echo $album_image->id; ?>">
+	<div class="main_item js-hide-btn" id="main_item_<?php echo $album_image->id; ?>" data-hidden_btn="btn_album_image_edit_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!IS_SP): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
 			<div><?php echo img($album_image->file, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
 <?php if (!empty($is_simple_view)): ?>
@@ -110,6 +110,7 @@ echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' =>
 	'is_all_records' => $is_all_records,
 	'uri_for_all_comments' => sprintf('album/image/%d?all_comment=1#comments', $album_image->id),
 	'trim_width' => Config::get('album.articles.comment.trim_width'),
+	'delete_uri' => 'album/image/comment/api/delete.json',
 )); ?>
 		</div>
 <?php endif; ?>

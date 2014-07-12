@@ -27,7 +27,11 @@ class Controller_Api extends \Controller_Site_Api
 		$is_desc   = (bool)\Input::get('is_desc', 1);
 		$member_id     = (int)\Input::get('member_id', 0);
 		$is_mytimeline = (bool)\Input::get('mytimeline', 0);
-		$limit         = \Input::get('limit') == 'all' ? \Config::get('timeline.articles.max_limit', 50) : (int)\Input::get('limit', \Config::get('timeline.articles.limit'));
+		$limit         = (int)\Input::get('limit', conf('timeline.articles.limit'));
+
+		$limit_max = conf('timeline.articles.max_limit', 50);
+		if ($limit > $limit_max) $limit = $limit_max;
+		if (\Input::get('limit') == 'all') $limit = $limit_max;
 
 		$response = '';
 		try

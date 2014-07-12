@@ -7,14 +7,3 @@ $(document).on('click','.link_album_image_set_cover', function(){
 	set_cover(this);
 	return false;
 });
-
-if (!is_sp()) {
-	$('.commentBox').on({
-		mouseenter:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
-		mouseleave:function() {$('#btn_comment_delete_' + get_id_num($(this).attr('id'))).hide()}
-	});
-	$('.imgBox').on({
-		mouseenter:function() {$('#btn_album_image_edit_' + get_id_num($(this).attr('id'))).fadeIn('fast')},
-		mouseleave:function() {$('#btn_album_image_edit_' + get_id_num($(this).attr('id'))).hide()}
-	});
-}

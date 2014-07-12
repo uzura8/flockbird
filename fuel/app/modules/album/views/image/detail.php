@@ -10,7 +10,16 @@
 <?php endif; ?>
 
 <div id="comment_list">
-<?php echo render('_parts/comment/list', array('parent' => $album_image->album, 'comments' => $comments, 'is_all_records' => $is_all_records)); ?>
+<?php echo render('_parts/comment/list', array(
+	'parent' => $album_image->album,
+	'comments' => $comments,
+	'is_all_records' => $is_all_records,
+	'delete_uri' => 'album/image/comment/api/delete.json',
+	'list_more_box_attrs' => array(
+		'data-uri' => 'album/image/comment/api/list/'.$album_image->id.'.html',
+		'data-is_before' => true,
+	),
+)); ?>
 </div>
 
 <?php if (Auth::check()): ?>

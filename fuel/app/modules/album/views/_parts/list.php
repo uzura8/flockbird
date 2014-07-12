@@ -5,8 +5,8 @@
 <div class="row">
 <div id="main_container">
 <?php foreach ($list as $album): ?>
-	<div class="main_item" id="main_item_<?php echo $album->id; ?>">
-		<div class="imgBox" id="imgBox_<?php echo $album->id ?>"<?php if (!IS_SP): ?> onmouseover="$('#btn_album_edit_<?php echo $album->id ?>').show();" onmouseout="$('#btn_album_edit_<?php echo $album->id ?>').hide();"<?php endif; ?>>
+	<div class="js-hide-btn main_item" id="main_item_<?php echo $album->id; ?>" data-hidden_btn="btn_album_edit_<?php echo $album->id; ?>">
+		<div class="imgBox" id="imgBox_<?php echo $album->id ?>">
 			<?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?>
 			<h5><?php echo Html::anchor('album/'.$album->id, strim($album->name, \Config::get('album.articles.trim_width.name'))); ?></h5>
 <?php $disable_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table); ?>

@@ -1,15 +1,16 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
 <?php
 $list_more_box_attrs_def = array(
-	'class' => 'listMoreBox js-ajax-loadList',
+	'class' => 'listMoreBox',
 	'id' => 'listMoreBox_comment',
 	'data-list' => '#comment_list',
 	'data-limit' => conf('view_params_default.list.comment.limit'),
 );
+if (empty($uri_for_all_comments)) $list_more_box_attrs_def['class'] .=' js-ajax-loadList';
 $list_more_box_attrs = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);
 ?>
 <?php if (!$is_all_records): ?>
-<?php echo Html::anchor(isset($uri_for_all_comments) ? $uri_for_all_comments : '#', 'もっと見る', $list_more_box_attrs); ?>
+<?php echo Html::anchor(isset($uri_for_all_comments) ? $uri_for_all_comments : '#', term('site.see_more'), $list_more_box_attrs); ?>
 <?php endif; ?>
 
 <?php foreach ($comments as $comment): ?>
