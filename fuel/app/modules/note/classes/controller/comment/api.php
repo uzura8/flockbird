@@ -24,9 +24,9 @@ class Controller_Comment_Api extends \Controller_Site_Api
 
 		$note_id   = (int)$parent_id;
 		$last_id   = (int)\Input::get('last_id', 0);
-		$is_before = (bool)\Input::get('is_before', true);
+		$is_before = (bool)\Input::get('is_before', 0);
 		$class_id  = (int)\Input::get('class_id', 0);
-		$is_desc   = (bool)\Input::get('is_desc', false);
+		$is_desc   = (bool)\Input::get('desc', 0);
 		$limit     = (int)\Input::get('limit', conf('view_params_default.list.comment.limit'));
 
 		$response = '';

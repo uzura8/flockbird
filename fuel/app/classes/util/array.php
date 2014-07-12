@@ -89,6 +89,26 @@ class Util_Array
 		return $list;
 	}
 
+	public static function conv_array2attr_string($attrs)
+	{
+		if (!$attrs) return '';
+
+		if (!is_array($attrs)) $attrs = (array)$attrs;
+		$list = array();
+		foreach ($attrs as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$list[] = sprintf("%s='%s'", $key, json_encode($value));
+				continue;
+			}
+
+			$list[] = sprintf('%s="%s"', $key, $value);
+		}
+
+		return implode(' ', $list);
+	}
+
 	public static function get_first_key(array $array)
 	{
 		$row = each($array);

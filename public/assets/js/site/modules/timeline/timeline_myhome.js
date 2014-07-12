@@ -1,7 +1,8 @@
 $(function() {
 	$('textarea.input_timeline').css('height', '50px');
 	$('#form_public_flag').val($('#public_flag_selector').data('public_flag'));
-	load_default_timeline(true);
+
+	load_default_timeline();
 
 	$(document).on('click','.display_upload_form', function(){
 		$('.upload').removeClass('hidden');
@@ -123,3 +124,8 @@ $(function() {
 		return false;
 	});
 })
+
+function load_default_timeline() {
+	var getData = {'mytimeline' : 1};
+	loadList('timeline/api/list.html', '#article_list', get_config('timeline_list_limit'), '', false, '', getData);
+}

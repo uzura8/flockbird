@@ -3,7 +3,7 @@ namespace Timeline;
 
 class Site_Model
 {
-	public static function get_list($self_member_id = 0, $target_member_id = 0, $is_mytimeline = false, $viewType = null, $last_id = 0, $is_over = false, $limit = 0, $sort = array())
+	public static function get_list($self_member_id = 0, $target_member_id = 0, $is_mytimeline = false, $viewType = null, $last_id = 0, $limit = 0, $is_desc = true, $is_before = false)
 	{
 		$follow_member_ids = null;
 		$friend_member_ids = null;
@@ -15,7 +15,7 @@ class Site_Model
 
 		if (!$limit) $limit = (int)\Config::get('timeline.articles.limit');
 		if ($limit > \Config::get('timeline.articles.limit_max')) $limit = \Config::get('timeline.articles.limit_max');
-		if (empty($sort)) $sort = array('id' => 'desc');
+		$sort = array('sort_datetime' => $is_desc ? 'desc' : 'asc');
 
 		$query = Model_TimelineCache::query()->select('id', 'member_id', 'timeline_id');
 
@@ -62,14 +62,8 @@ class Site_Model
 
 		if ($last_id)
 		{
-			$inequality_sign = '>';
-			if (empty($sort[1]) || $sort[1] == 'asc')
-			{
-				$inequality_sign = '<';
-			}
-			if ($is_over) $inequality_sign = '>';
-
-			$query->where('id', $inequality_sign, $last_id);
+			$inequality_sign = $is_before ? '>' : '<';
+			$query->where('timeline_id', $inequality_sign, $last_id);
 		}
 
 		$query->order_by($sort);

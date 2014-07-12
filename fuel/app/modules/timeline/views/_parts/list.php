@@ -7,14 +7,19 @@
 <?php endif; ?>
 
 <?php if ($is_next): ?>
-<nav id="page-nav">
 <?php
-$attr = array('class' => 'load_more_timeline listMoreBox', 'data-last_id' => $id);
-if (!empty($member)) $attr['data-member_id'] = $member->id;
-if (!empty($mytimeline)) $attr['data-mytimeline'] = 1;
-echo Html::anchor('#', '<i class="fa fa-caret-down"></i> もっとみる', $attr);
+$attr = array(
+	'class' => 'listMoreBox js-ajax-loadList',
+	'data-uri' => 'timeline/api/list.html',
+	'data-list' => '#article_list',
+	'data-limit' => Config::get('timeline.articles.limit'),
+);
+$data_array = array('desc' => 1);
+if (!empty($member)) $data_array['member_id'] = $member->id;
+if (!empty($mytimeline)) $data_array['mytimeline'] = 1;
+if ($data_array) $attr['data-get_data'] = $data_array;
 ?>
-</nav>
+<a href="#" <?php echo Util_Array::conv_array2attr_string($attr); ?>><?php echo icon_label('site.see_more', 'both', false, null, 'fa fa-'); ?></a>
 <?php endif; ?>
 <?php if (!IS_API): ?></div><!-- article_list --><?php endif; ?>
 <?php if (IS_API): ?></body></html><?php endif; ?>

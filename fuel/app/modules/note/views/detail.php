@@ -14,6 +14,7 @@
 	'parent' => $note,
 	'comments' => $comments,
 	'is_all_records' => $is_all_records,
+	'delete_uri' => 'note/comment/api/delete.json',
 	'list_more_box_attrs' => array(
 		'data-uri' => 'note/comment/api/list/'.$note->id.'.html',
 		'data-is_before' => true,

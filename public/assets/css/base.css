@@ -117,12 +117,6 @@ img.profile_image {
 	padding-right: 0;
 }
 
-.btn_timeline_delete {
-	position: absolute;
-	right: 0;
-	top: 0;
-}
-
 a.load_more_timeline {
 	margin-bottom: 20px;
 }
@@ -175,7 +169,8 @@ div.btnBox button {
 	padding-left: 20px;
 	padding-right: 20px;
 }
-.commentBox .boxBtn {
+.commentBox .boxBtn,
+#article_list .boxBtn {
 	position: absolute;
 	right: 5px;
 	top: 5px;

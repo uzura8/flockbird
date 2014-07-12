@@ -70,13 +70,13 @@ echo render('_parts/public_flag_selecter', $data);
 <div id="comment_list_<?php echo $parent->id; ?>">
 <?php
 $comment_get_uri = \Timeline\Site_Util::get_comment_api_uri('get', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
-$list_more_box_attrs = array('id' => 'listMoreBox_comment_'.$parent->id, 'data-parent_id' => $parent->id, 'data-get_uri' => $comment_get_uri);
+$list_more_box_attrs = array('id' => 'listMoreBox_comment_'.$parent->id, 'data-parent_id' => $parent->id, 'data-uri' => $comment_get_uri, 'data-is_before' => 1);
 $data = array(
 	'parent' => $parent,
 	'comments' => $list,
 	'is_all_records' => $is_all_records,
 	'list_more_box_attrs' => $list_more_box_attrs,
-	'comment_delete_uri' => \Timeline\Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->id, $timeline->foreign_id, $timeline->foreign_table),
+	'delete_uri' => \Timeline\Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->id, $timeline->foreign_id, $timeline->foreign_table),
 	'absolute_display_delete_btn' => $is_auth,
 );
 echo render('_parts/comment/list', $data);
@@ -114,14 +114,12 @@ echo render('_parts/post_comment', array(
 if ($access_from_member_relation  == 'self' && \Timeline\Site_Util::check_is_editable($timeline->type))
 {
 	list($post_id, $post_uri) = \Timeline\Site_Util::get_delete_api_info($timeline);
-	$attr = array(
-		'class'        => 'boxBtn',
-		'id'           => 'btn_timeline_delete_'.$timeline->id,
-		'data-id'      => $timeline->id,
-		'data-post_id' => $post_id,
-		'data-uri'     => $post_uri,
-	);
-	echo btn('form.delete', '#', 'btn_timeline_delete', false, 'xs', 'default', $attr);
+	echo render('_parts/btn_delete', array(
+		'id' => $post_id,
+		'attr_id' => 'btn_timeline_delete_'.$timeline->id,
+		'parrent_attr_id' => 'timelineBox_'.$timeline->id,
+		'delete_uri' => $post_uri,
+	));
 }
 ?>
 

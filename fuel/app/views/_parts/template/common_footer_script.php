@@ -37,4 +37,3 @@ function get_config(key) {
 	return config[key];
 }
 </script>
-<?php echo Asset::js('site.js');?>

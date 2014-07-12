@@ -79,6 +79,7 @@ $config = array(
 		'detail' => '詳細',
 		'link' => 'リンク',
 		'shot' => '撮影',
+		'see_more' => 'もっとみる',
 	),
 	'member' => array(
 		'view' => 'メンバー',

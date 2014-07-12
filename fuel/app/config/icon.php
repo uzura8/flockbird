@@ -78,6 +78,7 @@ $config = array(
 		//'detail' => '詳細',
 		'link' => 'link',
 		'shot' => 'camera',
+		'see_more' => 'caret-down',
 	),
 	'member' => array(
 		'view' => 'user',

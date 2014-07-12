@@ -22,14 +22,12 @@ class Controller_Api extends \Controller_Site_Api
 	{
 		if ($this->format != 'html') throw new \HttpNotFoundException();
 
+		$last_id   = (int)\Input::get('last_id', 0);
+		$is_before = (bool)\Input::get('is_before', 0);
+		$is_desc   = (bool)\Input::get('is_desc', 1);
 		$member_id     = (int)\Input::get('member_id', 0);
 		$is_mytimeline = (bool)\Input::get('mytimeline', 0);
 		$limit         = \Input::get('limit') == 'all' ? \Config::get('timeline.articles.max_limit', 50) : (int)\Input::get('limit', \Config::get('timeline.articles.limit'));
-		$before_id     = (int)\Input::get('before_id', 0);
-		$after_id      = (int)\Input::get('after_id', 0);
-		$is_over       = (bool)\Input::get('is_over', 0);
-
-		$last_id = $before_id ?: $after_id;
 
 		$response = '';
 		try
@@ -38,7 +36,7 @@ class Controller_Api extends \Controller_Site_Api
 			if ($member_id && !$member = \Model_Member::check_authority($member_id)) 	throw new \HttpNotFoundException;;
 			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
 			$timeline_viewType = $is_mytimeline ? $this->u->timeline_viewType : null;
-			list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $last_id, $is_over, $limit);
+			list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $last_id, $limit, $is_desc, $is_before);
 			$data = array('list' => $list, 'is_next' => $is_next);
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;
