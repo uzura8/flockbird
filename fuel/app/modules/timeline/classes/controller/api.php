@@ -20,27 +20,26 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function get_list()
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-
-		$last_id   = (int)\Input::get('last_id', 0);
-		$is_before = (bool)\Input::get('is_before', 0);
-		$is_desc   = (bool)\Input::get('is_desc', 1);
-		$member_id     = (int)\Input::get('member_id', 0);
-		$is_mytimeline = (bool)\Input::get('mytimeline', 0);
-		$limit         = (int)\Input::get('limit', conf('timeline.articles.limit'));
-
-		$limit_max = conf('timeline.articles.max_limit', 50);
-		if ($limit > $limit_max) $limit = $limit_max;
-		if (\Input::get('limit') == 'all') $limit = $limit_max;
-
 		$response = '';
 		try
 		{
+			if ($this->format != 'html') throw new \HttpNotFoundException();
+
+			$member_id     = (int)\Input::get('member_id', 0);
+			$is_mytimeline = (bool)\Input::get('mytimeline', 0);
+			list($limit, $params, $is_desc, $class_id, $last_id, $is_before)
+				= $this->common_get_list_params(array('desc' => 1, 'limit' => conf('timeline.articles.limit')), conf('timeline.articles.max_limit', 50));
+
 			$member = null;
-			if ($member_id && !$member = \Model_Member::check_authority($member_id)) 	throw new \HttpNotFoundException;;
+			if ($member_id && !$member = \Model_Member::check_authority($member_id))
+			{
+				throw new \HttpNotFoundException;;
+			}
 			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
 			$timeline_viewType = $is_mytimeline ? $this->u->timeline_viewType : null;
-			list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $last_id, $limit, $is_desc, $is_before);
+			list($list, $is_next)
+				= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $last_id, $limit, $is_desc, $is_before);
+
 			$data = array('list' => $list, 'is_next' => $is_next);
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;
@@ -48,6 +47,10 @@ class Controller_Api extends \Controller_Site_Api
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
 		}
 		catch(\FuelException $e)
 		{
