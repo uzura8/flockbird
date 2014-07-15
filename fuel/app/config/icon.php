@@ -45,6 +45,8 @@ $config = array(
 		'add_picture' => 'camera',
 		'add_file' => 'file',
 		'add_link' => 'link',
+		//'comment' => 'コメント',
+		//'do_comment' => 'コメントする',
 	),
 	'site' => array(
 		//'view' => 'サイト',

@@ -110,9 +110,6 @@ img.profile_image {
 #article_list .timelineBox .member_img_box_m {
 	min-height: 55px;
 }
-#article_list .timelineBox .commentPostBox {
-	display: none;
-}
 #article_list .timelineBox .commentPostBox .main {
 	padding-right: 0;
 }

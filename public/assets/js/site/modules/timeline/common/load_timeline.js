@@ -1,15 +1,26 @@
 $(function() {
+	var source   = $("#comment_form-template").html();
+	var template = Handlebars.compile(source);
+
+	$(document).on('click','.link_comment', function(){
+		var id = parseInt($(this).data('id'));
+		var targetBlockName = $(this).data('block');
+		if (!get_uid() || !id || !targetBlockName.length) return false;
+
+		if ($('#link_comment_box_' + id).size()) $('#link_comment_box_' + id).hide();
+		var textareaSelector = '#textarea_comment_' + id;
+		if ($(textareaSelector).size() == 0) {
+			var val = {'id' : id};
+			$('#' + targetBlockName).html(template(val));
+		}
+		$(textareaSelector).focus();
+		return false;
+	});
+
 	$(document).on('click','.update_public_flag', function(){
 		$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
 		if (GL.execute_flg) return false;
 		update_public_flag(this);
-		return false;
-	});
-
-	$(document).on('click','.link_comment', function(){
-		if ($(this).hasClass('hide-after_click')) $(this).hide();
-		$('#commentPostBox_' + $(this).data('id')).show();
-		$('#textarea_comment_' + $(this).data('id')).focus();
 		return false;
 	});
 

@@ -71,3 +71,7 @@
   - version: 0.5.2
   - license: MIT
   - url: http://hackerwins.github.io/summernote/
+* handlebars
+  - version: v1.3.0
+  - license: MIT
+  - url: http://handlebarsjs.com

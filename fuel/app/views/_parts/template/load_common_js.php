@@ -1,3 +1,4 @@
+<?php echo Asset::js('handlebars-v1.3.0.js');?>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
 if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/jquery-2.1.1.min.js'); ?>"><\/script>')

@@ -59,14 +59,18 @@ echo render('_parts/public_flag_selecter', $data);
 
 <?php /* comment_list */; ?>
 <?php list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id); ?>
-<?php if (!empty($list)): ?>
 <?php $parent = $timeline; ?>
 <div class="comment_info">
 	<small><?php echo icon('comment'); ?> <span id="comment_count_<?php echo $parent->id; ?>"><?php echo $all_comment_count; ?><span></small>
 <?php if ($is_auth): ?>
-	<small><?php echo anchor('#', 'コメントする', false, array('class' => 'link_comment', 'data-id' => $parent->id)); ?></small>
+	<small><?php echo anchor('#', term('form.do_comment'), false, array(
+		'class' => 'link_comment',
+		'data-id' => $parent->id,
+		'data-block' => 'form_comment_'.$timeline->id,
+	)); ?></small>
 <?php endif; ?>
 </div>
+<?php if ($list): ?>
 <div id="comment_list_<?php echo $parent->id; ?>">
 <?php
 $comment_get_uri = \Timeline\Site_Util::get_comment_api_uri('get', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
@@ -84,30 +88,17 @@ echo render('_parts/comment/list', $data);
 </div>
 
 <?php /* post_comment */; ?>
-<?php /*
 <?php if ($is_auth): ?>
-<?php if ($all_comment_count): ?>
-<?php echo anchor('#', 'コメントする', false, array('class' => 'link_comment hide-after_click showCommentBox', 'data-id' => $parent->id)); ?>
+<?php echo anchor('#', term('form.do_comment'), false, array(
+	'class' => 'link_comment showCommentBox',
+	'id' => 'link_comment_box_'.$timeline->id,
+	'data-id' => $timeline->id,
+	'data-block' => 'form_comment_'.$timeline->id,
+)); ?>
 <?php endif; ?>
-<?php
-$post_comment_button_attrs = array(
-	'class' => 'btn btn-default btn-sm btn_comment',
-	'id' => 'btn_comment_'.$parent->id,
-	'data-parent_id' => $parent->id,
-	'data-get_uri' => \Timeline\Site_Util::get_comment_api_uri('get', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id),
-	'data-post_parent_id' => \Timeline\Site_Util::get_comment_parent_id($timeline->type, $timeline->id, $timeline->foreign_id),
-	'data-post_uri' => \Timeline\Site_Util::get_comment_api_uri('create', $timeline->type, $timeline->foreign_table),
-);
-echo render('_parts/post_comment', array(
-	'u' => $u,
-	'button_attrs' => $post_comment_button_attrs,
-	'textarea_attrs' => array('id' => 'textarea_comment_'.$parent->id),
-	'parts_attrs' => array('id' => 'commentPostBox_'.$parent->id),
-));
-?>
 <?php endif; ?>
-*/ ?>
-<?php endif; ?>
+<div id="form_comment_<?php echo $timeline->id; ?>"></div>
+
 
 <?php /* edit_button */; ?>
 <?php
