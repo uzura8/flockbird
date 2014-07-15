@@ -30,7 +30,7 @@ if ($foreign_table_obj || $timeline->type == \Config::get('timeline.types.album_
 
 
 <?php /* images */; ?>
-<?php if ($images): ?>
+<?php if (!empty($images['list'])): ?>
 <div class="thumbnails">
 <?php echo render('_parts/thumbnails', array('images' => $images)); ?>
 </div>

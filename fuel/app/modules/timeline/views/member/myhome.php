@@ -2,7 +2,7 @@
 <?php echo render('_parts/post_comment', array(
 	'u' => $u,
 	'size' => 'M',
-	'button_attrs' => array('class' => 'btn btn-default', 'id' => 'btn_timeline'),
+	'button_attrs' => array('id' => 'btn_timeline'),
 	'textarea_attrs' => array('class' => 'form-control autogrow input_timeline'),
 	'with_public_flag_selector' => true,
 	'with_uploader' => true,
