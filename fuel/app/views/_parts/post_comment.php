@@ -2,19 +2,24 @@
 $textarea_attrs_def = array('rows' => 2, 'class' => 'form-control autogrow', 'id' => 'textarea_comment');
 $textarea_attrs     = (empty($textarea_attrs)) ? $textarea_attrs_def : array_merge($textarea_attrs_def, $textarea_attrs);
 
-$button_attrs_def = array('class' => '', 'id' => 'btn_comment');
+$button_attrs_def = array(
+	'class' => 'js-ajax-postComment',
+	'id' => 'btn_comment',
+	'data-textarea' => '#'.$textarea_attrs['id'],
+);
 $button_attrs     = (empty($button_attrs)) ? $button_attrs_def : array_merge($button_attrs_def, $button_attrs);
 $button_attrs['class'] .= ' pull-right';
 
 $parts_attrs_def = array('class' => 'commentPostBox');
 $parts_attrs     = empty($parts_attrs) ? $parts_attrs_def : array_merge($parts_attrs_def, $parts_attrs);
+$parts_attrs_string = Util_Array::conv_array2attr_string($parts_attrs);
 
 $size = empty($size) ? 'S' : strtoupper($size);
 if (IS_SP) $size = Site_Util::convert_img_size_down($size) ?: $size;
 $class_name = 'member_img_box_'.strtolower($size);
 $img_size   = conf('upload.types.img.types.m.sizes.'.$size);
 ?>
-<div<?php if (!empty($parts_attrs['class'])): ?> class="<?php echo $parts_attrs['class']; ?>"<?php endif; ?><?php if (!empty($parts_attrs['id'])): ?> id="<?php echo $parts_attrs['id']; ?>"<?php endif; ?>>
+<div<?php if ($parts_attrs_string): ?> <?php echo $parts_attrs_string; ?><?php endif; ?>>
 	<div class="<?php echo $class_name; ?>">
 		<?php echo img($u->get_image(), $img_size, 'member/'.$u->id, false, site_get_screen_name($u), true); ?>
 		<div class="content">

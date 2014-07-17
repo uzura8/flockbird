@@ -181,8 +181,8 @@ $config = array(
 	),
 	'view_params_default' => array(
 		'list' => array(
-			'limit' => 5,
-			'limit_max' => 50,
+			'limit' => 2,
+			'limit_max' => 3,
 			'trim_width' => array(
 				'title' => 88,
 				'body'  => 500,
@@ -191,15 +191,22 @@ $config = array(
 				'body'  => 5,
 			),
 			'comment' => array(
-				'limit' => 3,
-				'limit_max' => 5,
+				'limit' => 2,
+				'limit_max' => 3,
 				'trim_width' => 200,
 			),
 		),
 		'detail' => array(
 			'comment' => array(
-				'limit' => 3,
-				'limit_max' => 5,
+				'limit' => 2,
+				'limit_max' => 3,
+			),
+		),
+		'form' => array(
+			'comment' => array(
+				'textarea' => array(
+					'height'  => '33px',
+				),
 			),
 		),
 	),

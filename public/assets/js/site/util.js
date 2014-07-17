@@ -76,10 +76,10 @@ function get_loading_image_tag()
 
 function removeLoadingBlock()
 {
-	var blockSelector = (arguments.length > 0) ? arguments[0] : '';
+	var loadingBlockId = (arguments.length > 0) ? arguments[0] : '';
 
-	if (blockSelector) {
-		$(blockSelector).remove();
+	if (loadingBlockId) {
+		$('#' + loadingBlockId).remove();
 		return;
 	}
 
@@ -92,7 +92,8 @@ function setLoading(blockSelector)
 	var loadingBlockSelector = (arguments.length > 2) ? arguments[2] : '';
 
 	if (trigerSelector) {
-		$(trigerSelector).html(get_loading_image_tag(true));
+		$(trigerSelector).attr('disabled', true);
+		$(trigerSelector).html(get_loading_image_tag(true, loadingBlockSelector));
 	} else {
 		$(blockSelector).append(get_loading_image_tag(true, loadingBlockSelector));
 	}
@@ -101,13 +102,17 @@ function setLoading(blockSelector)
 function removeLoading(blockSelector)
 {
 	var trigerSelector = (arguments.length > 1) ? arguments[1] : '';
-	var loadingBlockSelector = (arguments.length > 2) ? arguments[2] : '';
+	var loadingBlockId = (arguments.length > 2) ? arguments[2] : '';
+	var isRemoveTrigerSelector = (arguments.length > 3) ? Boolean(arguments[3]) : false;
 
 	if (trigerSelector) {
-		$(trigerSelector).remove();
-	} else {
-		removeLoadingBlock(loadingBlockSelector);
+		$(trigerSelector).attr('disabled', false);
+		if (isRemoveTrigerSelector) {
+			$(trigerSelector).remove();
+			return;
+		}
 	}
+	removeLoadingBlock(loadingBlockId);
 }
 
 function show_list(uri, list_block_id) {
@@ -193,11 +198,11 @@ function loadList(getUri, parentListSelector) {
 		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
-			setLoading(parentListSelector, trigerSelector, '#list_loading_image');
+			setLoading(parentListSelector, trigerSelector, 'list_loading_image');
 		},
 		complete: function(xhr, textStatus) {
 			GL.execute_flg = false;
-			removeLoading(parentListSelector, trigerSelector, '#list_loading_image');
+			removeLoading(parentListSelector, trigerSelector, 'list_loading_image', true);
 		},
 		success: function(result) {
 			if (nextItemSelector) {
@@ -271,11 +276,64 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 
 function reset_textarea()
 {
-	var textarea_attribute = (arguments.length > 0) ? arguments[0] : 'textarea';
-	var textarea_height    = (arguments.length > 1) ? arguments[1] : '33px';
+	var textareaSelector = (arguments.length > 0) ? arguments[0] : 'textarea';
+	var textareaHeight   = (arguments.length > 1) ? arguments[1] : '';
+	if (!textareaHeight) textareaHeight = get_config('default_form_comment_textarea_height');
 
-	$(textarea_attribute).val('');
-	$(textarea_attribute).css('height', textarea_height);
+	$(textareaSelector).val('');
+	$(textareaSelector).css('height', textareaHeight);
+}
+
+function postComment(postUri, textareaSelector, getUri, listSelector)
+{
+	var nextItemSelector  = (arguments.length > 4) ? arguments[4] : '';
+	var isInsertBefore    = (arguments.length > 5) ? arguments[5] : false;
+	var trigerSelector    = (arguments.length > 6) ? arguments[6] : '';
+	var postData          = (arguments.length > 7) ? arguments[7] : {};
+	var isCheckInput      = (arguments.length > 8) ? arguments[8] : true;
+	var postedArticleTerm = (arguments.length > 9) ? arguments[9] : '';
+	var getData           = (arguments.length > 10) ? arguments[10] : {};
+	var textareaHeight    = (arguments.length > 11) ? arguments[11] : '33px';
+
+	if (GL.execute_flg) return false;
+	if (!postUri) return false;
+
+	var body = $(textareaSelector).val().trim();
+	if (isCheckInput && !body.length) return;
+	postData['body'] = body;
+	postData = set_token(postData);
+
+	if (!postedArticleTerm) postedArticleTerm = get_term('comment');
+	var trigerSelectorHtml = (trigerSelector) ? $(trigerSelector).html() : '';
+
+	$.ajax({
+		url : get_url(postUri),
+		type : 'POST',
+		dataType : 'text',
+		data : postData,
+		timeout: get_config('default_ajax_timeout'),
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			setLoading(listSelector, trigerSelector, 'btn_loading_image');
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			removeLoading(listSelector, trigerSelector, 'btn_loading_image');
+			if (trigerSelector) $(trigerSelector).html(trigerSelectorHtml);
+		},
+		success: function(result){
+			$.jGrowl(postedArticleTerm + 'を投稿しました。');
+			loadList(getUri, listSelector, 0, nextItemSelector, isInsertBefore, '', getData);
+			//if (count_attribute && $(count_attribute) != null) {
+			//	var count = parseInt($(count_attribute).html()) + 1;
+			//	$(count_attribute).html(count);
+			//}
+			reset_textarea(textareaSelector, textareaHeight);
+		},
+		error: function(result){
+			$.jGrowl(get_error_message(result['status'], postedArticleTerm + 'の投稿に失敗しました。'));
+		}
+	});
 }
 
 function create_comment(parent_id, post_uri, get_uri, before_element_id_name)

@@ -22,6 +22,10 @@
 )); ?>
 </div>
 <?php if (Auth::check()): ?>
-<?php echo render('_parts/post_comment'); ?>
+<?php echo render('_parts/post_comment', array('button_attrs' => array(
+	'data-post_uri' => 'note/comment/api/create/'.$note->id.'.json',
+	'data-get_uri' => 'note/comment/api/list/'.$note->id.'.html',
+	'data-list' => '#comment_list',
+))); ?>
 <?php endif; ?>
 <?php endif; ?>

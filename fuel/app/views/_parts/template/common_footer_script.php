@@ -19,7 +19,8 @@ function get_term(key) {
 <?php if (Module::loaded('timeline')): ?>
 		'timeline': '<?php echo term('timeline'); ?>',
 <?php endif; ?>
-		'public_flag': '<?php echo term('public_flag.label'); ?>'
+		'public_flag': '<?php echo term('public_flag.label'); ?>',
+		'comment': '<?php echo term('form.comment'); ?>'
 	};
 	return terms[key];
 }
@@ -32,6 +33,7 @@ function get_config(key) {
 		'default_list_limit': <?php echo conf('view_params_default.list.limit'); ?>,
 		'default_list_comment_limit_max': <?php echo conf('view_params_default.list.comment.limit_max'); ?>,
 		'default_detail_comment_limit_max': <?php echo conf('view_params_default.detail.comment.limit_max'); ?>,
+		'default_form_comment_textarea_height': '<?php echo conf('view_params_default.form.comment.textarea.height'); ?>',
 		'site_public_flag_default': <?php echo conf('public_flag.default'); ?>
 	};
 	return config[key];
