@@ -45,6 +45,7 @@ class Controller_News_Category_Api extends Controller_Api
 					'name' => $news_category->name,
 					'label' => $news_category->label,
 					'delete_uri' => sprintf('admin/news/category/api/delete/%s.json', $news_category->id),
+					'edit_uri' => sprintf('admin/news/category/edit/%d', $news_category->id),
 				));
 
 				return \Response::forge($response, $status_code);
