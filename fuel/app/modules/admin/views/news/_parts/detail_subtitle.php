@@ -6,6 +6,7 @@
 <?php
 $publish_action = $news->is_published ? 'unpublish' : 'publish';
 $menus = array(
+	array('icon_term' => 'form.preview', 'href' => 'news/preview/'.$news->slug.'?token='.$news->token, 'attr' => array('target' => '_blank')),
 	array('icon_term' => 'form.do_edit', 'href' => 'admin/news/edit/'.$news->id),
 	array('icon_term' => 'form.do_'.$publish_action, 'attr' => array(
 		'class' => 'js-simplePost',
