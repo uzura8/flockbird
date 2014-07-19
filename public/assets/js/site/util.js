@@ -266,6 +266,7 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 		success: function(data){
 			var delete_target_attribute = target_attribute_id ? target_attribute_id : target_attribute_prefix + '_' + id;
 			$(delete_target_attribute).fadeOut();
+			$(delete_target_attribute).remove();
 			if (is_display_message_success) $.jGrowl(msg_prefix + '削除しました。');
 		},
 		error: function(data){
