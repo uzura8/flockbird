@@ -208,32 +208,33 @@ class Site_Util
 
 	public static function get_comment_api_uri($action, $type, $foreign_table = '', $timeline_id = 0, $foreign_id = 0)
 	{
-		switch ($action)
-		{
-			case 'create':
-				$common_path = 'comment/api/create.json';
-				break;
-			case 'delete':
-				$common_path = 'comment/api/delete.json';
-				break;
-			case 'get':
-			default :
-				$common_path = 'comment/api/list/'.$timeline_id.'.html';
-				break;
-		}
-
+		$pre_path = 'timeline/';
+		$id = $timeline_id;
 		switch ($type)
 		{
 			case \Config::get('timeline.types.note'):// note 投稿
 				$pre_path = 'note/';
+				$id = $foreign_id;
 				if ($action == 'get') $common_path = 'comment/api/list/'.$foreign_id.'.html';
 				break;
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
 				$pre_path = 'album/image/';
+				$id = $foreign_id;
 				if ($action == 'get') $common_path = 'comment/api/list/'.$foreign_id.'.html';
 				break;
+		}
+
+		switch ($action)
+		{
+			case 'create':
+				$common_path = $id ? 'comment/api/create/'.$id.'.json' : 'comment/api/create.json';
+				break;
+			case 'delete':
+				$common_path = $id ? 'comment/api/delete/'.$id.'.json' : 'comment/api/delete.json';
+				break;
+			case 'get':
 			default :
-				$pre_path = 'timeline/';
+				$common_path = $id ? 'comment/api/list/'.$id.'.html' : 'comment/api/list.json';
 				break;
 		}
 

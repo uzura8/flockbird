@@ -2,9 +2,11 @@ $('.carousel').carousel({
 	interval: false
 });
 
+var source   = $("#comment_form-template").html();
+var templatePostComment = Handlebars.compile(source);
+
 var baseUrl = get_baseUrl();
 var album_id = get_id_from_url();
-var comment_limit_default = get_comment_limit_default();
 
 var basePath = get_upload_uri_base_path(); // 画像のベースパスを指定
 var images = {}; // 画像ファイル名格納用配列
@@ -48,8 +50,7 @@ $.get(get_url('album/image/api/list.json'), {'album_id':album_id, 'limit':0}, fu
 	$('#myCarousel > .carousel-inner').html(html);
 	//$('#slideNumber').html('現在のスライド番号:' + slideNumber + ' / 画像ID: ' + image_ids[slideNumber]);
 	$('#link2detail').html('<a href="' + get_url('album/image/' + image_ids[slideNumber]) + '" class="btn btn-default"><i class="glyphicon glyphicon-picture"></i> 詳細</a>');
-
-	loadList('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
+	displayComment(image_ids[slideNumber], templatePostComment);
 },'json');
 
 var next = function() {
@@ -64,8 +65,7 @@ var next = function() {
 		nextSlideNumber = 0;
 	}
 
-	loadList('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
-
+	displayComment(image_ids[slideNumber], templatePostComment);
 	$('#myCarousel > .carousel-inner > img:first').remove();
 	$('#myCarousel .carousel-inner').append('<img class="item" src="'+ images[image_ids[nextSlideNumber]]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
 	$('#myCarousel').carousel('next');
@@ -83,8 +83,7 @@ var prev = function() {
 		prevSlideNumber = slideNumber_max - 1;
 	}
 
-	loadList('album/image/comment/api/list/' + image_ids[slideNumber] + '.html', '#comment_list', comment_limit_default);
-
+	displayComment(image_ids[slideNumber], templatePostComment);
 	$('#myCarousel > .carousel-inner > img:last').remove();
 	$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[image_ids[prevSlideNumber]]+'" id="image_'+ image_ids[prevSlideNumber] +'">');
 	$('#myCarousel').carousel('prev');
@@ -116,14 +115,20 @@ $('body').keydown(function(event){
 	slide(event.keyCode);
 });
 
-$(document).on('click', '#btn_comment', function(){
-	create_comment(
-		image_ids[slideNumber],
-		'album/image/comment/api/create.json',
-		'album/image/comment/api/list/' + image_ids[slideNumber] + '.html',
-		$('.commentBox').last().attr('id'),
-		this
-	);
+function displayComment(image_id, template) {
+	var getUri = 'album/image/comment/api/list/' + image_id + '.html';
+	var listSelector = '#comment_list';
+	$('.commentPostBox').remove();
+	loadList(getUri, listSelector, get_comment_limit_default());
 
-	return false;
-});
+	var uid = get_uid();
+	if (uid) {
+		var val = {
+			'id' : image_id,
+			'listSelector' : listSelector,
+			'getUri' : getUri,
+			'postUri' : 'album/image/comment/api/create/' + image_id + '.json'
+		};
+		$(listSelector).after(template(val));
+	}
+}

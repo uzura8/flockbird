@@ -5,12 +5,20 @@ $(function() {
 	$(document).on('click','.link_comment', function(){
 		var id = parseInt($(this).data('id'));
 		var targetBlockName = $(this).data('block');
+		var postUri = $(this).data('post_uri');
+		var getUri = $(this).data('get_uri');
+
 		if (!get_uid() || !id || !targetBlockName.length) return false;
 
 		if ($('#link_comment_box_' + id).size()) $('#link_comment_box_' + id).hide();
 		var textareaSelector = '#textarea_comment_' + id;
 		if ($(textareaSelector).size() == 0) {
-			var val = {'id' : id};
+			var val = {
+				'id' : id,
+				'postUri' : postUri,
+				'getUri' : getUri,
+				'listSelector' : '#comment_list_' + id
+			};
 			$('#' + targetBlockName).html(template(val));
 		}
 		$(textareaSelector).focus();
@@ -21,29 +29,6 @@ $(function() {
 		$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
 		if (GL.execute_flg) return false;
 		update_public_flag(this);
-		return false;
-	});
-
-	$(document).on('click','.btn_comment', function(){
-		if (GL.execute_flg) return false;
-		var parent_id = $(this).data('parent_id');
-		var post_parent_id = $(this).data('post_parent_id') ? $(this).data('post_parent_id') : parent_id;
-		var post_uri = $(this).data('post_uri') ? $(this).data('post_uri') : 'timeline/comment/api/create.json';
-		var get_uri = $(this).data('get_uri') ? $(this).data('get_uri') : 'timeline/comment/api/list/' + post_parent_id + '.html';
-
-		create_comment(
-			post_parent_id,
-			post_uri,
-			get_uri,
-			$('.commentBox_' + parent_id).last().attr('id'),
-			this,
-			1,
-			'#textarea_comment_' + parent_id,
-			'#comment_list_' + parent_id,
-			{},
-			{class_id: parent_id}
-		);
-
 		return false;
 	});
 

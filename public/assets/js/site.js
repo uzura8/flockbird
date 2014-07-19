@@ -33,11 +33,12 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var isInsertBefore = $(this).data('is_before') ? Boolean($(this).data('is_before')) : false;
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 
-	if (isInsertBefore) {
-		var nextSelector = '#' + $(listSelector + ' > div:first').first().attr('id');
-	} else {
-		var nextSelector = '#' + $(listSelector + ' > div:last').last().attr('id');
+	var nextElement = '';
+	if ($(listSelector).html().replace(/[\r\n\s]+/, '')) {
+		var position = isInsertBefore ? 'first' : 'last';
+		nextElement = $(listSelector + ' > div:' + position);
 	}
+	var nextSelector = nextElement ? '#' + nextElement.attr('id') : '';
 
 	postComment(
 		postUri,
@@ -48,7 +49,6 @@ $(document).on('click','.js-ajax-postComment', function(){
 		isInsertBefore,
 		this
 	);
-
 	return false;
 });
 

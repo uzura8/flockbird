@@ -25,7 +25,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 		{
 			if ($this->format != 'html') throw new \HttpNotFoundException();
 
-			$album_image_id = (int)$parent_id;
+			$album_image_id = (int)$parent_id ?: (int)\Input::get('id');
 			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
 			{
 				throw new \HttpNotFoundException;
@@ -74,15 +74,16 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 	 * @access  public
 	 * @return  Response
 	 */
-	public function post_create()
+	public function post_create($parent_id = null)
 	{
 		$response = array('status' => 0);
 		try
 		{
+			if ($this->format != 'json') throw new \HttpNotFoundException();
 			\Util_security::check_csrf();
 
-			$album_image_id = (int)\Input::post('id');
-			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
+			$album_image_id = (int)$parent_id ?: (int)\Input::post('id');
+			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id, $this->u->id))
 			{
 				throw new \HttpNotFoundException;
 			}
@@ -106,6 +107,14 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$response['status'] = 1;
 			$response['id'] = $comment->id;
 			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
 		}
 		catch(\FuelException $e)
 		{

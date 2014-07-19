@@ -58,29 +58,38 @@ echo render('_parts/public_flag_selecter', $data);
 
 
 <?php /* comment_list */; ?>
-<?php list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id); ?>
+<?php
+list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id);
+$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri('get', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
+$comment_post_uri = \Timeline\Site_Util::get_comment_api_uri('create', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
+$comment_delete_uri = \Timeline\Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
+?>
 <?php $parent = $timeline; ?>
 <div class="comment_info">
 	<small><?php echo icon('comment'); ?> <span id="comment_count_<?php echo $parent->id; ?>"><?php echo $all_comment_count; ?><span></small>
 <?php if ($is_auth): ?>
-	<small><?php echo anchor('#', term('form.do_comment'), false, array(
-		'class' => 'link_comment',
-		'data-id' => $parent->id,
-		'data-block' => 'form_comment_'.$timeline->id,
-	)); ?></small>
+<?php
+$link_comment_attr = array(
+	'class' => 'link_comment',
+	'data-id' => $parent->id,
+	'data-block' => 'form_comment_'.$timeline->id,
+	'data-post_uri' => $comment_post_uri,
+	'data-get_uri' => $comment_get_uri,
+);
+?>
+	<small><?php echo anchor('#', term('form.do_comment'), false, $link_comment_attr); ?></small>
 <?php endif; ?>
 </div>
 <?php if ($list): ?>
 <div id="comment_list_<?php echo $parent->id; ?>">
 <?php
-$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri('get', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
 $list_more_box_attrs = array('id' => 'listMoreBox_comment_'.$parent->id, 'data-parent_id' => $parent->id, 'data-uri' => $comment_get_uri, 'data-is_before' => 1);
 $data = array(
 	'parent' => $parent,
 	'comments' => $list,
 	'is_all_records' => $is_all_records,
 	'list_more_box_attrs' => $list_more_box_attrs,
-	'delete_uri' => \Timeline\Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->id, $timeline->foreign_id, $timeline->foreign_table),
+	'delete_uri' => $comment_delete_uri,
 	'absolute_display_delete_btn' => $is_auth,
 );
 echo render('_parts/comment/list', $data);
@@ -89,14 +98,14 @@ echo render('_parts/comment/list', $data);
 
 <?php /* post_comment */; ?>
 <?php if ($is_auth): ?>
-<?php echo anchor('#', term('form.do_comment'), false, array(
-	'class' => 'link_comment showCommentBox',
-	'id' => 'link_comment_box_'.$timeline->id,
-	'data-id' => $timeline->id,
-	'data-block' => 'form_comment_'.$timeline->id,
-)); ?>
+<?php
+$link_comment_attr['id'] = 'link_comment_box_'.$timeline->id;
+$link_comment_attr['class'] .= ' showCommentBox';
+?>
+<?php echo anchor('#', term('form.do_comment'), false, $link_comment_attr); ?>
 <?php endif; ?>
 <?php endif; ?>
+<div id="comment_list_<?php echo $timeline->id; ?>"></div>
 <div id="form_comment_<?php echo $timeline->id; ?>"></div>
 
 

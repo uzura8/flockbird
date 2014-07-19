@@ -23,5 +23,9 @@
 </div>
 
 <?php if (Auth::check()): ?>
-<?php echo render('_parts/post_comment'); ?>
+<?php echo render('_parts/post_comment', array('button_attrs' => array(
+	'data-post_uri' => 'album/image/comment/api/create/'.$album_image->id.'.json',
+	'data-get_uri' => 'album/image/comment/api/list/'.$album_image->id.'.html',
+	'data-list' => '#comment_list',
+))); ?>
 <?php endif; ?>

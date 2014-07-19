@@ -16,11 +16,6 @@
 		<div id="album_image_comment"></div>
 		<h4 id="comments">Comments</h4>
 		<div id="comment_list"></div>
-
-<?php if (Auth::check()): ?>
-<?php echo render('_parts/post_comment', array('u' => $u, 'attributes' => array('class' => 'w90 autogrow'))); ?>
-<?php endif; ?>
-
 	</div>
 </div>
 <?php endif; ?>
