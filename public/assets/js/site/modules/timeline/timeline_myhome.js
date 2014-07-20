@@ -44,32 +44,40 @@ $(function() {
 		return false;
 	});
 
-	var uid = get_uid();
 	$('#btn_timeline').click(function(){
 		if (GL.execute_flg) return false;
 
 		var body = $('#textarea_comment').val().trim();
-		var post_data_additional = {};
+		var postData = {};
 		$('input[name^="image_tmp"]').each(function(){
-				post_data_additional[this.name] = this.value;
+				postData[this.name] = this.value;
 		});
-		if (body.length == 0 && Object.keys(post_data_additional).length == 0) return;
-		post_data_additional['album_id'] = $('#album_id').val();
-		create_comment(
-			0,
+		if (body.length == 0 && Object.keys(postData).length == 0) return;
+
+		var listSelector = '#article_list';
+		var isInsertBefore = true;
+		var nextSelector = getNextSelector(listSelector, isInsertBefore);
+		postData['album_id'] = $('#album_id').val();
+		postData['public_flag'] = $('#form_public_flag').val();
+		var getData = {
+			'mytimeline' : 1,
+			'is_before' : 1,
+			'desc' : 1
+		};
+
+		postComment(
 			'timeline/api/create.json',
-			'timeline/api/list.html?mytimeline=1&is_over=1',
-			$('.timelineBox').first().attr('id'),
-			this,
-			$('#form_public_flag').val(),
 			'#textarea_comment',
-			'#article_list',
-			post_data_additional,
-			{},
+			'timeline/api/list.html',
+			listSelector,
+			nextSelector,
+			isInsertBefore,
+			this,
+			postData,
 			false,
-			'50px',
-			true,
-			get_term('timeline')
+			get_term('timeline'),
+			getData,
+			'50px'
 		);
 
 		$('.upload').addClass('hidden');

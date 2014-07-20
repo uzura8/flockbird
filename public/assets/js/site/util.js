@@ -115,69 +115,6 @@ function removeLoading(blockSelector)
 	removeLoadingBlock(loadingBlockId);
 }
 
-function show_list(uri, list_block_id) {
-	var record_limit         = (arguments.length > 2 && arguments[2]) ? arguments[2] : 0;
-	var next_element_id_name = (arguments.length > 3 && arguments[3]) ? arguments[3] : '';
-	var is_insert_before     = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
-	var selfDomElement       = (arguments.length > 5) ? arguments[5] : false;
-	var get_data_additional  = (arguments.length > 6) ? arguments[6] : {};
-	var next_element_id_num  = (arguments.length > 7) ? arguments[7] : 0;
-
-	if (!selfDomElement) {
-		$(list_block_id).append('<div class="loading_image" id="list_loading_image">' + get_loading_image_tag() + '</div>');
-	}
-
-	var baseUrl = get_baseUrl();
-	var get_url = baseUrl + uri;
-	var get_data = get_data_additional;
-	get_data['nochache']  = (new Date()).getTime();
-	get_data['limit'] = record_limit;
-
-	if (!next_element_id_num && next_element_id_name.length > 0) {
-		next_element_id_num = get_id_num(next_element_id_name);
-	}
-	if (next_element_id_num) {
-		var key = is_insert_before ? 'after_id' : 'before_id';
-		get_data[key] = next_element_id_num;
-	}
-
-	$.ajax({
-		url : get_url,
-		type : 'GET',
-		dataType : 'text',
-		data : get_data,
-		timeout: 10000,
-		beforeSend: function(xhr, settings) {
-			GL.execute_flg = true;
-			if (selfDomElement) {
-				$(selfDomElement).html(get_loading_image_tag(true));
-			}
-		},
-		complete: function(xhr, textStatus) {
-			GL.execute_flg = false;
-		},
-		success: function(result) {
-			if (selfDomElement) $(selfDomElement).remove();
-
-			if (next_element_id_num) {
-				if (is_insert_before) {
-					$(list_block_id).prepend(result).fadeIn('fast');
-				} else {
-					$(list_block_id).append(result).fadeIn('fast');
-				}
-			} else {
-				$(list_block_id).html(result).fadeIn('fast');
-			}
-			$(list_block_id).find('textarea').autogrow();
-		},
-		error: function(result) {
-			$.jGrowl(get_error_message(result['status'], '読み込みに失敗しました。'));
-		}
-	});
-
-	if (!selfDomElement) $('#list_loading_image').remove();
-}
-
 function loadList(getUri, parentListSelector) {
 	var limit            = (arguments.length > 2) ? parseInt(arguments[2]) : 0;
 	var nextItemSelector = (arguments.length > 3) ? arguments[3] : '';
@@ -285,6 +222,16 @@ function reset_textarea()
 	$(textareaSelector).css('height', textareaHeight);
 }
 
+function getNextSelector(listSelector, isInsertBefore)
+{
+	var nextElement = '';
+	if ($(listSelector).html().replace(/[\r\n\s]+/, '')) {
+		var position = isInsertBefore ? 'first' : 'last';
+		nextElement = $(listSelector + ' > div:' + position);
+	}
+	return nextElement ? '#' + nextElement.attr('id') : '';
+}
+
 function postComment(postUri, textareaSelector, getUri, listSelector)
 {
 	var nextItemSelector  = (arguments.length > 4) ? arguments[4] : '';
@@ -335,74 +282,6 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 			$.jGrowl(get_error_message(result['status'], postedArticleTerm + 'の投稿に失敗しました。'));
 		}
 	});
-}
-
-function create_comment(parent_id, post_uri, get_uri, before_element_id_name)
-{
-	var selfDomElement       = (arguments.length > 4)  ? arguments[4]  : false;
-	var public_flag          = (arguments.length > 5)  ? String(arguments[5]) : '';
-	var textarea_attribute   = (arguments.length > 6)  ? arguments[6]  : '#textarea_comment';
-	var list_block_id        = (arguments.length > 7)  ? arguments[7]  : '#comment_list';
-	var post_data_additional = (arguments.length > 8)  ? arguments[8]  : {};
-	var get_data_additional  = (arguments.length > 9)  ? arguments[9]  : {};
-	var is_check_input_body  = (arguments.length > 10) ? arguments[10] : true;
-	var textarea_height      = (arguments.length > 11) ? arguments[11] : '33px';
-	var is_insert_before     = (arguments.length > 12) ? arguments[12] : false;
-	var article_name         = (arguments.length > 13) ? arguments[13] : 'コメント';
-	var count_attr_prefix    = (arguments.length > 14) ? arguments[14] : '#comment_count_';
-
-	var body = $(textarea_attribute).val().trim();
-	if (is_check_input_body && body.length <= 0) return;
-
-	var selfDomElement_html = (selfDomElement) ? $(selfDomElement).html() : '';
-	var post_data = post_data_additional;
-	post_data['body'] = body;
-	var count_attribute = '';
-	if (parent_id) {
-		post_data['id'] = parent_id;
-		count_attribute = count_attr_prefix + parent_id;
-	}
-	if (public_flag.length > 0) post_data['public_flag'] = public_flag;
-	post_data = set_token(post_data);
-	var ret = false;
-	$.ajax({
-		url : get_baseUrl() + post_uri,
-		type : 'POST',
-		dataType : 'text',
-		data : post_data,
-		timeout: 10000,
-		beforeSend: function(xhr, settings) {
-			GL.execute_flg = true;
-			if (selfDomElement) {
-				$(selfDomElement).attr('disabled', true);
-				$(selfDomElement).html(get_loading_image_tag());
-			}
-		},
-		complete: function(xhr, textStatus) {
-			GL.execute_flg = false;
-			if (selfDomElement) {
-				$(selfDomElement).attr('disabled', false);
-				$(selfDomElement).html(selfDomElement_html);
-			}
-		},
-		success: function(result){
-			$.jGrowl(article_name + 'を投稿しました。');
-			show_list(get_uri, list_block_id, 'all', before_element_id_name, is_insert_before, false, get_data_additional);
-			if (count_attribute && $(count_attribute) != null) {
-				var count = parseInt($(count_attribute).html()) + 1;
-				$(count_attribute).html(count);
-			}
-			$(textarea_attribute).val('');
-			$(textarea_attribute).css('height', textarea_height);
-
-			var ret = true;
-		},
-		error: function(result){
-			$.jGrowl(get_error_message(result['status'], article_name + 'の投稿に失敗しました。'));
-		}
-	});
-
-	return ret;
 }
 
 function set_datetimepicker(attribute)

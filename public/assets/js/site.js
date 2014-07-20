@@ -33,13 +33,7 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var isInsertBefore = $(this).data('is_before') ? Boolean($(this).data('is_before')) : false;
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 
-	var nextElement = '';
-	if ($(listSelector).html().replace(/[\r\n\s]+/, '')) {
-		var position = isInsertBefore ? 'first' : 'last';
-		nextElement = $(listSelector + ' > div:' + position);
-	}
-	var nextSelector = nextElement ? '#' + nextElement.attr('id') : '';
-
+	var nextSelector = getNextSelector(listSelector, isInsertBefore);
 	postComment(
 		postUri,
 		textareaSelector,
