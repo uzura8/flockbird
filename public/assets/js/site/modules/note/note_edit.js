@@ -1,5 +1,3 @@
-var id = get_id_from_url(true);
-
 isPopover = false;
 setup_simple_validation_required_popover('#form_title');
 setup_simple_validation_required_popover('#form_body');

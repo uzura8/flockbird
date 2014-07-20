@@ -1,9 +1,9 @@
-function get_id_from_url()
+function getIdFromUrl()
 {
-	var is_parseInt = (arguments.length > 0) ? arguments[0] : true;
+	var isParseInt = (arguments.length > 0) ? arguments[0] : true;
 
 	var id = url('-1');
-	if (is_parseInt) id = parseInt(id);
+	if (isParseInt) id = parseInt(id);
 
 	return id;
 }
@@ -284,26 +284,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 	});
 }
 
-function set_datetimepicker(attribute)
-{
-	var is_accept_futer = (arguments.length > 1) ? arguments[1] : false;
-	$(attribute).datetimepicker({
-		dateFormat: 'yy-mm-dd',
-		hourMax: 23,
-		changeYear: true,
-		changeMonth: true,
-		prevText: '&#x3c;前',
-		nextText: '次&#x3e;',
-		timeFormat: 'HH:mm',
-		hourGrid: 6,
-		minuteGrid: 15,
-		addSliderAccess: true,
-		sliderAccessArgs: { touchonly: false },
-		maxDateTime: is_accept_futer ? null : new Date()
-	});
-}
-
-function load_item(container_attribute, item_attribute)
+function loadItem(container_attribute, item_attribute)
 {
 	var finished_msg = (arguments.length > 2) ? arguments[2] : '';
 	var loading_image_url = (arguments.length > 3) ? arguments[3] : get_url('assets/img/site/loading_l.gif');
@@ -317,17 +298,17 @@ function load_item(container_attribute, item_attribute)
 	});
 }
 
-function load_popover(link_attribute, content_attribute, content_url) {
-	var input_attrs = (arguments.length > 3) ? arguments[3] : '';
+function loadPopover(linkSelector, contentSelector, contentUrl) {
+	var inputAttrs = (arguments.length > 3) ? arguments[3] : '';
 
-	$(link_attribute).popover({html: true})
-	$(link_attribute).click(function(){
-		$(content_attribute).load(content_url);
-		//if (input_attrs.length > 0) $(input_attrs).focus();
+	$(linkSelector).popover({html: true})
+	$(linkSelector).click(function(){
+		$(contentSelector).load(contentUrl);
+		//if (inputAttrs.length > 0) $(inputAttrs).focus();
 		$(window).resize(function(e) {
 			e.preventDefault()
-			$(link_attribute).each(function (){
-				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('a[data-toggle=popover]').has(e.target).length === 0 && check_is_input(input_attrs) === false) {
+			$(linkSelector).each(function (){
+				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('a[data-toggle=popover]').has(e.target).length === 0 && checkIsInput(inputAttrs) === false) {
 					$(this).popover('hide');
 					return;
 				}
@@ -498,10 +479,10 @@ function simple_validation_required(input_atter) {
 	return true;
 }
 
-function check_is_input(input_attrs) {
+function checkIsInput(inputAttrs) {
 	var is_input = false;
-	for (i = 0; i < input_attrs.length; i++) {
-		var val = $(input_attrs[i]).val();
+	for (i = 0; i < inputAttrs.length; i++) {
+		var val = $(inputAttrs[i]).val();
 		if(val && val.length > 0) is_input = true;
 	}
 
@@ -547,7 +528,7 @@ function load_masonry_item(container_attribute, item_attribute)
 	}
 }
 
-function send_article(btnObj, post_data, post_uri, parent_box_attr) {
+function sendArticle(btnObj, post_data, post_uri, parent_box_attr) {
 	var add_before  = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
 	var msg_success = (arguments.length > 5 && arguments[5]) ? arguments[5] : '投稿に成功しました。';
 	var msg_error   = (arguments.length > 6 && arguments[6]) ? arguments[6] : '投稿に失敗しました。';
@@ -559,7 +540,7 @@ function send_article(btnObj, post_data, post_uri, parent_box_attr) {
 		type : 'POST',
 		dataType : 'text',
 		data : post_data,
-		timeout: 10000,
+		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
 			$(btnObj).attr('disabled', true);
@@ -619,7 +600,7 @@ function update_follow_status(selfDomElement) {
 		type : 'POST',
 		dataType : 'text',
 		data : post_data,
-		timeout: 10000,
+		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
 			if (selfDomElement) {
@@ -728,5 +709,5 @@ function execute_simple_post(selfDomElement) {
 	if (id > 0) post_data['id'] = id;
 	var msg_success = '作成しました。';
 	var msg_error = '作成に失敗しました。';
-	send_article(selfDomElement, post_data, post_uri, '#' + parent_box, false, msg_success, msg_error);
+	sendArticle(selfDomElement, post_data, post_uri, '#' + parent_box, false, msg_success, msg_error);
 }
