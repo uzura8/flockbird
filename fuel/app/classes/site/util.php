@@ -37,6 +37,23 @@ class Site_Util
 		return implode('/', $items);
 	}
 
+	public static function check_ssl_required_uri($uri, $is_ssl_required_all = false, $is_check_module = true)
+	{
+		if(preg_match("#^((https?|ftp):)?//#i", $uri)) return false;
+		if($is_ssl_required_all) return true;
+
+		$uri = trim($uri, '/');
+		if (in_array($uri, conf('ssl_required.actions'))) return true;
+
+		if ($is_check_module)
+		{
+			$module = Util_string::get_exploded_first($uri, '/');
+			if (in_array($module, conf('ssl_required.modules'))) return true;
+		}
+
+		return false;
+	}
+
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())
 	{
 		$form = Fieldset::forge($name);

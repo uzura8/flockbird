@@ -32,6 +32,18 @@ define('PRJ_PROFILING', false);
 define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
 
+/**
+ * ssl mode:
+ *     使用には PRJ_DOMAIN の SSL 証明書のサーバ設定が必要
+ *
+ * false    : SSL を使用しない
+ * 'ALL'    : 全ページで SSL の使用を必須とする
+ * 'PARTIAL': 指定のページのみで SSL の使用を必須とするsite.ssl_required)
+ *              fuel/config/site.php の ssl_required で設定
+ */
+define('PRJ_SSL_MODE', false);
+
+
 // サイト名
 define('PRJ_SITE_NAME', 'サンプルSNS');
 define('PRJ_SITE_DESCRIPTION', 'サンプルSNSです');

@@ -15,9 +15,12 @@ class Controller_Base extends Controller_Hybrid
 	{
 		parent::before();
 
+		if (!defined('IS_SSL')) define('IS_SSL', Input::protocol() == 'https');
 		if (!defined('IS_ADMIN')) define('IS_ADMIN', $this->check_is_admin_request());
 		if (!defined('IS_SP')) define('IS_SP', \MyAgent\Agent::is_mobile_device());
 		if (!defined('IS_API')) define('IS_API', Input::is_ajax());
+
+		$this->check_ssl_required_request_and_redirect();
 
 		$this->auth_instance = Auth::forge($this->auth_driver);
 		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
@@ -29,6 +32,24 @@ class Controller_Base extends Controller_Hybrid
 			$this->set_title_and_breadcrumbs(PRJ_SITE_NAME);
 			$this->template->header_keywords = '';
 			$this->template->header_description = '';
+		}
+	}
+
+	protected function check_ssl_required_request_and_redirect()
+	{
+		if (IS_SSL) return;
+		if (!PRJ_SSL_MODE || !in_array(PRJ_SSL_MODE, array('ALL', 'PARTIAL'))) return;
+
+		if (PRJ_SSL_MODE == 'ALL') Response::redirect(Uri::string());
+
+		$module = Site_Util::get_module_name();
+		if ($module && in_array($module, conf('ssl_required.modules')))
+		{
+			Response::redirect(Uri::create(Uri::string_with_query(), array(), array(), true));
+		}
+		if (Site_Util::check_ssl_required_uri(Uri::string(), false, false))
+		{
+			Response::redirect(Uri::create(Uri::string_with_query(), array(), array(), true));
 		}
 	}
 

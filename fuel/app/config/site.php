@@ -11,6 +11,35 @@ $config = array(
 	'original_user_id' => array(
 		'site'  => 1,
 	),
+	'ssl_required' => array(
+		'modules' => array(
+			'admin',
+		),
+		'actions' => array(
+			'auth/login',
+			'auth/callback',
+			'member/setting',
+			'member/setting/index',
+			'member/setting/password',
+			'member/setting/change_password',
+			'member/setting/email',
+			'member/setting/confirm_change_email',
+			'member/leave',
+			'member/leave/index',
+			'member/leave/confirm',
+			'member/leave/delete',
+			'member/profile',
+			'member/profile/index',
+			'member/profile/edit',
+			'member/recover/resend_password',
+			'member/recover/send_reset_password_mail',
+			'member/recover/reset_password',
+			'member/register',
+			'member/register/index',
+			'member/register/signup',
+			'member/register/confirm_signup',
+		),
+	),
 	'memberRelation' => array(
 		'follow' => array(
 			'isEnabled'  => 1,

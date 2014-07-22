@@ -33,6 +33,13 @@ class Util_string
 		return $parts[$number];
 	}
 
+	public static function get_exploded_first($string, $delimitter = '_')
+	{
+		$parts = explode($delimitter, $string);
+
+		return  array_shift($parts);
+	}
+
 	public static function get_exploded_last($string, $delimitter = '_')
 	{
 		$parts = explode($delimitter, $string);

@@ -9,9 +9,11 @@ define('PRJ_BASEPATH', realpath(APPPATH.'../../').DIRECTORY_SEPARATOR);
 require PRJ_BASEPATH.'config.php';
 
 // BASE_URL
-$PRJ_BASE_URL = sprintf('http://%s%s', PRJ_DOMAIN, PRJ_URI_PATH);
-if (PRJ_ENVIRONMENT == '') $PRJ_BASE_URL = str_replace('http://', 'http://stg.', $PRJ_BASE_URL);
-define('PRJ_BASE_URL', $PRJ_BASE_URL);
+$protocol = (PRJ_SSL_MODE == 'ALL') ? 'https' : 'http';
+$prefix = '';
+//if (PRJ_ENVIRONMENT == 'STAGING') $prefix = 'stg.';
+//if (PRJ_ENVIRONMENT == 'TEST') $prefix = 'test.';
+define('PRJ_BASE_URL', sprintf('%s://%s%s%s', $protocol, $prefix, PRJ_DOMAIN, PRJ_URI_PATH));
 
 // 公開ディレクトリ
 if (!defined('PRJ_PUBLIC_DIR')) define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public/');
