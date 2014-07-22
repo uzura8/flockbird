@@ -5,13 +5,25 @@ if (!empty($in_popover)) $form_attributes['class'] = '';
 $col_sm_size       = empty($in_popover) ? 7 : 12;
 $label_col_sm_size = empty($in_popover) ? 3 : 12;
 $col_offset_size   = empty($in_popover) ? 3 : 0;
+$is_display_form = (empty($in_popover) || (!empty($in_popover) && (!PRJ_SSL_MODE || (PRJ_SSL_MODE && IS_SSL))));
 ?>
 <?php echo form_open(false, false, $form_attributes, array('destination' => $destination)); ?>
+<?php if ($is_display_form): ?>
 	<?php echo form_input($login_val, 'email', '', $col_sm_size, $label_col_sm_size); ?>
 	<?php echo form_input($login_val, 'password', '', $col_sm_size, $label_col_sm_size); ?>
 	<?php echo form_checkbox($login_val, 'rememberme', array(), $label_col_sm_size, 'block', '', array(), !empty($in_popover)); ?>
 	<?php echo form_anchor('member/recover/resend_password', term('site.password').'を忘れた場合はこちら', array(), $col_offset_size, null, true); ?>
+<?php endif; ?>
+<?php if ($is_display_form): ?>
 	<?php echo form_button('site.login', 'submit', null, null, $col_offset_size); ?>
+<?php else: ?>
+	<?php echo form_anchor(
+		conf('login_uri.site'),
+		icon_label('site.login'),
+		array('class' => 'btn btn-default btn-primary'),
+		$col_offset_size
+	); ?>
+<?php endif; ?>
 
 <?php if (PRJ_FACEBOOK_APP_ID): ?>
 	<?php echo form_anchor(
