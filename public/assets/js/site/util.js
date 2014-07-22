@@ -298,22 +298,31 @@ function loadItem(container_attribute, item_attribute)
 	});
 }
 
-function loadPopover(linkSelector, contentSelector, contentUrl) {
-	var inputAttrs = (arguments.length > 3) ? arguments[3] : '';
+function loadPopover(linkSelector, contentSelector, content, contentUrl) {
+	var content = (arguments.length > 2) ? arguments[2] : '';
+	var contentUrl = (arguments.length > 3) ? arguments[3] : '';
+	var inputAttrs = (arguments.length > 4) ? arguments[4] : '';
 
+	if (!content && !contentUrl) return false;
 	$(linkSelector).popover({html: true})
 	$(linkSelector).click(function(){
-		$(contentSelector).load(contentUrl);
+		if (content) {
+			$(contentSelector).html(content);
+		} else {
+			$(contentSelector).load(contentUrl);
+		}
 		//if (inputAttrs.length > 0) $(inputAttrs).focus();
-		$(window).resize(function(e) {
-			e.preventDefault()
-			$(linkSelector).each(function (){
-				if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('a[data-toggle=popover]').has(e.target).length === 0 && checkIsInput(inputAttrs) === false) {
-					$(this).popover('hide');
-					return;
-				}
+		if (!is_sp()) {
+			$(window).resize(function(e) {
+				e.preventDefault()
+				$(linkSelector).each(function (){
+					if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('a[data-toggle=popover]').has(e.target).length === 0 && checkIsInput(inputAttrs) === false) {
+						$(this).popover('hide');
+						return;
+					}
+				});
 			});
-		});
+		}
 		return false;
 	})
 }

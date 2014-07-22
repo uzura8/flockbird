@@ -517,3 +517,7 @@ div.btnBox {
 .note-editor .note-editable {
 	background-color: #FFF;
 }
+
+#insecure_user_popover .form-group .btn {
+	margin-bottom: 5px;
+}

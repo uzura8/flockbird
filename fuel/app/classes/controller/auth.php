@@ -34,14 +34,9 @@ class Controller_Auth extends Controller_Site
 
 		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
 
-		$val = Validation::forge();
-		$val->add_model(Model_MemberAuth::forge());
-		$options = array('1' => '次回から自動的にログイン');
-		$val->add('rememberme', '', array('type' => 'checkbox', 'options' => $options))->add_rule('checkbox_val', $options);
-
 		if (Input::method() == 'POST')
 		{
-			if ($val->run())
+			if ($this->login_val->run())
 			{
 				Util_security::check_csrf();
 				$auth = Auth::instance();
@@ -72,7 +67,7 @@ class Controller_Auth extends Controller_Site
 		}
 
 		$this->set_title_and_breadcrumbs('ログイン');
-		$this->template->content = View::forge('auth/_parts/login', array('val' => $val, 'destination' => $destination));
+		$this->template->content = View::forge('auth/_parts/login', array('destination' => $destination));
 	}
 
 	protected function force_login($member_id)
