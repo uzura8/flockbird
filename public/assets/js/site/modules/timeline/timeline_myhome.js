@@ -134,6 +134,6 @@ $(function() {
 })
 
 function load_default_timeline() {
-	var getData = {'mytimeline' : 1};
+	var getData = {'mytimeline' : 1, 'desc' : 1};
 	loadList('timeline/api/list.html', '#article_list', get_config('timeline_list_limit'), '', false, '', getData);
 }
