@@ -165,10 +165,11 @@ function delete_item(uri)
 	var target_attribute_prefix = (arguments.length > 2) ? arguments[2] : '';
 	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
 	var item_term = (arguments.length > 4) ? arguments[4] : '';
-	var confirm_msg = (arguments.length > 5 && arguments[5].length > 0) ? arguments[5] : '削除します。よろしいですか?';
+	var confirm_msg = (arguments.length > 5) ? arguments[5] : '削除します。よろしいですか?';
+	var counterSelector = (arguments.length > 6) ? arguments[6] : '';
 
 	apprise(confirm_msg, {'confirm':true}, function(r) {
-		if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, target_attribute_id, true, item_term);
+		if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, target_attribute_id, true, item_term, counterSelector);
 	});
 }
 
@@ -183,6 +184,7 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
 	var is_display_message_success = (arguments.length > 4) ? arguments[4] : true;
 	var item_term = (arguments.length > 5) ? arguments[5] : '';
+	var counterSelector = (arguments.length > 6) ? arguments[6] : '';
 
 	var baseUrl = get_baseUrl();
 
@@ -204,6 +206,7 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 			var delete_target_attribute = target_attribute_id ? target_attribute_id : target_attribute_prefix + '_' + id;
 			$(delete_target_attribute).fadeOut();
 			$(delete_target_attribute).remove();
+			updateCounter(counterSelector, -1);
 			if (is_display_message_success) $.jGrowl(msg_prefix + '削除しました。');
 		},
 		error: function(data){
@@ -237,11 +240,12 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 	var nextItemSelector  = (arguments.length > 4) ? arguments[4] : '';
 	var isInsertBefore    = (arguments.length > 5) ? arguments[5] : false;
 	var trigerSelector    = (arguments.length > 6) ? arguments[6] : '';
-	var postData          = (arguments.length > 7) ? arguments[7] : {};
-	var isCheckInput      = (arguments.length > 8) ? arguments[8] : true;
-	var postedArticleTerm = (arguments.length > 9) ? arguments[9] : '';
-	var getData           = (arguments.length > 10) ? arguments[10] : {};
-	var textareaHeight    = (arguments.length > 11) ? arguments[11] : '33px';
+	var counterSelector   = (arguments.length > 7) ? arguments[7] : '';
+	var postData          = (arguments.length > 8) ? arguments[8] : {};
+	var isCheckInput      = (arguments.length > 9) ? arguments[9] : true;
+	var postedArticleTerm = (arguments.length > 10) ? arguments[10] : '';
+	var getData           = (arguments.length > 11) ? arguments[11] : {};
+	var textareaHeight    = (arguments.length > 12) ? arguments[12] : '33px';
 
 	if (GL.execute_flg) return false;
 	if (!postUri) return false;
@@ -272,16 +276,24 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 		success: function(result){
 			$.jGrowl(postedArticleTerm + 'を投稿しました。');
 			loadList(getUri, listSelector, 0, nextItemSelector, isInsertBefore, '', getData);
-			//if (count_attribute && $(count_attribute) != null) {
-			//	var count = parseInt($(count_attribute).html()) + 1;
-			//	$(count_attribute).html(count);
-			//}
+			updateCounter(counterSelector);
 			reset_textarea(textareaSelector, textareaHeight);
 		},
 		error: function(result){
 			$.jGrowl(get_error_message(result['status'], postedArticleTerm + 'の投稿に失敗しました。'));
 		}
 	});
+}
+
+function updateCounter(counterSelector)
+{
+	var addValue = (arguments.length > 1) ? parseInt(arguments[1]) : 1;
+
+	if (!counterSelector.length) return false;
+	if (!$(counterSelector).size()) return false;
+	var count = parseInt($(counterSelector).html()) + addValue;
+	if (count < 0) count = 0;
+	$(counterSelector).html(count);
 }
 
 function loadItem(container_attribute, item_attribute)
@@ -680,11 +692,12 @@ function execute_simple_delete(selfDomElement) {
 	var post_uri  = $(selfDomElement).data('uri');
 	var parent_id = $(selfDomElement).data('parent');
 	var msg = $(selfDomElement).data('msg') ? $(selfDomElement).data('msg') : '';
+	var counterSelector = $(selfDomElement).data('counter') ? $(selfDomElement).data('counter') : '';
 	if (!post_id && !post_uri) return false;
 
 	var parent_attr = parent_id ? '#' + parent_id : '#' + post_id;
 
-	delete_item(post_uri, post_id, '', parent_attr, '', msg);
+	delete_item(post_uri, post_id, '', parent_attr, '', msg, counterSelector);
 }
 
 function execute_simple_post(selfDomElement) {

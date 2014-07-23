@@ -41,6 +41,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				'list_more_box_attrs' => array('id' => 'listMoreBox_comment_'.$timeline_id, 'data-parent_id' => $timeline_id),
 				'class_id' => $class_id,
 				'delete_uri' => Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->id, $timeline->foreign_id, $timeline->foreign_table),
+				'counter_selector' => '#comment_count_'.$timeline->id,
 				'list_more_box_attrs' => array(
 					'data-uri' => 'timeline/comment/api/list/'.$timeline->id.'.html',
 					'data-is_before' => true,

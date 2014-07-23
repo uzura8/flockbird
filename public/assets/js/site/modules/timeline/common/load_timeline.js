@@ -17,7 +17,8 @@ $(function() {
 				'id' : id,
 				'postUri' : postUri,
 				'getUri' : getUri,
-				'listSelector' : '#comment_list_' + id
+				'listSelector' : '#comment_list_' + id,
+				'counterSelector' : '#comment_count_' + id
 			};
 			$('#' + targetBlockName).html(template(val));
 		}

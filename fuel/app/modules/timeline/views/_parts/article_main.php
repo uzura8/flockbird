@@ -90,6 +90,7 @@ $data = array(
 	'is_all_records' => $is_all_records,
 	'list_more_box_attrs' => $list_more_box_attrs,
 	'delete_uri' => $comment_delete_uri,
+	'counter_selector' => '#comment_count_'.$parent->id,
 	'absolute_display_delete_btn' => $is_auth,
 );
 echo render('_parts/comment/list', $data);

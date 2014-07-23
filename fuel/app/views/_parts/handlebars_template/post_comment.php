@@ -14,7 +14,7 @@ $img_size   = conf('upload.types.img.types.m.sizes.'.$size);
 					<textarea name="body" id="textarea_comment_{{{this.id}}}" class="form-control autogrow" rows="2"></textarea>
 				</div>
 				<div class="clearfix">
-					<a href="#" id="btn_comment_{{{this.id}}}" class="btn btn-default btn-sm pull-right js-ajax-postComment" data-list="{{{this.listSelector}}}" data-get_uri="{{{this.getUri}}}" data-post_uri="{{{this.postUri}}}" data-textarea="#textarea_comment_{{{this.id}}}"><i class="glyphicon glyphicon-edit"></i><span class="hidden-xs-inline"> <?php echo term('form.submit'); ?></span></a>
+					<a href="#" id="btn_comment_{{{this.id}}}" class="btn btn-default btn-sm pull-right js-ajax-postComment" data-list="{{{this.listSelector}}}"{{#if this.counterSelector}} data-counter="{{{this.counterSelector}}}"{{/if}} data-get_uri="{{{this.getUri}}}" data-post_uri="{{{this.postUri}}}" data-textarea="#textarea_comment_{{{this.id}}}"><i class="glyphicon glyphicon-edit"></i><span class="hidden-xs-inline"> <?php echo term('form.submit'); ?></span></a>
 				</div>
 			</div>
 		</div>

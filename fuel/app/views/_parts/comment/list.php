@@ -27,6 +27,7 @@ $list_more_box_attrs = empty($list_more_box_attrs) ? $list_more_box_attrs_def : 
 	'attr_id' => 'btn_comment_delete_'.$comment->id,
 	'parrent_attr_id' => 'commentBox_'.$comment->id,
 	'delete_uri' => (!empty($delete_uri)) ? $delete_uri : '',
+	'counter_selector' => (!empty($counter_selector)) ? $counter_selector : '',
 )); ?>
 <?php endif ; ?>
 </div>

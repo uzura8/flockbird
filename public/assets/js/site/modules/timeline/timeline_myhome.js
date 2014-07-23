@@ -73,6 +73,7 @@ $(function() {
 			nextSelector,
 			isInsertBefore,
 			this,
+			'',
 			postData,
 			false,
 			get_term('timeline'),

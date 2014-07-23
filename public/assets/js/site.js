@@ -32,6 +32,7 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var listSelector = $(this).data('list') ? $(this).data('list') : '';
 	var isInsertBefore = $(this).data('is_before') ? Boolean($(this).data('is_before')) : false;
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
+	var counterSelector = $(this).data('counter') ? $(this).data('counter') : '';
 
 	var nextSelector = getNextSelector(listSelector, isInsertBefore);
 	postComment(
@@ -41,7 +42,8 @@ $(document).on('click','.js-ajax-postComment', function(){
 		listSelector,
 		nextSelector,
 		isInsertBefore,
-		this
+		this,
+		counterSelector
 	);
 	return false;
 });
