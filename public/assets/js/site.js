@@ -48,6 +48,13 @@ $(document).on('click','.js-ajax-postComment', function(){
 	return false;
 });
 
+$(document).on('click','.js-ajax-updatePublicFlag', function(){
+	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
+	if (GL.execute_flg) return false;
+	update_public_flag(this);
+	return false;
+});
+
 $(document).on('click','.js-ajax-loadList', function(){
 	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
 	var listSelector = $(this).data('list') ? $(this).data('list') : '';

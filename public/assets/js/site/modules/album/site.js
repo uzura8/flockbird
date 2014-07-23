@@ -3,13 +3,6 @@ $(function(){
 		selector: 'a[data-toggle=tooltip]'
 	});
 
-	$(document).on('click','.update_public_flag', function(){
-		$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
-		if (GL.execute_flg) return false;
-		update_public_flag(this);
-		return false;
-	});
-
 	$(document).on('click','.album_edit_link', function(){
 		location.href = get_url('album/edit/' + $(this).data('id'));
 		return false;
@@ -30,6 +23,7 @@ function set_cover(selfDomElement) {
 		type : 'POST',
 		dataType : 'text',
 		data : post_data,
+		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
 			$(selfDomElement).remove();

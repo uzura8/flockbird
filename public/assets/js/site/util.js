@@ -341,9 +341,9 @@ function loadPopover(linkSelector, contentSelector, content, contentUrl) {
 
 function update_public_flag(selfDomElement) {
 	var public_flag          = $(selfDomElement).data('public_flag');
-	var public_flag_original = $(selfDomElement).data('public_flag_original') ? $(selfDomElement).data('public_flag_original') : null;
+	var public_flag_original = $(selfDomElement).data('public_flag_original');
 
-	if (public_flag_original != null && is_expanded_public_range(public_flag_original, public_flag)) {
+	if (is_expanded_public_range(public_flag_original, public_flag)) {
 		apprise('公開範囲が広がります。実行しますか？', {'confirm':true}, function(r) {
 			if (r == true) check_is_update_children_public_flag_before_update(selfDomElement);
 		});

@@ -42,7 +42,7 @@ if (!empty($is_use_in_form))
 }
 else
 {
-	$class_atter = 'update_public_flag';
+	$class_atter = 'update_public_flag js-ajax-updatePublicFlag';
 	$data_atters['public_flag_original'] = $public_flag;
 	if (!empty($child_model)) $data_atters['child_model'] = $child_model;
 }
