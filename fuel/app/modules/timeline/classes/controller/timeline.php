@@ -35,7 +35,7 @@ class Controller_Timeline extends \Controller_Site
 	public function action_list()
 	{
 		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0);
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s', term('site.latest'), term('timeline', 'site.list')));
+		$this->set_title_and_breadcrumbs(term('site.latest', 'timeline', 'site.list'));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/list', array('list' => $list, 'is_next' => $is_next));
 	}

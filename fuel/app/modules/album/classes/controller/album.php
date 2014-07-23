@@ -36,7 +36,7 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s', term('site.latest'), term('album', 'site.list')));
+		$this->set_title_and_breadcrumbs(term('site.latest', 'album', 'site.list'));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$data = \Site_Model::get_simple_pager_list('album', 1, array(
 			'related'  => 'member',
