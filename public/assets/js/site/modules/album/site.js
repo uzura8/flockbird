@@ -2,11 +2,6 @@ $(function(){
 	$('body').tooltip({
 		selector: 'a[data-toggle=tooltip]'
 	});
-
-	$(document).on('click','.album_edit_link', function(){
-		location.href = get_url('album/edit/' + $(this).data('id'));
-		return false;
-	});
 });
 
 function set_cover(selfDomElement) {

@@ -12,6 +12,13 @@ $(document).on('click', '.js-simplePost', function(){
 	return false;
 });
 
+$(document).on('click', '.js-simpleLink', function(){
+	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
+	if (!getUri.length) return false;
+	location.href = get_url(getUri);
+	return false;
+});
+
 $(document).on('click', '.js-ajax-delete', function(){
 	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
 	execute_simple_delete(this);
