@@ -40,16 +40,17 @@ class Controller_Base extends Controller_Hybrid
 		if (IS_SSL) return;
 		if (!PRJ_SSL_MODE || !in_array(PRJ_SSL_MODE, array('ALL', 'PARTIAL'))) return;
 
-		if (PRJ_SSL_MODE == 'ALL') Response::redirect(Uri::string());
+		$ssl_url = Uri::create(Uri::string_with_query(), array(), array(), true);
+		if (PRJ_SSL_MODE == 'ALL') Response::redirect($ssl_url);
 
 		$module = Site_Util::get_module_name();
 		if ($module && in_array($module, conf('ssl_required.modules')))
 		{
-			Response::redirect(Uri::create(Uri::string_with_query(), array(), array(), true));
+			Response::redirect($ssl_url);
 		}
 		if (Site_Util::check_ssl_required_uri(Uri::string(), false, false))
 		{
-			Response::redirect(Uri::create(Uri::string_with_query(), array(), array(), true));
+			Response::redirect($ssl_url);
 		}
 	}
 
