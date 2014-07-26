@@ -84,10 +84,11 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$timeline_id = (int)$parent_id ?: (int)\Input::post('id');
-			if (!$timeline_id || !$timeline = Model_Timeline::check_authority($timeline_id, $this->u->id))
+			if (!$timeline_id || !$timeline = Model_Timeline::check_authority($timeline_id))
 			{
 				throw new \HttpNotFoundException;
 			}
+			$this->check_public_flag($timeline->public_flag, $timeline->member_id);
 
 			// validation
 			if (Site_Util::check_type_for_post_foreign_table_comment($timeline->type))

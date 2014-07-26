@@ -82,7 +82,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$note_id = (int)$parent_id ?: (int)\Input::post('id');
-			if (!$note_id || !$note = Model_Note::check_authority($note_id, $this->u->id))
+			if (!$note_id || !$note = Model_Note::check_authority($note_id))
 			{
 				throw new \HttpNotFoundException;
 			}

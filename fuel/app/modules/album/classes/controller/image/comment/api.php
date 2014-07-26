@@ -83,10 +83,11 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$album_image_id = (int)$parent_id ?: (int)\Input::post('id');
-			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id, $this->u->id))
+			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
 			{
 				throw new \HttpNotFoundException;
 			}
+			$this->check_public_flag($album_image->public_flag, $album_image->album->member_id);
 
 			// Lazy validation
 			$body = trim(\Input::post('body', ''));
