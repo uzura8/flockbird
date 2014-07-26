@@ -16,13 +16,17 @@ class Observer_UpdateTimelineCache extends \Orm\Observer
 		{
 			if ($obj->updated_at == $obj->sort_datetime)
 			{
+				if (!$timeline_cache->is_follow) continue;
+
+				$timeline_cache->delete();
 				$timeline_cache->sort_datetime = $obj->sort_datetime;
+				$timeline_cache->save();
 			}
 			else
 			{
 				$timeline_cache->public_flag = $obj->public_flag;
+				$timeline_cache->save();
 			}
-			$timeline_cache->save();
 		}
 	}
 }

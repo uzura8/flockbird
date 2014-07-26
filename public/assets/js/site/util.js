@@ -121,10 +121,11 @@ function loadList(getUri, parentListSelector) {
 	var isInsertBefore   = (arguments.length > 4) ? arguments[4] : false;
 	var trigerSelector   = (arguments.length > 5) ? arguments[5] : '';
 	var getData          = (arguments.length > 6) ? arguments[6] : {};
+	var lastId           = (arguments.length > 7) ? parseInt(arguments[7]) : 0;
 
 	getData['limit'] = limit ? limit : get_config('default_list_limit');
 
-	var lastId =  (nextItemSelector && $(nextItemSelector).data('id')) ? parseInt($(nextItemSelector).data('id')) : 0;
+	if (!lastId) lastId = (nextItemSelector && $(nextItemSelector).data('id')) ? parseInt($(nextItemSelector).data('id')) : 0;
 	if (lastId) getData['last_id'] = lastId;
 
 	$.ajax({

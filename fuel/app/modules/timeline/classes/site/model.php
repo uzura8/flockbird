@@ -15,7 +15,7 @@ class Site_Model
 
 		if (!$limit) $limit = (int)\Config::get('timeline.articles.limit');
 		if ($limit > \Config::get('timeline.articles.limit_max')) $limit = \Config::get('timeline.articles.limit_max');
-		$sort = array('sort_datetime' => $is_desc ? 'desc' : 'asc');
+		$sort = array('id' => $is_desc ? 'desc' : 'asc');
 
 		$query = Model_TimelineCache::query()->select('id', 'member_id', 'timeline_id');
 
@@ -63,7 +63,7 @@ class Site_Model
 		if ($last_id)
 		{
 			$inequality_sign = $is_before ? '>' : '<';
-			$query->where('timeline_id', $inequality_sign, $last_id);
+			$query->where('id', $inequality_sign, $last_id);
 		}
 
 		$query->order_by($sort);

@@ -2,7 +2,7 @@
 <?php if (!IS_API): ?><div id="article_list"><?php endif; ?>
 <?php if ($list): ?>
 <?php foreach ($list as $id => $timeline_cache): ?>
-		<?php echo \Timeline\Site_Util::get_article_view($timeline_cache->timeline_id, $timeline_cache->member_id, \Auth::check() ? $u->id : 0); ?>
+<?php echo \Timeline\Site_Util::get_article_view($timeline_cache->timeline_id, $timeline_cache->member_id, \Auth::check() ? $u->id : 0); ?>
 <?php endforeach; ?>
 <?php endif; ?>
 
@@ -11,6 +11,7 @@
 $attr = array(
 	'class' => 'listMoreBox js-ajax-loadList',
 	'data-uri' => 'timeline/api/list.html',
+	'data-last_id' => $timeline_cache->id,
 	'data-list' => '#article_list',
 	'data-limit' => Config::get('timeline.articles.limit'),
 );
@@ -21,5 +22,6 @@ if ($data_array) $attr['data-get_data'] = $data_array;
 ?>
 <a href="#" <?php echo Util_Array::conv_array2attr_string($attr); ?>><?php echo icon_label('site.see_more', 'both', false, null, 'fa fa-'); ?></a>
 <?php endif; ?>
+
 <?php if (!IS_API): ?></div><!-- article_list --><?php endif; ?>
 <?php if (IS_API): ?></body></html><?php endif; ?>

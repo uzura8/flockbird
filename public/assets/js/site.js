@@ -68,20 +68,19 @@ $(document).on('click','.js-ajax-loadList', function(){
 	var limit = $(this).data('limit') ? $(this).data('limit') : 0;
 	var isInsertBefore = $(this).data('is_before') ? Boolean($(this).data('is_before')) : false;
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
+	var lastId = $(this).data('last_id') ? parseInt($(this).data('last_id')) : 0;
 
 	if (GL.execute_flg) return false;
 	if (!getUri || !listSelector) return false;
 
-	var limitId = 0;
 	if (isInsertBefore) {
-		var nextSelector = '#' + $(this).next().attr('id');
 		getData['is_before'] = 1;
-		if ($(this).prev().size()) limitId = parseInt($(this).prev().data('id'));
+		var nextSelector = '#' + $(this).next().attr('id');
+		if ($(this).prev().size()) lastId = parseInt($(this).prev().data('id'));
 	} else {
 		var nextSelector = '#' + $(this).prev().attr('id');
-		if ($(this).next().size()) limitId = parseInt($(this).next().data('id'));
+		if ($(this).next().size()) lastId = parseInt($(this).next().data('id'));
 	}
-	if (limitId) getData['limit_id'] = limitId;
 
 	loadList(
 		getUri,
@@ -90,7 +89,8 @@ $(document).on('click','.js-ajax-loadList', function(){
 		nextSelector,
 		isInsertBefore,
 		this,
-		getData
+		getData,
+		lastId
 	);
 
 	return false;
