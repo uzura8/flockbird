@@ -42,4 +42,5 @@ return array(
 	),
 	'display_setting' => array(
 	),
+	'follow_timeline_limit_max' => 10,
 );
