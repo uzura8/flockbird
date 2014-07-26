@@ -46,8 +46,6 @@ class Model_TimelineCache extends \Orm\Model
 			'validation' => array('required', 'max_length' => array(2)),
 			'form' => array(),
 		),
-		'created_at' => array('form' => array('type' => false)),
-		'sort_datetime' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(

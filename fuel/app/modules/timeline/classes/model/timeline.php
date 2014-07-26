@@ -119,8 +119,6 @@ class Model_Timeline extends \Orm\Model
 				'member_id_to',
 				'group_id',
 				'public_flag',
-				'created_at',
-				'sort_datetime',
 			),
 		),
 		// update 時に timeline_cache の特定のカラムのみ更新する

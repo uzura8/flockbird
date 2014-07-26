@@ -21,8 +21,10 @@ CREATE TABLE `timeline` (
   `updated_at` datetime NOT NULL,
   `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `foreign_table_foreign_id_created_at_idx` (`foreign_table`,`foreign_id`,`created_at`)
+  CONSTRAINT `timeline_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  KEY `foreign_table_foreign_id_type_created_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `timeline_cache` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -33,14 +35,12 @@ CREATE TABLE `timeline_cache` (
   `page_id` int(11) NULL,
   `is_follow` tinyint(1) NOT NULL DEFAULT '0',
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
-  `created_at` datetime NOT NULL,
-  `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
   UNIQUE KEY `timeline_id_is_follow_UNIQUE_idx` (`timeline_id`,`is_follow`),
-  KEY `public_flag_sort_datetime_idx` (`public_flag`,`sort_datetime`),
   CONSTRAINT `timeline_cache_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `timeline_child_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -49,9 +49,10 @@ CREATE TABLE `timeline_child_data` (
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
-  KEY `foreign_table_foreign_id_idx` (`foreign_table`,`foreign_id`),
+  KEY `foreign_table_foreign_id_timeline_id_idx` (`foreign_table`,`foreign_id`,`timeline_id`),
   CONSTRAINT `timeline_child_data_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `timeline_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

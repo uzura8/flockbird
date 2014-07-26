@@ -494,13 +494,10 @@ CREATE TABLE `timeline_cache` (
   `page_id` int(11) NULL,
   `is_follow` tinyint(1) NOT NULL DEFAULT '0',
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
-  `created_at` datetime NOT NULL,
-  `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
   UNIQUE KEY `timeline_id_is_follow_UNIQUE_idx` (`timeline_id`,`is_follow`),
-  KEY `public_flag_sort_datetime_idx` (`public_flag`,`sort_datetime`),
-  CONSTRAINT `timeline_cache_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
+: CONSTRAINT `timeline_cache_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
