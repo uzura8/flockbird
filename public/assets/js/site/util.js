@@ -734,3 +734,14 @@ function execute_simple_post(selfDomElement) {
 	var msg_error = '作成に失敗しました。';
 	sendArticle(selfDomElement, post_data, post_uri, '#' + parent_box, false, msg_success, msg_error);
 }
+
+function check_editable_content(selfDomElement) {
+	var uid = get_uid();
+	if (!uid) return false;
+	var auther_id = $(selfDomElement).data('auther_id') ? parseInt($(selfDomElement).data('auther_id')) : 0;
+	var parent_auther_id = $(selfDomElement).data('parent_auther_id') ? parseInt($(selfDomElement).data('parent_auther_id')) : 0;
+	if (!auther_id && !parent_auther_id) return true;
+	if (auther_id && auther_id == uid) return true;
+	if (parent_auther_id && parent_auther_id == uid) return true;
+	return false;
+}

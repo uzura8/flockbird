@@ -12,9 +12,19 @@ $list_more_box_attrs = empty($list_more_box_attrs) ? $list_more_box_attrs_def : 
 <?php if (!$is_all_records): ?>
 <?php echo Html::anchor(isset($uri_for_all_comments) ? $uri_for_all_comments : '#', term('site.see_more'), $list_more_box_attrs); ?>
 <?php endif; ?>
-
 <?php foreach ($comments as $comment): ?>
-<div class="js-hide-btn commentBox<?php if ($parent || !empty($class_id)): ?> commentBox_<?php echo isset($class_id) ? $class_id : $parent->id; ?><?php endif; ?>" id="commentBox_<?php echo $comment->id; ?>" data-id="<?php echo $comment->id; ?>" data-hidden_btn="btn_comment_delete_<?php echo $comment->id; ?>">
+<?php
+$box_attrs = array(
+	'class' => 'js-hide-btn commentBox',
+	'id' => 'commentBox_'.$comment->id,
+	'data-id' => $comment->id,
+	'data-hidden_btn' => 'btn_comment_delete_'.$comment->id,
+	'data-auther_id' => $comment->member_id,
+);
+if ($parent && !empty($parent->member_id)) $box_attrs['data-parent_auther_id'] = $parent->member_id;
+if ($parent || !empty($class_id)) $box_attrs['class'] .= sprintf(' commentBox_%d', isset($class_id) ? $class_id : $parent->id);
+?>
+<div <?php echo Util_Array::conv_array2attr_string($box_attrs); ?>>
 <?php echo render('_parts/member_contents_box', array(
 	'member' => $comment->member,
 	'date' => array('datetime' => $comment->created_at),

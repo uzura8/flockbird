@@ -27,8 +27,12 @@ $(document).on('click', '.js-ajax-delete', function(){
 
 if (!is_sp()) {
 	$(document).on({
-		mouseenter:function() {$('#' + $(this).data('hidden_btn')).fadeIn('fast')},
-		mouseleave:function() {$('#' + $(this).data('hidden_btn')).hide()}
+		mouseenter:function() {
+			if (check_editable_content(this)) $('#' + $(this).data('hidden_btn')).fadeIn('fast');
+		},
+		mouseleave:function() {
+			if (check_editable_content(this)) $('#' + $(this).data('hidden_btn')).hide();
+		}
 	},'.js-hide-btn');
 }
 
