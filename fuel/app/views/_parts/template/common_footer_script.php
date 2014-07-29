@@ -3,7 +3,12 @@ var GL = {};
 GL.execute_flg = false;
 function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
 function check_is_admin() {return <?php echo IS_ADMIN ? 'true' : 'false'; ?>;}
-function get_baseUrl() {return '<?php echo Uri::base_path(); ?>';}
+function getBasePath() {return '<?php echo Uri::base_path(); ?>';}
+function getBaseUrl() {
+	var is_current_protocol = (arguments.length > 0) ? arguments[0] : false;
+	if (is_current_protocol) return '<?php echo Uri::base(true, true); ?>';
+	return '<?php echo Uri::base(); ?>';
+}
 function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
 function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
 function is_sp() {return <?php echo (IS_SP)? 'true' : 'false'; ?>;}

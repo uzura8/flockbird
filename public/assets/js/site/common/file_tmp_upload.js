@@ -80,7 +80,6 @@ function load_file_tmp(get_url, file_name, parent_attr) {
 	var parentDomElement = $(parent_attr);
 
 	var get_data = {};
-	get_data['nochache']  = (new Date()).getTime();
 	get_data['file'] = file_name;
 
 	$.ajax({
@@ -88,7 +87,7 @@ function load_file_tmp(get_url, file_name, parent_attr) {
 		type : 'GET',
 		dataType : 'text',
 		data : get_data,
-		timeout: 10000,
+		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			$(parentDomElement).html(get_loading_image_tag(true));
 		},

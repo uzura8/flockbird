@@ -20,7 +20,12 @@ function get_id_num(id_string)
 
 function get_url(uri)
 {
-	return get_baseUrl() + uri;
+	var isReturnPath = (arguments.length > 1) ? arguments[1] : false;
+	var isReturnCurrentProtocol = (arguments.length > 2) ? arguments[2] : true;
+
+	if (isReturnPath) return getBasePath() + uri;
+	if (isReturnCurrentProtocol) return getBaseUrl(true) + uri;
+	return getBaseUrl() + uri;
 }
 
 function set_token()
@@ -174,20 +179,12 @@ function delete_item(uri)
 	});
 }
 
-function delete_item_execute(uri)
-{
-	var url = get_url(uri) + '?' + set_token();
-	location.href = url;
-}
-
 function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 {
 	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
 	var is_display_message_success = (arguments.length > 4) ? arguments[4] : true;
 	var item_term = (arguments.length > 5) ? arguments[5] : '';
 	var counterSelector = (arguments.length > 6) ? arguments[6] : '';
-
-	var baseUrl = get_baseUrl();
 
 	var token_key = get_token_key();
 	var post_data = {};
@@ -199,9 +196,10 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 	if (item_term.length > 0) msg_prefix = item_term + 'を';
 
 	$.ajax({
-		url : baseUrl + post_uri,
+		url : get_url(post_uri),
 		dataType : "text",
 		data : post_data,
+		timeout: get_config('default_ajax_timeout'),
 		type : 'POST',
 		success: function(data){
 			var delete_target_attribute = target_attribute_id ? target_attribute_id : target_attribute_prefix + '_' + id;
@@ -404,10 +402,11 @@ function update_public_flag_execute(selfDomElement) {
 	uri = post_uri ? post_uri : model_uri +'/api/update_public_flag.html';
 	post_data = set_token(post_data);
 	$.ajax({
-		url : get_baseUrl() + uri,
+		url : get_url(uri),
 		type : 'POST',
 		dataType : 'text',
 		data : post_data,
+		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
 			$(selfDomElement).remove();

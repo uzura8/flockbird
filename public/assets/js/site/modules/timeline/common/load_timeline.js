@@ -43,7 +43,7 @@ $(function() {
 		var val = {'detail_uri' : get_url(detail_uri)};
 		if (member_id == get_uid()) {
 			if (delete_uri) {
-				val['delete_uri'] = get_url(delete_uri);
+				val['delete_uri'] = delete_uri;
 				val['parent_id'] = parent;
 			}
 		}

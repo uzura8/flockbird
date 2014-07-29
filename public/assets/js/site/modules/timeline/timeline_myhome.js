@@ -8,15 +8,13 @@ $(function() {
 		$('.upload').removeClass('hidden');
 		$(this).addClass('hidden');
 
-		var url = get_url('album/api/albums.json');
 		var get_data = {};
-		get_data['nochache']  = (new Date()).getTime();
 		$.ajax({
-			url : url,
+			url : get_url('album/api/albums.json'),
 			type : 'GET',
 			dataType : 'json',
 			data : get_data,
-			timeout: 10000,
+			timeout: get_config('default_ajax_timeout'),
 			beforeSend: function(xhr, settings) {
 				//GL.execute_flg = true;
 				$('#album_id').attr('disabled', 'disabled');
@@ -101,13 +99,13 @@ $(function() {
 			'id'    : member_id,
 			'value' : value,
 		};
-		uri = 'member/api/update_config/timeline_viewType.html';
 		post_data = set_token(post_data);
 		$.ajax({
-			url : get_url(uri),
+			url : get_url('member/api/update_config/timeline_viewType.html'),
 			type : 'POST',
 			dataType : 'text',
 			data : post_data,
+			timeout: get_config('default_ajax_timeout'),
 			beforeSend: function(xhr, settings) {
 				GL.execute_flg = true;
 				$(this).remove();

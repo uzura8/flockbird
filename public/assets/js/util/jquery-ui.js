@@ -16,6 +16,7 @@ function jqui_sort(uri){
 				type : 'POST',
 				dataType : 'text',
 				data : post_data,
+				timeout: get_config('default_ajax_timeout'),
 				success: function(data){
 					$.jGrowl('並び順を変更しました。');
 				},

@@ -5,7 +5,6 @@ $('.carousel').carousel({
 var source   = $("#comment_form-template").html();
 var templatePostComment = Handlebars.compile(source);
 
-var baseUrl = get_baseUrl();
 var album_id = getIdFromUrl();
 
 var basePath = get_upload_uri_base_path(); // 画像のベースパスを指定

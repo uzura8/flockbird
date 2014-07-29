@@ -14,7 +14,7 @@ function set_cover(selfDomElement) {
 	var post_data = {'id':album_image_id};
 	post_data = set_token(post_data);
 	$.ajax({
-		url : get_baseUrl() + 'album/image/api/set_cover.json',
+		url : get_url('album/image/api/set_cover.json'),
 		type : 'POST',
 		dataType : 'text',
 		data : post_data,
