@@ -7,7 +7,7 @@ $(document).on('click', '.btn_follow', function(){
 });
 
 $(document).on('click', '.js-simplePost', function(){
-	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
+	close_dropdown_menu(this);
 	post_submit(this);
 	return false;
 });
@@ -20,7 +20,7 @@ $(document).on('click', '.js-simpleLink', function(){
 });
 
 $(document).on('click', '.js-ajax-delete', function(){
-	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
+	close_dropdown_menu(this);
 	execute_simple_delete(this);
 	return false;
 });
@@ -60,7 +60,7 @@ $(document).on('click','.js-ajax-postComment', function(){
 });
 
 $(document).on('click','.js-ajax-updatePublicFlag', function(){
-	$(this).parent('li').parent('ul.dropdown-menu').parent('div.btn-group').removeClass('open');
+	close_dropdown_menu(this);
 	if (GL.execute_flg) return false;
 	update_public_flag(this);
 	return false;

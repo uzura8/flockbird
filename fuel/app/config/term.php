@@ -79,6 +79,7 @@ $config = array(
 		'latest' => '最新の',
 		'display' => '表示',
 		'detail' => '詳細',
+		'show_detail' => '詳細をみる',
 		'link' => 'リンク',
 		'shot' => '撮影',
 		'see_more' => 'もっとみる',

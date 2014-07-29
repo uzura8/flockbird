@@ -77,7 +77,14 @@ $config = array(
 		//'title' => 'タイトル',
 		//'latest' => '最新の',
 		//'display' => '表示',
-		//'detail' => '詳細',
+		'detail' => array(
+			'key' => 'file-o',
+			'prefix' => 'fa fa-',
+		),
+		'show_detail' => array(
+			'key' => 'file-o',
+			'prefix' => 'fa fa-',
+		),
 		'link' => 'link',
 		'shot' => 'camera',
 		'see_more' => 'caret-down',

@@ -4,7 +4,6 @@
 .imgBox .btn_album_image_edit {
 	display: none;
 }
-.commentBox .js-ajax-delete,
-#article_list .js-ajax-delete {
+.commentBox .js-ajax-delete {
 	display: none;
 }

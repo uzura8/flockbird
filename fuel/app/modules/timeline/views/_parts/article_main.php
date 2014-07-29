@@ -112,15 +112,16 @@ $link_comment_attr['class'] .= ' showCommentBox';
 
 <?php /* edit_button */; ?>
 <?php
-if ($access_from_member_relation  == 'self' && \Timeline\Site_Util::check_is_editable($timeline->type))
-{
-	list($post_id, $post_uri) = \Timeline\Site_Util::get_delete_api_info($timeline);
-	echo render('_parts/btn_delete', array(
-		'id' => $post_id,
-		'attr_id' => 'btn_timeline_delete_'.$timeline->id,
-		'parrent_attr_id' => 'timelineBox_'.$timeline->id,
-		'delete_uri' => $post_uri,
-	));
-}
+$dropdown_btn_attr = array(
+	'data-toggle' => 'dropdown',
+	'data-detail_uri' => \Timeline\Site_Util::get_detail_uri($timeline->id, $timeline->type, $foreign_table_obj),
+	'data-delete_uri' => \Timeline\Site_Util::get_delete_api_info($timeline),
+	'data-parent' => 'timelineBox_'.$timeline->id,
+	'data-member_id' => $timeline->member_id,
+);
 ?>
+<div class="dropdown boxBtn" id="myDropdown_<?php echo $timeline->id; ?>">
+	<?php echo btn('', '#', 'js-dropdown_tl_menu', false, 'xs', null, $dropdown_btn_attr, 'chevron-down'); ?>
+	<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel"></ul>
+</div>
 

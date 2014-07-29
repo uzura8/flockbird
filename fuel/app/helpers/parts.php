@@ -24,7 +24,20 @@ function icon_label($icon_term, $type = 'both', $is_hidden_xs = true, $absolute_
 	{
 		$icon_key = Config::get('icon.'.$icon_term);
 	}
-	$icon = $icon_key ? icon($icon_key, $class_prefix, $tag) : '';
+	$icon = '';
+	if ($icon_key)
+	{
+		if (is_array($icon_key))
+		{
+			$key = isset($icon_key['key']) ? $icon_key['key'] : '';
+			if (isset($icon_key['prefix'])) $class_prefix = $icon_key['prefix'];
+			$icon = icon($key, $class_prefix, $tag);
+		}
+		else
+		{
+			$icon = icon($icon_key, $class_prefix, $tag);
+		}
+	}
 	if ($type == 'icon') return $icon;
 
 	return $icon.$label;

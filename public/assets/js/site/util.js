@@ -166,7 +166,7 @@ function delete_item(uri)
 	var target_attribute_prefix = (arguments.length > 2) ? arguments[2] : '';
 	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
 	var item_term = (arguments.length > 4) ? arguments[4] : '';
-	var confirm_msg = (arguments.length > 5) ? arguments[5] : '削除します。よろしいですか?';
+	var confirm_msg = (arguments.length > 5 && arguments[5].length) ? arguments[5] : '削除します。よろしいですか?';
 	var counterSelector = (arguments.length > 6) ? arguments[6] : '';
 
 	apprise(confirm_msg, {'confirm':true}, function(r) {
@@ -744,4 +744,8 @@ function check_editable_content(selfDomElement) {
 	if (auther_id && auther_id == uid) return true;
 	if (parent_auther_id && parent_auther_id == uid) return true;
 	return false;
+}
+
+function close_dropdown_menu(selfDomElement) {
+	$(selfDomElement).parent('li').parent('ul.dropdown-menu').parent('div').removeClass('open');
 }

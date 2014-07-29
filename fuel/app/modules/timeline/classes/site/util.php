@@ -185,6 +185,24 @@ class Site_Util
 		return render('_parts/quote_article', array('title' => $title, 'body' => $body, 'read_more_uri' => $read_more_uri));
 	}
 
+	public static function get_detail_uri($timeline_id, $type, $foreign_table_obj)
+	{
+		switch ($type)
+		{
+			case \Config::get('timeline.types.note'):
+				return 'note/'.$foreign_table_obj->id;
+				break;
+			case \Config::get('timeline.types.album'):
+				return 'album/'.$foreign_table_obj->id;
+				break;
+			case \Config::get('timeline.types.album_image'):
+				return 'timeline/'.$foreign_table_obj->id;
+				break;
+		}
+
+		return 'timeline/'.$timeline_id;
+	}
+
 	public static function get_type_for_save_comment_to_foreign_table()
 	{
 		return array(
@@ -348,28 +366,29 @@ class Site_Util
 
 	public static function get_delete_api_info(Model_Timeline $timeline)
 	{
-		$id  = 0;
-		$uri = '';
+		$path = '';
+		$id = '';
 		switch ($timeline->type)
 		{
 			case \Config::get('timeline.types.normal'):
 			case \Config::get('timeline.types.album_image_timeline'):
 				$id  = $timeline->id;
-				$uri = 'timeline/api/delete.json';
+				$path = 'timeline/api/delete/';
 				break;
 			case \Config::get('timeline.types.note'):
 				$id  = $timeline->foreign_id;
-				$uri = 'note/api/delete.json';
+				$path = 'note/api/delete/';
 				break;
 			case \Config::get('timeline.types.album'):
 				$id  = $timeline->foreign_id;
-				$uri = 'album/api/delete.json';
+				$path = 'album/api/delete/';
 				break;
 			default :
 				break;
 		}
+		if (!$path || !$id) return '';
 
-		return array($id, $uri);
+		return sprintf('%s%s.json', $path, $id);
 	}
 
 	public static function get_public_flag_info(Model_Timeline $timeline)
