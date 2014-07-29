@@ -78,6 +78,7 @@ class Controller_News_Category_Api extends Controller_Api
 		{
 			\Util_security::check_csrf();
 			$news_category_id = (int)$news_category_id;
+			if (\Input::post('id')) $news_category_id = (int)\Input::post('id');
 			if (!$news_category_id || !$news_category = \News\Model_NewsCategory::find($news_category_id))
 			{
 				throw new \HttpNotFoundException;

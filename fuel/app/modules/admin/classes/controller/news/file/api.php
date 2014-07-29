@@ -17,14 +17,15 @@ class Controller_News_File_Api extends Controller_Api
 	 * @access  public
 	 * @return  Response
 	 */
-	public function post_delete()
+	public function post_delete($id = null)
 	{
 		$response = array('status' => 0);
 		try
 		{
 			\Util_security::check_csrf();
 
-			$id = (int)\Input::post('id');
+			$id = (int)$id;
+			if (\Input::post('id')) $id = (int)\Input::post('id');
 			if (!$id || !$news_file = \News\Model_NewsFile::check_authority($id))
 			{
 				throw new \HttpNotFoundException;

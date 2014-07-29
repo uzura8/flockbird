@@ -131,14 +131,15 @@ class Controller_Comment_Api extends \Controller_Site_Api
 	 * @access  public
 	 * @return  Response
 	 */
-	public function post_delete()
+	public function post_delete($id = null)
 	{
 		$response = array('status' => 0);
 		try
 		{
 			\Util_security::check_csrf();
 
-			$id = (int)\Input::post('id');
+			$id = (int)$id;
+			if (\Input::post('id')) $id = (int)\Input::post('id');
 			if (!$id || !$note_comment = Model_NoteComment::check_authority($id, $this->u->id))
 			{
 				throw new \HttpNotFoundException;

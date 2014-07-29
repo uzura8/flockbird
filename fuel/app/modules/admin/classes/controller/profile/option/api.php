@@ -84,6 +84,7 @@ class Controller_Profile_Option_Api extends Controller_Api
 		{
 			\Util_security::check_csrf();
 			$profile_option_id = (int)$profile_option_id;
+			if (\Input::post('id')) $profile_option_id = (int)\Input::post('id');
 			if (!$profile_option_id || !$profile_option = \Model_ProfileOption::find($profile_option_id, array('related' => 'profile')))
 			{
 				throw new \HttpNotFoundException;
