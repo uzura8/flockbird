@@ -24,4 +24,4 @@
 	<?php echo render('member/_parts/timeline_viewType_selecter', array('id' => $u->id, 'timeline_viewType' => $u->timeline_viewType)); ?>
 </div>
 
-<div id="article_list"></div>
+<div id="article_list" data-type="ajax"></div>

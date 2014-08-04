@@ -2,7 +2,7 @@ $(function() {
 	$('textarea.input_timeline').css('height', '50px');
 	$('#form_public_flag').val($('#public_flag_selector').data('public_flag'));
 
-	load_default_timeline();
+	loadTimeline({'mytimeline' : 1, 'desc' : 1});
 
 	$(document).on('click','.display_upload_form', function(){
 		$('.upload').removeClass('hidden');
@@ -48,7 +48,7 @@ $(function() {
 		var body = $('#textarea_comment').val().trim();
 		var postData = {};
 		$('input[name^="image_tmp"]').each(function(){
-				postData[this.name] = this.value;
+			postData[this.name] = this.value;
 		});
 		if (body.length == 0 && Object.keys(postData).length == 0) return;
 
@@ -131,8 +131,3 @@ $(function() {
 		return false;
 	});
 })
-
-function load_default_timeline() {
-	var getData = {'mytimeline' : 1, 'desc' : 1};
-	loadList('timeline/api/list.html', '#article_list', get_config('timeline_list_limit'), '', false, '', getData);
-}

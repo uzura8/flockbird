@@ -9,11 +9,8 @@
 <?php if ($is_next): ?>
 <?php
 $attr = array(
-	'class' => 'listMoreBox js-ajax-loadList',
-	'data-uri' => 'timeline/api/list.html',
+	'class' => 'listMoreBox js-ajax-Load_timeline',
 	'data-last_id' => $timeline_cache->id,
-	'data-list' => '#article_list',
-	'data-limit' => Config::get('timeline.articles.limit'),
 );
 $data_array = array('desc' => 1);
 if (!empty($member)) $data_array['member_id'] = $member->id;

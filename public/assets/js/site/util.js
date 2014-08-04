@@ -127,6 +127,7 @@ function loadList(getUri, parentListSelector) {
 	var trigerSelector   = (arguments.length > 5) ? arguments[5] : '';
 	var getData          = (arguments.length > 6) ? arguments[6] : {};
 	var lastId           = (arguments.length > 7) ? parseInt(arguments[7]) : 0;
+	var callbackFunc     = (arguments.length > 8) ? arguments[8] : null;
 
 	getData['limit'] = limit ? limit : get_config('default_list_limit');
 
@@ -156,6 +157,10 @@ function loadList(getUri, parentListSelector) {
 				}
 			} else {
 				$(parentListSelector).html(result).fadeIn('fast');
+			}
+			if (callbackFunc) {
+				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);
+				callbackFunc();
 			}
 			//$(parentListSelector).find('textarea').autogrow();
 		},
@@ -747,4 +752,10 @@ function check_editable_content(selfDomElement) {
 
 function close_dropdown_menu(selfDomElement) {
 	$(selfDomElement).parent('li').parent('ul.dropdown-menu').parent('div').removeClass('open');
+}
+
+function removeItems(linkCommentSelector) {
+	$(linkCommentSelector).each(function() {
+		$(this).remove();
+	});
 }

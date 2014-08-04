@@ -1,33 +1,13 @@
 $(function() {
-	$(document).on('click','.link_comment', function(){
-		var id = parseInt($(this).data('id'));
-		var targetBlockName = $(this).data('block');
-		var postUri = $(this).data('post_uri');
-		var getUri = $(this).data('get_uri');
-
-		if (!get_uid() || !id || !targetBlockName.length) return false;
-
-		if ($('#link_comment_box_' + id).size()) $('#link_comment_box_' + id).hide();
-		var textareaSelector = '#textarea_comment_' + id;
-		if ($(textareaSelector).size() == 0) {
-			var source   = $("#comment_form-template").html();
-			var template = Handlebars.compile(source);
-			var val = {
-				'id' : id,
-				'postUri' : postUri,
-				'getUri' : getUri,
-				'listSelector' : '#comment_list_' + id,
-				'counterSelector' : '#comment_count_' + id
-			};
-			$('#' + targetBlockName).html(template(val));
-		}
-		$(textareaSelector).focus();
-		return false;
-	});
-
 	$('body').tooltip({
 		selector: 'a[data-toggle=tooltip]'
 	});
+
+	var listType = $('#article_list').data('type');
+	if (!listType || listType != 'ajax') {
+		removeLinkCommentBlocks();
+		showComments();
+	}
 
 	$(document).on('click', '.js-dropdown_tl_menu', function(){
 		var detail_uri = $(this).data('detail_uri') ? $(this).data('detail_uri') : '';
@@ -50,4 +30,119 @@ $(function() {
 		targetBlock.html(template(val));
 		return false;
 	});
+
+	$(document).on('click','.link_comment', function(){
+		var id = $(this).data('id') ? $(this).data('id') : 0;
+		var blockSelector = '#comment_list_' + id;
+		var getUri = $(blockSelector).data('get_uri') ? $(blockSelector).data('get_uri') : '';
+		var postUri = $(blockSelector).data('post_uri') ? $(blockSelector).data('post_uri') : '';
+
+		if (is_sp()) {
+			loadTlComment(getUri, blockSelector, id, postUri);
+			$(blockSelector).removeClass('hidden');
+		}
+		showCommentInput(id, 'form_comment_' + id, postUri, getUri, false);
+		$(this).parent('small').html('<span>' + get_term('comment') + '</span>');
+		return false;
+	});
+
+	$(document).on('click','.link_show_comment_form', function(){
+		var id = parseInt($(this).data('id'));
+		var targetBlockName = $(this).data('block');
+
+		var blockSelector = '#comment_list_' + id;
+		var getUri = $(blockSelector).data('get_uri') ? $(blockSelector).data('get_uri') : '';
+		var postUri = $(blockSelector).data('post_uri') ? $(blockSelector).data('post_uri') : '';
+
+		showCommentInput(id, targetBlockName, postUri, getUri, true);
+		$('#link_show_comment_' + id).parent('small').html('<span>' + get_term('comment') + '</span>');
+		return false;
+	});
+
+	$(document).on('click','.js-ajax-Load_timeline', function(){
+		var getData = $(this).data('get_data') ? $(this).data('get_data') : '';
+		var lastId = $(this).data('last_id') ? $(this).data('last_id') : '';
+
+		loadTimeline(getData, false, this, lastId);
+		return false;
+	});
 })
+
+function removeLinkCommentBlocks() {
+	if (get_uid()) return;
+	removeItems('.link_show_comment_form');
+}
+
+function showComments() {
+	if (is_sp()) return;
+	$('.comment_list').each(function() {
+		$(this).removeClass('hidden');
+	});
+	$('.link_show_comment_form').each(function() {
+		$(this).removeClass('hidden');
+	});
+}
+
+function loadTimeline() {
+	var getData        = (arguments.length > 0) ? arguments[0] : {};
+	var isInsertBefore = (arguments.length > 1) ? arguments[1] : false;
+	var trigerSelector = (arguments.length > 2) ? arguments[2] : '';
+	var lastId         = (arguments.length > 3) ? parseInt(arguments[3]) : 0;
+
+	var getUri             = 'timeline/api/list.html';
+	var parentListSelector = '#article_list';
+	var limit            = get_config('timeline_list_limit');
+
+	if (trigerSelector) {
+		if (isInsertBefore) {
+			getData['is_before'] = 1;
+			var nextSelector = '#' + $(trigerSelector).next().attr('id');
+			if ($(trigerSelector).prev().size()) lastId = parseInt($(trigerSelector).prev().data('id'));
+		} else {
+			var nextSelector = '#' + $(trigerSelector).prev().attr('id');
+			if ($(trigerSelector).next().size()) lastId = parseInt($(trigerSelector).next().data('id'));
+		}
+	}
+
+	loadList(
+		getUri,
+		parentListSelector,
+		limit,
+		nextSelector,
+		isInsertBefore,
+		trigerSelector,
+		getData,
+		lastId,
+		postLoadTimeline
+	);
+}
+
+function postLoadTimeline() {
+	removeLinkCommentBlocks();
+	showComments();
+}
+
+function loadTlComment(getUri, parentListSelector) {
+	var limit = get_config('default_list_limit');
+	loadList(getUri, parentListSelector, limit);
+}
+
+function showCommentInput(id, targetBlockName, postUri, getUri, isFocus) {
+	if (!get_uid() || !id || !targetBlockName.length) return;
+	if ($('#link_show_comment_form_' + id).size()) $('#link_show_comment_form_' + id).hide();
+	var textareaSelector = '#textarea_comment_' + id;
+	if ($(textareaSelector).size() == 0) {
+		var source   = $("#comment_form-template").html();
+		var template = Handlebars.compile(source);
+		var val = {
+			'id' : id,
+			'postUri' : postUri,
+			'getUri' : getUri,
+			'listSelector' : '#comment_list_' + id,
+			'counterSelector' : '#comment_count_' + id
+		};
+		$('#' + targetBlockName).html(template(val));
+	}
+	if (isFocus) $(textareaSelector).focus();
+}
+
