@@ -77,14 +77,16 @@ $(document).on('click','.js-ajax-loadList', function(){
 	if (GL.execute_flg) return false;
 	if (!getUri || !listSelector) return false;
 
+	var limitId = 0;
 	if (isInsertBefore) {
 		getData['is_before'] = 1;
 		var nextSelector = '#' + $(this).next().attr('id');
-		if ($(this).prev().size()) lastId = parseInt($(this).prev().data('id'));
+		if ($(this).prev().size()) limitId = parseInt($(this).prev().data('id'));
 	} else {
 		var nextSelector = '#' + $(this).prev().attr('id');
-		if ($(this).next().size()) lastId = parseInt($(this).next().data('id'));
+		if ($(this).next().size()) limitId = parseInt($(this).next().data('id'));
 	}
+	if (limitId) getData['limit_id'] = limitId;
 
 	loadList(
 		getUri,

@@ -3,7 +3,7 @@ namespace Timeline;
 
 class Site_Model
 {
-	public static function get_list($self_member_id = 0, $target_member_id = 0, $is_mytimeline = false, $viewType = null, $last_id = 0, $limit = 0, $is_desc = true, $is_before = false)
+	public static function get_list($self_member_id = 0, $target_member_id = 0, $is_mytimeline = false, $viewType = null, $last_id = 0, $limit = 0, $is_desc = true, $is_before = false, $limit_id = 0)
 	{
 		$follow_member_ids = null;
 		$friend_member_ids = null;
@@ -19,7 +19,7 @@ class Site_Model
 
 		$query = Model_TimelineCache::query()->select('id', 'member_id', 'timeline_id');
 
-		if ($last_id) $query->and_where_open();
+		if ($last_id || $limit_id) $query->and_where_open();
 		if ($is_mytimeline)
 		{
 			if ($follow_timeline_ids = self::get_follow_timeline_ids($self_member_id))
@@ -58,12 +58,17 @@ class Site_Model
 			$query->where($basic_cond);
 			$query->where('is_follow', 0);
 		}
-		if ($last_id) $query->and_where_close();
+		if ($last_id || $limit_id) $query->and_where_close();
 
 		if ($last_id)
 		{
 			$inequality_sign = $is_before ? '>' : '<';
 			$query->where('id', $inequality_sign, $last_id);
+		}
+		if ($limit_id)
+		{
+			$inequality_sign = $is_before ? '<' : '>';
+			$query->where('id', $inequality_sign, $limit_id);
 		}
 
 		$query->order_by($sort);
@@ -121,7 +126,7 @@ class Site_Model
 				return \Album\Model_AlbumImageComment::get_comments($foreign_id, $limit);
 		}
 
-		return Model_TimelineComment::get_comments($timeline_id, $limit);;
+		return Model_TimelineComment::get_comments($timeline_id, $limit);
 	}
 
 	public static function get_foreign_table_obj($type, $foreign_id)

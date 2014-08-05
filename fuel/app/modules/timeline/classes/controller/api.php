@@ -27,7 +27,7 @@ class Controller_Api extends \Controller_Site_Api
 
 			$member_id     = (int)\Input::get('member_id', 0);
 			$is_mytimeline = (bool)\Input::get('mytimeline', 0);
-			list($limit, $params, $is_desc, $class_id, $last_id, $is_before)
+			list($limit, $params, $is_desc, $class_id, $last_id, $is_before, $limit_id)
 				= $this->common_get_list_params(array('desc' => 1, 'limit' => conf('timeline.articles.limit')), conf('timeline.articles.max_limit', 50));
 
 			$member = null;
@@ -38,7 +38,7 @@ class Controller_Api extends \Controller_Site_Api
 			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
 			$timeline_viewType = $is_mytimeline ? $this->u->timeline_viewType : null;
 			list($list, $is_next)
-				= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $last_id, $limit, $is_desc, $is_before);
+				= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $last_id, $limit, $is_desc, $is_before, $limit_id);
 
 			$data = array('list' => $list, 'is_next' => $is_next);
 			if ($member) $data['member'] = $member;

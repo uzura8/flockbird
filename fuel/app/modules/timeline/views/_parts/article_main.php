@@ -86,12 +86,16 @@ $comment_list_attr['class'] .= ' hidden';
 <?php if ($list): ?>
 <div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>>
 <?php
-$list_more_box_attrs = array('id' => 'listMoreBox_comment_'.$timeline->id, 'data-parent_id' => $timeline->id, 'data-uri' => $comment_get_uri, 'data-is_before' => 1);
 $data = array(
 	'parent' => $timeline,
 	'comments' => $list,
 	'is_all_records' => $is_all_records,
-	'list_more_box_attrs' => $list_more_box_attrs,
+	'list_more_box_attrs' => array(
+		'id' => 'listMoreBox_comment_'.$timeline->id,
+		'data-uri' => $comment_get_uri,
+		'data-list' => '#comment_list_'.$timeline->id,
+		'data-is_before' => 1,
+	),
 	'delete_uri' => $comment_delete_uri,
 	'counter_selector' => '#comment_count_'.$timeline->id,
 	'absolute_display_delete_btn' => true,

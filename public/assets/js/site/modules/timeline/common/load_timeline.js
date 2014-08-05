@@ -38,7 +38,7 @@ $(function() {
 		var postUri = $(blockSelector).data('post_uri') ? $(blockSelector).data('post_uri') : '';
 
 		if (is_sp()) {
-			loadTlComment(getUri, blockSelector, id, postUri);
+			loadTlComment(getUri, blockSelector);
 			$(blockSelector).removeClass('hidden');
 		}
 		showCommentInput(id, 'form_comment_' + id, postUri, getUri, false);
@@ -91,17 +91,19 @@ function loadTimeline() {
 
 	var getUri             = 'timeline/api/list.html';
 	var parentListSelector = '#article_list';
-	var limit            = get_config('timeline_list_limit');
+	var limit              = get_config('timeline_list_limit');
 
 	if (trigerSelector) {
+		var limitId = 0;
 		if (isInsertBefore) {
 			getData['is_before'] = 1;
 			var nextSelector = '#' + $(trigerSelector).next().attr('id');
-			if ($(trigerSelector).prev().size()) lastId = parseInt($(trigerSelector).prev().data('id'));
+			if ($(trigerSelector).prev().size()) limitId = parseInt($(trigerSelector).prev().data('list_id'));
 		} else {
 			var nextSelector = '#' + $(trigerSelector).prev().attr('id');
-			if ($(trigerSelector).next().size()) lastId = parseInt($(trigerSelector).next().data('id'));
+			if ($(trigerSelector).next().size()) limitId = parseInt($(trigerSelector).next().data('list_id'));
 		}
+		if (limitId) getData['limit_id'] = limitId;
 	}
 
 	loadList(

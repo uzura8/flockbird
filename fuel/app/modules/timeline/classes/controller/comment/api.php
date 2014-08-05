@@ -45,6 +45,8 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				'list_more_box_attrs' => array(
 					'data-uri' => 'timeline/comment/api/list/'.$timeline->id.'.html',
 					'data-is_before' => true,
+					'data-list' => '#comment_list_'.$timeline->id,
+					'data-is_before' => 1,
 				),
 			);
 			if ($limit) $data['show_more_link'] = true;

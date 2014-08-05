@@ -429,9 +429,10 @@ class Site_Util
 		return $info;
 	}
 
-	public static function get_article_view($timeline_id, $member_id, $self_member_id)
+	public static function get_article_view($timeline_cache_id, $timeline_id, $member_id, $self_member_id)
 	{
 		return render('timeline::_parts/article', array(
+			'timeline_cache_id' => $timeline_cache_id,
 			'timeline_id' => $timeline_id,
 			'member_id' => $member_id,
 			'self_member_id' => $self_member_id,

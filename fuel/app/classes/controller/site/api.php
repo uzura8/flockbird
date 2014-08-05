@@ -36,6 +36,6 @@ class Controller_Site_Api extends Controller_Base_Site
 			$params[] = array('id', $operator, $limit_id);
 		}
 
-		return array($limit, $params, $is_desc, $class_id, $last_id, $is_before);
+		return array($limit, $params, $is_desc, $class_id, $last_id, $is_before, $limit_id);
 	}
 }

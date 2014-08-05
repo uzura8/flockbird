@@ -62,6 +62,7 @@ $(function() {
 			'is_before' : 1,
 			'desc' : 1
 		};
+		var lastId = nextSelector ? parseInt($(nextSelector).data('list_id')) : 0;
 
 		postComment(
 			'timeline/api/create.json',
@@ -76,6 +77,7 @@ $(function() {
 			false,
 			get_term('timeline'),
 			getData,
+			lastId,
 			'50px'
 		);
 

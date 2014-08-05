@@ -249,7 +249,8 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 	var isCheckInput      = (arguments.length > 9) ? arguments[9] : true;
 	var postedArticleTerm = (arguments.length > 10) ? arguments[10] : '';
 	var getData           = (arguments.length > 11) ? arguments[11] : {};
-	var textareaHeight    = (arguments.length > 12) ? arguments[12] : '33px';
+	var lastId            = (arguments.length > 12) ? parseInt(arguments[12]) : 0;
+	var textareaHeight    = (arguments.length > 13) ? arguments[13] : '33px';
 
 	if (GL.execute_flg) return false;
 	if (!postUri) return false;
@@ -279,7 +280,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 		},
 		success: function(result){
 			$.jGrowl(postedArticleTerm + 'を投稿しました。');
-			loadList(getUri, listSelector, 0, nextItemSelector, isInsertBefore, '', getData);
+			loadList(getUri, listSelector, 0, nextItemSelector, isInsertBefore, '', getData, lastId);
 			updateCounter(counterSelector);
 			reset_textarea(textareaSelector, textareaHeight);
 		},
