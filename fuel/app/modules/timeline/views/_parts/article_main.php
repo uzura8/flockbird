@@ -1,5 +1,4 @@
 <?php
-$is_auth = ($access_from_member_relation == 'others') ? false : true;
 $images = \Timeline\Site_Util::get_timeline_images(
 	$timeline->type,
 	$timeline->foreign_id,
@@ -44,7 +43,7 @@ if ($foreign_table_obj || $timeline->type == \Config::get('timeline.types.album_
 $public_flag_info = \Timeline\Site_Util::get_public_flag_info($timeline);
 $data = array(
 	'model' => $public_flag_info['model'],
-	'id' => $timeline->id,
+	'id' => $public_flag_info['public_flag_target_id'],
 	'public_flag' => $timeline->public_flag,
 	'view_icon_only' => false,
 	'have_children_public_flag' => $public_flag_info['have_children_public_flag'],
