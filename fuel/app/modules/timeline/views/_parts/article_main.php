@@ -132,7 +132,7 @@ $dropdown_btn_attr = array(
 	'data-member_id' => $timeline->member_id,
 );
 ?>
-<div class="dropdown boxBtn" id="myDropdown_<?php echo $timeline->id; ?>">
+<div class="dropdown boxBtn" id="dropdown_<?php echo $timeline->id; ?>">
 	<?php echo btn('', '#', 'js-dropdown_tl_menu', false, 'xs', null, $dropdown_btn_attr, 'chevron-down'); ?>
 	<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel"></ul>
 </div>

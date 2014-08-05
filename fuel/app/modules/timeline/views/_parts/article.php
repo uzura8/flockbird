@@ -9,7 +9,7 @@ $attr = array(
 	'class' => 'timelineBox js-hide-btn',
 	'id' => 'timelineBox_'.$timeline_id,
 	'data-id' => $timeline_id,
-	'data-hidden_btn' => 'btn_timeline_delete_'.$timeline_id,
+	'data-hidden_btn' => 'dropdown_'.$timeline_id,
 	'data-list_id' => $timeline_cache_id,
 );
 ?>
