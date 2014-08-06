@@ -760,3 +760,7 @@ function removeItems(linkCommentSelector) {
 		$(this).remove();
 	});
 }
+
+function removeNext(selfDomElement) {
+	$(selfDomElement).next().remove();
+}

@@ -5,8 +5,7 @@ $(function() {
 
 	var listType = $('#article_list').data('type');
 	if (!listType || listType != 'ajax') {
-		removeLinkCommentBlocks();
-		showComments();
+		postLoadTimeline();
 	}
 
 	$(document).on('click', '.js-dropdown_tl_menu', function(){
@@ -122,6 +121,7 @@ function loadTimeline() {
 function postLoadTimeline() {
 	removeLinkCommentBlocks();
 	showComments();
+	removeCaretFromPublicFlagDropdown();
 }
 
 function loadTlComment(getUri, parentListSelector) {
@@ -146,5 +146,15 @@ function showCommentInput(id, targetBlockName, postUri, getUri, isFocus) {
 		$('#' + targetBlockName).html(template(val));
 	}
 	if (isFocus) $(textareaSelector).focus();
+}
+
+function removeCaretFromPublicFlagDropdown() {
+	$('.check_require_caret').each(function() {
+		var uid = parseInt($(this).data('uid'));
+		if (!get_uid() || uid != get_uid()) {
+			$(this).children('span.caret').remove();
+		}
+		$(this).removeClass('check_require_caret');
+	});
 }
 

@@ -48,7 +48,8 @@ $data = array(
 	'view_icon_only' => false,
 	'have_children_public_flag' => $public_flag_info['have_children_public_flag'],
 	'disabled_to_update' => $public_flag_info['disabled_to_update'],
-	'is_mycontents' => ($access_from_member_relation == 'self'),
+	'use_in_cache' => true,
+	'member_id' => $timeline->member_id,
 );
 if (!empty($child_model)) $data['child_model'] = $child_model;
 echo render('_parts/public_flag_selecter', $data);

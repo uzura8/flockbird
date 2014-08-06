@@ -101,3 +101,13 @@ $(document).on('click','.js-ajax-loadList', function(){
 
 	return false;
 });
+
+$(document).on('click', '.js-exec_unauth', function(){
+	var uid = $(this).data('uid') ? parseInt($(this).data('uid')) : 0;
+	var func = $(this).data('func') ? $(this).data('func') : null;
+	if (!uid || !func) return false;
+	if (uid == get_uid()) return false;
+	func = eval(func);
+	func(this);
+	return false;
+});
