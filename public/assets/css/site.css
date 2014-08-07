@@ -97,13 +97,6 @@ form .popover.bottom .arrow:after {
 	border-bottom-color: #DFDFDF;
 }
 
-
-.main_item .member_img_box_s .public_flag {
-	position: absolute;
-	top: 0;
-	right: 8px;
-}
-
 #member_profile_image_index .imgBox {
 	margin-bottom: 10px;
 }

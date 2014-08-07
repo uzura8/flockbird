@@ -16,5 +16,5 @@ foreach ($viewType_options as $value => $label)
 	}
 	$menus[] = $menu;
 }
-echo btn_dropdown(\Timeline\Form_MemberConfig::get_viewType_options($timeline_viewType, true), $menus, true, null, null, true);
+echo btn_dropdown(\Timeline\Form_MemberConfig::get_viewType_options($timeline_viewType, true), $menus, true, 'sm', null, true);
 ?>

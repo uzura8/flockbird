@@ -25,53 +25,38 @@ img.profile_image {
 	margin-left: 65px;
 }
 
-.member_img_box_ss,
-.member_img_box_s,
-.member_img_box_m
+.member_contents.row {
+	margin-left: 0;
+	margin-right: 0;
+}
+.member_contents .col-xs-1 {
+	padding: 0 !important;
+}
+.member_contents .col-xs-1 img {
+	margin-left: auto;
+	margin-right: auto;
+}
+.member_contents .col-xs-11 {
+	padding: 0 !important;
+}
+@media (max-width: 767px)
 {
-	position: relative;
-	text-align: left;
+	.member_contents .col-xs-11 {
+		padding-left: 4px !important;
+	}
 }
-.member_img_box_ss img.profile_image,
-.member_img_box_s img.profile_image,
-.member_img_box_m img.profile_image
-{
-	position: absolute;
-	left: 3px;
-	top: 3px;
+@media (min-width: 768px) and (max-width: 991px) {
+	.member_contents .col-xs-11 {
+		padding-left: 15px !important;
+	}
 }
-
-.member_img_box_ss div.content {
-	margin-left: 24px;
-}
-.member_img_box_s div.content,
-.member_img_box_m div.content div.member_img_box_s div.content
-{
-	margin-left: 35px;
-}
-.member_img_box_m div.content {
-	margin-left: 60px;
-}
-.member_img_box_m div.content .sub_info {
-	margin-top: 5px;
-}
-
-.member_img_box_s div.content .fullname,
-.member_img_box_s div.content small {
-	font-size: 12px;
-	line-height: 13px;
-}
-.member_img_box_ss div.content .fullname,
-.member_img_box_ss div.content small {
-	font-size: 11px;
-	line-height: 12px;
-}
-
-.member_img_box_s div.content div.main .fullname {
-	margin-right: 5px;
-}
-.member_img_box_s .content span.label {
-	margin-left: 5px;
+@media (min-width: 992px) {
+	#main_container .main_item .member_contents .col-xs-11 {
+		padding-left: 5px !important;
+	}
+	#main_container .main_item .member_contents .col-xs-1 {
+		padding-top: 3px !important;
+	}
 }
 
 .date_box {
@@ -83,10 +68,6 @@ img.profile_image {
 	position: absolute;
 	top: 0;
 	right: 8px;
-}
-
-#subtitle div.member_img_box_s .public_flag {
-	margin-left: 5px;
 }
 
 .list_subtitle {
@@ -107,9 +88,6 @@ img.profile_image {
 	padding-top: 5px;
 }
 
-#article_list .timelineBox .member_img_box_m {
-	min-height: 55px;
-}
 #article_list .timelineBox .commentPostBox .main {
 	padding-right: 0;
 }
@@ -238,11 +216,14 @@ div#main div.row div#main_container {
 	width: 230px;
 	margin: 5px;
 	padding: 5px 0 5px;
-	text-align: center;
 	float: left;
 	border: 1px solid #ccc;
 	background: #eee;
 	box-shadow: 0 2px 1px #eee;
+}
+
+#main_container .main_item h5 {
+	text-align: center;
 }
 #main_container .main_item div.article {
 	text-align: left;
@@ -277,14 +258,6 @@ div#main div.row div#main_container {
 }
 #main_container .main_item .commentBox {
 	padding: 5px 10px 5px 5px;
-}
-#main_container .main_item .member_img_box_s {
-	margin-top: 5px;
-	padding: 0 10px;
-	text-align: left;
-}
-#main_container .main_item .member_img_box_s img.profile_image {
-	left: 9px;
 }
 
 #main_container .main_item h5 {
