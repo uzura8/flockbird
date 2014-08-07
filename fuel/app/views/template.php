@@ -24,8 +24,10 @@
 <div class="container">
 	<div class="row row-offcanvas row-offcanvas-right">
 		<div class="col-sm-9">
-<?php if (!empty($breadcrumbs) && !IS_SP): ?>
+<?php if (!empty($breadcrumbs)): ?>
+<div class="hidden-xs">
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
+</div>
 <?php endif; ?>
 
 <?php echo render('_parts/template/global_alerts'); ?>
@@ -43,8 +45,10 @@ $sub_column = isset($sub_column) ? $sub_column : null;
 echo render('_parts/template/main_content', array('content' => $content, 'sub_column' => $sub_column));
 ?>
 
-<?php if (!empty($breadcrumbs) && IS_SP): ?>
+<?php if (!empty($breadcrumbs)): ?>
+<div class="visible-xs">
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
+</div>
 <?php endif; ?>
 
 		</div><!--/span-->
