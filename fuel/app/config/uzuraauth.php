@@ -22,7 +22,7 @@ return array(
 		/**
 		 * Name of the cookie used to record this functionality
 		 */
-		'cookie_name' => 'rmcookie',
+		'cookie_name' => 'remember_checked_on',
 
 		/**
 		 * Remember me expiration (default: 31 days)
