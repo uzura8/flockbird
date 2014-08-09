@@ -31,7 +31,9 @@ if (!is_sp()) {
 			if (check_editable_content(this)) $('#' + $(this).data('hidden_btn')).fadeIn('fast');
 		},
 		mouseleave:function() {
-			if (check_editable_content(this)) $('#' + $(this).data('hidden_btn')).hide();
+			var targetSelector = '#' + $(this).data('hidden_btn');
+			if (check_editable_content(this)) $(targetSelector).hide();
+			$(targetSelector).removeClass('open');
 		}
 	},'.js-hide-btn');
 }

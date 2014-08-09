@@ -19,7 +19,8 @@ $(function() {
 
 		var source   = $("#tl_dropdown_menu-tpl").html();
 		var template = Handlebars.compile(source);
-		var val = {'detail_uri' : get_url(detail_uri)};
+		var val = {};
+		val['detail_uri'] = detail_uri? get_url(detail_uri) : '';
 		if (member_id == get_uid()) {
 			if (delete_uri) {
 				val['delete_uri'] = delete_uri;

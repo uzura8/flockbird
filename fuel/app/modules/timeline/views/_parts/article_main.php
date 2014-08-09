@@ -126,11 +126,11 @@ $link_comment_attr['class'] .= ' hidden';
 <?php
 $dropdown_btn_attr = array(
 	'data-toggle' => 'dropdown',
-	'data-detail_uri' => \Timeline\Site_Util::get_detail_uri($timeline->id, $timeline->type, $foreign_table_obj),
 	'data-delete_uri' => \Timeline\Site_Util::get_delete_api_info($timeline),
 	'data-parent' => 'timelineBox_'.$timeline->id,
 	'data-member_id' => $timeline->member_id,
 );
+if (!$is_detail) $dropdown_btn_attr['data-detail_uri'] = \Timeline\Site_Util::get_detail_uri($timeline->id, $timeline->type, $foreign_table_obj);
 ?>
 <div class="dropdown boxBtn" id="dropdown_<?php echo $timeline->id; ?>">
 	<?php echo btn('', '#', 'js-dropdown_tl_menu', false, 'xs', null, $dropdown_btn_attr, 'chevron-down'); ?>

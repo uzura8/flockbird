@@ -27,6 +27,9 @@ img.profile_image {
 	word-wrap: break-word;
 }
 
+.member_contents .main {
+	margin-top: 5px;
+}
 .member_contents.row {
 	margin-left: 0;
 	margin-right: 0;
@@ -147,10 +150,10 @@ div.btnBox button {
 	padding-right: 20px;
 }
 .commentBox .boxBtn,
-#article_list .boxBtn {
+.timelineBox .boxBtn {
 	position: absolute;
 	right: 5px;
-	top: 5px;
+	top: 3px;
 	color: #949494;
 }
 .commentBox small {

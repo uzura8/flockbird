@@ -741,6 +741,7 @@ function execute_simple_post(selfDomElement) {
 }
 
 function check_editable_content(selfDomElement) {
+	if (Boolean($(selfDomElement).data('hidden_btn_absolute'))) return true;
 	var uid = get_uid();
 	if (!uid) return false;
 	var auther_id = $(selfDomElement).data('auther_id') ? parseInt($(selfDomElement).data('auther_id')) : 0;
