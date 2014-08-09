@@ -276,4 +276,19 @@ class Site_Model
 		}
 		if ($sort_order == 0) throw new \HttpInvalidInputException('Invalid input data.');
 	}
+
+	public static function get_value_for_observer_setting(\Orm\Model $obj, $value, $value_type)
+	{
+		switch ($value_type)
+		{
+			case 'value':
+				return $value;
+				break;
+			case 'property':
+				return $obj->{$value};
+				break;
+		}
+
+		throw new \FuelException('Orm observer setting error.');
+	}
 }

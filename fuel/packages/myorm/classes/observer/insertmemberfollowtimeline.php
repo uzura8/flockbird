@@ -33,18 +33,7 @@ class Observer_InsertMemberFollowTimeline extends \Orm\Observer
 		{
 			foreach ($froms as $value_from => $type)
 			{
-				switch ($type)
-				{
-					case 'value':
-						$value = $value_from;
-						break;
-					case 'property':
-						$value = $obj->{$value_from};
-						break;
-					default :
-						throw new \FuelException('Orm observer setting error.');
-						break;
-				}
+				$value = \Site_Model::get_value_for_observer_setting($obj, $value_from, $type);
 				$query = $query->where($property_to, $value);
 			}
 		}

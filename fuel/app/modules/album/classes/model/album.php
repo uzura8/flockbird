@@ -103,6 +103,40 @@ class Model_Album extends \Orm\Model
 				'property_from' => 'updated_at',
 				'property_to' => 'sort_datetime',
 			);
+
+			if (\Config::get('timeline.articles.cache.is_use'))
+			{
+				$observer_key = \Config::get('timeline.types.album_image');
+				static::$_observers['MyOrm\Observer_ExecuteToRelations'] = array(
+					'events' => array('after_update'),
+					'relations' => array(
+						array(
+							'model_to' => '\Timeline\Model_Timeline',
+							'execute_func' => array(
+								'method' => '\Timeline\Site_Util::delete_cache',
+								'params' => array(
+									'id' => 'property',
+									$observer_key => 'value',
+								),
+							),
+							'conditions' => array(
+								'foreign_table' => array(
+									'album' => 'value',
+								),
+								'foreign_id' => array(
+									'id' => 'property',
+								),
+								'type' => array(
+									$observer_key => 'value',
+								),
+							),
+							'properties_check_changed' => array(
+								'name',
+							),
+						),
+					),
+				);
+			}
 		}
 	}
 

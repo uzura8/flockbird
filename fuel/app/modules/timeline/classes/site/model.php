@@ -161,6 +161,7 @@ class Site_Model
 		if (!$timeline) $timeline = Site_Util::get_timeline_object($type_key, $foreign_id);
 		$is_new = empty($timeline->id);
 
+		if (!is_null($body)) $timeline->body = $body;
 		if ($is_new)
 		{
 			$timeline->member_id = $member_id;
@@ -168,7 +169,6 @@ class Site_Model
 			$timeline->public_flag = is_null($public_flag) ? conf('public_flag.default') : $public_flag;
 			$timeline->foreign_table = $foreign_table;
 			$timeline->foreign_id = $foreign_id;
-			if (!is_null($body)) $timeline->body = $body;
 		}
 		else
 		{
@@ -176,7 +176,7 @@ class Site_Model
 			{
 				$timeline->public_flag = $public_flag;
 			}
-			$timeline->sort_datetime = date('Y-m-d H:i:s');
+			if ($timeline->is_changed()) $timeline->sort_datetime = date('Y-m-d H:i:s');
 		}
 		$timeline->save();
 
