@@ -13,7 +13,7 @@ $attr = array(
 <div <?php echo Util_Array::conv_array2attr_string($attr); ?>>
 	<div class="row member_contents">
 		<div class="col-xs-1">
-			<?php echo empty($member) ? img('m', $img_size, '', false, '', true) : img($member->get_image(), $img_size, 'member/'.$member->id, false, site_get_screen_name($member), true, true); ?>
+			<?php echo empty($member) ? img('m', $img_size, '', false, '', true, true) : img($member->get_image(), $img_size, 'member/'.$member->id, false, site_get_screen_name($member), true, true); ?>
 		</div>
 		<div class="col-xs-11">
 			<div class="member_info">
