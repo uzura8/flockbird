@@ -494,6 +494,7 @@ CREATE TABLE `timeline_cache` (
   `page_id` int(11) NULL,
   `is_follow` tinyint(1) NOT NULL DEFAULT '0',
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
+  `type` tinyint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
   UNIQUE KEY `timeline_id_is_follow_UNIQUE_idx` (`timeline_id`,`is_follow`),

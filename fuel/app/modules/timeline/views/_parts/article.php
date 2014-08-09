@@ -1,8 +1,5 @@
 <?php
 $is_detail = true;
-$img_size = conf('upload.types.img.types.m.sizes.M');
-$member = Model_Member::check_authority($member_id);
-$access_from_member_relation = \Site_Member::get_access_from_member_relation($member_id, $self_member_id);
 $attr = array(
 	'class' => 'timelineBox js-hide-btn',
 	'id' => 'timelineBox_'.$timeline_id,
@@ -15,6 +12,15 @@ if (!empty($timeline_cache_id))
 	$is_detail = false;
 	$attr['data-list_id'] = $timeline_cache_id;
 }
+
+$access_from_member_relation = null;
+if (\Timeline\Site_Util::check_type_to_get_access_from($type))
+{
+	$access_from_member_relation = \Site_Member::get_access_from_member_relation($member_id, $self_member_id);
+}
+
+$member = Model_Member::check_authority($member_id);
+$img_size = conf('upload.types.img.types.m.sizes.M');
 ?>
 <div <?php echo Util_Array::conv_array2attr_string($attr); ?>>
 	<div class="row member_contents">

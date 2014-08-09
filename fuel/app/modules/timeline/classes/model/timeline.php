@@ -118,7 +118,9 @@ class Model_Timeline extends \Orm\Model
 				'member_id',
 				'member_id_to',
 				'group_id',
+				'page_id',
 				'public_flag',
+				'type',
 			),
 		),
 		// update 時に timeline_cache の特定のカラムのみ更新する

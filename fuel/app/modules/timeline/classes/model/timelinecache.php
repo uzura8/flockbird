@@ -46,6 +46,11 @@ class Model_TimelineCache extends \Orm\Model
 			'validation' => array('required', 'max_length' => array(2)),
 			'form' => array(),
 		),
+		'type' => array(
+			'data_type' => 'integer',
+			'validation' => array('max_length' => array(2)),
+			'form' => array('type' => false),
+		),
 	);
 
 	protected static $_observers = array(
@@ -56,6 +61,8 @@ class Model_TimelineCache extends \Orm\Model
 
 	public static function _init()
 	{
+		static::$_properties['type']['validation']['in_array'][] = \Config::get('timeline.types');
+
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 	}

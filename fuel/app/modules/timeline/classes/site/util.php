@@ -262,6 +262,17 @@ class Site_Util
 		return $pre_path.$common_path;
 	}
 
+	public static function check_type_to_get_access_from($type)
+	{
+		$types_to_get_access_from = array(
+			\Config::get('timeline.types.album'),
+			\Config::get('timeline.types.album_image'),
+			\Config::get('timeline.types.album_image_timeline'),
+		);
+
+		return in_array($type, $types_to_get_access_from);
+	}
+
 	public static function get_timeline_images($type, $foreign_id, $timeline_id = null, $access_from = null)
 	{
 		// defaults
@@ -430,16 +441,6 @@ class Site_Util
 		}
 
 		return $info;
-	}
-
-	public static function get_article_view($timeline_cache_id, $timeline_id, $member_id, $self_member_id)
-	{
-		return render('timeline::_parts/article', array(
-			'timeline_cache_id' => $timeline_cache_id,
-			'timeline_id' => $timeline_id,
-			'member_id' => $member_id,
-			'self_member_id' => $self_member_id,
-		));
 	}
 
 	public static function get_article_main_view($timeline_id, $access_from_member_relation = null, $is_detail = false)

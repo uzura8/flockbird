@@ -2,7 +2,15 @@
 <?php if (!IS_API): ?><div id="article_list"><?php endif; ?>
 <?php if ($list): ?>
 <?php foreach ($list as $id => $timeline_cache): ?>
-<?php echo \Timeline\Site_Util::get_article_view($timeline_cache->id, $timeline_cache->timeline_id, $timeline_cache->member_id, \Auth::check() ? $u->id : 0); ?>
+<?php
+echo render('timeline::_parts/article', array(
+	'timeline_cache_id' => $timeline_cache->id,
+	'timeline_id' => $timeline_cache->timeline_id,
+	'type' => $timeline_cache->type,
+	'member_id' => $timeline_cache->member_id,
+	'self_member_id' => \Auth::check() ? $u->id : 0,
+));
+?>
 <?php endforeach; ?>
 <?php endif; ?>
 
