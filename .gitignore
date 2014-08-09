@@ -11,6 +11,7 @@ desktop.ini
 /tags
 /fuel/tags
 /fuel/app/logs/*/*/*
+/fuel/app/cache/*
 /fuel/app/cache/*/*
 /fuel/app/cache/default_config_setting
 /fuel/app/tmp/*

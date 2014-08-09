@@ -1,8 +1,12 @@
 <?php
-
 return array(
 	'articles' => array(
-		'limit' => 3,
+		'cache' => array(
+			'is_use'  => true,
+			'expir' => null,
+			'prefix'  => 'tl_',
+		),
+		'limit' => 10,
 		'limit_max' => 50,
 		'trim_width' => array(
 			//'title' => 88,

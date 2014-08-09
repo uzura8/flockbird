@@ -166,6 +166,17 @@ class Model_Timeline extends \Orm\Model
 
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
+
+		if (\Config::get('timeline.articles.cache.is_use'))
+		{
+			// 更新・削除時に timeline の cache を削除
+			static::$_observers['MyOrm\Observer_UpdateTimeline'] = array(
+				'events' => array('after_update'),
+			);
+			static::$_observers['MyOrm\Observer_DeleteTimeline'] = array(
+				'events' => array('before_delete'),
+			);
+		}
 	}
 
 	public static function check_authority($id, $target_member_id = 0)

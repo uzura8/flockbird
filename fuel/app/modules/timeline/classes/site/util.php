@@ -445,6 +445,28 @@ class Site_Util
 
 	public static function get_article_main_view($timeline_id, $access_from_member_relation = null, $is_detail = false)
 	{
+		if ($is_detail || !\Config::get('timeline.articles.cache.is_use'))
+		{
+			return self::get_article_main_content($timeline_id, $access_from_member_relation, $is_detail);
+		}
+
+		$cache_key = self::get_cache_key($timeline_id, $access_from_member_relation);
+		$cache_expir = \Config::get('timeline.articles.cache.expir');
+		try
+		{
+			$content = \Cache::get($cache_key, $cache_expir);
+		}
+		catch (\CacheNotFoundException $e)
+		{
+			$content = self::get_article_main_content($timeline_id, $access_from_member_relation);
+			\Cache::set($cache_key, $content, $cache_expir);
+		}
+
+		return $content;
+	}
+
+	public static function get_article_main_content($timeline_id, $access_from_member_relation = null, $is_detail = false)
+	{
 		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));
 
 		return render('timeline::_parts/article_main', array(
@@ -452,6 +474,31 @@ class Site_Util
 			'access_from_member_relation' => $access_from_member_relation,
 			'is_detail' => $is_detail,
 		));
+	}
+
+	public static function get_cache_key($timeline_id, $access_from_member_relation = null)
+	{
+		$cache_key = \Config::get('timeline.articles.cache.prefix').$timeline_id;
+		if ($access_from_member_relation) $cache_key .= '_'.$access_from_member_relation;
+
+		return $cache_key;
+	}
+
+	public static function delete_cache($timeline_id, $type)
+	{
+		$cache_keys = array(self::get_cache_key($timeline_id));
+		if (self::check_type_to_get_access_from($type))
+		{
+			$relations = array('self', 'member', 'others', 'friend');
+			foreach ($relations as $relation)
+			{
+				$cache_keys[] = self::get_cache_key($timeline_id, $relation);
+			}
+		}
+		foreach ($cache_keys as $cache_key)
+		{
+			\Cache::delete($cache_key);
+		}
 	}
 
 	public static function get_member_relation_member_ids($member_id_from, $timeline_viewType = null)
