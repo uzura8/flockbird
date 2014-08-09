@@ -124,7 +124,7 @@ class Site_Util
 		return array($body, $is_safe);
 	}
 
-	public static function get_timeline_content(Model_Timeline $timeline, \Orm\Model $foreign_table_obj = null, $optional_info = array())
+	public static function get_timeline_content(Model_Timeline $timeline, \Orm\Model $foreign_table_obj = null, $optional_info = array(), $is_detail = false)
 	{
 		list($content, $is_safe_content) = self::get_timeline_body(
 			$timeline->type,
@@ -132,6 +132,8 @@ class Site_Util
 			$foreign_table_obj,
 			$optional_info
 		);
+		if ($is_detail) return nl2br($content);
+
 		if (strlen($content) && !$is_safe_content)
 		{
 			if ($truncate_lines = \Config::get('timeline.articles.truncate_lines.body', false))
@@ -147,7 +149,7 @@ class Site_Util
 		return $content;
 	}
 
-	public static function get_quote_article($type, $foreign_table_obj)
+	public static function get_quote_article($type, $foreign_table_obj, $is_detail = false)
 	{
 		$accept_types = array(
 			\Config::get('timeline.types.note'),
@@ -160,11 +162,12 @@ class Site_Util
 			'value' => '',
 			'truncate_count' => conf('view_params_default.list.trim_width.title')
 		);
-		$body = array(
-			'value' => $foreign_table_obj->body,
-			'truncate_count' => \Config::get('timeline.articles.truncate_lines.body'),
-			'truncate_type' => 'line'
-		);
+		$body = array('value' => $foreign_table_obj->body);
+		if (!$is_detail)
+		{
+			$body['truncate_count'] = \Config::get('timeline.articles.truncate_lines.body');
+			$body['truncate_type']  = 'line';
+		}
 		$read_more_uri  = '';
 
 		switch ($type)
@@ -439,13 +442,14 @@ class Site_Util
 		));
 	}
 
-	public static function get_article_main_view($timeline_id, $access_from_member_relation)
+	public static function get_article_main_view($timeline_id, $access_from_member_relation = null, $is_detail = false)
 	{
 		$timeline = Model_Timeline::find($timeline_id, array('related' => array('member')));
 
 		return render('timeline::_parts/article_main', array(
 			'timeline' => $timeline,
 			'access_from_member_relation' => $access_from_member_relation,
+			'is_detail' => $is_detail,
 		));
 	}
 

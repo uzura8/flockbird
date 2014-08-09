@@ -1,5 +1,6 @@
 <?php
-$img_size   = conf('upload.types.img.types.m.sizes.M');
+$is_detail = true;
+$img_size = conf('upload.types.img.types.m.sizes.M');
 $member = Model_Member::check_authority($member_id);
 $access_from_member_relation = \Site_Member::get_access_from_member_relation($member_id, $self_member_id);
 $attr = array(
@@ -7,8 +8,12 @@ $attr = array(
 	'id' => 'timelineBox_'.$timeline_id,
 	'data-id' => $timeline_id,
 	'data-hidden_btn' => 'dropdown_'.$timeline_id,
-	'data-list_id' => $timeline_cache_id,
 );
+if (!empty($timeline_cache_id))
+{
+	$is_detail = false;
+	$attr['data-list_id'] = $timeline_cache_id;
+}
 ?>
 <div <?php echo Util_Array::conv_array2attr_string($attr); ?>>
 	<div class="row member_contents">
@@ -20,7 +25,7 @@ $attr = array(
 				<b class="fullname"><?php echo empty($member) ? term('member.left') : Html::anchor('member/'.$member->id, $member->name); ?></b>
 			</div>
 			<div class="main">
-				<?php echo \Timeline\Site_Util::get_article_main_view($timeline_id, $access_from_member_relation); ?>
+				<?php echo \Timeline\Site_Util::get_article_main_view($timeline_id, $access_from_member_relation, $is_detail); ?>
 			</div>
 		</div>
 	</div>

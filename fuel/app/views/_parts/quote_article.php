@@ -6,7 +6,7 @@
 <?php
 $body_value = $body['value'];
 if (empty($read_more_uri)) $read_more_uri = '';
-if (isset($body['truncate_type']) && $body['truncate_type'] == 'line')
+if (!empty($body['truncate_count']))
 {
 	if ($body['truncate_type'] == 'line')
 	{

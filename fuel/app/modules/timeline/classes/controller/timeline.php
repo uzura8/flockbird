@@ -83,14 +83,12 @@ class Controller_Timeline extends \Controller_Site
 	{
 		if (!$timeline = Model_Timeline::check_authority($id)) throw new \HttpNotFoundException;
 		$this->check_public_flag($timeline->public_flag, $timeline->member_id);
-		$timeline_cache = Model_TimelineCache::get4timeline_id($id, true);
 
 		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/article', array(
-			'timeline_cache_id' => $timeline_cache->id,
-			'timeline' => $timeline,
-			'is_convert_nl2br' => true,
+			'timeline_id' => $timeline->id,
+			'member_id' => $timeline->member_id,
 			'self_member_id' => \Auth::check() ? $this->u->id : 0,
 		));
 	}
