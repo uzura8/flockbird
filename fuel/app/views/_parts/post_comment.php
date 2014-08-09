@@ -18,7 +18,7 @@ $size = empty($size) ? 'S' : strtoupper($size);
 $img_size   = conf('upload.types.img.types.m.sizes.'.$size);
 ?>
 <div<?php if ($parts_attrs_string): ?> <?php echo $parts_attrs_string; ?><?php endif; ?>>
-	<div class="member_contents">
+	<div class="row member_contents">
 		<div class="col-xs-1">
 			<?php echo img($u->get_image(), $img_size, 'member/'.$u->id, false, site_get_screen_name($u), true, true); ?>
 		</div>
