@@ -66,7 +66,6 @@ class Controller_Note extends \Controller_Site
 				$member->id,
 				\Auth::check() ? $this->u->id : 0,
 				$is_mypage,
-				null,
 				array(array('is_published', $is_published))
 			),
 			'limit'    => conf('view_params_default.list.limit'),

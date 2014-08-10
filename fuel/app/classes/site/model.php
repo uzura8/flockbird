@@ -110,13 +110,13 @@ class Site_Model
 		return $query;
 	}
 
-	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_myapge = false, $where = array(), $member_id_colmn = null)
+	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_mypage = false, $where = array(), $member_id_colmn = null)
 	{
 		if ($target_member_id) $where[] = array($member_id_colmn ?: 'member_id', $target_member_id);
 
 		if ($self_member_id)
 		{
-			if (($target_member_id && $target_member_id != $self_member_id) || !$is_myapge)
+			if (($target_member_id && $target_member_id != $self_member_id) || !$is_mypage)
 			{
 				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
 			}
