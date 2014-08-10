@@ -2,12 +2,12 @@
 return array(
 	'articles' => array(
 		'cache' => array(
-			'is_use'  => false,
+			'is_use'  => true,
 			'expir' => 60 * 60 * 3,
 			'prefix'  => 'tl_',
 		),
-		'limit' => 10,
-		'limit_max' => 50,
+		'limit' => 2,
+		'limit_max' => 3,
 		'trim_width' => array(
 			//'title' => 88,
 			'body'  => 500,
@@ -17,8 +17,8 @@ return array(
 			'body'  => 5,
 		),
 		'comment' => array(
-			'limit' => 5,
-			'limit_max' => 20,
+			'limit' => 2,
+			'limit_max' => 3,
 			'trim_width' => 200,
 		),
 		'thumbnail' => array(

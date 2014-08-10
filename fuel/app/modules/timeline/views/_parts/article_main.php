@@ -59,6 +59,15 @@ echo render('_parts/public_flag_selecter', $data);
 
 <?php /* comment_list */; ?>
 <?php
+$list = null;
+$is_all_records = null;
+$all_comment_count = null;
+if ($is_detail)
+{
+	list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id);
+}
+?>
+<?php
 $comment_count_attr = array(
 	'class' => 'comment_count unset_comment_count',
 	'id' => 'comment_count_'.$timeline->id,
@@ -71,7 +80,7 @@ $link_comment_attr = array(
 );
 ?>
 <div class="comment_info">
-	<small><?php echo icon('comment'); ?> <span <?php echo Util_Array::conv_array2attr_string($comment_count_attr); ?>><span></small>
+	<small><?php echo icon('comment'); ?> <span <?php echo Util_Array::conv_array2attr_string($comment_count_attr); ?>><?php if ($is_detail): ?><?php echo $all_comment_count; ?><?php endif; ?><span></small>
 	<small><?php echo anchor('#', term('form.comment'), false, $link_comment_attr); ?></small>
 </div>
 <?php
@@ -86,7 +95,27 @@ $comment_list_attr = array(
 	'data-get_uri' => $comment_get_uri,
 );
 ?>
-<div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>></div>
+<div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>>
+<?php if ($is_detail): ?>
+<?php
+$data = array(
+	'parent' => $timeline,
+	'comments' => $list,
+	'is_all_records' => $is_all_records,
+	'list_more_box_attrs' => array(
+		'id' => 'listMoreBox_comment_'.$timeline->id,
+		'data-uri' => $comment_get_uri,
+		'data-list' => '#comment_list_'.$timeline->id,
+		'data-is_before' => 1,
+	),
+	'delete_uri' => $comment_delete_uri,
+	'counter_selector' => '#comment_count_'.$timeline->id,
+	'absolute_display_delete_btn' => true,
+);
+echo render('_parts/comment/list', $data);
+?>
+<?php endif; ?>
+</div>
 
 <?php
 $link_comment_attr = array(
@@ -95,9 +124,11 @@ $link_comment_attr = array(
 	'data-id' => $timeline->id,
 	'data-block' => 'form_comment_'.$timeline->id,
 );
-$link_comment_attr['class'] .= ' hidden';
+if (!$is_detail) $link_comment_attr['class'] .= ' hidden';
 ?>
+<?php if (!$is_detail || $list): ?>
 <?php echo anchor('#', term('form.do_comment'), false, $link_comment_attr); ?>
+<?php endif; ?>
 
 <?php /* post_comment_link */; ?>
 <div id="form_comment_<?php echo $timeline->id; ?>"></div>

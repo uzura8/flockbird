@@ -37,10 +37,7 @@ $(function() {
 		var getUri = $(blockSelector).data('get_uri') ? $(blockSelector).data('get_uri') : '';
 		var postUri = $(blockSelector).data('post_uri') ? $(blockSelector).data('post_uri') : '';
 
-		if (is_sp()) {
-			loadTlComment(getUri, blockSelector);
-			$(blockSelector).removeClass('hidden');
-		}
+		if (is_sp()) loadTlComment(getUri, blockSelector);
 		showCommentInput(id, 'form_comment_' + id, postUri, getUri, false);
 		$(this).parent('small').html('<span>' + get_term('comment') + '</span>');
 		return false;
@@ -68,18 +65,14 @@ $(function() {
 	});
 })
 
-function removeLinkCommentBlocks() {
-	if (get_uid()) return;
-	removeItems('.link_show_comment_form');
-}
-
-function showComments() {
+function showLinkCommentBlocks() {
 	if (is_sp()) return;
-	$('.comment_list').each(function() {
-		$(this).removeClass('hidden');
-	});
+	if (!get_uid()) return;
 	$('.link_show_comment_form').each(function() {
-		$(this).removeClass('hidden');
+		var id = parseInt($(this).data('id'));
+		var parentDomElement = $('#timelineBox_' + id);
+		var comment_cont = parseInt(parentDomElement.data('comment_count'));
+		if (comment_cont) $(this).removeClass('hidden');
 	});
 }
 
@@ -121,8 +114,7 @@ function loadTimeline() {
 
 function postLoadTimeline() {
 	loadTlCommentAll();
-	removeLinkCommentBlocks();
-	//showComments();
+	showLinkCommentBlocks();
 	removeCaretFromPublicFlagDropdown();
 	setCommentCount();
 }
