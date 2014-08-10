@@ -106,7 +106,6 @@ class Model_Album extends \Orm\Model
 
 			if (\Config::get('timeline.articles.cache.is_use'))
 			{
-				$observer_key = \Config::get('timeline.types.album_image');
 				static::$_observers['MyOrm\Observer_ExecuteToRelations'] = array(
 					'events' => array('after_update'),
 					'relations' => array(
