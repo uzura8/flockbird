@@ -5,6 +5,7 @@
 	display: none;
 }
 .commentBox .js-ajax-delete,
-.timelineBox .dropdown {
+.timelineBox .dropdown,
+.article .btn-group.edit {
 	display: none;
 }

@@ -113,3 +113,14 @@ $(document).on('click', '.js-exec_unauth', function(){
 	func(this);
 	return false;
 });
+
+$(document).on('click', '.js-display_parts', function(){
+	var targetId = $(this).data('target_id') ? $(this).data('target_id') : '';
+	var hideSelector = $(this).data('hide_selector') ? $(this).data('hide_selector') : '';
+	var focusSelector = $(this).data('focus_selector') ? $(this).data('focus_selector') : '';
+
+	$('#' + targetId).removeClass('hidden');
+	if (hideSelector) $(hideSelector).addClass('hidden');
+	if (focusSelector) $(focusSelector).focus();
+	return false;
+});

@@ -37,13 +37,15 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				'comments' => $comments,
 				'parent' => $note,
 				'is_all_records' => $is_all_records,
-				'list_more_box_attrs' => array('data-parent_id' => $note_id),
+				'list_more_box_attrs' => array(
+					'id' => 'listMoreBox_comment_'.$note->id,
+					'data-uri' => sprintf('note/comment/api/list/%s.html', $note->id),
+					'data-list' => '#comment_list_'.$note->id,
+					'data-is_before' => 1,
+				),
 				'class_id' => $class_id,
 				'delete_uri' => 'note/comment/api/delete.json',
-				'list_more_box_attrs' => array(
-					'data-uri' => 'note/comment/api/list/'.$note->id.'.html',
-					'data-is_before' => true,
-				),
+				'counter_selector' => '#comment_count_'.$note->id,
 			);
 			if ($limit) $data['show_more_link'] = true;
 			$response = \View::forge('_parts/comment/list', $data);

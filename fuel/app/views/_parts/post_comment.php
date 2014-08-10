@@ -1,5 +1,5 @@
 <?php
-$textarea_attrs_def = array('rows' => 2, 'class' => 'form-control autogrow', 'id' => 'textarea_comment');
+$textarea_attrs_def = array('rows' => 1, 'class' => 'form-control autogrow', 'id' => 'textarea_comment');
 $textarea_attrs     = (empty($textarea_attrs)) ? $textarea_attrs_def : array_merge($textarea_attrs_def, $textarea_attrs);
 
 $button_attrs_def = array(
