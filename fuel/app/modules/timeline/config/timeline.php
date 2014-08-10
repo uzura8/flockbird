@@ -2,7 +2,7 @@
 return array(
 	'articles' => array(
 		'cache' => array(
-			'is_use'  => true,
+			'is_use'  => false,
 			'expir' => 60 * 60 * 3,
 			'prefix'  => 'tl_',
 		),

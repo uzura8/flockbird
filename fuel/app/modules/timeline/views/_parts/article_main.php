@@ -59,7 +59,6 @@ echo render('_parts/public_flag_selecter', $data);
 
 <?php /* comment_list */; ?>
 <?php
-list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id);
 $link_comment_attr = array(
 	'class' => 'link_comment',
 	'id' => 'link_show_comment_'.$timeline->id,
@@ -67,7 +66,7 @@ $link_comment_attr = array(
 );
 ?>
 <div class="comment_info">
-	<small><?php echo icon('comment'); ?> <span id="comment_count_<?php echo $timeline->id; ?>"><?php echo $all_comment_count; ?><span></small>
+	<small><?php echo icon('comment'); ?> <span id="comment_count_<?php echo $timeline->id; ?>"><span></small>
 	<small><?php echo anchor('#', term('form.comment'), false, $link_comment_attr); ?></small>
 </div>
 <?php
@@ -75,36 +74,15 @@ $comment_get_uri = \Timeline\Site_Util::get_comment_api_uri('get', $timeline->ty
 $comment_post_uri = \Timeline\Site_Util::get_comment_api_uri('create', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
 $comment_delete_uri = \Timeline\Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
 $comment_list_attr = array(
-	'class' => 'comment_list',
+	'class' => 'comment_list unloade_comments',
 	'id' => 'comment_list_'.$timeline->id,
 	'data-id' => $timeline->id,
 	'data-post_uri' => $comment_post_uri,
 	'data-get_uri' => $comment_get_uri,
 );
-$comment_list_attr['class'] .= ' hidden';
 ?>
-<?php if ($list): ?>
-<div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>>
-<?php
-$data = array(
-	'parent' => $timeline,
-	'comments' => $list,
-	'is_all_records' => $is_all_records,
-	'list_more_box_attrs' => array(
-		'id' => 'listMoreBox_comment_'.$timeline->id,
-		'data-uri' => $comment_get_uri,
-		'data-list' => '#comment_list_'.$timeline->id,
-		'data-is_before' => 1,
-	),
-	'delete_uri' => $comment_delete_uri,
-	'counter_selector' => '#comment_count_'.$timeline->id,
-	'absolute_display_delete_btn' => true,
-);
-echo render('_parts/comment/list', $data);
-?>
-</div>
+<div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>></div>
 
-<?php /* post_comment_link */; ?>
 <?php
 $link_comment_attr = array(
 	'class' => 'link_show_comment_form showCommentBox',
@@ -116,9 +94,7 @@ $link_comment_attr['class'] .= ' hidden';
 ?>
 <?php echo anchor('#', term('form.do_comment'), false, $link_comment_attr); ?>
 
-<?php else: ?>
-<div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>></div>
-<?php endif; ?>
+<?php /* post_comment_link */; ?>
 <div id="form_comment_<?php echo $timeline->id; ?>"></div>
 
 

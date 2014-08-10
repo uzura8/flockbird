@@ -120,8 +120,9 @@ function loadTimeline() {
 }
 
 function postLoadTimeline() {
+	loadTlCommentAll();
 	removeLinkCommentBlocks();
-	showComments();
+	//showComments();
 	removeCaretFromPublicFlagDropdown();
 }
 
@@ -159,3 +160,10 @@ function removeCaretFromPublicFlagDropdown() {
 	});
 }
 
+function loadTlCommentAll() {
+	$('.unloade_comments').each(function() {
+		var getUri = $(this).data('get_uri');
+		loadTlComment(getUri, this);
+		$(this).removeClass('unloade_comments');
+	});
+}
