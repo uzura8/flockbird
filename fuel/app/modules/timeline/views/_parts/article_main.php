@@ -59,6 +59,11 @@ echo render('_parts/public_flag_selecter', $data);
 
 <?php /* comment_list */; ?>
 <?php
+$comment_count_attr = array(
+	'class' => 'comment_count unset_comment_count',
+	'id' => 'comment_count_'.$timeline->id,
+	'data-id' => $timeline->id,
+);
 $link_comment_attr = array(
 	'class' => 'link_comment',
 	'id' => 'link_show_comment_'.$timeline->id,
@@ -66,7 +71,7 @@ $link_comment_attr = array(
 );
 ?>
 <div class="comment_info">
-	<small><?php echo icon('comment'); ?> <span id="comment_count_<?php echo $timeline->id; ?>"><span></small>
+	<small><?php echo icon('comment'); ?> <span <?php echo Util_Array::conv_array2attr_string($comment_count_attr); ?>><span></small>
 	<small><?php echo anchor('#', term('form.comment'), false, $link_comment_attr); ?></small>
 </div>
 <?php

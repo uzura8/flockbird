@@ -8,6 +8,8 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_InsertRelationialTable' => __DIR__.'/classes/observer/insertrelationaltable.php',
 	'MyOrm\\Observer_UpdateRelationalTable' => __DIR__.'/classes/observer/updaterelationaltable.php',
 	'MyOrm\\Observer_ExecuteToRelations' => __DIR__.'/classes/observer/executetorelations.php',
+	'MyOrm\\Observer_CountUpToRelations' => __DIR__.'/classes/observer/countuptorelations.php',
+	'MyOrm\\Observer_CountDownToRelations' => __DIR__.'/classes/observer/countdowntorelations.php',
 	'MyOrm\\Observer_RemoveFile' => __DIR__.'/classes/observer/removefile.php',
 	'MyOrm\\Observer_AddMemberFilesizeTotal' => __DIR__.'/classes/observer/addmemberfilesizetotal.php',
 	'MyOrm\\Observer_SubtractMemberFilesizeTotal' => __DIR__.'/classes/observer/subtractmemberfilesizetotal.php',

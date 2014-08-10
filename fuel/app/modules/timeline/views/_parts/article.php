@@ -11,6 +11,7 @@ if (!empty($timeline_cache_id))
 {
 	$is_detail = false;
 	$attr['data-list_id'] = $timeline_cache_id;
+	$attr['data-comment_count'] = $comment_count;
 }
 
 $access_from_member_relation = null;

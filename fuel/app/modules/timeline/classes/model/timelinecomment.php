@@ -67,6 +67,34 @@ class Model_TimelineComment extends \Orm\Model
 				),
 			),
 		),
+		'MyOrm\Observer_CountUpToRelations'=>array(
+			'events'   => array('after_insert'),
+			'relations' => array(
+				array(
+					'model_to' => '\Timeline\Model_TimelineCache',
+					'property' => 'comment_count',
+					'conditions' => array(
+						'timeline_id' => array(
+							'timeline_id' => 'property',
+						),
+					),
+				),
+			),
+		),
+		'MyOrm\Observer_CountDownToRelations'=>array(
+			'events'   => array('after_delete'),
+			'relations' => array(
+				array(
+					'model_to' => '\Timeline\Model_TimelineCache',
+					'property' => 'comment_count',
+					'conditions' => array(
+						'timeline_id' => array(
+							'timeline_id' => 'property',
+						),
+					),
+				),
+			),
+		),
 	);
 
 	protected static $count_per_timeline = array();

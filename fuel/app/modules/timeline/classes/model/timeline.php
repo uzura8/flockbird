@@ -111,7 +111,7 @@ class Model_Timeline extends \Orm\Model
 			'property_from' => 'created_at',
 		),
 		// insert 時に紐づく timeline_cache レコードを挿入する
-		'MyOrm\Observer_InsertTimelineCache'=>array(
+		'MyOrm\Observer_InsertTimelineCache' => array(
 			'events' => array('after_insert'),
 			'properties' => array(
 				'timeline_id' => 'id',
@@ -124,7 +124,7 @@ class Model_Timeline extends \Orm\Model
 			),
 		),
 		// update 時に timeline_cache の特定のカラムのみ更新する
-		'MyOrm\Observer_UpdateTimelineCache'=>array(
+		'MyOrm\Observer_UpdateTimelineCache' => array(
 			'events' => array('after_update'),
 		),
 		// insert 時に紐づく memberfollow_timeline を insert する

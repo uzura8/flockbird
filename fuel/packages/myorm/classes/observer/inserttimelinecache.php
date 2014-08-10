@@ -17,11 +17,13 @@ class Observer_InsertTimelineCache extends \Orm\Observer
 	{
 		$this->cache = new \Timeline\Model_TimelineCache;
 		$this->set_properties($obj);
+		$this->cache->comment_count = 0;
 		$this->cache->save();
 
 		$this->cache = new \Timeline\Model_TimelineCache;
 		$this->set_properties($obj);
 		$this->cache->is_follow = 1;
+		$this->cache->comment_count = 0;
 		$this->cache->save();
 	}
 

@@ -495,10 +495,11 @@ CREATE TABLE `timeline_cache` (
   `is_follow` tinyint(1) NOT NULL DEFAULT '0',
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `type` tinyint(2) NOT NULL DEFAULT '0',
+  `comment_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
   UNIQUE KEY `timeline_id_is_follow_UNIQUE_idx` (`timeline_id`,`is_follow`),
-: CONSTRAINT `timeline_cache_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
+  CONSTRAINT `timeline_cache_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

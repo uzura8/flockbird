@@ -124,11 +124,13 @@ function postLoadTimeline() {
 	removeLinkCommentBlocks();
 	//showComments();
 	removeCaretFromPublicFlagDropdown();
+	setCommentCount();
 }
 
 function loadTlComment(getUri, parentListSelector) {
 	var limit = get_config('default_list_limit');
 	loadList(getUri, parentListSelector, limit);
+	$(parentListSelector).removeClass('unloade_comments');
 }
 
 function showCommentInput(id, targetBlockName, postUri, getUri, isFocus) {
@@ -161,9 +163,22 @@ function removeCaretFromPublicFlagDropdown() {
 }
 
 function loadTlCommentAll() {
+	if (is_sp()) return;
 	$('.unloade_comments').each(function() {
-		var getUri = $(this).data('get_uri');
-		loadTlComment(getUri, this);
-		$(this).removeClass('unloade_comments');
+		var id = parseInt($(this).data('id'));
+		var comment_cont = parseInt($('#timelineBox_' + id).data('comment_count'));
+		if (comment_cont > 0) {
+			var getUri = $(this).data('get_uri');
+			loadTlComment(getUri, this);
+		}
+	});
+}
+
+function setCommentCount() {
+	$('.unset_comment_count').each(function() {
+		var id = parseInt($(this).data('id'));
+		var comment_cont = parseInt($('#timelineBox_' + id).data('comment_count'));
+		$(this).html(comment_cont);
+		$(this).removeClass('unset_comment_count');
 	});
 }

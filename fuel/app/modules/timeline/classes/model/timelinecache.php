@@ -51,6 +51,10 @@ class Model_TimelineCache extends \Orm\Model
 			'validation' => array('max_length' => array(2)),
 			'form' => array('type' => false),
 		),
+		'comment_count' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
 	);
 
 	protected static $_observers = array(
