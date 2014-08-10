@@ -16,6 +16,7 @@ $menus = array(
 	array('icon_term' => 'form.do_delete', 'attr' => array(
 		'class' => 'js-simplePost',
 		'data-uri' => 'album/delete/'.$album->id,
+		'data-msg' => '削除します。よろしいですか。',
 	)),
 );
 echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));

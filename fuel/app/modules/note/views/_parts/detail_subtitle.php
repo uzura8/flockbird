@@ -23,6 +23,7 @@ if (!$note->is_published)
 $menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
 	'class' => 'js-simplePost',
 	'data-uri' => 'note/delete/'.$note->id,
+	'data-msg' => '削除します。よろしいですか。',
 ));
 echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));
 ?>
