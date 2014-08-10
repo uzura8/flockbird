@@ -97,7 +97,10 @@ elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && 
 		'data-uri' => 'album/image/api/delete/'.$album_image->id.'.json',
 	));
 }
-echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_image_edit', 'id' => 'btn_album_image_edit_'.$album_image->id));
+if ($menus)
+{
+	echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_image_edit', 'id' => 'btn_album_image_edit_'.$album_image->id));
+}
 ?>
 <?php endif; ?>
 		</div><!-- imgBox -->
