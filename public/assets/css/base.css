@@ -373,6 +373,11 @@ span.required {
 	text-align: center;
 }
 
+.form-group .radio label {
+	word-break:break-all;
+	word-wrap:break-word;
+}
+
 .controls input[type="radio"],
 .controls input[type="checkbox"]
 {
