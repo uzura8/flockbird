@@ -3,7 +3,7 @@ return array(
 	'articles' => array(
 		'cache' => array(
 			'is_use'  => true,
-			'expir' => null,
+			'expir' => 60 * 60 * 3,
 			'prefix'  => 'tl_',
 		),
 		'limit' => 10,

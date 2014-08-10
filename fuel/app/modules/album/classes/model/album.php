@@ -116,7 +116,6 @@ class Model_Album extends \Orm\Model
 								'method' => '\Timeline\Site_Util::delete_cache',
 								'params' => array(
 									'id' => 'property',
-									$observer_key => 'value',
 								),
 							),
 							'conditions' => array(
@@ -126,12 +125,6 @@ class Model_Album extends \Orm\Model
 								'foreign_id' => array(
 									'id' => 'property',
 								),
-								'type' => array(
-									$observer_key => 'value',
-								),
-							),
-							'properties_check_changed' => array(
-								'name',
 							),
 						),
 					),

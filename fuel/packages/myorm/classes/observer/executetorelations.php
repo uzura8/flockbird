@@ -15,7 +15,40 @@ class Observer_ExecuteToRelations extends \Orm\Observer
 		$this->_relations = (array)$props['relations'];
 	}
 
+	public function before_insert(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
+	public function after_insert(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
+	public function before_update(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
 	public function after_update(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
+	public function before_save(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
+	public function after_save(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
+	public function before_delete(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
+	public function after_delete(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
+
+	private function main(\Orm\Model $obj)
 	{
 		if (!$this->_relations) return;
 		foreach ($this->_relations as $props)

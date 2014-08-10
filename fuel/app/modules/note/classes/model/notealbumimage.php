@@ -101,4 +101,11 @@ class Model_NoteAlbumImage extends \Orm\Model
 
 		return $with_count_all ? array($list, $count_all) : $list;
 	}
+
+	public static function get_note_id4album_image_id($album_image_id)
+	{
+		$obj = self::query()->where('album_image_id', $album_image_id)->get_one();
+
+		return $obj->note_id;
+	}
 }

@@ -88,6 +88,7 @@ class Controller_Timeline extends \Controller_Site
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/article', array(
 			'timeline_id' => $timeline->id,
+			'type' => $timeline->type,
 			'member_id' => $timeline->member_id,
 			'self_member_id' => \Auth::check() ? $this->u->id : 0,
 		));

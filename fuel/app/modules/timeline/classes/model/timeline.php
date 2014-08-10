@@ -292,11 +292,11 @@ class Model_Timeline extends \Orm\Model
 		if (is_null($public_flag)) $public_flag = PRJ_PUBLIC_FLAG_PRIVATE;
 
 		$public_flag = self::get_public_flag_for_update_with_check_child_data($public_flag, $this);
-		if ($public_flag === false) return;
-		if ($this->public_flag == $public_flag) return;
+		if ($public_flag === false) return false;
+		if ($this->public_flag == $public_flag) return false;
 
 		$this->public_flag = $public_flag;
-		$this->save();
+		return $this->save();
 	}
 
 	public static function get_public_flag_for_update_with_check_child_data($public_flag, Model_Timeline $obj)

@@ -225,4 +225,13 @@ class Site_Model
 
 		return $viewType;
 	}
+
+	public static function delete_note_view_cache4album_image_id($album_image_id)
+	{
+		if (!$note_id = \Note\Model_NoteAlbumImage::get_note_id4album_image_id($album_image_id)) return;
+		if (!$timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids('note', $note_id)) return;
+
+		$timeline = array_shift($timelines);
+		\Timeline\Site_Util::delete_cache($timeline->id, $timeline->type);
+	}
 }

@@ -198,8 +198,6 @@ class Site_Util
 			case \Config::get('timeline.types.album'):
 				return 'album/'.$foreign_table_obj->id;
 				break;
-			case \Config::get('timeline.types.album_image'):
-				return 'timeline/'.$foreign_table_obj->id;
 				break;
 		}
 
@@ -484,10 +482,10 @@ class Site_Util
 		return $cache_key;
 	}
 
-	public static function delete_cache($timeline_id, $type)
+	public static function delete_cache($timeline_id, $type = null)
 	{
 		$cache_keys = array(self::get_cache_key($timeline_id));
-		if (self::check_type_to_get_access_from($type))
+		if (!$type || self::check_type_to_get_access_from($type))
 		{
 			$relations = array('self', 'member', 'others', 'friend');
 			foreach ($relations as $relation)

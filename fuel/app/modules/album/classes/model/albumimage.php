@@ -87,6 +87,35 @@ class Model_AlbumImage extends \Orm\Model
 		static::$_properties['name']['label'] = term('site.picture', 'site.title');
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
+
+		if (\Module::loaded('timeline'))
+		{
+			if (\Config::get('timeline.articles.cache.is_use'))
+			{
+				static::$_observers['MyOrm\Observer_ExecuteToRelations'] = array(
+					'events' => array('after_save'),
+					'relations' => array(
+						array(
+							'model_to' => '\Timeline\Model_TimelineChildData',
+							'conditions' => array(
+								'foreign_table' => array(
+									'album_image' => 'value',
+								),
+								'foreign_id' => array(
+									'id' => 'property',
+								),
+							),
+							'execute_func' => array(
+								'method' => '\Timeline\Site_Util::delete_cache',
+								'params' => array(
+									'timeline_id' => 'property',
+								),
+							),
+						),
+					),
+				);
+			}
+		}
 	}
 
 	public static function check_authority($id, $target_member_id = 0)
@@ -227,8 +256,19 @@ class Model_AlbumImage extends \Orm\Model
 			if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $ids);
 		}
 
-		// timeline_child_data の削除
-		if (\Module::loaded('timeline')) \Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('album_image', $ids);
+		if (\Module::loaded('timeline'))
+		{
+			// timeline_child_data の削除
+			\Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('album_image', $ids);
+
+			// timeline view cache の削除
+			if (\Module::loaded('note')
+				&& \Config::get('timeline.articles.cache.is_use')
+				&& $album->foreign_table == 'note')
+			{
+				\Timeline\Site_Model::delete_note_view_cache4album_image_id($ids[0]);
+			}
+		}
 
 		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
 		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) throw new \FuelException('Album images delete error.');
