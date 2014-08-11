@@ -88,6 +88,11 @@ class Model_Timeline extends \Orm\Model
 			'validation' => array('required', 'max_length' => array(2)),
 			'form' => array(),
 		),
+		'comment_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 		'sort_datetime' => array('form' => array('type' => false)),
@@ -172,6 +177,18 @@ class Model_Timeline extends \Orm\Model
 			// 更新・削除時に timeline の cache を削除
 			static::$_observers['MyOrm\Observer_UpdateTimeline'] = array(
 				'events' => array('after_update'),
+				'check_changed' => array(
+					'check_properties' => array(
+						'body',
+						'source',
+						'source_uri',
+						'public_flag',
+						'sort_datetime' => array(
+							'ignore_property' => 'comment_count',
+						),
+					),
+					//'ignore_properties' => array(),
+				),
 			);
 			static::$_observers['MyOrm\Observer_DeleteTimeline'] = array(
 				'events' => array('before_delete'),

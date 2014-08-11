@@ -53,6 +53,7 @@ class Model_TimelineCache extends \Orm\Model
 		),
 		'comment_count' => array(
 			'data_type' => 'integer',
+			'default' => 0,
 			'form' => array('type' => false),
 		),
 	);

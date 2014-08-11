@@ -476,6 +476,7 @@ CREATE TABLE `timeline` (
   `source` varchar(64) NULL COMMENT 'The source caption',
   `source_uri` text NULL COMMENT 'The source URI',
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
+  `comment_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `sort_datetime` datetime NOT NULL,

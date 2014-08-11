@@ -6,7 +6,9 @@ class Observer_CountUpToRelations extends \Orm\Observer
 	protected $_relations;
 	protected $_model_to;
 	protected $_conditions;
-	protected $_property;
+	protected $_optional_updates;
+	protected $_update_property;
+	protected $_model;
 
 	public function __construct($class)
 	{
@@ -30,7 +32,8 @@ class Observer_CountUpToRelations extends \Orm\Observer
 		{
 			$this->_model_to = $props['model_to'];
 			$this->_conditions = $props['conditions'];
-			$this->_property = $props['property'];
+			$this->_update_property = (!empty($props['update_property'])) ? $props['update_property'] : 'comment_count';
+			$this->_optional_updates = $props['optional_updates'];
 			$this->execute($obj);
 		}
 	}
@@ -52,10 +55,23 @@ class Observer_CountUpToRelations extends \Orm\Observer
 			}
 		}
 		$models = $query->get();
-		foreach ($models as $model)
+		foreach ($models as $this->model)
 		{
-			$model->{$this->_property} = \DB::expr(sprintf('`%s` + 1', $this->_property));
-			$model->save();
+			$this->model->{$this->_update_property} = \DB::expr(sprintf('`%s` + 1', $this->_update_property));
+			$this->set_value_optional($obj);
+			$this->model->save();
+		}
+	}
+
+	private function set_value_optional($self_obj)
+	{
+		foreach ($this->_optional_updates as $property_to => $froms)
+		{
+			foreach ($froms as $value_from => $type)
+			{
+				$value = \Site_Model::get_value_for_observer_setting($self_obj, $value_from, $type);
+				$this->model->{$property_to} = $value;
+			}
 		}
 	}
 }

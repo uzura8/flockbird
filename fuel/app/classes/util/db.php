@@ -48,4 +48,12 @@ class Util_db
 
 		return $ids;
 	}
+
+	public static function get_columns($table, $is_column_only = true)
+	{
+		$list_columns = DB::list_columns($table);
+		if (!$is_column_only) return $list_columns;
+
+		return array_keys($list_columns);
+	}
 }

@@ -14,19 +14,15 @@ class Observer_UpdateTimelineCache extends \Orm\Observer
 
 		foreach ($timeline_caches as $timeline_cache)
 		{
-			if ($obj->updated_at == $obj->sort_datetime)
+			// is_follow record のみ timeline_cache.id の付け直し
+			if ($obj->is_changed('sort_datetime') && $timeline_cache->is_follow)
 			{
-				if (!$timeline_cache->is_follow) continue;
-
 				$timeline_cache->delete();
-				$timeline_cache->sort_datetime = $obj->sort_datetime;
 				$timeline_cache->save();
 			}
-			else
-			{
-				$timeline_cache->public_flag = $obj->public_flag;
-				$timeline_cache->save();
-			}
+			if ($obj->is_changed('public_flag')) $timeline_cache->public_flag = $obj->public_flag;
+			if ($obj->is_changed('comment_count')) $timeline_cache->comment_count = $obj->comment_count;
+			$timeline_cache->save();
 		}
 	}
 }

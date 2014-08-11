@@ -6,7 +6,7 @@ class Observer_CountDownToRelations extends \Orm\Observer
 	protected $_relations;
 	protected $_model_to;
 	protected $_conditions;
-	protected $_property;
+	protected $_update_property;
 
 	public function __construct($class)
 	{
@@ -30,7 +30,7 @@ class Observer_CountDownToRelations extends \Orm\Observer
 		{
 			$this->_model_to = $props['model_to'];
 			$this->_conditions = $props['conditions'];
-			$this->_property = $props['property'];
+			$this->_update_property = (!empty($props['update_property'])) ? $props['update_property'] : 'comment_count';
 			$this->execute($obj);
 		}
 	}
@@ -54,8 +54,8 @@ class Observer_CountDownToRelations extends \Orm\Observer
 		$models = $query->get();
 		foreach ($models as $model)
 		{
-			$expr = \DB::expr(sprintf('CASE WHEN `%s` -1 < 0 THEN 0 ELSE `%s` - 1 END', $this->_property, $this->_property));
-			$model->{$this->_property} = $expr;
+			$expr = \DB::expr(sprintf('CASE WHEN `%s` -1 < 0 THEN 0 ELSE `%s` - 1 END', $this->_update_property, $this->_update_property));
+			$model->{$this->_update_property} = $expr;
 			$model->save();
 		}
 	}

@@ -42,16 +42,36 @@ class Model_TimelineComment extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_UpdateRelationalTable'=>array(
-			'events'=>array('after_insert'),
-			'model_to' => '\Timeline\Model_Timeline',
+		'MyOrm\Observer_CountUpToRelations'=>array(
+			'events'   => array('after_insert'),
 			'relations' => array(
-				'id' => array(
-					'timeline_id' => 'property',
+				array(
+					'model_to' => '\Timeline\Model_Timeline',
+					'conditions' => array(
+						'id' => array(
+							'timeline_id' => 'property',
+						),
+					),
+					'optional_updates' => array(
+						'sort_datetime' => array(
+							'created_at' => 'property',
+						),
+					),
 				),
 			),
-			'property_from' => 'created_at',
-			'property_to' => 'sort_datetime',
+		),
+		'MyOrm\Observer_CountDownToRelations'=>array(
+			'events'   => array('after_delete'),
+			'relations' => array(
+				array(
+					'model_to' => '\Timeline\Model_Timeline',
+					'conditions' => array(
+						'id' => array(
+							'timeline_id' => 'property',
+						),
+					),
+				),
+			),
 		),
 		'MyOrm\Observer_InsertRelationialTable'=>array(
 			'events'   => array('after_insert'),
@@ -64,34 +84,6 @@ class Model_TimelineComment extends \Orm\Model
 				'conditions' => array(
 					'timeline_id' => 'timeline_id',
 					'member_id',
-				),
-			),
-		),
-		'MyOrm\Observer_CountUpToRelations'=>array(
-			'events'   => array('after_insert'),
-			'relations' => array(
-				array(
-					'model_to' => '\Timeline\Model_TimelineCache',
-					'property' => 'comment_count',
-					'conditions' => array(
-						'timeline_id' => array(
-							'timeline_id' => 'property',
-						),
-					),
-				),
-			),
-		),
-		'MyOrm\Observer_CountDownToRelations'=>array(
-			'events'   => array('after_delete'),
-			'relations' => array(
-				array(
-					'model_to' => '\Timeline\Model_TimelineCache',
-					'property' => 'comment_count',
-					'conditions' => array(
-						'timeline_id' => array(
-							'timeline_id' => 'property',
-						),
-					),
 				),
 			),
 		),
