@@ -115,6 +115,21 @@ class Model_Timeline extends \Orm\Model
 			'property_to'   => 'sort_datetime',
 			'property_from' => 'created_at',
 		),
+		'MyOrm\Observer_SortDatetime' => array(
+			'events' => array('before_update'),
+			'mysql_timestamp' => true,
+			'check_changed' => array(
+				'check_properties' => array(
+					'body',
+					'source',
+					'source_uri',
+					'public_flag',
+					'comment_count' => array(
+						'ignore_value' => 'reduced_num',
+					),
+				),
+			),
+		),
 		// insert 時に紐づく timeline_cache レコードを挿入する
 		'MyOrm\Observer_InsertTimelineCache' => array(
 			'events' => array('after_insert'),

@@ -282,8 +282,10 @@ CREATE TABLE `note` (
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `is_published` tinyint(2) NOT NULL DEFAULT '0',
   `published_at` datetime NULL,
+  `comment_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
+  `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `published_at_idx` (`published_at`),
   KEY `member_id_is_published_published_at_public_flag_idx` (`member_id`,`is_published`,`published_at`,`public_flag`),
@@ -482,7 +484,10 @@ CREATE TABLE `timeline` (
   `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `timeline_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
-  KEY `foreign_table_foreign_id_type_created_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`)
+  KEY `member_id_idx` (`member_id`),
+  KEY `group_id_idx` (`group_id`),
+  KEY `page_id_idx` (`page_id`),
+  KEY `foreign_table_foreign_id_type_idx` (`foreign_table`,`foreign_id`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

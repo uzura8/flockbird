@@ -43,6 +43,11 @@ class Model_Note extends \Orm\Model
 			'validation' => array('required'),
 			'form' => array(),
 		),
+		'comment_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'is_published' => array(
 			'data_type' => 'integer',
 			'validation' => array('max_length' => array(2), 'in_array' => array(0,1)),
@@ -51,6 +56,7 @@ class Model_Note extends \Orm\Model
 		'published_at'    => array('form' => array('type' => false)),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
+		'sort_datetime' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
@@ -62,6 +68,26 @@ class Model_Note extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'MyOrm\Observer_CopyValue'=>array(
+			'events'=>array('before_insert'),
+			'property_to'   => 'sort_datetime',
+			'property_from' => 'created_at',
+		),
+		'MyOrm\Observer_SortDatetime' => array(
+			'events' => array('before_update'),
+			'mysql_timestamp' => true,
+			'check_changed' => array(
+				'check_properties' => array(
+					'title',
+					'body',
+					'public_flag',
+					'is_published',
+					'comment_count' => array(
+						'ignore_value' => 'reduced_num',
+					),
+				),
+			),
+		),
 	);
 
 	public static function _init()
@@ -71,24 +97,31 @@ class Model_Note extends \Orm\Model
 
 		if (\Module::loaded('timeline'))
 		{
-			// 更新時に timeline の sort_datetime を更新
-			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
-				'events'=>array('after_update'),
-				'model_to' => '\Timeline\Model_Timeline',
+			$type_note = \Config::get('timeline.types.note');
+			// 更新時に timeline の sort_datetime, comment_count を更新
+			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
+				'events' => array('after_update'),
 				'relations' => array(
-					'foreign_table' => array(
-						'note' => 'value',
-					),
-					'foreign_id' => array(
-						'id' => 'property',
+					array(
+						'model_to' => '\Timeline\Model_Timeline',
+						'conditions' => array(
+							'foreign_table' => array(
+								'note' => 'value',
+							),
+							'foreign_id' => array(
+								'id' => 'property',
+							),
+							'type' => array(
+								$type_note => 'value',
+							),
+						),
+						'update_properties' => array(
+							'public_flag',
+							'sort_datetime',
+							'comment_count',
+						),
 					),
 				),
-				'properties_check_changed' => array(
-					'title',
-					'body',
-				),
-				'property_from' => 'updated_at',
-				'property_to' => 'sort_datetime',
 			);
 		}
 	}
@@ -139,11 +172,11 @@ class Model_Note extends \Orm\Model
 				$album_image->update_public_flag($public_flag, true);
 			}
 		}
-		// timeline の public_flag の更新
-		if (\Module::loaded('timeline'))
-		{
-			\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
-		}
+		//// timeline の public_flag の更新
+		//if (\Module::loaded('timeline'))
+		//{
+		//	\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
+		//}
 
 		$this->public_flag = $public_flag;
 		$this->save();

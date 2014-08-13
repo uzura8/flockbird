@@ -36,6 +36,37 @@ class Model_NoteComment extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'MyOrm\Observer_CountUpToRelations'=>array(
+			'events'   => array('after_insert'),
+			'relations' => array(
+				array(
+					'model_to' => '\Note\Model_Note',
+					'conditions' => array(
+						'id' => array(
+							'note_id' => 'property',
+						),
+					),
+					//'optional_updates' => array(
+					//	'sort_datetime' => array(
+					//		'created_at' => 'property',
+					//	),
+					//),
+				),
+			),
+		),
+		'MyOrm\Observer_CountDownToRelations'=>array(
+			'events'   => array('after_delete'),
+			'relations' => array(
+				array(
+					'model_to' => '\Note\Model_Note',
+					'conditions' => array(
+						'id' => array(
+							'note_id' => 'property',
+						),
+					),
+				),
+			),
+		),
 	);
 
 	protected static $count_per_note = array();
@@ -44,20 +75,6 @@ class Model_NoteComment extends \Orm\Model
 	{
 		if (\Module::loaded('timeline'))
 		{
-			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
-				'events'=>array('after_insert'),
-				'model_to' => '\Timeline\Model_Timeline',
-				'relations' => array(
-					'foreign_table' => array(
-						'note' => 'value',
-					),
-					'foreign_id' => array(
-						'note_id' => 'property',
-					),
-				),
-				'property_from' => 'created_at',
-				'property_to' => 'sort_datetime',
-			);
 			static::$_observers['MyOrm\Observer_InsertMemberFollowTimeline'] = array(
 				'events'   => array('after_insert'),
 				'timeline_relations' => array(

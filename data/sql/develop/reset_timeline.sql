@@ -23,7 +23,10 @@ CREATE TABLE `timeline` (
   `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `timeline_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
-  KEY `foreign_table_foreign_id_type_created_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`)
+  KEY `member_id_idx` (`member_id`),
+  KEY `group_id_idx` (`group_id`),
+  KEY `page_id_idx` (`page_id`),
+  KEY `foreign_table_foreign_id_type_idx` (`foreign_table`,`foreign_id`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

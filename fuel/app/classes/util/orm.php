@@ -42,4 +42,14 @@ class Util_Orm
 
 		return $field;
 	}
+
+	public static function get_changed_values(\Orm\Model $obj, $property = null)
+	{
+		$values = $obj->get_diff();
+		if (!$values) return false;
+
+		if (!$property) return $values;
+
+		return array($values[0][$property], $values[1][$property]);
+	}
 }

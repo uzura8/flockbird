@@ -1,14 +1,13 @@
 <?php
 namespace MyOrm;
 
-class Observer_CountUpToRelations extends \Orm\Observer
+class Observer_UpdateRelationalTables extends \Orm\Observer
 {
 	protected $_relations;
 	protected $_model_to;
 	protected $_conditions;
-	protected $_optional_updates;
-	protected $_update_property;
-	protected $_model;
+	protected $_update_properties;
+	protected $_properties_check_changed;
 
 	public function __construct($class)
 	{
@@ -16,15 +15,14 @@ class Observer_CountUpToRelations extends \Orm\Observer
 		$this->_relations = (array)$props['relations'];
 	}
 
-	public function before_insert(\Orm\Model $obj)
+	public function before_update(\Orm\Model $obj)
 	{
 		$this->main($obj);
 	}
-	public function after_insert(\Orm\Model $obj)
+	public function after_update(\Orm\Model $obj)
 	{
 		$this->main($obj);
 	}
-
 	private function main(\Orm\Model $obj)
 	{
 		if (!$this->_relations) return;
@@ -32,8 +30,7 @@ class Observer_CountUpToRelations extends \Orm\Observer
 		{
 			$this->_model_to = $props['model_to'];
 			$this->_conditions = $props['conditions'];
-			$this->_update_property = (!empty($props['update_property'])) ? $props['update_property'] : 'comment_count';
-			if (isset($props['optional_updates'])) $this->_optional_updates = $props['optional_updates'];
+			$this->_update_properties = $props['update_properties'];
 			$this->execute($obj);
 		}
 	}
@@ -55,26 +52,26 @@ class Observer_CountUpToRelations extends \Orm\Observer
 			}
 		}
 		$models = $query->get();
-		foreach ($models as $this->model)
+		foreach ($models as $model)
 		{
-			$this->model->{$this->_update_property} = \DB::expr(sprintf('`%s` + 1', $this->_update_property));
-			$this->set_value_optional($obj);
-			$this->model->save();
-		}
-	}
-
-	private function set_value_optional($self_obj)
-	{
-		if (empty($this->_optional_updates)) return;
-
-		foreach ($this->_optional_updates as $property_to => $froms)
-		{
-			foreach ($froms as $value_from => $type)
+			foreach ($this->_update_properties as $property_to => $froms)
 			{
-				$value = \Site_Model::get_value_for_observer_setting($self_obj, $value_from, $type);
-				$this->model->{$property_to} = $value;
+				if (!is_array($froms))
+				{
+					$model->{$froms} = $obj->{$froms};
+				}
+				else
+				{
+					foreach ($froms as $value_from => $type)
+					{
+						$value = \Site_Model::get_value_for_observer_setting($obj, $value_from, $type);
+						$model->{$property_to} = $value;
+					}
+				}
 			}
+			if (!$model->is_changed()) continue;
+			$model->save();
 		}
 	}
 }
-// End of file countuptorelations.php
+// End of file updaterelationaltables.php

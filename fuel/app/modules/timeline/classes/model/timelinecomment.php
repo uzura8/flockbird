@@ -52,11 +52,11 @@ class Model_TimelineComment extends \Orm\Model
 							'timeline_id' => 'property',
 						),
 					),
-					'optional_updates' => array(
-						'sort_datetime' => array(
-							'created_at' => 'property',
-						),
-					),
+					//'optional_updates' => array(
+					//	'sort_datetime' => array(
+					//		'created_at' => 'property',
+					//	),
+					//),
 				),
 			),
 		),

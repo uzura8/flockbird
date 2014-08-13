@@ -120,8 +120,8 @@ echo render('_parts/comment/list', $data);
 <?php endif; ?>
 	</div>
 <?php endforeach; ?>
-<?php endif; ?>
 </div>
+<?php endif; ?>
 
 <nav id="page-nav">
 <?php
