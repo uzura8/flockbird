@@ -87,6 +87,8 @@ $(function() {
 		$('#album_id').val('0')
 		$('#progress .progress-bar').css('width', 0);
 		$('#album_id').html('<option selected="selected" value="0">' + get_term('timeline') + '用' + get_term('album') + '</option>');
+
+		return false;
 	});
 
 	$(document).on('click','.timeline_viewType', function(){
