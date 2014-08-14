@@ -10,5 +10,6 @@ git submodule foreach 'git fetch;git checkout 1.8/develop'
 php composer.phar update
 php oil refine install
 chmod -R 777 public/media/*
+php oil r createuser sample@example.com password 初期メンバー
 php oil r admin::createuser admin password admin@example.icom 100
 
