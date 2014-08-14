@@ -28,12 +28,18 @@ class Model_TimelineComment extends \Orm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
-		'body',
+		'body' => array(
+			'data_type' => 'varchar',
+			'form' => array('type' => false),
+		),
 		'created_at',
 		'updated_at',
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -90,14 +96,6 @@ class Model_TimelineComment extends \Orm\Model
 	);
 
 	protected static $count_per_timeline = array();
-
-	public static function validate($factory)
-	{
-		$val = \Validation::forge($factory);
-		$val->add_field('body', 'コメント', 'required');
-
-		return $val;
-	}
 
 	public static function check_authority($id, $target_member_id = 0, $accept_member_ids = array())
 	{

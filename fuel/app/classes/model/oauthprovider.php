@@ -14,6 +14,12 @@ class Model_OauthProvider extends \Orm\Model
 		),
 	);
 
+	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
+	);
+
 	protected static $id_list = array();
 
 	public static function get_id($name)

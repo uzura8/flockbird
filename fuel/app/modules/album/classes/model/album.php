@@ -60,6 +60,9 @@ class Model_Album extends \Orm\Model
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -68,7 +71,6 @@ class Model_Album extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'Orm\\Observer_Validation',
 	);
 
 	public static function _init()

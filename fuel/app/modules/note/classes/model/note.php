@@ -50,7 +50,7 @@ class Model_Note extends \Orm\Model
 		),
 		'is_published' => array(
 			'data_type' => 'integer',
-			'validation' => array('max_length' => array(2), 'in_array' => array(0,1)),
+			'validation' => array('max_length' => array(2), 'in_array' => array(array(0,1))),
 			'form' => array('type' => false),
 		),
 		'published_at'    => array('form' => array('type' => false)),
@@ -60,6 +60,9 @@ class Model_Note extends \Orm\Model
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,

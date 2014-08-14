@@ -59,7 +59,7 @@ class Model_TimelineCache extends \Orm\Model
 	);
 
 	protected static $_observers = array(
-		'Orm\\Observer_Validation' => array(
+		'Orm\Observer_Validation' => array(
 			'events' => array('before_save')
 		),
 	);
