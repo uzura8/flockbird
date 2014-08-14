@@ -140,11 +140,10 @@ class Model_AlbumImage extends \Orm\Model
 					),
 				),
 			);
-
 			if (\Config::get('timeline.articles.cache.is_use'))
 			{
 				static::$_observers['MyOrm\Observer_ExecuteToRelations'] = array(
-					'events' => array('after_save'),
+					'events' => array('after_update'),
 					'relations' => array(
 						array(
 							'model_to' => '\Timeline\Model_TimelineChildData',
@@ -155,6 +154,10 @@ class Model_AlbumImage extends \Orm\Model
 								'foreign_id' => array(
 									'id' => 'property',
 								),
+							),
+							'properties_check_changed' => array(
+								'name',
+								'public_flag',
 							),
 							'execute_func' => array(
 								'method' => '\Timeline\Site_Util::delete_cache',
