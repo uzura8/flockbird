@@ -36,6 +36,32 @@ class Model_AlbumImageComment extends \Orm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'MyOrm\Observer_CountUpToRelations' => array(
+			'events'   => array('after_insert'),
+			'relations' => array(
+				array(
+					'model_to' => '\Album\Model_AlbumImage',
+					'conditions' => array(
+						'id' => array(
+							'album_image_id' => 'property',
+						),
+					),
+				),
+			),
+		),
+		'MyOrm\Observer_CountDownToRelations' => array(
+			'events'   => array('after_delete'),
+			'relations' => array(
+				array(
+					'model_to' => '\Album\Model_AlbumImage',
+					'conditions' => array(
+						'id' => array(
+							'album_image_id' => 'property',
+						),
+					),
+				),
+			),
+		),
 	);
 
 	protected static $count_per_album_image_list = array();

@@ -49,6 +49,11 @@ class Model_AlbumImage extends \Orm\Model
 			'validation' => array('trim', 'max_length' => array(255)),
 			'form' => array('type' => 'text', 'class' => 'form-control'),
 		),
+		'comment_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'public_flag' => array(
 			'data_type' => 'integer',
 			'validation' => array('required'),
@@ -61,6 +66,7 @@ class Model_AlbumImage extends \Orm\Model
 		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
+		'sort_datetime' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
@@ -74,6 +80,24 @@ class Model_AlbumImage extends \Orm\Model
 		'Orm\Observer_UpdatedAt' => array(
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
+		),
+		'MyOrm\Observer_CopyValue'=>array(
+			'events'=>array('before_insert'),
+			'property_to'   => 'sort_datetime',
+			'property_from' => 'created_at',
+		),
+		'MyOrm\Observer_SortDatetime' => array(
+			'events' => array('before_update'),
+			'mysql_timestamp' => true,
+			'check_changed' => array(
+				'check_properties' => array(
+					'name',
+					'public_flag',
+					'comment_count' => array(
+						'ignore_value' => 'reduced_num',
+					),
+				),
+			),
 		),
 		'MyOrm\Observer_DeleteAlbumImage' => array(
 			'events' => array('before_delete'),
@@ -90,6 +114,33 @@ class Model_AlbumImage extends \Orm\Model
 
 		if (\Module::loaded('timeline'))
 		{
+			$type_album_image_profile = \Config::get('timeline.types.album_image_profile');
+			// 更新時に timeline の sort_datetime, comment_count を更新
+			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
+				'events' => array('after_update'),
+				'relations' => array(
+					array(
+						'model_to' => '\Timeline\Model_Timeline',
+						'conditions' => array(
+							'foreign_table' => array(
+								'album_image' => 'value',
+							),
+							'foreign_id' => array(
+								'id' => 'property',
+							),
+							'type' => array(
+								$type_album_image_profile => 'value',
+							),
+						),
+						'update_properties' => array(
+							'public_flag',
+							'sort_datetime',
+							'comment_count',
+						),
+					),
+				),
+			);
+
 			if (\Config::get('timeline.articles.cache.is_use'))
 			{
 				static::$_observers['MyOrm\Observer_ExecuteToRelations'] = array(

@@ -22,13 +22,15 @@ CREATE TABLE `album_image` (
   `file_id` varchar(255) NOT NULL,
   `name` text NULL,
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
+  `comment_count` int(11) NOT NULL DEFAULT '0',
   `shot_at` datetime NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
+  `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `album_id_public_flag_id` (`album_id`,`public_flag`,`id`),
   KEY `album_id_public_flag_shot_at` (`album_id`,`public_flag`,`shot_at`),
-  KEY `album_id_idx` (`album_id`),
+  KEY `sort_datetime_idx` (`sort_datetime`),
   KEY `file_id_idx` (`file_id`),
   CONSTRAINT `album_image_album_id_album_id` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -44,19 +46,6 @@ CREATE TABLE `album_image_comment` (
   KEY `album_image_id_created_at` (`album_image_id`,`created_at`),
   KEY `album_image_id_idx` (`album_image_id`),
   CONSTRAINT `album_image_comment_album_image_id_album_image_id` FOREIGN KEY (`album_image_id`) REFERENCES `album_image` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `comments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `website` varchar(255) NOT NULL,
-  `message` text NOT NULL,
-  `post_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

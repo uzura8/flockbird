@@ -265,7 +265,7 @@ class Form_MemberProfile
 			$properties['rules']
 		);
 
-		list($month, $day) = isset($this->member_obj->birthday) ? Util_Date::sprit_date_str($this->member_obj->birthday) : array(1, 1);
+		list($month, $day) = (!empty($this->member_obj->birthday)) ? Util_Date::sprit_date_str($this->member_obj->birthday) : array(1, 1);
 		if (self::conf('birthday', 'birthday.isRequired')) $rules[] = 'required';
 
 		$options = Form_Util::get_int_options(1, 12);
