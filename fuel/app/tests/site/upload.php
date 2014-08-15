@@ -42,7 +42,8 @@ class Test_Site_Upload extends TestCase
 
 	public function test_check_real_file_tmp_info()
 	{
-		if (!$file_paths = Util_file::get_file_recursive(conf('upload.types.img.tmp.raw_file_path')))
+		$raw_file_dir_path = conf('upload.types.img.tmp.raw_file_path');
+		if (!file_exists($raw_file_dir_path) || !$file_paths = Util_file::get_file_recursive($raw_file_dir_path))
 		{
 			$this->markTestSkipped('No data.');
 		}

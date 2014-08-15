@@ -22,7 +22,8 @@ class Test_Model_FileTmp extends TestCase
 	{
 		foreach ($this->files as $file)
 		{
-			$this->assertFileExists(self::check_and_get_file_path($file->path, $file->name));
+			if (!$file_path = self::check_and_get_file_path($file->path, $file->name)) continue;
+			$this->assertFileExists($file_path);
 		}
 	}
 
