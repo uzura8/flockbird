@@ -134,7 +134,7 @@ function _get_definition($strings)
 	if ('true'  === strtolower($value))  return array($key, true);
 	if ('false' === strtolower($value))  return array($key, false);
 
-	if (preg_match("/^['\"]{1}(.*)['\"]{1}$/u", $value, $matches)) return array($key, (string)$matches[2]);
+	if (preg_match("/^['\"]{1}(.*)['\"]{1}$/u", $value, $matches)) return array($key, (string)$matches[1]);
 
 	return array($key, (int)$value);
 }
