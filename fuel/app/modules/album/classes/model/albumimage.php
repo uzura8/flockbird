@@ -132,6 +132,7 @@ class Model_AlbumImage extends \Orm\Model
 								$type_album_image_profile => 'value',
 							),
 						),
+						'is_check_updated' => true,
 						'update_properties' => array(
 							'public_flag',
 							'sort_datetime',

@@ -107,8 +107,10 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				'member_id' => $this->u->id,
 			);
 
+			\DB::start_transaction();
 			$comment = new Model_TimelineComment($values);
 			$comment->save();
+			\DB::commit_transaction();
 
 			$response['status'] = 1;
 			$response['id'] = $comment->id;
@@ -128,6 +130,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		}
 		catch(\FuelException $e)
 		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 

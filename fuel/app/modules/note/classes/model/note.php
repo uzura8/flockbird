@@ -118,6 +118,7 @@ class Model_Note extends \Orm\Model
 								$type_note => 'value',
 							),
 						),
+						'is_check_updated' => true,
 						'update_properties' => array(
 							'public_flag',
 							'sort_datetime',
@@ -139,6 +140,80 @@ class Model_Note extends \Orm\Model
 		if ($target_member_id && $obj->member_id != $target_member_id) return false;
 
 		return $obj;
+	}
+
+	public function save_with_relations($member_id, $values, $file_tmps = null, $album_images = array(), $files = array())
+	{
+		if (!empty($this->member_id) && $this->member_id != $member_id)
+		{
+			throw new \InvalidArgumentException('Parameter member_id is invalid.');
+		}
+
+		$is_new = $this->_is_new;
+
+		$this->member_id = $member_id;
+		if (isset($values['title'])) $this->title = $values['title'];
+		if (isset($values['body'])) $this->body = $values['body'];
+
+		if (isset($values['public_flag'])) $this->public_flag = $values['public_flag'];
+		$is_changed_public_flag = $this->is_changed('public_flag');
+
+		$this->is_published = 0;
+		if (!$this->is_published)
+		{
+			if (!empty($values['is_published']))
+			{
+				$this->is_published = 1;
+			}
+			elseif (empty($values['is_draft']))
+			{
+				$this->is_published = 1;
+			}
+		}
+		$is_published = ($this->is_changed('is_published') && $this->is_published);
+
+		if (!empty($values['published_at_time']))
+		{
+			if (!\Util_Date::check_is_same_minute($values['published_at_time'], $this->published_at))
+			{
+				$this->published_at = $values['published_at_time'].':00';
+			}
+		}
+		elseif (!$this->published_at && $is_published)
+		{
+			$this->published_at = \Date::time()->format('mysql');
+		}
+
+		$is_changed = $this->is_changed();
+		if ($is_changed) $this->save();
+
+		$moved_files = array();
+		if (is_enabled('album'))
+		{
+			if ($file_tmps)
+			{
+				$album_id = \Album\Model_Album::get_id_for_foreign_table($member_id, 'note');
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $this->public_flag);
+				\Note\Model_NoteAlbumImage::save_multiple($this->id, $album_image_ids);
+			}
+			if ($album_images && $files) \Site_Upload::update_image_objs4file_objects($album_images, $files, $this->public_flag);
+		}
+
+		if (is_enabled('timeline'))
+		{
+			if ($is_published)
+			{
+				// timeline 投稿
+				\Timeline\Site_Model::save_timeline($member_id, $this->public_flag, 'note', $this->id);
+			}
+			elseif (!$is_new && $is_changed_public_flag)
+			{
+				// timeline の public_flag の更新
+				\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($this->public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
+			}
+		}
+
+		return array($is_changed, $is_published, $moved_files);
 	}
 
 	public function delete_with_relations()
@@ -167,6 +242,10 @@ class Model_Note extends \Orm\Model
 
 	public function update_public_flag_with_relations($public_flag)
 	{
+		$this->public_flag = $public_flag;
+		if (!$this->is_changed('public_flag')) return;
+		$this->save();
+
 		// album_image の public_flag の更新
 		if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
@@ -175,13 +254,5 @@ class Model_Note extends \Orm\Model
 				$album_image->update_public_flag($public_flag, true);
 			}
 		}
-		//// timeline の public_flag の更新
-		//if (\Module::loaded('timeline'))
-		//{
-		//	\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
-		//}
-
-		$this->public_flag = $public_flag;
-		$this->save();
 	}
 }

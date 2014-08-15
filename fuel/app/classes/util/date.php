@@ -4,6 +4,7 @@ class Util_Date
 {
 	public static function check_is_same_minute($time1, $time2)
 	{
+		if (!$time1 || !$time2) return false;
 		if (!$minute1 = self::remove_second_string($time1)) return false;
 		if (!$minute2 = self::remove_second_string($time2)) return false;
 

@@ -132,39 +132,14 @@ class Controller_Note extends \Controller_Site
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 
-				$note->title        = $post['title'];
-				$note->body         = $post['body'];
-				$note->public_flag  = $post['public_flag'];
-				$note->member_id    = $this->u->id;
-				$note->is_published = $post['is_draft'] ? 0 : 1;
-				if ($post['published_at_time'])
-				{
-					$note->published_at = $post['published_at_time'].':00';
-				}
-				elseif ($note->is_published)
-				{
-					$note->published_at = date('Y-m-d H:i:s');
-				}
 				\DB::start_transaction();
-				$note->save();
-				if (is_enabled('album'))
-				{
-					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
-					list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $note->public_flag);
-					\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
-				}
-
-				// timeline 投稿
-				if ($note->is_published && is_enabled('timeline'))
-				{
-					\Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'note', $note->id);
-				}
+				list($is_changed, $is_published, $moved_files) = $note->save_with_relations($this->u->id, $post, $file_tmps);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'note');
 
-				$message = sprintf('%sを%sしました。', term('note'), $note->is_published ? term('form.create_simple') : term('form.draft'));
+				$message = sprintf('%sを%sしました。', term('note'), $is_published ? term('form.create_simple') : term('form.draft'));
 				\Session::set_flash('message', $message);
 				\Response::redirect('note/detail/'.$note->id);
 			}
@@ -199,6 +174,7 @@ class Controller_Note extends \Controller_Site
 		}
 
 		$val = self::get_validation_object($note, true);
+		$album_images = array();
 		if (is_enabled('album'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
@@ -218,52 +194,16 @@ class Controller_Note extends \Controller_Site
 
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-				$is_update_public_flag = ($note->public_flag != $post['public_flag']);
-
-				$note->title = $post['title'];
-				$note->body  = $post['body'];
-				if ($is_update_public_flag) $note->public_flag = $post['public_flag'];
-
-				$is_published = !$note->is_published && empty($post['is_draft']);
-				if ($is_published) $note->is_published = 1;
-
-				if ($post['published_at_time'] && !\Util_Date::check_is_same_minute($post['published_at_time'], $note->published_at))
-				{
-					$note->published_at = $post['published_at_time'].':00';
-				}
-				elseif ($is_published)
-				{
-					$note->published_at = date('Y-m-d H:i:s');
-				}
 
 				\DB::start_transaction();
-				$note->save();
-				if (is_enabled('album'))
-				{
-					list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $note->public_flag);
-					\Note\Model_NoteAlbumImage::save_multiple($note->id, $album_image_ids);
-					\Site_Upload::update_image_objs4file_objects($album_images, $files, $note->public_flag);
-				}
-
-				// timeline 投稿
-				if (is_enabled('timeline'))
-				{
-					if ($is_published)
-					{
-						\Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
-					}
-					elseif ($is_update_public_flag)
-					{
-						// timeline の public_flag の更新
-						\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($note->public_flag, 'note', $note->id, \Config::get('timeline.types.note'));
-					}
-				}
+				list($is_changed, $is_published, $moved_files) = $note->save_with_relations($this->u->id, $post, $file_tmps, $album_images, $files);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'note');
 
-				\Session::set_flash('message', term('note').'を編集しました。');
+				$message = sprintf('%sを%sしました。', term('note'), $is_published ? term('form.publish') : term('form.edit'));
+				\Session::set_flash('message', $message);
 				\Response::redirect('note/detail/'.$note->id);
 			}
 			catch(\FuelException $e)
@@ -344,22 +284,7 @@ class Controller_Note extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			$note->is_published = 1;
-			if (!$note->published_at) $note->published_at = date('Y-m-d H:i:s');
-			$note->save();
-
-			// album_image の public_flag を update
-			if (is_enabled('album'))
-			{
-				$album_images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id);
-				foreach ($album_images as $album_image)
-				{
-					$album_image->public_flag = $note->public_flag;
-					$album_image->save();
-				}
-			}
-			// timeline 投稿
-			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $note->public_flag, 'note', $note->id);
+			list($is_changed, $is_published) = $note->save_with_relations($this->u->id, array('is_published' => 1));
 			\DB::commit_transaction();
 			\Session::set_flash('message', term('note').'を公開しました。');
 		}

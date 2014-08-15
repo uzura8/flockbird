@@ -41,7 +41,7 @@ class Model_NoteAlbumImage extends \Orm\Model
 	{
 		if (\Module::loaded('timeline'))
 		{
-			// album_image 追加時に timeline の sort_datetime を更新
+			// album_image 追加時に note の sort_datetime を更新
 			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
 				'events' => array('after_insert'),
 				'model_to' => '\Note\Model_Note',

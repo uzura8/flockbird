@@ -101,8 +101,8 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				'member_id' => $this->u->id,
 			);
 
-			$comment = new Model_NoteComment($values);
 			\DB::start_transaction();
+			$comment = new Model_NoteComment($values);
 			$comment->save();
 			\DB::commit_transaction();
 

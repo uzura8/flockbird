@@ -28,9 +28,11 @@ class Observer_UpdateRelationalTables extends \Orm\Observer
 		if (!$this->_relations) return;
 		foreach ($this->_relations as $props)
 		{
+			$this->_update_properties = $props['update_properties'];
+			if ($props['is_check_updated'] && !$this->check_is_updated($obj)) continue;
+
 			$this->_model_to = $props['model_to'];
 			$this->_conditions = $props['conditions'];
-			$this->_update_properties = $props['update_properties'];
 			$this->execute($obj);
 		}
 	}
@@ -72,6 +74,31 @@ class Observer_UpdateRelationalTables extends \Orm\Observer
 			if (!$model->is_changed()) continue;
 			$model->save();
 		}
+	}
+
+	private function check_is_updated($obj)
+	{
+		$is_changed = false;
+		foreach ($this->_update_properties as $property_to => $froms)
+		{
+			if (!is_array($froms))
+			{
+				if ($obj->is_changed($froms)) return true;
+			}
+			else
+			{
+				foreach ($froms as $value_from => $type)
+				{
+					if ($type == 'value') return true;
+					if ($type == 'property')
+					{
+						if ($obj->is_changed($value_from)) return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 }
 // End of file updaterelationaltables.php
