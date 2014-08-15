@@ -309,8 +309,8 @@ class Test_Model_Timeline extends \TestCase
 				$this->assertEquals($obj->group_id, $cache->group_id);
 				$this->assertEquals($obj->page_id, $cache->page_id);
 				$this->assertEquals($obj->public_flag, $cache->public_flag);
-				$this->assertEquals($obj->created_at, $cache->created_at);
-				$this->assertEquals($obj->sort_datetime, $cache->sort_datetime);
+				$this->assertEquals($obj->type, $cache->type);
+				$this->assertEquals($obj->comment_count, $cache->comment_count);
 
 				// test for is_follow.
 				$this->assertContains($cache->is_follow, array(0, 1));
