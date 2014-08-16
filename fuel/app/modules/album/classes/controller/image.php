@@ -184,7 +184,7 @@ class Controller_Image extends \Controller_Site
 			'album'
 		);
 		$this->template->post_header = \View::forge('_parts/datetimepicker_header');
-		$this->template->post_footer = \View::forge('_parts/datetimepicker_footer', array('attr' => '#shot_at_time'));
+		$this->template->post_footer = \View::forge('_parts/datetimepicker_footer', array('attr' => '#shot_at_time', 'max_date' => 'now'));
 
 		$this->template->content = \View::forge('image/edit', array('val' => $val, 'album_image' => $album_image));
 	}
