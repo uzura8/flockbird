@@ -31,14 +31,20 @@ $attr = array(
 )); ?>
 <?php if (Auth::check() && $note->member_id == $u->id): ?>
 <?php
-$menus = array(
-	array('icon_term' => 'form.do_edit', 'href' => 'note/edit/'.$id),
-	array('icon_term' => 'form.do_delete', 'href' => '#', 'attr' => array(
-		'class' => 'js-ajax-delete',
-		'data-parent' => 'article_'.$id,
-		'data-uri' => 'note/api/delete/'.$id.'.json',
-	)),
-);
+$menus = array(array('icon_term' => 'form.do_edit', 'href' => 'note/edit/'.$id));
+if (!$note->is_published)
+{
+	$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
+		'class' => 'js-simplePost',
+		'data-uri' => 'note/publish/'.$note->id,
+		'data-msg' => term('form.publish').'しますか？',
+	));
+}
+$menus[] = array('icon_term' => 'form.do_delete', 'href' => '#', 'attr' => array(
+	'class' => 'js-ajax-delete',
+	'data-parent' => 'article_'.$id,
+	'data-uri' => 'note/api/delete/'.$id.'.json',
+));
 echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'edit', 'id' => 'btn_edit_'.$id));
 ?>
 <?php endif; ?>

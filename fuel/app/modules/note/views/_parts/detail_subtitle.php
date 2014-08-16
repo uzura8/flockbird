@@ -18,6 +18,7 @@ if (!$note->is_published)
 	$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
 		'class' => 'js-simplePost',
 		'data-uri' => 'note/publish/'.$note->id,
+		'data-msg' => term('form.publish').'しますか？',
 	));
 }
 $menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
