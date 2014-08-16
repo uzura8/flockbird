@@ -52,4 +52,31 @@ class Util_Orm
 
 		return array($values[0][$property], $values[1][$property]);
 	}
+
+	public static function get_count_all($model_name, $conditions = array())
+	{
+		$query = $model_name::query();
+		if ($conditions) $query = $query->where($conditions);
+
+		return $query->count();
+	}
+
+	public static function get_last_row($model_name, $conditions = array(), $sort_col = 'id')
+	{
+		$query = $model_name::query();
+		if ($conditions) $query = $query->where($conditions);
+		$query = $query->order_by($sort_col, 'desc')->rows_limit(1);
+
+		return $query->get_one();
+	}
+
+	public static function check_is_changed(\Orm\Model $obj, array $target_properties, array $before_values)
+	{
+		foreach ($target_properties as $property)
+		{
+			if ($obj->{$property} != $before_values[$property]) return true;
+		}
+
+		return false;
+	}
 }

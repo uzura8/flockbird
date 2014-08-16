@@ -54,8 +54,13 @@ class Observer_CountDownToRelations extends \Orm\Observer
 		$models = $query->get();
 		foreach ($models as $model)
 		{
-			$expr = \DB::expr(sprintf('CASE WHEN `%s` -1 < 0 THEN 0 ELSE `%s` - 1 END', $this->_update_property, $this->_update_property));
-			$model->{$this->_update_property} = $expr;
+			//$expr = \DB::expr(sprintf('CASE WHEN `%s` -1 < 0 THEN 0 ELSE `%s` - 1 END', $this->_update_property, $this->_update_property));
+			//$model->{$this->_update_property} = $expr;
+			$model->{$this->_update_property} = $model->{$this->_update_property} - 1;
+			if ($model->{$this->_update_property} < 0)
+			{
+				$model->{$this->_update_property} = 0;
+			}
 			$model->save();
 		}
 	}

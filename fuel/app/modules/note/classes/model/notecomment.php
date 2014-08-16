@@ -142,4 +142,17 @@ class Model_NoteComment extends \Orm\Model
 
 		return array($comments, $is_all_records, $all_records_count);
 	}
+
+	public static function save_comment($note_id, $member_id, $body = '')
+	{
+		$values = array(
+			'body' => $body,
+			'note_id' => $note_id,
+			'member_id' => $member_id,
+		);
+		$obj = self::forge($values);
+		$obj->save();
+
+		return $obj;
+	}
 }

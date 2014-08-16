@@ -50,6 +50,7 @@ class Model_Note extends \Orm\Model
 		),
 		'is_published' => array(
 			'data_type' => 'integer',
+			'default' => 0,
 			'validation' => array('max_length' => array(2), 'in_array' => array(array(0,1))),
 			'form' => array('type' => false),
 		),
@@ -98,7 +99,7 @@ class Model_Note extends \Orm\Model
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 
-		if (\Module::loaded('timeline'))
+		if (is_enabled('timeline'))
 		{
 			$type_note = \Config::get('timeline.types.note');
 			// 更新時に timeline の sort_datetime, comment_count を更新
@@ -158,7 +159,6 @@ class Model_Note extends \Orm\Model
 		if (isset($values['public_flag'])) $this->public_flag = $values['public_flag'];
 		$is_changed_public_flag = $this->is_changed('public_flag');
 
-		$this->is_published = 0;
 		if (!$this->is_published)
 		{
 			if (!empty($values['is_published']))

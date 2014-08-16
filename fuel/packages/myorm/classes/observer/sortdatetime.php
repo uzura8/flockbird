@@ -63,7 +63,7 @@ class Observer_SortDatetime extends \Orm\Observer
 						{
 							list($before, $after) = \Util_Orm::get_changed_values($self_obj, $property);
 							if (preg_match('/`'.$property.'`\s+\-\s+1/', $after)) continue;
-							if ($before > $after) continue;
+							if (is_int($before) && is_int($after) && $before > $after) continue;
 						}
 
 						return true;

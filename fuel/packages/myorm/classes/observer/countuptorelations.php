@@ -57,7 +57,8 @@ class Observer_CountUpToRelations extends \Orm\Observer
 		$models = $query->get();
 		foreach ($models as $this->model)
 		{
-			$this->model->{$this->_update_property} = \DB::expr(sprintf('`%s` + 1', $this->_update_property));
+			//$this->model->{$this->_update_property} = \DB::expr(sprintf('`%s` + 1', $this->_update_property));
+			$this->model->{$this->_update_property} = $this->model->{$this->_update_property} + 1;
 			$this->set_value_optional($obj);
 			$this->model->save();
 		}

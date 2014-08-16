@@ -102,8 +102,7 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			);
 
 			\DB::start_transaction();
-			$comment = new Model_NoteComment($values);
-			$comment->save();
+			$comment = Model_NoteComment::save_comment($note_id, $this->u->id, $body);
 			\DB::commit_transaction();
 
 			$response['status'] = 1;
@@ -147,13 +146,20 @@ class Controller_Comment_Api extends \Controller_Site_Api
 				throw new \HttpNotFoundException;
 			}
 
+			\DB::start_transaction();
 			$note_comment->delete();
+			\DB::commit_transaction();
 
 			$response['status'] = 1;
 			$status_code = 200;
 		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
 		catch(\FuelException $e)
 		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 

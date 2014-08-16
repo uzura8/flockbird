@@ -1,6 +1,9 @@
 <?php
 
 return array(
+	'news' => array(
+		'isEnabled'  => 1,
+	),
 	'upload' => array(
 		'types' => array(
 			'img' => array(

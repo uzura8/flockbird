@@ -14,4 +14,4 @@
 //		),
 //	),
 //);
-return $GLOBALS['DSN']['development'];
+return $GLOBALS['DSN']['test'];
