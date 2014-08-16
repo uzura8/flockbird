@@ -35,9 +35,9 @@ $.get(get_url('album/image/api/list.json'), {'album_id':album_id, 'limit':0}, fu
 	var html = "";
 	$.each(position, function(i, v){
 		if ( i == 'now' ) {
-			html += "<img class='item active' src='"+ images[image_ids[v]]+"' id='image_" + image_ids[v] + "'>";
+			html += getImageTag(images[image_ids[v]], image_ids[v], true);
 		} else {
-			html += "<img class='item' src='"+ images[image_ids[v]]+"' id='image_" + image_ids[v] + "'>";
+			html += getImageTag(images[image_ids[v]], image_ids[v]);
 		}
 	});
 
@@ -66,7 +66,7 @@ var next = function() {
 
 	displayComment(image_ids[slideNumber], templatePostComment);
 	$('#myCarousel > .carousel-inner > img:first').remove();
-	$('#myCarousel .carousel-inner').append('<img class="item" src="'+ images[image_ids[nextSlideNumber]]+'" id="image_'+ image_ids[nextSlideNumber] +'">');
+	$('#myCarousel > .carousel-inner').append(getImageTag(images[image_ids[nextSlideNumber]], image_ids[nextSlideNumber]));
 	$('#myCarousel').carousel('next');
 }
 
@@ -84,7 +84,7 @@ var prev = function() {
 
 	displayComment(image_ids[slideNumber], templatePostComment);
 	$('#myCarousel > .carousel-inner > img:last').remove();
-	$('#myCarousel > .carousel-inner').prepend('<img class="item" src="'+ images[image_ids[prevSlideNumber]]+'" id="image_'+ image_ids[prevSlideNumber] +'">');
+	$('#myCarousel > .carousel-inner').prepend(getImageTag(images[image_ids[prevSlideNumber]], image_ids[prevSlideNumber]));
 	$('#myCarousel').carousel('prev');
 }
 
@@ -105,14 +105,16 @@ $('.carousel-control').click(function(event) {
 		return;
 	}
 	reset_textarea('#textarea_comment');
-	slide($(this).attr('data-action'));
+	slide($(this).attr('data-slide'));
 	return false;
 });
 
-$('body').keydown(function(event){
-	// キーボード操作によるスライドの移動
-	slide(event.keyCode);
-});
+function getImageTag(imageUri, imageId) {
+	var isActive = (arguments.length > 2) ? Boolean(arguments[2]) : false;
+	var classValueAdditional = isActive ? ' active' : '';
+
+	return '<div class="item' + classValueAdditional + '"><img src="' + imageUri + '" id="image_' + imageId + '"></div>';
+}
 
 function displayComment(image_id, template) {
 	var getUri = 'album/image/comment/api/list/' + image_id + '.html';

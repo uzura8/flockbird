@@ -1,11 +1,12 @@
 <p><?php echo nl2br($album->body) ?></p>
 
 <?php if (Config::get('album.display_setting.detail.display_slide_image')): ?>
-<?php if (!empty($album_images)): ?>
-<div id="myCarousel" class="carousel slide">
+<?php 	if (!empty($album_images)): ?>
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+	<!-- Wrapper for slides -->
 	<div class="carousel-inner">
 <?php $i = 0; ?>
-<?php foreach ($album_images as $album_image): ?>
+<?php 		foreach ($album_images as $album_image): ?>
 		<div class="item<?php if (!$i): ?> active<?php endif; ?>">
 			<?php echo img((!empty($album_image->file)) ? $album_image->file : '', '600x600', 'album/image/'.$album_image->id); ?>
 <?php if (!empty($album_image->name)): ?>
@@ -15,12 +16,17 @@
 <?php endif; ?>
 		</div>
 <?php $i++; ?>
-<?php endforeach; ?>
+<?php 		endforeach; ?>
 	</div>
-	<a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-	<a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
+	<!-- Controls -->
+	<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+		<span class="glyphicon glyphicon-chevron-left"></span>
+	</a>
+	<a class="right carousel-control" href="#myCarousel" data-slide="next">
+		<span class="glyphicon glyphicon-chevron-right"></span>
+	</a>
 </div>
-<?php endif; ?>
+<?php 	endif; ?>
 <?php endif; ?>
 
 <?php if (!empty($val)): ?>

@@ -4,11 +4,17 @@
 <div class="row" id="img_comment_box">
 	<div class="col-md-8">
 		<a name="slidetop" id="slidetop"></a>
-		<div id="myCarousel" class="carousel">
+		<div id="myCarousel" class="carousel slide" data-ride="carousel">
+			<!-- Wrapper for slides -->
 			<div class="carousel-inner"></div>
-				<a class="carousel-control left" href="#slidetop" data-action="prev">&lsaquo;</a>
-				<a class="carousel-control right" href="#slidetop" data-action="next">&rsaquo;</a>
-			</div>
+			<!-- Controls -->
+			<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+			</a>
+			<a class="right carousel-control" href="#myCarousel" data-slide="next">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+			</a>
+		</div>
 		<div id="slideNumber"></div>
 		<div id="link2detail"></div>
 	</div>
