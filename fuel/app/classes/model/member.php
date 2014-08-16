@@ -115,7 +115,7 @@ class Model_Member extends \Orm\Model
 		static::$_properties['sex']['validation']['in_array'][] = array_keys(self::get_sex_options());
 
 		$options_public_flag = Site_Util::get_public_flags();
-		static::$_properties['sex_public_flag']['label'] = sprintf('%sの%s', term('member.sex.label'), term('public_flag'));
+		static::$_properties['sex_public_flag']['label'] = sprintf('%sの%s', term('member.sex.label'), term('public_flag.label'));
 		static::$_properties['sex_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['sex_public_flag']['validation']['in_array'][] = $options_public_flag;
 
@@ -124,13 +124,13 @@ class Model_Member extends \Orm\Model
 		static::$_properties['birthyear']['form']['options'] = $options;
 		static::$_properties['birthyear']['validation']['in_array'][] = array_keys($options);
 
-		static::$_properties['birthyear_public_flag']['label'] = sprintf('%sの%s', term('member.birthyear'), term('public_flag'));
+		static::$_properties['birthyear_public_flag']['label'] = sprintf('%sの%s', term('member.birthyear'), term('public_flag.label'));
 		static::$_properties['birthyear_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthyear_public_flag']['validation']['in_array'][] = $options_public_flag;
 
 		static::$_properties['birthday']['label'] = term('member.birthday');
 
-		static::$_properties['birthday_public_flag']['label'] = sprintf('%sの%s', term('member.birthday'), term('public_flag'));
+		static::$_properties['birthday_public_flag']['label'] = sprintf('%sの%s', term('member.birthday'), term('public_flag.label'));
 		static::$_properties['birthday_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthday_public_flag']['validation']['in_array'][] = $options_public_flag;
 	}
