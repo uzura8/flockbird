@@ -102,4 +102,9 @@ class Site_Util
 
 		return $info;
 	}
+
+	public static function get_like_api_uri4album_image($album_image_id)
+	{
+		return sprintf('album/image/api/like/%d.json', $album_image_id);
+	}
 }

@@ -262,22 +262,15 @@ class Site_Util
 
 	public static function get_like_api_uri($type, $timeline_id = 0, $foreign_id = 0)
 	{
-		$common_path = 'api/like/';
-		$pre_path = 'timeline/';
-		$id = $timeline_id;
 		switch ($type)
 		{
 			case \Config::get('timeline.types.note'):// note 投稿
-				$pre_path = 'note/';
-				$id = $foreign_id;
-				break;
+				return \Note\Site_Util::get_like_api_uri($foreign_id);
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				$pre_path = 'album/image/';
-				$id = $foreign_id;
-				break;
+				return \Album\Site_Util::get_like_api_uri4album_image($foreign_id);
 		}
 
-		return $pre_path.$common_path.$id.'.json';
+		return sprintf('timeline/api/like/%d.json', $timeline_id);
 	}
 
 	public static function check_type_to_get_access_from($type)

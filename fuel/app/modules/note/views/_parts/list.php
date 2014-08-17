@@ -56,21 +56,36 @@ echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' =>
 <?php endif; ?>
 
 <?php if ($note->is_published): ?>
-<?php
-list($comments, $is_all_records, $all_comment_count) = \Note\Model_NoteComment::get_comments($id, conf('view_params_default.list.comment.limit'));
+<?php list($comments, $is_all_records, $all_comment_count) = \Note\Model_NoteComment::get_comments($id, conf('view_params_default.list.comment.limit')); ?>
+
+<div class="comment_info">
+<?php // comment_count_and_link
 $link_comment_attr = array(
 	'class' => 'js-display_parts link_show_comment_'.$id,
 	'data-target_id' => 'commentPostBox_'.$id,
 	'data-hide_selector' => '.link_show_comment_'.$id,
 	'data-focus_selector' => '#textarea_comment_'.$id,
 );
+echo render('_parts/comment/count_and_link_display', array(
+	'id' => $id,
+	'count' => $all_comment_count,
+	'link_attr' => $link_comment_attr,
+)); ?>
+
+<?php // like_count_and_link ?>
+<?php if (conf('like.isEnabled') && Auth::check()): ?>
+<?php
+$data_like_link = array(
+	'id' => $id,
+	'uri' => \Note\Site_Util::get_like_api_uri($id),
+	'count_attr' => array('class' => 'unset_like_count'),
+	'count' => $note->like_count,
+	'left_margin' => true,
+);
+echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
-<div class="comment_info">
-	<small><?php echo icon('comment'); ?> <span id="comment_count_<?php echo $id; ?>"><?php echo $all_comment_count; ?><span></small>
-<?php if (Auth::check()): ?>
-	<small><?php echo anchor('#', term('form.do_comment'), false, $link_comment_attr); ?></small>
 <?php endif; ?>
-</div>
+</div><!-- .comment_info -->
 
 <?php
 $comment_list_attr = array(

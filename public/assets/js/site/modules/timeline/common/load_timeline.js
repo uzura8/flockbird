@@ -31,7 +31,7 @@ $(function() {
 		return false;
 	});
 
-	$(document).on('click','.link_comment', function(){
+	$(document).on('click','.link_show_comment', function(){
 		var id = $(this).data('id') ? $(this).data('id') : 0;
 		var blockSelector = '#comment_list_' + id;
 		var getUri = $(blockSelector).data('get_uri') ? $(blockSelector).data('get_uri') : '';

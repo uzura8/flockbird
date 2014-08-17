@@ -694,12 +694,12 @@ function update_like_status(selfDomElement) {
 					resData = $.parseJSON(result);
 			if (resData.status) {
 				//$(selfDomElement).addClass('btn-primary');
-				selfDomElement_html = get_term('like') + 'しました';
+				selfDomElement_html = get_term('like') + 'を取り消す';
 				msg = get_term('like') + 'しました。';
 			} else {
 				$(selfDomElement).removeClass('btn-primary');
 				selfDomElement_html = get_term('do_like');
-				msg = get_term('like') + 'を解除しました。';
+				msg = get_term('like') + 'を取り消しました。';
 			}
 			if (counterSelector) $(counterSelector).html(resData.count);
 			$.jGrowl(msg);
