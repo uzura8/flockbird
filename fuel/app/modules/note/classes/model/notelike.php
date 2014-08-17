@@ -113,4 +113,12 @@ class Model_NoteLike extends \MyOrm\Model
 
 		return self::$count_per_note[$note_id];
 	}
+
+	public static function check_liked($note_id, $member_id)
+	{
+		return (bool)$query = self::query()
+			->where('note_id', $note_id)
+			->where('member_id', $member_id)
+			->get_one();
+	}
 }

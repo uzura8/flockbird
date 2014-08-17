@@ -50,6 +50,7 @@ $config = array(
 		'do_comment' => 'コメントする',
 		'like' => 'イイね',
 		'do_like' => 'イイねする',
+		'undo_like' => 'イイねを取り消す',
 	),
 	'site' => array(
 		'view' => 'サイト',

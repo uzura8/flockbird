@@ -16,6 +16,6 @@ if (!isset($link_attr)) $link_attr = array();
 $link_attr = Util_Toolkit::convert_to_attr($link_attr, $link_attr_default);
 ?>
 <small><?php echo icon('comment'); ?> <?php echo html_tag('span', $count_attr, isset($count) ? $count : ''); ?></small>
-<?php if (!empty($link_display_absolute) || Auth::check()): ?>
+<?php if ((Auth::check() || !empty($link_display_absolute)) && empty($link_hide_absolute)): ?>
 <small class="ml3"><?php echo anchor('#', term('form.comment'), false, $link_attr); ?></small>
 <?php endif; ?>

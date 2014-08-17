@@ -20,6 +20,7 @@ function get_term(key) {
 <?php if (conf('like.isEnabled')): ?>
 		'like': '<?php echo term('form.like'); ?>',
 		'do_like': '<?php echo term('form.do_like'); ?>',
+		'undo_like': '<?php echo term('form.undo_like'); ?>',
 <?php endif; ?>
 <?php if (Module::loaded('album')): ?>
 		'album': '<?php echo term('album'); ?>',

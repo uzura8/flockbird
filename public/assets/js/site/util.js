@@ -694,7 +694,7 @@ function update_like_status(selfDomElement) {
 					resData = $.parseJSON(result);
 			if (resData.status) {
 				//$(selfDomElement).addClass('btn-primary');
-				selfDomElement_html = get_term('like') + 'を取り消す';
+				selfDomElement_html = get_term('undo_like');
 				msg = get_term('like') + 'しました。';
 			} else {
 				$(selfDomElement).removeClass('btn-primary');

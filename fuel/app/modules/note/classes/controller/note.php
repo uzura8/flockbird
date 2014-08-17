@@ -90,11 +90,16 @@ class Controller_Note extends \Controller_Site
 		if (!$note = Model_Note::check_authority($id)) throw new \HttpNotFoundException;
 		$this->check_public_flag($note->public_flag, $note->member_id);
 
+		// note_album_image
 		$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
 
+		// note_comment
 		$record_limit = conf('view_params_default.detail.comment.limit');
 		if (\Input::get('all_comment', 0)) $record_limit = conf('view_params_default.detail.comment.limit_max');
-		list($comments, $is_all_records) = Model_NoteComment::get_comments($id, $record_limit);
+		list($comments, $is_all_records, $all_comment_count) = Model_NoteComment::get_comments($id, $record_limit);
+
+		// note_like
+		$is_liked_self = \Auth::check() ? Model_NoteLike::check_liked($id, $this->u->id) : false;
 
 		$title = array('name' => $note->title);
 		$header_info = array();
@@ -106,7 +111,14 @@ class Controller_Note extends \Controller_Site
 		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
 		$this->template->post_footer = \View::forge('_parts/load_masonry', array('is_not_load_more' => true));
-		$this->template->content = \View::forge('detail', array('note' => $note, 'images' => $images, 'comments' => $comments, 'is_all_records' => $is_all_records));
+		$this->template->content = \View::forge('detail', array(
+			'note' => $note,
+			'images' => $images,
+			'comments' => $comments,
+			'is_all_records' => $is_all_records,
+			'all_comment_count' => $all_comment_count,
+			'is_liked_self' => $is_liked_self,
+		));
 	}
 
 	/**
