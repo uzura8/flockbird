@@ -251,6 +251,9 @@ $config = array(
 	'public_flag' => array(
 		'default' => PRJ_PUBLIC_FLAG_ALL,
 	),
+	'like' => array(
+		'isEnabled'  => true,
+	),
 	'member_config_default' => array(
 	),
 	// site_config default

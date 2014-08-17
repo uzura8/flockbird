@@ -93,6 +93,11 @@ class Model_Timeline extends \Orm\Model
 			'default' => 0,
 			'form' => array('type' => false),
 		),
+		'like_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 		'sort_datetime' => array('form' => array('type' => false)),

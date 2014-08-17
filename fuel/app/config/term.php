@@ -48,6 +48,8 @@ $config = array(
 		'add_link' => 'リンクを追加',
 		'comment' => 'コメント',
 		'do_comment' => 'コメントする',
+		'like' => 'イイね',
+		'do_like' => 'イイねする',
 	),
 	'site' => array(
 		'view' => 'サイト',

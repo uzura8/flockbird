@@ -661,6 +661,57 @@ function update_follow_status(selfDomElement) {
 	});
 }
 
+function update_like_status(selfDomElement) {
+	//var id = $(selfDomElement).data('id');
+	var counterSelector = $(selfDomElement).data('count');
+	var postUrl = $(selfDomElement).data('uri');
+	if (!postUrl) return;
+
+	var selfDomElement_html = $(selfDomElement).html();
+
+	var post_data = {};
+	postData = set_token(post_data);
+
+	$.ajax({
+		url : get_url(postUrl),
+		type : 'POST',
+		dataType : 'text',
+		data : postData,
+		timeout: get_config('default_ajax_timeout'),
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			if (selfDomElement) {
+				$(selfDomElement).attr('disabled', true);
+				$(selfDomElement).html(get_loading_image_tag());
+			}
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			$(selfDomElement).attr('disabled', false);
+		},
+		success: function(result){
+			var message
+					resData = $.parseJSON(result);
+			if (resData.status) {
+				//$(selfDomElement).addClass('btn-primary');
+				selfDomElement_html = get_term('like') + 'しました';
+				msg = get_term('like') + 'しました。';
+			} else {
+				$(selfDomElement).removeClass('btn-primary');
+				selfDomElement_html = get_term('do_like');
+				msg = get_term('like') + 'を解除しました。';
+			}
+			if (counterSelector) $(counterSelector).html(resData.count);
+			$.jGrowl(msg);
+			$(selfDomElement).html(selfDomElement_html);
+		},
+		error: function(result){
+			$(selfDomElement).html(selfDomElement_html);
+			$.jGrowl(get_error_message(result['status'], get_term('like') + 'に失敗しました。'));
+		}
+	});
+}
+
 function execute_post(uri){
 	var post_data = (arguments.length > 1) ? arguments[1] : {};
 

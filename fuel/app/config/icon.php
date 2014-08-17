@@ -47,6 +47,8 @@ $config = array(
 		'add_link' => 'link',
 		//'comment' => 'コメント',
 		//'do_comment' => 'コメントする',
+		'like' => 'thumbs-up',
+		'do_like' => 'thumbs-up',
 	),
 	'site' => array(
 		//'view' => 'サイト',

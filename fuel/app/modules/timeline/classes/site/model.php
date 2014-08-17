@@ -17,7 +17,7 @@ class Site_Model
 		if ($limit > \Config::get('timeline.articles.limit_max')) $limit = \Config::get('timeline.articles.limit_max');
 		$sort = array('id' => $is_desc ? 'desc' : 'asc');
 
-		$query = Model_TimelineCache::query()->select('id', 'member_id', 'timeline_id', 'type', 'comment_count');
+		$query = Model_TimelineCache::query()->select('id', 'member_id', 'timeline_id', 'type', 'comment_count', 'like_count');
 
 		if ($last_id || $limit_id) $query->and_where_open();
 		if ($is_mytimeline)

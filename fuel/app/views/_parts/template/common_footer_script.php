@@ -17,6 +17,10 @@ function get_term(key) {
 <?php if (conf('memberRelation.follow.isEnabled')): ?>
 		'follow': '<?php echo term('follow'); ?>',
 <?php endif; ?>
+<?php if (conf('like.isEnabled')): ?>
+		'like': '<?php echo term('form.like'); ?>',
+		'do_like': '<?php echo term('form.do_like'); ?>',
+<?php endif; ?>
 <?php if (Module::loaded('album')): ?>
 		'album': '<?php echo term('album'); ?>',
 		'album_image': '<?php echo term('album_image'); ?>',

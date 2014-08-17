@@ -225,7 +225,7 @@ class Site_Util
 		return self::check_type_for_post_foreign_table_comment($type) ? $foreign_id : $timeline_id;
 	}
 
-	public static function get_comment_api_uri($action, $type, $foreign_table = '', $timeline_id = 0, $foreign_id = 0)
+	public static function get_comment_api_uri($action, $type, $timeline_id = 0, $foreign_id = 0)
 	{
 		$pre_path = 'timeline/';
 		$id = $timeline_id;
@@ -258,6 +258,26 @@ class Site_Util
 		}
 
 		return $pre_path.$common_path;
+	}
+
+	public static function get_like_api_uri($type, $timeline_id = 0, $foreign_id = 0)
+	{
+		$common_path = 'api/like/';
+		$pre_path = 'timeline/';
+		$id = $timeline_id;
+		switch ($type)
+		{
+			case \Config::get('timeline.types.note'):// note 投稿
+				$pre_path = 'note/';
+				$id = $foreign_id;
+				break;
+			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
+				$pre_path = 'album/image/';
+				$id = $foreign_id;
+				break;
+		}
+
+		return $pre_path.$common_path.$id.'.json';
 	}
 
 	public static function check_type_to_get_access_from($type)

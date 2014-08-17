@@ -6,6 +6,12 @@ $(document).on('click', '.btn_follow', function(){
 	return false;
 });
 
+$(document).on('click', '.js-like', function(){
+	if (GL.execute_flg) return false;
+	update_like_status(this);
+	return false;
+});
+
 $(document).on('click', '.js-simplePost', function(){
 	close_dropdown_menu(this);
 	post_submit(this);

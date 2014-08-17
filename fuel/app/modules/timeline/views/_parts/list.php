@@ -8,6 +8,7 @@ echo render('timeline::_parts/article', array(
 	'timeline_id' => $timeline_cache->timeline_id,
 	'type' => $timeline_cache->type,
 	'comment_count' => $timeline_cache->comment_count,
+	'like_count' => $timeline_cache->like_count,
 	'member_id' => $timeline_cache->member_id,
 	'self_member_id' => \Auth::check() ? $u->id : 0,
 ));

@@ -22,6 +22,7 @@ class Observer_UpdateTimelineCache extends \Orm\Observer
 			}
 			if ($obj->is_changed('public_flag')) $timeline_cache->public_flag = $obj->public_flag;
 			if ($obj->is_changed('comment_count')) $timeline_cache->comment_count = $obj->comment_count;
+			if ($obj->is_changed('like_count')) $timeline_cache->like_count = $obj->like_count;
 			$timeline_cache->save();
 		}
 	}

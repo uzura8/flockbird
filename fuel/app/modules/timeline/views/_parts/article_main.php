@@ -67,6 +67,7 @@ if ($is_detail)
 	list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id);
 }
 ?>
+<div class="comment_info">
 <?php
 $comment_count_attr = array(
 	'class' => 'comment_count unset_comment_count',
@@ -79,14 +80,36 @@ $link_comment_attr = array(
 	'data-id' => $timeline->id,
 );
 ?>
-<div class="comment_info">
 	<small><?php echo icon('comment'); ?> <span <?php echo Util_Array::conv_array2attr_string($comment_count_attr); ?>><?php if ($is_detail): ?><?php echo $all_comment_count; ?><?php endif; ?><span></small>
-	<small><?php echo anchor('#', term('form.comment'), false, $link_comment_attr); ?></small>
+	<small class="ml3"><?php echo anchor('#', term('form.comment'), false, $link_comment_attr); ?></small>
+<?php if (conf('like.isEnabled')): ?>
+<?php
+if ($is_detail)
+{
+	$all_like_count = \Timeline\Model_TimelineLike::get_count4timeline_id($timeline->id);
+}
+$like_post_uri = \Timeline\Site_Util::get_like_api_uri($timeline->type, $timeline->id, $timeline->foreign_id);
+$like_count_attr = array(
+	'class' => 'like_count unset_like_count',
+	'id' => 'like_count_'.$timeline->id,
+	'data-id' => $timeline->id,
+);
+$link_like_attr = array(
+	'class' => 'js-like link_like',
+	'id' => 'link_like_'.$timeline->id,
+	'data-uri' => $like_post_uri,
+	'data-id' => $timeline->id,
+	'data-count' => '#like_count_'.$timeline->id,
+);
+?>
+	<small class="ml10"><?php echo icon('form.like'); ?> <span <?php echo Util_Array::conv_array2attr_string($like_count_attr); ?>><?php if ($is_detail): ?><?php echo $all_like_count; ?><?php endif; ?><span></small>
+	<small class="ml3"><?php echo anchor('#', term('form.do_like'), false, $link_like_attr); ?></small>
+<?php endif; ?>
 </div>
 <?php
-$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri('get', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
-$comment_post_uri = \Timeline\Site_Util::get_comment_api_uri('create', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
-$comment_delete_uri = \Timeline\Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->foreign_table, $timeline->id, $timeline->foreign_id);
+$comment_get_uri = \Timeline\Site_Util::get_comment_api_uri('get', $timeline->type, $timeline->id, $timeline->foreign_id);
+$comment_post_uri = \Timeline\Site_Util::get_comment_api_uri('create', $timeline->type, $timeline->id, $timeline->foreign_id);
+$comment_delete_uri = \Timeline\Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->id, $timeline->foreign_id);
 $comment_list_attr = array(
 	'class' => 'comment_list unloade_comments',
 	'id' => 'comment_list_'.$timeline->id,

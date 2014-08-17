@@ -56,6 +56,11 @@ class Model_TimelineCache extends \Orm\Model
 			'default' => 0,
 			'form' => array('type' => false),
 		),
+		'like_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 	);
 
 	protected static $_observers = array(

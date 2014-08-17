@@ -468,6 +468,7 @@ CREATE TABLE `timeline` (
   `source_uri` text NULL COMMENT 'The source URI',
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `comment_count` int(11) NOT NULL DEFAULT '0',
+  `like_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `sort_datetime` datetime NOT NULL,
@@ -491,6 +492,7 @@ CREATE TABLE `timeline_cache` (
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `type` tinyint(2) NOT NULL DEFAULT '0',
   `comment_count` int(11) NOT NULL DEFAULT '0',
+  `like_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `timeline_id_idx` (`timeline_id`),
   UNIQUE KEY `timeline_id_is_follow_UNIQUE_idx` (`timeline_id`,`is_follow`),
@@ -520,6 +522,18 @@ CREATE TABLE `timeline_comment` (
   PRIMARY KEY (`id`),
   KEY `timeline_id_created_at` (`timeline_id`,`created_at`),
   CONSTRAINT `timeline_comment_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `timeline_like` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timeline_id` int(11) NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_timeline_id_UNIQUE_idx` (`member_id`,`timeline_id`),
+  KEY `timeline_id_created_at` (`timeline_id`,`created_at`),
+  CONSTRAINT `timeline_like_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

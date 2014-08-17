@@ -117,6 +117,7 @@ function postLoadTimeline() {
 	showLinkCommentBlocks();
 	removeCaretFromPublicFlagDropdown();
 	setCommentCount();
+	setLikeCount();
 }
 
 function loadTlComment(getUri, parentListSelector) {
@@ -169,8 +170,17 @@ function loadTlCommentAll() {
 function setCommentCount() {
 	$('.unset_comment_count').each(function() {
 		var id = parseInt($(this).data('id'));
-		var comment_cont = parseInt($('#timelineBox_' + id).data('comment_count'));
-		$(this).html(comment_cont);
+		var count = $('#timelineBox_' + id).data('comment_count');
+		if (count !== null) $(this).html(count);
 		$(this).removeClass('unset_comment_count');
+	});
+}
+
+function setLikeCount() {
+	$('.unset_like_count').each(function() {
+		var id = parseInt($(this).data('id'));
+		var count = $('#timelineBox_' + id).data('like_count');
+		if (count !== null) $(this).html(count);
+		$(this).removeClass('unset_like_count');
 	});
 }
