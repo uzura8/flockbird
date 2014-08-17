@@ -1,12 +1,12 @@
 <?php
 namespace Note;
 
-class Model_NoteComment extends \Orm\Model
+class Model_NoteLike extends \MyOrm\Model
 {
-	protected static $_table_name = 'note_comment';
+	protected static $_table_name = 'note_like';
 
 	protected static $_belongs_to = array(
-		'note' => array(
+		'timeline' => array(
 			'key_from' => 'note_id',
 			'model_to' => '\Note\Model_Note',
 			'key_to' => 'id',
@@ -28,18 +28,15 @@ class Model_NoteComment extends \Orm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
-		'body',
 		'created_at' => array('form' => array('type' => false)),
-		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
-			'mysql_timestamp' => true,
-		),
-		'Orm\Observer_UpdatedAt' => array(
-			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
 		'MyOrm\Observer_CountUpToRelations'=>array(
@@ -52,11 +49,7 @@ class Model_NoteComment extends \Orm\Model
 							'note_id' => 'property',
 						),
 					),
-					//'optional_updates' => array(
-					//	'sort_datetime' => array(
-					//		'created_at' => 'property',
-					//	),
-					//),
+					'update_property' => 'like_count',
 				),
 			),
 		),
@@ -70,6 +63,7 @@ class Model_NoteComment extends \Orm\Model
 							'note_id' => 'property',
 						),
 					),
+					'update_property' => 'like_count',
 				),
 			),
 		),
@@ -118,39 +112,5 @@ class Model_NoteComment extends \Orm\Model
 		self::$count_per_note[$note_id] = $query->count();
 
 		return self::$count_per_note[$note_id];
-	}
-
-	public static function get_comments($note_id, $record_limit = 0, $params = array(), $is_desc = false)
-	{
-		$is_all_records = false;
-		$params = array_merge(array(array('note_id', '=', $note_id)), $params);;
-		$query = self::query()->where($params);
-		$all_records_count = $query->count();
-		$query->related('member');
-		if (!$record_limit || $record_limit >= $all_records_count)
-		{
-			$is_all_records = true;
-			$comments = $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
-		}
-		else
-		{
-			$comments = $query->order_by('id', 'desc')->rows_limit($record_limit)->get();
-			if (!$is_desc) $comments = array_reverse($comments);
-		}
-
-		return array($comments, $is_all_records, $all_records_count);
-	}
-
-	public static function save_comment($note_id, $member_id, $body = '')
-	{
-		$values = array(
-			'body' => $body,
-			'note_id' => $note_id,
-			'member_id' => $member_id,
-		);
-		$obj = self::forge($values);
-		$obj->save();
-
-		return $obj;
 	}
 }

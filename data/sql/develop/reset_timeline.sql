@@ -71,7 +71,7 @@ CREATE TABLE `timeline_comment` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `timeline_id_created_at` (`timeline_id`,`created_at`),
+  KEY `timeline_id_id_idx` (`timeline_id`,`id`),
   CONSTRAINT `timeline_comment_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -83,7 +83,7 @@ CREATE TABLE `timeline_like` (
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `member_id_timeline_id_UNIQUE_idx` (`member_id`,`timeline_id`),
-  KEY `timeline_id_created_at` (`timeline_id`,`created_at`),
+  KEY `timeline_id_id_idx` (`timeline_id`,`id`),
   CONSTRAINT `timeline_like_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

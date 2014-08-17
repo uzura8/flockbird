@@ -225,6 +225,12 @@ class Controller_Api extends \Controller_Site_Api
 		$this->response($response, $status_code);
 	}
 
+	/**
+	 * Timeline like
+	 * 
+	 * @access  public
+	 * @return  Response (json)
+	 */
 	public function post_like($id = null)
 	{
 		$response = array('status' => 0);

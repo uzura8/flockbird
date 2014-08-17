@@ -48,6 +48,11 @@ class Model_Note extends \Orm\Model
 			'default' => 0,
 			'form' => array('type' => false),
 		),
+		'like_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'is_published' => array(
 			'data_type' => 'integer',
 			'default' => 0,
@@ -124,6 +129,7 @@ class Model_Note extends \Orm\Model
 							'public_flag',
 							'sort_datetime',
 							'comment_count',
+							'like_count',
 						),
 					),
 				),
