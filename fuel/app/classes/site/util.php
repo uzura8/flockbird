@@ -54,6 +54,16 @@ class Site_Util
 		return false;
 	}
 
+	public static function check_is_develop_env()
+	{
+		if (!defined('PRJ_ENVIRONMENT') || !PRJ_ENVIRONMENT)
+		{
+			throw new \FuelException('Environment is not defined.');
+		}
+
+		return in_array(PRJ_ENVIRONMENT, array('DEVELOPMENT', 'TEST'));
+	}
+
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())
 	{
 		$form = Fieldset::forge($name);
