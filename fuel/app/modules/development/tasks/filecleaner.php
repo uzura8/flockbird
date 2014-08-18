@@ -35,6 +35,7 @@ class FileCleaner
 			$messages[] = self::clean_img();
 			$messages[] = self::clean_file_tmp();
 			$messages[] = self::clean_file();
+			$messages[] = self::clean_cache();
 		}
 		catch(\FuelException $e)
 		{
@@ -78,6 +79,20 @@ class FileCleaner
 	public static function clean_file_tmp()
 	{
 		return self::execute_clean_file('file', true);
+	}
+
+	/**
+	 * Usage (from command line):
+	 *
+	 * php oil r development::filecleaner:clean_cache
+	 *
+	 * @return string
+	 */
+	public static function clean_cache()
+	{
+		\Cache::delete_all();
+
+		return 'Delete all caches.';
 	}
 
 	/**
