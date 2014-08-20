@@ -13,6 +13,7 @@ Autoloader::add_classes(array(
 	'Controller' => APPPATH.'classes/controller.php',
 	//'DB' => APPPATH.'classes/db.php',
 	'Database_Query_Builder_Update' => APPPATH.'classes/database/query/builder/update.php',
+	'DBUtil' => APPPATH.'classes/dbutil.php',
 	'Uri' => APPPATH.'classes/uri.php',
 	'Validation' => APPPATH.'classes/validation.php',
 	'Input' => APPPATH.'classes/input.php',

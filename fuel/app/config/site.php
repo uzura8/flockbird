@@ -300,6 +300,14 @@ $config = array(
 	),
 );
 $config = Site_Util::merge_module_configs($config, 'site');
-$config = Site_Util::merge_db_configs($config, 'site_config');
+try
+{
+	$config = Site_Util::merge_db_configs($config, 'site_config');
+}
+catch(Database_Exception $e)
+{
+	// Task DbSetter 実行時にDBが存在しない場合があるので、スルーする
+}
+
 
 return $config;

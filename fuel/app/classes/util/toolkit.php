@@ -151,4 +151,9 @@ class Util_Toolkit
 
 		return Util_Array::conv_arrays2str($attrs);
 	}
+
+	public static function shell_exec($command)
+	{
+		return shell_exec("{$command} 2>&1");
+	}
 }

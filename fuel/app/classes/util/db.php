@@ -1,5 +1,5 @@
 <?php
-class Util_db
+class Util_Db
 {
 	public static function conv_col($rows)
 	{
@@ -55,5 +55,98 @@ class Util_db
 		if (!$is_column_only) return $list_columns;
 
 		return array_keys($list_columns);
+	}
+
+	public static function get_conection_configs($key = null)
+	{
+		$db_conection_configs = Config::get('db.default.connection');
+		if (empty($key)) return $db_conection_configs;
+		if (!empty($db_conection_configs[$key])) return $db_conection_configs[$key];
+
+		if (in_array($key, array('host', 'port', 'database')))
+		{
+
+			if (!empty($db_conection_configs['dsn']))
+			{
+				return self::get_dsn_config($db_conection_configs['dsn'], $key);
+			}
+
+			return null;
+		}
+
+		return null;
+	}
+
+	public static function get_dsn_config($dsn_str, $dns_key = null)
+	{
+		if (!preg_match('/(.+)\:(.+)/', $dsn_str, $matches))
+		{
+			return null;
+		}
+		if ($matches[1] != 'mysql') return null;
+
+		$dsn_settings = explode(';', $matches[2]);
+		$dsn_configs = array();
+		foreach ($dsn_settings as $settings)
+		{
+			if (!preg_match('/(.+)=(.+)/', $settings, $matches))
+			{
+				continue;
+			}
+			$dsn_configs[$matches[1]] = $matches[2];
+		}
+		if (!$dsn_configs) return null;
+
+		if (empty($dns_key)) return $dsn_configs;
+
+		if ($dns_key == 'database') $dns_key = 'dbname';
+		if (empty($dsn_configs[$dns_key]))
+		{
+			return null;
+		}
+
+		return $dsn_configs[$dns_key];
+	}
+
+	public static function get_database_name()
+	{
+		return self::get_conection_configs('database');
+	}
+
+	public static function exec_db_command4file($sql_file)
+	{
+		try
+		{
+			$command = sprintf('%s < %s', self::make_mysql_conect_command(true), $sql_file);
+		}
+		catch(FuelException $e)
+		{
+			throw new FuelException($e->getMessage());
+		}
+		if ($error = Util_Toolkit::shell_exec($command))
+		{
+			throw new Database_Exception($error);
+		}
+
+		return true;
+	}
+
+	public static function make_mysql_conect_command($with_dbname = false)
+	{
+		$host = self::get_conection_configs('host');
+		$port = self::get_conection_configs('port');
+		$database = self::get_conection_configs('database');
+		$username = self::get_conection_configs('username');
+		$password = self::get_conection_configs('password');
+
+		if (!$username && !$database) throw new FuelException('DB settings is invalid.');
+
+		$command = sprintf('mysql -u%s', $username);
+		if (!empty($password)) $command .= sprintf(' -p%s', $password);
+		if (!empty($hostname)) $command .= sprintf(' -h%s', $hostname);
+		if (!empty($port)) $command .= sprintf(' -P%s', $port);
+		if ($with_dbname) $command .= sprintf(' %s', $database);
+
+		return $command;
 	}
 }
