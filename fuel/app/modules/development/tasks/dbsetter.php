@@ -7,11 +7,13 @@ namespace Fuel\Tasks;
 
 class DbSetter
 {
-	public function __construct()
+	public function __construct($args = null)
 	{
-		if (!\Site_Util::check_is_develop_env())
+		$absolute_execute = \Cli::option('absolute_execute', false);
+		if (!$absolute_execute && !\Site_Util::check_is_develop_env())
 		{
-			throw new \FuelException('This task is not work at prod env.');
+			\Cli::error('This task is not work at prod env.');
+			exit;
 		}
 	}
 
@@ -22,7 +24,7 @@ class DbSetter
 	 *
 	 * @return string
 	 */
-	public static function run($exec_mode = null)
+	public static function run()
 	{
 		$messages = array();
 		try
