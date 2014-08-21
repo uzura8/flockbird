@@ -113,11 +113,11 @@ class Util_Db
 		return self::get_conection_configs('database');
 	}
 
-	public static function exec_db_command4file($sql_file)
+	public static function exec_db_command4file($sql_file, $dbname = null)
 	{
 		try
 		{
-			$command = sprintf('%s < %s', self::make_mysql_conect_command(true), $sql_file);
+			$command = sprintf('%s < %s', Util_Db::make_mysql_conect_command(true, $dbname), $sql_file);
 		}
 		catch(FuelException $e)
 		{
@@ -131,21 +131,26 @@ class Util_Db
 		return true;
 	}
 
-	public static function make_mysql_conect_command($with_dbname = false)
+	public static function make_mysql_conect_command($with_dbname = false, $dbname = null)
 	{
 		$host = self::get_conection_configs('host');
 		$port = self::get_conection_configs('port');
-		$database = self::get_conection_configs('database');
 		$username = self::get_conection_configs('username');
 		$password = self::get_conection_configs('password');
 
-		if (!$username && !$database) throw new FuelException('DB settings is invalid.');
+		if (!$username) throw new FuelException('Username is not set at configs.');
 
 		$command = sprintf('mysql -u%s', $username);
 		if (!empty($password)) $command .= sprintf(' -p%s', $password);
 		if (!empty($hostname)) $command .= sprintf(' -h%s', $hostname);
 		if (!empty($port)) $command .= sprintf(' -P%s', $port);
-		if ($with_dbname) $command .= sprintf(' %s', $database);
+
+		if ($with_dbname)
+		{
+			$database = $dbname ?: self::get_conection_configs('database');
+			if (!$database) throw new FuelException('Database is not set at configs.');
+			$command .= sprintf(' %s', $database);
+		}
 
 		return $command;
 	}

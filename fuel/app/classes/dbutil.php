@@ -32,7 +32,17 @@ class DBUtil extends Fuel\Core\DBUtil
 	public static function shell_exec_sql($sql)
 	{
 		$command = sprintf("echo '%s' | %s", $sql, Util_Db::make_mysql_conect_command());
+		if ($error = Util_Toolkit::shell_exec($command))
+		{
+			throw new Database_Exception($error);
+		}
 
+		return true;
+	}
+
+	public static function shell_exec_sql4file($sql_file, $dbname = null)
+	{
+		$command = sprintf('%s < %s', Util_Db::make_mysql_conect_command(true, $dbname), $sql_file);
 		if ($error = Util_Toolkit::shell_exec($command))
 		{
 			throw new Database_Exception($error);

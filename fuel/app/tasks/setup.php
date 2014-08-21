@@ -2,106 +2,140 @@
 namespace Fuel\Tasks;
 
 /**
- * Task DbSetter
+ * Task Setup
  */
 
-class DbSetter
+class Setup
 {
+	private static $absolute_execute = false;
+	private static $database;
+
 	public function __construct($args = null)
 	{
-		$absolute_execute = \Cli::option('absolute_execute', false);
-		if (!$absolute_execute && !\Site_Util::check_is_develop_env())
-		{
-			\Cli::error('This task is not work at prod env.');
-			exit;
-		}
+		self::$absolute_execute = \Cli::option('absolute_execute', false);
 	}
 
 	/**
 	 * Usage (from command line):
 	 *
-	 * php oil r development::dbsetter
+	 * php oil r setup
 	 *
 	 * @return string
 	 */
-	public static function run()
+	public static function run($database = null, $charset = null)
 	{
-		$messages = array();
 		try
 		{
-			$messages[] = self::drop_db();
-			$messages[] = self::setup_db();
+			self::$absolute_execute = false;
+			$result = self::exexute_create_db($database, $charset);
+			if ($result) $result = self::exexute_install_db($database);
 		}
 		catch(\FuelException $e)
 		{
-			$messages[] = 'Error: '.$e->getMessage();
+			return \Util_Task::output_message(sprintf('Setup db error: %s', $e->getMessage()), false);
 		}
 
-		return implode(PHP_EOL, $messages);
+		return \Util_Task::output_result_message($result, 'setup', sprintf('Setup db %s.', self::$database));
 	}
 
 	/**
 	 * Usage (from command line):
 	 *
-	 * php oil r development::dbresetter:drop_db
+	 * php oil r setup:reset_db
 	 *
 	 * @return string
 	 */
-	public static function drop_db()
+	public static function reset_db($database = null, $charset = null)
 	{
-		if (!$database = \Util_Db::get_database_name())
-		{
-			return 'Drop database error: Database name is not set at config.';
-		}
 		try
 		{
-			\DBUtil::shell_exec_drop_database($database);
+			$result = self::exexute_drop_db($databasecharset);
+			if ($result) $result = self::exexute_create_db($database, $charset);
+			if ($result) $result = self::exexute_install_db($database);
 		}
-		catch(\Database_Exception $e)
+		catch(\FuelException $e)
 		{
-			return sprintf('Drop db error: %s', $e->getMessage());
+			return \Util_Task::output_message(sprintf('Reset db error: %s', $e->getMessage()), false);
 		}
 
-		return sprintf('Drop db.');
-	}
-
-	public static function create_database($database = null, $charset = null, $if_not_exists = true)
-	{
-		if (!$database = \Util_Db::get_database_name())
-		{
-			throw new FuelException('Database name is not set at config.');
-		}
-
-		return DBUtil::shell_exec_create_database($database, $charset, $if_not_exists);
+		return \Util_Task::output_result_message($result, __FUNCTION__, sprintf('Reset db %s.', self::$database));
 	}
 
 	/**
 	 * Usage (from command line):
 	 *
-	 * php oil r development::dbresetter:setup_db
+	 * php oil r setup:create_db
 	 *
 	 * @return string
 	 */
-	public static function setup_db()
+	public static function create_db($database = null, $charset = null)
+	{
+		try
+		{
+			$result = self::exexute_create_db($database, $charset);
+		}
+		catch(\FuelException $e)
+		{
+			return \Util_Task::output_message(sprintf('Create db error: %s', $e->getMessage()), false);
+		}
+
+		return \Util_Task::output_result_message($result, __FUNCTION__, sprintf('Create db %s.', self::$database));
+	}
+
+	/**
+	 * Usage (from command line):
+	 *
+	 * php oil r setup:drop_db
+	 *
+	 * @return string
+	 */
+	public static function drop_db($database)
+	{
+		try
+		{
+			$result = self::exexute_drop_db($database);
+		}
+		catch(\FuelException $e)
+		{
+			return \Util_Task::output_message(sprintf('Drop db error: %s', $e->getMessage()), false);
+		}
+
+		return \Util_Task::output_result_message($result, __FUNCTION__, sprintf('Drop db %s.', self::$database));
+	}
+
+	private static function exexute_create_db($database = null, $charset = null)
+	{
+		if (!$database && !$database = \Util_Db::get_database_name())
+		{
+			throw new \FuelException('Database name is not set at configs.');
+		}
+		self::$database = $database;
+
+		$if_not_exists = self::$absolute_execute || \Site_Util::check_is_develop_env();
+
+		return \DBUtil::shell_exec_create_database(self::$database, $charset, $if_not_exists);
+	}
+
+	private static function exexute_drop_db($database = null)
+	{
+		if (!self::$absolute_execute && !\Site_Util::check_is_develop_env())
+		{
+			throw new \FuelException('This task is not work at prod env.');
+		}
+		if (!$database && !$database = \Util_Db::get_database_name())
+		{
+			throw new \FuelException('Drop db error: Database name is not set at configs.');
+		}
+		self::$database = $database;
+
+		return \DBUtil::shell_exec_drop_database(self::$database);
+	}
+
+	private static function exexute_install_db($database = null)
 	{
 		$setup_sql_file = PRJ_BASEPATH.'data/sql/setup/setup.sql';
 
-		if (!$database = \Util_Db::get_database_name())
-		{
-			return 'Setup database error: Database name is not set at config.';
-		}
-		try
-		{
-			\DBUtil::shell_exec_create_database($database);
-			\Util_Db::exec_db_command4file($setup_sql_file);
-		}
-		catch(\Database_Exception $e)
-		{
-			return sprintf('Setup db error: %s', $e->getMessage());
-		}
-
-		return sprintf('Setup database.');
+		return \DBUtil::shell_exec_sql4file($setup_sql_file, $database);
 	}
 }
-
-/* End of file tasks/dbsetter.php */
+/* End of file tasks/setup.php */
