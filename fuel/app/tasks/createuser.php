@@ -25,9 +25,9 @@ class CreateUser
 
 			return 'Create site user '.$name.'.';
 		}
-		catch(Exception $e)
+		catch(\FuelException $e)
 		{
-			return 'admin::createuser error: '.$e->getMessage();
+			return 'createuser error: '.$e->getMessage();
 		}
 	}
 }

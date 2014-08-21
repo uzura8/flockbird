@@ -105,7 +105,7 @@ class Util_file
 		if (!file_exists($file)) return;
 		if (!$return = unlink($file))
 		{
-			throw new FuelException('Remove image error.');
+			throw new FuelException('Remove file error: '.$file);
 		}
 
 		return $return;
