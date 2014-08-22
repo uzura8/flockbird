@@ -53,6 +53,7 @@ class Model_Album extends \Orm\Model
 			'data_type' => 'text',
 			//'validation' => array('trim', array('in_array', array('note'))),
 			'validation' => array('trim', 'max_length' => array(20)),
+			'default' => '',
 			'form' => array('type' => false),
 		),
 		'created_at' => array('form' => array('type' => false)),
@@ -212,7 +213,7 @@ class Model_Album extends \Orm\Model
 		$obj = self::query();
 		foreach ($cols as $col) $obj = $obj->select($col);
 		$obj = $obj->where('member_id', $member_id)->order_by('id', 'asc');
-		if (!$with_foreigns) $obj = $obj->where('foreign_table', 'is', null);
+		if (!$with_foreigns) $obj = $obj->where('foreign_table', '');
 		$obj = $obj->order_by('id', 'asc');
 
 		return $obj->get();
