@@ -8,13 +8,18 @@
 
 	----
 	cp config.php.sample config.php
+	vi config.php
 	----
 
+	URL設定(ドメイン と 設置パスを指定)
 	----
-	define('PRJ_ENVIRONMENT', 'DEVELOPMENT');
+	define('PRJ_DOMAIN', 'sns.example.com');
+	define('PRJ_URI_PATH', '/');
+	----
 
-	// DBサーバ接続設定
-	$GLOBALS['DSN']['development'] = array(
+	 DBサーバ接続設定
+	----
+	$GLOBALS['DSN']['production'] = array(
 		'default' => array(
 			'connection'  => array(
 				'dsn'        => 'mysql:host=localhost;dbname=dbname',
@@ -24,31 +29,25 @@
 			'profiling' => true,
 		),
 	);
+	----
 
-	// 暗号化キー(ASCII文字列)
+	暗号化キーを指定(ASCII文字列)
+	----
 	define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 	----
 
 
-2. DBの作成 & セットアップSQLの実行
+2. .htaccess の RewriteBase を設定
 
 	----
-	echo "CREATE DATABASE DB-name DEFAULT CHARACTER SET utf8" | mysql -u root -p
-	mysql -u root -p DB-name < data/sql/setup/setup.sql
+	vi .htaccess
+
+	RewriteBase /(設置パス/)
 	----
 
 
 3. セットアップスクリプトの実行
 
 	----
-	sh setup.sh
-	----
-
-
-4. .htaccess の RewriteBase を設定
-
-	----
-	vi .htaccess
-
-	RewriteBase /(設置パス/)
+	sh bin/setup/setup.sh
 	----
