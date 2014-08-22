@@ -2,10 +2,10 @@
 namespace Fuel\Tasks;
 
 /**
- * Task Setup
+ * Task SetupDB
  */
 
-class Setup
+class SetupDB
 {
 	private static $absolute_execute = false;
 	private static $database;
@@ -18,7 +18,7 @@ class Setup
 	/**
 	 * Usage (from command line):
 	 *
-	 * php oil r setup
+	 * php oil r setupdb
 	 *
 	 * @return string
 	 */
@@ -35,17 +35,17 @@ class Setup
 			return \Util_Task::output_message(sprintf('Setup db error: %s', $e->getMessage()), false);
 		}
 
-		return \Util_Task::output_result_message($result, 'setup', sprintf('Setup db %s.', self::$database));
+		return \Util_Task::output_result_message($result, 'setup db', sprintf('Setup db %s.', self::$database));
 	}
 
 	/**
 	 * Usage (from command line):
 	 *
-	 * php oil r setup:reset_db
+	 * php oil r setupdb:reset
 	 *
 	 * @return string
 	 */
-	public static function reset_db($database = null, $charset = null)
+	public static function reset($database = null, $charset = null)
 	{
 		try
 		{
@@ -58,17 +58,17 @@ class Setup
 			return \Util_Task::output_message(sprintf('Reset db error: %s', $e->getMessage()), false);
 		}
 
-		return \Util_Task::output_result_message($result, __FUNCTION__, sprintf('Reset db %s.', self::$database));
+		return \Util_Task::output_result_message($result, __FUNCTION__.' db', sprintf('Reset db %s.', self::$database));
 	}
 
 	/**
 	 * Usage (from command line):
 	 *
-	 * php oil r setup:create_db
+	 * php oil r setupdb:create
 	 *
 	 * @return string
 	 */
-	public static function create_db($database = null, $charset = null)
+	public static function create($database = null, $charset = null)
 	{
 		try
 		{
@@ -79,17 +79,17 @@ class Setup
 			return \Util_Task::output_message(sprintf('Create db error: %s', $e->getMessage()), false);
 		}
 
-		return \Util_Task::output_result_message($result, __FUNCTION__, sprintf('Create db %s.', self::$database));
+		return \Util_Task::output_result_message($result, __FUNCTION__.' db', sprintf('Create db %s.', self::$database));
 	}
 
 	/**
 	 * Usage (from command line):
 	 *
-	 * php oil r setup:drop_db
+	 * php oil r setupdb:drop
 	 *
 	 * @return string
 	 */
-	public static function drop_db($database)
+	public static function drop($database)
 	{
 		try
 		{
@@ -100,7 +100,7 @@ class Setup
 			return \Util_Task::output_message(sprintf('Drop db error: %s', $e->getMessage()), false);
 		}
 
-		return \Util_Task::output_result_message($result, __FUNCTION__, sprintf('Drop db %s.', self::$database));
+		return \Util_Task::output_result_message($result, __FUNCTION__.' db', sprintf('Drop db %s.', self::$database));
 	}
 
 	private static function exexute_create_db($database = null, $charset = null)
