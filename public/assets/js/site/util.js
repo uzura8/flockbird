@@ -241,16 +241,17 @@ function getNextSelector(listSelector, isInsertBefore)
 
 function postComment(postUri, textareaSelector, getUri, listSelector)
 {
-	var nextItemSelector  = (arguments.length > 4) ? arguments[4] : '';
-	var isInsertBefore    = (arguments.length > 5) ? arguments[5] : false;
-	var trigerSelector    = (arguments.length > 6) ? arguments[6] : '';
-	var counterSelector   = (arguments.length > 7) ? arguments[7] : '';
-	var postData          = (arguments.length > 8) ? arguments[8] : {};
-	var isCheckInput      = (arguments.length > 9) ? arguments[9] : true;
-	var postedArticleTerm = (arguments.length > 10) ? arguments[10] : '';
-	var getData           = (arguments.length > 11) ? arguments[11] : {};
-	var lastId            = (arguments.length > 12) ? parseInt(arguments[12]) : 0;
-	var textareaHeight    = (arguments.length > 13) ? arguments[13] : '33px';
+	var nextItemSelector  = (arguments.length > 4)  ? arguments[4] : '';
+	var isInsertBefore    = (arguments.length > 5)  ? arguments[5] : false;
+	var trigerSelector    = (arguments.length > 6)  ? arguments[6] : '';
+	var counterSelector   = (arguments.length > 7)  ? arguments[7] : '';
+	var callbackFunc      = (arguments.length > 8)  ? arguments[8] : null;
+	var postData          = (arguments.length > 9)  ? arguments[9] : {};
+	var isCheckInput      = (arguments.length > 10) ? arguments[10] : true;
+	var postedArticleTerm = (arguments.length > 11) ? arguments[11] : '';
+	var getData           = (arguments.length > 12) ? arguments[12] : {};
+	var lastId            = (arguments.length > 13) ? parseInt(arguments[13]) : 0;
+	var textareaHeight    = (arguments.length > 14) ? arguments[14] : '33px';
 
 	if (GL.execute_flg) return false;
 	if (!postUri) return false;
@@ -283,6 +284,10 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 			loadList(getUri, listSelector, 0, nextItemSelector, isInsertBefore, '', getData, lastId);
 			updateCounter(counterSelector);
 			reset_textarea(textareaSelector, textareaHeight);
+			if (callbackFunc) {
+				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);
+				callbackFunc();
+			}
 		},
 		error: function(result){
 			$.jGrowl(get_error_message(result['status'], postedArticleTerm + 'の投稿に失敗しました。'));
@@ -815,4 +820,12 @@ function removeItems(linkCommentSelector) {
 
 function removeNext(selfDomElement) {
 	$(selfDomElement).next().remove();
+}
+
+function scroll() {
+	var targetSelector = (arguments.length > 0) ? arguments[0] : '';
+	var easing = (arguments.length > 1) ? arguments[1] : 'swing';
+
+	var position = targetSelector ? $(targetSelector).offset().top : 0;
+	$('html,body').animate({scrollTop: position}, easing);
 }

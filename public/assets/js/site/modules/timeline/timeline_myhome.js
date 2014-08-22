@@ -73,6 +73,7 @@ $(function() {
 			isInsertBefore,
 			this,
 			'',
+			resetInputs,
 			postData,
 			false,
 			get_term('timeline'),
@@ -80,13 +81,6 @@ $(function() {
 			lastId,
 			'50px'
 		);
-
-		$('.upload').addClass('hidden');
-		$('.display_upload_form').removeClass('hidden');
-		$('#files').html('');
-		$('#album_id').val('0')
-		$('#progress .progress-bar').css('width', 0);
-		$('#album_id').html('<option selected="selected" value="0">' + get_term('timeline') + '用' + get_term('album') + '</option>');
 
 		return false;
 	});
@@ -135,3 +129,13 @@ $(function() {
 		return false;
 	});
 })
+
+function resetInputs() {
+	$('.upload').addClass('hidden');
+	$('.display_upload_form').removeClass('hidden');
+	$('#files_img').html('');
+	$('#album_id').val('0')
+	$('#progress_img .progress-bar').css('width', 0);
+	$('#album_id').html('<option selected="selected" value="0">' + get_term('timeline') + '用' + get_term('album') + '</option>');
+	scroll(is_sp() ? '#main_post_box' : 0, 'swing');
+}
