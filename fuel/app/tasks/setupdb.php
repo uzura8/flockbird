@@ -49,7 +49,7 @@ class SetupDB
 	{
 		try
 		{
-			$result = self::exexute_drop_db($databasecharset);
+			$result = self::exexute_drop_db($database);
 			if ($result) $result = self::exexute_create_db($database, $charset);
 			if ($result) $result = self::exexute_install_db($database);
 		}

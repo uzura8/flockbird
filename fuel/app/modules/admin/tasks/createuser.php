@@ -25,7 +25,7 @@ class CreateUser
 
 			return 'Create admin user '.$username.'.';
 		}
-		catch(Exception $e)
+		catch(\FuelException $e)
 		{
 			return 'admin::createuser error: '.$e->getMessage();
 		}
