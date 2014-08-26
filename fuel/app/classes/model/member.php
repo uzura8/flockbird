@@ -20,19 +20,19 @@ class Model_Member extends \Orm\Model
 			'cascade_delete' => false,
 		),
 	);
-	protected static $_has_many = array(
-		'member_config' => array(
-			'key_from' => 'id',
-			'model_to' => 'Model_MemberConfig',
-			'key_to' => 'member_id',
-		)
-	);
-	protected static $_eav = array(
-		'member_config' => array(
-			'attribute' => 'name',	// the key column in the related table contains the attribute
-			'value' => 'value',		// the value column in the related table contains the value
-		)
-	);
+	//protected static $_has_many = array(
+	//	'member_config' => array(
+	//		'key_from' => 'id',
+	//		'model_to' => 'Model_MemberConfig',
+	//		'key_to' => 'member_id',
+	//	)
+	//);
+	//protected static $_eav = array(
+	//	'member_config' => array(
+	//		'attribute' => 'name',	// the key column in the related table contains the attribute
+	//		'value' => 'value',		// the value column in the related table contains the value
+	//	)
+	//);
 
 	protected static $_properties = array(
 		'id',
@@ -90,6 +90,10 @@ class Model_Member extends \Orm\Model
 		'last_login' => array('form' => array('type' => false)),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
+	);
+
+	protected static $_to_array_exclude = array(
+		'login_hash', 'register_type', 'filesize_total', 'last_login', 'created_at', 'updated_at'
 	);
 
 	protected static $_observers = array(

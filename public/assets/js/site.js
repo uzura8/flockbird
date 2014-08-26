@@ -130,3 +130,49 @@ $(document).on('click', '.js-display_parts', function(){
 	if (focusSelector) $(focusSelector).focus();
 	return false;
 });
+
+$(document).on('click', '.js-popover', function(){
+	var contentSelector = $(this).data('content_id');
+
+	if ($(contentSelector).size() && $(contentSelector).html().length) {
+		$(this).popover('hide');
+	} else {
+		$(this).popover('show', {html: true});
+
+		var getUri = $(this).data('uri');
+		var templateSelecor = $(this).data('tmpl');
+		var source = $(templateSelecor).html();
+		var template = Handlebars.compile(source);
+
+		$.ajax({
+			type: 'GET',
+			url: get_url(getUri),
+			dataType: 'text',
+			beforeSend: function(xhr, settings) {
+				GL.execute_flg = true;
+				$("#article").append(get_loading_image_tag('loading_article'));
+			},
+			complete: function(xhr, textStatus) {
+				GL.execute_flg = false;
+				$("#loading_article").remove();
+			},
+			success: function(response, status){
+				var obj = $.parseJSON(response);
+				if (obj.list) {
+					$.each(obj.list, function(i, val) {
+						var html = template(val);
+						$(contentSelector).append(html);
+					});
+				} else {
+					var html = 'ありません。';
+					$(contentSelector).append(html);
+				}
+			},
+			error: function(result) {
+				showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
+			}
+		});
+	}
+	return false;
+});
+

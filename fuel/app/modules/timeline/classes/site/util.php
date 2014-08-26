@@ -270,7 +270,7 @@ class Site_Util
 				return \Album\Site_Util::get_like_api_uri4album_image($foreign_id);
 		}
 
-		return sprintf('timeline/api/like/%d.json', $timeline_id);
+		return sprintf('timeline/like/api/update/%d.json', $timeline_id);
 	}
 
 	public static function check_type_to_get_access_from($type)

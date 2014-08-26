@@ -36,6 +36,10 @@ class Model_MemberAuth extends \Orm\Model
 		'updated_at' => array('form' => array('type' => false)),
 	);
 
+	protected static $_to_array_exclude = array(
+		'member_id', 'email', 'password', 'id', 'created_at', 'updated_at'
+	);
+
 	public static function _init()
 	{
 		//static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();

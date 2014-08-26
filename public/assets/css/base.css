@@ -513,3 +513,8 @@ div.btnBox {
 #insecure_user_popover .form-group .btn {
 	margin-bottom: 5px;
 }
+
+.js-hide-btn .popover .popover-content {
+	overflow: scroll;
+	max-height: 300px;
+}

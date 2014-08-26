@@ -105,6 +105,6 @@ class Site_Util
 
 	public static function get_like_api_uri4album_image($album_image_id)
 	{
-		return sprintf('album/image/api/like/%d.json', $album_image_id);
+		return sprintf('album/like/image/api/update/%d.json', $album_image_id);
 	}
 }

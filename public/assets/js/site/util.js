@@ -320,7 +320,7 @@ function loadItem(container_attribute, item_attribute)
 	});
 }
 
-function loadPopover(linkSelector, contentSelector, content, contentUrl) {
+function loadPopover(linkSelector, contentSelector) {
 	var content = (arguments.length > 2) ? arguments[2] : '';
 	var contentUrl = (arguments.length > 3) ? arguments[3] : '';
 	var inputAttrs = (arguments.length > 4) ? arguments[4] : '';
