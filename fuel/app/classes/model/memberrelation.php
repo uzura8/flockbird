@@ -80,7 +80,8 @@ class Model_MemberRelation extends \Orm\Model
 		}
 		$key  = Util_string::combine_nums(array($self_member_id, $target_member_id), $relation_type == 'friend');
 		$prop = 'relations_'.$relation_type;
-		if (isset(self::$$prop[$key])) return (bool)self::$$prop[$key];
+		$target_relation_cache = self::$$prop;
+		if (isset($target_relation_cache[$key])) return (bool)$target_relation_cache[$key];
 
 		self::set_relations_cache4member_id_from_to($self_member_id, $target_member_id);
 

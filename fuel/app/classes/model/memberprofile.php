@@ -65,7 +65,7 @@ class Model_MemberProfile extends \Orm\Model
 		if ($profile_display_type_str && $profile_display_type = conf('member.profile.display_type.'.$profile_display_type_str))
 		{
 			$profile_ids = Model_Profile::get_ids4display_type($profile_display_type);
-			$query = $query->where('profile_id', 'in', $profile_ids);
+			if ($profile_ids) $query = $query->where('profile_id', 'in', $profile_ids);
 		}
 		if ($with_relations)
 		{
