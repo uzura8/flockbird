@@ -22,7 +22,8 @@ echo render('_parts/comment/count_and_link_display', array(
 <?php
 $data_like_link = array(
 	'id' => $note->id,
-	'uri' => \Note\Site_Util::get_like_api_uri($note->id),
+	'post_uri' => \Note\Site_Util::get_like_api_uri($note->id),
+	'get_member_uri' => \Note\Site_Util::get_liked_member_api_uri($note->id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $note->like_count,
 	'left_margin' => true,
