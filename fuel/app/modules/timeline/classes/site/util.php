@@ -273,7 +273,12 @@ class Site_Util
 		return sprintf('timeline/like/api/update/%d.json', $timeline_id);
 	}
 
-	public static function get_liked_member_api_uri($type, $timeline_id = 0, $foreign_id = 0)
+	public static function get_liked_member_api_uri($timeline_id)
+	{
+		return sprintf('timeline/like/api/member/%d.html', $timeline_id);
+	}
+
+	public static function get_liked_member_api_uri4foreign_table($type, $timeline_id = 0, $foreign_id = 0)
 	{
 		switch ($type)
 		{
@@ -283,7 +288,7 @@ class Site_Util
 				return \Album\Site_Util::get_liked_member_api_uri4album_image($foreign_id);
 		}
 
-		return sprintf('timeline/like/api/member/%d.html', $timeline_id);
+		return self::get_liked_member_api_uri($timeline_id);
 	}
 
 	public static function check_type_to_get_access_from($type)

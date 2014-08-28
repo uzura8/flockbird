@@ -57,4 +57,22 @@ class Controller_Like_Api extends \Controller_Site_Api
 
 		$this->response($response, $status_code);
 	}
+
+	/**
+	 * Note like get member
+	 * 
+	 * @access  public
+	 * @return  Response (json)
+	 */
+	public function get_member($parent_id = null)
+	{
+		$result = $this->get_liked_member_list(
+			'\Note\Model_NoteLike',
+			'\Note\Model_Note',
+			$parent_id,
+			'note_id',
+			Site_Util::get_liked_member_api_uri($parent_id)
+		);
+		if ($result) return $result;
+	}
 }

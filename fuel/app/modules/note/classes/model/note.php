@@ -1,7 +1,7 @@
 <?php
 namespace Note;
 
-class Model_Note extends \Orm\Model
+class Model_Note extends \MyOrm\Model
 {
 	protected static $_table_name = 'note';
 

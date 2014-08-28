@@ -20,54 +20,14 @@ class Controller_Like_Api extends \Controller_Site_Api
 	 */
 	public function get_member($parent_id = null)
 	{
-		$response = '';
-		try
-		{
-			if (!in_array($this->format, array('json', 'html'))) throw new \HttpNotFoundException();
-			$timeline_id = (int)$parent_id;
-			if (!$timeline_id || !$timeline = Model_timeline::check_authority($timeline_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$this->check_public_flag($timeline->public_flag, $timeline->member_id);
-
-			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params(array('desc' => 1), conf('view_params_default.list.limit.limit_max'));
-			list($list, $next_id) = Model_TimelineLike::get_list(array('timeline_id' => $timeline_id), $limit, 'member', ($this->format == 'json'), false, $is_desc);
-
-			$status_code = 200;
-			if ($this->format == 'html')
-			{
-				return \Response::forge(\View::forge('_parts/member_list', array(
-					'list' => $list,
-					'related_member_table_name' => 'member',
-					'next_id' => $next_id,
-					'is_simple_list' => true,
-					'list_id' => 'liked_member_list_timeline_'.$timeline_id,
-					'get_uri' => Site_Util::get_liked_member_api_uri($timeline->type, $timeline->id, $timeline->foreign_id),
-					'no_data_message' => sprintf('%sしている%sはいません', term('form.like'), term('member.view')),
-				)), $status_code);
-			}
-
-			$response = array(
-				'status' => 1,
-				'list' => $list,
-				'next_id' => $next_id,
-			);
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$result = $this->get_liked_member_list(
+			'\Timeline\Model_TimelineLike',
+			'\Timeline\Model_Timeline',
+			$parent_id,
+			'timeline_id',
+			Site_Util::get_liked_member_api_uri($parent_id)
+		);
+		if ($result) return $result;
 	}
 
 	public function get_list()

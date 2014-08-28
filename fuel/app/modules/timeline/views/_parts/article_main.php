@@ -85,7 +85,7 @@ echo render('_parts/comment/count_and_link_display', $data_comment_link);
 $data_like_link = array(
 	'id' => $timeline->id,
 	'post_uri' => \Timeline\Site_Util::get_like_api_uri($timeline->type, $timeline->id, $timeline->foreign_id),
-	'get_member_uri' => \Timeline\Site_Util::get_liked_member_api_uri($timeline->type, $timeline->id, $timeline->foreign_id),
+	'get_member_uri' => \Timeline\Site_Util::get_liked_member_api_uri4foreign_table($timeline->type, $timeline->id, $timeline->foreign_id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'link_display_absolute' => true,
 	'left_margin' => true,
