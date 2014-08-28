@@ -3,6 +3,13 @@
 	padding-bottom: 15px;
 	border-bottom: 1px solid #EEEEEE;
 }
+.modal-content #article_list .article {
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+}
+#article_list .article .col-xs-2 {
+	padding: 0 0 0 5px;
+}
 
 #article_list .article .header {
 	margin-bottom: 10px;

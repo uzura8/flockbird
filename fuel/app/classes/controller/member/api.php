@@ -75,23 +75,29 @@ class Controller_Member_Api extends Controller_Site_Api
 	 */
 	public function get_list()
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-
-		$page = (int)\Input::get('page', 1);
-
 		$response = '';
 		try
 		{
-			$sort = conf('member.view_params.list.sort');
-			$data = \Site_Model::get_simple_pager_list('member', $page, array(
-				'order_by' => array($sort['property'] => $sort['direction']),
-				'limit'    => conf('member.view_params.list.limit'),
-			));
+			if ($this->format != 'html') throw new \HttpNotFoundException();
 
-			$response = \View::forge('member/_parts/list', $data);
+			$sort = conf('member.view_params.list.sort');
+			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params(array(
+				'desc' => ($sort['direction'] == 'desc') ? 1 : 0,
+				'limit' => conf('member.view_params.list.limit'),
+			), conf('member.view_params.list.limit_max'));
+			list($list, $next_id) = Model_Member::get_list($params, $limit, null, ($this->format == 'json'), false, $is_desc);
+			$response = \View::forge('_parts/member_list', array(
+				'list' => $list,
+				'next_id' => $next_id,
+				'get_uri' => 'member/api/list.html',
+			));
 			$status_code = 200;
 
 			return \Response::forge($response, $status_code);
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
 		}
 		catch(\FuelException $e)
 		{

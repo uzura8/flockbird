@@ -273,6 +273,19 @@ class Site_Util
 		return sprintf('timeline/like/api/update/%d.json', $timeline_id);
 	}
 
+	public static function get_liked_member_api_uri($type, $timeline_id = 0, $foreign_id = 0)
+	{
+		switch ($type)
+		{
+			case \Config::get('timeline.types.note'):// note 投稿
+				return \Note\Site_Util::get_liked_member_api_uri($foreign_id);
+			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
+				return \Album\Site_Util::get_liked_member_api_uri4album_image($foreign_id);
+		}
+
+		return sprintf('timeline/like/api/member/%d.html', $timeline_id);
+	}
+
 	public static function check_type_to_get_access_from($type)
 	{
 		$types_to_get_access_from = array(

@@ -57,12 +57,18 @@ class Controller_Member extends Controller_Site
 	public function action_list()
 	{
 		$this->set_title_and_breadcrumbs(term('member.view', 'site.list'));
+
 		$sort = conf('member.view_params.list.sort');
-		$data = Site_Model::get_simple_pager_list('member', 1, array(
-			'order_by' => array($sort['property'] => $sort['direction']),
-			'limit'    => conf('member.view_params.list.limit'),
+		list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params(array(
+			'desc' => ($sort['direction'] == 'desc') ? 1 : 0,
+			'limit' => conf('member.view_params.list.limit'),
+		), conf('member.view_params.list.limit_max'));
+		list($list, $next_id) = Model_Member::get_list($params, $limit, null, ($this->format == 'json'), false, $is_desc);
+		$this->template->content = \View::forge('_parts/member_list', array(
+			'list' => $list,
+			'next_id' => $next_id,
+			'get_uri' => 'member/api/list.html',
 		));
-		$this->template->content = \View::forge('member/_parts/list', $data);
 		$this->template->post_footer = \View::forge('_parts/load_item');
 	}
 }

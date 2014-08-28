@@ -85,10 +85,10 @@ class Site_Model
 		if ($limit)
 		{
 			$is_next = count($list) > $limit;
-			if ($is_next) array_pop($list);
+			if ($is_next) $next_obj = array_pop($list);
 		}
 
-		return array($list, $is_next);
+		return array($list, $is_next, $next_obj->id);
 	}
 
 	private static function set_mytimeline_cond(&$query, $self_member_id, $follow_member_ids = null, $friend_member_ids = null)

@@ -3,8 +3,9 @@ if (empty($is_mypage)) $is_mypage = false;
 if (empty($is_list)) $is_list = false;
 if (empty($access_from)) $access_from = 'guest';
 if (empty($display_type)) $display_type = 'detail';
-if (!isset($with_image_upload_form)) $with_image_upload_form = false;
 if (empty($page_type)) $page_type = 'detail';
+if (!isset($with_image_upload_form)) $with_image_upload_form = false;
+if (!isset($is_simple_list)) $is_simple_list = false;
 switch ($page_type)
 {
 	case 'lerge_list':
@@ -53,10 +54,10 @@ elseif ($page_type != 'detail')
 <?php if (!empty($with_link2profile_image)): ?>
 			<div class="btnBox"><?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera'); ?></div>
 <?php endif; ?>
-<?php if ($is_mypage && $with_image_upload_form  && $member->file_id): ?>
-				<?php echo btn('form.delete', '#', 'js-simplePost', true, 'sm', 'default', array('data-uri' => 'member/profile/image/unset')); ?>
-<?php endif; ?>
 <?php if ($is_mypage && $with_image_upload_form): ?>
+<?php 	if ($member->file_id): ?>
+				<?php echo btn('form.delete', '#', 'js-simplePost', true, 'sm', 'default', array('data-uri' => 'member/profile/image/unset')); ?>
+<?php 	endif; ?>
 <?php echo render('_parts/form/upload_form', array('form_attrs' => array('action' => 'member/profile/image/edit'))); ?>
 <?php endif; ?>
 		</div>
@@ -76,7 +77,8 @@ elseif ($page_type != 'detail')
 					)); ?>
 <?php endif; ?>
 				</<?php echo $member_name_tag; ?>>
-<?php if (check_display_type(conf('profile.sex.displayType'), $display_type)
+<?php if (!$is_simple_list
+				&& check_display_type(conf('profile.sex.displayType'), $display_type)
 				&& check_public_flag($member->sex_public_flag, $access_from)
 				&& $sex = Model_Member::get_sex_options($member->sex, true)): ?>
 			<div class="row">
@@ -84,7 +86,10 @@ elseif ($page_type != 'detail')
 				<div class="col-xs-8"><?php echo $sex; ?></div>
 			</div>
 <?php endif; ?>
-<?php if ($member->birthyear && check_display_type(conf('profile.birthday.birthyear.displayType'), $display_type) && check_public_flag($member->birthyear_public_flag, $access_from)): ?>
+<?php if (!$is_simple_list
+				&& $member->birthyear
+				&& check_display_type(conf('profile.birthday.birthyear.displayType'), $display_type)
+				&& check_public_flag($member->birthyear_public_flag, $access_from)): ?>
 			<div class="row">
 				<div class="col-xs-4"><label>
 					<?php if (conf('profile.birthday.birthyear.viewType')): ?><?php echo term('member.age'); ?><?php else: ?><?php echo term('member.birthyear'); ?><?php endif; ?>
@@ -94,17 +99,25 @@ elseif ($page_type != 'detail')
 				</div>
 			</div>
 <?php endif; ?>
-<?php if ($member->birthday && check_display_type(conf('profile.birthday.birthday.displayType'), $display_type) && check_public_flag($member->birthday_public_flag, $access_from)): ?>
+<?php if (!$is_simple_list
+				&& !empty($member_profiles)
+				&& $member->birthday
+				&& check_display_type(conf('profile.birthday.birthday.displayType'), $display_type)
+				&& check_public_flag($member->birthday_public_flag, $access_from)): ?>
 			<div class="row">
 				<div class="col-xs-4"><label><?php echo term('member.birthday'); ?></label></div>
 				<div class="col-xs-8"><?php echo Util_Date::conv_date_format($member->birthday, '%d月%d日'); ?></div>
 			</div>
 <?php endif; ?>
+<?php if (!empty($member_profiles)): ?>
 			<?php echo render('member/profile/_parts/values', array('member' => $member, 'member_profiles' => $member_profiles, 'access_from' => $access_from, 'display_type' => $display_type)); ?>
+<?php endif; ?>
+<?php if (!$is_simple_list): ?>
 			<ul class="list-inline mt10">
 				<li><small><label><?php echo term('site.registration'); ?>:</label> <?php echo site_get_time($member->created_at) ?></small></li>
 				<?php if ($member->last_login): ?><li><small><label>最終<?php echo term('site.login'); ?>:</label> <?php echo site_get_time($member->last_login) ?></small></li><?php endif; ?>
 			</ul>
+<?php endif; ?>
 		</div>
 	</div>
 <?php if (!$is_list): ?></div><?php endif; ?>

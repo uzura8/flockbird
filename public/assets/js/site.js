@@ -176,3 +176,52 @@ $(document).on('click', '.js-popover', function(){
 	return false;
 });
 
+$(document).on('click', '.js-modal', function(){
+	var target = $(this).data('target');
+	var getUri = $(this).data('uri');
+	var templateSelecor = $(this).data('tmpl');
+
+	var option = {};
+	if (getUri) {
+		$.ajax({
+			type: 'GET',
+			url: get_url(getUri),
+			dataType: 'text',
+			beforeSend: function(xhr, settings) {
+				GL.execute_flg = true;
+				$("#article").append(get_loading_image_tag('loading_article'));
+			},
+			complete: function(xhr, textStatus) {
+				GL.execute_flg = false;
+				$("#loading_article").remove();
+			},
+			success: function(response, status){
+				if (templateSelecor) {
+					var templateSelecor = $(this).data('tmpl');
+					var source = $(templateSelecor).html();
+					var template = Handlebars.compile(source);
+					var obj = $.parseJSON(response);
+					if (obj.list) {
+						$.each(obj.list, function(i, val) {
+							var html = template(val);
+							$(contentSelector).append(html);
+						});
+					} else {
+						var html = 'ありません。';
+					}
+				} else {
+					var html = response;
+				}
+				$(target + ' .modal-body').html(html);
+				$(target).modal(option);
+			},
+			error: function(result) {
+				showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
+			}
+		});
+	} else {
+		option['remote'] = get_url(getUri);
+		$(target).modal(option);
+	}
+	return false;
+});
