@@ -100,7 +100,7 @@ class Controller_Base_Site extends Controller_Base
 		return $this->u->filesize_total;
 	}
 
-	protected function check_public_flag($public_flag, $member_id)
+	protected function check_browse_authority($public_flag, $member_id)
 	{
 		switch ($public_flag)
 		{

@@ -120,20 +120,20 @@ function removeLoading(blockSelector)
 	removeLoadingBlock(loadingBlockId);
 }
 
-function loadList(getUri, parentListSelector) {
-	var limit            = (arguments.length > 2) ? parseInt(arguments[2]) : 0;
-	var nextItemSelector = (arguments.length > 3) ? arguments[3] : '';
-	var isInsertBefore   = (arguments.length > 4) ? arguments[4] : false;
-	var trigerSelector   = (arguments.length > 5) ? arguments[5] : '';
-	var getData          = (arguments.length > 6) ? arguments[6] : {};
-	var lastId           = (arguments.length > 7) ? parseInt(arguments[7]) : 0;
-	var callbackFunc     = (arguments.length > 8) ? arguments[8] : null;
+function loadList(getUri) {
+	var parentListSelector = (arguments.length > 1) ? arguments[1] : 0;
+	var limit              = (arguments.length > 2) ? parseInt(arguments[2]) : 0;
+	var trigerSelector     = (arguments.length > 3) ? arguments[3] : '';
+	var isPrepend          = (arguments.length > 3) ? Boolean(arguments[4]) : false;
+	var getData            = (arguments.length > 4) ? arguments[5] : {};
+	var callbackFunc       = (arguments.length > 5) ? arguments[6] : null;
+	//var nextItemSelector = (arguments.length > 3) ? arguments[3] : '';
+	//var isPrepend        = (arguments.length > 4) ? arguments[4] : false;
 
 	getData['limit'] = limit ? limit : get_config('default_list_limit');
 
-	if (!lastId) lastId = (nextItemSelector && $(nextItemSelector).data('id')) ? parseInt($(nextItemSelector).data('id')) : 0;
-	if (lastId) getData['last_id'] = lastId;
-
+	//if (!sinceId) sinceId = (nextItemSelector && $(nextItemSelector).data('id')) ? parseInt($(nextItemSelector).data('id')) : 0;
+	//maxId = (nextItemSelector && $(nextItemSelector).data('id')) ? parseInt($(nextItemSelector).data('id')) : 0;
 	$.ajax({
 		url : get_url(getUri),
 		type : 'GET',
@@ -146,17 +146,33 @@ function loadList(getUri, parentListSelector) {
 		},
 		complete: function(xhr, textStatus) {
 			GL.execute_flg = false;
-			removeLoading(parentListSelector, trigerSelector, 'list_loading_image', true);
+			removeLoading(parentListSelector, trigerSelector, 'list_loading_image');
 		},
 		success: function(result) {
-			if (nextItemSelector) {
-				if (isInsertBefore) {
-					$(nextItemSelector).before(result).fadeIn('fast');
+			//if (nextItemSelector) {
+			//	if (isPrepend) {
+			//		$(nextItemSelector).before(result).fadeIn('fast');
+			//	} else {
+			//		$(nextItemSelector).after(result).fadeIn('fast');
+			//	}
+			//} else {
+			//	$(parentListSelector).html(result).fadeIn('fast');
+			//}
+			if (trigerSelector) {
+				var trigarObj = $(trigerSelector);
+				if (isPrepend) {
+					trigarObj.before(result).fadeIn('fast');
 				} else {
-					$(nextItemSelector).after(result).fadeIn('fast');
+					trigarObj.after(result).fadeIn('fast');
 				}
+				trigarObj.remove();
 			} else {
-				$(parentListSelector).html(result).fadeIn('fast');
+				if (isPrepend) {
+					$(parentListSelector).prepend(result).fadeIn('fast');
+				} else {
+					$(parentListSelector).append(result).fadeIn('fast');
+				}
+				//$(parentListSelector).html(result).fadeIn('fast');
 			}
 			if (callbackFunc) {
 				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);
@@ -229,11 +245,11 @@ function reset_textarea()
 	$(textareaSelector).css('height', textareaHeight);
 }
 
-function getNextSelector(listSelector, isInsertBefore)
+function getNextSelector(listSelector, isPrepend)
 {
 	var nextElement = '';
 	if ($(listSelector).html().replace(/[\r\n\s]+/, '')) {
-		var position = isInsertBefore ? 'first' : 'last';
+		var position = isPrepend ? 'first' : 'last';
 		nextElement = $(listSelector + ' > div:' + position);
 	}
 	return nextElement ? '#' + nextElement.attr('id') : '';
@@ -241,17 +257,15 @@ function getNextSelector(listSelector, isInsertBefore)
 
 function postComment(postUri, textareaSelector, getUri, listSelector)
 {
-	var nextItemSelector  = (arguments.length > 4)  ? arguments[4] : '';
-	var isInsertBefore    = (arguments.length > 5)  ? arguments[5] : false;
+	var isPrepend         = (arguments.length > 4)  ? arguments[4] : false;
+	var getData           = (arguments.length > 5)  ? arguments[5] : {};
 	var trigerSelector    = (arguments.length > 6)  ? arguments[6] : '';
 	var counterSelector   = (arguments.length > 7)  ? arguments[7] : '';
 	var callbackFunc      = (arguments.length > 8)  ? arguments[8] : null;
 	var postData          = (arguments.length > 9)  ? arguments[9] : {};
 	var isCheckInput      = (arguments.length > 10) ? arguments[10] : true;
 	var postedArticleTerm = (arguments.length > 11) ? arguments[11] : '';
-	var getData           = (arguments.length > 12) ? arguments[12] : {};
-	var lastId            = (arguments.length > 13) ? parseInt(arguments[13]) : 0;
-	var textareaHeight    = (arguments.length > 14) ? arguments[14] : '33px';
+	var textareaHeight    = (arguments.length > 12) ? arguments[12] : '33px';
 
 	if (GL.execute_flg) return false;
 	if (!postUri) return false;
@@ -281,7 +295,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 		},
 		success: function(result){
 			$.jGrowl(postedArticleTerm + 'を投稿しました。');
-			loadList(getUri, listSelector, 0, nextItemSelector, isInsertBefore, '', getData, lastId);
+			loadList(getUri, listSelector, 0, '', isPrepend, getData);
 			updateCounter(counterSelector);
 			reset_textarea(textareaSelector, textareaHeight);
 			if (callbackFunc) {

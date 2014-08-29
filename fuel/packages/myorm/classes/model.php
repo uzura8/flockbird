@@ -3,10 +3,23 @@ namespace MyOrm;
 
 class Model extends \Orm\Model
 {
-	public static function check_authority($id)
+	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $accept_member_id_related_table_props = array(), $member_id_prop = 'member_id')
 	{
-		if (!$id) return false;
-		if (!$obj = self::find($id)) return false;
+		if (!$id) throw new \HttpNotFoundException;
+
+		$params = array('rows_limit' => 1);
+		if ($related_tables) $params['related'] = $related_tables;
+		if (!$obj = self::find($id, $params)) throw new \HttpNotFoundException;
+
+		if ($target_member_id)
+		{
+			$accept_member_ids = array($obj->{$member_id_prop});
+			if ($accept_member_id_related_table_props)
+			{
+				$accept_member_ids = array_merge($accept_member_ids, Util_Orm::get_related_table_values_recursive($obj, $accept_member_id_related_table_props));
+			}
+			if (!in_array($target_member_id, $accept_member_ids)) throw new \HttpForbiddenException;
+		}
 
 		return $obj;
 	}
@@ -18,8 +31,26 @@ class Model extends \Orm\Model
 			->get_one();
 	}
 
-	public static function get_list($params = array(), $limit = 0, $relateds = array(), $is_return_array = false, $is_return_all_count = false, $is_desc = false, $select_props = array(), $sort_prop = 'id')
+	public static function get_list($params = array(), $limit = 0, $is_latest = false, $is_desc = false, $since_id = 0, $max_id = 0, $relateds = array(), $is_return_array = false, $is_return_all_count = false, $select_props = array(), $sort_prop = 'id')
 	{
+		$is_reverse = false;
+		if ($limit && $is_latest && !$is_desc)
+		{
+			$is_desc = true;
+			$is_reverse = true;
+		}
+
+		if ($since_id)
+		{
+			$operator = $is_latest ? '<' : '>';
+			$params[] = array($sort_prop, $operator, $since_id);
+		}
+		if ($max_id)
+		{
+			$operator = $is_latest ? '>=' : '<=';
+			$params[] = array($sort_prop, $operator, $max_id);
+		}
+
 		$query = self::query();
 		if ($select_props)
 		{
@@ -45,8 +76,8 @@ class Model extends \Orm\Model
 			$next_obj = array_pop($list);
 			$next_id = $next_obj->id;
 		}
+		if ($is_reverse) $list = array_reverse($list);
 
-		//if (!$is_desc) $list = array_reverse($list);
 		if ($is_return_array)
 		{
 			$list_array = array();

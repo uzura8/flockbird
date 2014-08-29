@@ -1,7 +1,7 @@
 <?php
 namespace Note;
 
-class Model_NoteComment extends \Orm\Model
+class Model_NoteComment extends \MyOrm\Model
 {
 	protected static $_table_name = 'note_comment';
 
@@ -96,20 +96,6 @@ class Model_NoteComment extends \Orm\Model
 		}
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $accept_member_ids = array())
-	{
-		if (!$id) return false;
-
-		$obj = self::find($id, array('rows_limit' => 1, 'related' => array('note', 'member')))? : null;
-		if (!$obj) return false;
-
-		$accept_member_ids[] = $obj->member_id;
-		$accept_member_ids[] = $obj->note->member_id;
-		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
-
-		return $obj;
-	}
-
 	public static function get_count4note_id($note_id)
 	{
 		if (!empty(self::$count_per_note[$note_id])) return self::$count_per_note[$note_id];
@@ -118,27 +104,6 @@ class Model_NoteComment extends \Orm\Model
 		self::$count_per_note[$note_id] = $query->count();
 
 		return self::$count_per_note[$note_id];
-	}
-
-	public static function get_comments($note_id, $record_limit = 0, $params = array(), $is_desc = false)
-	{
-		$is_all_records = false;
-		$params = array_merge(array(array('note_id', '=', $note_id)), $params);;
-		$query = self::query()->where($params);
-		$all_records_count = $query->count();
-		$query->related('member');
-		if (!$record_limit || $record_limit >= $all_records_count)
-		{
-			$is_all_records = true;
-			$comments = $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
-		}
-		else
-		{
-			$comments = $query->order_by('id', 'desc')->rows_limit($record_limit)->get();
-			if (!$is_desc) $comments = array_reverse($comments);
-		}
-
-		return array($comments, $is_all_records, $all_records_count);
 	}
 
 	public static function save_comment($note_id, $member_id, $body = '')

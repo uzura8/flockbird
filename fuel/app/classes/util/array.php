@@ -115,4 +115,16 @@ class Util_Array
 
 		return $row['key'];
 	}
+
+	public static function get_first(array $array)
+	{
+		return !empty($array[0]) ? $array[0] : false;
+	}
+
+	public static function get_last(array $array)
+	{
+		$key = count($array) - 1;
+
+		return !empty($array[$key]) ? $array[$key] : false;
+	}
 }

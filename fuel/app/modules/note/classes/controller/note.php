@@ -87,16 +87,16 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_detail($id = null)
 	{
-		if (!$note = Model_Note::check_authority($id)) throw new \HttpNotFoundException;
-		$this->check_public_flag($note->public_flag, $note->member_id);
+		$note_id = (int)$id;
+		$note = Model_Note::check_authority($note_id);
+		$this->check_browse_authority($note->public_flag, $note->member_id);
 
 		// note_album_image
 		$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
 
 		// note_comment
-		$record_limit = conf('view_params_default.detail.comment.limit');
-		if (\Input::get('all_comment', 0)) $record_limit = conf('view_params_default.detail.comment.limit_max');
-		list($comments, $is_all_records, $all_comment_count) = Model_NoteComment::get_comments($id, $record_limit);
+		list($limit, $is_latest, $is_desc, $since_id, $max_id) = $this->common_get_list_params(array('latest' => 1));
+		list($list, $next_id, $all_comment_count) = Model_NoteComment::get_list(array('note_id' => $note_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
 
 		// note_like
 		$is_liked_self = \Auth::check() ? Model_NoteLike::check_liked($id, $this->u->id) : false;
@@ -110,13 +110,12 @@ class Controller_Note extends \Controller_Site
 		}
 		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
-		$this->template->post_footer = \View::forge('_parts/load_masonry', array('is_not_load_more' => true));
 		$this->template->content = \View::forge('detail', array(
 			'note' => $note,
 			'images' => $images,
-			'comments' => $comments,
-			'is_all_records' => $is_all_records,
+			'comments' => $list,
 			'all_comment_count' => $all_comment_count,
+			'comment_next_id' => $next_id,
 			'is_liked_self' => $is_liked_self,
 		));
 	}

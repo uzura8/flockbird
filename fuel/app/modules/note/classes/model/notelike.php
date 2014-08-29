@@ -90,20 +90,6 @@ class Model_NoteLike extends \MyOrm\Model
 		}
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $accept_member_ids = array())
-	{
-		if (!$id) return false;
-
-		$obj = self::find($id, array('rows_limit' => 1, 'related' => array('note', 'member')))? : null;
-		if (!$obj) return false;
-
-		$accept_member_ids[] = $obj->member_id;
-		$accept_member_ids[] = $obj->note->member_id;
-		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
-
-		return $obj;
-	}
-
 	public static function get_count4note_id($note_id)
 	{
 		if (!empty(self::$count_per_note[$note_id])) return self::$count_per_note[$note_id];

@@ -156,18 +156,6 @@ class Model_Member extends \MyOrm\Model
 		return Model_File::get_name($this->file_id) ?: 'm';
 	}
 
-	public static function check_authority($id, $target_member_id = 0)
-	{
-		if (!$id) return false;
-
-		$obj = self::find($id);
-		if (!$obj) return false;
-
-		if ($target_member_id && $obj->id != $target_member_id) return false;
-
-		return $obj;
-	}
-
 	public static function recalculate_filesize_total($member_id = 0)
 	{
 		$filesize_total = Model_File::calc_filesize_total($member_id);

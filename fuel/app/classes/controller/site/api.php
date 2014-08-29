@@ -11,6 +11,16 @@ class Controller_Site_Api extends Controller_Base_Site
 		parent::before();
 	}
 
+	public function check_response_format($accept_formats = array())
+	{
+		if (!$accept_formats) return true;
+
+		if (!is_array($accept_formats)) $accept_formats = (array)$accept_formats;
+		if (!in_array($this->format, $accept_formats)) throw new \HttpNotFoundException();
+
+		return true;
+	}
+
 
 	/**
 	 * 以下、共通 controller
@@ -22,13 +32,11 @@ class Controller_Site_Api extends Controller_Base_Site
 		$response = '';
 		try
 		{
-			if (!in_array($this->format, array('json', 'html'))) throw new \HttpNotFoundException();
+			$this->check_response_format(array('json', 'html'));
+
 			$parent_id = (int)$parent_id;
-			if (!$parent_id || !$parent_obj = $parent_model::check_authority($parent_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$this->check_public_flag($parent_obj->public_flag, $parent_obj->member_id);
+			$parent_obj = $parent_model::check_authority($parent_id);
+			$this->check_browse_authority($parent_obj->public_flag, $parent_obj->member_id);
 
 			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params(array('desc' => 1), conf('view_params_default.list.limit.limit_max'));
 			$params[$parent_id_prop] = $parent_id;

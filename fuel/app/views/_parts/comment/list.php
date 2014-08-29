@@ -1,18 +1,21 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><?php endif; ?>
+<?php if ($list): ?>
+<?php 	if (!empty($next_id)): ?>
 <?php
 $list_more_box_attrs_def = array(
 	'class' => 'listMoreBox',
 	'id' => 'listMoreBox_comment',
 	'data-list' => '#comment_list',
 	'data-limit' => conf('view_params_default.list.comment.limit'),
+	'data-latest' => 1,
 );
 if (empty($uri_for_all_comments)) $list_more_box_attrs_def['class'] .=' js-ajax-loadList';
 $list_more_box_attrs = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);
+if ($first_comment = Util_Array::get_first($list)) $list_more_box_attrs['data-since_id'] = $first_comment->id;
 ?>
-<?php if (!$is_all_records): ?>
 <?php echo Html::anchor(isset($uri_for_all_comments) ? $uri_for_all_comments : '#', term('site.see_more'), $list_more_box_attrs); ?>
-<?php endif; ?>
-<?php foreach ($comments as $comment): ?>
+<?php 	endif; ?>
+<?php 	foreach ($list as $comment): ?>
 <?php
 $box_attrs = array(
 	'class' => 'js-hide-btn commentBox',
@@ -22,7 +25,7 @@ $box_attrs = array(
 	'data-auther_id' => $comment->member_id,
 );
 if ($parent && !empty($parent->member_id)) $box_attrs['data-parent_auther_id'] = $parent->member_id;
-if ($parent || !empty($class_id)) $box_attrs['class'] .= sprintf(' commentBox_%d', isset($class_id) ? $class_id : $parent->id);
+if ($parent) $box_attrs['class'] .= sprintf(' commentBox_%d', $parent->id);
 ?>
 <div <?php echo Util_Array::conv_array2attr_string($box_attrs); ?>>
 <?php echo render('_parts/member_contents_box', array(
@@ -41,4 +44,5 @@ if ($parent || !empty($class_id)) $box_attrs['class'] .= sprintf(' commentBox_%d
 )); ?>
 <?php endif ; ?>
 </div>
-<?php endforeach; ?>
+<?php 	endforeach; ?>
+<?php endif; ?>

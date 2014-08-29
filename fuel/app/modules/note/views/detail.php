@@ -37,21 +37,26 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 <div id="comment_list">
 <?php echo render('_parts/comment/list', array(
 	'parent' => $note,
-	'comments' => $comments,
-	'is_all_records' => $is_all_records,
+	'list' => $comments,
+	'next_id' => $comment_next_id,
+	//'is_all_records' => $is_all_records,
 	'delete_uri' => 'note/comment/api/delete.json',
 	'list_more_box_attrs' => array(
 		'data-uri' => 'note/comment/api/list/'.$note->id.'.html',
-		'data-is_before' => true,
 	),
 )); ?>
 </div>
-<?php if (Auth::check()): ?>
-<?php echo render('_parts/post_comment', array('button_attrs' => array(
-	'data-post_uri' => 'note/comment/api/create/'.$note->id.'.json',
-	'data-get_uri' => 'note/comment/api/list/'.$note->id.'.html',
-	'data-list' => '#comment_list',
-	'data-counter' => '#comment_count_'.$note->id,
-))); ?>
-<?php endif; ?>
+<?php
+if (Auth::check())
+{
+	$button_attrs = array(
+		'data-post_uri' => 'note/comment/api/create/'.$note->id.'.json',
+		'data-get_uri' => 'note/comment/api/list/'.$note->id.'.html',
+		'data-list' => '#comment_list',
+		'data-counter' => '#comment_count_'.$note->id,
+		'data-latest' => 1,
+	);
+	echo render('_parts/post_comment', array('button_attrs' => $button_attrs));
+}
+?>
 <?php endif; ?>

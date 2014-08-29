@@ -79,4 +79,21 @@ class Util_Orm
 
 		return false;
 	}
+
+	public static function get_related_table_values_recursive(\Orm\Model$obj, $related_table_props = array())
+	{
+		$values = array();
+		foreach ($related_table_props as $related_table => $values)
+		{
+			if (is_array($values))
+			{
+				$value = array_merge($value, self::get_related_table_values_recursive($obj->{$related_table}, $values));
+				continue;
+			}
+
+			$values[] = $obj->{$related_table}->{$values};
+		}
+
+		return $values;
+	}
 }

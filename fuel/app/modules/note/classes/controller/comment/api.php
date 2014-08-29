@@ -23,35 +23,42 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		$response = '';
 		try
 		{
-			if ($this->format != 'html') throw new \HttpNotFoundException();
-			$note_id = (int)$parent_id;
-			if (!$note_id || !$note = Model_Note::check_authority($note_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$this->check_public_flag($note->public_flag, $note->member_id);
+			$this->check_response_format(array('json', 'html'));
 
-			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params();
-			list($comments, $is_all_records) = Model_NoteComment::get_comments($note_id, $limit, $params, $is_desc);
-			$data = array(
-				'comments' => $comments,
-				'parent' => $note,
-				'is_all_records' => $is_all_records,
-				'list_more_box_attrs' => array(
-					'id' => 'listMoreBox_comment_'.$note->id,
-					'data-uri' => sprintf('note/comment/api/list/%s.html', $note->id),
-					'data-list' => '#comment_list_'.$note->id,
-					'data-is_before' => 1,
-				),
-				'class_id' => $class_id,
-				'delete_uri' => 'note/comment/api/delete.json',
-				'counter_selector' => '#comment_count_'.$note->id,
-			);
-			if ($limit) $data['show_more_link'] = true;
-			$response = \View::forge('_parts/comment/list', $data);
+			$parent_id = (int)$parent_id;
+			$parent_obj = Model_Note::check_authority($parent_id);
+			$this->check_browse_authority($parent_obj->public_flag, $parent_obj->member_id);
+
+			list($limit, $is_latest, $is_desc, $since_id, $max_id) = $this->common_get_list_params();
+			list($list, $next_id, $all_comment_count)
+				= Model_NoteComment::get_list(array('note_id' => $parent_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, ($this->format == 'json'));
+
 			$status_code = 200;
+			if ($this->format == 'html')
+			{
+				// html response
+				return \Response::forge(\View::forge('_parts/comment/list', array(
+					'list' => $list,
+					'next_id' => $next_id,
+					'parent' => $parent_obj,
+					'list_more_box_attrs' => array(
+						'id' => 'listMoreBox_comment_'.$parent_id,
+						'data-uri' => sprintf('note/comment/api/list/%s.html', $parent_id),
+						'data-list' => '#comment_list_'.$parent_id,
+						'data-max_id' => $max_id,
+						//'data-prepend' => 1,
+					),
+					'delete_uri' => 'note/comment/api/delete.json',
+					'counter_selector' => '#comment_count_'.$parent_id,
+				)), $status_code);
+			}
 
-			return \Response::forge($response, $status_code);
+			// json response
+			$response = array(
+				'status' => 1,
+				'list' => $list,
+				'next_id' => $next_id,
+			);
 		}
 		catch(\HttpNotFoundException $e)
 		{
@@ -80,15 +87,13 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		$response = array('status' => 0);
 		try
 		{
-			if ($this->format != 'json') throw new \HttpNotFoundException();
+			$this->check_response_format('json');
 			\Util_security::check_csrf();
 
-			$note_id = (int)$parent_id ?: (int)\Input::post('id');
-			if (!$note_id || !$note = Model_Note::check_authority($note_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$this->check_public_flag($note->public_flag, $note->member_id);
+			$note_id = (int)$parent_id;
+			if (\Input::post('id')) $note_id = (int)\Input::post('id');
+			$note = Model_Note::check_authority($note_id);
+			$this->check_browse_authority($note->public_flag, $note->member_id);
 
 			// Lazy validation
 			$body = trim(\Input::post('body', ''));
@@ -137,14 +142,12 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		$response = array('status' => 0);
 		try
 		{
+			$this->check_response_format('json');
 			\Util_security::check_csrf();
 
 			$id = (int)$id;
 			if (\Input::post('id')) $id = (int)\Input::post('id');
-			if (!$id || !$note_comment = Model_NoteComment::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$note_comment = Model_NoteComment::check_authority($id);
 
 			\DB::start_transaction();
 			$note_comment->delete();

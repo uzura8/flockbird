@@ -59,7 +59,7 @@ class Controller_Comment extends \Controller_Site
 	{
 		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
 
-		if (!$comment = Model_NoteComment::check_authority($id, $this->u->id))
+		if (!$comment = Model_NoteComment::check_authority($id, $this->u->id, array('note', 'member'), array('note' => 'member_id')))
 		{
 			throw new \HttpNotFoundException;
 		}

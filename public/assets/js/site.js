@@ -49,18 +49,21 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var textareaSelector = $(this).data('textarea') ? $(this).data('textarea') : '';
 	var getUri = $(this).data('get_uri') ? $(this).data('get_uri') : '';
 	var listSelector = $(this).data('list') ? $(this).data('list') : '';
-	var isInsertBefore = $(this).data('is_before') ? Boolean($(this).data('is_before')) : false;
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 	var counterSelector = $(this).data('counter') ? $(this).data('counter') : '';
+	var isLatest = $(this).data('latest') ? Boolean($(this).data('latest')) : false;
 
-	var nextSelector = getNextSelector(listSelector, isInsertBefore);
+	var nextSelector = getNextSelector(listSelector, isLatest ? false : true);
+	if (nextSelector) getData['max_id'] = parseInt($(nextSelector).data('id')) + 1;
+	if (isLatest) getData['latest'] = 1;
+
 	postComment(
 		postUri,
 		textareaSelector,
 		getUri,
 		listSelector,
-		nextSelector,
-		isInsertBefore,
+		isLatest ? false : true,
+		getData,
 		this,
 		counterSelector
 	);
@@ -77,34 +80,37 @@ $(document).on('click','.js-ajax-updatePublicFlag', function(){
 $(document).on('click','.js-ajax-loadList', function(){
 	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
 	var listSelector = $(this).data('list') ? $(this).data('list') : '';
-	var limit = $(this).data('limit') ? $(this).data('limit') : 0;
-	var isInsertBefore = $(this).data('is_before') ? Boolean($(this).data('is_before')) : false;
+	var limit = $(this).data('limit') ? parseInt($(this).data('limit')) : 0;
+	var isLatest = $(this).data('latest') ? parseInt($(this).data('latest')) : 0;
+	var isDesc = $(this).data('desc') ? parseInt($(this).data('desc')) : 0;
+	var sinceId = $(this).data('since_id') ? parseInt($(this).data('since_id')) : 0;
+	var maxId = $(this).data('max_id') ? parseInt($(this).data('max_id')) : 0;
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
-	var lastId = $(this).data('last_id') ? parseInt($(this).data('last_id')) : 0;
 
 	if (GL.execute_flg) return false;
-	if (!getUri || !listSelector) return false;
+	if (!getUri) return false;
 
-	var limitId = 0;
-	if (isInsertBefore) {
-		getData['is_before'] = 1;
-		var nextSelector = '#' + $(this).next().attr('id');
-		if ($(this).prev().size()) limitId = parseInt($(this).prev().data('id'));
-	} else {
-		var nextSelector = '#' + $(this).prev().attr('id');
-		if ($(this).next().size()) limitId = parseInt($(this).next().data('id'));
-	}
-	if (limitId) getData['limit_id'] = limitId;
+	//var maxId = 0;
+	//if (isPrepend) {
+	//	getData['prepend'] = 1;
+	//	var nextSelector = '#' + $(this).next().attr('id');
+	//	if ($(this).prev().size()) maxId = parseInt($(this).prev().data('id'));
+	//} else {
+	//	var nextSelector = '#' + $(this).prev().attr('id');
+	//	if ($(this).next().size()) maxId = parseInt($(this).next().data('id'));
+	//}
+	if (isLatest) getData['latest'] = isLatest;
+	if (isDesc) getData['desc'] = isDesc;
+	if (sinceId) getData['since_id'] = sinceId;
+	if (maxId) getData['max_id'] = maxId;
 
 	loadList(
 		getUri,
 		listSelector,
 		limit,
-		nextSelector,
-		isInsertBefore,
 		this,
-		getData,
-		lastId
+		false,
+		getData
 	);
 
 	return false;

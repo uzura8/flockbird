@@ -137,18 +137,6 @@ class Model_Note extends \MyOrm\Model
 		}
 	}
 
-	public static function check_authority($id, $target_member_id = 0)
-	{
-		if (!$id) return false;
-
-		$obj = self::find($id, array('related' => 'member'));
-		if (!$obj) return false;
-
-		if ($target_member_id && $obj->member_id != $target_member_id) return false;
-
-		return $obj;
-	}
-
 	public function save_with_relations($member_id, $values, $file_tmps = null, $album_images = array(), $files = array())
 	{
 		if (!empty($this->member_id) && $this->member_id != $member_id)
