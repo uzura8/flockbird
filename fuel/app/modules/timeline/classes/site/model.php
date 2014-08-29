@@ -3,7 +3,7 @@ namespace Timeline;
 
 class Site_Model
 {
-	public static function get_list($self_member_id = 0, $target_member_id = 0, $is_mytimeline = false, $viewType = null, $last_id = 0, $limit = 0, $is_desc = true, $is_before = false, $limit_id = 0)
+	public static function get_list($self_member_id = 0, $target_member_id = 0, $is_mytimeline = false, $viewType = null, $max_id = 0, $limit = 0, $is_latest = true, $is_desc = true, $since_id = 0)
 	{
 		$follow_member_ids = null;
 		$friend_member_ids = null;
@@ -19,7 +19,7 @@ class Site_Model
 
 		$query = Model_TimelineCache::query()->select('id', 'member_id', 'timeline_id', 'type', 'comment_count', 'like_count');
 
-		if ($last_id || $limit_id) $query->and_where_open();
+		if ($max_id || $since_id) $query->and_where_open();
 		if ($is_mytimeline)
 		{
 			if ($follow_timeline_ids = self::get_follow_timeline_ids($self_member_id))
@@ -58,17 +58,25 @@ class Site_Model
 			$query->where($basic_cond);
 			$query->where('is_follow', 0);
 		}
-		if ($last_id || $limit_id) $query->and_where_close();
+		if ($max_id || $since_id) $query->and_where_close();
 
-		if ($last_id)
+
+		$is_reverse = false;
+		if ($limit && $is_latest && !$is_desc)
 		{
-			$inequality_sign = $is_before ? '>' : '<';
-			$query->where('id', $inequality_sign, $last_id);
+			$is_desc = true;
+			$is_reverse = true;
 		}
-		if ($limit_id)
+
+		if ($since_id)
 		{
-			$inequality_sign = $is_before ? '<' : '>';
-			$query->where('id', $inequality_sign, $limit_id);
+			$operator = $is_latest ? '>' : '<';
+			$query->where('id', $operator, $since_id);
+		}
+		if ($max_id)
+		{
+			$operator = $is_latest ? '<=' : '>=';
+			$query->where('id', $operator, $max_id);
 		}
 
 		$query->order_by($sort);
@@ -81,14 +89,14 @@ class Site_Model
 
 		$list = $query->get();
 
-		$is_next = false;
-		if ($limit)
+		$next_id = 0;
+		if ($limit && count($list) > $limit)
 		{
-			$is_next = count($list) > $limit;
-			if ($is_next) $next_obj = array_pop($list);
+			$next_obj = array_pop($list);
+			$next_id = $next_obj->id;
 		}
 
-		return array($list, $is_next, $next_obj->id);
+		return array($list, $next_id);
 	}
 
 	private static function set_mytimeline_cond(&$query, $self_member_id, $follow_member_ids = null, $friend_member_ids = null)

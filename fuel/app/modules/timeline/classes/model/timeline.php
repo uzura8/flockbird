@@ -1,7 +1,7 @@
 <?php
 namespace Timeline;
 
-class Model_Timeline extends \Orm\Model
+class Model_Timeline extends \MyOrm\Model
 {
 	protected static $_table_name = 'timeline';
 
@@ -214,18 +214,6 @@ class Model_Timeline extends \Orm\Model
 				'events' => array('before_delete'),
 			);
 		}
-	}
-
-	public static function check_authority($id, $target_member_id = 0)
-	{
-		if (!$id) return false;
-
-		$obj = self::find($id);
-		if (!$obj) return false;
-
-		if ($target_member_id && $obj->member_id != $target_member_id) return false;
-
-		return $obj;
 	}
 
 	public static function get4latest_foreign_data($foreign_table, $foreign_id, $since_datetime = null)

@@ -1,7 +1,7 @@
 <?php
 namespace Timeline;
 
-class Model_TimelineCache extends \Orm\Model
+class Model_TimelineCache extends \MyOrm\Model
 {
 	protected static $_table_name = 'timeline_cache';
 

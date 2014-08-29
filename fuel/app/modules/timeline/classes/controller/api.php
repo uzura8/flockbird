@@ -23,24 +23,21 @@ class Controller_Api extends \Controller_Site_Api
 		$response = '';
 		try
 		{
-			if ($this->format != 'html') throw new \HttpNotFoundException();
+			$this->check_response_format('html');
+
+			list($limit, $is_latest, $is_desc, $since_id, $max_id)
+				= $this->common_get_list_params(array('desc' => 1, 'limit' => conf('timeline.articles.limit')), conf('timeline.articles.max_limit'));
 
 			$member_id     = (int)\Input::get('member_id', 0);
 			$is_mytimeline = (bool)\Input::get('mytimeline', 0);
-			list($limit, $params, $is_desc, $class_id, $last_id, $is_before, $limit_id)
-				= $this->common_get_list_params(array('desc' => 1, 'limit' => conf('timeline.articles.limit')), conf('timeline.articles.max_limit', 50));
-
-			$member = null;
-			if ($member_id && !$member = \Model_Member::check_authority($member_id))
-			{
-				throw new \HttpNotFoundException;;
-			}
+			$member = $member_id ? \Model_Member::check_authority($member_id) : null;
 			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
 			$timeline_viewType = $is_mytimeline ? $this->u->timeline_viewType : null;
-			list($list, $is_next)
-				= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $last_id, $limit, $is_desc, $is_before, $limit_id);
 
-			$data = array('list' => $list, 'is_next' => $is_next);
+			list($list, $next_id)
+				= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $max_id, $limit, $is_latest, $is_desc, $since_id);
+
+			$data = array('list' => $list, 'next_id' => $next_id);
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;
 			$response = \View::forge('_parts/list', $data);
@@ -51,6 +48,10 @@ class Controller_Api extends \Controller_Site_Api
 		catch(\HttpNotFoundException $e)
 		{
 			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
 		}
 		catch(\FuelException $e)
 		{

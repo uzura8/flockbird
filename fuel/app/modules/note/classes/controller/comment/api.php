@@ -20,60 +20,14 @@ class Controller_Comment_Api extends \Controller_Site_Api
 	 */
 	public function get_list($parent_id = null)
 	{
-		$response = '';
-		try
-		{
-			$this->check_response_format(array('json', 'html'));
-
-			$parent_id = (int)$parent_id;
-			$parent_obj = Model_Note::check_authority($parent_id);
-			$this->check_browse_authority($parent_obj->public_flag, $parent_obj->member_id);
-
-			list($limit, $is_latest, $is_desc, $since_id, $max_id) = $this->common_get_list_params();
-			list($list, $next_id, $all_comment_count)
-				= Model_NoteComment::get_list(array('note_id' => $parent_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, ($this->format == 'json'));
-
-			$status_code = 200;
-			if ($this->format == 'html')
-			{
-				// html response
-				return \Response::forge(\View::forge('_parts/comment/list', array(
-					'list' => $list,
-					'next_id' => $next_id,
-					'parent' => $parent_obj,
-					'list_more_box_attrs' => array(
-						'id' => 'listMoreBox_comment_'.$parent_id,
-						'data-uri' => sprintf('note/comment/api/list/%s.html', $parent_id),
-						'data-list' => '#comment_list_'.$parent_id,
-						'data-max_id' => $max_id,
-						//'data-prepend' => 1,
-					),
-					'delete_uri' => 'note/comment/api/delete.json',
-					'counter_selector' => '#comment_count_'.$parent_id,
-				)), $status_code);
-			}
-
-			// json response
-			$response = array(
-				'status' => 1,
-				'list' => $list,
-				'next_id' => $next_id,
-			);
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$result = $this->get_comment_list(
+			'\Note\Model_NoteComment',
+			'\Note\Model_Note',
+			$parent_id,
+			'note_id',
+			'note'
+		);
+		if ($result) return $result;
 	}
 
 	/**
@@ -122,6 +76,10 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		{
 			$status_code = 403;
 		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
 		catch(\FuelException $e)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
@@ -159,6 +117,14 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		catch(\HttpNotFoundException $e)
 		{
 			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
 		}
 		catch(\FuelException $e)
 		{

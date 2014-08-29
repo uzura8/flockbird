@@ -16,11 +16,13 @@ echo render('timeline::_parts/article', array(
 <?php endforeach; ?>
 <?php endif; ?>
 
-<?php if ($is_next): ?>
+<?php if ($next_id): ?>
 <?php
 $attr = array(
 	'class' => 'listMoreBox js-ajax-Load_timeline',
-	'data-last_id' => $timeline_cache->id,
+	'data-max_id' => $next_id,
+	'data-latest' => 1,
+	'data-desc' => 1,
 );
 $data_array = array('desc' => 1);
 if (!empty($member)) $data_array['member_id'] = $member->id;

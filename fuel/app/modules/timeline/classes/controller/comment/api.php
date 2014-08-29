@@ -20,55 +20,14 @@ class Controller_Comment_Api extends \Controller_Site_Api
 	 */
 	public function get_list($parent_id = null)
 	{
-		$response = '';
-		try
-		{
-			if ($this->format != 'html') throw new \HttpNotFoundException();
-			$timeline_id = (int)$parent_id;
-			if (!$timeline_id || !$timeline = Model_timeline::check_authority($timeline_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$this->check_public_flag($timeline->public_flag, $timeline->member_id);
-
-			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params();
-			list($comments, $is_all_records) = Model_TimelineComment::get_comments($timeline_id, $limit, $params, $is_desc);
-
-			$data = array(
-				'comments' => $comments,
-				'parent' => $timeline,
-				'is_all_records' => $is_all_records,
-				'list_more_box_attrs' => array('id' => 'listMoreBox_comment_'.$timeline_id, 'data-parent_id' => $timeline_id),
-				'class_id' => $class_id,
-				'delete_uri' => Site_Util::get_comment_api_uri('delete', $timeline->type, $timeline->id, $timeline->foreign_id),
-				'counter_selector' => '#comment_count_'.$timeline->id,
-				'list_more_box_attrs' => array(
-					'data-uri' => 'timeline/comment/api/list/'.$timeline->id.'.html',
-					'data-is_before' => true,
-					'data-list' => '#comment_list_'.$timeline->id,
-					'data-is_before' => 1,
-				),
-			);
-			if ($limit) $data['show_more_link'] = true;
-
-			$response = \View::forge('_parts/comment/list', $data);
-			$status_code = 200;
-			return \Response::forge($response, $status_code);
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$result = $this->get_comment_list(
+			'\Timeline\Model_TimelineComment',
+			'\Timeline\Model_Timeline',
+			$parent_id,
+			'timeline_id',
+			'timeline'
+		);
+		if ($result) return $result;
 	}
 
 	/**
@@ -82,15 +41,13 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		$response = array('status' => 0);
 		try
 		{
-			if ($this->format != 'json') throw new \HttpNotFoundException();
+			$this->check_response_format('json');
 			\Util_security::check_csrf();
 
-			$timeline_id = (int)$parent_id ?: (int)\Input::post('id');
-			if (!$timeline_id || !$timeline = Model_Timeline::check_authority($timeline_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$this->check_public_flag($timeline->public_flag, $timeline->member_id);
+			$timeline_id = (int)$parent_id;
+			if (\Input::post('id')) $timeline_id = (int)\Input::post('id');
+			$timeline = Model_Timeline::check_authority($timeline_id);
+			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
 
 			// validation
 			if (Site_Util::check_type_for_post_foreign_table_comment($timeline->type))

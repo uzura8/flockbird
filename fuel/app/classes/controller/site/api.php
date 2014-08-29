@@ -27,6 +27,64 @@ class Controller_Site_Api extends Controller_Base_Site
 	 * 
 	 */
 
+	protected function get_comment_list($model, $parent_model, $parent_id, $parent_id_prop, $module)
+	{
+		$response = '';
+		try
+		{
+			$this->check_response_format(array('json', 'html'));
+
+			$parent_id = (int)$parent_id;
+			$parent_obj = $parent_model::check_authority($parent_id);
+			$this->check_browse_authority($parent_obj->public_flag, $parent_obj->member_id);
+
+			list($limit, $is_latest, $is_desc, $since_id, $max_id) = $this->common_get_list_params();
+			list($list, $next_id, $all_comment_count)
+				= $model::get_list(array($parent_id_prop => $parent_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, ($this->format == 'json'));
+
+			$status_code = 200;
+			if ($this->format == 'html')
+			{
+				// html response
+				return \Response::forge(\View::forge('_parts/comment/list', array(
+					'list' => $list,
+					'next_id' => $next_id,
+					'parent' => $parent_obj,
+					'list_more_box_attrs' => array(
+						'id' => 'listMoreBox_comment_'.$parent_id,
+						'data-uri' => sprintf('%s/comment/api/list/%d.html', $module, $parent_id),
+						'data-list' => '#comment_list_'.$parent_id,
+						'data-max_id' => $max_id,
+						//'data-prepend' => 1,
+					),
+					'delete_uri' => sprintf('%s/comment/api/delete.json', $module),
+					'counter_selector' => '#comment_count_'.$parent_id,
+				)), $status_code);
+			}
+
+			// json response
+			$response = array(
+				'status' => 1,
+				'list' => $list,
+				'next_id' => $next_id,
+			);
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
 	protected function get_liked_member_list($like_model, $parent_model, $parent_id, $parent_id_prop, $get_uri)
 	{
 		$response = '';

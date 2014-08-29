@@ -20,14 +20,14 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function get_list()
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-
-		$page      = (int)\Input::get('page', 1);
-		$member_id = (int)\Input::get('member_id', 0);
-
 		$response = '';
 		try
 		{
+			$this->check_response_format('html');
+
+			$page      = (int)\Input::get('page', 1);
+			$member_id = (int)\Input::get('member_id', 0);
+
 			list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
 			$is_draft = $is_mypage ? \Util_string::cast_bool_int(\Input::get('is_draft', 0)) : 0;
 			$is_published = \Util_toolkit::reverse_bool($is_draft, true);
@@ -49,6 +49,14 @@ class Controller_Api extends \Controller_Site_Api
 
 			return \Response::forge($response, $status_code);
 		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
 		catch(\FuelException $e)
 		{
 			$status_code = 400;
@@ -68,14 +76,12 @@ class Controller_Api extends \Controller_Site_Api
 		$response = array('status' => 0);
 		try
 		{
+			$this->check_response_format('json');
 			\Util_security::check_csrf();
 
 			$id = (int)$id;
 			if (\Input::post('id')) $id = (int)\Input::post('id');
-			if (!$id || !$note = Model_Note::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$note = Model_Note::check_authority($id, $this->u->id);
 
 			\DB::start_transaction();
 			$deleted_files = $note->delete_with_relations();
@@ -88,6 +94,14 @@ class Controller_Api extends \Controller_Site_Api
 		catch(\HttpNotFoundException $e)
 		{
 			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
 		}
 		catch(\FuelException $e)
 		{
@@ -104,19 +118,18 @@ class Controller_Api extends \Controller_Site_Api
 	 * @access  public
 	 * @return  Response (html)
 	 */
-	public function post_update_public_flag()
+	public function post_update_public_flag($id = null)
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
 		$response = '0';
 		try
 		{
+			$this->check_response_format('html');
 			\Util_security::check_csrf();
 
-			$id = (int)\Input::post('id');
-			if (!$id || !$note = Model_Note::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$id = (int)$id;
+			if (\Input::post('id')) $id = (int)\Input::post('id');
+			$note = Model_Note::check_authority($id, $this->u->id);
+
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($note->public_flag);
 
 			\DB::start_transaction();
@@ -132,6 +145,10 @@ class Controller_Api extends \Controller_Site_Api
 		catch(\HttpNotFoundException $e)
 		{
 			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
 		}
 		catch(\HttpInvalidInputException $e)
 		{
