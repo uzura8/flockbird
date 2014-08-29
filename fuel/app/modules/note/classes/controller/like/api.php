@@ -15,16 +15,13 @@ class Controller_Like_Api extends \Controller_Site_Api
 		try
 		{
 			if (!conf('like.isEnabled')) throw new \HttpNotFoundException();
-			if ($this->format != 'json') throw new \HttpNotFoundException();
+			$this->check_response_format('json');
 			\Util_security::check_csrf();
 
 			$note_id = (int)$id;
 			if (\Input::post('id')) $note_id = (int)\Input::post('id');
-			if (!$note_id || !$note = Model_Note::check_authority($note_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$this->check_public_flag($note->public_flag, $note->member_id);
+			$note = Model_Note::check_authority($note_id);
+			$this->check_browse_authority($note->public_flag, $note->member_id);
 
 			\DB::start_transaction();
 			$is_liked = (bool)Model_NoteLike::change_registered_status4unique_key(array(
