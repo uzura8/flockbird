@@ -56,7 +56,11 @@ echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' =>
 <?php endif; ?>
 
 <?php if ($note->is_published): ?>
-<?php list($comments, $is_all_records, $all_comment_count) = \Note\Model_NoteComment::get_comments($id, conf('view_params_default.list.comment.limit')); ?>
+<?php
+// note_comment
+list($comments, $comment_next_id, $all_comment_count)
+	= \Note\Model_NoteComment::get_list(array('note_id' => $id), conf('view_params_default.list.comment.limit'), true, false, 0, 0, null, false, true);
+?>
 
 <div class="comment_info">
 <?php // comment_count_and_link
@@ -99,16 +103,16 @@ $comment_list_attr = array(
 <?php
 $data = array(
 	'parent' => $note,
-	'comments' => $comments,
-	'is_all_records' => $is_all_records,
+	'list' => $comments,
+	'next_id' => $comment_next_id,
+	//'is_all_records' => $is_all_records,
+	'delete_uri' => 'note/comment/api/delete.json',
+	'counter_selector' => '#comment_count_'.$id,
 	'list_more_box_attrs' => array(
 		'id' => 'listMoreBox_comment_'.$id,
 		'data-uri' => sprintf('note/comment/api/list/%s.html', $id),
 		'data-list' => '#comment_list_'.$id,
-		'data-is_before' => 1,
 	),
-	'delete_uri' => 'note/comment/api/delete.json',
-	'counter_selector' => '#comment_count_'.$id,
 );
 echo render('_parts/comment/list', $data);
 ?>
@@ -134,6 +138,7 @@ echo render('_parts/comment/list', $data);
 		'data-get_uri' => 'note/comment/api/list/'.$id.'.html',
 		'data-list' => '#comment_list_'.$id,
 		'data-counter' => '#comment_count_'.$id,
+		'data-latest' => 1,
 	),
 	'textarea_attrs' => array('id' => 'textarea_comment_'.$id),
 )); ?>

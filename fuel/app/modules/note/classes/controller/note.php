@@ -37,7 +37,7 @@ class Controller_Note extends \Controller_Site
 		$this->set_title_and_breadcrumbs(term('site.latest', 'note', 'site.list'));
 		$data = \Site_Model::get_simple_pager_list('note', 1, array(
 			'related'  => 'member',
-			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
+			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0, false, array(array('is_published', 1))),
 			'order_by' => array('created_at' => 'desc'),
 			'limit'    => conf('view_params_default.list.limit'),
 		), 'Note');

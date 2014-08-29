@@ -277,7 +277,6 @@ CREATE TABLE `note` (
   `updated_at` datetime NOT NULL,
   `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `published_at_idx` (`published_at`),
   KEY `member_id_is_published_published_at_public_flag_idx` (`member_id`,`is_published`,`published_at`,`public_flag`),
   KEY `member_id_created_at_idx` (`member_id`,`created_at`),
   KEY `public_flag_craeted_at_idx` (`public_flag`,`created_at`),

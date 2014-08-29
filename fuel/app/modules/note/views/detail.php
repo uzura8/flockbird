@@ -41,6 +41,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 	'next_id' => $comment_next_id,
 	//'is_all_records' => $is_all_records,
 	'delete_uri' => 'note/comment/api/delete.json',
+	'counter_selector' => '#comment_count_'.$note->id,
 	'list_more_box_attrs' => array(
 		'data-uri' => 'note/comment/api/list/'.$note->id.'.html',
 	),
