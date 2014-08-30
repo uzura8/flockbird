@@ -45,8 +45,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			$status_code = 200;
 			if ($this->format == 'html')
 			{
-				// html response
-				return \Response::forge(\View::forge('_parts/comment/list', array(
+				$data = array(
 					'list' => $list,
 					'next_id' => $next_id,
 					'parent' => $parent_obj,
@@ -54,12 +53,13 @@ class Controller_Site_Api extends Controller_Base_Site
 						'id' => 'listMoreBox_comment_'.$parent_id,
 						'data-uri' => sprintf('%s/comment/api/list/%d.html', $module, $parent_id),
 						'data-list' => '#comment_list_'.$parent_id,
-						'data-max_id' => $max_id,
-						//'data-prepend' => 1,
 					),
 					'delete_uri' => sprintf('%s/comment/api/delete.json', $module),
 					'counter_selector' => '#comment_count_'.$parent_id,
-				)), $status_code);
+				);
+				if ($since_id) $data['since_id'] = $since_id;
+				// html response
+				return \Response::forge(\View::forge('_parts/comment/list', $data), $status_code);
 			}
 
 			// json response

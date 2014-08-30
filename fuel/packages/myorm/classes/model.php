@@ -42,13 +42,11 @@ class Model extends \Orm\Model
 
 		if ($since_id)
 		{
-			$operator = $is_latest ? '<' : '>';
-			$params[] = array($sort_prop, $operator, $since_id);
+			$params[] = array($sort_prop, '>', $since_id);
 		}
 		if ($max_id)
 		{
-			$operator = $is_latest ? '>=' : '<=';
-			$params[] = array($sort_prop, $operator, $max_id);
+			$params[] = array($sort_prop, '<=', $max_id);
 		}
 
 		$query = self::query();

@@ -70,13 +70,11 @@ class Site_Model
 
 		if ($since_id)
 		{
-			$operator = $is_latest ? '>' : '<';
-			$query->where('id', $operator, $since_id);
+			$query->where('id', '>', $since_id);
 		}
 		if ($max_id)
 		{
-			$operator = $is_latest ? '<=' : '>=';
-			$query->where('id', $operator, $max_id);
+			$query->where('id', '<=', $max_id);
 		}
 
 		$query->order_by($sort);

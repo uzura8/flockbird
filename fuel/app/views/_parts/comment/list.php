@@ -7,11 +7,12 @@ $list_more_box_attrs_def = array(
 	'id' => 'listMoreBox_comment',
 	'data-list' => '#comment_list',
 	'data-limit' => conf('view_params_default.list.comment.limit'),
+	'data-max_id' => $next_id,
 	'data-latest' => 1,
 );
+if (!empty($since_id)) $list_more_box_attrs_def['data-since_id'] = $since_id;
 if (empty($uri_for_all_comments)) $list_more_box_attrs_def['class'] .=' js-ajax-loadList';
 $list_more_box_attrs = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);
-if ($first_comment = Util_Array::get_first($list)) $list_more_box_attrs['data-since_id'] = $first_comment->id;
 ?>
 <?php echo Html::anchor(isset($uri_for_all_comments) ? $uri_for_all_comments : '#', term('site.see_more'), $list_more_box_attrs); ?>
 <?php 	endif; ?>

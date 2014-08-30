@@ -52,17 +52,20 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 	var counterSelector = $(this).data('counter') ? $(this).data('counter') : '';
 	var isLatest = $(this).data('latest') ? Boolean($(this).data('latest')) : false;
+	var isDesc = $(this).data('desc') ? Boolean($(this).data('desc')) : false;
 
-	var nextSelector = getNextSelector(listSelector, isLatest ? false : true);
-	if (nextSelector) getData['max_id'] = parseInt($(nextSelector).data('id')) + 1;
+	var isPrepend = isDesc ? true : false;
+	var nextSelector = getNextSelector(listSelector, isPrepend);
+	if (nextSelector) getData['since_id'] = parseInt($(nextSelector).data('id'));
 	if (isLatest) getData['latest'] = 1;
+	if (isDesc) getData['desc'] = 1;
 
 	postComment(
 		postUri,
 		textareaSelector,
 		getUri,
 		listSelector,
-		isLatest ? false : true,
+		isPrepend,
 		getData,
 		this,
 		counterSelector
