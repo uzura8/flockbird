@@ -34,10 +34,20 @@ class Controller_Timeline extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0);
+		$default_params = array(
+			'desc' => 1,
+			'latest' => 1,
+			'limit' => conf('timeline.articles.limit'),
+		);
+		list($limit, $is_latest, $is_desc, $since_id, $max_id)
+			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
+		list($list, $next_id)
+			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, 0, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
+		$data = array('list' => $list, 'next_id' => $next_id);
+
 		$this->set_title_and_breadcrumbs(term('site.latest', 'timeline', 'site.list'));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
-		$this->template->content = \View::forge('_parts/list', array('list' => $list, 'is_next' => $is_next));
+		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
 	/**
@@ -51,11 +61,23 @@ class Controller_Timeline extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
-		list($list, $is_next) = Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id);
+
+		$default_params = array(
+			'desc' => 1,
+			'latest' => 1,
+			'limit' => conf('timeline.articles.limit'),
+		);
+		list($limit, $is_latest, $is_desc, $since_id, $max_id)
+			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
+		list($list, $next_id)
+			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
+		$data = array('list' => $list, 'next_id' => $next_id);
+		if ($member) $data['member'] = $member;
+		if ($since_id) $data['since_id'] = $since_id;
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('timeline', 'site.list')), null, $member);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
-		$this->template->content = \View::forge('_parts/list', array('member' => $member, 'list' => $list, 'is_next' => $is_next));
+		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
 	/**

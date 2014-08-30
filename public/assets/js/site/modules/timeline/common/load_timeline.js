@@ -57,7 +57,7 @@ $(function() {
 	});
 
 	$(document).on('click','.js-ajax-Load_timeline', function(){
-		var getData = $(this).data('get_data') ? $(this).data('get_data') : '';
+		var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 		var isLatest = $(this).data('latest') ? parseInt($(this).data('latest')) : 0;
 		var isDesc = $(this).data('desc') ? parseInt($(this).data('desc')) : 0;
 		var sinceId = $(this).data('since_id') ? parseInt($(this).data('since_id')) : 0;
@@ -92,19 +92,6 @@ function loadTimeline() {
 	var getUri             = 'timeline/api/list.html';
 	var parentListSelector = '#article_list';
 	var limit              = get_config('timeline_list_limit');
-
-	//if (trigerSelector) {
-	//	var limitId = 0;
-	//	if (isPrepend) {
-	//		getData['is_before'] = 1;
-	//		var nextSelector = '#' + $(trigerSelector).next().attr('id');
-	//		if ($(trigerSelector).prev().size()) limitId = parseInt($(trigerSelector).prev().data('list_id'));
-	//	} else {
-	//		var nextSelector = '#' + $(trigerSelector).prev().attr('id');
-	//		if ($(trigerSelector).next().size()) limitId = parseInt($(trigerSelector).next().data('list_id'));
-	//	}
-	//	if (limitId) getData['limit_id'] = limitId;
-	//}
 
 	loadList(
 		getUri,
