@@ -96,14 +96,14 @@ class Controller_Site_Api extends Controller_Base_Site
 			$parent_obj = $parent_model::check_authority($parent_id);
 			$this->check_browse_authority($parent_obj->public_flag, $parent_obj->member_id);
 
-			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params(array('desc' => 1), conf('view_params_default.list.limit.limit_max'));
+			list($limit, $is_latest, $is_desc, $since_id, $max_id) = $this->common_get_list_params(array('desc' => 1, 'latest' => 1), conf('view_params_default.list.limit.limit_max'));
 			$params[$parent_id_prop] = $parent_id;
-			list($list, $next_id) = $like_model::get_list($params, $limit, 'member', ($this->format == 'json'), false, $is_desc);
+			list($list, $next_id) = $like_model::get_list($params, $limit, $is_latest, $is_desc, $since_id, $max_id, 'member', ($this->format == 'json'));
 
 			$status_code = 200;
 			if ($this->format == 'html')
 			{
-				return \Response::forge(\View::forge('_parts/member_list', array(
+				$data = array(
 					'list' => $list,
 					'related_member_table_name' => 'member',
 					'next_id' => $next_id,
@@ -111,7 +111,9 @@ class Controller_Site_Api extends Controller_Base_Site
 					'list_id' => 'liked_member_list_'.$parent_id,
 					'get_uri' => $get_uri,
 					'no_data_message' => sprintf('%sしている%sはいません', term('form.like'), term('member.view')),
-				)), $status_code);
+				);
+				if ($since_id) $data['since_id'] = $since_id;
+				return \Response::forge(\View::forge('_parts/member_list', $data), $status_code);
 			}
 
 			$response = array(

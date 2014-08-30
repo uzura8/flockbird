@@ -85,20 +85,6 @@ class Model_TimelineLike extends \MyOrm\Model
 
 	protected static $count_per_timeline = array();
 
-	public static function check_authority($id, $target_member_id = 0, $accept_member_ids = array())
-	{
-		if (!$id) return false;
-
-		$obj = self::find($id, array('rows_limit' => 1, 'related' => array('timeline', 'member')))? : null;
-		if (!$obj) return false;
-
-		$accept_member_ids[] = $obj->member_id;
-		$accept_member_ids[] = $obj->timeline->member_id;
-		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
-
-		return $obj;
-	}
-
 	public static function get_count4timeline_id($timeline_id)
 	{
 		if (!empty(self::$count_per_timeline[$timeline_id])) return self::$count_per_timeline[$timeline_id];

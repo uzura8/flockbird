@@ -30,34 +30,6 @@ class Controller_Like_Api extends \Controller_Site_Api
 		if ($result) return $result;
 	}
 
-	public function get_list()
-	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-
-		$page = (int)\Input::get('page', 1);
-
-		$response = '';
-		try
-		{
-			$sort = conf('member.view_params.list.sort');
-			$data = \Site_Model::get_simple_pager_list('member', $page, array(
-				'order_by' => array($sort['property'] => $sort['direction']),
-				'limit'    => conf('member.view_params.list.limit'),
-			));
-
-			$response = \View::forge('member/_parts/list', $data);
-			$status_code = 200;
-
-			return \Response::forge($response, $status_code);
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
-	}
-
 	/**
 	 * Timeline like post update
 	 * 
@@ -70,16 +42,13 @@ class Controller_Like_Api extends \Controller_Site_Api
 		try
 		{
 			if (!conf('like.isEnabled')) throw new \HttpNotFoundException();
-			if ($this->format != 'json') throw new \HttpNotFoundException();
+			$this->check_response_format('json');
 			\Util_security::check_csrf();
 
 			$timeline_id = (int)$id;
 			if (\Input::post('id')) $timeline_id = (int)\Input::post('id');
-			if (!$timeline_id || !$timeline = Model_Timeline::check_authority($timeline_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-			$this->check_public_flag($timeline->public_flag, $timeline->member_id);
+			$timeline = Model_Timeline::check_authority($timeline_id);
+			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
 
 			\DB::start_transaction();
 			$is_liked = (bool)Model_TimelineLike::change_registered_status4unique_key(array(
