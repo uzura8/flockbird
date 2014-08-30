@@ -26,7 +26,7 @@ class Controller_Like_Api extends \Controller_Site_Api
 			\DB::start_transaction();
 			$is_liked = (bool)Model_NoteLike::change_registered_status4unique_key(array(
 				'note_id' => $note->id,
-				'member_id' => $note->member_id
+				'member_id' => $this->u->id
 			));
 			\DB::commit_transaction();
 
