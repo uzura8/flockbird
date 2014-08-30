@@ -52,36 +52,34 @@ $(function() {
 		});
 		if (body.length == 0 && Object.keys(postData).length == 0) return;
 
-		var listSelector = '#article_list';
-		var isInsertBefore = true;
-		var nextSelector = getNextSelector(listSelector, isInsertBefore);
 		postData['album_id'] = $('#album_id').val();
 		postData['public_flag'] = $('#form_public_flag').val();
+
+		var listSelector = '#article_list';
+		var isPrepend = true;
 		var getData = {
-			'mytimeline' : 1,
-			'is_before' : 1,
-			'desc' : 1
+			mytimeline: 1,
+			latest: 1,
+			desc: 1
 		};
-		var lastId = nextSelector ? parseInt($(nextSelector).data('list_id')) : 0;
+		var nextSelector = getNextSelector(listSelector, isPrepend);
+		if (nextSelector) getData['since_id'] = parseInt($(nextSelector).data('list_id'));
 
 		postComment(
 			'timeline/api/create.json',
 			'#textarea_comment',
 			'timeline/api/list.html',
 			listSelector,
-			nextSelector,
-			isInsertBefore,
+			isPrepend,
+			getData,
 			this,
 			'',
 			resetInputs,
 			postData,
 			false,
 			get_term('timeline'),
-			getData,
-			lastId,
 			'50px'
 		);
-
 		return false;
 	});
 

@@ -28,6 +28,7 @@ $data_array = array('desc' => 1);
 if (!empty($member)) $data_array['member_id'] = $member->id;
 if (!empty($mytimeline)) $data_array['mytimeline'] = 1;
 if ($data_array) $attr['data-get_data'] = $data_array;
+if (!empty($since_id)) $attr['data-since_id'] = $since_id;
 ?>
 <a href="#" <?php echo Util_Array::conv_array2attr_string($attr); ?>><?php echo icon_label('site.see_more', 'both', false, null, 'fa fa-'); ?></a>
 <?php endif; ?>

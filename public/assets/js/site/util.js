@@ -127,13 +127,9 @@ function loadList(getUri) {
 	var isPrepend          = (arguments.length > 3) ? Boolean(arguments[4]) : false;
 	var getData            = (arguments.length > 4) ? arguments[5] : {};
 	var callbackFunc       = (arguments.length > 5) ? arguments[6] : null;
-	//var nextItemSelector = (arguments.length > 3) ? arguments[3] : '';
-	//var isPrepend        = (arguments.length > 4) ? arguments[4] : false;
 
 	getData['limit'] = limit ? limit : get_config('default_list_limit');
 
-	//if (!sinceId) sinceId = (nextItemSelector && $(nextItemSelector).data('id')) ? parseInt($(nextItemSelector).data('id')) : 0;
-	//maxId = (nextItemSelector && $(nextItemSelector).data('id')) ? parseInt($(nextItemSelector).data('id')) : 0;
 	$.ajax({
 		url : get_url(getUri),
 		type : 'GET',
@@ -149,15 +145,6 @@ function loadList(getUri) {
 			removeLoading(parentListSelector, trigerSelector, 'list_loading_image');
 		},
 		success: function(result) {
-			//if (nextItemSelector) {
-			//	if (isPrepend) {
-			//		$(nextItemSelector).before(result).fadeIn('fast');
-			//	} else {
-			//		$(nextItemSelector).after(result).fadeIn('fast');
-			//	}
-			//} else {
-			//	$(parentListSelector).html(result).fadeIn('fast');
-			//}
 			if (trigerSelector) {
 				var trigarObj = $(trigerSelector);
 				if (isPrepend) {
@@ -172,7 +159,6 @@ function loadList(getUri) {
 				} else {
 					$(parentListSelector).append(result).fadeIn('fast');
 				}
-				//$(parentListSelector).html(result).fadeIn('fast');
 			}
 			if (callbackFunc) {
 				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);
