@@ -25,8 +25,13 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$this->check_response_format('html');
 
+			$default_params = array(
+				'desc' => 1,
+				'latest' => 1,
+				'limit' => conf('timeline.articles.limit'),
+			);
 			list($limit, $is_latest, $is_desc, $since_id, $max_id)
-				= $this->common_get_list_params(array('desc' => 1, 'limit' => conf('timeline.articles.limit')), conf('timeline.articles.max_limit'));
+				= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
 
 			$member_id     = (int)\Input::get('member_id', 0);
 			$is_mytimeline = (bool)\Input::get('mytimeline', 0);

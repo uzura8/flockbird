@@ -231,6 +231,14 @@ $config = array(
 				'limit_max' => 3,
 			),
 		),
+		'like' => array(
+			'members' => array(
+				'popover' => array(
+					'limit' => 2,
+					'limit_max' => 3,
+				),
+			),
+		),
 		'form' => array(
 			'comment' => array(
 				'textarea' => array(

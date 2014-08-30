@@ -21,10 +21,8 @@ echo render('timeline::_parts/article', array(
 $attr = array(
 	'class' => 'listMoreBox js-ajax-Load_timeline',
 	'data-max_id' => $next_id,
-	'data-latest' => 1,
-	'data-desc' => 1,
 );
-$data_array = array('desc' => 1);
+$data_array = array();
 if (!empty($member)) $data_array['member_id'] = $member->id;
 if (!empty($mytimeline)) $data_array['mytimeline'] = 1;
 if ($data_array) $attr['data-get_data'] = $data_array;

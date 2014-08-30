@@ -128,7 +128,7 @@ function loadList(getUri) {
 	var getData            = (arguments.length > 4) ? arguments[5] : {};
 	var callbackFunc       = (arguments.length > 5) ? arguments[6] : null;
 
-	getData['limit'] = limit ? limit : get_config('default_list_limit');
+	//getData['limit'] = limit ? limit : get_config('default_list_limit');
 
 	$.ajax({
 		url : get_url(getUri),

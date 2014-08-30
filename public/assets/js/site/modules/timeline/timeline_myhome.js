@@ -2,7 +2,7 @@ $(function() {
 	$('textarea.input_timeline').css('height', '50px');
 	$('#form_public_flag').val($('#public_flag_selector').data('public_flag'));
 
-	loadTimeline({'mytimeline': 1, 'desc': 1, 'latest': 1});
+	loadTimeline({'mytimeline': 1});
 
 	$(document).on('click','.display_upload_form', function(){
 		$('.upload').removeClass('hidden');

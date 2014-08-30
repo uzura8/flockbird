@@ -93,15 +93,6 @@ $(document).on('click','.js-ajax-loadList', function(){
 	if (GL.execute_flg) return false;
 	if (!getUri) return false;
 
-	//var maxId = 0;
-	//if (isPrepend) {
-	//	getData['prepend'] = 1;
-	//	var nextSelector = '#' + $(this).next().attr('id');
-	//	if ($(this).prev().size()) maxId = parseInt($(this).prev().data('id'));
-	//} else {
-	//	var nextSelector = '#' + $(this).prev().attr('id');
-	//	if ($(this).next().size()) maxId = parseInt($(this).next().data('id'));
-	//}
 	if (isLatest) getData['latest'] = isLatest;
 	if (isDesc) getData['desc'] = isDesc;
 	if (sinceId) getData['since_id'] = sinceId;

@@ -6,9 +6,7 @@ $list_more_box_attrs_def = array(
 	'class' => 'listMoreBox',
 	'id' => 'listMoreBox_comment',
 	'data-list' => '#comment_list',
-	'data-limit' => conf('view_params_default.list.comment.limit'),
 	'data-max_id' => $next_id,
-	'data-latest' => 1,
 );
 if (!empty($since_id)) $list_more_box_attrs_def['data-since_id'] = $since_id;
 if (empty($uri_for_all_comments)) $list_more_box_attrs_def['class'] .=' js-ajax-loadList';

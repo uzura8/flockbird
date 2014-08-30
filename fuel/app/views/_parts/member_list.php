@@ -34,8 +34,6 @@ $attr = array(
 	'data-uri' => $get_uri,
 	'data-list' => '#article_list',
 	'data-max_id' => $next_id,
-	'data-latest' => 1,
-	'data-desc' => 1,
 );
 if (!empty($since_id)) $attr['data-since_id'] = $since_id;
 echo Html::anchor('#', icon_label('site.see_more', 'both', false, null, 'fa fa-'), $attr);

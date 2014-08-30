@@ -27,7 +27,7 @@ class Controller_Site_Api extends Controller_Base_Site
 	 * 
 	 */
 
-	protected function get_comment_list($model, $parent_model, $parent_id, $parent_id_prop, $module)
+	protected function get_comment_list($model, $parent_model, $parent_id, $parent_id_prop, $module, $limit = 0, $limit_max = 0)
 	{
 		$response = '';
 		try
@@ -38,7 +38,12 @@ class Controller_Site_Api extends Controller_Base_Site
 			$parent_obj = $parent_model::check_authority($parent_id);
 			$this->check_browse_authority($parent_obj->public_flag, $parent_obj->member_id);
 
-			list($limit, $is_latest, $is_desc, $since_id, $max_id) = $this->common_get_list_params();
+			$default_params = array(
+				'latest' => 1,
+				'limit' => $limit ?: conf('view_params_default.list.comment.limit'),
+			);
+			list($limit, $is_latest, $is_desc, $since_id, $max_id)
+				= $this->common_get_list_params($default_params, $limit_max ?: conf('view_params_default.list.comment.limit_max'));
 			list($list, $next_id, $all_comment_count)
 				= $model::get_list(array($parent_id_prop => $parent_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, ($this->format == 'json'));
 
@@ -85,7 +90,7 @@ class Controller_Site_Api extends Controller_Base_Site
 		$this->response($response, $status_code);
 	}
 
-	protected function get_liked_member_list($like_model, $parent_model, $parent_id, $parent_id_prop, $get_uri)
+	protected function get_liked_member_list($like_model, $parent_model, $parent_id, $parent_id_prop, $get_uri, $limit = 0, $limit_max = 0)
 	{
 		$response = '';
 		try
@@ -96,7 +101,13 @@ class Controller_Site_Api extends Controller_Base_Site
 			$parent_obj = $parent_model::check_authority($parent_id);
 			$this->check_browse_authority($parent_obj->public_flag, $parent_obj->member_id);
 
-			list($limit, $is_latest, $is_desc, $since_id, $max_id) = $this->common_get_list_params(array('desc' => 1, 'latest' => 1), conf('view_params_default.list.limit.limit_max'));
+			$default_params = array(
+				'desc' => 1,
+				'latest' => 1,
+				'limit' => $limit ?: conf('view_params_default.like.members.popover.limit'),
+			);
+			list($limit, $is_latest, $is_desc, $since_id, $max_id)
+				= $this->common_get_list_params($default_params, $limit_max ?: conf('view_params_default.like.members.popover.limit_max'));
 			$params[$parent_id_prop] = $parent_id;
 			list($list, $next_id) = $like_model::get_list($params, $limit, $is_latest, $is_desc, $since_id, $max_id, 'member', ($this->format == 'json'));
 

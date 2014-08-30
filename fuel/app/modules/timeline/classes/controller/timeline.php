@@ -82,7 +82,7 @@ class Controller_Timeline extends \Controller_Site
 	public function action_detail($id = null)
 	{
 		if (!$timeline = Model_Timeline::check_authority($id)) throw new \HttpNotFoundException;
-		$this->check_public_flag($timeline->public_flag, $timeline->member_id);
+		$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
 
 		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');

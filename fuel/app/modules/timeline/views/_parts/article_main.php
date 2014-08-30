@@ -113,7 +113,7 @@ $comment_list_attr = array(
 <?php
 $data = array(
 	'parent' => $timeline,
-	'comments' => $list,
+	'list' => $list,
 	'is_all_records' => $is_all_records,
 	'list_more_box_attrs' => array(
 		'id' => 'listMoreBox_comment_'.$timeline->id,
