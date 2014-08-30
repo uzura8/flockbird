@@ -78,17 +78,20 @@ class Controller_Member_Api extends Controller_Site_Api
 		$response = '';
 		try
 		{
-			if ($this->format != 'html') throw new \HttpNotFoundException();
+			$this->check_response_format('html');
 
-			$sort = conf('member.view_params.list.sort');
-			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params(array(
-				'desc' => ($sort['direction'] == 'desc') ? 1 : 0,
+			$default_params = array(
+				'latest' => 1,
+				'desc' => 1,
 				'limit' => conf('member.view_params.list.limit'),
-			), conf('member.view_params.list.limit_max'));
-			list($list, $next_id) = Model_Member::get_list($params, $limit, null, ($this->format == 'json'), false, $is_desc);
+			);
+			list($limit, $is_latest, $is_desc, $since_id, $max_id)
+				= $this->common_get_list_params($default_params, conf('member.view_params.list.limit_max'));
+			list($list, $next_id) = Model_Member::get_list(null, $limit, $is_latest, $is_desc, $since_id, $max_id);
 			$response = \View::forge('_parts/member_list', array(
 				'list' => $list,
 				'next_id' => $next_id,
+				'since_id' => $since_id,
 				'get_uri' => 'member/api/list.html',
 			));
 			$status_code = 200;

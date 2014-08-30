@@ -77,10 +77,6 @@ $config = array(
 		),
 		'view_params' => array(
 			'list' => array(
-				'sort' => array(
-					'property' => 'created_at',
-					'direction' => 'desc',
-				),
 				'limit' => 3,
 				'limit_max' => 5,
 			),

@@ -40,6 +40,7 @@ class Model extends \Orm\Model
 			$is_reverse = true;
 		}
 
+		if (!is_array($params)) $params = (array)$params;
 		if ($since_id)
 		{
 			$params[] = array($sort_prop, '>', $since_id);
