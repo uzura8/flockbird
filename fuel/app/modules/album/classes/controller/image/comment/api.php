@@ -26,10 +26,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			if ($this->format != 'html') throw new \HttpNotFoundException();
 
 			$album_image_id = (int)$parent_id ?: (int)\Input::get('id');
-			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$album_image = Model_AlbumImage::check_authority($album_image_id);
 			$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 
 			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params();
@@ -83,10 +80,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$album_image_id = (int)$parent_id ?: (int)\Input::post('id');
-			if (!$album_image_id || !$album_image = Model_AlbumImage::check_authority($album_image_id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$album_image = Model_AlbumImage::check_authority($album_image_id);
 			$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 
 			// Lazy validation
@@ -141,12 +135,9 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 
 			$id = (int)$id;
 			if (\Input::post('id')) $id = (int)\Input::post('id');
-			if (!$id || !$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
 
 			\DB::start_transaction();
+			$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->u->id);
 			$album_image_comment->delete();
 			\DB::commit_transaction();
 

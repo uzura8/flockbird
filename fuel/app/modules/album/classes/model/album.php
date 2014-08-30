@@ -1,7 +1,7 @@
 <?php
 namespace Album;
 
-class Model_Album extends \Orm\Model
+class Model_Album extends \MyOrm\Model
 {
 	protected static $_table_name = 'album';
 
@@ -133,18 +133,6 @@ class Model_Album extends \Orm\Model
 				);
 			}
 		}
-	}
-
-	public static function check_authority($id, $target_member_id = 0)
-	{
-		if (!$id) return false;
-
-		$obj = self::find($id, array('rows_limit' => 1, 'related' => 'member'))? : null;
-		if (!$obj) return false;
-
-		if ($target_member_id && $obj->member_id != $target_member_id) return false;
-
-		return $obj;
 	}
 
 	public static function delete_relations(Model_Album $album, $id = null)

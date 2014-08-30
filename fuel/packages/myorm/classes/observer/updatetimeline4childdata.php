@@ -11,7 +11,7 @@ class Observer_UpdateTimeline4ChildData extends \Orm\Observer
 
 	public function after_save(\Orm\Model $obj)
 	{
-		if (!$timeline = \Timeline\Model_Timeline::check_authority($obj->timeline_id)) return;
+		if (!$timeline = \Timeline\Model_Timeline::find($obj->timeline_id)) return;
 		if (\Config::get('timeline.articles.cache.is_use'))
 		{
 			\Timeline\Site_Util::delete_cache($timeline->id, $timeline->type);
@@ -20,7 +20,7 @@ class Observer_UpdateTimeline4ChildData extends \Orm\Observer
 
 	public function after_delete(\Orm\Model $obj)
 	{
-		if (!$timeline = \Timeline\Model_Timeline::check_authority($obj->timeline_id)) return;
+		if (!$timeline = \Timeline\Model_Timeline::find($obj->timeline_id)) return;
 
 		$is_cache_delete = false;
 		if (!\Timeline\Model_TimelineChildData::get4timeline_id($obj->timeline_id))

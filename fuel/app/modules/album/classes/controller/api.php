@@ -79,12 +79,9 @@ class Controller_Api extends \Controller_Site_Api
 
 			$id = (int)$id;
 			if (\Input::post('id')) $id = (int)\Input::post('id');
-			if (!$id || !$album = Model_Album::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
 
 			\DB::start_transaction();
+			$album = Model_Album::check_authority($id, $this->u->id, 'member');
 			$deleted_files = Model_Album::delete_relations($album);
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
@@ -123,10 +120,7 @@ class Controller_Api extends \Controller_Site_Api
 			$icon_only_flag = (int)\Input::post('icon_only_flag', 0);
 			$have_children_public_flag      = (int)\Input::post('have_children_public_flag', 0);
 			$is_update_children_public_flag = (int)\Input::post('is_update_children_public_flag', 0);
-			if (!$id || !$album = Model_Album::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$album = Model_Album::check_authority($id, $this->u->id, 'member');
 			if ($result = Site_Util::check_album_disabled_to_update($album->foreign_table))
 			{
 				throw new \DisableToUpdatePublicFlagException($result['message']);

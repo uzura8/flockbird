@@ -47,9 +47,9 @@ class Controller_Base_Site extends Controller_Base
 
 			return array($is_mypage, $member, $access_from);
 		}
-		elseif (!$member = Model_Member::check_authority($member_id))
+		else
 		{
-			throw new \HttpNotFoundException;
+			$member = Model_Member::check_authority($member_id);
 		}
 
 		$is_mypage = false;

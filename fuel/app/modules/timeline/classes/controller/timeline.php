@@ -103,7 +103,7 @@ class Controller_Timeline extends \Controller_Site
 	 */
 	public function action_detail($id = null)
 	{
-		if (!$timeline = Model_Timeline::check_authority($id)) throw new \HttpNotFoundException;
+		$timeline = Model_Timeline::check_authority($id);
 		$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
 
 		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true);
@@ -125,21 +125,13 @@ class Controller_Timeline extends \Controller_Site
 	 */
 	public function action_delete($id = null)
 	{
-		\Util_security::check_csrf();
-		if (!$timeline = Model_Timeline::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
-
 		try
 		{
-			$id = (int)\Input::post('id');
-			if (!$id || !$timeline = Model_Timeline::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			\Util_security::check_csrf();
+			if (\Input::post('id')) $id = (int)\Input::post('id');
 
 			\DB::start_transaction();
+			$timeline = Model_Timeline::check_authority($id, $this->u->id);
 			list($result, $deleted_files) = Site_Model::delete_timeline($timeline, $this->u->id);
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);

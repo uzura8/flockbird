@@ -1,7 +1,7 @@
 <?php
 namespace Album;
 
-class Model_AlbumImageComment extends \Orm\Model
+class Model_AlbumImageComment extends \MyOrm\Model
 {
 	protected static $_table_name = 'album_image_comment';
 
@@ -22,12 +22,20 @@ class Model_AlbumImageComment extends \Orm\Model
 		'id',
 		'album_image_id',
 		'member_id',
-		'body',
+		'body' => array(
+			'data_type' => 'varchar',
+			'label' => 'コメント',
+			'validation' => array('trim', 'required'),
+			'form' => array('type' => 'text', 'class' => 'form-control'),
+		),
 		'created_at',
 		'updated_at',
 	);
 
 	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
@@ -87,24 +95,21 @@ class Model_AlbumImageComment extends \Orm\Model
 		}
 	}
 
-	public static function validate($factory)
+	public static function check_authority($id, $target_member_id = 0, $related_tables = null)
 	{
-		$val = \Validation::forge($factory);
-		$val->add_field('body', 'コメント', 'required');
+		if (is_null($related_tables)) $related_tables = array('album_image', 'member');
 
-		return $val;
-	}
+		if (!$id) throw new \HttpNotFoundException;
 
-	public static function check_authority($id, $target_member_id = 0, $accept_member_ids = array())
-	{
-		if (!$id) return false;
+		$params = array('rows_limit' => 1);
+		if ($related_tables) $params['related'] = $related_tables;
+		if (!$obj = self::find($id, $params)) throw new \HttpNotFoundException;
 
-		$obj = self::find($id, array('rows_limit' => 1, 'related' => array('album_image', 'member')))? : null;
-		if (!$obj) return false;
-
-		$accept_member_ids[] = $obj->member_id;
-		$accept_member_ids[] = $obj->album_image->album->member_id;
-		if ($target_member_id && !in_array($target_member_id, $accept_member_ids)) return false;
+		$accept_member_ids = array($obj->member_id, $obj->album_image->album->member_id);
+		if ($target_member_id && !in_array($target_member_id, $accept_member_ids))
+		{
+			throw new \HttpForbiddenException;
+		}
 
 		return $obj;
 	}

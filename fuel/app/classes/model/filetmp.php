@@ -1,6 +1,6 @@
 <?php
 
-class Model_FileTmp extends \Orm\Model
+class Model_FileTmp extends \MyOrm\Model
 {
 	protected static $_table_name = 'file_tmp';
 	protected static $_has_many = array(
@@ -68,17 +68,17 @@ class Model_FileTmp extends \Orm\Model
 		),
 	);
 
-	public static function check_authority($id, $target_member_id = 0, $user_type = 0)
+	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $user_type = 0)
 	{
-		if (!$id) return false;
+		if (!$id) throw new \HttpNotFoundException;
 
-		$obj = self::find($id);
-		if (!$obj) return false;
+		$params = array('rows_limit' => 1);
+		if (!$obj = self::find($id, $params)) throw new \HttpForbiddenException;
 
 		if ($target_member_id)
 		{
-			if ($obj->member_id != $target_member_id) return false;
-			if ($obj->user_type != $user_type) return false;
+			if ($obj->member_id != $target_member_id) throw new \HttpForbiddenException;
+			if ($obj->user_type != $user_type) throw new \HttpForbiddenException;
 		}
 
 		return $obj;

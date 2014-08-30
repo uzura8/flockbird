@@ -68,7 +68,7 @@ class Controller_News extends Controller_Admin
 	 */
 	public function action_detail($id = null)
 	{
-		if (!$news = \News\Model_News::check_authority($id)) throw new \HttpNotFoundException;
+		$news = \News\Model_News::check_authority($id);
 
 		$images = \Config::get('news.image.isEnabled') ? \News\Model_NewsImage::get4news_id($id) : array();
 		$files  = \Config::get('news.file.isEnabled') ? \News\Model_NewsFile::get4news_id($id) : array();
@@ -195,10 +195,7 @@ class Controller_News extends Controller_Admin
 	 */
 	public function action_edit($id = null)
 	{
-		if (!$id || !$news = \News\Model_News::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$news = \News\Model_News::check_authority($id);
 
 		$val = self::get_validation_object($news);
 		$news_images = array();
@@ -350,10 +347,7 @@ class Controller_News extends Controller_Admin
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		if (!$news = \News\Model_News::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$news = \News\Model_News::check_authority($id);
 
 		try
 		{
@@ -403,10 +397,7 @@ class Controller_News extends Controller_Admin
 
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		if (!$news = \News\Model_News::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$news = \News\Model_News::check_authority($id);
 
 		$msg_status = $target_status ? term('form.publish') : term('form.unpublish').'に';
 		$redirect_uri = \Site_Util::get_redirect_uri('admin/news/'.$id);

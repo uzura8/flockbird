@@ -1,7 +1,7 @@
 <?php
 namespace Album;
 
-class Model_AlbumImage extends \Orm\Model
+class Model_AlbumImage extends \MyOrm\Model
 {
 	protected static $_table_name = 'album_image';
 
@@ -173,13 +173,16 @@ class Model_AlbumImage extends \Orm\Model
 		}
 	}
 
-	public static function check_authority($id, $target_member_id = 0)
+	public static function check_authority($id, $target_member_id = 0, $related_tables = null)
 	{
-		if (!$id) return false;
+		if (is_null($related_tables)) $related_tables = array('album', 'file');
 
-		$obj = self::find($id, array('rows_limit' => 1, 'related' => array('album', 'file')))? : null;
-		if (!$obj) return false;
-		if ($target_member_id && $target_member_id != $obj->album->member_id) return false;
+		if (!$id) throw new \HttpNotFoundException;
+
+		$params = array('rows_limit' => 1);
+		if ($related_tables) $params['related'] = $related_tables;
+		if (!$obj = self::find($id, $params)) throw new \HttpNotFoundException;
+		if ($target_member_id && $target_member_id != $obj->album->member_id) throw new \HttpForbiddenException;
 
 		return $obj;
 	}

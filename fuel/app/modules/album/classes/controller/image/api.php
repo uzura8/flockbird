@@ -40,10 +40,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$member    = null;
 			$is_mypage = false;
 
-			if ($album_id && !$album = Model_Album::check_authority($album_id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$album = Model_Album::check_authority($album_id, null, 'member');
 			if ($member_id) list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
 			if ($album && $member)
 			{
@@ -145,10 +142,7 @@ class Controller_Image_api extends \Controller_Site_Api
 	public function get_comments($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album_image = Model_AlbumImage::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album_image = Model_AlbumImage::check_authority($id);
 		$comments = Model_AlbumImageComment::find('all', array('where' => array('album_image_id' => $id), 'related' => 'member', 'order_by_rows' => 'id'));
 
 		$this->response($comments);
@@ -168,11 +162,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
-
-			if (!$id || !$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$album_image = Model_AlbumImage::check_authority($id, $this->u->id);
 			if ($album_image->album->cover_album_image_id == $id)
 			{
 				throw new AlreadySetToCoverException;
@@ -217,12 +207,9 @@ class Controller_Image_api extends \Controller_Site_Api
 
 			$id = (int)$id;
 			if (\Input::post('id')) $id = (int)\Input::post('id');
-			if (!$id || !$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
 
 			\DB::start_transaction();
+			$album_image = Model_AlbumImage::check_authority($id, $this->u->id);
 			$album_image->delete();
 			\DB::commit_transaction();
 
@@ -258,10 +245,7 @@ class Controller_Image_api extends \Controller_Site_Api
 
 			$id = (int)\Input::post('id');
 			$icon_only_flag = (int)\Input::post('icon_only_flag', 0);
-			if (!$id || !$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$album_image = Model_AlbumImage::check_authority($id, $this->u->id);
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($album_image->public_flag);
 
 			\DB::start_transaction();

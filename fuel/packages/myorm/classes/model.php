@@ -3,23 +3,15 @@ namespace MyOrm;
 
 class Model extends \Orm\Model
 {
-	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $accept_member_id_related_table_props = array(), $member_id_prop = 'member_id')
+	public static function check_authority($id, $target_member_id = 0, $related_tables = array())
 	{
 		if (!$id) throw new \HttpNotFoundException;
 
 		$params = array('rows_limit' => 1);
+		if ($related_tables && !is_array($related_tables)) $related_tables = (array)$related_tables;
 		if ($related_tables) $params['related'] = $related_tables;
 		if (!$obj = self::find($id, $params)) throw new \HttpNotFoundException;
-
-		if ($target_member_id)
-		{
-			$accept_member_ids = array($obj->{$member_id_prop});
-			if ($accept_member_id_related_table_props)
-			{
-				$accept_member_ids = array_merge($accept_member_ids, Util_Orm::get_related_table_values_recursive($obj, $accept_member_id_related_table_props));
-			}
-			if (!in_array($target_member_id, $accept_member_ids)) throw new \HttpForbiddenException;
-		}
+		if ($target_member_id && $obj->member_id != $target_member_id) throw new \HttpForbiddenException;
 
 		return $obj;
 	}

@@ -109,18 +109,30 @@ class Controller_Comment_Api extends \Controller_Site_Api
 
 			$id = (int)$id;
 			if (\Input::post('id')) $id = (int)\Input::post('id');
-			if (!$id || !$timeline_comment = Model_TimelineComment::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
 
+			\DB::start_transaction();
+			$timeline_comment = Model_TimelineComment::check_authority($id, $this->u->id);
 			$timeline_comment->delete();
+			\DB::commit_transaction();
 
 			$response['status'] = 1;
 			$status_code = 200;
 		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
 		catch(\FuelException $e)
 		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 

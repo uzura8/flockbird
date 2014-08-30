@@ -59,10 +59,7 @@ class Controller_Image_comment extends \Controller_Site
 	public function action_delete($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album_image_comment = Model_AlbumImageComment::check_authority($id, $this->u->id);
 		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
 
 		$album_image_id = $album_image_comment->album_image_id;

@@ -179,11 +179,7 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_edit($id = null)
 	{
-		if (!$note = Model_Note::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
-
+		$note = Model_Note::check_authority($id, $this->u->id);
 		$val = self::get_validation_object($note, true);
 		$album_images = array();
 		if (is_enabled('album'))
@@ -249,11 +245,8 @@ class Controller_Note extends \Controller_Site
 	public function action_delete($id = null)
 	{
 		\Util_security::check_csrf();
+		$note = Model_Note::check_authority($id, $this->u->id);
 
-		if (!$note = Model_Note::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
 		try
 		{
 			\DB::start_transaction();
@@ -282,10 +275,7 @@ class Controller_Note extends \Controller_Site
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		if (!$note = Model_Note::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$note = Model_Note::check_authority($id, $this->u->id);
 		if ($note->is_published)
 		{
 			\Session::set_flash('error', '既に公開されています。');

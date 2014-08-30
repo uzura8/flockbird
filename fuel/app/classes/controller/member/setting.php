@@ -233,10 +233,7 @@ END;
 					{
 						throw new FuelException('change email error.');
 					}
-					if (!$member = Model_Member::check_authority($member_email_pre->member_id))
-					{
-						throw new FuelException('change email error.');
-					}
+					$member = Model_Member::check_authority($member_email_pre->member_id);
 					$email = $member_email_pre->email;
 					$member_email_pre->delete();// 仮登録情報の削除
 					DB::commit_transaction();

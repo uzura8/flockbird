@@ -100,10 +100,7 @@ class Controller_Api extends \Controller_Site_Api
 			$album_id = (int)\Input::post('album_id', 0);
 			if ($file_tmps && $album_id)
 			{
-				if (!$album = \Album\Model_Album::check_authority($album_id, $this->u->id))
-				{
-					throw new \FuelException('Album id is invalid.');
-				}
+				$album = \Album\Model_Album::check_authority($album_id, $this->u->id);
 				if (\Album\Site_Util::check_album_disabled_to_update($album->foreign_table, true))
 				{
 					throw new \FuelException('Album id is invalid.');
@@ -161,12 +158,9 @@ class Controller_Api extends \Controller_Site_Api
 
 			$id = (int)$id;
 			if (\Input::post('id')) $id = (int)\Input::post('id');
-			if (!$id || !$timeline = Model_Timeline::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
 
 			\DB::start_transaction();
+			$timeline = Model_Timeline::check_authority($id, $this->u->id);
 			list($result, $deleted_files) = Site_Model::delete_timeline($timeline, $this->u->id);
 			\DB::commit_transaction();
 			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
@@ -198,10 +192,7 @@ class Controller_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$id = (int)\Input::post('id');
-			if (!$id || !$timeline = Model_Timeline::check_authority($id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$timeline = Model_Timeline::check_authority($id, $this->u->id);
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($timeline->public_flag);
 
 			\DB::start_transaction();

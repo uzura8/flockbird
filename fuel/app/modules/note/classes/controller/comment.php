@@ -59,15 +59,10 @@ class Controller_Comment extends \Controller_Site
 	{
 		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
 
-		if (!$comment = Model_NoteComment::check_authority($id, $this->u->id, array('note', 'member'), array('note' => 'member_id')))
-		{
-			throw new \HttpNotFoundException;
-		}
-
-		$note_id = $comment->note_id;
+		$comment = Model_NoteComment::check_authority($id, $this->u->id);
 		$comment->delete();
 
 		\Session::set_flash('message', term('note').'を削除しました。');
-		\Response::redirect('note/detail/'.$note_id);
+		\Response::redirect('note/detail/'.$comment->note_id);
 	}
 }

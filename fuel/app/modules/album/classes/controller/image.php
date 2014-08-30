@@ -50,7 +50,7 @@ class Controller_Image extends \Controller_Site
 	public function action_detail($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album_image = Model_Albumimage::check_authority($id)) throw new \HttpNotFoundException;
+		$album_image = Model_Albumimage::check_authority($id);
 		$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 
 		$record_limit = conf('view_params_default.detail.comment.limit');
@@ -114,10 +114,7 @@ class Controller_Image extends \Controller_Site
 	public function action_edit($id = null)
 	{
 		$with_file = (\Input::method() == 'POST') ? false : true;
-		if (!$album_image = Model_AlbumImage::check_authority($id, $this->u->id, $with_file))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album_image = Model_Albumimage::check_authority($id, $this->u->id);
 		$disabled_to_update_message = Site_Util::check_album_disabled_to_update($album_image->album->foreign_table);
 
 		$val = self::get_validation_object($album_image, true);
@@ -199,11 +196,7 @@ class Controller_Image extends \Controller_Site
 	public function action_delete($id = null)
 	{
 		\Util_security::check_csrf();
-		if (!$album_image = Model_AlbumImage::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
-
+		$album_image = Model_Albumimage::check_authority($id, $this->u->id);
 		$album_id = $album_image->album_id;
 		try
 		{

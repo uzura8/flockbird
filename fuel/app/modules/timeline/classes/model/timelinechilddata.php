@@ -1,7 +1,7 @@
 <?php
 namespace Timeline;
 
-class Model_TimelineChildData extends \Orm\Model
+class Model_TimelineChildData extends \MyOrm\Model
 {
 	protected static $_table_name = 'timeline_child_data';
 

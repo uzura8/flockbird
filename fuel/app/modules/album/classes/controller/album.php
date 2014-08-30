@@ -83,7 +83,7 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_detail($id = null)
 	{
-		if (!$album = Model_Album::check_authority($id)) throw new \HttpNotFoundException;
+		$album = Model_Album::check_authority($id, null, 'member');
 		$this->check_browse_authority($album->public_flag, $album->member_id);
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 
@@ -128,10 +128,7 @@ class Controller_Album extends \Controller_Site
 	public function action_upload($id = null)
 	{
 		$id = (int)$id;
-		if (!$id || !$album = Model_Album::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album = Model_Album::check_authority($id, null, 'member');
 		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
 		{
 			throw new \HttpForbiddenException;
@@ -192,10 +189,7 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_slide($id = null)
 	{
-		if (!$album = Model_Album::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album = Model_Album::check_authority($id, null, 'member');
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 		//$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => array('created_at', 'desc')));
 
@@ -291,10 +285,7 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_edit($id = null)
 	{
-		if (!$album = Model_Album::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album = Model_Album::check_authority($id, $this->u->id, 'member');
 		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
 		{
 			throw new \HttpForbiddenException;
@@ -362,10 +353,7 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_edit_images($id = null)
 	{
-		if (!$album = Model_Album::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album = Model_Album::check_authority($id, $this->u->id, 'member');
 		$album_images = Model_AlbumImage::find('all', array(
 			'related'  => array('file'),
 			'where'    => array(array('album_id' => $id)),
@@ -466,11 +454,7 @@ class Controller_Album extends \Controller_Site
 	public function action_delete($id = null)
 	{
 		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
-
-		if (!$album = Model_Album::check_authority($id, $this->u->id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album = Model_Album::check_authority($id, $this->u->id, 'member');
 		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
 		{
 			throw new \HttpForbiddenException;

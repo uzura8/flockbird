@@ -137,10 +137,7 @@ END;
 		{
 			throw new \HttpForbiddenException;
 		}
-		if (!$user = Model_AdminUser::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$user = Model_AdminUser::check_authority($id);
 
 		try
 		{

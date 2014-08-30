@@ -20,10 +20,7 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 			if (!self::check_relation_type($relation_type)) throw new HttpNotFoundException();
 
 			$member_id_to = (int)Input::post('id');
-			if (!$member_id_to || !$member = Model_Member::check_authority($member_id_to))
-			{
-				throw new HttpNotFoundException;
-			}
+			$member = Model_Member::check_authority($member_id_to);
 			if ($member_id_to == $this->u->id) throw new HttpInvalidInputException;
 
 			$member_relation = Model_MemberRelation::get4member_id_from_to($this->u->id, $member_id_to);

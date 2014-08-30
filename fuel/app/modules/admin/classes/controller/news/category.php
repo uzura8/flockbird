@@ -44,10 +44,7 @@ class Controller_News_Category extends Controller_Admin {
 	 */
 	public function action_edit($id = null)
 	{
-		if (!$id || !$news_category = \News\Model_NewsCategory::check_authority($id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$news_category = \News\Model_NewsCategory::check_authority($id);
 		$val = \Validation::forge()->add_model($news_category);
 
 		if (\Input::method() == 'POST')

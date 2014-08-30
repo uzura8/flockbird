@@ -1,7 +1,7 @@
 <?php
 namespace News;
 
-class Model_NewsImage extends \Orm\Model
+class Model_NewsImage extends \MyOrm\Model
 {
 	protected static $_table_name = 'news_image';
 
@@ -67,16 +67,6 @@ class Model_NewsImage extends \Orm\Model
 	);
 
 	protected static $count_list = array();
-
-	public static function check_authority($id)
-	{
-		if (!$id) return false;
-
-		$obj = self::find($id, array('rows_limit' => 1, 'related' => array('news', 'file')))? : null;
-		if (!$obj) return false;
-
-		return $obj;
-	}
 
 	public function get_image()
 	{

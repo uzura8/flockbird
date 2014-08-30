@@ -346,10 +346,17 @@ class Model_Timeline extends \MyOrm\Model
 	{
 		$album_image_ids = array();
 		$deleted_files   = null;
-		if (Site_Util::check_type($this->type, 'album_image_timeline')
-			&& $album = \Album\Model_Album::check_authority($this->foreign_id, $member_id))
+		if (Site_Util::check_type($this->type, 'album_image_timeline'))
 		{
-			$album_image_ids = Model_TimelineChildData::get_foreign_ids4timeline_id($this->id);
+			try
+			{
+				$album = \Album\Model_Album::check_authority($this->foreign_id, $member_id);
+			}
+			catch(\FuelException $e)
+			{
+				$album = null;
+			}
+			$album_image_ids = $album ? Model_TimelineChildData::get_foreign_ids4timeline_id($this->id) : null;
 		}
 		if ($album_image_ids)
 		{

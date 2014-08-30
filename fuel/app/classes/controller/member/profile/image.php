@@ -24,7 +24,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 		$this->set_title_and_breadcrumbs(term('profile', 'site.picture', 'site.setting'), array('/member/profile/' => term('profile')), $member);
 
 		$images = array();
-		if (Module::loaded('album') && conf('upload.types.img.types.m.save_as_album_image'))
+		if (is_enabled('album') && conf('upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
 			$images = \Album\Model_AlbumImage::query()->related('album')->related('file')->where('album_id', $album_id)->order_by('id', 'desc')->get();
@@ -59,7 +59,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 				$file->file_path,
 				$file->filepath,
 				true,
-				(Module::loaded('album') && conf('upload.types.img.types.m.save_as_album_image')) ? 'profile' : null
+				(is_enabled('album') && conf('upload.types.img.types.m.save_as_album_image')) ? 'profile' : null
 			);
 			Session::set_flash('message', term('site.picture').'を更新しました。');
 		}
@@ -84,14 +84,11 @@ class Controller_Member_Profile_Image extends Controller_Member
 
 		try
 		{
-			if (!Module::loaded('album') || !conf('upload.types.img.types.m.save_as_album_image'))
+			if (!is_enabled('album') || !conf('upload.types.img.types.m.save_as_album_image'))
 			{
 				throw new \HttpNotFoundException;
 			}
-			if (!$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id);
 			if ($album_image->album->foreign_table != 'member')
 			{
 				throw new FuelException('Disabled to set album image as profile image.');
@@ -155,13 +152,10 @@ class Controller_Member_Profile_Image extends Controller_Member
 
 		try
 		{
-			if (Module::loaded('album')) $album_image_id = null;
+			if (is_enabled('album')) $album_image_id = null;
 			if ($album_image_id)
 			{
-				if (!$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id))
-				{
-					throw new \HttpNotFoundException;
-				}
+				$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id);
 				if ($album_image->album->foreign_table != 'member')
 				{
 					throw new FuelException('Disabled to set album image as profile image.');
@@ -179,7 +173,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 			}
 			else
 			{
-				if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
+				if (is_enabled('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
 				$this->u->file_id = null;
 				$this->u->save();
 			}
@@ -207,14 +201,11 @@ class Controller_Member_Profile_Image extends Controller_Member
 		try
 		{
 			Util_security::check_csrf();
-			if (!Module::loaded('album') || !conf('upload.types.img.types.m.save_as_album_image'))
+			if (!is_enabled('album') || !conf('upload.types.img.types.m.save_as_album_image'))
 			{
 				throw new HttpNotFoundException;
 			}
-			if (!$album_image_id || !$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id))
-			{
-				throw new HttpNotFoundException;
-			}
+			$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id);
 			if ($album_image->album->foreign_table != 'member')
 			{
 				throw new FuelException('Disabled to set album image as profile image.');
@@ -223,7 +214,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 			DB::start_transaction();
 			if ($album_image->file_id == $this->u->file_id)
 			{
-				if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
+				if (is_enabled('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
 				$this->u->file_id = null;
 				$this->u->save();
 			}

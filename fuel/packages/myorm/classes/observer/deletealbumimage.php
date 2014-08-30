@@ -11,7 +11,7 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 	public function before_delete(\Orm\Model $obj)
 	{
 		// カバー写真の確認 & 削除
-		if (!$album = \Album\Model_Album::check_authority($obj->album_id))
+		if (!$album = \Album\Model_Album::find($obj->album_id))
 		{
 			throw new \FuelException('Invalid album id.');
 		}
