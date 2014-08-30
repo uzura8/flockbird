@@ -51,7 +51,7 @@ class Controller_Image extends \Controller_Site
 	{
 		$id = (int)$id;
 		if (!$id || !$album_image = Model_Albumimage::check_authority($id)) throw new \HttpNotFoundException;
-		$this->check_public_flag($album_image->public_flag, $album_image->album->member_id);
+		$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 
 		$record_limit = conf('view_params_default.detail.comment.limit');
 		if (\Input::get('all_comment', 0)) $record_limit = conf('view_params_default.detail.comment.limit_max');

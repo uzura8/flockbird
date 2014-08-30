@@ -84,7 +84,7 @@ class Controller_Album extends \Controller_Site
 	public function action_detail($id = null)
 	{
 		if (!$album = Model_Album::check_authority($id)) throw new \HttpNotFoundException;
-		$this->check_public_flag($album->public_flag, $album->member_id);
+		$this->check_browse_authority($album->public_flag, $album->member_id);
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(

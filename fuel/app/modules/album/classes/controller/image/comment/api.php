@@ -30,7 +30,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			$this->check_public_flag($album_image->public_flag, $album_image->album->member_id);
+			$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 
 			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params();
 			list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($album_image_id, $limit, $params, $is_desc);
@@ -87,7 +87,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			{
 				throw new \HttpNotFoundException;
 			}
-			$this->check_public_flag($album_image->public_flag, $album_image->album->member_id);
+			$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 
 			// Lazy validation
 			$body = trim(\Input::post('body', ''));
