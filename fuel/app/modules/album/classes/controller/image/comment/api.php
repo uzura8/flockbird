@@ -20,49 +20,17 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 	 */
 	public function get_list($parent_id = null)
 	{
-		$response = '';
-		try
-		{
-			if ($this->format != 'html') throw new \HttpNotFoundException();
-
-			$album_image_id = (int)$parent_id ?: (int)\Input::get('id');
-			$album_image = Model_AlbumImage::check_authority($album_image_id);
-			$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
-
-			list($limit, $params, $is_desc, $class_id) = $this->common_get_list_params();
-			list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($album_image_id, $limit, $params, $is_desc);
-			$data = array(
-				'comments' => $comments,
-				'parent' => $album_image->album,
-				'is_all_records' => $is_all_records,
-				'list_more_box_attrs' => array('data-parent_id' => $album_image_id),
-				'class_id' => $class_id,
-				'delete_uri' => 'album/image/comment/api/delete.json',
-				'list_more_box_attrs' => array(
-					'data-uri' => 'album/image/comment/api/list/'.$album_image_id.'.html',
-					'data-is_before' => true,
-				),
-			);
-			if ($limit) $data['show_more_link'] = true;
-			$response = \View::forge('_parts/comment/list', $data);
-			$status_code = 200;
-
-			return \Response::forge($response, $status_code);
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$result = $this->get_comment_list(
+			'\Album\Model_AlbumImageComment',
+			'\Album\Model_AlbumImage',
+			$parent_id,
+			'album_image_id',
+			'album/image',
+			\Config::get('album.articles.comment.limit'),
+			\Config::get('album.articles.comment.limit_max'),
+			array('album' => 'member_id')
+		);
+		if ($result) return $result;
 	}
 
 	/**

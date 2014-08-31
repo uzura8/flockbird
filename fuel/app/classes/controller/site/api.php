@@ -27,7 +27,7 @@ class Controller_Site_Api extends Controller_Base_Site
 	 * 
 	 */
 
-	protected function get_comment_list($model, $parent_model, $parent_id, $parent_id_prop, $module, $limit = 0, $limit_max = 0)
+	protected function get_comment_list($model, $parent_model, $parent_id, $parent_id_prop, $api_uri_path_prefix, $limit = 0, $limit_max = 0, $parent_obj_member_id_relateds = array())
 	{
 		$response = '';
 		try
@@ -36,7 +36,16 @@ class Controller_Site_Api extends Controller_Base_Site
 
 			$parent_id = (int)$parent_id;
 			$parent_obj = $parent_model::check_authority($parent_id);
-			$this->check_browse_authority($parent_obj->public_flag, $parent_obj->member_id);
+			$auther_member_ids = array();
+			if ($parent_obj_member_id_relateds)
+			{
+				$auther_member_ids = Util_Orm::get_related_table_values_recursive($parent_obj, $parent_obj_member_id_relateds);
+			}
+			else
+			{
+				$auther_member_ids[] = $parent_obj->member_id;
+			}
+			foreach ($auther_member_ids as $member_id) $this->check_browse_authority($parent_obj->public_flag, $member_id);
 
 			$default_params = array(
 				'latest' => 1,
@@ -54,12 +63,13 @@ class Controller_Site_Api extends Controller_Base_Site
 					'list' => $list,
 					'next_id' => $next_id,
 					'parent' => $parent_obj,
+					'auther_member_ids' => $auther_member_ids,
 					'list_more_box_attrs' => array(
 						'id' => 'listMoreBox_comment_'.$parent_id,
-						'data-uri' => sprintf('%s/comment/api/list/%d.html', $module, $parent_id),
+						'data-uri' => sprintf('%s/comment/api/list/%d.html', $api_uri_path_prefix, $parent_id),
 						'data-list' => '#comment_list_'.$parent_id,
 					),
-					'delete_uri' => sprintf('%s/comment/api/delete.json', $module),
+					'delete_uri' => sprintf('%s/comment/api/delete.json', $api_uri_path_prefix),
 					'counter_selector' => '#comment_count_'.$parent_id,
 				);
 				if ($since_id) $data['since_id'] = $since_id;

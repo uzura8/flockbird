@@ -95,8 +95,11 @@ class Controller_Note extends \Controller_Site
 		$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
 
 		// note_comment
-		list($limit, $is_latest, $is_desc, $since_id, $max_id) = $this->common_get_list_params(array('latest' => 1));
-		list($list, $next_id, $all_comment_count) = Model_NoteComment::get_list(array('note_id' => $note_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
+		$default_params = array('latest' => 1);
+		list($limit, $is_latest, $is_desc, $since_id, $max_id)
+			= $this->common_get_list_params($default_params, conf('view_params_default.detail.comment.limit_max'));
+		list($list, $next_id, $all_comment_count)
+			= Model_NoteComment::get_list(array('note_id' => $note_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
 
 		// note_like
 		$is_liked_self = \Auth::check() ? Model_NoteLike::check_liked($id, $this->u->id) : false;

@@ -53,11 +53,19 @@ class Controller_Image extends \Controller_Site
 		$album_image = Model_Albumimage::check_authority($id);
 		$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 
-		$record_limit = conf('view_params_default.detail.comment.limit');
-		if (\Input::get('all_comment', 0)) $record_limit = conf('view_params_default.detail.comment.limit_max');
-		list($comments, $is_all_records) = Model_AlbumImageComment::get_comments($id, $record_limit);
+		// album image_comment
+		$default_params = array('latest' => 1);
+		list($limit, $is_latest, $is_desc, $since_id, $max_id)
+			= $this->common_get_list_params($default_params, conf('view_params_default.detail.comment.limit_max'));
+		list($list, $next_id, $all_comment_count)
+			= Model_AlbumImageComment::get_list(array('album_image_id' => $id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
 
-		$data = array('album_image' => $album_image, 'comments' => $comments, 'is_all_records' => $is_all_records);
+		$data = array(
+			'album_image' => $album_image,
+			'comments' => $list,
+			'all_comment_count' => $all_comment_count,
+			'comment_next_id' => $next_id,
+		);
 
 		// 前後の id の取得
 		$params = array(

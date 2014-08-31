@@ -12,12 +12,12 @@
 <div id="comment_list">
 <?php echo render('_parts/comment/list', array(
 	'parent' => $album_image->album,
-	'comments' => $comments,
-	'is_all_records' => $is_all_records,
+	'list' => $comments,
+	'next_id' => $comment_next_id,
 	'delete_uri' => 'album/image/comment/api/delete.json',
+	'counter_selector' => '#comment_count_'.$album_image->id,
 	'list_more_box_attrs' => array(
 		'data-uri' => 'album/image/comment/api/list/'.$album_image->id.'.html',
-		'data-is_before' => true,
 	),
 )); ?>
 </div>

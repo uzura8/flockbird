@@ -33,7 +33,21 @@ if ($parent) $box_attrs['class'] .= sprintf(' commentBox_%d', $parent->id);
 	'content' => $comment->body,
 	'trim_width' => empty($trim_width) ? 0 : $trim_width,
 )); ?>
-<?php if (!empty($absolute_display_delete_btn) || (isset($u) && in_array($u->id, array($comment->member_id, $parent->member_id)))): ?>
+<?php
+$is_display_delete_btn = false;
+if (!empty($absolute_display_delete_btn))
+{
+	$is_display_delete_btn = true;
+}
+elseif (\Auth::check())
+{
+	if (!isset($auther_member_ids)) $auther_member_ids = array();
+	$auther_member_ids[] = $comment->member_id;
+	if (isset($parent->member_id)) $auther_member_ids[] = $parent->member_id;
+	if (in_array($u->id, $auther_member_ids)) $is_display_delete_btn = true;
+}
+?>
+<?php if ($is_display_delete_btn): ?>
 <?php echo render('_parts/btn_delete', array(
 	'id' => $comment->id,
 	'attr_id' => 'btn_comment_delete_'.$comment->id,

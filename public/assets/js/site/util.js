@@ -124,7 +124,7 @@ function loadList(getUri) {
 	var parentListSelector = (arguments.length > 1) ? arguments[1] : 0;
 	var limit              = (arguments.length > 2) ? parseInt(arguments[2]) : 0;
 	var trigerSelector     = (arguments.length > 3) ? arguments[3] : '';
-	var isPrepend          = (arguments.length > 3) ? Boolean(arguments[4]) : false;
+	var position           = (arguments.length > 3) ? arguments[4] : 'replace';// params: replace / append / prepend
 	var getData            = (arguments.length > 4) ? arguments[5] : {};
 	var callbackFunc       = (arguments.length > 5) ? arguments[6] : null;
 
@@ -147,17 +147,21 @@ function loadList(getUri) {
 		success: function(result) {
 			if (trigerSelector) {
 				var trigarObj = $(trigerSelector);
-				if (isPrepend) {
+				if (position == 'prepend') {
 					trigarObj.before(result).fadeIn('fast');
+				} else if (position == 'append') {
+					trigarObj.after(result).fadeIn('fast');
 				} else {
 					trigarObj.after(result).fadeIn('fast');
+					trigarObj.remove();
 				}
-				trigarObj.remove();
 			} else {
-				if (isPrepend) {
+				if (position == 'prepend') {
 					$(parentListSelector).prepend(result).fadeIn('fast');
-				} else {
+				} else if (position == 'append') {
 					$(parentListSelector).append(result).fadeIn('fast');
+				} else {
+					$(parentListSelector).html(result).fadeIn('fast');
 				}
 			}
 			if (callbackFunc) {
@@ -231,19 +235,19 @@ function reset_textarea()
 	$(textareaSelector).css('height', textareaHeight);
 }
 
-function getNextSelector(listSelector, isPrepend)
+function getNextSelector(listSelector, position)
 {
-	var nextElement = '';
-	if ($(listSelector).html().replace(/[\r\n\s]+/, '')) {
-		var position = isPrepend ? 'first' : 'last';
-		nextElement = $(listSelector + ' > div:' + position);
-	}
+	if (position == 'replace') return '';
+	if (!$(listSelector).html().replace(/[\r\n\s]+/, '')) return '';
+
+	var insertPosition = (position == 'prepend') ? 'first' : 'last';
+	nextElement = $(listSelector + ' > div:' + insertPosition);
 	return nextElement ? '#' + nextElement.attr('id') : '';
 }
 
 function postComment(postUri, textareaSelector, getUri, listSelector)
 {
-	var isPrepend         = (arguments.length > 4)  ? arguments[4] : false;
+	var position          = (arguments.length > 4)  ? arguments[4] : 'replace';
 	var getData           = (arguments.length > 5)  ? arguments[5] : {};
 	var trigerSelector    = (arguments.length > 6)  ? arguments[6] : '';
 	var counterSelector   = (arguments.length > 7)  ? arguments[7] : '';
@@ -281,7 +285,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 		},
 		success: function(result){
 			$.jGrowl(postedArticleTerm + 'を投稿しました。');
-			loadList(getUri, listSelector, 0, '', isPrepend, getData);
+			loadList(getUri, listSelector, 0, '', position, getData);
 			updateCounter(counterSelector);
 			reset_textarea(textareaSelector, textareaHeight);
 			if (callbackFunc) {

@@ -49,7 +49,11 @@
 				</div>
 <?php endif; ?>
 
-<?php list($album_image_comment, $is_all_records, $all_comment_count) = \Album\Model_AlbumImageComment::get_comments($album_image->id, \Config::get('album.articles.comment.limit')); ?>
+<?php
+// comment
+list($comments, $comment_next_id, $all_comment_count)
+	= \Album\Model_AlbumImageComment::get_list(array('album_image_id' => $album_image->id), \Config::get('album.articles.comment.limit'), true, false, 0, 0, null, false, true);
+?>
 				<div class="comment_info">
 					<small><span class="glyphicon glyphicon-comment"></span> <?php echo $all_comment_count; ?></small>
 <?php if (Auth::check()): ?>
@@ -105,16 +109,31 @@ if ($menus)
 <?php endif; ?>
 		</div><!-- imgBox -->
 
-<?php if (empty($is_simple_view )&& $album_image_comment): ?>
-		<div class="list_album_image_comment">
-<?php echo render('_parts/comment/list', array(
+<?php if (empty($is_simple_view ) && $comments): ?>
+<?php
+$comment_list_attr = array(
+	'class' => 'comment_list list_album_image_comment',
+	'id' => 'comment_list_'.$album_image->id,
+);
+?>
+		<div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>>
+<?php
+$data = array(
 	'parent' => (!empty($album)) ? $album : $album_image->album,
-	'comments' => $album_image_comment,
-	'is_all_records' => $is_all_records,
-	'uri_for_all_comments' => sprintf('album/image/%d?all_comment=1#comments', $album_image->id),
-	'trim_width' => Config::get('album.articles.comment.trim_width'),
+	'list' => $comments,
+	'next_id' => $comment_next_id,
+	'uri_for_all_comments' => sprintf('album/image/%d?limit=all#comments', $album_image->id),
 	'delete_uri' => 'album/image/comment/api/delete.json',
-)); ?>
+	'trim_width' => Config::get('album.articles.comment.trim_width'),
+	'counter_selector' => '#comment_count_'.$id,
+	'list_more_box_attrs' => array(
+		'id' => 'listMoreBox_comment_'.$id,
+		'data-uri' => sprintf('album/image/comment/api/list/%s.html', $id),
+		'data-list' => '#comment_list_'.$id,
+	),
+);
+echo render('_parts/comment/list', $data);
+?>
 		</div>
 <?php endif; ?>
 	</div><!-- main_item -->

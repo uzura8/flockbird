@@ -54,8 +54,8 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var isLatest = $(this).data('latest') ? Boolean($(this).data('latest')) : false;
 	var isDesc = $(this).data('desc') ? Boolean($(this).data('desc')) : false;
 
-	var isPrepend = isDesc ? true : false;
-	var nextSelector = getNextSelector(listSelector, isPrepend);
+	var position = isDesc ? 'prepend' : 'append';
+	var nextSelector = getNextSelector(listSelector, position);
 	if (nextSelector) getData['since_id'] = parseInt($(nextSelector).data('id'));
 	if (isLatest) getData['latest'] = 1;
 	if (isDesc) getData['desc'] = 1;
@@ -65,7 +65,7 @@ $(document).on('click','.js-ajax-postComment', function(){
 		textareaSelector,
 		getUri,
 		listSelector,
-		isPrepend,
+		position,
 		getData,
 		this,
 		counterSelector
@@ -89,6 +89,7 @@ $(document).on('click','.js-ajax-loadList', function(){
 	var sinceId = $(this).data('since_id') ? parseInt($(this).data('since_id')) : 0;
 	var maxId = $(this).data('max_id') ? parseInt($(this).data('max_id')) : 0;
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
+	var position = $(this).data('position') ? $(this).data('position') : 'replace';// params: replace / append / prepend
 
 	if (GL.execute_flg) return false;
 	if (!getUri) return false;
@@ -103,7 +104,7 @@ $(document).on('click','.js-ajax-loadList', function(){
 		listSelector,
 		limit,
 		this,
-		false,
+		position,
 		getData
 	);
 

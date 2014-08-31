@@ -92,20 +92,19 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 <?php endif; ?>
 </div><!-- .comment_info -->
 
+<?php if ($comments): ?>
 <?php
 $comment_list_attr = array(
 	'class' => 'comment_list',
 	'id' => 'comment_list_'.$id,
 );
 ?>
-<?php if ($comments): ?>
 <div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>>
 <?php
 $data = array(
 	'parent' => $note,
 	'list' => $comments,
 	'next_id' => $comment_next_id,
-	//'is_all_records' => $is_all_records,
 	'delete_uri' => 'note/comment/api/delete.json',
 	'counter_selector' => '#comment_count_'.$id,
 	'list_more_box_attrs' => array(

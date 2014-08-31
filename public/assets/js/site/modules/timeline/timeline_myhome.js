@@ -56,13 +56,13 @@ $(function() {
 		postData['public_flag'] = $('#form_public_flag').val();
 
 		var listSelector = '#article_list';
-		var isPrepend = true;
+		var position = 'prepend';
 		var getData = {
 			mytimeline: 1,
 			latest: 1,
 			desc: 1
 		};
-		var nextSelector = getNextSelector(listSelector, isPrepend);
+		var nextSelector = getNextSelector(listSelector, position);
 		if (nextSelector) getData['since_id'] = parseInt($(nextSelector).data('list_id'));
 
 		postComment(
@@ -70,7 +70,7 @@ $(function() {
 			'#textarea_comment',
 			'timeline/api/list.html',
 			listSelector,
-			isPrepend,
+			position,
 			getData,
 			this,
 			'',

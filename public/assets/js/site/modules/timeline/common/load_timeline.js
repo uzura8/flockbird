@@ -68,7 +68,7 @@ $(function() {
 		if (sinceId) getData['since_id'] = sinceId;
 		if (maxId) getData['max_id'] = maxId;
 
-		loadTimeline(getData, false, this);
+		loadTimeline(getData, this);
 		return false;
 	});
 })
@@ -86,7 +86,6 @@ function showLinkCommentBlocks() {
 
 function loadTimeline() {
 	var getData        = (arguments.length > 0) ? arguments[0] : {};
-	var isPrepend      = (arguments.length > 1) ? arguments[1] : false;
 	var trigerSelector = (arguments.length > 2) ? arguments[2] : '';
 
 	var getUri             = 'timeline/api/list.html';
@@ -98,7 +97,7 @@ function loadTimeline() {
 		parentListSelector,
 		limit,
 		trigerSelector,
-		isPrepend,
+		'prepend',
 		getData,
 		postLoadTimeline
 	);
@@ -114,7 +113,7 @@ function postLoadTimeline() {
 
 function loadTlComment(getUri, parentListSelector) {
 	var limit = get_config('default_list_limit');
-	loadList(getUri, parentListSelector, limit, '', false, {'latest': 1});
+	loadList(getUri, parentListSelector, limit, '', 'replace', {'latest': 1});
 	$(parentListSelector).removeClass('unloade_comments');
 }
 
