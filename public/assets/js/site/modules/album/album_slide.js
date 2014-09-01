@@ -120,7 +120,7 @@ function displayComment(image_id, template) {
 	var getUri = 'album/image/comment/api/list/' + image_id + '.html';
 	var listSelector = '#comment_list';
 	$('.commentPostBox').remove();
-	loadList(getUri, listSelector, get_comment_limit_default(), '', 'replace');
+	loadList(getUri, listSelector, 0, '', 'replace');
 
 	var uid = get_uid();
 	if (uid) {

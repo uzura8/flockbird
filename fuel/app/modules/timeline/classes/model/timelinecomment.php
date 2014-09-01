@@ -125,25 +125,4 @@ class Model_TimelineComment extends \MyOrm\Model
 
 		return self::$count_per_timeline[$timeline_id];
 	}
-
-	public static function get_comments($timeline_id, $record_limit = 0, $params = array(), $is_desc = false)
-	{
-		$is_all_records = false;
-		$params = array_merge(array(array('timeline_id', '=', $timeline_id)), $params);
-		$query = self::query()->where($params);
-		$all_records_count = $query->count();
-		$query->related('member');
-		if (!$record_limit || $record_limit >= $all_records_count)
-		{
-			$is_all_records = true;
-			$comments = $query->order_by('id', ($is_desc)? 'desc' : 'asc')->get();
-		}
-		else
-		{
-			$comments = $query->order_by('id', 'desc')->rows_limit($record_limit)->get();
-			if (!$is_desc) $comments = array_reverse($comments);
-		}
-
-		return array($comments, $is_all_records, $all_records_count);
-	}
 }

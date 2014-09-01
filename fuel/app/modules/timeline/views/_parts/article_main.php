@@ -60,11 +60,11 @@ echo render('_parts/public_flag_selecter', $data);
 <?php /* comment_list */; ?>
 <?php
 $list = null;
-$is_all_records = null;
+$next_id = null;
 $all_comment_count = null;
 if ($is_detail)
 {
-	list($list, $is_all_records, $all_comment_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id);
+	list($list, $next_id, $all_records_count) = \Timeline\Site_Model::get_comments($timeline->type, $timeline->id, $timeline->foreign_id);
 }
 ?>
 
@@ -114,7 +114,7 @@ $comment_list_attr = array(
 $data = array(
 	'parent' => $timeline,
 	'list' => $list,
-	'is_all_records' => $is_all_records,
+	'next_id' => $next_id,
 	'list_more_box_attrs' => array(
 		'id' => 'listMoreBox_comment_'.$timeline->id,
 		'data-uri' => $comment_get_uri,

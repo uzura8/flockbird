@@ -79,7 +79,6 @@ $data = array(
 	'u' => $u,
 	'parent' => $parent,
 	'comments' => $comment['list'],
-	'is_all_records' => $comment['is_all_records'],
 	'list_more_box_attrs' => $list_more_box_attrs,
 );
 if (!empty($comment_delete_uri)) $data['delete_uri'] = $comment_delete_uri;

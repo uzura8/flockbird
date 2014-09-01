@@ -122,17 +122,20 @@ class Site_Model
 
 	public static function get_comments($type, $timeline_id, $foreign_id = 0, $limit = 0)
 	{
+		$model  = 'Timeline\\Model_TimelineComment';
+		$params = array('timeline_id' => $timeline_id);
 		if (!$limit) $limit = \Config::get('timeline.articles.comment.limit');
 		switch ($type)
 		{
 			case \Config::get('timeline.types.note'):
-				return \Note\Model_NoteComment::get_comments($foreign_id, $limit);
-
+				$model  = '\Note\Model_NoteComment';
+				$params = array('note_id' => $foreign_id);
 			case \Config::get('timeline.types.album_image_profile'):
-				return \Album\Model_AlbumImageComment::get_comments($foreign_id, $limit);
+				$model  = '\Album\Model_AlbumImageComment';
+				$params = array('album_image_id' => $foreign_id);
 		}
 
-		return Model_TimelineComment::get_comments($timeline_id, $limit);
+		return $model::get_list($params, $limit, true, false, 0, 0, null, false, true);
 	}
 
 	public static function get_foreign_table_obj($type, $foreign_id)
