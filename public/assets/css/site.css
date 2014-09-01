@@ -114,3 +114,7 @@ form .popover.bottom .arrow:after {
 div.profile .col-xs-4 {
 	text-align: right;
 }
+
+div#timeline_setting {
+	margin-bottom: 5px;
+}

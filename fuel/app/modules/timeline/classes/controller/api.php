@@ -38,6 +38,7 @@ class Controller_Api extends \Controller_Site_Api
 			$member = $member_id ? \Model_Member::check_authority($member_id) : null;
 			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
 			$timeline_viewType = $is_mytimeline ? $this->u->timeline_viewType : null;
+			$is_display_load_before_link = (bool)\Input::get('before_link', false);
 
 			list($list, $next_id)
 				= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $max_id, $limit, $is_latest, $is_desc, $since_id);
@@ -46,6 +47,7 @@ class Controller_Api extends \Controller_Site_Api
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;
 			if ($since_id) $data['since_id'] = $since_id;
+			if ($is_display_load_before_link) $data['is_display_load_before_link'] = $is_display_load_before_link;
 			$response = \View::forge('_parts/list', $data);
 			$status_code = 200;
 

@@ -86,7 +86,7 @@ function showLinkCommentBlocks() {
 
 function loadTimeline() {
 	var getData        = (arguments.length > 0) ? arguments[0] : {};
-	var trigerSelector = (arguments.length > 2) ? arguments[2] : '';
+	var trigerSelector = (arguments.length > 1) ? arguments[1] : '';
 
 	var getUri             = 'timeline/api/list.html';
 	var parentListSelector = '#article_list';

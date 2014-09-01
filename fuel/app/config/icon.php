@@ -91,6 +91,8 @@ $config = array(
 		'link' => 'link',
 		'shot' => 'camera',
 		'see_more' => 'caret-down',
+		'see_before' => 'caret-up',
+		'see_latest' => 'caret-up',
 	),
 	'member' => array(
 		'view' => 'user',

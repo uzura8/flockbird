@@ -44,6 +44,8 @@ class Controller_Timeline extends \Controller_Site
 		list($list, $next_id)
 			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, 0, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
 		$data = array('list' => $list, 'next_id' => $next_id);
+		if ($since_id) $data['since_id'] = $since_id;
+		if ($max_id) $data['is_display_load_before_link'] = true;
 
 		$this->set_title_and_breadcrumbs(term('site.latest', 'timeline', 'site.list'));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
@@ -74,6 +76,7 @@ class Controller_Timeline extends \Controller_Site
 		$data = array('list' => $list, 'next_id' => $next_id);
 		if ($member) $data['member'] = $member;
 		if ($since_id) $data['since_id'] = $since_id;
+		if ($max_id) $data['is_display_load_before_link'] = true;
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('timeline', 'site.list')), null, $member);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');

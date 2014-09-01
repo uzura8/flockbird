@@ -118,13 +118,15 @@ class Util_Array
 
 	public static function get_first(array $array)
 	{
-		return !empty($array[0]) ? $array[0] : false;
+		if (count($array) < 1) return false;
+
+		return array_shift($array);
 	}
 
 	public static function get_last(array $array)
 	{
-		$key = count($array) - 1;
+		if (count($array) < 1) return false;
 
-		return !empty($array[$key]) ? $array[$key] : false;
+		return array_pop($array);
 	}
 }

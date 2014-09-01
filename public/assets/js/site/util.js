@@ -149,12 +149,10 @@ function loadList(getUri) {
 				var trigarObj = $(trigerSelector);
 				if (position == 'prepend') {
 					trigarObj.before(result).fadeIn('fast');
-				} else if (position == 'append') {
-					trigarObj.after(result).fadeIn('fast');
 				} else {
 					trigarObj.after(result).fadeIn('fast');
-					trigarObj.remove();
 				}
+				trigarObj.remove();
 			} else {
 				if (position == 'prepend') {
 					$(parentListSelector).prepend(result).fadeIn('fast');
