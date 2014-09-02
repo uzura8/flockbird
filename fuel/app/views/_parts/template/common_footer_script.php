@@ -4,6 +4,7 @@ GL.execute_flg = false;
 function get_uid() {return <?php echo Auth::check() ? $u->id : 0; ?>;}
 function check_is_admin() {return <?php echo IS_ADMIN ? 'true' : 'false'; ?>;}
 function getBasePath() {return '<?php echo Uri::base_path(); ?>';}
+function getCurrentPath() {return '<?php echo Uri::string(); ?>';}
 function getBaseUrl() {
 	var is_current_protocol = (arguments.length > 0) ? arguments[0] : false;
 	if (is_current_protocol) return '<?php echo Uri::base(true, true); ?>';

@@ -83,29 +83,23 @@ $(document).on('click','.js-ajax-updatePublicFlag', function(){
 $(document).on('click','.js-ajax-loadList', function(){
 	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
 	var listSelector = $(this).data('list') ? $(this).data('list') : '';
-	var limit = $(this).data('limit') ? parseInt($(this).data('limit')) : 0;
-	var isLatest = $(this).data('latest') ? parseInt($(this).data('latest')) : 0;
-	var isDesc = $(this).data('desc') ? parseInt($(this).data('desc')) : 0;
-	var sinceId = $(this).data('since_id') ? parseInt($(this).data('since_id')) : 0;
-	var maxId = $(this).data('max_id') ? parseInt($(this).data('max_id')) : 0;
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 	var position = $(this).data('position') ? $(this).data('position') : 'replace';// params: replace / append / prepend
+	var historyKey = $(this).data('history_key') ? $(this).data('history_key') : '';
 
 	if (GL.execute_flg) return false;
 	if (!getUri) return false;
 
-	if (isLatest) getData['latest'] = isLatest;
-	if (isDesc) getData['desc'] = isDesc;
-	if (sinceId) getData['since_id'] = sinceId;
-	if (maxId) getData['max_id'] = maxId;
+	var pushStateInfo = {};
+	if (historyKey) pushStateInfo['keys'] = [historyKey];
 
 	loadList(
 		getUri,
 		listSelector,
-		limit,
 		this,
 		position,
-		getData
+		getData,
+		pushStateInfo
 	);
 
 	return false;

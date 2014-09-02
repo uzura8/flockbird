@@ -58,17 +58,7 @@ $(function() {
 
 	$(document).on('click','.js-ajax-Load_timeline', function(){
 		var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
-		var isLatest = $(this).data('latest') ? parseInt($(this).data('latest')) : 0;
-		var isDesc = $(this).data('desc') ? parseInt($(this).data('desc')) : 0;
-		var sinceId = $(this).data('since_id') ? parseInt($(this).data('since_id')) : 0;
-		var maxId = $(this).data('max_id') ? parseInt($(this).data('max_id')) : 0;
-
-		if (isLatest) getData['latest'] = isLatest;
-		if (isDesc) getData['desc'] = isDesc;
-		if (sinceId) getData['since_id'] = sinceId;
-		if (maxId) getData['max_id'] = maxId;
-
-		loadTimeline(getData, this);
+		loadTimeline(getData, this, true);
 		return false;
 	});
 })
@@ -87,18 +77,21 @@ function showLinkCommentBlocks() {
 function loadTimeline() {
 	var getData        = (arguments.length > 0) ? arguments[0] : {};
 	var trigerSelector = (arguments.length > 1) ? arguments[1] : '';
+	var isAddHisttory  = (arguments.length > 2) ? Boolean(arguments[2]) : false;
 
 	var getUri             = 'timeline/api/list.html';
 	var parentListSelector = '#article_list';
-	var limit              = get_config('timeline_list_limit');
+
+	var pushStateInfo = {};
+	if (isAddHisttory) pushStateInfo['keys'] = ['max_id'];
 
 	loadList(
 		getUri,
 		parentListSelector,
-		limit,
 		trigerSelector,
 		'prepend',
 		getData,
+		pushStateInfo,
 		postLoadTimeline
 	);
 }
@@ -112,8 +105,7 @@ function postLoadTimeline() {
 }
 
 function loadTlComment(getUri, parentListSelector) {
-	var limit = get_config('default_list_limit');
-	loadList(getUri, parentListSelector, limit, '', 'replace', {'latest': 1});
+	loadList(getUri, parentListSelector, '', 'replace', {'latest': 1});
 	$(parentListSelector).removeClass('unloade_comments');
 }
 

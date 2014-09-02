@@ -120,15 +120,33 @@ function removeLoading(blockSelector)
 	removeLoadingBlock(loadingBlockId);
 }
 
+function addHistory(pushStateInfo, getData) {
+	if (!('pushState' in history)) return;
+	if (!pushStateInfo) return;
+
+	var path = pushStateInfo.uri ? pushStateInfo.uri : getCurrentPath();
+	var getUrl = get_url(path);
+	if (pushStateInfo.keys)
+	{
+		var query = '';
+		$.each(pushStateInfo.keys, function(key, val) {
+			if (!getData[val]) return;
+			if (query.lendth) query += '&';
+			query += val + '=' + getData[val];
+		});
+		if (query.length) getUrl += '?' + query;
+	}
+	
+	window.history.pushState(null, null, getUrl);// history に追加
+}
+
 function loadList(getUri) {
 	var parentListSelector = (arguments.length > 1) ? arguments[1] : 0;
-	var limit              = (arguments.length > 2) ? parseInt(arguments[2]) : 0;
-	var trigerSelector     = (arguments.length > 3) ? arguments[3] : '';
-	var position           = (arguments.length > 3) ? arguments[4] : 'replace';// params: replace / append / prepend
-	var getData            = (arguments.length > 4) ? arguments[5] : {};
-	var callbackFunc       = (arguments.length > 5) ? arguments[6] : null;
-
-	//getData['limit'] = limit ? limit : get_config('default_list_limit');
+	var trigerSelector     = (arguments.length > 2) ? arguments[2] : '';
+	var position           = (arguments.length > 3) ? arguments[3] : 'replace';// params: replace / append / prepend
+	var getData            = (arguments.length > 4) ? arguments[4] : {};
+	var pushStateInfo      = (arguments.length > 5) ? arguments[5] : null;
+	var callbackFunc       = (arguments.length > 6) ? arguments[6] : null;
 
 	$.ajax({
 		url : get_url(getUri),
@@ -166,6 +184,7 @@ function loadList(getUri) {
 				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);
 				callbackFunc();
 			}
+			if (pushStateInfo) addHistory(pushStateInfo, getData);
 			//$(parentListSelector).find('textarea').autogrow();
 		},
 		error: function(result) {

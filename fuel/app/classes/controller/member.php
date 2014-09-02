@@ -83,6 +83,8 @@ class Controller_Member extends Controller_Site
 			'next_id' => $next_id,
 			'since_id' => $since_id,
 			'get_uri' => 'member/api/list.html',
+			'history_key' => 'max_id',
+			'is_display_load_before_link' => $max_id ? true : false,
 		));
 		$this->template->post_footer = \View::forge('_parts/load_item');
 	}

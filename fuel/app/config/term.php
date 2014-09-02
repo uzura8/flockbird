@@ -86,8 +86,7 @@ $config = array(
 		'link' => 'リンク',
 		'shot' => '撮影',
 		'see_more' => 'もっとみる',
-		'see_before' => '以前の投稿をみる',
-		'see_latest' => '最新の投稿をみる',
+		'see_latest' => '最新をみる',
 	),
 	'member' => array(
 		'view' => 'メンバー',

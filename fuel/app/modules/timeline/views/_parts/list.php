@@ -7,20 +7,20 @@ if (!isset($is_display_load_before_link)) $is_display_load_before_link = false;
 if ($next_id || $is_display_load_before_link)
 {
 	$list_more_box_attr_default = array('class' => 'listMoreBox js-ajax-Load_timeline');
-	$data_array = array();
-	if (!empty($member)) $data_array['member_id'] = $member->id;
-	if (!empty($mytimeline)) $data_array['mytimeline'] = 1;
-	if ($data_array) $list_more_box_attr_default['data-get_data'] = $data_array;
+	$gete_data_list_default = array();
+	if (!empty($member)) $gete_data_list_default['member_id'] = $member->id;
+	if (!empty($mytimeline)) $gete_data_list_default['mytimeline'] = 1;
+}
+
+// see latest link.
+if ($is_display_load_before_link)
+{
+	$first_obj = Util_Array::get_first($list);
+	$gete_data_list = array('since_id' => $first_obj->id);
+	$load_before_link_attr = array_merge($list_more_box_attr_default, array('data-get_data' => json_encode(array_merge($gete_data_list_default, $gete_data_list))));
+	echo html::anchor('#', icon_label('site.see_latest', 'both', false, null, 'fa fa-'), $load_before_link_attr);
 }
 ?>
-<?php if ($is_display_load_before_link): ?>
-<?php
-$first_obj = Util_Array::get_first($list);
-$load_before_link_attr = array('data-since_id' => $first_obj->id);
-$load_before_link_attr = array_merge($list_more_box_attr_default, $load_before_link_attr);
-?>
-<a href="#" <?php echo Util_Array::conv_array2attr_string($load_before_link_attr); ?>><?php echo icon_label('site.see_latest', 'both', false, null, 'fa fa-'); ?></a>
-<?php endif; ?>
 
 <?php foreach ($list as $id => $timeline_cache): ?>
 <?php
@@ -37,14 +37,15 @@ echo render('timeline::_parts/article', array(
 <?php endforeach; ?>
 <?php endif; ?>
 
-<?php if ($next_id): ?>
-<?php
-$load_after_link_attr = array('data-max_id' => $next_id);
-if (!empty($since_id)) $load_after_link_attr['data-since_id'] = $since_id;
-$load_after_link_attr = array_merge($list_more_box_attr_default, $load_after_link_attr);
+<?php // see more link.
+if ($next_id)
+{
+	$gete_data_list = array('max_id' => $next_id);
+	if (!empty($since_id)) $gete_data_list['since_id'] = $since_id;
+	$load_after_link_attr = array_merge($list_more_box_attr_default, array('data-get_data' => json_encode(array_merge($gete_data_list_default, $gete_data_list))));
+	echo html::anchor('#', icon_label('site.see_more', 'both', false, null, 'fa fa-'), $load_after_link_attr);
+}
 ?>
-<a href="#" <?php echo Util_Array::conv_array2attr_string($load_after_link_attr); ?>><?php echo icon_label('site.see_more', 'both', false, null, 'fa fa-'); ?></a>
-<?php endif; ?>
 
 <?php if (!IS_API): ?></div><!-- article_list --><?php endif; ?>
 <?php if (IS_API): ?></body></html><?php endif; ?>
