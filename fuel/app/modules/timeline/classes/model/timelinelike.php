@@ -94,16 +94,4 @@ class Model_TimelineLike extends \MyOrm\Model
 
 		return self::$count_per_timeline[$timeline_id];
 	}
-
-	public static function get_timeline_ids4member_id_and_timeline_ids($member_id, $timeline_ids)
-	{
-		if (!is_array($timeline_ids)) $timeline_ids = (array)$timeline_ids;
-
-		$obj = self::query()->select('timeline_id')
-			->where('member_id', $member_id)
-			->where('timeline_id', 'in', $timeline_ids)
-			->get();
-
-		return \Util_Orm::conv_col2array($obj, 'timeline_id');
-	}
 }

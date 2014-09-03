@@ -92,4 +92,12 @@ class Model extends \Orm\Model
 
 		return $obj->id;
 	}
+
+	public static function get_cols($col, $params)
+	{
+		$query = self::query()->select($col);
+		if ($params) $query->where($params);
+
+		return \Util_Orm::conv_col2array($query->get(), $col);
+	}
 }
