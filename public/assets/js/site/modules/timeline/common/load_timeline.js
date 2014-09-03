@@ -104,9 +104,10 @@ function loadTimeline() {
 }
 
 function postLoadTimeline() {
+	removeCaretFromPublicFlagDropdown();
+	changeLikeStatus();
 	loadTlCommentAll();
 	showLinkCommentBlocks();
-	removeCaretFromPublicFlagDropdown();
 	setCommentCount();
 	setLikeCount();
 }
@@ -173,4 +174,15 @@ function setLikeCount() {
 		if (count !== null) $(this).html(count);
 		$(this).removeClass('unset_like_count');
 	});
+}
+
+function changeLikeStatus() {
+	var likedTimelineObj = $('#liked_timeline_ids');
+	if (get_uid() && likedTimelineObj.size()) {
+		var timelineIds = $.parseJSON(likedTimelineObj.val());
+		$.each(timelineIds, function(i, id) {
+			$('#link_like_' + id).html(get_term('undo_like'));
+		});
+	}
+	if (likedTimelineObj.size()) likedTimelineObj.remove();
 }

@@ -24,6 +24,9 @@ if (\Timeline\Site_Util::check_type_to_get_access_from($type))
 $member = Model_Member::check_authority($member_id);
 $img_size = conf('upload.types.img.types.m.sizes.M');
 ?>
+<?php if (isset($liked_timeline_ids)): ?>
+<?php echo Form::hidden('liked_timeline_ids', json_encode($liked_timeline_ids), array('id' => 'liked_timeline_ids')); ?>
+<?php endif; ?>
 <div <?php echo Util_Array::conv_array2attr_string($attr); ?>>
 	<div class="row member_contents">
 		<div class="col-xs-1">

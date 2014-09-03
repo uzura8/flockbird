@@ -14,4 +14,5 @@
 	'since_id' => $since_id,
 	'is_display_load_before_link' => $is_display_load_before_link,
 	'member' => $member,
+	'liked_timeline_ids' => $liked_timeline_ids,
 )); ?>

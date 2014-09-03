@@ -1,7 +1,7 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!IS_API): ?><div id="article_list"><?php endif; ?>
 <?php if ($list): ?>
-
+<?php echo Form::hidden('liked_timeline_ids', json_encode($liked_timeline_ids), array('id' => 'liked_timeline_ids')); ?>
 <?php
 if (!isset($is_display_load_before_link)) $is_display_load_before_link = false;
 if ($next_id || $is_display_load_before_link)
