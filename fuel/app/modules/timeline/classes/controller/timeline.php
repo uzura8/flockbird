@@ -43,7 +43,7 @@ class Controller_Timeline extends \Controller_Site
 			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
 		list($list, $next_id)
 			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, 0, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
-		$liked_timeline_ids = \Auth::check() ? \Timeline\Model_TimelineLike::get_cols('timeline_id', array(
+		$liked_timeline_ids = (\Auth::check() && $list) ? Model_TimelineLike::get_cols('timeline_id', array(
 			array('member_id' => $this->u->id),
 			array('timeline_id', 'in', \Util_Orm::conv_col2array($list, 'timeline_id'))
 		)) : array();
@@ -78,7 +78,7 @@ class Controller_Timeline extends \Controller_Site
 			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
 		list($list, $next_id)
 			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
-		$liked_timeline_ids = \Auth::check() ? \Timeline\Model_TimelineLike::get_cols('timeline_id', array(
+		$liked_timeline_ids = (\Auth::check() && $list) ? Model_TimelineLike::get_cols('timeline_id', array(
 			array('member_id' => $this->u->id),
 			array('timeline_id', 'in', \Util_Orm::conv_col2array($list, 'timeline_id'))
 		)) : array();
@@ -118,7 +118,7 @@ class Controller_Timeline extends \Controller_Site
 	{
 		$timeline = Model_Timeline::check_authority($id);
 		$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
-		$liked_timeline_ids = \Auth::check() ? \Timeline\Model_TimelineLike::get_cols('timeline_id', array(
+		$liked_timeline_ids = (\Auth::check() && $list) ? Model_TimelineLike::get_cols('timeline_id', array(
 			'member_id' => $this->u->id,
 			'timeline_id' => $id,
 		)) : array();

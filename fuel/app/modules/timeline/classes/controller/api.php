@@ -42,7 +42,7 @@ class Controller_Api extends \Controller_Site_Api
 
 			list($list, $next_id)
 				= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $max_id, $limit, $is_latest, $is_desc, $since_id);
-			$liked_timeline_ids = \Auth::check() ? \Timeline\Model_TimelineLike::get_cols('timeline_id', array(
+			$liked_timeline_ids = (\Auth::check() && $list) ? Model_TimelineLike::get_cols('timeline_id', array(
 				array('member_id' => $this->u->id),
 				array('timeline_id', 'in', \Util_Orm::conv_col2array($list, 'timeline_id'))
 			)) : array();
