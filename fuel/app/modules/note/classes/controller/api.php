@@ -42,6 +42,10 @@ class Controller_Api extends \Controller_Site_Api
 				'limit'    => conf('view_params_default.list.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			), 'Note');
+			$data['liked_note_ids'] = (\Auth::check() && $data['list']) ? Model_NoteLike::get_cols('note_id', array(
+				array('member_id' => $this->u->id),
+				array('note_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
+			)) : array();
 			$data['is_draft'] = $is_draft;
 
 			$response = \View::forge('_parts/list', $data);

@@ -86,19 +86,20 @@ $data_like_link = array(
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $note->like_count,
 	'left_margin' => true,
+	'is_liked' => isset($liked_note_ids) && in_array($id, $liked_note_ids),
 );
 echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
 <?php endif; ?>
 </div><!-- .comment_info -->
 
-<?php if ($comments): ?>
 <?php
 $comment_list_attr = array(
 	'class' => 'comment_list',
 	'id' => 'comment_list_'.$id,
 );
 ?>
+<?php if ($comments): ?>
 <div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>>
 <?php
 $data = array(
