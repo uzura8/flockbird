@@ -90,6 +90,7 @@ class Controller_Member_Api extends Controller_Site_Api
 				'next_id' => $next_id,
 				'since_id' => $since_id,
 				'get_uri' => 'member/api/list.html',
+				'history_key' => 'max_id',
 			));
 			$status_code = 200;
 

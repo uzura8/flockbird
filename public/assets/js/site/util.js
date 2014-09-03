@@ -124,20 +124,30 @@ function addHistory(pushStateInfo, getData) {
 	if (!('pushState' in history)) return;
 	if (!pushStateInfo) return;
 
-	var path = pushStateInfo.uri ? pushStateInfo.uri : getCurrentPath();
-	var getUrl = get_url(path);
-	if (pushStateInfo.keys)
-	{
+	var HistoryUrl = '';
+	if (pushStateInfo.url && pushStateInfo.url != '#') {
+		HistoryUrl = pushStateInfo.url;
+	} else if (pushStateInfo.fullPath) {
+		HistoryUrl = pushStateInfo.fullPath;
+	} else if (pushStateInfo.uri) {
+		HistoryUrl = get_url(pushStateInfo.uri);
+	} else {
+		HistoryUrl = get_url(getCurrentPath());
+	}
+	if (pushStateInfo.keys) {
 		var query = '';
 		$.each(pushStateInfo.keys, function(key, val) {
 			if (!getData[val]) return;
 			if (query.lendth) query += '&';
 			query += val + '=' + getData[val];
 		});
-		if (query.length) getUrl += '?' + query;
+		if (query.length) {
+			var delimitter = (HistoryUrl.indexOf('?') == -1) ? '?' : '&';
+			HistoryUrl += delimitter + query;
+		}
 	}
 	
-	window.history.pushState(null, null, getUrl);// history に追加
+	window.history.pushState(null, null, HistoryUrl);// history に追加
 }
 
 function loadList(getUri) {

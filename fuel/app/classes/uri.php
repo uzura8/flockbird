@@ -8,12 +8,44 @@ class Uri extends Fuel\Core\Uri
 	 *
 	 * @return  string
 	 */
-	public static function string_with_query()
+	public static function string_with_query(array $query_data = array(), $is_return_full_path = false)
 	{
-		$return = static::string();
-		if ($query = \Input::server('QUERY_STRING'))
+		$return = $is_return_full_path ? static::base_path(static::string()) : static::string();
+		if ($query_data)
+		{
+			$return .= '?'.http_build_query($query_data);
+		}
+		elseif ($query = \Input::server('QUERY_STRING'))
 		{
 			$return .= '?'.$query;
+		}
+
+		return $return;
+	}
+
+	public static function create_url($string, $query_data = array(), $return_type = 'string')
+	{
+		if (!in_array($return_type, array('string', 'root_path', 'url')))
+		{
+			throw new InvalidArgumentException('Third parameter is invalid.');
+		}
+
+		switch ($return_type)
+		{
+			case 'root_path':
+				$return = static::base_path($string);
+				break;
+			case 'url':
+				$return = static::create($string);
+				break;
+			default :
+				$return = $string;
+				break;
+		}
+		if ($query_data)
+		{
+			$delimitter = (strpos($return, '?') === false) ? '?' : '&';
+			$return .= $delimitter.http_build_query($query_data);
 		}
 
 		return $return;

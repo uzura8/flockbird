@@ -83,7 +83,14 @@ function loadTimeline() {
 	var parentListSelector = '#article_list';
 
 	var pushStateInfo = {};
-	if (isAddHisttory) pushStateInfo['keys'] = ['max_id'];
+	if (isAddHisttory) {
+		var trigerObj = trigerSelector ? $(trigerSelector) : null;
+		if (trigerObj && trigerObj.attr('href') && trigerObj.attr('href') != '#') {
+			pushStateInfo['url'] = trigerObj.attr('href');
+		} else {
+			pushStateInfo['keys'] = ['max_id'];
+		}
+	}
 
 	loadList(
 		getUri,

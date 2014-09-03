@@ -43,7 +43,8 @@ if ($next_id)
 	$gete_data_list = array('max_id' => $next_id);
 	if (!empty($since_id)) $gete_data_list['since_id'] = $since_id;
 	$load_after_link_attr = array_merge($list_more_box_attr_default, array('data-get_data' => json_encode(array_merge($gete_data_list_default, $gete_data_list))));
-	echo html::anchor('#', icon_label('site.see_more', 'both', false, null, 'fa fa-'), $load_after_link_attr);
+	$href = IS_API ? '#' : Uri::create_url(Uri::string(), array('max_id' => $next_id));
+	echo Html::anchor($href, icon_label('site.see_more', 'both', false, null, 'fa fa-'), $load_after_link_attr);
 }
 ?>
 

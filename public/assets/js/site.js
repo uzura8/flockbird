@@ -91,7 +91,14 @@ $(document).on('click','.js-ajax-loadList', function(){
 	if (!getUri) return false;
 
 	var pushStateInfo = {};
-	if (historyKey) pushStateInfo['keys'] = [historyKey];
+	if (historyKey) {
+		var trigerObj = $(this);
+		if (trigerObj && trigerObj.attr('href') && trigerObj.attr('href') != '#') {
+			pushStateInfo['url'] = trigerObj.attr('href');
+		} else {
+			pushStateInfo['keys'] = [historyKey];
+		}
+	}
 
 	loadList(
 		getUri,
