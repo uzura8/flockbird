@@ -35,19 +35,19 @@ class Test_Model_File extends TestCase
 		}
 	}
 
-	public function test_check_removed_exif()
-	{
-		if (!is_callable('exif_read_data'))
-		{
-			$this->markTestSkipped('No data.');
-		}
+	//public function test_check_removed_exif()
+	//{
+	//	if (!is_callable('exif_read_data'))
+	//	{
+	//		$this->markTestSkipped('No data.');
+	//	}
 
-		foreach ($this->files as $file)
-		{
-			$test = exif_read_data($this->get_file_path($file->path, $file->name));
-			$this->assertFalse($test);
-		}
-	}
+	//	foreach ($this->files as $file)
+	//	{
+	//		$test = exif_read_data($this->get_file_path($file->path, $file->name));
+	//		$this->assertFalse($test);
+	//	}
+	//}
 
 	private static function check_and_get_file_path($filepath, $name, $type = null)
 	{

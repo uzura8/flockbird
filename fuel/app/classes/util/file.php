@@ -269,7 +269,7 @@ class Util_file
 		}
 	}
 
-	public static function get_file_recursive($path, $is_name_only = false)
+	public static function get_file_recursive($path, $is_name_only = false, $is_get_all_files = false)
 	{
 		$files = array();
 		$d = dir($path);
@@ -277,6 +277,7 @@ class Util_file
 		while (false !== ($entry = $d->read()))
 		{
 			if ($entry == '.' || $entry == '..') continue;
+			if (!$is_get_all_files && static::check_name_dot_started($entry)) continue;
 			$path = sprintf('%s/%s', $base_path, $entry);
 			if (is_dir($path))
 			{
@@ -310,5 +311,10 @@ class Util_file
 		}
 
 		return $return;
+	}
+
+	public static function check_name_dot_started($filename)
+	{
+		return substr($filename, 0, 1) == '.';
 	}
 }
