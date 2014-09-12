@@ -70,9 +70,12 @@ return array(
 		'admin'  => true,
 		'moderator'  => array(
 			'admin/news/create' => array('GET', 'POST'),
+			'admin/news/delete' => array('POST', 'DELETE'),
 			'admin/news/edit' => array('GET', 'POST'),
 			'admin/news/publish' => array('POST'),
 			'admin/news/unpublish' => array('POST'),
+			'admin/news/image/api/delete' => array('POST', 'DELETE'),
+			'admin/news/file/api/delete' => array('POST', 'DELETE'),
 			'admin/news/category/index' => array('GET'),
 			'admin/news/category/edit_all' => array('GET', 'POST'),
 			'admin/news/category/api/create' => array('POST'),
