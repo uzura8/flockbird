@@ -509,10 +509,7 @@ class Controller_Album extends \Controller_Site
 			$post = $val->validated();
 
 			\DB::start_transaction();
-			list($album_image, $file) = Model_AlbumImage::save_with_file($album_id, $this->u, $post['public_flag']);
-
-			// timeline 投稿
-			if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'album_image', $album->id, null, null, array($album_image->id));
+			list($album_image, $file) = Model_AlbumImage::save_with_relations($album_id, $this->u, $post['public_flag'], null, 'album_image');
 			\DB::commit_transaction();
 			\Session::set_flash('message', '写真を投稿しました。');
 		}

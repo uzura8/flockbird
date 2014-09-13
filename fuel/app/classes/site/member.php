@@ -9,13 +9,10 @@ class Site_Member
 		if (Module::loaded('album') && conf('upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
-			list($album_image, $file) = \Album\Model_AlbumImage::save_with_file($album_id, $member, PRJ_PUBLIC_FLAG_ALL, $file_path);
+			list($album_image, $file) = \Album\Model_AlbumImage::save_with_relations($album_id, $member, PRJ_PUBLIC_FLAG_ALL, $file_path, 'album_image_profile');
 
 			$member->file_id = $album_image->file->id;
 			$member->save();
-
-			$type_key = 'album_image_profile';
-			$foreign_id = $album_image->id;
 		}
 		else
 		{
@@ -31,11 +28,9 @@ class Site_Member
 			$member->file_id = $file->id;
 			$member->save();
 
-			$type_key = 'profile_image';
-			$foreign_id = $file->id;
+			// timeline 投稿
+			if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, 'profile_image', $file->id);
 		}
-		// timeline 投稿
-		if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, $type_key, $foreign_id);
 
 		return $file;
 	}

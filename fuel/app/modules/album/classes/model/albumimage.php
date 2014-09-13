@@ -272,7 +272,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		}
 	}
 
-	public static function save_with_file($album_id, $member = null, $public_flag = null, $file_path = null)
+	public static function save_with_relations($album_id, $member = null, $public_flag = null, $file_path = null, $timeline_type_key = 'album_image')
 	{
 		if (empty($member))
 		{
@@ -292,6 +292,25 @@ class Model_AlbumImage extends \MyOrm\Model
 		$self->shot_at     = $file->shot_at;
 		//$self->name = $name ?: $file->original_filename;
 		$self->save();
+
+		// timeline 投稿
+		if (\Module::loaded('timeline'))
+		{
+			switch ($timeline_type_key)
+			{
+				case 'album_image_profile':
+					$timeline_foreign_id = $self->id;
+					$timeline_child_foreign_ids = array();
+					break;
+				case 'album':
+				case 'album_image':
+				default :
+					$timeline_foreign_id = $self->album->id;
+					$timeline_child_foreign_ids = array($self->id);
+					break;
+			}
+			\Timeline\Site_Model::save_timeline($member->id, $public_flag, $timeline_type_key, $timeline_foreign_id, null, null, $timeline_child_foreign_ids);
+		}
 
 		return array($self, $file);
 	}
