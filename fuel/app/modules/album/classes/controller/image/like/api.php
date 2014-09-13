@@ -3,6 +3,10 @@ namespace Album;
 
 class Controller_Image_Like_Api extends \Controller_Site_Api
 {
+	protected $check_not_auth_action = array(
+		'get_member',
+	);
+
 	/**
 	 * AlbumImage api like update
 	 * 

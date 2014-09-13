@@ -77,7 +77,7 @@ echo render('_parts/comment/count_and_link_display', array(
 )); ?>
 
 <?php // like_count_and_link ?>
-<?php if (conf('like.isEnabled') && Auth::check()): ?>
+<?php if (conf('like.isEnabled')): ?>
 <?php
 $data_like_link = array(
 	'id' => $id,
