@@ -37,6 +37,10 @@ class Controller_Image extends \Controller_Site
 			'order_by' => array('id' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
 		), 'Album');
+		$data['liked_album_image_ids'] = (\Auth::check() && $data['list']) ? Model_AlbumImageLike::get_cols('album_image_id', array(
+			array('member_id' => $this->u->id),
+			array('album_image_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
+		)) : array();
 		$this->template->content = \View::forge('image/_parts/list', $data);
 	}
 
@@ -113,6 +117,10 @@ class Controller_Image extends \Controller_Site
 			'order_by' => array('id' => 'desc'),
 		), 'Album');
 		$data['member'] = $member;
+		$data['liked_album_image_ids'] = (\Auth::check() && $data['list']) ? Model_AlbumImageLike::get_cols('album_image_id', array(
+			array('member_id' => $this->u->id),
+			array('album_image_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
+		)) : array();
 		$this->template->content = \View::forge('image/_parts/list', $data);
 	}
 

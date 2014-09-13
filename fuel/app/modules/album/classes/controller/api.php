@@ -20,14 +20,15 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function get_list()
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-
-		$page      = (int)\Input::get('page', 1);
-		$member_id = (int)\Input::get('member_id', 0);
-		$is_member_page = (int)\Input::get('is_member_page', 0);
 		$response = '';
 		try
 		{
+			$this->check_response_format('html');
+
+			$page      = (int)\Input::get('page', 1);
+			$member_id = (int)\Input::get('member_id', 0);
+			$is_member_page = (int)\Input::get('is_member_page', 0);
+
 			$data = \Site_Model::get_simple_pager_list('album', $page, array(
 				'related'  => 'member',
 				'where'    => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id)),

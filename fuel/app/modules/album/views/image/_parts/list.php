@@ -61,6 +61,24 @@ list($comments, $comment_next_id, $all_comment_count)
 <?php endif; ?>
 				</div><!-- comment_info -->
 
+<?php // like_count_and_link ?>
+<?php if (conf('like.isEnabled')): ?>
+<?php
+$data_like_link = array(
+	'id' => $album_image->id,
+	'post_uri' => \Album\Site_Util::get_like_api_uri($album_image->id),
+	'get_member_uri' => \Album\Site_Util::get_liked_member_api_uri($album_image->id),
+	'count_attr' => array('class' => 'unset_like_count'),
+	'count' => $album_image->like_count,
+	'left_margin' => false,
+	'is_liked' => isset($liked_album_image_ids) && in_array($album_image->id, $liked_album_image_ids),
+);
+
+
+echo render('_parts/like/count_and_link_execute', $data_like_link);
+?>
+<?php endif; ?>
+
 			</div><!-- article -->
 <?php endif; ?>
 
@@ -126,11 +144,11 @@ $data = array(
 	'uri_for_all_comments' => sprintf('album/image/%d?limit=all#comments', $album_image->id),
 	'delete_uri' => 'album/image/comment/api/delete.json',
 	'trim_width' => Config::get('album.articles.comment.trim_width'),
-	'counter_selector' => '#comment_count_'.$id,
+	'counter_selector' => '#comment_count_'.$album_image->id,
 	'list_more_box_attrs' => array(
-		'id' => 'listMoreBox_comment_'.$id,
-		'data-uri' => sprintf('album/image/comment/api/list/%s.html', $id),
-		'data-list' => '#comment_list_'.$id,
+		'id' => 'listMoreBox_comment_'.$album_image->id,
+		'data-uri' => sprintf('album/image/comment/api/list/%s.html', $album_image->id),
+		'data-list' => '#comment_list_'.$album_image->id,
 	),
 );
 echo render('_parts/comment/list', $data);

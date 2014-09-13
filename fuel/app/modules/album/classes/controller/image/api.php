@@ -26,7 +26,7 @@ class Controller_Image_api extends \Controller_Site_Api
 		$response  = '';
 		try
 		{
-			if (!in_array($this->format, array('html', 'json'))) throw new \HttpNotFoundException();
+			$this->check_response_format(array('html', 'json'));
 
 			$album_id  = (int)$album_id;
 			if (!$album_id) $album_id = (int)\Input::get('album_id', 0);
@@ -39,7 +39,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$member    = null;
 			$is_mypage = false;
 
-			$album = Model_Album::check_authority($album_id, null, 'member');
+			if ($album_id) $album = Model_Album::check_authority($album_id, null, 'member');
 			if ($member_id) list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
 			if ($album && $member)
 			{
@@ -48,7 +48,6 @@ class Controller_Image_api extends \Controller_Site_Api
 			}
 			if (!$is_mypage && $album) $is_mypage = $this->check_is_mypage($album->member_id);
 
-			$data = array('album' => null, 'member' => null);
 			$params = array(
 				'related'  => array('file', 'album'),
 				'order_by' => array('id' => 'desc'),
@@ -67,6 +66,10 @@ class Controller_Image_api extends \Controller_Site_Api
 			}
 			$params['where'] = \Site_Model::get_where_params4list($target_member_id, $self_member_id, $is_mypage, $where, $member_id_colmn);
 			$data = \Site_Model::get_simple_pager_list('album_image', $page, $params, 'Album');
+			$data['liked_album_image_ids'] = (\Auth::check() && $data['list']) ? Model_AlbumImageLike::get_cols('album_image_id', array(
+				array('member_id' => $this->u->id),
+				array('album_image_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
+			)) : array();
 
 			if ($this->format == 'html')
 			{
