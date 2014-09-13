@@ -57,15 +57,13 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			$body = trim(\Input::post('body', ''));
 			if (!strlen($body)) throw new \HttpInvalidInputException;
 
+			\DB::start_transaction();
 			// Create a new comment
-			$values = array(
+			$comment = new Model_TimelineComment(array(
 				'body' => $body,
 				'timeline_id' => $timeline_id,
 				'member_id' => $this->u->id,
-			);
-
-			\DB::start_transaction();
-			$comment = new Model_TimelineComment($values);
+			));
 			$comment->save();
 			\DB::commit_transaction();
 

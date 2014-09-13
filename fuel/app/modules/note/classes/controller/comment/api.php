@@ -55,13 +55,16 @@ class Controller_Comment_Api extends \Controller_Site_Api
 
 			// Create a new comment
 			$values = array(
-				'body' => $body,
-				'note_id' => $note_id,
-				'member_id' => $this->u->id,
 			);
 
 			\DB::start_transaction();
-			$comment = Model_NoteComment::save_comment($note_id, $this->u->id, $body);
+			// Create a new comment
+			$comment = new Model_NoteComment(array(
+				'body' => $body,
+				'note_id' => $note_id,
+				'member_id' => $member_id,
+			));
+			$comment->save();
 			\DB::commit_transaction();
 
 			$response['status'] = 1;

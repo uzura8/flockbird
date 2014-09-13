@@ -55,15 +55,13 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$body = trim(\Input::post('body', ''));
 			if (!strlen($body)) throw new \HttpInvalidInputException;
 
+			\DB::start_transaction();
 			// Create a new comment
-			$values = array(
+			$comment = new Model_AlbumImageComment(array(
 				'body' => $body,
 				'album_image_id' => $album_image_id,
-				'member_id' => $this->u->id,
-			);
-
-			$comment = new Model_AlbumImageComment($values);
-			\DB::start_transaction();
+				'member_id' => $member_id,
+			));
 			$comment->save();
 			\DB::commit_transaction();
 

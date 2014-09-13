@@ -54,11 +54,10 @@ class Test_Model_NoteComment extends \TestCase
 	*/
 	public function test_save_comment($member_id, $body)
 	{
-		$note_id = self::$note_id;
-
 		// note_comment save
-		\Note\Model_NoteComment::save_comment($note_id, $member_id, $body);
-		$note_comment = \Util_Orm::get_last_row('\Note\Model_NoteComment', array('note_id' => $note_id));
+		$note_comment = $this->save_comment($member_id, $body);
+
+		$note_id = self::$note_id;
 		$note = \DB::select()->from('note')->where('id', $note_id)->execute()->current();
 
 		// 件数
@@ -119,9 +118,9 @@ class Test_Model_NoteComment extends \TestCase
 	{
 		$note_id = self::$note_id;
 
-		\Note\Model_NoteComment::save_comment(self::$note_id, 1, 'Test comment1.');
-		\Note\Model_NoteComment::save_comment(self::$note_id, 1, 'Test comment2.');
-		$note_comment = \Note\Model_NoteComment::save_comment(self::$note_id, 1, 'Test comment3.');
+		$this->save_comment(1, 'Test comment1.');
+		$this->save_comment(1, 'Test comment2.');
+		$note_comment = $this->save_comment(1, 'Test comment3.');
 
 		// note_comment delete
 		$note_comment->delete();
@@ -164,5 +163,17 @@ class Test_Model_NoteComment extends \TestCase
 				$this->assertEquals(self::$timeline_view_cache_before, $timeline_view_cache);
 			}
 		}
+	}
+
+	private function save_comment($member_id, $body)
+	{
+		$comment = new Model_NoteComment(array(
+			'body' => $body,
+			'note_id' => self::$note_id,
+			'member_id' => $member_id,
+		));
+		$comment->save();
+
+		return $comment;
 	}
 }

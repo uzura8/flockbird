@@ -124,17 +124,4 @@ class Model_NoteComment extends \MyOrm\Model
 
 		return self::$count_per_note[$note_id];
 	}
-
-	public static function save_comment($note_id, $member_id, $body = '')
-	{
-		$values = array(
-			'body' => $body,
-			'note_id' => $note_id,
-			'member_id' => $member_id,
-		);
-		$obj = self::forge($values);
-		$obj->save();
-
-		return $obj;
-	}
 }
