@@ -102,6 +102,7 @@ class Model_Album extends \MyOrm\Model
 				'properties_check_changed' => array(
 					'name',
 					'body',
+					'public_flag',
 				),
 				'property_from' => 'updated_at',
 				'property_to' => 'sort_datetime',
