@@ -60,11 +60,15 @@ class Controller_Image extends \Controller_Site
 		list($list, $next_id, $all_comment_count)
 			= Model_AlbumImageComment::get_list(array('album_image_id' => $id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
 
+		// album_image_like
+		$is_liked_self = \Auth::check() ? Model_AlbumImageLike::check_liked($id, $this->u->id) : false;
+
 		$data = array(
 			'album_image' => $album_image,
 			'comments' => $list,
 			'all_comment_count' => $all_comment_count,
 			'comment_next_id' => $next_id,
+			'is_liked_self' => $is_liked_self,
 		);
 
 		// 前後の id の取得

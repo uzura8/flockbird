@@ -1,14 +1,14 @@
 <?php
-namespace Note;
+namespace Album;
 
-class Model_NoteLike extends \MyOrm\Model
+class Model_AlbumImageLike extends \MyOrm\Model
 {
-	protected static $_table_name = 'note_like';
+	protected static $_table_name = 'album_image_like';
 
 	protected static $_belongs_to = array(
-		'note' => array(
-			'key_from' => 'note_id',
-			'model_to' => '\Note\Model_Note',
+		'album_image' => array(
+			'key_from' => 'album_image_id',
+			'model_to' => '\Album\Model_AlbumImage',
 			'key_to' => 'id',
 		),
 		'member' => array(
@@ -20,7 +20,7 @@ class Model_NoteLike extends \MyOrm\Model
 
 	protected static $_properties = array(
 		'id',
-		'note_id' => array(
+		'album_image_id' => array(
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
@@ -43,10 +43,10 @@ class Model_NoteLike extends \MyOrm\Model
 			'events'   => array('after_insert'),
 			'relations' => array(
 				array(
-					'model_to' => '\Note\Model_Note',
+					'model_to' => '\Album\Model_AlbumImage',
 					'conditions' => array(
 						'id' => array(
-							'note_id' => 'property',
+							'album_image_id' => 'property',
 						),
 					),
 					'update_property' => 'like_count',
@@ -57,10 +57,10 @@ class Model_NoteLike extends \MyOrm\Model
 			'events'   => array('after_delete'),
 			'relations' => array(
 				array(
-					'model_to' => '\Note\Model_Note',
+					'model_to' => '\Album\Model_AlbumImage',
 					'conditions' => array(
 						'id' => array(
-							'note_id' => 'property',
+							'album_image_id' => 'property',
 						),
 					),
 					'update_property' => 'like_count',
@@ -69,7 +69,7 @@ class Model_NoteLike extends \MyOrm\Model
 		),
 	);
 
-	protected static $count_per_note = array();
+	protected static $count_per_album_image = array();
 
 	public static function _init()
 	{
@@ -79,10 +79,10 @@ class Model_NoteLike extends \MyOrm\Model
 				'events'   => array('after_insert'),
 				'timeline_relations' => array(
 					'foreign_table' => array(
-						'note' => 'value',
+						'album_image' => 'value',
 					),
 					'foreign_id' => array(
-						'note_id' => 'property',
+						'album_image_id' => 'property',
 					),
 				),
 				'property_from_member_id' => 'member_id',
@@ -90,20 +90,20 @@ class Model_NoteLike extends \MyOrm\Model
 		}
 	}
 
-	public static function get_count4note_id($note_id)
+	public static function get_count4album_image_id($album_image_id)
 	{
-		if (!empty(self::$count_per_note[$note_id])) return self::$count_per_note[$note_id];
+		if (!empty(self::$count_per_album_image[$album_image_id])) return self::$count_per_album_image[$album_image_id];
 
-		$query = self::query()->select('id')->where('note_id', $note_id);
-		self::$count_per_note[$note_id] = $query->count();
+		$query = self::query()->select('id')->where('album_image_id', $album_image_id);
+		self::$count_per_album_image[$album_image_id] = $query->count();
 
-		return self::$count_per_note[$note_id];
+		return self::$count_per_album_image[$album_image_id];
 	}
 
-	public static function check_liked($note_id, $member_id)
+	public static function check_liked($album_image_id, $member_id)
 	{
 		return (bool)$query = self::query()
-			->where('note_id', $note_id)
+			->where('album_image_id', $album_image_id)
 			->where('member_id', $member_id)
 			->get_one();
 	}

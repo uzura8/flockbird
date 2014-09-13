@@ -23,6 +23,7 @@ CREATE TABLE `album_image` (
   `name` text NULL,
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `comment_count` int(11) NOT NULL DEFAULT '0',
+  `like_count` int(11) NOT NULL DEFAULT '0',
   `shot_at` datetime NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -46,6 +47,17 @@ CREATE TABLE `album_image_comment` (
   KEY `album_image_id_created_at` (`album_image_id`,`created_at`),
   KEY `album_image_id_idx` (`album_image_id`),
   CONSTRAINT `album_image_comment_album_image_id_album_image_id` FOREIGN KEY (`album_image_id`) REFERENCES `album_image` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `album_image_like` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `album_image_id` int(11) NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_album_image_id_UNIQUE_idx` (`member_id`,`album_image_id`),
+  KEY `album_image_id_id_idx` (`album_image_id`,`id`),
+  CONSTRAINT `album_image_like_album_image_id_album_image_id` FOREIGN KEY (`album_image_id`) REFERENCES `album_image` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

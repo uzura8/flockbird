@@ -103,13 +103,13 @@ class Site_Util
 		return $info;
 	}
 
-	public static function get_like_api_uri4album_image($album_image_id)
+	public static function get_like_api_uri($album_image_id)
 	{
-		return sprintf('album/like/image/api/update/%d.json', $album_image_id);
+		return sprintf('album/image/like/api/update/%d.json', $album_image_id);
 	}
 
-	public static function get_liked_member_api_uri4album_image($album_image_id)
+	public static function get_liked_member_api_uri($album_image_id)
 	{
-		return sprintf('album/like/image/api/member/%d.html', $album_image_id);
+		return sprintf('album/image/like/api/member/%d.html', $album_image_id);
 	}
 }

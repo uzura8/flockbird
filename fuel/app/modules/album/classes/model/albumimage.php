@@ -54,6 +54,11 @@ class Model_AlbumImage extends \MyOrm\Model
 			'default' => 0,
 			'form' => array('type' => false),
 		),
+		'like_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'public_flag' => array(
 			'data_type' => 'integer',
 			'validation' => array('required'),
@@ -137,6 +142,7 @@ class Model_AlbumImage extends \MyOrm\Model
 							'public_flag',
 							'sort_datetime',
 							'comment_count',
+							'like_count',
 						),
 					),
 				),

@@ -59,7 +59,8 @@ list($comments, $comment_next_id, $all_comment_count)
 <?php if (Auth::check()): ?>
 					<small><?php echo Html::anchor('album/image/'.$album_image->id.'?write_comment=1#comments', 'コメントする'); ?></small>
 <?php endif; ?>
-				</div>
+				</div><!-- comment_info -->
+
 			</div><!-- article -->
 <?php endif; ?>
 
