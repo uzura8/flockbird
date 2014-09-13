@@ -60,7 +60,7 @@ class Controller_Image_Comment_Api extends \Controller_Site_Api
 			$comment = new Model_AlbumImageComment(array(
 				'body' => $body,
 				'album_image_id' => $album_image_id,
-				'member_id' => $member_id,
+				'member_id' => $this->u->id,
 			));
 			$comment->save();
 			\DB::commit_transaction();

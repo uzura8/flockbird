@@ -53,16 +53,12 @@ class Controller_Comment_Api extends \Controller_Site_Api
 			$body = trim(\Input::post('body', ''));
 			if (!strlen($body)) throw new \HttpInvalidInputException;
 
-			// Create a new comment
-			$values = array(
-			);
-
 			\DB::start_transaction();
 			// Create a new comment
 			$comment = new Model_NoteComment(array(
 				'body' => $body,
 				'note_id' => $note_id,
-				'member_id' => $member_id,
+				'member_id' => $this->u->id,
 			));
 			$comment->save();
 			\DB::commit_transaction();
