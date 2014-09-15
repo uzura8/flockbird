@@ -2,6 +2,7 @@
 Autoloader::add_classes(array(
 	'MyOrm\\Model' => __DIR__.'/classes/model.php',
 	'MyOrm\\Observer_CopyValue' => __DIR__.'/classes/observer/copyvalue.php',
+	'MyOrm\\Observer_UpdatedAt' => __DIR__.'/classes/observer/updatedat.php',
 	'MyOrm\\Observer_SortDatetime' => __DIR__.'/classes/observer/sortdatetime.php',
 	//'MyOrm\\Observer_InsertCache' => __DIR__.'/classes/observer/insertcache.php',
 	//'MyOrm\\Observer_InsertCacheDuplicate' => __DIR__.'/classes/observer/insertcacheduplicate.php',

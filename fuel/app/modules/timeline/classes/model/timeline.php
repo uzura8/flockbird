@@ -111,9 +111,8 @@ class Model_Timeline extends \MyOrm\Model
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
 		),
-		'Orm\Observer_UpdatedAt' => array(
+		'MyOrm\Observer_UpdatedAt' => array(
 			'events' => array('before_save'),
-			'mysql_timestamp' => true,
 		),
 		'MyOrm\Observer_CopyValue'=>array(
 			'events'=>array('before_insert'),
