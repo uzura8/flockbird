@@ -283,7 +283,7 @@ class Test_Model_Note extends \TestCase
 	{
 		$before = array(
 			'public_flag' => $note->public_flag,
-			'updated_at' => $note->sort_datetime,
+			'updated_at' => $note->updated_at,
 			'sort_datetime' => $note->sort_datetime,
 		);
 		$note->update_public_flag_with_relations($public_flag);

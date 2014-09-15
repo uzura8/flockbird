@@ -105,7 +105,7 @@ class Controller_Album extends \Controller_Site
 		}
 		if (\Config::get('album.display_setting.detail.display_upload_form') && !$disabled_to_update && \Auth::check() && $album->member_id == $this->u->id)
 		{
-			$data['val'] = self::get_val_public_flag();
+			$data['val'] = self::get_validation_public_flag();
 		}
 		$data['list'] = array_slice($data['list'], 0, \Config::get('album.articles.limit'));
 		$data['id'] = $id;
@@ -248,13 +248,7 @@ class Controller_Album extends \Controller_Site
 				$post = $val->validated();
 
 				\DB::start_transaction();
-				$album->name = $post['name'];
-				$album->body = $post['body'];
-				$album->public_flag = $post['public_flag'];
-				$album->member_id = $this->u->id;
-				$album->save();
-				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album->id, 'album_id', 'album_image', 'Album', $album->public_flag);
-				if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], 'album', $album->id, null, null, $album_image_ids);
+				list($album, $moved_files) = Model_Album::save_with_relations($post, $this->u->id, $album, $file_tmps);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
@@ -294,13 +288,7 @@ class Controller_Album extends \Controller_Site
 		{
 			throw new \HttpForbiddenException;
 		}
-
-		$val = \Validation::forge();
-		$val->add_model($album);
-		$val->add('original_public_flag')
-				->add_rule('in_array', \Site_Util::get_public_flags());
-		$val->add('is_update_children_public_flag')
-					->add_rule('in_array', array(0,1));
+		$val = $this->get_validation($album, true);
 
 		if (\Input::method() == 'POST')
 		{
@@ -309,25 +297,9 @@ class Controller_Album extends \Controller_Site
 				\Util_security::check_csrf();
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-				$is_update_public_flag = ($album->public_flag != $post['public_flag']);
 
 				\DB::start_transaction();
-				// update album
-				$album->name = $post['name'];
-				$album->body = $post['body'];
-				if ($is_update_public_flag) $album->public_flag = $post['public_flag'];
-				$album->save();
-
-				// update album_image public_flag
-				if ($is_update_public_flag && !empty($post['is_update_children_public_flag']))
-				{
-					Model_AlbumImage::update_public_flag4album_id($album->id, $post['public_flag']);
-				}
-				// timeline の public_flag の更新
-				if ($is_update_public_flag && \Module::loaded('timeline'))
-				{
-					\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($post['public_flag'], 'album', $album->id, \Config::get('timeline.types.album'));
-				}
+				list($album, $moved_files) = Model_Album::save_with_relations($post, $this->u->id, $album);
 				\DB::commit_transaction();
 
 				\Session::set_flash('message', term('album').'を編集をしました。');
@@ -365,7 +337,7 @@ class Controller_Album extends \Controller_Site
 		));
 		$is_disabled_to_update_public_flag = Site_Util::check_album_disabled_to_update($album->foreign_table, true);
 
-		$val = self::get_val($is_disabled_to_update_public_flag);
+		$val = self::get_album_image_validation($is_disabled_to_update_public_flag);
 
 		$shot_at = '';
 		$posted_album_image_ids = array();
@@ -504,7 +476,7 @@ class Controller_Album extends \Controller_Site
 
 		try
 		{
-			$val = self::get_val_public_flag();
+			$val = self::get_validation_public_flag();
 			if (!$val->run()) throw new \FuelException($val->show_errors());
 			$post = $val->validated();
 
@@ -561,7 +533,23 @@ class Controller_Album extends \Controller_Site
 		\Response::redirect('member/profile/setting_image');
 	}
 
-	private static function get_val($is_disabled_to_update_public_flag)
+	private static function get_validation(Model_Album $album, $is_edit = false)
+	{
+		$val = \Validation::forge();
+		$val->add_model($album);
+
+		$val->add('original_public_flag')
+				->add_rule('in_array', \Site_Util::get_public_flags());
+		if ($is_edit)
+		{
+			$val->add('is_update_children_public_flag')
+						->add_rule('in_array', array(0, 1));
+		}
+
+		return $val;
+	}
+
+	private static function get_album_image_validation($is_disabled_to_update_public_flag)
 	{
 		$val = \Validation::forge();
 		$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
@@ -581,7 +569,7 @@ class Controller_Album extends \Controller_Site
 		return $val;
 	}
 
-	private static function get_val_public_flag()
+	private static function get_validation_public_flag()
 	{
 		$val = \Validation::forge();
 		$options = \Site_Form::get_public_flag_options();

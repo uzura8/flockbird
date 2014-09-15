@@ -136,6 +136,46 @@ class Model_Album extends \MyOrm\Model
 		}
 	}
 
+	public static function save_with_relations($values, $member_id, Model_Album $album = null, $file_tmps = array())
+	{
+		if (!$album) $album = self::forge();
+		$is_new = $album->is_new();
+
+		$album->name = $values['name'];
+		$album->body = $values['body'];
+		$album->public_flag = $values['public_flag'];
+		$album->member_id = $member_id;
+
+		$is_changed = $album->is_changed();
+		$is_changed_public_flag = (!$is_new && $album->is_changed('public_flag'));
+		$album->save();
+
+		$moved_files = array();
+		$album_image_ids = array();
+		if ($file_tmps)
+		{
+			list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album->id, 'album_id', 'album_image', 'Album', $values['public_flag']);
+		}
+		if (\Module::loaded('timeline'))
+		{
+			\Timeline\Site_Model::save_timeline($member_id, $values['public_flag'], 'album', $album->id, null, null, $album_image_ids);
+		}
+
+		if ($is_changed_public_flag && \Module::loaded('timeline'))
+		{
+			// timeline の public_flag の更新
+			\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($values['public_flag'], 'album', $album->id, \Config::get('timeline.types.album'));
+		}
+
+		if (!empty($values['is_update_children_public_flag']))
+		{
+			// update album_image public_flag
+			Model_AlbumImage::update_public_flag4album_id($album->id, $values['public_flag']);
+		}
+
+		return array($album, $moved_files, $is_changed);
+	}
+
 	public static function delete_relations(Model_Album $album, $id = null)
 	{
 		if (!$album)
