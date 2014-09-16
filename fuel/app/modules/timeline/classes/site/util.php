@@ -80,6 +80,23 @@ class Site_Util
 		return array($type, $foreign_table, $child_foreign_table);
 	}
 
+	public static function get_namespace4foreign_table($foreign_table)
+	{
+		switch ($foreign_table)
+		{
+			case 'note':
+				return 'Note';
+			case 'album':
+			case 'album_image':
+				return 'Album';
+			case 'member':
+			case 'file':
+				return '';
+		}
+
+		throw new \InvalidArgumentException('first parameter is invalid.');;
+	}
+
 	public static function get_timeline_body($type, $body = null, $foreign_table_obj = null, array $optional_info = null)
 	{
 		$is_safe = false;

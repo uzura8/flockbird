@@ -111,8 +111,17 @@ class Model_Timeline extends \MyOrm\Model
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_UpdatedAt' => array(
+		'MyOrm\Observer_UpdatedAtCopyFromRelationalTable' => array(
 			'events' => array('before_save'),
+			'model_from' => array(
+				'foreign_table' => 'timeline_related_table',
+			),
+			'conditions' => array(
+				'id' => array(
+					'foreign_id' => 'property',
+				),
+			),
+			'copy_property' => 'update_at',
 		),
 		'MyOrm\Observer_CopyValue'=>array(
 			'events'=>array('before_insert'),
@@ -129,6 +138,9 @@ class Model_Timeline extends \MyOrm\Model
 					'source_uri',
 					'public_flag',
 					'comment_count' => array(
+						'ignore_value' => 'reduced_num',
+					),
+					'like_count' => array(
 						'ignore_value' => 'reduced_num',
 					),
 				),
