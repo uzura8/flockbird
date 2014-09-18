@@ -8,13 +8,6 @@ define('PRJ_BASEPATH', realpath(APPPATH.'../../').DIRECTORY_SEPARATOR);
 // config.php の読み込み
 require PRJ_BASEPATH.'config.php';
 
-// BASE_URL
-$protocol = (PRJ_SSL_MODE == 'ALL') ? 'https' : 'http';
-$prefix = '';
-//if (PRJ_ENVIRONMENT == 'STAGING') $prefix = 'stg.';
-//if (PRJ_ENVIRONMENT == 'TEST') $prefix = 'test.';
-define('PRJ_BASE_URL', sprintf('%s://%s%s%s', $protocol, $prefix, PRJ_DOMAIN, PRJ_URI_PATH));
-
 // 公開ディレクトリ
 if (!defined('PRJ_PUBLIC_DIR')) define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public/');
 
@@ -35,6 +28,20 @@ if (!defined('PRJ_MAX_FILE_UPLOADS')) define('PRJ_MAX_FILE_UPLOADS', ini_get('ma
 
 // ImageMagick のパス(ImageMagick を使用する場合のみ)
 if (!defined('PRJ_IMAGE_IMGMAGICK_PATH')) define('PRJ_IMAGE_IMGMAGICK_PATH', '');
+
+
+if (!defined('PRJ_DOMAIN') && !empty($_SERVER['HTTP_HOST'])) define('PRJ_DOMAIN', $_SERVER['HTTP_HOST']);
+if (!defined('PRJ_URI_PATH')) define('PRJ_URI_PATH', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
+
+// define default configs.
+_set_default_configs();
+
+// BASE_URL
+$protocol = (PRJ_SSL_MODE == 'ALL') ? 'https' : 'http';
+$prefix = '';
+//if (PRJ_ENVIRONMENT == 'STAGING') $prefix = 'stg.';
+//if (PRJ_ENVIRONMENT == 'TEST') $prefix = 'test.';
+define('PRJ_BASE_URL', sprintf('%s://%s%s%s', $protocol, $prefix, PRJ_DOMAIN, PRJ_URI_PATH));
 
 // error level 設定
 switch (PRJ_ENVIRONMENT)
@@ -65,20 +72,21 @@ define('PRJ_PUBLIC_FLAG_ALL',     1);
 define('PRJ_PUBLIC_FLAG_MEMBER',  2);
 //define('PRJ_PUBLIC_FLAG_FRIEND',  3);
 
-// define default configs.
-define('PRJ_DEFAULT_CONFIG_SETTING_FILE', PRJ_BASEPATH.'config.php.sample');
-define('PRJ_DEFAULT_CONFIG_SETTING_CACHE', APPPATH.'cache/default_config_setting');
-if (!file_exists(PRJ_DEFAULT_CONFIG_SETTING_FILE)) die('There is no config.php.sample.');
 
-$default_configs = _get_default_configs();
-foreach ($default_configs as $key => $value)
+function _set_default_configs()
 {
-	if (defined($key)) continue;
+	define('PRJ_DEFAULT_CONFIG_SETTING_FILE', PRJ_BASEPATH.'config.php.sample');
+	define('PRJ_DEFAULT_CONFIG_SETTING_CACHE', APPPATH.'cache/default_config_setting');
+	if (!file_exists(PRJ_DEFAULT_CONFIG_SETTING_FILE)) die('There is no config.php.sample.');
 
-	define($key, $value);
+	$default_configs = _get_default_configs();
+	foreach ($default_configs as $key => $value)
+	{
+		if (defined($key)) continue;
+
+		define($key, $value);
+	}
 }
-
-
 
 function _get_default_configs()
 {

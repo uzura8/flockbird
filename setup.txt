@@ -11,12 +11,6 @@
 	vi config.php
 	----
 
-	URL設定(ドメイン と 設置パスを指定)
-	----
-	define('PRJ_DOMAIN', 'sns.example.com');
-	define('PRJ_URI_PATH', '/');
-	----
-
 	 DBサーバ接続設定
 	----
 	$GLOBALS['DSN']['production'] = array(

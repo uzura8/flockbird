@@ -10,8 +10,8 @@
 define('PRJ_ENVIRONMENT', 'PRODUCTION');
 
 // BASE_URL
-define('PRJ_DOMAIN', 'sns.example.com');
-define('PRJ_URI_PATH', '/');
+//define('PRJ_DOMAIN', 'sns.example.com');
+//define('PRJ_URI_PATH', '/');
 
 // DBサーバ接続設定
 $GLOBALS['DSN']['production'] = array(
