@@ -7,12 +7,11 @@ class Observer_ExecuteToRelations extends \Orm\Observer
 	protected $_model_to;
 	protected $_conditions;
 	protected $_execute_func;
-	protected $_properties_check_changed;
 
 	public function __construct($class)
 	{
 		$props = $class::observers(get_class($this));
-		$this->_relations = (array)$props['relations'];
+		$this->_relations = \Arr::is_assoc($props['relations']) ? array($props['relations']) : $props['relations'];
 	}
 
 	public function before_insert(\Orm\Model $obj)
@@ -51,15 +50,23 @@ class Observer_ExecuteToRelations extends \Orm\Observer
 	private function main(\Orm\Model $obj)
 	{
 		if (!$this->_relations) return;
+
 		foreach ($this->_relations as $props)
 		{
+			if (!empty($props['check_changed']))
+			{
+				$check_properties = isset($props['check_changed']['check_properties']) ? $props['check_changed']['check_properties'] : array();
+				$ignore_properties = isset($props['check_changed']['ignore_properties']) ? $props['check_changed']['ignore_properties'] : array();
+				if (!\Util_Orm::check_is_updated($obj, $check_properties, $ignore_properties)) continue;
+			}
 			$this->_model_to = $props['model_to'];
 			$this->_conditions = $props['conditions'];
 			$this->_execute_func = $props['execute_func'];
-			if (isset($props['properties_check_changed']))
+			if (!empty($props['check_changed']))
 			{
-				$this->_properties_check_changed = $props['properties_check_changed'];
-				if (!$this->check_target_properties_updated($obj)) continue;
+				$check_properties = isset($props['check_changed']['check_properties']) ? $props['check_changed']['check_properties'] : array();
+				$ignore_properties = isset($props['check_changed']['ignore_properties']) ? $props['check_changed']['ignore_properties'] : array();
+				if (!\Util_Orm::check_is_updated($obj, $check_properties, $ignore_properties)) continue;
 			}
 			$this->execute($obj);
 		}
@@ -94,16 +101,6 @@ class Observer_ExecuteToRelations extends \Orm\Observer
 			}
 			call_user_func_array($this->_execute_func['method'], $params);
 		}
-	}
-
-	private function check_target_properties_updated($obj)
-	{
-		foreach ($this->_properties_check_changed as $property_check_changed)
-		{
-			if ($obj->is_changed($property_check_changed)) return true;
-		}
-
-		return false;
 	}
 }
 // End of file executetorelations.php

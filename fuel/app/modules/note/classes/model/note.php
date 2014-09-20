@@ -94,6 +94,9 @@ class Model_Note extends \MyOrm\Model
 					'comment_count' => array(
 						'ignore_value' => 'reduced_num',
 					),
+					'like_count' => array(
+						'ignore_value' => 'reduced_num',
+					),
 				),
 			),
 		),
@@ -111,26 +114,32 @@ class Model_Note extends \MyOrm\Model
 			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
 				'events' => array('after_update'),
 				'relations' => array(
-					array(
-						'model_to' => '\Timeline\Model_Timeline',
-						'conditions' => array(
-							'foreign_table' => array(
-								'note' => 'value',
-							),
-							'foreign_id' => array(
-								'id' => 'property',
-							),
-							'type' => array(
-								$type_note => 'value',
-							),
-						),
-						'is_check_updated' => true,
-						'update_properties' => array(
+					'model_to' => '\Timeline\Model_Timeline',
+					'conditions' => array(
+						'foreign_table' => array('note' => 'value'),
+						'foreign_id' => array('id' => 'property'),
+						'type' => array($type_note => 'value'),
+					),
+					'check_changed' => array(
+						'check_properties' => array(
+							'title',
+							'body',
 							'public_flag',
 							'sort_datetime',
-							'comment_count',
-							'like_count',
+							'comment_count' => array(
+								'ignore_value' => 'reduced_num',
+							),
+							'like_count' => array(
+								'ignore_value' => 'reduced_num',
+							),
 						),
+					),
+					'update_properties' => array(
+						'public_flag',
+						'sort_datetime',
+						'comment_count',
+						'like_count',
+						'updated_at',
 					),
 				),
 			);

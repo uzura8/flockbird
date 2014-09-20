@@ -1,19 +1,16 @@
 <?php
 namespace MyOrm;
 
-class Observer_UpdatedAtCopyFromRelationalTable extends \Orm\Observer
+class Observer_CreatedAtCopyFromRelationalTable extends \Orm\Observer
 {
 	public static $mysql_timestamp = true;
-	public static $property = 'updated_at';
-	public static $copy_property = 'updated_at';
+	public static $property = 'created_at';
+	public static $copy_property = 'created_at';
 	public static $property_created_at = 'created_at';
 
 	protected $_model_from;
 	protected $_conditions;
 	protected $_copy_property;
-	protected $_check_properties;
-	protected $_ignore_properties;
-	protected $_property_created_at;
 	protected $_mysql_timestamp;
 
 	/**
@@ -26,40 +23,21 @@ class Observer_UpdatedAtCopyFromRelationalTable extends \Orm\Observer
 		$props = $class::observers(get_class($this));
 		$this->_property           = isset($props['property']) ? $props['property'] : static::$property;
 		$this->_copy_property      = isset($props['copy_property']) ? $props['copy_property'] : static::$copy_property;
-		$this->_property_created_at = isset($props['property_created_at']) ? $props['property_created_at'] : static::$property_created_at;
 		$this->_model_from         = (array)$props['model_from'];
 		$this->_conditions         = (array)$props['conditions'];
 		$this->_mysql_timestamp    = isset($props['mysql_timestamp']) ? $props['mysql_timestamp'] : static::$mysql_timestamp;
-		if (!empty($props['check_changed']))
-		{
-			$this->_check_properties = isset($props['check_changed']['check_properties']) ? $props['check_changed']['check_properties'] : array();
-			$this->_ignore_properties = isset($props['check_changed']['ignore_properties']) ? $props['check_changed']['ignore_properties'] : array();
-		}
 	}
 
-	public function before_save(\Orm\Model $obj)
+	public function before_insert(\Orm\Model $obj)
 	{
 		$this->main($obj);
 	}
 
 	private function main(\Orm\Model $obj)
 	{
-		if (!\Util_Orm::check_is_updated($obj, $this->_check_properties, $this->_ignore_properties))
-		{
-			return;
-		}
 		if (!$datetime = $this->get_datetime_from_relational_model($obj))
 		{
-			if (!$obj->is_new() || !empty($obj->{$this->_property})) return;
-
-			if (!empty($obj->{$this->_property_created_at}))
-			{
-				$datetime = $obj->{$this->_property_created_at};
-			}
-			else	
-			{
-				$datetime = $this->_mysql_timestamp ? \Date::time()->format('mysql') : \Date::time()->get_timestamp();
-			}
+			$datetime = $this->_mysql_timestamp ? \Date::time()->format('mysql') : \Date::time()->get_timestamp();
 		}
 
 		$obj->{$this->_property} = $datetime;
@@ -70,7 +48,7 @@ class Observer_UpdatedAtCopyFromRelationalTable extends \Orm\Observer
 		if (!$relational_model = $this->get_relational_model($obj, $this->_model_from)) return false;
 		if (!class_exists($relational_model)) return false;
 
-		$model_from = get_real_class($this->relational_model);
+		$model_from = get_real_class($relational_model);
 		$query = $model_from::query();
 		foreach ($this->_conditions as $property_to => $froms)
 		{
@@ -106,10 +84,7 @@ class Observer_UpdatedAtCopyFromRelationalTable extends \Orm\Observer
 						return false;
 					}
 					$namespace = \Timeline\Site_Util::get_namespace4foreign_table($obj->{$value_from});
-					$model = \Inflector::camelize($obj->{$value_from});
-					$model_from = '';
-					if ($namespace) $model_from .= '\\'.$namespace;
-					$model_from .= '\\'.$model;
+					$model_from = \Site_Model::get_model_name($obj->{$value_from}, $namespace);
 				}
 			}
 		}
@@ -121,4 +96,4 @@ class Observer_UpdatedAtCopyFromRelationalTable extends \Orm\Observer
 		return $model_from;
 	}
 }
-// End of file updatedatcopyfromrelationaltable.php
+// End of file createdatcopyfromrelationaltable.php

@@ -124,26 +124,36 @@ class Model_AlbumImage extends \MyOrm\Model
 			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
 				'events' => array('after_update'),
 				'relations' => array(
-					array(
-						'model_to' => '\Timeline\Model_Timeline',
-						'conditions' => array(
-							'foreign_table' => array(
-								'album_image' => 'value',
-							),
-							'foreign_id' => array(
-								'id' => 'property',
-							),
-							'type' => array(
-								$type_album_image_profile => 'value',
-							),
+					'model_to' => '\Timeline\Model_Timeline',
+					'conditions' => array(
+						'foreign_table' => array(
+							'album_image' => 'value',
 						),
-						'is_check_updated' => true,
-						'update_properties' => array(
+						'foreign_id' => array(
+							'id' => 'property',
+						),
+						'type' => array(
+							$type_album_image_profile => 'value',
+						),
+					),
+					'check_changed' => array(
+						'check_properties' => array(
 							'public_flag',
 							'sort_datetime',
-							'comment_count',
-							'like_count',
+							'comment_count' => array(
+								'ignore_value' => 'reduced_num',
+							),
+							'like_count' => array(
+								'ignore_value' => 'reduced_num',
+							),
 						),
+					),
+					'update_properties' => array(
+						'public_flag',
+						'sort_datetime',
+						'updated_at',
+						'comment_count',
+						'like_count',
 					),
 				),
 			);
@@ -152,25 +162,25 @@ class Model_AlbumImage extends \MyOrm\Model
 				static::$_observers['MyOrm\Observer_ExecuteToRelations'] = array(
 					'events' => array('after_update'),
 					'relations' => array(
-						array(
-							'model_to' => '\Timeline\Model_TimelineChildData',
-							'conditions' => array(
-								'foreign_table' => array(
-									'album_image' => 'value',
-								),
-								'foreign_id' => array(
-									'id' => 'property',
-								),
+						'model_to' => '\Timeline\Model_TimelineChildData',
+						'conditions' => array(
+							'foreign_table' => array(
+								'album_image' => 'value',
 							),
-							'properties_check_changed' => array(
+							'foreign_id' => array(
+								'id' => 'property',
+							),
+						),
+						'check_changed' => array(
+							'check_properties' => array(
 								'name',
 								'public_flag',
 							),
-							'execute_func' => array(
-								'method' => '\Timeline\Site_Util::delete_cache',
-								'params' => array(
-									'timeline_id' => 'property',
-								),
+						),
+						'execute_func' => array(
+							'method' => '\Timeline\Site_Util::delete_cache',
+							'params' => array(
+								'timeline_id' => 'property',
 							),
 						),
 					),

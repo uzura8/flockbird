@@ -25,7 +25,7 @@ class Observer_UpdatedAt extends \Orm\Observer
 	{
 		if ($this->_overwrite or empty($obj->{$this->_property}))
 		{
-			if (!empty($obj->{$this->_property_from}))
+			if ($obj->is_new())
 			{
 				$obj->{$this->_property} = $obj->{$this->_property_from};
 			}

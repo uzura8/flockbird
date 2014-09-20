@@ -48,15 +48,12 @@ class Model_TimelineComment extends \MyOrm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_CountUpToRelations'=>array(
+		'MyOrm\Observer_CountUpToRelations' => array(
 			'events'   => array('after_insert'),
 			'relations' => array(
 				array(
 					'model_to' => '\Timeline\Model_Timeline',
-					'conditions' => array(
-						'id' => array(
-							'timeline_id' => 'property',
-						),
+					'conditions' => array('id' => array('timeline_id' => 'property'),
 					),
 					//'optional_updates' => array(
 					//	'sort_datetime' => array(

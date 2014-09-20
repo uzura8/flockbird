@@ -42,6 +42,7 @@ class Test_Model_Note extends \TestCase
 			'is_published' => $note->is_published,
 			'sort_datetime' => $note->sort_datetime,
 			'comment_count' => $note->comment_count,
+			'like_count' => $note->like_count,
 		);
 
 		// timeline view cache 作成
@@ -105,7 +106,10 @@ class Test_Model_Note extends \TestCase
 
 			// 値
 			$this->assertEquals($before['comment_count'], $note->comment_count);
-			if ($is_changed) $this->assertEquals($note->updated_at, $note->sort_datetime);
+			if ($is_changed && self::check_sort_datetime_change($note, $before))
+			{
+				$this->assertEquals($note->updated_at, $note->sort_datetime);
+			}
 		}
 
 		// timeline 関連
@@ -166,46 +170,46 @@ class Test_Model_Note extends \TestCase
 		$data = array();
 		//(Model_Note $note, $self_member_id, $values)
 
-		// 通常日記新規投稿
+		// #0: 通常日記新規投稿
 		$note = \Note\Model_Note::forge();
 		$data[] = array($note, 1, array(
 			'title' => 'test',
-			'body' => 'This is test.',
+			'body' => '#0: 通常日記新規投稿',
 			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
 		));
 		$note = \Util_Orm::get_last_row('\Note\Model_Note');
-		// 通常日記編集(変更なし)
+		// #1: 通常日記編集(変更なし)
 		$note = \Note\Model_Note::forge();
 		$data[] = array($note, 1, array(
 			'title' => 'test',
-			'body' => 'This is test.',
+			'body' => '#1: 通常日記編集(変更なし)',
 			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
 		));
-		// 通常日記編集
+		// #2: 通常日記編集
 		$note = \Note\Model_Note::forge();
 		$data[] = array($note, 1, array(
-			'title' => 'test1',
+			'title' => '#2: 通常日記編集',
 			'body' => 'This is test1.',
 			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
 		));
 
-		// 日記下書き
+		// #3: 日記下書き
 		$note = \Note\Model_Note::forge();
 		$data[] = array($note, 1, array(
 			'title' => 'test2',
-			'body' => 'This is test2.',
+			'body' => '#3: 日記下書き',
 			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
 			'is_draft' => 1,
 		));
-		// 日記下書き編集
+		// #4: 日記下書き編集
 		$note = \Util_Orm::get_last_row('\Note\Model_Note');
 		$data[] = array($note, 1, array(
 			'title' => 'test2edit',
-			'body' => 'This is test2edit.',
+			'body' => '#4: 日記下書き編集',
 			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
 			'is_draft' => 1,
 		));
-		// 下書き日記公開
+		// #5: 下書き日記公開
 		$note = \Util_Orm::get_last_row('\Note\Model_Note');
 		$data[] = array($note, 1, array(
 		));
@@ -344,5 +348,21 @@ class Test_Model_Note extends \TestCase
 		$data[] = array($note, PRJ_PUBLIC_FLAG_MEMBER);
 
 		return $data;
+	}
+
+	private static function check_sort_datetime_change(Model_Note $note, $before)
+	{
+		$check_properties = array(
+			'title',
+			'body',
+			'public_flag',
+			'is_published',
+		);
+		foreach ($check_properties as $property)
+		{
+			if ($note->{$property} != $before[$property]) return true;
+		}
+
+		return false;
 	}
 }

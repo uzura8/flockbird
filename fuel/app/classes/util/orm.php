@@ -64,8 +64,8 @@ class Util_Orm
 	public static function get_last_row($model_name, $conditions = array(), $sort_col = 'id')
 	{
 		$query = $model_name::query();
-		if ($conditions) $query = $query->where($conditions);
-		$query = $query->order_by($sort_col, 'desc')->rows_limit(1);
+		if ($conditions) $query->where($conditions);
+		$query->order_by($sort_col, 'desc')->rows_limit(1);
 
 		return $query->get_one();
 	}
@@ -95,5 +95,75 @@ class Util_Orm
 		}
 
 		return $values;
+	}
+
+	public static function check_is_updated(\Orm\Model $obj, $check_properties = array(), $ignore_properties = array())
+	{
+		if (empty($check_properties) && empty($ignore_properties))
+		{
+			return true;
+		}
+
+		if (\Util_Orm::check_properties_updated($obj, $check_properties)) return true;
+		if (\Util_Orm::check_properties_updated_without_ignores($obj, $ignore_properties)) return true;
+
+		return false;
+	}
+
+	public static function check_properties_updated(\Orm\Model $obj, $check_properties)
+	{
+		if (empty($check_properties)) return false;
+
+		$check_properties = (array)$check_properties;
+		foreach ($check_properties as $key => $property)
+		{
+			if (is_array($property))
+			{
+				$conditions = $property;
+				$property = $key;
+				foreach ($conditions as $condition => $value)
+				{
+					if (!$obj->is_changed($property)) continue;
+					if ($condition == 'ignore_property')
+					{
+						if ($obj->is_changed($value)) continue;
+
+						return true;
+					}
+					if ($condition == 'ignore_value')
+					{
+						if ($value == 'reduced_num')
+						{
+							list($before, $after) = \Util_Orm::get_changed_values($obj, $property);
+							if (preg_match('/`'.$property.'`\s+\-\s+1/', $after)) continue;
+							if (is_int($before) && is_int($after) && $before > $after) continue;
+						}
+
+						return true;
+					}
+				}
+			}
+			else
+			{
+				if ($obj->is_changed($property)) return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static function check_properties_updated_without_ignores(\Orm\Model $obj, $ignore_properties)
+	{
+		if (empty($ignore_properties)) return false;
+
+		$ignore_properties = (array)$ignore_properties;
+		$all_properties = \Util_Db::get_columns('timeline');
+		foreach ($all_properties as $property)
+		{
+			if (in_array($property, $ignore_properties)) continue;
+			if ($obj->is_changed($property)) return true;
+		}
+
+		return false;
 	}
 }

@@ -42,16 +42,17 @@ class Model_NoteAlbumImage extends \Orm\Model
 		if (\Module::loaded('timeline'))
 		{
 			// album_image 追加時に note の sort_datetime を更新
-			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
+			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
 				'events' => array('after_insert'),
-				'model_to' => '\Note\Model_Note',
 				'relations' => array(
-					'id' => array(
-						'note_id' => 'property',
+					'model_to' => '\Note\Model_Note',
+					'conditions' => array(
+						'id' => array('note_id' => 'property'),
+					),
+					'update_properties' => array(
+						'sort_datetime' => array('created_at' => 'property'),
 					),
 				),
-				'property_from' => 'created_at',
-				'property_to' => 'sort_datetime',
 			);
 		}
 	}

@@ -85,27 +85,26 @@ class Model_Album extends \MyOrm\Model
 		{
 			// 更新時に timeline の sort_datetime を更新
 			$observer_key = \Config::get('timeline.types.album');
-			static::$_observers['MyOrm\Observer_UpdateRelationalTable'] = array(
+			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
 				'events' => array('after_update'),
-				'model_to' => '\Timeline\Model_Timeline',
 				'relations' => array(
-					'foreign_table' => array(
-						'album' => 'value',
+					'model_to' => '\Timeline\Model_Timeline',
+					'conditions' => array(
+						'foreign_table' => array('album' => 'value'),
+						'foreign_id' => array('id' => 'property'),
+						'type' => array($observer_key => 'value'),
 					),
-					'foreign_id' => array(
-						'id' => 'property',
+					'check_changed' => array(
+						'check_properties' => array(
+							'name',
+							'body',
+							'public_flag',
+						),
 					),
-					'type' => array(
-						$observer_key => 'value',
+					'update_properties' => array(
+						'sort_datetime' => array('updated_at' => 'property'),
 					),
 				),
-				'properties_check_changed' => array(
-					'name',
-					'body',
-					'public_flag',
-				),
-				'property_from' => 'updated_at',
-				'property_to' => 'sort_datetime',
 			);
 
 			if (\Config::get('timeline.articles.cache.is_use'))
@@ -113,21 +112,19 @@ class Model_Album extends \MyOrm\Model
 				static::$_observers['MyOrm\Observer_ExecuteToRelations'] = array(
 					'events' => array('after_update'),
 					'relations' => array(
-						array(
-							'model_to' => '\Timeline\Model_Timeline',
-							'execute_func' => array(
-								'method' => '\Timeline\Site_Util::delete_cache',
-								'params' => array(
-									'id' => 'property',
-								),
+						'model_to' => '\Timeline\Model_Timeline',
+						'execute_func' => array(
+							'method' => '\Timeline\Site_Util::delete_cache',
+							'params' => array(
+								'id' => 'property',
 							),
-							'conditions' => array(
-								'foreign_table' => array(
-									'album' => 'value',
-								),
-								'foreign_id' => array(
-									'id' => 'property',
-								),
+						),
+						'conditions' => array(
+							'foreign_table' => array(
+								'album' => 'value',
+							),
+							'foreign_id' => array(
+								'id' => 'property',
 							),
 						),
 					),

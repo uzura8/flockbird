@@ -41,19 +41,17 @@ class Model_TimelineChildData extends \MyOrm\Model
 		'MyOrm\Observer_ExecuteToRelations' => array(
 			'events' => array('after_save'),
 			'relations' => array(
-				array(
-					'execute_func' => array(
-						'method' => '\Timeline\Site_Util::delete_cache',
-						'params' => array(
-							'id' => 'property',
-							'type' => 'property',
-						),
+				'execute_func' => array(
+					'method' => '\Timeline\Site_Util::delete_cache',
+					'params' => array(
+						'id' => 'property',
+						'type' => 'property',
 					),
-					'model_to' => '\Timeline\Model_Timeline',
-					'conditions' => array(
-						'id' => array(
-							'timeline_id' => 'property',
-						),
+				),
+				'model_to' => '\Timeline\Model_Timeline',
+				'conditions' => array(
+					'id' => array(
+						'timeline_id' => 'property',
 					),
 				),
 			),

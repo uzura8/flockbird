@@ -107,10 +107,24 @@ class Model_Timeline extends \MyOrm\Model
 		'Orm\Observer_Validation' => array(
 			'events' => array('before_save'),
 		),
-		'Orm\Observer_CreatedAt' => array(
+		//'Orm\Observer_CreatedAt' => array(
+		//	'events' => array('before_insert'),
+		//	'mysql_timestamp' => true,
+		//),
+		'MyOrm\Observer_CreatedAtCopyFromRelationalTable' => array(
 			'events' => array('before_insert'),
-			'mysql_timestamp' => true,
+			'model_from' => array(
+				'foreign_table' => 'timeline_related_table',
+			),
+			'conditions' => array(
+				'id' => array(
+					'foreign_id' => 'property',
+				),
+			),
 		),
+		//'MyOrm\Observer_UpdatedAt' => array(
+		//	'events' => array('before_save'),
+		//),
 		'MyOrm\Observer_UpdatedAtCopyFromRelationalTable' => array(
 			'events' => array('before_save'),
 			'model_from' => array(
@@ -121,7 +135,6 @@ class Model_Timeline extends \MyOrm\Model
 					'foreign_id' => 'property',
 				),
 			),
-			'copy_property' => 'update_at',
 		),
 		'MyOrm\Observer_CopyValue'=>array(
 			'events'=>array('before_insert'),
@@ -130,7 +143,6 @@ class Model_Timeline extends \MyOrm\Model
 		),
 		'MyOrm\Observer_SortDatetime' => array(
 			'events' => array('before_update'),
-			'mysql_timestamp' => true,
 			'check_changed' => array(
 				'check_properties' => array(
 					'body',
@@ -179,19 +191,20 @@ class Model_Timeline extends \MyOrm\Model
 			),
 		),
 		// update 時に紐づく memberfollow_timeline の updated_at を更新する
-		'MyOrm\Observer_UpdateRelationalTable'=>array(
-			'events'=>array('after_update'),
-			'model_to' => '\Timeline\Model_MemberFollowTimeline',
+		'MyOrm\Observer_UpdateRelationalTables' => array(
+			'events' => array('after_update'),
 			'relations' => array(
-				'timeline_id' => array(
-					'id' => 'property',
+				'model_to' => '\Timeline\Model_MemberFollowTimeline',
+				'conditions' => array(
+					'timeline_id' => array('id' => 'property'),
+				),
+				'check_changed' => array(
+					'check_properties' => array('sort_datetime'),
+				),
+				'update_properties' => array(
+					'updated_at' => array('sort_datetime' => 'property'),
 				),
 			),
-			'properties_check_changed' => array(
-				'sort_datetime',
-			),
-			'property_to'   => 'updated_at',
-			'property_from' => 'sort_datetime',
 		),
 	);
 

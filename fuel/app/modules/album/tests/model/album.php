@@ -173,7 +173,7 @@ class Test_Model_Album extends \TestCase
 		// 変更なし
 		if ($album->public_flag == $before['public_flag'])
 		{
-			$this->assertEquals($before['created_at'], $album->updated_at);
+			$this->assertEquals($before['updated_at'], $album->updated_at);
 		}
 		// 変更あり
 		else
@@ -193,7 +193,7 @@ class Test_Model_Album extends \TestCase
 			// 変更なし
 			if ($album->public_flag == $before['public_flag'])
 			{
-				$this->assertEquals($album->created_at, $timeline->sort_datetime);
+				$this->assertEquals($before['updated_at'], $timeline->sort_datetime);
 			}
 			// 変更あり
 			else
