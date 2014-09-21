@@ -164,7 +164,7 @@ class Site_Model
 		);
 	}
 
-	public static function save_timeline($member_id, $public_flag = null, $type_key = null, $foreign_id = null,  $body = null, Model_Timeline $timeline = null, $child_foreign_ids = array())
+	public static function save_timeline($member_id, $public_flag = null, $type_key = null, $foreign_id = null, $save_datetime = null, $body = null, Model_Timeline $timeline = null, $child_foreign_ids = array())
 	{
 		list($type, $foreign_table, $child_foreign_table) = Site_Util::get_timeline_save_values($type_key);
 		if (!$timeline) $timeline = Site_Util::get_timeline_object($type_key, $foreign_id);
@@ -178,6 +178,7 @@ class Site_Model
 			$timeline->public_flag = is_null($public_flag) ? conf('public_flag.default') : $public_flag;
 			$timeline->foreign_table = $foreign_table;
 			$timeline->foreign_id = $foreign_id;
+			$timeline->created_at = $save_datetime ?: \Date::time()->format('mysql');
 		}
 		else
 		{
@@ -185,7 +186,7 @@ class Site_Model
 			{
 				$timeline->public_flag = $public_flag;
 			}
-			if ($timeline->is_changed()) $timeline->sort_datetime = date('Y-m-d H:i:s');
+			if ($timeline->is_changed() && $save_datetime) $timeline->updated_at = $save_datetime;
 		}
 		$timeline->save();
 

@@ -52,11 +52,11 @@ class Model_NoteComment extends \MyOrm\Model
 							'note_id' => 'property',
 						),
 					),
-					//'optional_updates' => array(
-					//	'sort_datetime' => array(
-					//		'created_at' => 'property',
-					//	),
-					//),
+					'optional_updates' => array(
+						'sort_datetime' => array(
+							'created_at' => 'property',
+						),
+					),
 				),
 			),
 		),

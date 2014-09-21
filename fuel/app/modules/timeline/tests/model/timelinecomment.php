@@ -19,7 +19,7 @@ class Test_Model_TimelineComment extends \TestCase
 	public static function setUpBeforeClass()
 	{
 		$body = 'This is test.';
-		$timeline = Site_Model::save_timeline(1, PRJ_PUBLIC_FLAG_ALL, 'normal', null, $body);
+		$timeline = Site_Model::save_timeline(1, PRJ_PUBLIC_FLAG_ALL, 'normal', null, null, $body);
 		self::$timeline_id = $timeline->id;
 		self::$timeline_before = $timeline;
 	}

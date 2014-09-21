@@ -128,7 +128,7 @@ class Controller_Api extends \Controller_Site_Api
 			{
 				$album_id = null;
 			}
-			$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], $type_key, $album_id, $post['body'], $timeline, $album_image_ids);
+			$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], $type_key, $album_id, null, $post['body'], $timeline, $album_image_ids);
 			\DB::commit_transaction();
 
 			// thumbnail 作成 & tmp_file thumbnail 削除

@@ -107,35 +107,35 @@ class Model_Timeline extends \MyOrm\Model
 		'Orm\Observer_Validation' => array(
 			'events' => array('before_save'),
 		),
-		//'Orm\Observer_CreatedAt' => array(
-		//	'events' => array('before_insert'),
-		//	'mysql_timestamp' => true,
-		//),
-		'MyOrm\Observer_CreatedAtCopyFromRelationalTable' => array(
+		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
-			'model_from' => array(
-				'foreign_table' => 'timeline_related_table',
-			),
-			'conditions' => array(
-				'id' => array(
-					'foreign_id' => 'property',
-				),
-			),
+			'mysql_timestamp' => true,
 		),
-		//'MyOrm\Observer_UpdatedAt' => array(
-		//	'events' => array('before_save'),
+		//'MyOrm\Observer_CreatedAtCopyFromRelationalTable' => array(
+		//	'events' => array('before_insert'),
+		//	'model_from' => array(
+		//		'foreign_table' => 'timeline_related_table',
+		//	),
+		//	'conditions' => array(
+		//		'id' => array(
+		//			'foreign_id' => 'property',
+		//		),
+		//	),
 		//),
-		'MyOrm\Observer_UpdatedAtCopyFromRelationalTable' => array(
+		'MyOrm\Observer_UpdatedAt' => array(
 			'events' => array('before_save'),
-			'model_from' => array(
-				'foreign_table' => 'timeline_related_table',
-			),
-			'conditions' => array(
-				'id' => array(
-					'foreign_id' => 'property',
-				),
-			),
 		),
+		//'MyOrm\Observer_UpdatedAtCopyFromRelationalTable' => array(
+		//	'events' => array('before_save'),
+		//	'model_from' => array(
+		//		'foreign_table' => 'timeline_related_table',
+		//	),
+		//	'conditions' => array(
+		//		'id' => array(
+		//			'foreign_id' => 'property',
+		//		),
+		//	),
+		//),
 		'MyOrm\Observer_CopyValue'=>array(
 			'events'=>array('before_insert'),
 			'property_to'   => 'sort_datetime',

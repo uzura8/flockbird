@@ -155,7 +155,7 @@ class Model_Album extends \MyOrm\Model
 		}
 		if (\Module::loaded('timeline'))
 		{
-			\Timeline\Site_Model::save_timeline($member_id, $values['public_flag'], 'album', $album->id, null, null, $album_image_ids);
+			\Timeline\Site_Model::save_timeline($member_id, $values['public_flag'], 'album', $album->id, $album->updated_at, null, null, $album_image_ids);
 		}
 
 		if ($is_changed_public_flag && \Module::loaded('timeline'))

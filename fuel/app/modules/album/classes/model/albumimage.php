@@ -319,7 +319,7 @@ class Model_AlbumImage extends \MyOrm\Model
 					$timeline_child_foreign_ids = array($self->id);
 					break;
 			}
-			\Timeline\Site_Model::save_timeline($member->id, $public_flag, $timeline_type_key, $timeline_foreign_id, null, null, $timeline_child_foreign_ids);
+			\Timeline\Site_Model::save_timeline($member->id, $public_flag, $timeline_type_key, $timeline_foreign_id, $self->updated_at, null, null, $timeline_child_foreign_ids);
 		}
 
 		return array($self, $file);

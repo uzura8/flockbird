@@ -54,17 +54,18 @@ class Controller_Member_Register extends Controller_Site
 				{
 					throw new FuelException('create member error.');
 				}
+				$member = $auth->get_member();
 				// 仮登録情報の削除
 				$email    = $member_pre->email;
 				$password = $member_pre->password;
 				$member_pre->delete();
 
 				// member_profile 登録
-				$form_member_profile->set_member_obj($auth->get_member());
+				$form_member_profile->set_member_obj();
 				$form_member_profile->seve();
 
 				// timeline 投稿
-				if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id);
+				if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id, $member->created_at);
 				DB::commit_transaction();
 
 				$maildata = array();

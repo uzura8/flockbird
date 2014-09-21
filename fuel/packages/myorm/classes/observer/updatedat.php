@@ -17,7 +17,7 @@ class Observer_UpdatedAt extends \Orm\Observer
 		$props = $class::observers(get_class($this));
 		$this->_mysql_timestamp  = isset($props['mysql_timestamp']) ? $props['mysql_timestamp'] : static::$mysql_timestamp;
 		$this->_property         = isset($props['property']) ? $props['property'] : static::$property;
-		$this->_property_from    = isset($props['property_from']) ? $props['property_from'] : static::$property;
+		$this->_property_from    = isset($props['property_from']) ? $props['property_from'] : static::$property_from;
 		$this->_overwrite        = isset($props['overwrite']) ? $props['overwrite'] : true;
 	}
 

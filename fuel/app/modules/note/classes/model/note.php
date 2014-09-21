@@ -207,7 +207,7 @@ class Model_Note extends \MyOrm\Model
 			if ($is_published)
 			{
 				// timeline 投稿
-				\Timeline\Site_Model::save_timeline($member_id, $this->public_flag, 'note', $this->id);
+				\Timeline\Site_Model::save_timeline($member_id, $this->public_flag, 'note', $this->id, $this->updated_at);
 			}
 			elseif (!$is_new && $is_changed_public_flag)
 			{

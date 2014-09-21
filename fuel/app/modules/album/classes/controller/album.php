@@ -153,7 +153,7 @@ class Controller_Album extends \Controller_Site
 
 				\DB::start_transaction();
 				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album->id, 'album_id', 'album_image', 'Album', $album->public_flag);
-				if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $album->public_flag, 'album_image', $album->id, null, null, $album_image_ids);
+				if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $album->public_flag, 'album_image', $album->id, null, null, null, $album_image_ids);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除

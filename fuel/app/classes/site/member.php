@@ -29,7 +29,7 @@ class Site_Member
 			$member->save();
 
 			// timeline 投稿
-			if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, 'profile_image', $file->id);
+			if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, 'profile_image', $file->id, $member->updated_at);
 		}
 
 		return $file;
