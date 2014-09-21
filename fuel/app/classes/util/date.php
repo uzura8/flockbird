@@ -100,4 +100,34 @@ class Util_Date
 
 		return floor(($now - $target_date) / 10000);
 	}
+
+	public static function get_datetime_list($base_datatime, $second = 1, $type = 'both')
+	{
+		if (!in_array($type, array('both', 'past', 'future'))) throw new InvalidArgumentException('Third parameter is invalid.');
+
+		$base_time = strtotime($base_datatime);
+		$return = array();
+		switch ($type)
+		{
+			case 'future':
+				$min = 0;
+				$max = $second;
+				break;
+			case 'past':
+				$min = 0 - $second;
+				$max = 0;
+				break;
+			case 'both':
+			default :
+				$min = 0 - $second;
+				$max = $second;
+				break;
+		}
+		for ($i = $min; $i <= $max; $i++)
+		{
+			$return[] = \Date::forge($base_time + $i)->format('mysql');
+		}
+
+		return $return;
+	}
 }

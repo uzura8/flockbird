@@ -75,11 +75,11 @@ class Test_Model_Album extends \TestCase
 			$timeline = array_shift($timelines);
 			$this->assertEquals($album->member_id, $timeline->member_id);
 			$this->assertEquals($timeline_public_flag_expected, $timeline->public_flag);
-			//$this->assertEquals($album->created_at, $timeline->created_at);
+			$this->assertContains($timeline->created_at, \Util_Date::get_datetime_list($album->created_at));
 			if ($is_changed)
 			{
 				$this->assertEquals($album->updated_at, $timeline->sort_datetime);
-				//$this->assertEquals($album->updated_at, $timeline->updated_at);
+				$this->assertContains($timeline->updated_at, \Util_Date::get_datetime_list($album->updated_at));
 			}
 
 			// timeline view cache check
