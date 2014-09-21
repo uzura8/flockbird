@@ -220,9 +220,12 @@ class Model_AlbumImage extends \MyOrm\Model
 		return self::$count_par_album_list[$album_id];
 	}
 
-	public static function get4album_id($album_id)
+	public static function get4album_id($album_id, $with_related = false)
 	{
-		return self::query()->where('album_id', $album_id)->get();
+		$query = self::query()->where('album_id', $album_id);
+		if ($with_related) $query->related('file');
+
+		return $query->get();
 	}
 
 	public static function get_ids4album_id($album_id, $order_by = 'id')

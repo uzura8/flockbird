@@ -226,6 +226,9 @@ class Test_Model_Album extends \TestCase
 			$this->markTestSkipped();
 		}
 		$album_id = $album->id;
+		$album_filesize_total = self::get_album_filesize_total($album_id);
+		$member_filesize_before = self::get_member_filesize_total($album->member_id);
+
 		$deleted_files = Model_Album::delete_relations($album);
 		if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
@@ -236,6 +239,9 @@ class Test_Model_Album extends \TestCase
 		// album_image
 		$album_images = Model_AlbumImage::get4album_id($album_id);
 		$this->assertEmpty($album_images);
+
+		// filesize
+		$this->assertEquals($member_filesize_before - $album_filesize_total, self::get_member_filesize_total($album->member_id));
 
 		// timeline
 		if (is_enabled('timeline'))
@@ -301,5 +307,24 @@ class Test_Model_Album extends \TestCase
 		chmod($upload_file, 0777);
 
 		return $upload_file;
+	}
+
+	private static function get_album_filesize_total($album_id)
+	{
+		$album_images = Model_AlbumImage::get4album_id($album_id, true);
+		$size = 0;
+		foreach ($album_images as $album_image)
+		{
+			$size += $album_image->file->filesize;
+		}
+
+		return $size;
+	}
+
+	private static function get_member_filesize_total($member_id)
+	{
+		$member = \Model_Member::check_authority($member_id);
+
+		return $member->filesize_total;
 	}
 }
