@@ -9,9 +9,11 @@ namespace Note;
  */
 class Test_Model_Note extends \TestCase
 {
+	private static $note;
 	private static $note_count = 0;
 	private static $timeline_count = 0;
 	private static $timeline_cache_count = 0;
+	private static $self_member_id = 1;
 
 	public static function setUpBeforeClass()
 	{
@@ -28,22 +30,26 @@ class Test_Model_Note extends \TestCase
 	}
 
 	/**
-	* @dataProvider save_with_relations_provider
+	* @dataProvider save_provider
 	*/
-	//public function save_with_relations($member_id, $values, $file_tmps = null, $album_images = array(), $files = array())
-	public function test_save_with_relations(Model_Note $note, $self_member_id, $values)
+	public function test_save($is_update_test, $values)
 	{
-		$is_new = $note->is_new();
-		$is_check_timeline_view_cache = (!$is_new && is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
-		$before = array(
-			'title' => $note->title,
-			'body' => $note->body,
-			'public_flag' => $note->public_flag,
-			'is_published' => $note->is_published,
-			'sort_datetime' => $note->sort_datetime,
-			'comment_count' => $note->comment_count,
-			'like_count' => $note->like_count,
-		);
+		$note = \Note\Model_Note::forge();
+		$before = array();
+		if ($is_update_test)
+		{
+			$note = $this->get_last_row();
+			$before = array(
+				'title' => $note->title,
+				'body' => $note->body,
+				'public_flag' => $note->public_flag,
+				'is_published' => $note->is_published,
+				'sort_datetime' => $note->sort_datetime,
+				'comment_count' => $note->comment_count,
+				'like_count' => $note->like_count,
+			);
+		}
+		$is_check_timeline_view_cache = ($is_update_test && is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
 
 		// timeline view cache 作成
 		if ($is_check_timeline_view_cache)
@@ -55,14 +61,14 @@ class Test_Model_Note extends \TestCase
 		}
 
 		// note save
-		list($is_changed, $is_published, $moved_files) = $note->save_with_relations($self_member_id, $values);
+		list($is_changed, $is_published, $moved_files) = $note->save_with_relations(self::$self_member_id, $values);
 
 		// 返り値の確認
 		$this->assertEmpty($moved_files);
-		$this->assertEquals((!$before['is_published'] && $note->is_published), $is_published);
+		if (!empty($values['is_draft'])) $this->assertEquals(false, $is_published);
 
 		// 新規投稿
-		if ($is_new)
+		if (!$is_update_test)
 		{
 			$is_draft = !empty($values['is_draft']);
 			// 件数
@@ -165,63 +171,55 @@ class Test_Model_Note extends \TestCase
 		}
 	}
 
-	public function save_with_relations_provider()
+	public function save_provider()
 	{
 		$data = array();
-		//(Model_Note $note, $self_member_id, $values)
-
 		// #0: 通常日記新規投稿
-		$note = \Note\Model_Note::forge();
-		$data[] = array($note, 1, array(
+		$data[] = array(0, array(
 			'title' => 'test',
 			'body' => '#0: 通常日記新規投稿',
+			'is_draft' => 0,
 			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
 		));
-		$note = \Util_Orm::get_last_row('\Note\Model_Note');
 		// #1: 通常日記編集(変更なし)
-		$note = \Note\Model_Note::forge();
-		$data[] = array($note, 1, array(
+		$data[] = array(1, array(
 			'title' => 'test',
 			'body' => '#1: 通常日記編集(変更なし)',
 			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+			'is_draft' => 0,
 		));
 		// #2: 通常日記編集
-		$note = \Note\Model_Note::forge();
-		$data[] = array($note, 1, array(
+		$data[] = array(1, array(
 			'title' => '#2: 通常日記編集',
 			'body' => 'This is test1.',
 			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
 		));
 
 		// #3: 日記下書き
-		$note = \Note\Model_Note::forge();
-		$data[] = array($note, 1, array(
+		$data[] = array(0, array(
 			'title' => 'test2',
 			'body' => '#3: 日記下書き',
 			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
 			'is_draft' => 1,
 		));
 		// #4: 日記下書き編集
-		$note = \Util_Orm::get_last_row('\Note\Model_Note');
-		$data[] = array($note, 1, array(
+		$data[] = array(1, array(
 			'title' => 'test2edit',
 			'body' => '#4: 日記下書き編集',
 			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
 			'is_draft' => 1,
 		));
 		// #5: 下書き日記公開
-		$note = \Util_Orm::get_last_row('\Note\Model_Note');
-		$data[] = array($note, 1, array(
+		$data[] = array(1, array(
+			'is_draft' => 0,
 		));
 
 		return $data;
 	}
 
-	/**
-	* @dataProvider delete_with_relations_provider
-	*/
-	public function test_delete_with_relations(Model_Note $note)
+	public function test_delete_with_relations()
 	{
+		$note = $this->get_last_row();
 		$is_draft = !$note->is_published;
 		$note_id = $note->id;
 		$deleted_files = $note->delete_with_relations();
@@ -253,38 +251,39 @@ class Test_Model_Note extends \TestCase
 		}
 	}
 
-	public function delete_with_relations_provider()
-	{
-		$data = array();
+	//public function delete_with_relations_provider()
+	//{
+	//	$data = array();
 
-		// 通常日記新規投稿
-		$note = \Note\Model_Note::forge();
-		$values = array(
-			'title' => 'test',
-			'body' => 'This is test.',
-			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
-		);
-		$note->save_with_relations(1, $values);
-		$data[] = array($note);
+	//	// 通常日記新規投稿
+	//	$note = \Note\Model_Note::forge();
+	//	$values = array(
+	//		'title' => 'test',
+	//		'body' => 'This is test.',
+	//		'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+	//	);
+	//	$note->save_with_relations(1, $values);
+	//	$data[] = array($note);
 
-		$note = \Note\Model_Note::forge();
-		$values = array(
-			'title' => 'test',
-			'body' => 'This is test.',
-			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
-			'is_draft' => 1,
-		);
-		$note->save_with_relations(1, $values);
-		$data[] = array($note);
+	//	$note = \Note\Model_Note::forge();
+	//	$values = array(
+	//		'title' => 'test',
+	//		'body' => 'This is test.',
+	//		'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+	//		'is_draft' => 1,
+	//	);
+	//	$note->save_with_relations(1, $values);
+	//	$data[] = array($note);
 
-		return $data;
-	}
+	//	return $data;
+	//}
 
 	/**
 	* @dataProvider update_public_flag_with_relations_provider
 	*/
-	public function test_update_public_flag_with_relations(Model_Note $note, $public_flag)
+	public function test_update_public_flag_with_relations($public_flag)
 	{
+		$note = $this->get_last_row();
 		$before = array(
 			'public_flag' => $note->public_flag,
 			'updated_at' => $note->updated_at,
@@ -342,10 +341,10 @@ class Test_Model_Note extends \TestCase
 			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
 		);
 		$note->save_with_relations(1, $values);
-		$data[] = array($note, PRJ_PUBLIC_FLAG_MEMBER);
+		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER);
 
 		// 変更なし
-		$data[] = array($note, PRJ_PUBLIC_FLAG_MEMBER);
+		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER);
 
 		return $data;
 	}
@@ -364,5 +363,20 @@ class Test_Model_Note extends \TestCase
 		}
 
 		return false;
+	}
+
+	private function get_last_row()
+	{
+		return \Util_Orm::get_last_row('\Note\Model_Note');
+	}
+
+	private function set_count()
+	{
+		self::$note_count = \Util_Orm::get_count_all('\Note\Model_Note');
+		if (is_enabled('timeline'))
+		{
+			self::$timeline_count = \Util_Orm::get_count_all('\Timeline\Model_Timeline');
+			self::$timeline_cache_count = \Util_Orm::get_count_all('\Timeline\Model_TimelineCache');
+		}
 	}
 }
