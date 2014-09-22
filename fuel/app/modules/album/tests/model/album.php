@@ -76,7 +76,10 @@ class Test_Model_Album extends \TestCase
 			$this->assertContains($timeline->created_at, \Util_Date::get_datetime_list($album->created_at));
 			if ($is_changed)
 			{
-				$this->assertEquals($album->updated_at, $timeline->sort_datetime);
+				if (self::check_sort_datetime_change(self::$album, $before))
+				{
+					$this->assertEquals($album->updated_at, $timeline->sort_datetime);
+				}
 				$this->assertContains($timeline->updated_at, \Util_Date::get_datetime_list($album->updated_at));
 			}
 
@@ -309,5 +312,20 @@ class Test_Model_Album extends \TestCase
 		$member = \Model_Member::check_authority($member_id);
 
 		return $member->filesize_total;
+	}
+
+	private static function check_sort_datetime_change(Model_Album $album, $before)
+	{
+		$check_properties = array(
+			'name',
+			'body',
+			'public_flag',
+		);
+		foreach ($check_properties as $property)
+		{
+			if ($album->{$property} != $before[$property]) return true;
+		}
+
+		return false;
 	}
 }
