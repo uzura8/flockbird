@@ -14,9 +14,11 @@ class Test_Model_Note extends \TestCase
 	private static $timeline_count = 0;
 	private static $timeline_cache_count = 0;
 	private static $self_member_id = 1;
+	private static $is_check_timeline_view_cache;
 
 	public static function setUpBeforeClass()
 	{
+		self::$is_check_timeline_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
 	}
 
 	protected function setUp()
@@ -49,15 +51,11 @@ class Test_Model_Note extends \TestCase
 				'like_count' => $note->like_count,
 			);
 		}
-		$is_check_timeline_view_cache = ($is_update_test && is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
 
 		// timeline view cache 作成
-		if ($is_check_timeline_view_cache)
+		if (self::$is_check_timeline_view_cache)
 		{
-			$timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids('note', $note->id, \Config::get('timeline.types.note'));
-			$timeline = array_shift($timelines);
-			\Timeline\Site_Util::get_article_main_view($timeline->id);
-			$timeline_view_cache_before = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline->id), \Config::get('timeline.articles.cache.expir'));
+			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('note', $note->id, \Config::get('timeline.types.note'));
 		}
 
 		// note save
@@ -142,24 +140,9 @@ class Test_Model_Note extends \TestCase
 				}
 
 				// timeline view cache check
-				if ($is_check_timeline_view_cache)
+				if (self::$is_check_timeline_view_cache)
 				{
-					try
-					{
-						$timeline_view_cache = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline->id), \Config::get('timeline.articles.cache.expir'));
-					}
-					catch (\CacheNotFoundException $e)
-					{
-						$timeline_view_cache = null;
-					}
-					if (\Util_Orm::check_is_changed($note, array('title', 'body', 'public_flag'), $before))
-					{
-						$this->assertEmpty($timeline_view_cache);
-					}
-					else
-					{
-						$this->assertEquals($timeline_view_cache_before, $timeline_view_cache);
-					}
+					$this->assertEmpty(\Timeline\Site_Util::get_view_cache($timeline->id));
 				}
 			}
 			// 下書き日記

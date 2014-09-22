@@ -13,9 +13,11 @@ class Test_Model_Album extends \TestCase
 	private static $album_count = 0;
 	private static $timeline_count = 0;
 	private static $timeline_cache_count = 0;
+	private static $is_check_timeline_view_cache;
 
 	public static function setUpBeforeClass()
 	{
+		self::$is_check_timeline_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
 	}
 
 	protected function setUp()
@@ -35,14 +37,10 @@ class Test_Model_Album extends \TestCase
 			'public_flag' => $album->public_flag,
 		);
 
-		$is_check_timeline_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
-		if ($is_check_timeline_view_cache)
+		// timeline view cache 作成
+		if (self::$is_check_timeline_view_cache)
 		{
-			// timeline view cache 作成
-			$timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids('album', $album->id, \Config::get('timeline.types.album'));
-			$timeline = array_shift($timelines);
-			\Timeline\Site_Util::get_article_main_view($timeline->id);
-			$timeline_view_cache_before = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline->id), \Config::get('timeline.articles.cache.expir'));
+			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.album'));
 		}
 
 		// album update
@@ -83,24 +81,9 @@ class Test_Model_Album extends \TestCase
 			}
 
 			// timeline view cache check
-			if ($is_check_timeline_view_cache)
+			if (self::$is_check_timeline_view_cache)
 			{
-				try
-				{
-					$timeline_view_cache = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline->id), \Config::get('timeline.articles.cache.expir'));
-				}
-				catch (\CacheNotFoundException $e)
-				{
-					$timeline_view_cache = null;
-				}
-				if (\Util_Orm::check_is_changed($album, array('name', 'body', 'public_flag'), $before))
-				{
-					$this->assertEmpty($timeline_view_cache);
-				}
-				else
-				{
-					$this->assertEquals($timeline_view_cache_before, $timeline_view_cache);
-				}
+				$this->assertEmpty(\Timeline\Site_Util::get_view_cache($timeline->id));
 			}
 		}
 	}
