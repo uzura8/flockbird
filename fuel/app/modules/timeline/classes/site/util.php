@@ -496,19 +496,7 @@ class Site_Util
 			return self::get_article_main_content($timeline_id, $access_from_member_relation, $is_detail);
 		}
 
-		$cache_key = self::get_cache_key($timeline_id, $access_from_member_relation);
-		$cache_expir = \Config::get('timeline.articles.cache.expir');
-		try
-		{
-			$content = \Cache::get($cache_key, $cache_expir);
-		}
-		catch (\CacheNotFoundException $e)
-		{
-			$content = self::get_article_main_content($timeline_id, $access_from_member_relation);
-			\Cache::set($cache_key, $content, $cache_expir);
-		}
-
-		return $content;
+		return self::get_view_cache($timeline_id, $access_from_member_relation, true);
 	}
 
 	public static function get_article_main_content($timeline_id, $access_from_member_relation = null, $is_detail = false)
@@ -528,6 +516,27 @@ class Site_Util
 		if ($access_from_member_relation) $cache_key .= '_'.$access_from_member_relation;
 
 		return $cache_key;
+	}
+
+	public static function get_view_cache($timeline_id, $access_from_member_relation = null, $is_make_cache = false)
+	{
+		$cache_key = self::get_cache_key($timeline_id, $access_from_member_relation);
+		$cache_expir = \Config::get('timeline.articles.cache.expir');
+		try
+		{
+			$content =  \Cache::get($cache_key, $cache_expir);
+		}
+		catch (\CacheNotFoundException $e)
+		{
+			$content = null;
+			if ($is_make_cache)
+			{
+				$content = self::get_article_main_content($timeline_id, $access_from_member_relation);
+				\Cache::set($cache_key, $content, $cache_expir);
+			}
+		}
+
+		return $content;
 	}
 
 	public static function delete_cache($timeline_id, $type = null)
@@ -570,5 +579,14 @@ class Site_Util
 		}
 
 		return array($follow_member_ids, $friend_member_ids);
+	}
+
+	public static function make_view_cache4foreign_table_and_foreign_id($foreign_table, $foreign_id, $type = null)
+	{
+		$timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids($foreign_table, $foreign_id, $type);
+		$timeline = array_shift($timelines);
+		Site_Util::get_article_main_view($timeline->id);
+
+		return \Cache::get(\Timeline\Site_Util::get_cache_key($timeline->id), \Config::get('timeline.articles.cache.expir'));
 	}
 }
