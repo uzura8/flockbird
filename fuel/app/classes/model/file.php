@@ -1,5 +1,5 @@
 <?php
-class Model_File extends \Orm\Model
+class Model_File extends \MyOrm\Model
 {
 	protected static $_table_name = 'file';
 	protected static $_properties = array(
