@@ -48,14 +48,10 @@ class Model_NoteComment extends \MyOrm\Model
 				array(
 					'model_to' => '\Note\Model_Note',
 					'conditions' => array(
-						'id' => array(
-							'note_id' => 'property',
-						),
+						'id' => array('note_id' => 'property'),
 					),
 					'optional_updates' => array(
-						'sort_datetime' => array(
-							'created_at' => 'property',
-						),
+						'sort_datetime' => array('created_at' => 'property'),
 					),
 				),
 			),
@@ -66,9 +62,7 @@ class Model_NoteComment extends \MyOrm\Model
 				array(
 					'model_to' => '\Note\Model_Note',
 					'conditions' => array(
-						'id' => array(
-							'note_id' => 'property',
-						),
+						'id' => array('note_id' => 'property'),
 					),
 				),
 			),

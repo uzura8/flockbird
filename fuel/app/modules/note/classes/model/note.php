@@ -91,12 +91,12 @@ class Model_Note extends \MyOrm\Model
 					'body',
 					'public_flag',
 					'is_published',
-					'comment_count' => array(
-						'ignore_value' => 'reduced_num',
-					),
-					'like_count' => array(
-						'ignore_value' => 'reduced_num',
-					),
+					//'comment_count' => array(
+					//	'ignore_value' => 'reduced_num',
+					//),
+					//'like_count' => array(
+					//	'ignore_value' => 'reduced_num',
+					//),
 				),
 			),
 		),
