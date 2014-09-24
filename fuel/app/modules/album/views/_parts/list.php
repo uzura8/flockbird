@@ -8,14 +8,14 @@
 <?php
 if (empty($before_album_member_id) || $album->member_id != $before_album_member_id)
 {
-	$access_from_member_relation = \Site_Member::get_access_from_member_relation($album->member_id, \Auth::check() ? $u->id : 0);
+	$access_from = \Site_Member::get_access_from_member_relation($album->member_id, \Auth::check() ? $u->id : 0);
 }
 $before_album_member_id = $album->member_id;
 ?>
 	<div class="js-hide-btn main_item" id="main_item_<?php echo $album->id; ?>" data-hidden_btn="btn_album_edit_<?php echo $album->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album->id ?>">
 			<div class="content"><?php echo img(
-				\Album\Model_AlbumImage::get_album_cover_filename($album->cover_album_image_id, $album->id, $access_from_member_relation),
+				\Album\Model_AlbumImage::get_album_cover_filename($album->cover_album_image_id, $album->id, $access_from),
 				img_size('ai', 'M'),
 				'album/'.$album->id
 			); ?></div>
@@ -49,7 +49,14 @@ $before_album_member_id = $album->member_id;
 	'child_model' => 'album_image',
 )); ?>
 <?php endif; ?>
-<?php $album_image_count = (int)\Album\Model_AlbumImage::get_count4album_id($album->id); ?>
+<?php
+$album_image_count = \Site_Model::get_count('album_image', array(
+	'where' => \Site_Model::get_where_public_flag4access_from(
+		$access_from,
+		array(array('album_id', $album->id))
+	),
+), 'Album');
+?>
 			<div class="article">
 				<div class="body"><?php echo nl2br(strim($album->body, \Config::get('album.articles.trim_width.body'))) ?></div>
 				<small><?php echo render('_parts/image_count_link', array('count' => $album_image_count, 'uri' => 'album/slide/'.$album->id.'#slidetop')); ?></small>
