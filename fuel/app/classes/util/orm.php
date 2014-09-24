@@ -166,4 +166,20 @@ class Util_Orm
 
 		return false;
 	}
+
+	public static function add_query_where(\Orm\Query $query, $conditions = array())
+	{
+		if (!$conditions) return $query;
+
+		if (count($conditions) == 3)
+		{
+			$query->where($conditions[0], $conditions[1], $conditions[2]);
+		}
+		else
+		{
+			$query->where($conditions);
+		}
+
+		return $query;
+	}
 }
