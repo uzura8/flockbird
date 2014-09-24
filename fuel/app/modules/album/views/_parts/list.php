@@ -5,9 +5,20 @@
 <div class="row">
 <div id="main_container">
 <?php foreach ($list as $album): ?>
+<?php
+if (empty($before_album_member_id) || $album->member_id != $before_album_member_id)
+{
+	$access_from_member_relation = \Site_Member::get_access_from_member_relation($album->member_id, \Auth::check() ? $u->id : 0);
+}
+$before_album_member_id = $album->member_id;
+?>
 	<div class="js-hide-btn main_item" id="main_item_<?php echo $album->id; ?>" data-hidden_btn="btn_album_edit_<?php echo $album->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album->id ?>">
-			<div class="content"><?php echo img(\Album\Site_Util::get_album_cover_filename($album->cover_album_image_id, $album->id), img_size('ai', 'M'), 'album/'.$album->id); ?></div>
+			<div class="content"><?php echo img(
+				\Album\Model_AlbumImage::get_album_cover_filename($album->cover_album_image_id, $album->id, $access_from_member_relation),
+				img_size('ai', 'M'),
+				'album/'.$album->id
+			); ?></div>
 			<h5><?php echo Html::anchor('album/'.$album->id, strim($album->name, \Config::get('album.articles.trim_width.name'))); ?></h5>
 <?php $disable_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table); ?>
 <?php if (!empty($is_member_page)): ?>

@@ -505,4 +505,32 @@ class Model_AlbumImage extends \MyOrm\Model
 
 		return $default_shot_at;
 	}
+
+	public static function get_album_cover_filename($cover_album_image_id = 0, $album_id = 0, $access_from = 'others')
+	{
+		$query = self::query()->related('file');
+		$public_flag_conds = \Site_Model::get_where_public_flag4access_from($access_from);
+		if (count($public_flag_conds) == 3)
+		{
+			$query->where($public_flag_conds[0], $public_flag_conds[1], $public_flag_conds[2]);
+		}
+		elseif($public_flag_conds)
+		{
+			$query->where($public_flag_conds);
+		}
+		
+		if ($cover_album_image_id)
+		{
+			$query->where('id', $cover_album_image_id);
+		}
+		else
+		{
+			$query->where('album_id', $album_id);
+			$query->order_by('id', 'asc');
+			$query->rows_limit(1);
+		}
+		$album_image = $query->get_one();
+
+		return (!empty($album_image)) ? $album_image->get_image() : 'ai';
+	}
 }
