@@ -133,63 +133,38 @@ class Controller_Image extends \Controller_Site
 	 */
 	public function action_edit($id = null)
 	{
-		$with_file = (\Input::method() == 'POST') ? false : true;
 		$album_image = Model_Albumimage::check_authority($id, $this->u->id);
-		$disabled_to_update_message = Site_Util::check_album_disabled_to_update($album_image->album->foreign_table);
-
 		$val = self::get_validation_object($album_image, true);
 
 		if (\Input::method() == 'POST')
 		{
-			\Util_security::check_csrf();
-
-			$post = array();
-			$error = '';
-			if ($val->run())
+			try
 			{
+				\Util_security::check_csrf();
+
+				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-				if (empty($post['name']) && empty($post['shot_at_time'])) $error = '入力してください';
-			}
-			else
-			{
-				$error = $val->show_errors();
-			}
-			if ($disabled_to_update_message && isset($post['public_flag']) && $album_image->public_flag != $post['public_flag'])
-			{
-				$error = $disabled_to_update_message;
-			}
-
-			if (!$error)
-			{
-				try
+				if (empty($post['name']) && empty($post['shot_at_time']))
 				{
-					$post = $val->validated();
-
-					\DB::start_transaction();
-					if (isset($post['name']) && $post['name'] !== '' && $post['name'] !== $album_image->name) $album_image->name = $post['name'];
-					if ($post['shot_at_time'] && !\Util_Date::check_is_same_minute($post['shot_at_time'], $album_image->shot_at))
-					{
-						$album_image->shot_at = $post['shot_at_time'].':00';
-					}
-					$album_image->save();
-					if (!$disabled_to_update_message && isset($post['public_flag']))
-					{
-						$album_image->update_public_flag($post['public_flag'], true);
-					}
-					\DB::commit_transaction();
-
-					\Session::set_flash('message', term('album_image').'を編集をしました。');
-					\Response::redirect('album/image/'.$album_image->id);
+					throw new \FuelException('入力してください');
 				}
-				catch(Exception $e)
+				$disabled_to_update_message = Site_Util::check_album_disabled_to_update($album_image->album->foreign_table);
+				if ($disabled_to_update_message && isset($post['public_flag']) && $album_image->public_flag != $post['public_flag'])
 				{
-					\DB::rollback_transaction();
-					\Session::set_flash('error', 'Could not save.');
+					throw new \FuelException($disabled_to_update_message);
 				}
+
+				\DB::start_transaction();
+				$album_image->update_with_relations($post);
+				\DB::commit_transaction();
+
+				\Session::set_flash('message', term('album_image').'を編集をしました。');
+				\Response::redirect('album/image/'.$album_image->id);
 			}
-			else
+			catch(Exception $e)
 			{
-				\Session::set_flash('error', $error);
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				\Session::set_flash('error', $e->getMessage());
 			}
 		}
 

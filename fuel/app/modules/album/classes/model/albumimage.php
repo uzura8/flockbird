@@ -285,8 +285,17 @@ class Model_AlbumImage extends \MyOrm\Model
 		}
 	}
 
-	public static function save_with_relations($album_id, $member = null, $public_flag = null, $file_path = null, $timeline_type_key = 'album_image')
+	public static function save_with_relations($album_id, $member = null, $public_flag = null, $file_path = null, $timeline_type_key = 'album_image', $optional_values = array())
 	{
+		if (!\Util_Array::array_in_array(array_keys($optional_values), array('name', 'shot_at', 'shot_at_time', 'public_flag')))
+		{
+			throw new \InvalidArgumentException('Parameter optional_values is invalid.');
+		}
+		if (is_null($public_flag))
+		{
+			$public_flag = isset($optional_values['public_flag']) ? $optional_values['public_flag'] : conf('public_flag.default');
+		}
+
 		if (empty($member))
 		{
 			$album = \Model_Album::find($album_id, array('related' => 'member'));
@@ -301,9 +310,12 @@ class Model_AlbumImage extends \MyOrm\Model
 		$self = new self;
 		$self->album_id    = $album_id;
 		$self->file_id     = $file->id;
-		$self->public_flag = is_null($public_flag) ? conf('public_flag.default') : $public_flag;
-		$self->shot_at     = $file->shot_at;
-		//$self->name = $name ?: $file->original_filename;
+		$self->public_flag = $public_flag;
+		$self->shot_at = self::get_shot_at_for_insert(
+			$file->shot_at,
+			isset($optional_values['shot_at_time']) ? $optional_values['shot_at_time'] : null,
+			isset($optional_values['shot_at']) ? $optional_values['shot_at'] : null
+		);
 		$self->save();
 
 		// timeline 投稿
@@ -326,6 +338,28 @@ class Model_AlbumImage extends \MyOrm\Model
 		}
 
 		return array($self, $file);
+	}
+
+	public function update_with_relations(array $values)
+	{
+		if (isset($values['name']) && $values['name'] !== $this->name)
+		{
+			$this->name = $values['name'];
+		}
+		$this->shot_at = self::get_shot_at_for_update(
+			$this->shot_at,
+			isset($values['shot_at_time']) ? $values['shot_at_time'] : null,
+			isset($values['shot_at']) ? $values['shot_at'] : null
+		);
+		$is_changed = $this->is_changed();
+		$this->save();
+
+		if (isset($values['public_flag']) && $values['public_flag'] !== $this->public_flag)
+		{
+			$this->update_public_flag($values['public_flag'], true);
+		}
+
+		return $is_changed;
 	}
 
 	public static function delete_multiple($ids, \Album\Model_Album $album)
@@ -438,5 +472,37 @@ class Model_AlbumImage extends \MyOrm\Model
 		}
 
 		return $result;
+	}
+
+	protected static function get_shot_at_for_insert($file_shot_at = null, $shot_at_time = null, $shot_at = null)
+	{
+		if (!empty($shot_at))
+		{
+			return $shot_at;
+		}
+		elseif (!empty($shot_at_time))
+		{
+			return $shot_at_time.':00';
+		}
+		elseif (!empty($file_shot_at))
+		{
+			return $file_shot_at;
+		}
+
+		return \Date::time()->format('mysql');
+	}
+
+	protected static function get_shot_at_for_update($default_shot_at, $update_shot_at_time = null, $update_shot_at = null)
+	{
+		if ($update_shot_at && $update_shot_at != $default_shot_at)
+		{
+			return $update_shot_at;
+		}
+		elseif ($update_shot_at_time && !\Util_Date::check_is_same_minute($update_shot_at_time, $default_shot_at))
+		{
+			return $update_shot_at_time.':00';
+		}
+
+		return $default_shot_at;
 	}
 }
