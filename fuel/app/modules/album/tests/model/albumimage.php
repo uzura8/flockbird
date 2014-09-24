@@ -323,6 +323,9 @@ class Test_Model_AlbumImage extends \TestCase
 		$file_path = \Site_Upload::get_uploaded_file_real_path(self::$album_image->file->path, self::$album_image->file->name);
 		$member_filesize_before = self::get_member_filesize_total(self::$member_id);
 
+		// set cover_album_image_id
+		self::$album ->cover_album_image_id = $album_image_id;
+
 		// timeline view cache 作成
 		if (self::$is_check_timeline_view_cache)
 		{
@@ -344,6 +347,9 @@ class Test_Model_AlbumImage extends \TestCase
 
 		// meber_filesize
 		$this->assertEquals($member_filesize_before - $file_size, self::get_member_filesize_total(self::$member_id));
+
+		// check cover_album_image_id
+		$this->assertEmpty(self::$album ->cover_album_image_id);
 
 		// timeline
 		if (is_enabled('timeline'))
