@@ -126,12 +126,8 @@ class Model_Note extends \MyOrm\Model
 							'body',
 							'public_flag',
 							'sort_datetime',
-							'comment_count' => array(
-								'ignore_value' => 'reduced_num',
-							),
-							'like_count' => array(
-								'ignore_value' => 'reduced_num',
-							),
+							'comment_count',
+							'like_count',
 						),
 					),
 					'update_properties' => array(

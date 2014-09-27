@@ -57,3 +57,8 @@ foreach ($modules as $module => $path)
 }
 // Config of navigation load.
 Config::load('navigation', 'navigation');
+
+if (in_array(PRJ_ENVIRONMENT, array('DEVELOPMENT', 'TEST')))
+{
+	Config::load('develop', 'develop');
+}

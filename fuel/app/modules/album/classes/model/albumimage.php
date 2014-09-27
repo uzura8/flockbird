@@ -140,12 +140,8 @@ class Model_AlbumImage extends \MyOrm\Model
 						'check_properties' => array(
 							'public_flag',
 							'sort_datetime',
-							'comment_count' => array(
-								'ignore_value' => 'reduced_num',
-							),
-							'like_count' => array(
-								'ignore_value' => 'reduced_num',
-							),
+							'comment_count',
+							'like_count',
 						),
 					),
 					'update_properties' => array(

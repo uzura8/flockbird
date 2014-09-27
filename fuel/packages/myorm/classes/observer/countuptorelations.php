@@ -9,6 +9,7 @@ class Observer_CountUpToRelations extends \Orm\Observer
 	protected $_optional_updates;
 	protected $_update_property;
 	protected $_model;
+	protected $update_model;
 
 	public function __construct($class)
 	{
@@ -51,20 +52,20 @@ class Observer_CountUpToRelations extends \Orm\Observer
 			foreach ($froms as $value_from => $type)
 			{
 				$value = \Site_Model::get_value_for_observer_setting($obj, $value_from, $type);
-				$query = $query->where($property_to, $value);
+				$query->where($property_to, $value);
 			}
 		}
 		$models = $query->get();
-		foreach ($models as $this->model)
+		foreach ($models as $this->update_model)
 		{
-			//$this->model->{$this->_update_property} = \DB::expr(sprintf('`%s` + 1', $this->_update_property));
-			$this->model->{$this->_update_property} = $this->model->{$this->_update_property} + 1;
-			$this->set_value_optional($obj);
-			$this->model->save();
+			//$this->update_model->{$this->_update_property} = \DB::expr(sprintf('`%s` + 1', $this->_update_property));
+			$this->update_model->{$this->_update_property} = $this->update_model->{$this->_update_property} + 1;
+			$this->set_optional_value($obj);
+			$res = $this->update_model->save();
 		}
 	}
 
-	private function set_value_optional($self_obj)
+	private function set_optional_value($self_obj)
 	{
 		if (empty($this->_optional_updates)) return;
 
@@ -73,7 +74,7 @@ class Observer_CountUpToRelations extends \Orm\Observer
 			foreach ($froms as $value_from => $type)
 			{
 				$value = \Site_Model::get_value_for_observer_setting($self_obj, $value_from, $type);
-				$this->model->{$property_to} = $value;
+				$this->update_model->{$property_to} = $value;
 			}
 		}
 	}

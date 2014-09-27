@@ -262,22 +262,26 @@ class Model_Timeline extends \MyOrm\Model
 			->get();
 	}
 
-	public static function get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids, $type = null)
+	public static function get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids, $type = null, $is_last_one = false)
 	{
 		$query = self::query()->where('foreign_table', $foreign_table);
-
 		if (is_array($foreign_ids))
 		{
-			$query = $query->where('foreign_id', 'in', $foreign_ids);
+			$query->where('foreign_id', 'in', $foreign_ids);
 		}
 		else
 		{
-			$query = $query->where('foreign_id', $foreign_ids);
+			$query->where('foreign_id', $foreign_ids);
 		}
-
 		if (!is_null($type))
 		{
-			$query = $query->where('type', $type);
+			$query->where('type', $type);
+		}
+
+		if ($is_last_one)
+		{
+			$query->order_by('id', 'asc')->rows_limit(1);
+			return $query->get_one();
 		}
 
 		return $query->get();

@@ -159,12 +159,9 @@ class Model_Member extends \MyOrm\Model
 	public static function recalculate_filesize_total($member_id = 0)
 	{
 		$filesize_total = Model_File::calc_filesize_total($member_id);
-		if ($filesize_total)
-		{
-			$member = self::find($member_id);
-			$member->filesize_total = $filesize_total;
-			$member->save();
-		}
+		$member = self::find($member_id);
+		$member->filesize_total = $filesize_total;
+		$member->save();
 
 		return $filesize_total;
 	}

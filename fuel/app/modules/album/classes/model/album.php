@@ -183,37 +183,20 @@ class Model_Album extends \MyOrm\Model
 			}
 		}
 
+		$member_id = $album->member_id;
+
 		// Delete album_image file.
-		$files = \DB::select('file.id', 'file.path', 'file.name')
-			->from('file')
-			->join('album_image', 'LEFT')->on('album_image.file_id', '=', 'file.id')
-			->where('album_image.album_id', $id)
-			->execute()->as_array();
-		$file_ids = array();
-		foreach ($files as $file) $file_ids[] = $file['id'];
-
-		if ($file_ids)
+		$album_images = Model_AlbumImage::get4album_id($album->id, true);
+		foreach ($album_images as $album_image)
 		{
-			// Profile 写真の登録確認&削除
-			if ($album->foreign_table == 'member' && in_array($album->member->file_id, $file_ids))
-			{
-				$album->member->file_id = null;
-				$album->member->save();
-			}
-
-			// Delete table file data.
-			if (!\DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
+			$album_image->delete();
 		}
 
 		// timeline 投稿の削除
 		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $album->id);
 
 		// Delete album.
-		$album->delete();
-
-		\Model_Member::recalculate_filesize_total($album->member_id);
-
-		return $files;
+		return $album->delete();
 	}
 
 	public function update_public_flag_with_relations($public_flag, $is_update_album_images = false)

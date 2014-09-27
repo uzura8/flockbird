@@ -48,9 +48,6 @@ class Model_NoteLike extends \MyOrm\Model
 						'id' => array('note_id' => 'property'),
 					),
 					'update_property' => 'like_count',
-					'optional_updates' => array(
-						'sort_datetime' => array('created_at' => 'property'),
-					),
 				),
 			),
 		),

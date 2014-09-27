@@ -29,8 +29,8 @@ class Test_Model_AlbumImage extends \TestCase
 			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
 		);
 		self::$album = self::force_save_album(self::$member_id, $values);
-		self::$member = \Model_Member::check_authority(self::$member_id);
 		self::set_timeline_count();
+		self::$member = \Model_Member::check_authority(self::$member_id);
 	}
 
 	protected function setUp()
@@ -46,7 +46,7 @@ class Test_Model_AlbumImage extends \TestCase
 		// timeline view cache 作成
 		if (self::$is_check_timeline_view_cache)
 		{
-			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.albumi_image'));
+			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.album_image'));
 		}
 
 		// insert
@@ -66,8 +66,8 @@ class Test_Model_AlbumImage extends \TestCase
 		if (is_enabled('timeline'))
 		{
 			// 件数
-			$this->assertEquals(self::$timeline_count + 1, \Util_Orm::get_count_all('\Timeline\Model_Timeline'));
-			$this->assertEquals(self::$timeline_cache_count + 2, \Util_Orm::get_count_all('\Timeline\Model_TimelineCache'));
+			$this->assertEquals(self::$timeline_count, \Util_Orm::get_count_all('\Timeline\Model_Timeline'));
+			$this->assertEquals(self::$timeline_cache_count, \Util_Orm::get_count_all('\Timeline\Model_TimelineCache'));
 
 			// timelines
 			$timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids('album', self::$album->id, \Config::get('timeline.types.album_image'));
@@ -120,7 +120,7 @@ class Test_Model_AlbumImage extends \TestCase
 		// timeline view cache 作成
 		if (self::$is_check_timeline_view_cache)
 		{
-			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.albumi_image'));
+			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.album_image'));
 		}
 
 		$before = array(
@@ -132,6 +132,7 @@ class Test_Model_AlbumImage extends \TestCase
 		);
 
 		// update
+		\Util_Develop::sleep();
 		$is_changed = self::$album_image->update_with_relations($updated_values);
 
 		// 件数
@@ -172,7 +173,7 @@ class Test_Model_AlbumImage extends \TestCase
 			// 変更あり
 			if ($is_changed)
 			{
-				$this->assertTrue(\Util_Date::check_is_future($timeline->sort_datetime, self::$album_image->created_at));
+				$this->assertTrue(\Util_Date::check_is_future($timeline->sort_datetime, self::$album->created_at));
 			}
 			// 変更なし
 			else
@@ -238,7 +239,7 @@ class Test_Model_AlbumImage extends \TestCase
 		// timeline view cache 作成
 		if (self::$is_check_timeline_view_cache)
 		{
-			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.albumi_image'));
+			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.album_image'));
 		}
 
 		$before = array(
@@ -246,7 +247,9 @@ class Test_Model_AlbumImage extends \TestCase
 			'created_at' => self::$album_image->created_at,
 			'updated_at' => self::$album_image->updated_at,
 		);
+
 		// update public_flag
+		\Util_Develop::sleep();
 		self::$album_image->update_public_flag($public_flag);
 		$is_updated = (self::$album_image->public_flag != $before['public_flag']);
 
@@ -257,7 +260,6 @@ class Test_Model_AlbumImage extends \TestCase
 		// 変更あり
 		if ($is_updated)
 		{
-			$this->assertTrue(\Util_Date::check_is_future(self::$album_image->updated_at, self::$album_image->created_at));
 			$this->assertTrue(\Util_Date::check_is_future(self::$album_image->updated_at, $before['updated_at']));
 		}
 		// 変更なし
@@ -329,7 +331,7 @@ class Test_Model_AlbumImage extends \TestCase
 		// timeline view cache 作成
 		if (self::$is_check_timeline_view_cache)
 		{
-			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.albumi_image'));
+			$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('album', $album->id, \Config::get('timeline.types.album_image'));
 		}
 
 		// file
@@ -380,7 +382,7 @@ class Test_Model_AlbumImage extends \TestCase
 		for ($i = 0; $i < $create_count; $i++)
 		{
 			self::$upload_file_path = self::setup_upload_file();
-			list($album_image, $file) = Model_AlbumImage::save_with_relations(self::$album->id, self::$member, $public_flag, self::$upload_file_path, 'album_image', $values);
+			list($album_image, $file) = Model_AlbumImage::save_with_relations(self::$album->id, self::$member, $public_flag, self::$upload_file_path, 'album', $values);
 		}
 		self::set_count();
 		self::set_timeline_count();
@@ -416,6 +418,12 @@ class Test_Model_AlbumImage extends \TestCase
 		$album->public_flag = $values['public_flag'];
 		$album->member_id = $member_id;
 		$album->save();
+		if (\Module::loaded('timeline'))
+		{
+			\Timeline\Site_Model::save_timeline($member_id, $values['public_flag'], 'album_image', $album->id, $album->updated_at);
+		}
+
+		//list($album, $moved_files, $is_changed) = Model_Album::save_with_relations($values, $member_id, $album);
 
 		//// album_image save
 		//$member = \Model_Member::check_authority($member_id);

@@ -57,8 +57,10 @@ class Test_Model_NoteLike extends \TestCase
 	public function test_update_post_like($member_id)
 	{
 		$note_id = self::$note_id;
+		$note_before = \DB::select()->from('note')->where('id', $note_id)->execute()->current();
 
 		// note_like save
+		\Util_Develop::sleep();
 		$is_liked = (bool)Model_NoteLike::change_registered_status4unique_key(array(
 			'note_id' => $note_id,
 			'member_id' => $member_id,
@@ -70,17 +72,11 @@ class Test_Model_NoteLike extends \TestCase
 		$like_count = \Util_Orm::get_count_all('\Note\Model_NoteLike', array('note_id' => $note_id));
 		$like_count_after = $is_liked ? self::$note_like_count + 1 : self::$note_like_count - 1;
 		$this->assertEquals($like_count_after, $like_count);
+		if (!$is_liked) $this->assertNull($note_like);
 
 		// 値
 		$this->assertEquals($like_count, $note['like_count']);
-		if ($is_liked)
-		{
-			$this->assertEquals($note_like->created_at, $note['sort_datetime']);
-		}
-		else
-		{
-			$this->assertNull($note_like);
-		}
+		$this->assertEquals($note_before['sort_datetime'], $note['sort_datetime']);
 
 		// timeline 関連
 		if (is_enabled('timeline'))
@@ -121,7 +117,7 @@ class Test_Model_NoteLike extends \TestCase
 	{
 		$data = array();
 
-		// 新規投稿
+		$data[] = array(1);
 		$data[] = array(1);
 
 		return $data;

@@ -180,7 +180,8 @@ class Test_Model_Timeline extends \TestCase
 			$this->assertEquals($album->member_id, $obj->member_id);
 
 			// check for public_flag.
-			$this->assertEquals($album->public_flag, $obj->public_flag);
+			$public_flag_range_max = Model_TimelineChildData::get_public_flag_range_max4timeline_id($obj->id);
+			$this->assertContains($obj->public_flag, array($public_flag_range_max, $album->public_flag));
 
 			// 未使用カラムの値が null か
 			$this->assertEmpty($obj->body);

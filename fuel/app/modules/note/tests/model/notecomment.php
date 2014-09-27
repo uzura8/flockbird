@@ -27,13 +27,14 @@ class Test_Model_NoteComment extends \TestCase
 		$note->save_with_relations(1, $values);
 		self::$note_id = $note->id;
 		self::$note_before = $note;
+
+		self::$is_check_timeline_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
 	}
 
 	protected function setUp()
 	{
 		self::$note_comment_count = \Util_Orm::get_count_all('\Note\Model_NoteComment', array('note_id' => self::$note_id));
 
-		self::$is_check_timeline_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
 		if (is_enabled('timeline'))
 		{
 			$timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids('note', self::$note_id, \Config::get('timeline.types.note'));
@@ -44,8 +45,7 @@ class Test_Model_NoteComment extends \TestCase
 		// timeline view cache 作成
 		if (self::$is_check_timeline_view_cache)
 		{
-			\Timeline\Site_Util::get_article_main_view(self::$timeline_id);
-			self::$timeline_view_cache_before = \Cache::get(\Timeline\Site_Util::get_cache_key(self::$timeline_id), \Config::get('timeline.articles.cache.expir'));
+			self::$timeline_view_cache_before = \Timeline\Site_Util::make_view_cache4foreign_table_and_foreign_id('note', $album->id, \Config::get('timeline.types.note'));
 		}
 	}
 
@@ -55,6 +55,7 @@ class Test_Model_NoteComment extends \TestCase
 	public function test_save_comment($member_id, $body)
 	{
 		// note_comment save
+		\Util_Develop::sleep();
 		$note_comment = $this->save_comment($member_id, $body);
 
 		$note_id = self::$note_id;
@@ -72,12 +73,17 @@ class Test_Model_NoteComment extends \TestCase
 		if (is_enabled('timeline'))
 		{
 			$timeline_id = self::$timeline_id;
-			$timeline = \DB::select()->from('timeline')->where('id', $timeline_id)->execute()->current();
+			$timeline = \Timeline\Model_Timeline::find($timeline_id);
+
 			// 値
-			$this->assertEquals($comment_count, $timeline['comment_count']);
-			$this->assertEquals($note_comment->created_at, $timeline['sort_datetime']);
+			$this->assertEquals($comment_count, $timeline->comment_count);
+			$this->assertEquals($note_comment->created_at, $timeline->sort_datetime);
+			$this->assertEquals($note['sort_datetime'], $timeline->sort_datetime);
 
 			$timeline_caches = \DB::select()->from('timeline_cache')->where('timeline_id', $timeline_id)->execute();
+
+			// timeline_caches
+			$this->assertCount(2, $timeline_caches);
 			foreach ($timeline_caches as $timeline_cache)
 			{
 				$this->assertEquals($comment_count, $timeline_cache['comment_count']);
@@ -90,14 +96,7 @@ class Test_Model_NoteComment extends \TestCase
 			// timeline view cache check
 			if (self::$is_check_timeline_view_cache)
 			{
-				try
-				{
-					$timeline_view_cache = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline_id), \Config::get('timeline.articles.cache.expir'));
-				}
-				catch (\CacheNotFoundException $e)
-				{
-					$timeline_view_cache = null;
-				}
+				$timeline_view_cache = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline_id), \Config::get('timeline.articles.cache.expir'));
 				$this->assertEquals(self::$timeline_view_cache_before, $timeline_view_cache);
 			}
 		}
@@ -122,17 +121,22 @@ class Test_Model_NoteComment extends \TestCase
 		$this->save_comment(1, 'Test comment2.');
 		$note_comment = $this->save_comment(1, 'Test comment3.');
 
+		// set before data.
+		$note_before = \DB::select()->from('note')->where('id', $note_id)->execute()->current();
+		self::$note_comment_count = \Util_Orm::get_count_all('\Note\Model_NoteComment', array('note_id' => self::$note_id));
+
 		// note_comment delete
+		\Util_Develop::sleep();
 		$note_comment->delete();
 		$note = \DB::select()->from('note')->where('id', $note_id)->execute()->current();
 
 		// 件数
 		$comment_count = \Util_Orm::get_count_all('\Note\Model_NoteComment', array('note_id' => $note_id));
-		$this->assertEquals(self::$note_comment_count + 3 - 1, $comment_count);
+		$this->assertEquals(self::$note_comment_count - 1, $comment_count);
 
 		// 値
 		$this->assertEquals($comment_count, $note['comment_count']);
-		$this->assertEquals(self::$note_before->sort_datetime, $note['sort_datetime']);
+		$this->assertEquals($note_before['sort_datetime'], $note['sort_datetime']);
 
 		// timeline 関連
 		if (is_enabled('timeline'))
@@ -141,9 +145,11 @@ class Test_Model_NoteComment extends \TestCase
 			$timeline = \DB::select()->from('timeline')->where('id', $timeline_id)->execute()->current();
 			// 値
 			$this->assertEquals($comment_count, $timeline['comment_count']);
-			$this->assertEquals(self::$note_before->sort_datetime, $timeline['sort_datetime']);
+			$this->assertEquals($note_before['sort_datetime'], $timeline['sort_datetime']);
 
+			// timeline_caches
 			$timeline_caches = \DB::select()->from('timeline_cache')->where('timeline_id', $timeline_id)->execute();
+			$this->assertCount(2, $timeline_caches);
 			foreach ($timeline_caches as $timeline_cache)
 			{
 				$this->assertEquals($comment_count, $timeline_cache['comment_count']);
@@ -152,14 +158,7 @@ class Test_Model_NoteComment extends \TestCase
 			// timeline view cache check
 			if (self::$is_check_timeline_view_cache)
 			{
-				try
-				{
-					$timeline_view_cache = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline_id), \Config::get('timeline.articles.cache.expir'));
-				}
-				catch (\CacheNotFoundException $e)
-				{
-					$timeline_view_cache = null;
-				}
+				$timeline_view_cache = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline_id), \Config::get('timeline.articles.cache.expir'));
 				$this->assertEquals(self::$timeline_view_cache_before, $timeline_view_cache);
 			}
 		}

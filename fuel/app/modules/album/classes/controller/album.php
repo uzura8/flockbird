@@ -441,7 +441,7 @@ class Controller_Album extends \Controller_Site
 			\DB::start_transaction();
 			$deleted_files = Model_Album::delete_relations($album);
 			\DB::commit_transaction();
-			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
+			//if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 			\Session::set_flash('message', term('album').'を削除しました。');
 		}

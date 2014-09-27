@@ -87,9 +87,10 @@ class Model_File extends \MyOrm\Model
 
 	public static function calc_filesize_total($member_id = 0)
 	{
-		if (!$member_id) return false;
+		if (!$member_id) throw new InvalidArgumentException('First parameter is invalid.');
 
 		$result = DB::query('SELECT SUM(filesize) as sum FROM file WHERE member_id = :member_id')->param('member_id', $member_id)->execute();
+		if (!array_key_exists('sum', $result[0])) throw new FuelException('SQL result error.');
 
 		return (int)$result[0]['sum'];
 	}
