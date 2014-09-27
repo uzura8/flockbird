@@ -148,7 +148,9 @@ class Model_Timeline extends \MyOrm\Model
 					'body',
 					'source',
 					'source_uri',
-					'public_flag',
+					'public_flag' => array(
+						'ignore_value' => 'reduced_public_flag_range',
+					),
 					'comment_count' => array(
 						'ignore_value' => 'reduced_num',
 					),

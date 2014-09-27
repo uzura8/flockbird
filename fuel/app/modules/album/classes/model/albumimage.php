@@ -97,7 +97,9 @@ class Model_AlbumImage extends \MyOrm\Model
 			'check_changed' => array(
 				'check_properties' => array(
 					'name',
-					'public_flag',
+					'public_flag' => array(
+						'ignore_value' => 'reduced_public_flag_range',
+					),
 					'comment_count' => array(
 						'ignore_value' => 'reduced_num',
 					),

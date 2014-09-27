@@ -89,14 +89,10 @@ class Model_Note extends \MyOrm\Model
 				'check_properties' => array(
 					'title',
 					'body',
-					'public_flag',
+					'public_flag' => array(
+						'ignore_value' => 'reduced_public_flag_range',
+					),
 					'is_published',
-					//'comment_count' => array(
-					//	'ignore_value' => 'reduced_num',
-					//),
-					//'like_count' => array(
-					//	'ignore_value' => 'reduced_num',
-					//),
 				),
 			),
 		),

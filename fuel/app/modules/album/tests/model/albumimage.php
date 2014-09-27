@@ -251,7 +251,7 @@ class Test_Model_AlbumImage extends \TestCase
 		// update public_flag
 		\Util_Develop::sleep();
 		self::$album_image->update_public_flag($public_flag);
-		$is_updated = (self::$album_image->public_flag != $before['public_flag']);
+		$is_updated = ($public_flag != $before['public_flag']);
 
 		// 値
 		$this->assertEquals($public_flag, self::$album_image->public_flag);
@@ -282,7 +282,10 @@ class Test_Model_AlbumImage extends \TestCase
 			// 変更あり
 			if ($is_updated)
 			{
-				$this->assertTrue(\Util_Date::check_is_future($timeline->sort_datetime, self::$album_image->created_at));
+				if (\Site_Util::check_is_expanded_public_flag_range($before['public_flag'], $public_flag))
+				{
+					$this->assertTrue(\Util_Date::check_is_future($timeline->sort_datetime, self::$album_image->created_at));
+				}
 			}
 			// 変更なし
 			else

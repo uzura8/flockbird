@@ -132,9 +132,13 @@ class Util_Orm
 					}
 					if ($condition == 'ignore_value')
 					{
-						if ($value == 'reduced_num')
+						list($before, $after) = \Util_Orm::get_changed_values($obj, $property);
+						if ($value == 'reduced_public_flag_range')
 						{
-							list($before, $after) = \Util_Orm::get_changed_values($obj, $property);
+							if (Site_Util::check_is_reduced_public_flag_range($before, $after)) continue;
+						}
+						elseif ($value == 'reduced_num')
+						{
 							if (preg_match('/`'.$property.'`\s+\-\s+1/', $after)) continue;
 							if (is_int($before) && is_int($after) && $before > $after) continue;
 						}
