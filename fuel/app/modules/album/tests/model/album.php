@@ -209,6 +209,7 @@ class Test_Model_Album extends \TestCase
 	{
 		if (!$album = $this->get_album())
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped();
 		}
 		$album_id = $album->id;

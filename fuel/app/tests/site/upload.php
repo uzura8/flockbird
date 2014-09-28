@@ -17,6 +17,7 @@ class Test_Site_Upload extends TestCase
 		$raw_file_dir_path = conf('upload.types.img.raw_file_path');
 		if (!file_exists($raw_file_dir_path) || !$file_paths = Util_file::get_file_recursive($raw_file_dir_path))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No data.');
 		}
 
@@ -45,6 +46,7 @@ class Test_Site_Upload extends TestCase
 		$raw_file_dir_path = conf('upload.types.img.tmp.raw_file_path');
 		if (!file_exists($raw_file_dir_path) || !$file_paths = Util_file::get_file_recursive($raw_file_dir_path))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No data.');
 		}
 		foreach ($file_paths as $file_path)
@@ -54,6 +56,7 @@ class Test_Site_Upload extends TestCase
 
 		if (!$file_paths = Util_file::get_file_recursive(conf('upload.types.file.tmp.raw_file_path')))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No data.');
 		}
 		foreach ($file_paths as $file_path)

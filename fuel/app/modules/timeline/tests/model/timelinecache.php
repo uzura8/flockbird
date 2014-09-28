@@ -13,6 +13,7 @@ class Test_Model_TimelineCache extends \TestCase
 	{
 		if (!$list = Model_TimelineCache::find('all'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No record for test.');
 		}
 		foreach ($list as $obj)

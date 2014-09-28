@@ -21,6 +21,7 @@ class Test_Model_Timeline extends \TestCase
 	{
 		if (!$list = Model_Timeline::get4type_key('normal'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped();
 		}
 
@@ -39,6 +40,7 @@ class Test_Model_Timeline extends \TestCase
 	{
 		if (!$list = Model_Timeline::get4type_key('member_register'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped();
 		}
 
@@ -61,6 +63,7 @@ class Test_Model_Timeline extends \TestCase
 	{
 		if (!$list = Model_Timeline::get4type_key('member_name'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped();
 		}
 
@@ -80,6 +83,7 @@ class Test_Model_Timeline extends \TestCase
 	{
 		if (!$list = Model_Timeline::get4type_key('album_image_profile'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped();
 		}
 
@@ -106,6 +110,7 @@ class Test_Model_Timeline extends \TestCase
 	{
 		if (!$list = Model_Timeline::get4type_key('profile_image'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No record for test.');
 		}
 
@@ -135,6 +140,7 @@ class Test_Model_Timeline extends \TestCase
 	{
 		if (!$list = Model_Timeline::get4type_key('note'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No record for test.');
 		}
 
@@ -165,6 +171,7 @@ class Test_Model_Timeline extends \TestCase
 		{
 			$this->markTestSkipped('No record for test.');
 		}
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 
 		foreach ($list as $obj)
 		{
@@ -192,6 +199,7 @@ class Test_Model_Timeline extends \TestCase
 	{
 		if (!$list = Model_Timeline::get4type_key('album_image'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No record for test.');
 		}
 
@@ -246,6 +254,7 @@ class Test_Model_Timeline extends \TestCase
 		{
 			$this->markTestSkipped('No record for test.');
 		}
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 
 		foreach ($list as $obj)
 		{
@@ -293,6 +302,7 @@ class Test_Model_Timeline extends \TestCase
 		{
 			$this->markTestSkipped('No record for test.');
 		}
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 		foreach ($list as $obj)
 		{
 			// test for cache exists.

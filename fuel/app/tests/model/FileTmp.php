@@ -14,6 +14,7 @@ class Test_Model_FileTmp extends TestCase
 	{
 		if (!$this->files = \Model_FileTmp::find('all'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No data.');
 		}
 	}

@@ -14,6 +14,7 @@ class Test_Model_Memeber extends TestCase
 	{
 		if (!$this->members = \Model_Member::find('all'))
 		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No data.');
 		}
 	}
