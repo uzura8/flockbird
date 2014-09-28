@@ -296,7 +296,7 @@ class Model_AlbumImage extends \MyOrm\Model
 
 		if (empty($member))
 		{
-			$album = \Model_Album::find($album_id, array('related' => 'member'));
+			$album = Model_Album::find($album_id, array('related' => 'member'));
 			$member = $album->member;
 		}
 
