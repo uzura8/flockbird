@@ -77,12 +77,23 @@ class Controller_Site_Api extends Controller_Base_Site
 				return \Response::forge(\View::forge('_parts/comment/list', $data), $status_code);
 			}
 
+			$list_array = array();
+			foreach ($list as $key => $obj)
+			{
+				$row = $obj->to_array();
+				$row['member'] = Model_Member::get_basic_data($row['member_id']);
+				$list_array[] = $row;
+			}
 			// json response
 			$response = array(
 				'status' => 1,
-				'list' => $list,
+				'list' => $list_array,
 				'next_id' => $next_id,
+				'parent' => array('id' => $parent_id, 'member_id' => $parent_obj->member_id),
+				'get_uri' => sprintf('%s/comment/api/list/%d.json', $api_uri_path_prefix, $parent_id),
+				'delete_uri' => sprintf('%s/comment/api/delete.json', $api_uri_path_prefix),
 			);
+			if ($since_id) $response['since_id'] = $since_id;
 		}
 		catch(\HttpNotFoundException $e)
 		{

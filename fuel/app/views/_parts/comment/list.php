@@ -8,9 +8,9 @@ $list_more_box_attrs_def = array(
 	'data-list' => '#comment_list',
 );
 if (empty($uri_for_all_comments)) $list_more_box_attrs_def['class'] .=' js-ajax-loadList';
-$gete_data_list = array('max_id' => $next_id);
-if (!empty($since_id)) $gete_data_list['since_id'] = $since_id;
-$list_more_box_attrs_def['data-get_data'] = json_encode($gete_data_list);
+$get_data_list = array('max_id' => $next_id);
+if (!empty($since_id)) $get_data_list['since_id'] = $since_id;
+$list_more_box_attrs_def['data-get_data'] = json_encode($get_data_list);
 $list_more_box_attrs = empty($list_more_box_attrs) ? $list_more_box_attrs_def : array_merge($list_more_box_attrs_def, $list_more_box_attrs);
 ?>
 <?php echo Html::anchor(isset($uri_for_all_comments) ? $uri_for_all_comments : '#', term('site.see_more'), $list_more_box_attrs); ?>

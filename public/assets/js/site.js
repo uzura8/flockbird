@@ -51,6 +51,7 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var listSelector = $(this).data('list') ? $(this).data('list') : '';
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 	var counterSelector = $(this).data('counter') ? $(this).data('counter') : '';
+	var templateSelector = $(this).data('template') ? $(this).data('template') : '';
 	var isLatest = $(this).data('latest') ? Boolean($(this).data('latest')) : false;
 	var isDesc = $(this).data('desc') ? Boolean($(this).data('desc')) : false;
 
@@ -68,7 +69,8 @@ $(document).on('click','.js-ajax-postComment', function(){
 		position,
 		getData,
 		this,
-		counterSelector
+		counterSelector,
+		templateSelector
 	);
 	return false;
 });
@@ -86,6 +88,7 @@ $(document).on('click','.js-ajax-loadList', function(){
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 	var position = $(this).data('position') ? $(this).data('position') : 'replace';// params: replace / append / prepend
 	var historyKey = $(this).data('history_key') ? $(this).data('history_key') : '';
+	var templateSelecor = $(this).data('template') ? $(this).data('template') : '';
 
 	if (GL.execute_flg) return false;
 	if (!getUri) return false;
@@ -106,7 +109,8 @@ $(document).on('click','.js-ajax-loadList', function(){
 		this,
 		position,
 		getData,
-		pushStateInfo
+		pushStateInfo,
+		templateSelecor
 	);
 
 	return false;

@@ -110,6 +110,8 @@ class Model_Member extends \MyOrm\Model
 		),
 	);
 
+	protected static $basic_list = array();
+
 	public static function _init()
 	{
 		static::$_properties['name']['label'] = term('member.name');
@@ -154,6 +156,23 @@ class Model_Member extends \MyOrm\Model
 		if (empty($this->file_id)) return 'm';
 
 		return Model_File::get_name($this->file_id) ?: 'm';
+	}
+
+	public static function get_basic_data($id)
+	{
+		if (!empty(self::$basic_list[$id])) return self::$basic_list[$id];
+
+		self::$basic_list[$id] = array();
+		if ($obj = self::find($id))
+		{
+			self::$basic_list[$id] = array(
+				'id' => $obj->id,
+				'name' => $obj->name,
+				'file' => $obj->get_image(),
+			);
+		}
+
+		return self::$basic_list[$id];
 	}
 
 	public static function recalculate_filesize_total($member_id = 0)

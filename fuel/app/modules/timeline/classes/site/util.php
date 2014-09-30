@@ -270,7 +270,7 @@ class Site_Util
 				break;
 			case 'get':
 			default :
-				$common_path = $id ? 'comment/api/list/'.$id.'.html' : 'comment/api/list.json';
+				$common_path = $id ? 'comment/api/list/'.$id.'.json' : 'comment/api/list.json';
 				break;
 		}
 

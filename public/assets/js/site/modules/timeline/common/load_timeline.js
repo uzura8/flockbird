@@ -99,6 +99,7 @@ function loadTimeline() {
 		'prepend',
 		getData,
 		pushStateInfo,
+		null,
 		postLoadTimeline
 	);
 }
@@ -113,7 +114,7 @@ function postLoadTimeline() {
 }
 
 function loadTlComment(getUri, parentListSelector) {
-	loadList(getUri, parentListSelector, '', 'replace', {'latest': 1});
+	loadList(getUri, parentListSelector, '', 'replace', {'latest': 1}, null, '#comment-template');
 	$(parentListSelector).removeClass('unloade_comments');
 }
 
