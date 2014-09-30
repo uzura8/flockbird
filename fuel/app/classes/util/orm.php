@@ -140,7 +140,7 @@ class Util_Orm
 						elseif ($value == 'reduced_num')
 						{
 							if (preg_match('/`'.$property.'`\s+\-\s+1/', $after)) continue;
-							if (is_int($before) && is_int($after) && $before > $after) continue;
+							if (is_numeric($before) && is_numeric($after) && $before > $after) continue;
 						}
 
 						return true;

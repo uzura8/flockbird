@@ -154,9 +154,6 @@ class Model_Timeline extends \MyOrm\Model
 					'comment_count' => array(
 						'ignore_value' => 'reduced_num',
 					),
-					'like_count' => array(
-						'ignore_value' => 'reduced_num',
-					),
 				),
 			),
 		),
