@@ -18,16 +18,14 @@ class Test_Model_TimelineComment extends \TestCase
 
 	public static function setUpBeforeClass()
 	{
-		$body = 'This is test.';
-		$timeline = Site_Model::save_timeline(1, PRJ_PUBLIC_FLAG_ALL, 'normal', null, null, $body);
+		$timeline = Site_Model::save_timeline(1, PRJ_PUBLIC_FLAG_ALL, 'normal', null, null, 'This is test.');
 		self::$timeline_id = $timeline->id;
-		self::$timeline_before = $timeline;
 	}
 
 	protected function setUp()
 	{
+		self::$timeline_before = Model_Timeline::find(self::$timeline_id);
 		self::$timeline_comment_count = \Util_Orm::get_count_all('\Timeline\Model_TimelineComment', array('timeline_id' => self::$timeline_id));
-
 		self::$is_check_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
 
 		// timeline view cache 作成
@@ -46,6 +44,7 @@ class Test_Model_TimelineComment extends \TestCase
 		$timeline_id = self::$timeline_id;
 
 		// timeline_comment save
+		\Util_Develop::sleep();
 		$comment = new Model_TimelineComment(array(
 			'body' => $body,
 			'timeline_id' => $timeline_id,
@@ -108,16 +107,18 @@ class Test_Model_TimelineComment extends \TestCase
 		$timeline_comment = $this->save_comment(1, 'Test comment3.');
 
 		// note_comment delete
+		\Util_Develop::sleep();
 		$timeline_comment->delete();
-		$timeline = \DB::select()->from('timeline')->where('id', $timeline_id)->execute()->current();
+
+		$timeline = Model_Timeline::find($timeline_id);
 
 		// 件数
 		$comment_count = \Util_Orm::get_count_all('\Timeline\Model_TimelineComment', array('timeline_id' => $timeline_id));
 		$this->assertEquals(self::$timeline_comment_count + 3 - 1, $comment_count);
 
 		// 値
-		$this->assertEquals($comment_count, $timeline['comment_count']);
-		$this->assertEquals(self::$timeline_before->sort_datetime, $timeline['sort_datetime']);
+		$this->assertEquals($comment_count, $timeline->comment_count);
+		$this->assertEquals(self::$timeline_before->sort_datetime, $timeline->sort_datetime);
 
 		$timeline_caches = \DB::select()->from('timeline_cache')->where('timeline_id', $timeline_id)->execute();
 		foreach ($timeline_caches as $timeline_cache)
@@ -128,15 +129,7 @@ class Test_Model_TimelineComment extends \TestCase
 		// timeline view cache check
 		if (self::$is_check_view_cache)
 		{
-			try
-			{
-				$view_cache = \Cache::get(\Timeline\Site_Util::get_cache_key($timeline_id), \Config::get('timeline.articles.cache.expir'));
-			}
-			catch (\CacheNotFoundException $e)
-			{
-				$view_cache = null;
-			}
-			$this->assertEquals(self::$view_cache_before, $view_cache);
+			$this->assertEquals(self::$view_cache_before, \Timeline\Site_Util::get_view_cache($timeline->id));
 		}
 	}
 
