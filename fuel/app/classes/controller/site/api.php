@@ -56,6 +56,17 @@ class Controller_Site_Api extends Controller_Base_Site
 			list($list, $next_id, $all_comment_count)
 				= $model::get_list(array($parent_id_prop => $parent_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, ($this->format == 'json'));
 
+			if (conf('like.isEnabled'))
+			{
+				$model_like = $model.'Like';
+				$comment_table_name = sprintf('%s_comment', str_replace('/', '_', $api_uri_path_prefix));
+				$comment_table_id_name = $comment_table_name.'_id';
+				$liked_ids = (\Auth::check() && $list) ? $model_like::get_cols($comment_table_id_name, array(
+					array('member_id' => $this->u->id),
+					array($comment_table_id_name, 'in', \Util_Orm::conv_col2array($list, 'id'))
+				)) : array();
+			}
+
 			$status_code = 200;
 			if ($this->format == 'html')
 			{
@@ -73,6 +84,7 @@ class Controller_Site_Api extends Controller_Base_Site
 					'counter_selector' => '#comment_count_'.$parent_id,
 				);
 				if ($since_id) $data['since_id'] = $since_id;
+				if (conf('like.isEnabled')) $data['liked_ids'] = $liked_ids;
 				// html response
 				return \Response::forge(\View::forge('_parts/comment/list', $data), $status_code);
 			}
@@ -82,6 +94,13 @@ class Controller_Site_Api extends Controller_Base_Site
 			{
 				$row = $obj->to_array();
 				$row['member'] = Model_Member::get_basic_data($row['member_id']);
+				if (conf('like.isEnabled'))
+				{
+					$row['get_like_members_uri'] = sprintf('%s/comment/like/api/member/%d.html', $api_uri_path_prefix, $row['id']);
+					$row['post_like_uri'] = sprintf('%s/comment/like/api/update/%d.json', $api_uri_path_prefix, $row['id']);
+					$row['is_liked'] = (\Auth::check() && in_array($row['id'], $liked_ids)) ? 1 : 0;
+					$row['comment_table'] = $comment_table_name;
+				}
 				$list_array[] = $row;
 			}
 			// json response
@@ -111,7 +130,7 @@ class Controller_Site_Api extends Controller_Base_Site
 		$this->response($response, $status_code);
 	}
 
-	protected function get_liked_member_list($like_model, $parent_model, $parent_id, $parent_id_prop, $get_uri, $limit = 0, $limit_max = 0, $parent_obj_member_id_relateds = array())
+	protected function get_liked_member_list($like_model, $parent_model, $parent_id, $parent_id_prop, $get_uri, $public_flag_related_table = null, $limit = 0, $limit_max = 0, $parent_obj_member_id_relateds = array())
 	{
 		$response = '';
 		try
@@ -129,7 +148,10 @@ class Controller_Site_Api extends Controller_Base_Site
 			{
 				$auther_member_ids[] = $parent_obj->member_id;
 			}
-			foreach ($auther_member_ids as $member_id) $this->check_browse_authority($parent_obj->public_flag, $member_id);
+			foreach ($auther_member_ids as $member_id)
+			{
+				$this->check_browse_authority($public_flag_related_table ? $parent_obj->{$public_flag_related_table}->public_flag : $parent_obj->public_flag, $member_id);
+			}
 
 			$default_params = array(
 				'desc' => 1,

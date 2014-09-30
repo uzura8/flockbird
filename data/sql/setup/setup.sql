@@ -535,19 +535,6 @@ CREATE TABLE `timeline_child_data` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `timeline_comment` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `timeline_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
-  `body` text NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `timeline_id_id_idx` (`timeline_id`,`id`),
-  CONSTRAINT `timeline_comment_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE `timeline_like` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timeline_id` int(11) NOT NULL,
@@ -557,6 +544,32 @@ CREATE TABLE `timeline_like` (
   UNIQUE KEY `member_id_timeline_id_UNIQUE_idx` (`member_id`,`timeline_id`),
   KEY `timeline_id_id_idx` (`timeline_id`,`id`),
   CONSTRAINT `timeline_like_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `timeline_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timeline_id` int(11) NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `body` text NOT NULL,
+  `like_count` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `timeline_id_id_idx` (`timeline_id`,`id`),
+  CONSTRAINT `timeline_comment_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `timeline_comment_like` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timeline_comment_id` int(11) NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_timeline_comment_id_UNIQUE_idx` (`member_id`,`timeline_comment_id`),
+  KEY `timeline_comment_id_id_idx` (`timeline_comment_id`,`id`),
+  CONSTRAINT `timeline_comment_like_timeline_comment_id_timeline_comment_id` FOREIGN KEY (`timeline_comment_id`) REFERENCES `timeline_comment` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

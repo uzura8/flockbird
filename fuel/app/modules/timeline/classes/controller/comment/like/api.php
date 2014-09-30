@@ -1,14 +1,14 @@
 <?php
-namespace Album;
+namespace Timeline;
 
-class Controller_Image_Like_Api extends \Controller_Site_Api
+class Controller_Comment_Like_Api extends \Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
 		'get_member',
 	);
 
 	/**
-	 * AlbumImage api like update
+	 * TimelineComment api like update
 	 * 
 	 * @access  public
 	 * @return  Response (json)
@@ -22,20 +22,20 @@ class Controller_Image_Like_Api extends \Controller_Site_Api
 			$this->check_response_format('json');
 			\Util_security::check_csrf();
 
-			$album_image_id = (int)$id;
-			if (\Input::post('id')) $album_image_id = (int)\Input::post('id');
-			$album_image = Model_AlbumImage::check_authority($album_image_id);
-			$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
+			$timeline_comment_id = (int)$id;
+			if (\Input::post('id')) $timeline_comment_id = (int)\Input::post('id');
+			$timeline_comment = Model_TimelineComment::check_authority($timeline_comment_id);
+			$this->check_browse_authority($timeline_comment->timeline->public_flag, $timeline_comment->member_id);
 
 			\DB::start_transaction();
-			$is_liked = (bool)Model_AlbumImageLike::change_registered_status4unique_key(array(
-				'album_image_id' => $album_image->id,
+			$is_liked = (bool)Model_TimelineCommentLike::change_registered_status4unique_key(array(
+				'timeline_comment_id' => $timeline_comment->id,
 				'member_id' => $this->u->id
 			));
 			\DB::commit_transaction();
 
 			$response['status'] = (int)$is_liked;
-			$response['count'] = Model_AlbumImageLike::get_count4album_image_id($album_image->id);
+			$response['count'] = Model_TimelineCommentLike::get_count4timeline_comment_id($timeline_comment->id);
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
@@ -60,7 +60,7 @@ class Controller_Image_Like_Api extends \Controller_Site_Api
 	}
 
 	/**
-	 * AlbumImage like get member
+	 * TimelineComment like get member
 	 * 
 	 * @access  public
 	 * @return  Response (json)
@@ -68,15 +68,12 @@ class Controller_Image_Like_Api extends \Controller_Site_Api
 	public function get_member($parent_id = null)
 	{
 		$result = $this->get_liked_member_list(
-			'\Album\Model_AlbumImageLike',
-			'\Album\Model_AlbumImage',
+			'\Timeline\Model_TimelineCommentLike',
+			'\Timeline\Model_TimelineComment',
 			$parent_id,
-			'album_image_id',
+			'timeline_comment_id',
 			Site_Util::get_liked_member_api_uri($parent_id),
-			null,
-			\Config::get('view_params_default.like.members.popover.limit'),
-			\Config::get('view_params_default.like.members.popover.limit_max'),
-			array('album' => 'member_id')
+			'timeline'
 		);
 		if ($result) return $result;
 	}

@@ -32,6 +32,11 @@ class Model_TimelineComment extends \MyOrm\Model
 			'data_type' => 'varchar',
 			'form' => array('type' => false),
 		),
+		'like_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'created_at',
 		'updated_at',
 	);

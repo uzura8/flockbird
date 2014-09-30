@@ -14,6 +14,26 @@
 			</div>
 			<div class="sub_info">
 				<small><span data-livestamp="{{{created_at}}}"></span></small>
+<?php if (conf('like.isEnabled')): ?>
+				<small class="ml10">
+					<a href="#" data-uri="{{{get_like_members_uri}}}" data-target="#modal_like_count_{{{comment_table}}}_{{{id}}}" id="link_like_count_{{{comment_table}}}_{{{id}}}" class="js-modal"><i class="glyphicon glyphicon-thumbs-up"></i> <span data-id="{{{id}}}" id="like_count_{{{comment_table}}}_{{{id}}}" class="like_count unset_like_count">{{{like_count}}}</span></a>
+				</small>
+				<div id="modal_like_count_{{{comment_table}}}_{{{id}}}" aria-hidden="true" aria-labelledby="" role="dialog" tabindex="-1" class="modal fade">
+					<div class="modal-dialog modal-sm">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+								<h4 id="myModalLabel" class="modal-title">{{getTerm 'like'}}した{{getTerm 'member'}}</h4>
+							</div>
+							<div class="modal-body"></div>
+							<div class="modal-footer">
+								<button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<small class="ml3"><a href="#" data-count="#like_count_{{{comment_table}}}_{{{id}}}" data-uri="{{{post_like_uri}}}" data-id="{{{id}}}" id="link_like_{{{id}}}" class="js-like">{{#if is_liked}}{{getTerm 'undo_like'}}{{else}}{{getTerm 'do_like'}}{{/if}}</a></small>
+<?php endif; ?>
 			</div><!-- sub_info -->
 		</div>
 	</div><!-- row -->
