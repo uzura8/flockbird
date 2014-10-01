@@ -79,15 +79,7 @@ class Test_Model_TimelineLike extends \TestCase
 		// timeline view cache check
 		if (self::$is_check_view_cache)
 		{
-			try
-			{
-				$view_cache = \Cache::get(Site_Util::get_cache_key($timeline_id), \Config::get('timeline.articles.cache.expir'));
-			}
-			catch (\CacheNotFoundException $e)
-			{
-				$view_cache = null;
-			}
-			$this->assertEquals(self::$view_cache_before, $view_cache);
+			$this->assertEquals(self::$view_cache_before, \Timeline\Site_Util::get_view_cache($timeline_id));
 		}
 	}
 
