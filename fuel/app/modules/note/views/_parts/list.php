@@ -81,8 +81,8 @@ echo render('_parts/comment/count_and_link_display', array(
 <?php
 $data_like_link = array(
 	'id' => $id,
-	'post_uri' => \Note\Site_Util::get_like_api_uri($id),
-	'get_member_uri' => \Note\Site_Util::get_liked_member_api_uri($id),
+	'post_uri' => \Site_Util::get_api_uri_update_like('note', $id),
+	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('note', $id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $note->like_count,
 	'left_margin' => true,
@@ -110,9 +110,16 @@ $data = array(
 	'counter_selector' => '#comment_count_'.$id,
 	'list_more_box_attrs' => array(
 		'id' => 'listMoreBox_comment_'.$id,
-		'data-uri' => sprintf('note/comment/api/list/%s.html', $id),
+		'data-uri' => sprintf('note/comment/api/list/%s.json', $id),
 		'data-list' => '#comment_list_'.$id,
+		'data-template' => '#comment-template',
 	),
+	'like_api_uri_prefix' => 'note/comment',
+	'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $comments) ?
+		\Note\Model_NoteCommentLike::get_cols('note_comment_id', array(
+			array('member_id' => $this->u->id),
+			array('note_comment_id', 'in', \Util_Orm::conv_col2array($comments, 'id'))
+		)) : array(),
 );
 echo render('_parts/comment/list', $data);
 ?>
@@ -135,8 +142,9 @@ echo render('_parts/comment/list', $data);
 		'class' => 'js-ajax-postComment btn-sm',
 		'id' => 'btn_comment_'.$id,
 		'data-post_uri' => 'note/comment/api/create/'.$id.'.json',
-		'data-get_uri' => 'note/comment/api/list/'.$id.'.html',
+		'data-get_uri' => 'note/comment/api/list/'.$id.'.json',
 		'data-list' => '#comment_list_'.$id,
+		'data-template' => '#comment-template',
 		'data-counter' => '#comment_count_'.$id,
 		'data-latest' => 1,
 	),

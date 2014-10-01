@@ -296,20 +296,6 @@ CREATE TABLE `note` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `note_comment` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `note_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
-  `body` text NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `note_id_id_idx` (`note_id`,`id`),
-  KEY `member_id_idx` (`member_id`),
-  CONSTRAINT `note_comment_note_id_note_id` FOREIGN KEY (`note_id`) REFERENCES `note` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE `note_like` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `note_id` int(11) NOT NULL,
@@ -319,6 +305,33 @@ CREATE TABLE `note_like` (
   UNIQUE KEY `member_id_note_id_UNIQUE_idx` (`member_id`,`note_id`),
   KEY `note_id_id_idx` (`note_id`,`id`),
   CONSTRAINT `note_like_note_id_note_id` FOREIGN KEY (`note_id`) REFERENCES `note` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `note_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `note_id` int(11) NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `body` text NOT NULL,
+  `like_count` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `note_id_id_idx` (`note_id`,`id`),
+  KEY `member_id_idx` (`member_id`),
+  CONSTRAINT `note_comment_note_id_note_id` FOREIGN KEY (`note_id`) REFERENCES `note` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `note_comment_like` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `note_comment_id` int(11) NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_note_comment_id_UNIQUE_idx` (`member_id`,`note_comment_id`),
+  KEY `note_comment_id_id_idx` (`note_comment_id`,`id`),
+  CONSTRAINT `note_comment_like_note_comment_id_note_comment_id` FOREIGN KEY (`note_comment_id`) REFERENCES `note_comment` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

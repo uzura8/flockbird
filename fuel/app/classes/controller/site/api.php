@@ -29,7 +29,7 @@ class Controller_Site_Api extends Controller_Base_Site
 
 	protected function get_comment_list($model, $parent_model, $parent_id, $parent_id_prop, $api_uri_path_prefix, $limit = 0, $limit_max = 0, $parent_obj_member_id_relateds = array())
 	{
-		$response = '';
+		$response = '0';
 		try
 		{
 			$this->check_response_format(array('json', 'html'));
@@ -86,6 +86,7 @@ class Controller_Site_Api extends Controller_Base_Site
 				if ($since_id) $data['since_id'] = $since_id;
 				if (conf('like.isEnabled')) $data['liked_ids'] = $liked_ids;
 				// html response
+
 				return \Response::forge(\View::forge('_parts/comment/list', $data), $status_code);
 			}
 
@@ -135,6 +136,7 @@ class Controller_Site_Api extends Controller_Base_Site
 		$response = '';
 		try
 		{
+			if (!conf('like.isEnabled')) throw new \HttpNotFoundException();
 			$this->check_response_format(array('json', 'html'));
 
 			$parent_id = (int)$parent_id;

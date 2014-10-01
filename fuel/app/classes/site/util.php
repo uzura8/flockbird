@@ -352,4 +352,14 @@ class Site_Util
 	{
 		return (substr($path, -1) == '/') ? $path.'index' : $path;
 	}
+
+	public static function get_api_uri_update_like($path_prefix, $parent_id)
+	{
+		return sprintf('%s/like/api/update/%d.json', $path_prefix, $parent_id);
+	}
+
+	public static function get_api_uri_get_liked_members($path_prefix, $parent_id)
+	{
+		return sprintf('%s/like/api/member/%d.html', $path_prefix, $parent_id);
+	}
 }

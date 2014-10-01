@@ -28,12 +28,27 @@ if ($parent && !empty($parent->member_id)) $box_attrs['data-parent_auther_id'] =
 if ($parent) $box_attrs['class'] .= sprintf(' commentBox_%d', $parent->id);
 ?>
 <div <?php echo Util_Array::conv_array2attr_string($box_attrs); ?>>
-<?php echo render('_parts/member_contents_box', array(
+<?php
+$data = array(
 	'member' => $comment->member,
 	'date' => array('datetime' => $comment->created_at),
 	'content' => $comment->body,
 	'trim_width' => empty($trim_width) ? 0 : $trim_width,
-)); ?>
+);
+if (conf('like.isEnabled'))
+{
+	$data['like_link'] = array(
+		'id' => $comment->id,
+		'post_uri' => \Site_Util::get_api_uri_update_like($like_api_uri_prefix, $comment->id),
+		'get_member_uri' => \Site_Util::get_api_uri_get_liked_members($like_api_uri_prefix, $comment->id),
+		'count_attr' => array('class' => 'unset_like_count'),
+		'count' => $comment->like_count,
+		'left_margin' => true,
+		'is_liked' => in_array($comment->id, $liked_ids),
+	);
+}
+echo render('_parts/member_contents_box', $data);
+?>
 <?php
 $is_display_delete_btn = false;
 if (!empty($absolute_display_delete_btn))

@@ -29,6 +29,11 @@ class Model_NoteComment extends \MyOrm\Model
 			'form' => array('type' => false),
 		),
 		'body',
+		'like_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);

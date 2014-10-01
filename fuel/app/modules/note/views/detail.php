@@ -22,8 +22,8 @@ echo render('_parts/comment/count_and_link_display', array(
 <?php
 $data_like_link = array(
 	'id' => $note->id,
-	'post_uri' => \Note\Site_Util::get_like_api_uri($note->id),
-	'get_member_uri' => \Note\Site_Util::get_liked_member_api_uri($note->id),
+	'post_uri' => \Site_Util::get_api_uri_update_like('note', $note->id),
+	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('note', $note->id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $note->like_count,
 	'left_margin' => true,
@@ -42,8 +42,11 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 	'delete_uri' => 'note/comment/api/delete.json',
 	'counter_selector' => '#comment_count_'.$note->id,
 	'list_more_box_attrs' => array(
-		'data-uri' => 'note/comment/api/list/'.$note->id.'.html',
+		'data-uri' => 'note/comment/api/list/'.$note->id.'.json',
+		'data-template' => '#comment-template',
 	),
+	'like_api_uri_prefix' => 'note/comment',
+	'liked_ids' => $liked_ids,
 )); ?>
 </div>
 <?php
@@ -51,8 +54,9 @@ if (Auth::check())
 {
 	$button_attrs = array(
 		'data-post_uri' => 'note/comment/api/create/'.$note->id.'.json',
-		'data-get_uri' => 'note/comment/api/list/'.$note->id.'.html',
+		'data-get_uri' => 'note/comment/api/list/'.$note->id.'.json',
 		'data-list' => '#comment_list',
+		'data-template' => '#comment-template',
 		'data-counter' => '#comment_count_'.$note->id,
 		'data-latest' => 1,
 	);

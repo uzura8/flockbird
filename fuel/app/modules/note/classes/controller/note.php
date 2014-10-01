@@ -41,12 +41,13 @@ class Controller_Note extends \Controller_Site
 			'order_by' => array('created_at' => 'desc'),
 			'limit'    => conf('view_params_default.list.limit'),
 		), 'Note');
-		$data['liked_note_ids'] = (\Auth::check() && $data['list']) ? Model_NoteLike::get_cols('note_id', array(
-			array('member_id' => $this->u->id),
-			array('note_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
-		)) : array();
+		$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check() && $data['list']) ?
+			Model_NoteLike::get_cols('note_id', array(
+				array('member_id' => $this->u->id),
+				array('note_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
+			)) : array();
 		$this->template->content = \View::forge('_parts/list', $data);
-		$this->template->post_footer = \View::forge('_parts/load_item');
+		$this->template->post_footer = \View::forge('_parts/list_footer');
 	}
 
 	/**
@@ -83,7 +84,7 @@ class Controller_Note extends \Controller_Site
 		$data['is_mypage']    = $is_mypage;
 		$data['is_draft']     = $is_draft;
 		$this->template->content = \View::forge('member', $data);
-		$this->template->post_footer = \View::forge('_parts/load_item');
+		$this->template->post_footer = \View::forge('_parts/list_footer');
 	}
 
 	/**
@@ -121,14 +122,22 @@ class Controller_Note extends \Controller_Site
 		}
 		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
-		$this->template->content = \View::forge('detail', array(
+		$this->template->post_footer = \View::forge('_parts/comment/handlebars_template');
+
+		$data = array(
 			'note' => $note,
 			'images' => $images,
 			'comments' => $list,
 			'all_comment_count' => $all_comment_count,
 			'comment_next_id' => $next_id,
 			'is_liked_self' => $is_liked_self,
-		));
+			'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $list) ?
+				Model_NoteCommentLike::get_cols('note_comment_id', array(
+					array('member_id' => $this->u->id),
+					array('note_comment_id', 'in', \Util_Orm::conv_col2array($list, 'id'))
+				)) : array(),
+		);
+		$this->template->content = \View::forge('detail', $data);
 	}
 
 	/**

@@ -36,13 +36,19 @@ if (isset($content) && strlen($content))
 <?php echo render('_parts/thumbnails', array('images' => $images)); ?>
 <?php endif; ?>
 		</div>
-
 <?php if ($date || isset($public_flag, $model, $id)): ?>
 		<div class="sub_info">
 <?php if ($date): ?>
 			<small><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>
 <?php endif; ?>
 <?php
+// like count and link
+if (!empty($like_link))
+{
+	echo render('_parts/like/count_and_link_execute', $like_link);
+}
+
+// public_flag
 if (isset($public_flag, $model, $id))
 {
 	$is_mycontents = Auth::check() && isset($member) && $u->id == $member->id;

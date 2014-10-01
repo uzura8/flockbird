@@ -282,9 +282,9 @@ class Site_Util
 		switch ($type)
 		{
 			case \Config::get('timeline.types.note'):// note 投稿
-				return \Note\Site_Util::get_like_api_uri($foreign_id);
+				return \Site_Util::get_api_uri_update_like('note', $foreign_id);
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				return \Album\Site_Util::get_like_api_uri($foreign_id);
+				return \Site_Util::get_api_uri_update_like('album_image', $foreign_id);
 		}
 
 		return sprintf('timeline/like/api/update/%d.json', $timeline_id);
@@ -300,9 +300,9 @@ class Site_Util
 		switch ($type)
 		{
 			case \Config::get('timeline.types.note'):// note 投稿
-				return \Note\Site_Util::get_liked_member_api_uri($foreign_id);
+				return \Site_Util::get_api_uri_get_liked_members('note', $foreign_id);
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				return \Album\Site_Util::get_liked_member_api_uri($foreign_id);
+				return \Site_Util::get_api_uri_get_liked_members('album_image', $foreign_id);
 		}
 
 		return self::get_liked_member_api_uri($timeline_id);
