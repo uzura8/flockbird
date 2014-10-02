@@ -21,16 +21,19 @@ $.get(get_url('album/image/api/list.json'), {'album_id':album_id, 'limit':0}, fu
 	slideNumber_max = image_ids.length;
 	image_ids.reverse();
 
-	if ( slideNumber_max < 2 ) {
-		return;
-	}
-
 	// 最初の画像の設定
 	var position = {
 		prev : slideNumber_max - 1,
 		now  : 0,
 		next : 1
 	};
+	if (slideNumber_max < 2) {
+		position = {
+			prev : 0,
+			now  : 0,
+			next : 0
+		};
+	}
 
 	var html = "";
 	$.each(position, function(i, v){
