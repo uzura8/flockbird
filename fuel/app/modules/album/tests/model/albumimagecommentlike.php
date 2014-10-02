@@ -91,7 +91,23 @@ class Test_Model_AlbumImageCommentLike extends \TestCase
 		}
 	}
 
-	public static function execute_like($album_image_comment_id, $member_id)
+	public function test_delete_parent()
+	{
+		$album_image_comment_id = self::$album_image_comment_id;
+		$album_image_comment = Model_AlbumImageComment::find($album_image_comment_id);
+		if (!\Util_Orm::get_count_all('\Album\Model_AlbumImageCommentLike', array('album_image_comment_id' => $album_image_comment_id)))
+		{
+			self::execute_like($album_image_comment_id, 6);
+			self::execute_like($album_image_comment_id, 7);
+		}
+		$album_image_comment->delete();
+
+		$like_count = \Util_Orm::get_count_all('\Album\Model_AlbumImageCommentLike', array('album_image_comment_id' => $album_image_comment_id));
+		$this->assertEquals(0, $like_count);
+	}
+
+
+	private static function execute_like($album_image_comment_id, $member_id)
 	{
 		return (bool)Model_AlbumImageCommentLike::change_registered_status4unique_key(array(
 			'album_image_comment_id' => $album_image_comment_id,
@@ -99,7 +115,7 @@ class Test_Model_AlbumImageCommentLike extends \TestCase
 		));
 	}
 
-	public static function save_comment($album_image_id, $member_id)
+	private static function save_comment($album_image_id, $member_id)
 	{
 		$comment = new Model_AlbumImageComment(array(
 			'body' => 'Test for album_image_comment_like.',

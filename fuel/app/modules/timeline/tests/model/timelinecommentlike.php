@@ -110,6 +110,21 @@ class Test_Model_TimelineCommentLike extends \TestCase
 		}
 	}
 
+	public function test_delete_parent()
+	{
+		$timeline_comment_id = self::$timeline_comment_id;
+		$timeline_comment = Model_TimelineComment::find($timeline_comment_id);
+		if (!\Util_Orm::get_count_all('\Timeline\Model_TimelineCommentLike', array('timeline_comment_id' => $timeline_comment_id)))
+		{
+			self::execute_like($timeline_comment_id, 6);
+			self::execute_like($timeline_comment_id, 7);
+		}
+		$timeline_comment->delete();
+
+		$like_count = \Util_Orm::get_count_all('\Timeline\Model_TimelineCommentLike', array('timeline_comment_id' => $timeline_comment_id));
+		$this->assertEquals(0, $like_count);
+	}
+
 	public static function save_timeline_comment($timeline_id, $member_id)
 	{
 		$comment = new Model_TimelineComment(array(

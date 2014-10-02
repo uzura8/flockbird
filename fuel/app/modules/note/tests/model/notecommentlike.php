@@ -119,7 +119,22 @@ class Test_Model_NoteCommentLike extends \TestCase
 		}
 	}
 
-	public static function save_comment($note_id, $member_id)
+	public function test_delete_parent()
+	{
+		$note_comment_id = self::$note_comment_id;
+		$note_comment = Model_NoteComment::find($note_comment_id);
+		if (!\Util_Orm::get_count_all('\Note\Model_NoteCommentLike', array('note_comment_id' => $note_comment_id)))
+		{
+			self::execute_like($note_comment_id, 6);
+			self::execute_like($note_comment_id, 7);
+		}
+		$note_comment->delete();
+
+		$like_count = \Util_Orm::get_count_all('\Note\Model_NoteCommentLike', array('note_comment_id' => $note_comment_id));
+		$this->assertEquals(0, $like_count);
+	}
+
+	private static function save_comment($note_id, $member_id)
 	{
 		$comment = new Model_NoteComment(array(
 			'body' => 'Test for note_comment_like.',
@@ -131,7 +146,7 @@ class Test_Model_NoteCommentLike extends \TestCase
 		return $comment;
 	}
 
-	public static function execute_like($note_comment_id, $member_id)
+	private static function execute_like($note_comment_id, $member_id)
 	{
 		return (bool)Model_NoteCommentLike::change_registered_status4unique_key(array(
 			'note_comment_id' => $note_comment_id,
