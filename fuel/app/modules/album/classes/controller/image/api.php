@@ -83,7 +83,15 @@ class Controller_Image_api extends \Controller_Site_Api
 				return \Response::forge($response, $status_code);
 			}
 
-			$response = $data['list'];
+			$list_array = array();
+			foreach ($data['list'] as $key => $obj)
+			{
+				$row = $obj->to_array();
+				$row['album']['member'] = \Model_Member::get_basic_data($obj->album->member_id);
+				$list_array[] = $row;
+			}
+			// json response
+			$response = $list_array;
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)

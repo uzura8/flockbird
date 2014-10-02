@@ -75,6 +75,8 @@ class Model_File extends \MyOrm\Model
 		),
 	);
 
+	protected static $_to_array_exclude = array('exif');
+
 	protected static $name_list = array();
 
 	public static function validate($factory)
