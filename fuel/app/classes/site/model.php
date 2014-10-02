@@ -291,4 +291,15 @@ class Site_Model
 
 		throw new \FuelException('Orm observer setting error.');
 	}
+
+	public static function get_liked_ids($parent_table, $member_id, array $parent_objs, $namespace = '', $member_id_prop = 'member_id')
+	{
+		$like_model = self::get_model_name($parent_table.'_like', $namespace);
+		$parent_foreign_key = $parent_table.'_id';
+
+		return \Album\Model_AlbumImageCommentLike::get_cols($parent_foreign_key, array(
+			array($member_id_prop => $member_id),
+			array($parent_foreign_key, 'in', \Util_Orm::conv_col2array($parent_objs, 'id'))
+		));
+	}
 }

@@ -29,7 +29,7 @@ class Controller_Image extends \Controller_Site
 	public function action_list()
 	{
 		$this->set_title_and_breadcrumbs(term('album_image', 'site.list'), array('album' => term('album', 'site.list')));
-		$this->template->post_footer = \View::forge('_parts/load_masonry');
+		$this->template->post_footer = \View::forge('image/_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related'  => array('file', 'album'),
@@ -73,6 +73,8 @@ class Controller_Image extends \Controller_Site
 			'all_comment_count' => $all_comment_count,
 			'comment_next_id' => $next_id,
 			'is_liked_self' => $is_liked_self,
+			'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $list) ?
+				\Site_Model::get_liked_ids('album_image_comment', $this->u->id, $list, 'Album') : array(),
 		);
 
 		// 前後の id の取得
@@ -91,6 +93,7 @@ class Controller_Image extends \Controller_Site
 		$title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
 		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
+		$this->template->post_footer = \View::forge('_parts/comment/handlebars_template');
 		$this->template->content = \View::forge('image/detail', $data);
 	}
 
@@ -108,7 +111,7 @@ class Controller_Image extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('album_image', 'site.list')), null, $member);
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
-		$this->template->post_footer = \View::forge('_parts/load_masonry');
+		$this->template->post_footer = \View::forge('image/_parts/list_footer');
 
 		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
 			'related' => array('file', 'album'),

@@ -147,9 +147,12 @@ $data = array(
 	'counter_selector' => '#comment_count_'.$album_image->id,
 	'list_more_box_attrs' => array(
 		'id' => 'listMoreBox_comment_'.$album_image->id,
-		'data-uri' => sprintf('album/image/comment/api/list/%s.html', $album_image->id),
+		'data-uri' => sprintf('album/image/comment/api/list/%s.json', $album_image->id),
 		'data-list' => '#comment_list_'.$album_image->id,
 	),
+	'like_api_uri_prefix' => 'album/image/comment',
+	'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $comments) ?
+		\Site_Model::get_liked_ids('album_image_comment', $u->id, $comments, 'Album') : array(),
 );
 echo render('_parts/comment/list', $data);
 ?>

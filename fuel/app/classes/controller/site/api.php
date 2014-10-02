@@ -104,12 +104,13 @@ class Controller_Site_Api extends Controller_Base_Site
 				}
 				$list_array[] = $row;
 			}
+			$parent_member_id = $parent_obj_member_id_relateds ? array_shift($auther_member_ids) : $parent_obj->member_id;
 			// json response
 			$response = array(
 				'status' => 1,
 				'list' => $list_array,
 				'next_id' => $next_id,
-				'parent' => array('id' => $parent_id, 'member_id' => $parent_obj->member_id),
+				'parent' => array('id' => $parent_id, 'member_id' => $parent_member_id),
 				'get_uri' => sprintf('%s/comment/api/list/%d.json', $api_uri_path_prefix, $parent_id),
 				'delete_uri' => sprintf('%s/comment/api/delete.json', $api_uri_path_prefix),
 			);

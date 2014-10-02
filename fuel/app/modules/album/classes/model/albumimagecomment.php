@@ -28,6 +28,11 @@ class Model_AlbumImageComment extends \MyOrm\Model
 			'validation' => array('trim', 'required'),
 			'form' => array('type' => 'text', 'class' => 'form-control'),
 		),
+		'like_count' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'created_at',
 		'updated_at',
 	);

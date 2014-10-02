@@ -42,15 +42,19 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 	'delete_uri' => 'album/image/comment/api/delete.json',
 	'counter_selector' => '#comment_count_'.$album_image->id,
 	'list_more_box_attrs' => array(
-		'data-uri' => 'album/image/comment/api/list/'.$album_image->id.'.html',
+		'data-uri' => 'album/image/comment/api/list/'.$album_image->id.'.json',
+		'data-template' => '#comment-template',
 	),
+	'like_api_uri_prefix' => 'album/image/comment',
+	'liked_ids' => $liked_ids,
 )); ?>
 </div>
 
 <?php if (Auth::check()): ?>
 <?php echo render('_parts/post_comment', array('button_attrs' => array(
 	'data-post_uri' => 'album/image/comment/api/create/'.$album_image->id.'.json',
-	'data-get_uri' => 'album/image/comment/api/list/'.$album_image->id.'.html',
+	'data-get_uri' => 'album/image/comment/api/list/'.$album_image->id.'.json',
 	'data-list' => '#comment_list',
+	'data-template' => '#comment-template',
 ))); ?>
 <?php endif; ?>

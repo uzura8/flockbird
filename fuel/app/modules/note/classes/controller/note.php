@@ -132,10 +132,7 @@ class Controller_Note extends \Controller_Site
 			'comment_next_id' => $next_id,
 			'is_liked_self' => $is_liked_self,
 			'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $list) ?
-				Model_NoteCommentLike::get_cols('note_comment_id', array(
-					array('member_id' => $this->u->id),
-					array('note_comment_id', 'in', \Util_Orm::conv_col2array($list, 'id'))
-				)) : array(),
+				\Site_Model::get_liked_ids('note_comment', $this->u->id, $list, 'Note') : array(),
 		);
 		$this->template->content = \View::forge('detail', $data);
 	}

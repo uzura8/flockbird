@@ -117,10 +117,10 @@ function getImageTag(imageUri, imageId) {
 }
 
 function displayComment(image_id, template) {
-	var getUri = 'album/image/comment/api/list/' + image_id + '.html';
+	var getUri = 'album/image/comment/api/list/' + image_id + '.json';
 	var listSelector = '#comment_list';
 	$('.commentPostBox').remove();
-	loadList(getUri, listSelector, 0, '', 'replace');
+	loadList(getUri, listSelector, '', 'replace', {}, null, '#comment-template');
 
 	var uid = get_uid();
 	if (uid) {

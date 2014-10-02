@@ -116,10 +116,7 @@ $data = array(
 	),
 	'like_api_uri_prefix' => 'note/comment',
 	'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $comments) ?
-		\Note\Model_NoteCommentLike::get_cols('note_comment_id', array(
-			array('member_id' => $this->u->id),
-			array('note_comment_id', 'in', \Util_Orm::conv_col2array($comments, 'id'))
-		)) : array(),
+		\Site_Model::get_liked_ids('note_comment', $u->id, $comments, 'Note') : array(),
 );
 echo render('_parts/comment/list', $data);
 ?>

@@ -1,3 +1,4 @@
+<?php echo render('_parts/comment/handlebars_template'); ?>
 <script>
 function get_upload_uri_base_path() {return '<?php echo PRJ_URI_PATH.Site_Upload::get_uploaded_file_uri_path('', '', '600x600'); ?>';}
 </script>
