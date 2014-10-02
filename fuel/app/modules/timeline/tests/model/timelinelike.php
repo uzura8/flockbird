@@ -59,7 +59,7 @@ class Test_Model_TimelineLike extends \TestCase
 		$this->assertEquals($like_count, $timeline['like_count']);
 		if ($is_liked)
 		{
-			$this->assertEquals($timeline_like->created_at, $timeline['sort_datetime']);
+			$this->assertEquals(self::$timeline_before->sort_datetime, $timeline['sort_datetime']);
 		}
 		else
 		{
