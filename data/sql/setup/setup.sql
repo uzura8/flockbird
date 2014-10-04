@@ -433,6 +433,24 @@ CREATE TABLE `news_category` (
   KEY `sort_order_idx` (`sort_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves categories of news';
 
+
+CREATE TABLE `notice` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `type` tinyint(2) NOT NULL DEFAULT '0',
+  `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
+  `foreign_id` int(11) NULL COMMENT 'The id of reference table',
+  `body` text NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `notice_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  KEY `member_id_created_at_idx` (`member_id`,`created_at`),
+  KEY `member_id_is_read_foreign_table_foreign_id_idx` (`member_id`,`is_read`,`foreign_table`,`foreign_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
