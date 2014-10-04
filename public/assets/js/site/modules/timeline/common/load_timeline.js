@@ -37,7 +37,7 @@ $(function() {
 		var getUri = $(blockSelector).data('get_uri') ? $(blockSelector).data('get_uri') : '';
 		var postUri = $(blockSelector).data('post_uri') ? $(blockSelector).data('post_uri') : '';
 
-		if (is_sp()) loadTlComment(getUri, blockSelector);
+		if (is_sp()) loadTlComment(getUri, blockSelector, id);
 		showCommentInput(id, 'form_comment_' + id, postUri, getUri, false);
 		$(this).parent('small').html('<span>' + get_term('comment') + '</span>');
 		return false;
@@ -100,6 +100,7 @@ function loadTimeline() {
 		getData,
 		pushStateInfo,
 		null,
+		null,
 		postLoadTimeline
 	);
 }
@@ -113,8 +114,8 @@ function postLoadTimeline() {
 	setLikeCount();
 }
 
-function loadTlComment(getUri, parentListSelector) {
-	loadList(getUri, parentListSelector, '', 'replace', {'latest': 1}, null, '#comment-template');
+function loadTlComment(getUri, parentListSelector, id) {
+	loadList(getUri, parentListSelector, '', 'replace', {'latest': 1}, null, '#comment-template', '#comment_count_' + id);
 	$(parentListSelector).removeClass('unloade_comments');
 }
 
@@ -154,7 +155,7 @@ function loadTlCommentAll() {
 		var comment_cont = parseInt($('#timelineBox_' + id).data('comment_count'));
 		if (comment_cont > 0) {
 			var getUri = $(this).data('get_uri');
-			loadTlComment(getUri, this);
+			loadTlComment(getUri, this, id);
 		}
 	});
 }

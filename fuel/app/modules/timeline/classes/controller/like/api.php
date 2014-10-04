@@ -25,7 +25,7 @@ class Controller_Like_Api extends \Controller_Site_Api
 			'\Timeline\Model_Timeline',
 			$parent_id,
 			'timeline_id',
-			Site_Util::get_liked_member_api_uri($parent_id)
+			\Site_Util::get_api_uri_get_liked_members('timeline', $parent_id)
 		);
 		if ($result) return $result;
 	}

@@ -60,11 +60,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			{
 				$model_like = $model.'Like';
 				$comment_table_name = sprintf('%s_comment', str_replace('/', '_', $api_uri_path_prefix));
-				$comment_table_id_name = $comment_table_name.'_id';
-				$liked_ids = (\Auth::check() && $list) ? $model_like::get_cols($comment_table_id_name, array(
-					array('member_id' => $this->u->id),
-					array($comment_table_id_name, 'in', \Util_Orm::conv_col2array($list, 'id'))
-				)) : array();
+				$liked_ids = \Auth::check() ? \Site_Model::get_liked_ids($comment_table_name, $this->u->id, $list, null, $model.'Like') : array();
 			}
 
 			$status_code = 200;
@@ -109,6 +105,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			$response = array(
 				'status' => 1,
 				'list' => $list_array,
+				'count' => $all_comment_count,
 				'next_id' => $next_id,
 				'parent' => array('id' => $parent_id, 'member_id' => $parent_member_id),
 				'get_uri' => sprintf('%s/comment/api/list/%d.json', $api_uri_path_prefix, $parent_id),

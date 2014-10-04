@@ -115,8 +115,7 @@ $data = array(
 		'data-template' => '#comment-template',
 	),
 	'like_api_uri_prefix' => 'note/comment',
-	'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $comments) ?
-		\Site_Model::get_liked_ids('note_comment', $u->id, $comments, 'Note') : array(),
+	'liked_ids' => (conf('like.isEnabled') && \Auth::check()) ? \Site_Model::get_liked_ids('note_comment', $u->id, $comments, 'Note') : array(),
 );
 echo render('_parts/comment/list', $data);
 ?>

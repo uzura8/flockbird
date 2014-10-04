@@ -32,7 +32,12 @@ class Model extends \Orm\Model
 			$is_reverse = true;
 		}
 
+		$query = self::query();
 		if (!is_array($params)) $params = (array)$params;
+		if ($params) $query->where($params);
+		$all_records_count = $is_return_all_count ? $query->count() : false;
+
+		$params = array();
 		if ($since_id)
 		{
 			$params[] = array($sort_prop, '>', $since_id);
@@ -41,15 +46,13 @@ class Model extends \Orm\Model
 		{
 			$params[] = array($sort_prop, '<=', $max_id);
 		}
+		if ($params) $query->where($params);
 
-		$query = self::query();
 		if ($select_props)
 		{
 			if (!is_array($select_props)) $select_props = (array)$select_props;
 			foreach ($select_props as $select_prop) $query->select($select_prop);
 		}
-		if ($params) $query->where($params);
-		$all_records_count = $is_return_all_count ? $query->count() : false;
 
 		if ($relateds) $query->related($relateds);
 

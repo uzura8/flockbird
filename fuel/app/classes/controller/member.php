@@ -41,10 +41,8 @@ class Controller_Member extends Controller_Site
 			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
 		list($list, $next_id)
 			= \Timeline\Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
-		$liked_timeline_ids = (Auth::check() && $list) ? \Timeline\Model_TimelineLike::get_cols('timeline_id', array(
-			array('member_id' => $this->u->id),
-			array('timeline_id', 'in', \Util_Orm::conv_col2array($list, 'timeline_id'))
-		)) : array();
+		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
+			\Site_Model::get_liked_ids('timeline', $this->u->id, $list, 'Timeline') : array();
 
 		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
 

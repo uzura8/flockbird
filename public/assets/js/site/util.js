@@ -156,8 +156,9 @@ function loadList(getUri) {
 	var position           = (arguments.length > 3) ? arguments[3] : 'replace';// params: replace / append / prepend
 	var getData            = (arguments.length > 4) ? arguments[4] : {};
 	var pushStateInfo      = (arguments.length > 5) ? arguments[5] : null;
-	var templateSelector   = (arguments.length > 6) ? arguments[6] : null;
-	var callbackFunc       = (arguments.length > 7) ? arguments[7] : null;
+	var templateSelector   = (arguments.length > 6) ? arguments[6] : '';
+	var counterSelector    = (arguments.length > 7) ? arguments[7] : '';
+	var callbackFunc       = (arguments.length > 8) ? arguments[8] : null;
 
 	var template = templateSelector ? Handlebars.compile($(templateSelector).html()) : null;
 	$.ajax({
@@ -193,7 +194,9 @@ function loadList(getUri) {
 					$(parentListSelector).html(html).fadeIn('fast');
 				}
 			}
-
+			if (templateSelector && counterSelector && result.count) {
+					$(counterSelector).html(result.count);
+			}
 			if (callbackFunc) {
 				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);
 				callbackFunc();
@@ -317,8 +320,8 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 		},
 		success: function(result){
 			$.jGrowl(postedArticleTerm + 'を投稿しました。');
-			loadList(getUri, listSelector, '', position, getData, null, templateSelector);
-			updateCounter(counterSelector);
+			loadList(getUri, listSelector, '', position, getData, null, templateSelector, counterSelector);
+			if (!templateSelector) updateCounter(counterSelector);
 			reset_textarea(textareaSelector, textareaHeight);
 			if (callbackFunc) {
 				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);

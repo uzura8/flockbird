@@ -72,7 +72,7 @@ class Controller_Image_Like_Api extends \Controller_Site_Api
 			'\Album\Model_AlbumImage',
 			$parent_id,
 			'album_image_id',
-			Site_Util::get_liked_member_api_uri($parent_id),
+			\Site_Util::get_api_uri_get_liked_members('album_image', $parent_id),
 			null,
 			\Config::get('view_params_default.like.members.popover.limit'),
 			\Config::get('view_params_default.like.members.popover.limit_max'),

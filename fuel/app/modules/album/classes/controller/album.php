@@ -112,10 +112,8 @@ class Controller_Album extends \Controller_Site
 		$data['album'] = $album;
 		$data['is_member_page'] = true;
 		$data['disabled_to_update'] = $disabled_to_update;
-		$data['liked_album_image_ids'] = (\Auth::check() && $data['list']) ? Model_AlbumImageLike::get_cols('album_image_id', array(
-			array('member_id' => $this->u->id),
-			array('album_image_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
-		)) : array();
+		$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
+			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list'], 'Album') : array();
 
 		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));

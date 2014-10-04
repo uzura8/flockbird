@@ -44,7 +44,7 @@ if (conf('like.isEnabled'))
 		'count_attr' => array('class' => 'unset_like_count'),
 		'count' => $comment->like_count,
 		'left_margin' => true,
-		'is_liked' => in_array($comment->id, $liked_ids),
+		'is_liked' => isset($liked_ids) ? in_array($comment->id, $liked_ids) : false,
 	);
 }
 echo render('_parts/member_contents_box', $data);

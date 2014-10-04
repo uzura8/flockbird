@@ -43,10 +43,8 @@ class Controller_Timeline extends \Controller_Site
 			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
 		list($list, $next_id)
 			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, 0, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
-		$liked_timeline_ids = (\Auth::check() && $list) ? Model_TimelineLike::get_cols('timeline_id', array(
-			array('member_id' => $this->u->id),
-			array('timeline_id', 'in', \Util_Orm::conv_col2array($list, 'timeline_id'))
-		)) : array();
+		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
+			\Site_Model::get_liked_ids('timeline', $this->u->id, $list, 'Timeline') : array();
 
 		$data = array('list' => $list, 'next_id' => $next_id, 'liked_timeline_ids' => $liked_timeline_ids);
 		if ($since_id) $data['since_id'] = $since_id;
@@ -78,10 +76,8 @@ class Controller_Timeline extends \Controller_Site
 			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
 		list($list, $next_id)
 			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
-		$liked_timeline_ids = (\Auth::check() && $list) ? Model_TimelineLike::get_cols('timeline_id', array(
-			array('member_id' => $this->u->id),
-			array('timeline_id', 'in', \Util_Orm::conv_col2array($list, 'timeline_id'))
-		)) : array();
+		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
+			\Site_Model::get_liked_ids('timeline', $this->u->id, $list, 'Timeline') : array();
 
 		$data = array('list' => $list, 'next_id' => $next_id, 'liked_timeline_ids' => $liked_timeline_ids);
 		if ($member) $data['member'] = $member;
@@ -118,10 +114,8 @@ class Controller_Timeline extends \Controller_Site
 	{
 		$timeline = Model_Timeline::check_authority($id);
 		$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
-		$liked_timeline_ids = (\Auth::check() && $list) ? Model_TimelineLike::get_cols('timeline_id', array(
-			'member_id' => $this->u->id,
-			'timeline_id' => $id,
-		)) : array();
+		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
+			\Site_Model::get_liked_ids('timeline', $this->u->id, array($timeline), 'Timeline') : array();
 
 		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');

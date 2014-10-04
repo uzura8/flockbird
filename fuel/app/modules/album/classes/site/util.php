@@ -90,9 +90,4 @@ class Site_Util
 	{
 		return sprintf('album/image/like/api/update/%d.json', $album_image_id);
 	}
-
-	public static function get_liked_member_api_uri($album_image_id)
-	{
-		return sprintf('album/image/like/api/member/%d.html', $album_image_id);
-	}
 }

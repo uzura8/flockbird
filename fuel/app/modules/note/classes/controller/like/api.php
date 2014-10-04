@@ -72,7 +72,7 @@ class Controller_Like_Api extends \Controller_Site_Api
 			'\Note\Model_Note',
 			$parent_id,
 			'note_id',
-			Site_Util::get_liked_member_api_uri($parent_id)
+			\Site_Util::get_api_uri_get_liked_members('note', $parent_id)
 		);
 		if ($result) return $result;
 	}

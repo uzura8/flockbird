@@ -41,11 +41,8 @@ class Controller_Note extends \Controller_Site
 			'order_by' => array('created_at' => 'desc'),
 			'limit'    => conf('view_params_default.list.limit'),
 		), 'Note');
-		$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check() && $data['list']) ?
-			Model_NoteLike::get_cols('note_id', array(
-				array('member_id' => $this->u->id),
-				array('note_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
-			)) : array();
+		$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
+			\Site_Model::get_liked_ids('note', $this->u->id, $data['list'], 'Note') : array();
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 	}
@@ -76,10 +73,8 @@ class Controller_Note extends \Controller_Site
 			'limit'    => conf('view_params_default.list.limit'),
 			'order_by' => array('created_at' => 'desc'),
 		), 'Note');
-		$data['liked_note_ids'] = (\Auth::check() && $data['list']) ? Model_NoteLike::get_cols('note_id', array(
-			array('member_id' => $this->u->id),
-			array('note_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
-		)) : array();
+		$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
+			\Site_Model::get_liked_ids('note', $this->u->id, $data['list'], 'Note') : array();
 		$data['member']       = $member;
 		$data['is_mypage']    = $is_mypage;
 		$data['is_draft']     = $is_draft;

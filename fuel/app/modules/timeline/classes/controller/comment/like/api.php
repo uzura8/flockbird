@@ -72,7 +72,7 @@ class Controller_Comment_Like_Api extends \Controller_Site_Api
 			'\Timeline\Model_TimelineComment',
 			$parent_id,
 			'timeline_comment_id',
-			Site_Util::get_liked_member_api_uri($parent_id),
+			\Site_Util::get_api_uri_get_liked_members('timeline/comment', $parent_id),
 			'timeline'
 		);
 		if ($result) return $result;

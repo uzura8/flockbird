@@ -75,7 +75,7 @@ $data_comment_link = array(
 	'count_attr' => array('class' => 'unset_comment_count'),
 	'link_display_absolute' => true,
 );
-if ($is_detail) $data_comment_link['count'] = $all_comment_count;
+if ($is_detail) $data_comment_link['count'] = $all_records_count;
 echo render('_parts/comment/count_and_link_display', $data_comment_link);
 ?>
 
@@ -119,11 +119,14 @@ $data = array(
 		'id' => 'listMoreBox_comment_'.$timeline->id,
 		'data-uri' => $comment_get_uri,
 		'data-list' => '#comment_list_'.$timeline->id,
+		'data-template' => '#comment-template',
 		'data-is_before' => 1,
 	),
 	'delete_uri' => $comment_delete_uri,
 	'counter_selector' => '#comment_count_'.$timeline->id,
 	'absolute_display_delete_btn' => true,
+	'like_api_uri_prefix' => 'timeline/comment',
+	'liked_ids' => (conf('like.isEnabled') && \Auth::check()) ? \Site_Model::get_liked_ids('timeline_comment', $u->id, $list, 'Timeline') : array(),
 );
 echo render('_parts/comment/list', $data);
 ?>

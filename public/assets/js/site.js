@@ -89,6 +89,7 @@ $(document).on('click','.js-ajax-loadList', function(){
 	var position = $(this).data('position') ? $(this).data('position') : 'replace';// params: replace / append / prepend
 	var historyKey = $(this).data('history_key') ? $(this).data('history_key') : '';
 	var templateSelecor = $(this).data('template') ? $(this).data('template') : '';
+	var counterSelecor = $(this).data('counter') ? $(this).data('counter') : '';
 
 	if (GL.execute_flg) return false;
 	if (!getUri) return false;
@@ -110,7 +111,8 @@ $(document).on('click','.js-ajax-loadList', function(){
 		position,
 		getData,
 		pushStateInfo,
-		templateSelecor
+		templateSelecor,
+		counterSelecor
 	);
 
 	return false;

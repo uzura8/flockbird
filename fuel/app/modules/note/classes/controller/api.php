@@ -45,14 +45,9 @@ class Controller_Api extends \Controller_Site_Api
 				'limit'    => conf('view_params_default.list.limit'),
 				'order_by' => array('created_at' => 'desc'),
 			), 'Note');
-			if (conf('like.isEnabled'))
-			{
-				$data['liked_note_ids'] = (\Auth::check() && $data['list']) ? Model_NoteLike::get_cols('note_id', array(
-					array('member_id' => $this->u->id),
-					array('note_id', 'in', \Util_Orm::conv_col2array($data['list'], 'id'))
-				)) : array();
-			}
 			$data['is_draft'] = $is_draft;
+			$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
+				\Site_Model::get_liked_ids('note', $this->u->id, $data['list'], 'Note') : array();
 
 			$response = \View::forge('_parts/list', $data);
 			$status_code = 200;
