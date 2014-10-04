@@ -4,6 +4,9 @@ return array(
 	// if no session type is requested, use the default
 	'driver'			=> 'file',
 
+	// cookie path  (optional, default = '/')
+	'cookie_path'		=> PRJ_URI_PATH,
+
 	// specific configuration settings for file based sessions
 	'file'				=> array(
 		'cookie_name'		=> 'auth_token',				// name of the session cookie for file based sessions
