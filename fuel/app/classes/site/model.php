@@ -304,4 +304,27 @@ class Site_Model
 			array($parent_foreign_key, 'in', \Util_Orm::conv_col2array($parent_objs, 'id'))
 		));
 	}
+
+	public static function create_comment_with_relation($parent_table, $parent_id, $parent_member_id, $member_id, $body, $namespace = '', $member_id_name = 'member_id')
+	{
+		$parent_id_name = $parent_table.'_id';
+		$comment_table_name = $parent_table.'_comment';
+		$model_comment = self::get_model_name($comment_table_name, $namespace);
+		$obj_comment = $model_comment::forge(array(
+			'body' => $body,
+			$parent_id_name => $parent_id,
+			$member_id_name => $member_id,
+		));
+		$obj_comment->save();
+
+		if (is_enabled('notice') && $member_id != $parent_member_id)
+		{
+			$obj_notice = \Notice\Model_Notice::get4foreign_data($parent_table, $parent_id, \Notice\Site_Util::get_notice_type('comment'));
+			\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id);
+			\Notice\Model_NoticeStatus::change_status2unread($obj_notice->id, $parent_member_id);
+			\Notice\Model_MemberWatchContent::check_and_create($member_id, $parent_table, $parent_id);
+		}
+
+		return $obj_comment;
+	}
 }

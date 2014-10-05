@@ -122,8 +122,12 @@ class Model_Timeline extends \MyOrm\Model
 		//		),
 		//	),
 		//),
-		'MyOrm\Observer_UpdatedAt' => array(
+		//'MyOrm\Observer_UpdatedAt' => array(
+		//	'events' => array('before_save'),
+		//),
+		'Orm\Observer_UpdatedAt' => array(
 			'events' => array('before_save'),
+			'mysql_timestamp' => true,
 		),
 		//'MyOrm\Observer_UpdatedAtCopyFromRelationalTable' => array(
 		//	'events' => array('before_save'),

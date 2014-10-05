@@ -13,20 +13,13 @@ return array(
 		),
 	),
 	'types' => array(
-		'timeline_commented' => 1,
-		'timeline_liked' => 2,
-		'timeline_comment_liked' => 3,
-		'note_commented' => 4,
-		'note_liked' => 5,
-		'note_comment_liked' => 6,
-		'album_image_commented' => 7,
-		'album_image_liked' => 8,
-		'album_image_comment_liked' => 9,
+		'create' => 1,
+		'update' => 2,
+		'comment' => 3,
+		'like' => 4,
 	),
 	'periode_to_update' => array(
-		'album' => '1 day',
-		'album_image' => '1 day',
-		'member_name' => '60 minute',// 短いスパンの変更は上書きする
+		'default' => '6 hours',
 	),
 	'display_setting' => array(
 	),

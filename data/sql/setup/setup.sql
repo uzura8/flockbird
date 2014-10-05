@@ -436,18 +436,48 @@ CREATE TABLE `news_category` (
 
 CREATE TABLE `notice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NULL,
-  `is_read` tinyint(1) NOT NULL DEFAULT '0',
-  `type` tinyint(2) NOT NULL DEFAULT '0',
   `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
+  `type` tinyint(2) NOT NULL DEFAULT '0',
   `body` text NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `notice_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
-  KEY `member_id_created_at_idx` (`member_id`,`created_at`),
-  KEY `member_id_is_read_foreign_table_foreign_id_idx` (`member_id`,`is_read`,`foreign_table`,`foreign_id`)
+  KEY `foreign_table_foreign_id_type_cteated_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `notice_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `notice_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `notice_id_member_id_UNIQUE_idx` (`notice_id`,`member_id`),
+  KEY `member_id_id_idx` (`member_id`,`id`),
+  CONSTRAINT `notice_status_notice_id_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notice` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `notice_status_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `notice_member_from` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `notice_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `notice_id_member_id_UNIQUE_idx` (`notice_id`,`member_id`),
+  CONSTRAINT `notice_member_from_notice_id_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notice` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `notice_member_from_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_watch_content` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
+  `foreign_id` int(11) NULL COMMENT 'The id of reference table',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_foreign_table_foreign_id_UNIQUE_idx` (`member_id`,`foreign_table`,`foreign_id`),
+  CONSTRAINT `member_watch_contents_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
