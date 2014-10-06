@@ -64,6 +64,16 @@ class Model_NoticeStatus extends \MyOrm\Model
 		return $obj;
 	}
 
+	public static function change_status2read($member_id, $notice_id)
+	{
+		if (!$obj = self::get4member_id_and_notice_id($member_id, $notice_id)) return;
+
+		$obj->is_read = 1;
+		$obj->save();
+
+		return $obj;
+	}
+
 	public static function get4member_id_and_notice_id($member_id, $notice_id)
 	{
 		return self::query()

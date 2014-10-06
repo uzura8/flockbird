@@ -4,6 +4,7 @@ class Controller_Base_Site extends Controller_Base
 {
 	protected $auth_driver = 'UzuraAuth';
 	protected $after_auth_uri = 'member';
+	protected $notification_counts = array();
 
 	public function before()
 	{
@@ -124,12 +125,18 @@ class Controller_Base_Site extends Controller_Base
 
 	protected function set_notification_count()
 	{
-		$notification_counts = array();
 		if (is_enabled('notice'))
 		{
-			$notification_counts['notice'] = \Notice\Model_NoticeStatus::get_unread_count4member_id($this->u->id);
+			$this->notification_counts['notice'] = \Notice\Site_Util::get_unread_count($this->u->id);
 		}
+		View::set_global('notification_counts', $this->notification_counts);
+	}
 
-		View::set_global('notification_counts', $notification_counts);
+	protected function change_notice_status2read($member_id, $foreign_table, $foreign_id, $type_key)
+	{
+		$read_count = \Notice\Site_Util::change_status2read($member_id, $foreign_table, $foreign_id, $type_key);
+		$this->notification_counts['notice'] -= $read_count;
+		if ($this->notification_counts['notice'] < 0) $this->notification_counts['notice'] = 0;
+		View::set_global('notification_counts', $this->notification_counts);
 	}
 }

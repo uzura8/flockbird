@@ -319,10 +319,7 @@ class Site_Model
 
 		if (is_enabled('notice') && $member_id != $parent_member_id)
 		{
-			$obj_notice = \Notice\Model_Notice::get4foreign_data($parent_table, $parent_id, \Notice\Site_Util::get_notice_type('comment'));
-			\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id);
-			\Notice\Model_NoticeStatus::change_status2unread($parent_member_id, $obj_notice->id);
-			\Notice\Model_MemberWatchContent::check_and_create($member_id, $parent_table, $parent_id);
+			\Notice\Site_Util::change_notice_status2unread($parent_table, $parent_id, $parent_member_id, $member_id, 'comment');
 		}
 
 		return $obj_comment;

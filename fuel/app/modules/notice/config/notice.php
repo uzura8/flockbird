@@ -1,5 +1,12 @@
 <?php
 return array(
+	'cache' => array(
+		'unreadCount' => array(
+			'isEnabled'  => true,
+			'expir' => 60 * 30,// 30 min
+			'prefix'  => 'notice_unread_count_',
+		),
+	),
 	'articles' => array(
 		'limit' => 2,
 		'limit_max' => 3,

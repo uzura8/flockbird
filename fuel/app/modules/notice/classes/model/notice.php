@@ -51,10 +51,10 @@ class Model_Notice extends \MyOrm\Model
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_accept_foreign_tables();
 	}
 
-	public static function get4foreign_data($foreign_table, $foreign_id, $type)
+	public static function check_and_create($foreign_table, $foreign_id, $type)
 	{
 		$since_datetime = \Date::forge(strtotime('-'.\Config::get('notice.periode_to_update.default')))->format('mysql');
-		if (!$obj = self::get4last_foreign_data($foreign_table, $foreign_id, $type, $since_datetime))
+		if (!$obj = self::get_last4foreign_data($foreign_table, $foreign_id, $type, $since_datetime))
 		{
 			$obj = self::forge(array(
 				'foreign_table' => $foreign_table,
@@ -68,7 +68,7 @@ class Model_Notice extends \MyOrm\Model
 		return $obj;
 	}
 
-	public static function get4last_foreign_data($foreign_table, $foreign_id, $type, $since_datetime = null)
+	public static function get_last4foreign_data($foreign_table, $foreign_id, $type, $since_datetime = null)
 	{
 		$query = self::query()
 			->where('foreign_table', $foreign_table)
@@ -80,5 +80,14 @@ class Model_Notice extends \MyOrm\Model
 		return $query->order_by('created_at', 'desc')
 			->rows_limit(1)
 			->get_one();
+	}
+
+	public static function get4foreign_data($foreign_table, $foreign_id, $type)
+	{
+		return self::query()
+			->where('foreign_table', $foreign_table)
+			->where('foreign_id', $foreign_id)
+			->where('type', $type)
+			->get();
 	}
 }

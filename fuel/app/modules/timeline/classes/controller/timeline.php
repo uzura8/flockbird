@@ -114,9 +114,12 @@ class Controller_Timeline extends \Controller_Site
 	{
 		$timeline = Model_Timeline::check_authority($id);
 		$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
+
+		// 既読処理
+		$this->change_notice_status2read($this->u->id, 'timeline', $id, 'comment');
+
 		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('timeline', $this->u->id, array($timeline), 'Timeline') : array();
-
 		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/article', array(
