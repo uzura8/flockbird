@@ -8,6 +8,7 @@ class Controller_Base_Site extends Controller_Base
 	public function before()
 	{
 		parent::before();
+		$this->set_notification_count();
 	}
 
 	protected function get_current_user($member_id = null)
@@ -119,5 +120,16 @@ class Controller_Base_Site extends Controller_Base
 		}
 
 		throw new \HttpForbiddenException;
+	}
+
+	protected function set_notification_count()
+	{
+		$notification_counts = array();
+		if (is_enabled('notice'))
+		{
+			$notification_counts['notice'] = \Notice\Model_NoticeStatus::get_unread_count4member_id($this->u->id);
+		}
+
+		View::set_global('notification_counts', $notification_counts);
 	}
 }

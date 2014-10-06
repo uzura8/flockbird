@@ -321,7 +321,7 @@ class Site_Model
 		{
 			$obj_notice = \Notice\Model_Notice::get4foreign_data($parent_table, $parent_id, \Notice\Site_Util::get_notice_type('comment'));
 			\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id);
-			\Notice\Model_NoticeStatus::change_status2unread($obj_notice->id, $parent_member_id);
+			\Notice\Model_NoticeStatus::change_status2unread($parent_member_id, $obj_notice->id);
 			\Notice\Model_MemberWatchContent::check_and_create($member_id, $parent_table, $parent_id);
 		}
 

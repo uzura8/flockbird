@@ -480,6 +480,34 @@ div.alert ul {
 	margin-right: 5px;
 }
 
+div.navbar-header div.navbar-btn div.notice button {
+	background-color: transparent;
+	border: none;
+	padding: 0 10px;
+	color: #444;
+	font-size: 22px;
+	position: relative;
+}
+div.navbar-header div.navbar-btn div.notice button:hover,
+div.navbar-header div.navbar-btn div.notice button:focus,
+div.navbar-header div.navbar-btn div.notice button.notified:hover,
+div.navbar-header div.navbar-btn div.notice button.notified:focus {
+	color: #fff;
+	background-color: transparent;
+}
+div.navbar-header div.navbar-btn div.notice button.notified {
+	color: #999;
+}
+div.navbar-header div.navbar-btn div.notice button span.badge {
+	position: absolute;
+	top: 16px;
+	right: 2px;
+	padding: 3px 4px;
+	background-color: #d9534f;
+	font-size: 10px;
+	color: #fff;
+}
+
 table th.small,
 table td.small {width: 40px; text-align: center}
 table th.datetime,

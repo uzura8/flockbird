@@ -20,12 +20,12 @@ class Model_NoticeStatus extends \MyOrm\Model
 
 	protected static $_properties = array(
 		'id',
-		'notice_id' => array(
+		'member_id' => array(
 			'data_type' => 'integer',
 			'validation' => array('required', 'valid_string' => array('numeric')),
 			'form' => array('type' => false),
 		),
-		'member_id' => array(
+		'notice_id' => array(
 			'data_type' => 'integer',
 			'validation' => array('required', 'valid_string' => array('numeric')),
 			'form' => array('type' => false),
@@ -44,13 +44,13 @@ class Model_NoticeStatus extends \MyOrm\Model
 		),
 	);
 
-	public static function change_status2unread($notice_id, $member_id)
+	public static function change_status2unread($member_id, $notice_id)
 	{
-		if (!$obj = self::get4notice_id_and_member_id($notice_id, $member_id))
+		if (!$obj = self::get4member_id_and_notice_id($member_id, $notice_id))
 		{
 			$obj = self::forge(array(
-				'notice_id' => $notice_id,
 				'member_id' => $member_id,
+				'notice_id' => $notice_id,
 				'is_read' => 0,
 			));
 			$obj->save();
@@ -64,11 +64,19 @@ class Model_NoticeStatus extends \MyOrm\Model
 		return $obj;
 	}
 
-	public static function get4notice_id_and_member_id($notice_id, $member_id)
+	public static function get4member_id_and_notice_id($member_id, $notice_id)
 	{
 		return self::query()
-			->where('notice_id', $notice_id)
 			->where('member_id', $member_id)
+			->where('notice_id', $notice_id)
 			->get_one();
+	}
+
+	public static function get_unread_count4member_id($member_id)
+	{
+		return self::query()
+			->where('member_id', $member_id)
+			->where('is_read', 0)
+			->count();
 	}
 }

@@ -1,9 +1,10 @@
 <?php
 
-function icon($icon_term, $class_prefix = 'glyphicon glyphicon-', $tag = 'i')
+function icon($icon_term, $class_prefix = 'glyphicon glyphicon-', $tag = 'i', $attr = array())
 {
 	$icon_key = Config::get('icon.'.$icon_term, $icon_term);
-	$attr = array('class' => $class_prefix.$icon_key);
+	$attr['class'] = (!empty($attr['class'])) ? $attr['class'].' ' : '';
+	$attr['class'] .= $class_prefix.$icon_key;
 
 	return html_tag($tag, $attr, '');
 }

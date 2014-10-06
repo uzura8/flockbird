@@ -448,12 +448,12 @@ CREATE TABLE `notice` (
 
 CREATE TABLE `notice_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `notice_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
+  `notice_id` int(11) NOT NULL,
   `is_read` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `notice_id_member_id_UNIQUE_idx` (`notice_id`,`member_id`),
-  KEY `member_id_id_idx` (`member_id`,`id`),
+  UNIQUE KEY `member_id_notice_id_UNIQUE_idx` (`member_id`,`notice_id`),
+  KEY `member_id_is_read_id_idx` (`member_id`,`is_read`,`id`),
   CONSTRAINT `notice_status_notice_id_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notice` (`id`) ON DELETE CASCADE,
   CONSTRAINT `notice_status_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
