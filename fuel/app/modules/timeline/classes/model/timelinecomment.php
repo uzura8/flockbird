@@ -99,6 +99,28 @@ class Model_TimelineComment extends \MyOrm\Model
 
 	protected static $count_per_timeline = array();
 
+	public static function _init()
+	{
+		if (is_enabled('notice'))
+		{
+			static::$_observers['MyOrm\Observer_InsertNotice'] = array(
+				'events'   => array('after_insert'),
+				'update_properties' => array(
+					'foreign_table' => array('timeline' => 'value'),
+					'foreign_id' => array('timeline_id' => 'property'),
+					'type_key' => array('comment' => 'value'),
+					'member_id_from' => array('member_id' => 'property'),
+					'member_id_to' => array(
+						'related' => array(
+							'table' => 'timeline',
+							'property' => 'member_id',
+						),
+					),
+				),
+			);
+		}
+	}
+
 	public static function check_authority($id, $target_member_id = 0, $related_tables = null)
 	{
 		if (is_null($related_tables)) $related_tables = array('timeline');

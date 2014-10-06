@@ -279,14 +279,28 @@ class Site_Model
 
 	public static function get_value_for_observer_setting(\Orm\Model $obj, $value, $value_type)
 	{
-		switch ($value_type)
+		if (!is_array($value_type))
 		{
-			case 'value':
-				return $value;
-				break;
-			case 'property':
-				return $obj->{$value};
-				break;
+			switch ($value_type)
+			{
+				case 'value':
+					return $value;
+					break;
+				case 'property':
+					return $obj->{$value};
+					break;
+			}
+			throw new \FuelException('Orm observer setting error.');
+		}
+
+		if ($value == 'related')
+		{
+			if (empty($value_type['table']) || empty($value_type['property']) || empty($obj->{$value_type['table']}))
+			{
+				throw new \FuelException('Orm observer setting error.');
+			}
+
+			return $obj->{$value_type['table']}->{$value_type['property']};
 		}
 
 		throw new \FuelException('Orm observer setting error.');
@@ -303,25 +317,5 @@ class Site_Model
 			array($member_id_prop => $member_id),
 			array($parent_foreign_key, 'in', \Util_Orm::conv_col2array($parent_objs, 'id'))
 		));
-	}
-
-	public static function create_comment_with_relation($parent_table, $parent_id, $parent_member_id, $member_id, $body, $namespace = '', $member_id_name = 'member_id')
-	{
-		$parent_id_name = $parent_table.'_id';
-		$comment_table_name = $parent_table.'_comment';
-		$model_comment = self::get_model_name($comment_table_name, $namespace);
-		$obj_comment = $model_comment::forge(array(
-			'body' => $body,
-			$parent_id_name => $parent_id,
-			$member_id_name => $member_id,
-		));
-		$obj_comment->save();
-
-		if (is_enabled('notice') && $member_id != $parent_member_id)
-		{
-			\Notice\Site_Util::change_notice_status2unread($parent_table, $parent_id, $parent_member_id, $member_id, 'comment');
-		}
-
-		return $obj_comment;
 	}
 }
