@@ -470,13 +470,13 @@ CREATE TABLE `notice_member_from` (
 
 CREATE TABLE `member_watch_content` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
   `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
+  `member_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `member_id_foreign_table_foreign_id_UNIQUE_idx` (`member_id`,`foreign_table`,`foreign_id`),
+  UNIQUE KEY `foreign_table_foreign_id_member_id_UNIQUE_idx` (`foreign_table`,`foreign_id`,`member_id`),
   CONSTRAINT `member_watch_contents_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

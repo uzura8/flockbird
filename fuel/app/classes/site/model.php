@@ -318,4 +318,23 @@ class Site_Model
 			array($parent_foreign_key, 'in', \Util_Orm::conv_col2array($parent_objs, 'id'))
 		));
 	}
+
+	public static function get4relation($model_to, array $conditions, \Orm\Model $model_obj_from)
+	{
+		if (!class_exists($model_to))
+		{
+			throw new \FuelException('Class not found : '.$model_to);
+		}
+		$model_to = get_real_class($model_to);
+		$query = $model_to::query();
+		foreach ($conditions as $property_to => $froms)
+		{
+			foreach ($froms as $value_from => $type)
+			{
+				$query->where($property_to, \Site_Model::get_value_for_observer_setting($model_obj_from, $value_from, $type));
+			}
+		}
+
+		return $query->get();
+	}
 }

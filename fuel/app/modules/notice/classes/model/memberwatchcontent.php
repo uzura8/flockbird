@@ -55,12 +55,12 @@ class Model_MemberWatchContent extends \MyOrm\Model
 
 	public static function check_and_create($member_id, $foreign_table, $foreign_id)
 	{
-		if (!$obj = self::get4member_id_and_foreign_data($member_id, $foreign_table, $foreign_id))
+		if (!$obj = self::get_one4foreign_data_and_member_id($foreign_table, $foreign_id, $member_id))
 		{
 			$obj = self::forge(array(
-				'member_id' => $member_id,
 				'foreign_table' => $foreign_table,
 				'foreign_id' => $foreign_id,
+				'member_id' => $member_id,
 			));
 			$obj->save();
 		}
@@ -68,12 +68,20 @@ class Model_MemberWatchContent extends \MyOrm\Model
 		return $obj;
 	}
 
-	public static function get4member_id_and_foreign_data($member_id, $foreign_table, $foreign_id)
+	public static function get_one4foreign_data_and_member_id($foreign_table, $foreign_id, $member_id)
 	{
 		return self::query()
-			->where('member_id', $member_id)
 			->where('foreign_table', $foreign_table)
 			->where('foreign_id', $foreign_id)
+			->where('member_id', $member_id)
 			->get_one();
+	}
+
+	public static function get4foreign_data($foreign_table, $foreign_id)
+	{
+		return self::query()
+			->where('foreign_table', $foreign_table)
+			->where('foreign_id', $foreign_id)
+			->get();
 	}
 }

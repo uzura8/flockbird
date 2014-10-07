@@ -118,6 +118,15 @@ class Model_TimelineComment extends \MyOrm\Model
 					),
 				),
 			);
+			$type = \Notice\Site_Util::get_notice_type('comment');
+			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
+				'events' => array('before_delete'),
+				'conditions' => array(
+					'foreign_table' => array('timeline' => 'value'),
+					'foreign_id' => array('timeline_id' => 'property'),
+					'type' => array($type => 'value'),
+				),
+			);
 		}
 	}
 

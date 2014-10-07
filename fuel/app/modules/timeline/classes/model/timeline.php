@@ -219,6 +219,16 @@ class Model_Timeline extends \MyOrm\Model
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 
+		if (is_enabled('notice'))
+		{
+			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
+				'events' => array('before_delete'),
+				'conditions' => array(
+					'foreign_table' => array('timeline' => 'value'),
+					'foreign_id' => array('id' => 'property'),
+				),
+			);
+		}
 		if (\Config::get('timeline.articles.cache.is_use'))
 		{
 			// 更新・削除時に timeline の cache を削除
