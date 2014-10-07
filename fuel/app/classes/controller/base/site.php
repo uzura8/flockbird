@@ -125,7 +125,7 @@ class Controller_Base_Site extends Controller_Base
 
 	protected function set_notification_count()
 	{
-		if (is_enabled('notice'))
+		if (is_enabled('notice') && Auth::check())
 		{
 			$this->notification_counts['notice'] = \Notice\Site_Util::get_unread_count($this->u->id);
 		}
