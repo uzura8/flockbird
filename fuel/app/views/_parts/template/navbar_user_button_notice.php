@@ -9,10 +9,12 @@
 		<span class="badge">99</span>
 	</button>
 */ ?>
+<?php if (is_enabled('notice')): ?>
 	<button class="btn btn-default navbar-inverse<?php if (!empty($notification_counts['notice'])): ?> notified<?php endif; ?>" type="button">
 		<?php echo icon('info-circle', 'fa fa-', 'i', array('class' => 'icon')); ?>
-<?php if (!empty($notification_counts['notice'])): ?>
+<?php 	if (!empty($notification_counts['notice'])): ?>
 		<span class="badge"><?php echo $notification_counts['notice']; ?></span>
-<?php endif; ?>
+<?php 	endif; ?>
 	</button>
+<?php endif; ?>
 </div>
