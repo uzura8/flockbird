@@ -16,7 +16,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 		$name = self::get_name('viewType');
 		$value = self::get_value($member_id, $name, parent::get_default_value('timeline_viewType', 0));
 		$options = self::get_viewType_options();
-		$val->add($name, sprintf('%sの%s', term('myhome'), term('timeline', 'site.view')), array('type' => 'radio', 'options' => $options, 'value' => $value))
+		$val->add($name, sprintf('%sの%s', term('page.myhome'), term('timeline', 'site.display')), array('type' => 'radio', 'options' => $options, 'value' => $value))
 				->add_rule('valid_string', 'numeric', 'required')
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));

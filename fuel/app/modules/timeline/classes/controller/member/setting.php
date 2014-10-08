@@ -19,7 +19,7 @@ class Controller_Member_Setting extends \Controller_Site
 	 */
 	public function action_viewtype()
 	{
-		$page_name = term('timeline', 'site.view', 'site.setting');
+		$page_name = term('timeline', 'site.display', 'site.setting');
 		$val = \Form_MemberConfig::get_validation($this->u->id, 'viewtype', 'Timeline');
 		if (\Input::method() == 'POST')
 		{

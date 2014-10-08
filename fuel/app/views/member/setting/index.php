@@ -19,7 +19,7 @@
 <?php if (is_enabled('timeline')): ?>
 	<?php echo form_text(
 		\Timeline\Form_MemberConfig::get_viewType_options($u->timeline_viewType),
-		term('timeline', 'site.view', 'site.setting'),
+		term('timeline', 'site.display', 'site.setting'),
 		$label_col_size,
 		true,
 		array('uri' => 'member/setting/timeline/viewtype', 'text' => icon('edit').' '.term('form.edit'), 'is_safe_text' => true)
