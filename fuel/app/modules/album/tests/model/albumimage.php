@@ -235,6 +235,8 @@ class Test_Model_AlbumImage extends \TestCase
 		{
 			self::$album_image = $this->get_album_image(array('public_flag' => $default_public_flag), 2);
 		}
+		$timelines = \Timeline\Model_Timeline::get4foreign_table_and_foreign_ids('album', self::$album_image->album_id, \Config::get('timeline.types.album_image'));
+		$timeline_before = array_shift($timelines);
 
 		// timeline view cache 作成
 		if (self::$is_check_timeline_view_cache)
@@ -290,7 +292,7 @@ class Test_Model_AlbumImage extends \TestCase
 			// 変更なし
 			else
 			{
-				$this->assertEquals($before['updated_at'], $timeline->updated_at);
+				$this->assertEquals($timeline_before->updated_at, $timeline->updated_at);
 			}
 
 			// timeline view cache check
