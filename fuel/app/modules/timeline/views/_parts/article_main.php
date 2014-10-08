@@ -89,6 +89,7 @@ $data_like_link = array(
 	'count_attr' => array('class' => 'unset_like_count'),
 	'link_display_absolute' => true,
 	'left_margin' => true,
+	'attr_prefix' => 'timeline_',
 );
 if ($is_detail) $data_like_link['count'] = \Timeline\Model_TimelineLike::get_count4timeline_id($timeline->id);
 echo render('_parts/like/count_and_link_execute', $data_like_link);

@@ -1,17 +1,23 @@
 <?php
+if (!isset($attr_prefix)) $attr_prefix = '';
+
+$class_name_modal = $attr_prefix.'modal_like_count';
+$class_name = $attr_prefix.'link_like_count';
 $link_count_attr = array(
-	'class' => 'js-modal',
-	'id' => 'link_like_count_'.$id,
-	'data-target' => '#modal_like_count_'.$id,
+	'class' => 'js-modal '.$class_name,
+	'id' => $class_name.'_'.$id,
+	'data-target' => '#'.$class_name_modal.'_'.$id,
 	'data-uri' => $get_member_uri,
 );
 $modal_block_attrs = array(
-	'id' => 'modal_like_count_'.$id,
+	'id' => $class_name_modal.'_'.$id,
 );
 
+$class_name_count = $attr_prefix.'like_count';
+$id_name_count = $class_name_count.'_'.$id;
 $count_attr_default = array(
-	'class' => array('like_count'),
-	'id' => 'like_count_'.$id,
+	'class' => array($class_name_count),
+	'id' => $id_name_count,
 	'data-id' => $id,
 );
 if (!isset($count_attr)) $count_attr = array();
@@ -29,12 +35,13 @@ $count_attr = Util_Toolkit::convert_to_attr($count_attr, $count_attr_default);
 )); ?>
 
 <?php // execute like
+$class_name = $attr_prefix.'link_like';
 $link_attr_default = array(
-	'class' => array('js-like'),
-	'id' => 'link_like_'.$id,
+	'class' => array('js-like', $class_name),
+	'id' => $class_name.'_'.$id,
 	'data-id' => $id,
 	'data-uri' => $post_uri,
-	'data-count' => '#like_count_'.$id,
+	'data-count' => '#'.$id_name_count,
 );
 if (!isset($link_attr)) $link_attr = array();
 $link_attr = Util_Toolkit::convert_to_attr($link_attr, $link_attr_default);

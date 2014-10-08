@@ -31,7 +31,8 @@ function get_term(key) {
 		'timeline': '<?php echo term('timeline'); ?>',
 <?php endif; ?>
 		'public_flag': '<?php echo term('public_flag.label'); ?>',
-		'comment': '<?php echo term('form.comment'); ?>'
+		'comment': '<?php echo term('form.comment'); ?>',
+		'member': '<?php echo term('member.view'); ?>'
 	};
 	return terms[key];
 }

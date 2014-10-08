@@ -107,7 +107,7 @@ function loadTimeline() {
 
 function postLoadTimeline() {
 	removeCaretFromPublicFlagDropdown();
-	changeLikeStatus();
+	changeLikeView();
 	loadTlCommentAll();
 	showLinkCommentBlocks();
 	setCommentCount();
@@ -178,12 +178,24 @@ function setLikeCount() {
 	});
 }
 
+function changeLikeView() {
+	if (get_uid()) {
+		changeLikeStatus();
+	} else {
+		$('.timeline_link_like').each(function() {
+			var id = parseInt($(this).data('id'));
+			var targetSelector = '#timeline_link_like_' + id;
+			$(targetSelector).remove();
+		});
+	}
+}
+
 function changeLikeStatus() {
 	var likedTimelineObj = $('#liked_timeline_ids');
 	if (get_uid() && likedTimelineObj.size()) {
 		var timelineIds = $.parseJSON(likedTimelineObj.val());
 		$.each(timelineIds, function(i, id) {
-			$('#link_like_' + id).html(get_term('undo_like'));
+			$('#timeline_link_like_' + id).html(get_term('undo_like'));
 		});
 	}
 	if (likedTimelineObj.size()) likedTimelineObj.remove();

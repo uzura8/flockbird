@@ -32,7 +32,9 @@
 						</div>
 					</div>
 				</div>
+<?php 	if (Auth::check()): ?>
 				<small class="ml3"><a href="#" data-count="#like_count_{{{comment_table}}}_{{{id}}}" data-uri="{{{post_like_uri}}}" data-id="{{{id}}}" id="link_like_{{{id}}}" class="js-like">{{#if is_liked}}{{getTerm 'undo_like'}}{{else}}{{getTerm 'do_like'}}{{/if}}</a></small>
+<?php 	endif; ?>
 <?php endif; ?>
 			</div><!-- sub_info -->
 		</div>
