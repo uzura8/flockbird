@@ -443,7 +443,7 @@ CREATE TABLE `notice` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `foreign_table_foreign_id_type_cteated_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`)
+  KEY `foreign_table_foreign_id_type_idx` (`foreign_table`,`foreign_id`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `notice_status` (
@@ -451,9 +451,10 @@ CREATE TABLE `notice_status` (
   `member_id` int(11) NOT NULL,
   `notice_id` int(11) NOT NULL,
   `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `member_id_notice_id_UNIQUE_idx` (`member_id`,`notice_id`),
-  KEY `member_id_is_read_id_idx` (`member_id`,`is_read`,`id`),
+  UNIQUE KEY `notice_id_member_id_UNIQUE_idx` (`notice_id`,`member_id`),
+  KEY `member_id_is_read_sort_datetime_idx` (`member_id`,`is_read`,`sort_datetime`),
   CONSTRAINT `notice_status_notice_id_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notice` (`id`) ON DELETE CASCADE,
   CONSTRAINT `notice_status_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -462,6 +463,7 @@ CREATE TABLE `notice_member_from` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `notice_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `notice_id_member_id_UNIQUE_idx` (`notice_id`,`member_id`),
   CONSTRAINT `notice_member_from_notice_id_notice_id` FOREIGN KEY (`notice_id`) REFERENCES `notice` (`id`) ON DELETE CASCADE,

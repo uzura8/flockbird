@@ -36,11 +36,17 @@ class Model_NoticeStatus extends \MyOrm\Model
 			'default' => 0,
 			'form' => array('type' => false),
 		),
+		'sort_datetime' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
 		'Orm\Observer_Validation' => array(
 			'events' => array('before_save'),
+		),
+		'Orm\Observer_CreatedAt' => array(
+			'events' => array('before_insert'),
+			'property' => 'sort_datetime',
+			'mysql_timestamp' => true,
 		),
 	);
 

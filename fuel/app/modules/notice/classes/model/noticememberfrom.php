@@ -30,11 +30,29 @@ class Model_NoticeMemberFrom extends \MyOrm\Model
 			'validation' => array('required', 'valid_string' => array('numeric')),
 			'form' => array('type' => false),
 		),
+		'created_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
 		'Orm\Observer_Validation' => array(
 			'events' => array('before_save'),
+		),
+		'Orm\Observer_CreatedAt' => array(
+			'events' => array('before_insert'),
+			'mysql_timestamp' => true,
+		),
+		// insert 時に紐づく notice_status の sort_datetime を更新する
+		'MyOrm\Observer_UpdateRelationalTables' => array(
+			'events' => array('after_insert'),
+			'relations' => array(
+				'model_to' => '\Notice\Model_NoticeStatus',
+				'conditions' => array(
+					'notice_id' => array('notice_id' => 'property'),
+				),
+				'update_properties' => array(
+					'sort_datetime' => array('created_at' => 'property'),
+				),
+			),
 		),
 	);
 
