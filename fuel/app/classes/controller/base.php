@@ -21,18 +21,20 @@ class Controller_Base extends Controller_Hybrid
 		if (!defined('IS_API')) define('IS_API', Input::is_ajax());
 
 		$this->check_ssl_required_request_and_redirect();
-
 		$this->auth_instance = Auth::forge($this->auth_driver);
 		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
-		$this->check_auth_and_redirect();
+		$this->check_auth_and_response();
 		$this->set_current_user();
+		$this->set_template_default_data();
+	}
 
-		if (!IS_API)
-		{
-			$this->set_title_and_breadcrumbs(PRJ_SITE_NAME);
-			$this->template->header_keywords = '';
-			$this->template->header_description = '';
-		}
+	protected function set_template_default_data()
+	{
+		if (IS_API) return;
+
+		$this->set_title_and_breadcrumbs(PRJ_SITE_NAME);
+		$this->template->header_keywords = '';
+		$this->template->header_description = '';
 	}
 
 	protected function check_ssl_required_request_and_redirect()
@@ -79,6 +81,32 @@ class Controller_Base extends Controller_Hybrid
 		return \Auth::has_access(sprintf('%s.%s', \Site_Util::get_action_path(), \Input::method()));
 	}
 
+	protected function check_auth_and_response()
+	{
+		$status_code = null;
+		try
+		{
+			$this->check_auth_and_redirect();
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\ApiNotAuthorizedException $e)
+		{
+			$status_code = 401;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 400;
+		}
+		if ($status_code)
+		{
+			$response = new Response(null, $status_code);
+			$response->send();
+		}
+	}
+
 	protected function set_current_user()
 	{
 		$this->u = null;
@@ -95,6 +123,7 @@ class Controller_Base extends Controller_Hybrid
 		if ($is_check_not_auth_action && $this->check_not_auth_action()) return;
 		if (IS_AUTH) return;
 
+		if (IS_API) throw new ApiNotAuthorizedException;
 		if (!$this->acl_has_access) throw new HttpForbiddenException;
 
 		Session::set_flash('destination', urlencode(Uri::string_with_query()));
