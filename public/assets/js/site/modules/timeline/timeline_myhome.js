@@ -2,13 +2,7 @@ $(function() {
 	$('textarea.input_timeline').css('height', '50px');
 	$('#form_public_flag').val($('#public_flag_selector').data('public_flag'));
 
-	var getData = {'mytimeline': 1};
-	var max_id = url('?max_id');
-	if (max_id) {
-		getData['max_id'] = max_id;
-		getData['before_link'] = 1;
-	}
-	loadTimeline(getData);
+	loadTimelineDefault();
 
 	$(document).on('click','.display_upload_form', function(){
 		$('.upload').removeClass('hidden');
@@ -129,7 +123,7 @@ $(function() {
 		});
 
 		$('#article_list').empty();
-		load_default_timeline(true);
+		loadTimelineDefault();
 
 		return false;
 	});
@@ -143,4 +137,14 @@ function resetInputs() {
 	$('#progress_img .progress-bar').css('width', 0);
 	$('#album_id').html('<option selected="selected" value="0">' + get_term('timeline') + '用' + get_term('album') + '</option>');
 	scroll(is_sp() ? '#main_post_box' : 0, 'swing');
+}
+
+function loadTimelineDefault() {
+	var getData = {'mytimeline': 1};
+	var max_id = url('?max_id');
+	if (max_id) {
+		getData['max_id'] = max_id;
+		getData['before_link'] = 1;
+	}
+	loadTimeline(getData);
 }

@@ -298,7 +298,7 @@ class Controller_Base extends Controller_Hybrid
 			Util_security::check_csrf();
 
 			$id = (int)Input::post('id');
-			$file_tmp = Model_FileTmp::check_authority($id, $this->u->id, null, IS_ADMIN ? 1 : 0);
+			$file_tmp = Model_FileTmp::check_authority($id, $this->u->id, null, 'member_id', IS_ADMIN ? 1 : 0);
 
 			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN, true, null, 0, true, $upload_type);
 			$uploadhandler = new MyUploadHandler($options, false);
