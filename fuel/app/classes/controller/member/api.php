@@ -27,7 +27,7 @@ class Controller_Member_Api extends Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$member_id = (int)\Input::post('id');
-			$member = Model_Member::check_authority($member_id, $this->u->id);
+			$member = \Model_Member::check_authority($member_id, $this->u->id, null, 'id');
 			if (!$member_config = Model_MemberConfig::get_from_member_id_and_name($member_id, $name))
 			{
 				$member_config = Model_MemberConfig::forge();

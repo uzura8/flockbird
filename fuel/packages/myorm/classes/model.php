@@ -3,7 +3,7 @@ namespace MyOrm;
 
 class Model extends \Orm\Model
 {
-	public static function check_authority($id, $target_member_id = 0, $related_tables = array())
+	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')
 	{
 		if (!$id) throw new \HttpNotFoundException;
 
@@ -11,7 +11,7 @@ class Model extends \Orm\Model
 		if ($related_tables && !is_array($related_tables)) $related_tables = (array)$related_tables;
 		if ($related_tables) $params['related'] = $related_tables;
 		if (!$obj = self::find($id, $params)) throw new \HttpNotFoundException;
-		if ($target_member_id && $obj->member_id != $target_member_id) throw new \HttpForbiddenException;
+		if ($target_member_id && $obj->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
 
 		return $obj;
 	}

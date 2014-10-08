@@ -187,7 +187,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		}
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $related_tables = null)
+	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id')
 	{
 		if (is_null($related_tables)) $related_tables = array('album', 'file');
 
@@ -196,7 +196,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		$params = array('rows_limit' => 1);
 		if ($related_tables) $params['related'] = $related_tables;
 		if (!$obj = self::find($id, $params)) throw new \HttpNotFoundException;
-		if ($target_member_id && $target_member_id != $obj->album->member_id) throw new \HttpForbiddenException;
+		if ($target_member_id && $target_member_id != $obj->album->{$member_id_prop}) throw new \HttpForbiddenException;
 
 		return $obj;
 	}

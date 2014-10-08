@@ -130,7 +130,7 @@ class Model_TimelineComment extends \MyOrm\Model
 		}
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $related_tables = null)
+	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id')
 	{
 		if (is_null($related_tables)) $related_tables = array('timeline');
 
@@ -140,7 +140,7 @@ class Model_TimelineComment extends \MyOrm\Model
 		if ($related_tables) $params['related'] = $related_tables;
 		if (!$obj = self::find($id, $params)) throw new \HttpNotFoundException;
 
-		$accept_member_ids = array($obj->member_id, $obj->timeline->member_id);
+		$accept_member_ids = array($obj->{$member_id_prop}, $obj->timeline->{$member_id_prop});
 		if ($target_member_id && !in_array($target_member_id, $accept_member_ids))
 		{
 			throw new \HttpForbiddenException;
