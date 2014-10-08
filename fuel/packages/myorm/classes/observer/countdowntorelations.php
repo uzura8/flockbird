@@ -37,21 +37,7 @@ class Observer_CountDownToRelations extends \Orm\Observer
 
 	private function execute($obj)
 	{
-		if (!class_exists($this->_model_to))
-		{
-			throw new \FuelException('Class not found : '.$this->_model_to);
-		}
-		$model_to = get_real_class($this->_model_to);
-		$query = $model_to::query();
-		foreach ($this->_conditions as $property_to => $froms)
-		{
-			foreach ($froms as $value_from => $type)
-			{
-				$value = \Site_Model::get_value_for_observer_setting($obj, $value_from, $type);
-				$query = $query->where($property_to, $value);
-			}
-		}
-		$models = $query->get();
+		$models = \Site_Model::get4relation($this->_model_to, $this->_conditions, $obj);
 		foreach ($models as $model)
 		{
 			//$expr = \DB::expr(sprintf('CASE WHEN `%s` -1 < 0 THEN 0 ELSE `%s` - 1 END', $this->_update_property, $this->_update_property));
