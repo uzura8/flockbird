@@ -35,7 +35,8 @@ class Form_MemberConfig
 	{
 		$parts = explode('_', $prefix);
 		$class = self::get_class_name((count($parts) > 1) ? array_shift($parts) : '', $namespace);
-		$method = 'get_validation_'.implode('_', $parts);
+		$method = 'get_validation';
+		if ($parts) $method .= '_'.implode('_', $parts);
 
 		return $class::$method($member_id);
 	}
