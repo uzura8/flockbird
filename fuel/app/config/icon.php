@@ -50,6 +50,12 @@ $config = array(
 		'like' => 'thumbs-up',
 		'do_like' => 'thumbs-up',
 		'undo_like' => 'thumbs-up',
+		//'recieve' => '受け取る',
+		//'unrecieve' => '受け取らない',
+		//'post' => '投稿',
+		//'do_post' => '投稿する',
+		'save' => 'save',
+		'do_save' => 'save',
 	),
 	'site' => array(
 		//'view' => 'サイト',

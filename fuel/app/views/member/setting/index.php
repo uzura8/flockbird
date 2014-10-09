@@ -5,7 +5,7 @@
 		term('site.email'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/email', 'text' => icon('edit').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/email', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
 	); ?>
 
 	<?php echo form_text(
@@ -13,8 +13,18 @@
 		term('site.password'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/password', 'text' => icon('edit').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/password', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
 	); ?>
+
+<?php if (is_enabled('notice')): ?>
+	<?php echo form_text(
+		sprintf('<span class="text-muted">%sを%sを%sします</span>', term('notice'), term('form.recieve', 'site.item'), term('site.setting')),
+		term('notice', 'site.setting'),
+		$label_col_size,
+		true,
+		array('uri' => 'member/setting/notice', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+	); ?>
+<?php endif; ?>
 
 <?php if (is_enabled('timeline')): ?>
 	<?php echo form_text(
@@ -22,7 +32,7 @@
 		term('timeline', 'site.display', 'site.setting'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/timeline/viewtype', 'text' => icon('edit').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/timeline/viewtype', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
 	); ?>
 <?php endif; ?>
 

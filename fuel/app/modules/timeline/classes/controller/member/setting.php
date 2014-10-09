@@ -43,6 +43,6 @@ class Controller_Member_Setting extends \Controller_Site
 			}
 		}
 		$this->set_title_and_breadcrumbs($page_name, array('member/setting' => term('site.setting', 'form.update')), $this->u);
-		$this->template->content = \View::forge('member/setting/timeline_viewtype', array('val' => $val));
+		$this->template->content = \View::forge('member/setting/_parts/form', array('val' => $val));
 	}
 }

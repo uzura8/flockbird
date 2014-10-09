@@ -54,6 +54,8 @@ $config = array(
 		'unrecieve' => '受け取らない',
 		'post' => '投稿',
 		'do_post' => '投稿する',
+		'save' => '保存',
+		'do_save' => '保存する',
 	),
 	'site' => array(
 		'view' => 'サイト',
