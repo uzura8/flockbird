@@ -52,4 +52,12 @@ class Site_Member
 
 		return 'member';
 	}
+
+	public static function get_config($member_id, $name)
+	{
+		$value = Model_MemberConfig::get_value($member_id, $name);
+		if (!is_null($value)) return $value;
+
+		return conf('member_config_default.'.$name);
+	}
 }
