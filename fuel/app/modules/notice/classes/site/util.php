@@ -29,13 +29,38 @@ class Site_Util
 	public static function change_notice_status2unread($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key)
 	{
 		if ($member_id_from == $member_id_to) return;
-		if (!\Site_Member::get_config($member_id_to, 'notice_'.$type_key)) return;
+		if (\Site_Member::get_config($member_id_to, 'notice_'.$type_key))
+		{
+			$obj_notice = \Notice\Model_Notice::check_and_create($foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type($type_key));
+			\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id_from);
+			\Notice\Model_NoticeStatus::change_status2unread($member_id_to, $obj_notice->id);
+			if (\Config::get('notice.cache.unreadCount.isEnabled')) \Notice\Site_Util::delete_unread_count_cache($member_id_to);
+		}
+		if (self::check_is_watch_target_content4type_key($member_id_from, $type_key))
+		{
+			\Notice\Model_MemberWatchContent::check_and_create($member_id_from, $foreign_table, $foreign_id);
+		}
+	}
 
-		$obj_notice = \Notice\Model_Notice::check_and_create($foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type($type_key));
-		\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id_from);
-		\Notice\Model_NoticeStatus::change_status2unread($member_id_to, $obj_notice->id);
-		\Notice\Model_MemberWatchContent::check_and_create($member_id_from, $foreign_table, $foreign_id);
-		if (\Config::get('notice.cache.unreadCount.isEnabled')) \Notice\Site_Util::delete_unread_count_cache($member_id_to);
+	public static function check_is_watch_target_content4type_key($member_id, $type_key)
+	{
+		return (bool)\Site_Member::get_config($member_id, self::get_member_config_name_for_watch_content($type_key));
+	}
+
+	public static function get_member_config_name_for_watch_content($type_key)
+	{
+		$prefix = 'notice_isWatchContent';
+		switch ($type_key)
+		{
+			case 'comment':
+				return $prefix.'Commented';
+				break;
+			case 'like':
+				return $prefix.'Liked';
+				break;
+		}
+
+		throw new \InvalidArgumentException('Parameter is invalid.');
 	}
 
 	public static function change_status2read($member_id, $foreign_table, $foreign_id, $type_key)
