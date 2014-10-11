@@ -54,7 +54,7 @@ class Form_MemberConfig
 		$field_names = Form_Util::get_field_names($val);
 		foreach ($field_names as $name)
 		{
-			$member_config = Model_MemberConfig::get_from_member_id_and_name($member_id, $name);
+			$member_config = Model_MemberConfig::get_one4member_id_and_name($member_id, $name);
 			if ($member_config && $member_config->value == $posted_values[$name]) continue;
 			if (!$member_config) $member_config = Model_MemberConfig::forge();
 

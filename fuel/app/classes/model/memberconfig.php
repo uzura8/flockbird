@@ -45,14 +45,14 @@ class Model_MemberConfig extends \Orm\Model
 		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
 	}
 
-	public static function get_from_member_id_and_name($member_id, $name)
+	public static function get_one4member_id_and_name($member_id, $name)
 	{
 		return self::query()->where('member_id', $member_id)->where('name', $name)->get_one();
 	}
 
 	public static function get_value($member_id, $name)
 	{
-		$obj = self::get_from_member_id_and_name($member_id, $name);
+		$obj = self::get_one4member_id_and_name($member_id, $name);
 		if (!$obj) return null;
 
 		return $obj->value;
