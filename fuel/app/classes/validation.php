@@ -171,7 +171,7 @@ class Validation extends Fuel\Core\Validation
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;
 
-		return Util_Date::check_is_futer($val, $base, $max ?: conf('posted_value_rule_default.time.default.max'));
+		return Util_Date::check_is_future($val, $base, $max ?: conf('posted_value_rule_default.time.default.max'));
 	}
 
 	public static function _validation_unique($val, $options, array $additional_conds_list = array())
