@@ -28,13 +28,14 @@ class Site_Util
 
 	public static function change_notice_status2unread($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key)
 	{
+		if ($member_id_from == $member_id_to) return;
 		if (!\Site_Member::get_config($member_id_to, 'notice_'.$type_key)) return;
 
 		$obj_notice = \Notice\Model_Notice::check_and_create($foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type($type_key));
 		\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id_from);
 		\Notice\Model_NoticeStatus::change_status2unread($member_id_to, $obj_notice->id);
 		\Notice\Model_MemberWatchContent::check_and_create($member_id_from, $foreign_table, $foreign_id);
-		\Notice\Site_Util::delete_unread_count_cache($member_id_to);
+		if (\Config::get('notice.cache.unreadCount.isEnabled')) \Notice\Site_Util::delete_unread_count_cache($member_id_to);
 	}
 
 	public static function change_status2read($member_id, $foreign_table, $foreign_id, $type_key)

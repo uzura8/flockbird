@@ -34,8 +34,6 @@ class Observer_InsertNotice extends \Orm\Observer
 				}
 			}
 		}
-		if ($member_id_from == $member_id_to) return;
-
 		\Notice\Site_Util::change_notice_status2unread($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key);
 	}
 
