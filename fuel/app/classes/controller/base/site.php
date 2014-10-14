@@ -134,9 +134,9 @@ class Controller_Base_Site extends Controller_Base
 
 	protected function change_notice_status2read($member_id, $foreign_table, $foreign_id, $type_key)
 	{
-		$read_count = \Notice\Site_Util::change_status2read($member_id, $foreign_table, $foreign_id, $type_key);
-		$this->notification_counts['notice'] -= $read_count;
-		if ($this->notification_counts['notice'] < 0) $this->notification_counts['notice'] = 0;
-		View::set_global('notification_counts', $this->notification_counts);
+		if ($read_count = \Notice\Site_Util::change_status2read($member_id, $foreign_table, $foreign_id, $type_key))
+		{
+			$this->set_notification_count();
+		}
 	}
 }
