@@ -144,7 +144,7 @@ class Test_Model_TimelineComment extends \TestCase
 		}
 
 		// 事前準備
-		\Model_MemberConfig::set_value($member_id_to, 'notice_comment', $mc_notice_comment);
+		\Model_MemberConfig::set_value($member_id_to, \Notice\Form_MemberConfig::get_name(self::$type_key), $mc_notice_comment);
 		$is_new_timeline = false;
 		if ($member_id_to != self::$member_id)
 		{
@@ -310,6 +310,76 @@ class Test_Model_TimelineComment extends \TestCase
 		$data[] = array(7, 7, 1, 0, 7, false, false, false);// #11: 自分が自分に -> 自分が追加コメント
 
 		return $data;
+	}
+
+	public function test_delete_notice()
+	{
+		// 事前準備
+		\Model_MemberConfig::set_value(2, \Notice\Form_MemberConfig::get_name(self::$type_key), 1);
+		\Model_MemberConfig::set_value(2, \Notice\Site_Util::get_member_config_name_for_watch_content(self::$type_key), 1);
+		\Model_MemberConfig::set_value(3, \Notice\Form_MemberConfig::get_name(self::$type_key), 1);
+		\Model_MemberConfig::set_value(3, \Notice\Site_Util::get_member_config_name_for_watch_content(self::$type_key), 1);
+		self::$member_id = 1;
+		self::set_timeline();
+		$timeline_id = self::$timeline_id;
+		$foreign_id = self::$timeline_id;
+		$notice_count_all_before = \Util_Orm::get_count_all('\Notice\Model_Notice');
+		$notice_status_count_all_before = \Util_Orm::get_count_all('\Notice\Model_NoticeStatus');
+		$notice_member_from_count_all_before = \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom');
+		$member_watch_content_count_all_before = \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent');
+
+		// 他人がコメント
+		$timeline_comment = self::save_comment(2, 'Test comment1.');
+		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$timeline_id, \Notice\Site_Util::get_notice_type(self::$type_key));
+		$this->assertNotNull($notice);
+
+		// 件数確認
+		$this->assertEquals($notice_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_Notice'));
+		$this->assertEquals($notice_status_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_NoticeStatus'));
+		$this->assertEquals($notice_member_from_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom'));
+		$this->assertEquals($member_watch_content_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent'));
+
+		// 関連テーブルのレコードが作成されていることを確認
+		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
+		$this->assertNotNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 2));
+		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, self::$timeline_id, 2));
+		$this->assertNotNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$timeline_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+
+		// コメントを削除
+		$timeline_comment->delete();
+
+		// 件数確認
+		$this->assertEquals($notice_count_all_before, \Util_Orm::get_count_all('\Notice\Model_Notice'));
+		$this->assertEquals($notice_status_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeStatus'));
+		$this->assertEquals($notice_member_from_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom'));
+		$this->assertEquals($member_watch_content_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent'));// watch は解除されない
+
+		// 関連テーブルのレコードが削除されていることを確認
+		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
+		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 2));
+		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, self::$timeline_id, 2));// watch は解除されない
+		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$timeline_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+
+		// 他人がコメント
+		$timeline_comment = self::save_comment(3, 'Test comment1.');
+		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$timeline_id, \Notice\Site_Util::get_notice_type(self::$type_key));
+		$this->assertNotNull($notice);
+
+		// timeline 削除
+		$timeline = Model_Timeline::find($timeline_id);
+		$timeline->delete();
+
+		// 件数確認
+		$this->assertEquals($notice_count_all_before, \Util_Orm::get_count_all('\Notice\Model_Notice'));
+		$this->assertEquals($notice_status_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeStatus'));
+		$this->assertEquals($notice_member_from_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom'));
+		$this->assertEquals($member_watch_content_count_all_before, \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent'));
+
+		// 関連テーブルのレコードが削除されていることを確認
+		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
+		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 3));
+		$this->assertNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, self::$timeline_id, 3));
+		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$timeline_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 	}
 
 	private static function save_comment($member_id, $body = null)
