@@ -144,7 +144,7 @@ class Test_Model_TimelineComment extends \TestCase
 		}
 
 		// 事前準備
-		self::set_member_config_notice_comment($member_id_to, $mc_notice_comment);
+		\Model_MemberConfig::set_value($member_id_to, 'notice_comment', $mc_notice_comment);
 		$is_new_timeline = false;
 		if ($member_id_to != self::$member_id)
 		{
@@ -154,7 +154,7 @@ class Test_Model_TimelineComment extends \TestCase
 		}
 		$timeline_id = self::$timeline_id;
 		$foreign_id = self::$timeline_id;
-		if ($is_test_after_read) $read_count = \Notice\Site_Util::change_status2read($member_id_to, 'timeline', $timeline_id, 'comment');
+		if ($is_test_after_read) $read_count = \Notice\Site_Util::change_status2read($member_id_to, self::$foreign_table, $timeline_id, self::$type_key);
 		$countup_num = $is_countup_exp ? 1 : 0;
 		$notice_count_all_before = \Util_Orm::get_count_all('\Notice\Model_Notice');
 
@@ -227,10 +227,95 @@ class Test_Model_TimelineComment extends \TestCase
 		return $data;
 	}
 
+	/**
+	* @dataProvider comment_watch_provider
+	*/
+	public function test_comment_watch($member_id_to, $member_id_from, $mc_notice_comment, $mc_watch_commented, $member_id_add_comment, $is_countup_watch_exp, $is_created_watch_exp, $is_countup_exp)
+	{
+		if (!is_enabled('notice'))
+		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
+			$this->markTestSkipped('notice module is disabled.');
+		}
+
+		// 事前準備
+		\Model_MemberConfig::set_value($member_id_from, \Notice\Form_MemberConfig::get_name(self::$type_key), $mc_notice_comment);
+		\Model_MemberConfig::set_value($member_id_from, \Notice\Site_Util::get_member_config_name_for_watch_content(self::$type_key), $mc_watch_commented);
+		$is_new_timeline = false;
+		if ($member_id_to != self::$member_id)
+		{
+			self::$member_id = $member_id_to;
+			self::set_timeline();
+			$is_new_timeline = true;
+		}
+		$timeline_id = self::$timeline_id;
+		$foreign_id = self::$timeline_id;
+		$watch_count_all_before = \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent');
+		// 既読処理
+		$read_count = \Notice\Site_Util::change_status2read($member_id_from, self::$foreign_table, $timeline_id, self::$type_key);
+
+		// timeline_comment save
+		$timeline_comment = self::save_comment($member_id_from);
+		self::$commented_member_id_before = $member_id_from;
+
+		// Model_Notice
+		$member_watch_content = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $foreign_id, $member_id_from);
+		if ($is_created_watch_exp)
+		{
+			$this->assertNotNull($member_watch_content);
+		}
+		else
+		{
+			$this->assertNull($member_watch_content);
+		}
+		// 件数
+		$watch_count_all = \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent');
+		$watch_count_all_countup_num = $is_countup_watch_exp ? 1 : 0;
+		$this->assertEquals($watch_count_all_before + $watch_count_all_countup_num, $watch_count_all);
+
+
+		// set cache
+		$notice_count_before = \Notice\Site_Util::get_unread_count($member_id_from);
+
+		// timeline_comment save
+		$timeline_comment_added = self::save_comment($member_id_add_comment);
+
+		// notice count を取得
+		$notice_count = \Notice\Site_Util::get_unread_count($member_id_from);
+
+		// execute test
+		$countup_num = $is_countup_exp ? 1 : 0;
+		$this->assertEquals($notice_count_before + $countup_num, $notice_count);// count up を確認
+	}
+
+	public function comment_watch_provider()
+	{
+		$data = array();
+
+		//($member_id_to, $member_id_from, $mc_notice_comment, $mc_watch_commented, $member_id_add_comment, $is_countup_watch_exp, $is_created_watch_exp, $is_countup_exp)
+		// 自分がコメントした投稿をウォッチする
+		$data[] = array(6, 4, 1, 1, 4,  true,  true, false);// #0: 他人が自分に -> 自分が追加コメント
+		$data[] = array(6, 4, 1, 1, 5, false,  true,  true);// #1: 他人が自分に -> 他人が追加コメント
+		$data[] = array(6, 6, 1, 1, 5, false, false,  true);// #2: 自分が自分に -> 他人が追加コメント
+		$data[] = array(6, 6, 1, 1, 6, false, false, false);// #3: 自分が自分に -> 自分が追加コメント
+		// 自分がコメントした投稿をウォッチする(設定が NULL)
+		$data[] = array(6, 8, 1, null, 8,  true,  true, false);// #4: 他人が自分に -> 自分が追加コメント
+		$data[] = array(6, 8, 1, null, 9, false,  true,  true);// #5: 他人が自分に -> 他人が追加コメント
+		$data[] = array(6, 6, 1, null, 9, false, false,  true);// #6: 自分が自分に -> 他人が追加コメント
+		$data[] = array(6, 6, 1, null, 6, false, false, false);// #7: 自分が自分に -> 自分が追加コメント
+		//// 自分がコメントした投稿をウォッチしない
+		$data[] = array(7, 4, 1, 0, 4, false, false, false);// #8:  他人が自分に -> 自分が追加コメント
+		$data[] = array(7, 4, 1, 0, 5, false, false, false);// #9:  他人が自分に -> 他人が追加コメント
+		$data[] = array(7, 7, 1, 0, 5, false, false,  true);// #10: 自分が自分に -> 他人が追加コメント
+		$data[] = array(7, 7, 1, 0, 7, false, false, false);// #11: 自分が自分に -> 自分が追加コメント
+
+		return $data;
+	}
+
 	private static function save_comment($member_id, $body = null)
 	{
 		if (is_null($body)) $body = 'This is test comment.';
-		$comment = new Model_TimelineComment(array(
+		$comment = Model_TimelineComment::forge(array(
 			'body' => $body,
 			'timeline_id' => self::$timeline_id,
 			'member_id' => $member_id,
@@ -244,32 +329,6 @@ class Test_Model_TimelineComment extends \TestCase
 	{
 		$timeline = Site_Model::save_timeline(self::$member_id, PRJ_PUBLIC_FLAG_ALL, 'normal', null, null, 'This is test.');
 		self::$timeline_id = $timeline->id;
-	}
-
-	private static function set_member_config_notice_comment($member_id, $value)
-	{
-		$name = 'notice_comment';
-		if ($member_config = \Model_MemberConfig::get_one4member_id_and_name($member_id, $name))
-		{
-			if (is_null($value))
-			{
-				$member_config->delete();
-				return;
-			}
-
-			$member_config->value = $value;
-			$member_config->save();
-			return;
-		}
-
-		if (is_null($value)) return;
-
-		$member_config = \Model_MemberConfig::forge(array(
-			'member_id' => $member_id,
-			'name' => $name,
-			'value' => $value,
-		));
-		$member_config->save();
 	}
 
 	private static function check_no_cache($member_id)

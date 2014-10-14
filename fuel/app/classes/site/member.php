@@ -58,6 +58,52 @@ class Site_Member
 		$value = Model_MemberConfig::get_value($member_id, $name);
 		if (!is_null($value)) return $value;
 
+		return self::get_config_default($name);
+	}
+
+	public static function get_config_default($name)
+	{
 		return conf('member_config_default.'.$name);
+	}
+
+	public static function get_config_array($member_id, $names = null)
+	{
+		$member_configs = Util_Orm::conv_cols2assoc(Model_MemberConfig::get4member_id($member_id, $names), 'name', 'value');
+		foreach ($names as $name)
+		{
+			if (isset($member_configs[$name])) continue;
+
+			$value = self::get_config_default($name);
+			if (is_null($value)) continue;
+
+			$member_configs[$name] = $value;
+		}
+
+		return $member_configs;
+	}
+
+	public static function get_member_ids4config_value($config_name, $config_value, $target_member_ids = array(), $is_fill_default_value = true)
+	{
+		if (!is_array($target_member_ids)) $target_member_ids = (array)$target_member_ids;
+
+		$member_configs = Util_Orm::conv_cols2assoc(Model_MemberConfig::get4name_and_member_ids($config_name, $target_member_ids), 'member_id', 'value');
+		$return_member_ids = array();
+		foreach ($target_member_ids as $member_id)
+		{
+			if (isset($member_configs[$member_id]))
+			{
+				$value = $member_configs[$member_id];
+			}
+			else
+			{
+				if (!$is_fill_default_value) continue;
+				$value = self::get_config_default($config_name);
+			}
+			if ($value != $config_value) continue;
+
+			$return_member_ids[] = $member_id;
+		}
+
+		return $return_member_ids;
 	}
 }

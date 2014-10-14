@@ -26,20 +26,29 @@ class Site_Util
 		return '';
 	}
 
-	public static function change_notice_status2unread($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key)
+	public static function get_notice_target_member_ids($member_id_to, $member_id_from, $foreign_table, $foreign_id, $type_key)
 	{
-		if ($member_id_from == $member_id_to) return;
-		if (\Site_Member::get_config($member_id_to, 'notice_'.$type_key))
-		{
-			$obj_notice = \Notice\Model_Notice::check_and_create($foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type($type_key));
-			\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id_from);
-			\Notice\Model_NoticeStatus::change_status2unread($member_id_to, $obj_notice->id);
-			if (\Config::get('notice.cache.unreadCount.isEnabled')) \Notice\Site_Util::delete_unread_count_cache($member_id_to);
-		}
-		if (self::check_is_watch_target_content4type_key($member_id_from, $type_key))
-		{
-			\Notice\Model_MemberWatchContent::check_and_create($member_id_from, $foreign_table, $foreign_id);
-		}
+		$notice_member_ids = \Util_Orm::conv_col2array(\Notice\Model_MemberWatchContent::get4foreign_data($foreign_table, $foreign_id), 'member_id');
+		if (!in_array($member_id_to, $notice_member_ids)) $notice_member_ids[] = $member_id_to;
+		$notice_member_ids = \Util_Array::unset_item($member_id_from, $notice_member_ids);
+		$config_key = \Notice\Form_MemberConfig::get_name($type_key);
+
+		return \Site_Member::get_member_ids4config_value($config_key, 1, $notice_member_ids);
+	}
+
+	public static function update_notice_status2unread($member_id_to, $notice_id)
+	{
+		$obj_notice_status = \Notice\Model_NoticeStatus::change_status2unread($member_id_to, $notice_id);
+		if (\Config::get('notice.cache.unreadCount.isEnabled')) \Notice\Site_Util::delete_unread_count_cache($member_id_to);
+
+		return $obj_notice_status;
+	}
+
+	public static function regiser_watch_content($member_id, $foreign_table, $foreign_id, $type_key)
+	{
+		if (!self::check_is_watch_target_content4type_key($member_id, $type_key)) return;
+
+		return \Notice\Model_MemberWatchContent::check_and_create($member_id, $foreign_table, $foreign_id);
 	}
 
 	public static function check_is_watch_target_content4type_key($member_id, $type_key)

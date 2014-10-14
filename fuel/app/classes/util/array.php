@@ -129,4 +129,12 @@ class Util_Array
 
 		return array_pop($array);
 	}
+
+	public static function unset_item($target_value, array $array)
+	{
+		$target_key = array_search($target_value, $array);
+		if (!is_null($target_key)) unset($array[$target_key]);
+
+		 return $array;
+	}
 }

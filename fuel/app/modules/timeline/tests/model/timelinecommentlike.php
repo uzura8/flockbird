@@ -127,7 +127,7 @@ class Test_Model_TimelineCommentLike extends \TestCase
 
 	public static function save_timeline_comment($timeline_id, $member_id)
 	{
-		$comment = new Model_TimelineComment(array(
+		$comment = Model_TimelineComment::forge(array(
 			'body' => 'Test for timeline_comment_like.',
 			'timeline_id' => $timeline_id,
 			'member_id' => $member_id,

@@ -3,7 +3,7 @@ namespace Notice;
 
 class Form_MemberConfig extends \Form_MemberConfig
 {
-	private static function get_name($item)
+	public static function get_name($item)
 	{
 		return sprintf('notice_%s', $item);
 	}
@@ -30,7 +30,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
 
-		$name = self::get_name('isWatchContentCommented');
+		$name = Site_Util::get_member_config_name_for_watch_content('comment');
 		$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
 		$label = sprintf('自分が%sした%s', term('form.comment'), term('form.post'));
 		$options = self::get_options_watch();
@@ -39,7 +39,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
 
-		$name = self::get_name('isWatchContentLiked');
+		$name = Site_Util::get_member_config_name_for_watch_content('like');
 		$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
 		$label = sprintf('自分が%sした%s', term('form.like'), term('form.post'));
 		$options = self::get_options_watch();

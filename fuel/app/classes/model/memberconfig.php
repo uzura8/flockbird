@@ -50,11 +50,59 @@ class Model_MemberConfig extends \Orm\Model
 		return self::query()->where('member_id', $member_id)->where('name', $name)->get_one();
 	}
 
+	public static function get4member_id($member_id, array $names = null)
+	{
+		$query = self::query()->where('member_id', $member_id);
+		if ($names) $query->where('name', 'in', $names);
+
+		return $query->get();
+	}
+
+	public static function get4name_and_member_ids($name, array $member_ids)
+	{
+		if (!$member_ids) return array();
+
+		return self::query()
+			->where('name', $name)
+			->where('member_id', 'in', $member_ids)
+			->get();
+	}
+
 	public static function get_value($member_id, $name)
 	{
 		$obj = self::get_one4member_id_and_name($member_id, $name);
 		if (!$obj) return null;
 
 		return $obj->value;
+	}
+
+	public static function set_value($member_id, $name, $value)
+	{
+		if ($obj = self::get_one4member_id_and_name($member_id, $name))
+		{
+			if ($value === $obj->value) return $obj;
+
+			if (is_null($value))
+			{
+				$obj->delete();
+				return null;
+			}
+
+			$obj->value = $value;
+			$obj->save();
+
+			return $obj;
+		}
+
+		if (is_null($value)) return null;
+
+		$obj = self::forge(array(
+			'member_id' => $member_id,
+			'name' => $name,
+			'value' => $value,
+		));
+		$obj->save();
+
+		return $obj;
 	}
 }
