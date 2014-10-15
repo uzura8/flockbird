@@ -77,4 +77,19 @@ class Model_NoticeMemberFrom extends \MyOrm\Model
 			->where('member_id', $member_id)
 			->get_one();
 	}
+
+	public static function get4notice_id($notice_id, $limit, $order_by = array('id' => 'desc'))
+	{
+		$query = self::query()
+			->where('notice_id', $notice_id)
+			->order_by($order_by);
+		if ($limit) $query->rows_limit($limit);
+
+		return $query->get();
+	}
+
+	public static function get_count4notice_id($notice_id)
+	{
+		return self::query()->where('notice_id', $notice_id)->count();
+	}
 }

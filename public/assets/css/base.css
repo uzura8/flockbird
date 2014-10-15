@@ -546,3 +546,37 @@ div.btnBox {
 	overflow: scroll;
 	max-height: 300px;
 }
+
+.simpleList-item {
+	position: relative;
+	display: block;
+	padding: 15px;
+	background-color: #fff;
+	border-bottom: 1px solid #ddd;
+}
+a.simpleList-item {
+	color: #555;
+}
+a.simpleList-item:hover,
+a.simpleList-item:focus {
+	text-decoration: none;
+	background-color: #f5f5f5;
+}
+.simpleList-item:last-child {
+	border-bottom: none;
+}
+.simpleList-item-warning {
+	color: #8a6d3b;
+	background-color: #fcf8e3;
+}
+a.simpleList-item-warning {
+	color: #8a6d3b;
+}
+a.simpleList-item-warning .simpleList-item-heading {
+	color: inherit;
+}
+a.simpleList-item-warning:hover,
+a.simpleList-item-warning:focus {
+	color: #8a6d3b;
+	background-color: #faf2cc;
+}

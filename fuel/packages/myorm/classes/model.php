@@ -103,4 +103,97 @@ class Model extends \Orm\Model
 
 		return \Util_Orm::conv_col2array($query->get(), $col);
 	}
+
+	public static function get_pager_list($params = array(), $page = 1, \Orm\Query $query = null)
+	{
+		if (!$query) $query = self::get_pager_list_query($params);
+		$count = $query->count();
+
+		// limit, offset
+		$page = (int)$page;
+		if ($page < 1) $page = 1;
+
+		$limit  = 0;
+		$offset = 0;
+		if (!empty($params['limit']))
+		{
+			$limit  = $params['limit'];
+			$offset = $limit * ($page - 1);
+
+			$query = $query->rows_limit($limit);
+			$query = $query->rows_offset($offset);
+		}
+		$next_page = ($limit && $count > $offset + $limit) ? $page + 1 : 0;
+
+		$list = $query->get();
+
+		return array('list' => $list, 'page' => $page, 'next_page' => $next_page);
+	}
+
+	public static function get_pager_list_query($params = array())
+	{
+		$query = self::query();
+
+		// select
+		if (!empty($params['select']))
+		{
+			$selects = is_array($params['select']) ? $params['select'] : (array)$params['select'];
+			foreach ($selects as $select)
+			{
+				$query->select($select);
+			}
+		}
+
+		// related
+		if (!empty($params['related']))
+		{
+			$query->related($params['related']);
+		}
+
+		// where
+		if (!empty($params['where']))
+		{
+			if (\Arr::is_multi($params['where'], true))
+			{
+				foreach ($params['where'] as $key => $where)
+				{
+					if ($key === 'and' || $key === 'or')
+					{
+						$method_open  = $key.'_where_open';
+						$method_close = $key.'_where_close';
+						$query->$method_open();
+						foreach ($where as $key_child => $where_child)
+						{
+							$query = \Site_Model::add_where($query, $where_child, $key_child);
+						}
+						$query = $query->$method_close();
+					}
+					else
+					{
+						$query = \Site_Model::add_where($query, $where);
+					}
+				}
+			}
+			else
+			{
+				$where = $params['where'];
+				$query = \Site_Model::add_where($query, $where);
+			}
+		}
+		// order by
+		if (!empty($params['order_by']))
+		{
+			foreach ($params['order_by'] as $key => $value)
+			{
+				if (is_numeric($key) && !in_array($value, array('asc', 'desc')))
+				{
+					$key   = $value;
+					$value = 'asc';
+				}
+				$query->order_by($key, $value);
+			}
+		}
+
+		return $query;
+	}
 }

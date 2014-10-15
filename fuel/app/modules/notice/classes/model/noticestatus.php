@@ -95,4 +95,16 @@ class Model_NoticeStatus extends \MyOrm\Model
 			->where('is_read', 0)
 			->count();
 	}
+
+	public static function get_pager_list4member_id($member_id, $limit, $page = 1, $is_unread_only = false, $relateds = array('notice'), $sorts = array('sort_datetime' => 'desc'))
+	{
+		$params = array();
+		$params['limit'] = $limit;
+		$params['where'] = array(array('member_id', $member_id));
+		if ($is_unread_only) $params['where']['is_read'] = 0;
+		if ($relateds) $params['related'] = $relateds;
+		if ($sorts) $params['order_by'] = $sorts;
+
+		return static::get_pager_list($params, $page);
+	}
 }

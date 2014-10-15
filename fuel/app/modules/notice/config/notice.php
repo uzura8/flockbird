@@ -19,6 +19,9 @@ return array(
 			'body'  => 5,
 		),
 	),
+	'noticeMemberFrom' => array(
+		'limit' => 2,
+	),
 	'types' => array(
 		'create' => 1,
 		'update' => 2,

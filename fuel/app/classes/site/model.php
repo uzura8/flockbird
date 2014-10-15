@@ -84,7 +84,7 @@ class Site_Model
 		return $query;
 	}
 
-	private static function add_where($query, $wheres, $key = null)
+	public static function add_where(\Orm\Query $query, $wheres, $key = null)
 	{
 		$method = 'where';
 		if ($key)

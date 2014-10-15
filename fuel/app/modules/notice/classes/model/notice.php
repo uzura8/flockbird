@@ -45,6 +45,10 @@ class Model_Notice extends \MyOrm\Model
 		),
 	);
 
+	protected static $_to_array_exclude = array(
+		'created_at', 'updated_at'
+	);
+
 	public static function _init()
 	{
 		static::$_properties['type']['validation']['in_array'][] = \Config::get('notice.types');
