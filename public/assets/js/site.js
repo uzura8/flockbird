@@ -148,38 +148,19 @@ $(document).on('click', '.js-popover', function(){
 		$(this).popover('show', {html: true});
 
 		var getUri = $(this).data('uri');
-		var templateSelector = $(this).data('tmpl');
-		var source = $(templateSelector).html();
-		var template = Handlebars.compile(source);
+		var getUri = $(this).data('uri');
+		var templateSelector = $(this).data('tmpl') ? $(this).data('tmpl') : '';
+		var template = templateSelector ? Handlebars.compile($(templateSelector).html()) : null;
 
-		$.ajax({
-			type: 'GET',
-			url: get_url(getUri),
-			dataType: 'text',
-			beforeSend: function(xhr, settings) {
-				GL.execute_flg = true;
-				$("#article").append(get_loading_image_tag('loading_article'));
-			},
-			complete: function(xhr, textStatus) {
-				GL.execute_flg = false;
-				$("#loading_article").remove();
-			},
-			success: function(response, status){
-				var obj = $.parseJSON(response);
-				if (obj.list) {
-					$.each(obj.list, function(i, val) {
-						var html = template(val);
-						$(contentSelector).append(html);
-					});
-				} else {
-					var html = 'ありません。';
-					$(contentSelector).append(html);
-				}
-			},
-			error: function(result) {
-				showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
-			}
-		});
+		loadList(
+			getUri,
+			contentSelector,
+			'',
+			'replace',
+			getData,
+			'',
+			templateSelector
+		);
 	}
 	return false;
 });
@@ -193,28 +174,16 @@ $(document).on('click', '.js-modal', function(){
 
 	var option = {};
 	if (getUri) {
-		$.ajax({
-			type: 'GET',
-			url: get_url(getUri),
-			data : getData,
-			dataType : templateSelector ? 'json' : 'text',
-			beforeSend: function(xhr, settings) {
-				GL.execute_flg = true;
-				$("#article").append(get_loading_image_tag('loading_article'));
-			},
-			complete: function(xhr, textStatus) {
-				GL.execute_flg = false;
-				$("#loading_article").remove();
-			},
-			success: function(result, status){
-				var html = templateSelector ? template(result) : result;
-				$(target + ' .modal-body').html(html);
-				$(target).modal(option);
-			},
-			error: function(result) {
-				showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
-			}
-		});
+		loadList(
+			getUri,
+			target + ' .modal-body',
+			'',
+			'replace',
+			getData,
+			'',
+			templateSelector
+		);
+		$(target).modal(option);
 	} else {
 		option['remote'] = get_url(getUri);
 		$(target).modal(option);
