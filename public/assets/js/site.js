@@ -88,7 +88,7 @@ $(document).on('click','.js-ajax-loadList', function(){
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 	var position = $(this).data('position') ? $(this).data('position') : 'replace';// params: replace / append / prepend
 	var historyKey = $(this).data('history_key') ? $(this).data('history_key') : '';
-	var templateSelecor = $(this).data('template') ? $(this).data('template') : '';
+	var templateSelector = $(this).data('template') ? $(this).data('template') : '';
 	var counterSelecor = $(this).data('counter') ? $(this).data('counter') : '';
 
 	if (GL.execute_flg) return false;
@@ -111,7 +111,7 @@ $(document).on('click','.js-ajax-loadList', function(){
 		position,
 		getData,
 		pushStateInfo,
-		templateSelecor,
+		templateSelector,
 		counterSelecor
 	);
 
@@ -148,8 +148,8 @@ $(document).on('click', '.js-popover', function(){
 		$(this).popover('show', {html: true});
 
 		var getUri = $(this).data('uri');
-		var templateSelecor = $(this).data('tmpl');
-		var source = $(templateSelecor).html();
+		var templateSelector = $(this).data('tmpl');
+		var source = $(templateSelector).html();
 		var template = Handlebars.compile(source);
 
 		$.ajax({
