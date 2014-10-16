@@ -31,12 +31,13 @@ class Controller_Image extends \Controller_Site
 		$this->set_title_and_breadcrumbs(term('album_image', 'site.list'), array('album' => term('album', 'site.list')));
 		$this->template->post_footer = \View::forge('image/_parts/list_footer');
 
+		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_AlbumImage::get_pager_list(array(
 			'related'  => array('file', 'album'),
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
 			'order_by' => array('id' => 'desc'),
-			'limit'    => \Config::get('album.articles.limit'),
-		));
+			'limit'    => $limit,
+		), $page);
 		$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list'], 'Album') : array();
 		$this->template->content = \View::forge('image/_parts/list', $data);
@@ -111,12 +112,13 @@ class Controller_Image extends \Controller_Site
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('image/_parts/list_footer');
 
+		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_AlbumImage::get_pager_list(array(
 			'related' => array('file', 'album'),
 			'where' => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id), array(), 't2.member_id'),
-			'limit' => \Config::get('album.articles.limit'),
+			'limit' => $limit,
 			'order_by' => array('id' => 'desc'),
-		));
+		), $page);
 		$data['member'] = $member;
 		$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list'], 'Album') : array();

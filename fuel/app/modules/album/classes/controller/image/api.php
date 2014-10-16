@@ -30,10 +30,9 @@ class Controller_Image_api extends \Controller_Site_Api
 
 			$album_id  = (int)$album_id;
 			if (!$album_id) $album_id = (int)\Input::get('album_id', 0);
-			$page      = (int)\Input::get('page', 1);
 			$member_id = (int)\Input::get('member_id', 0);
 			$is_member_page = (int)\Input::get('is_member_page', 0);
-			$limit = (int)\Input::get('limit', \Config::get('album.articles.limit'));
+			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 
 			$album     = null;
 			$member    = null;
@@ -114,17 +113,17 @@ class Controller_Image_api extends \Controller_Site_Api
 	{
 		if ($this->format != 'html') throw new \HttpNotFoundException();
 
-		$page      = (int)\Input::get('page', 1);
 		$member_id = (int)\Input::get('member_id', 0);
 
 		$response = '';
 		try
 		{
 			list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
+			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 			$data = Model_AlbumImage::get_pager_list(array(
 				'related' => array('file', 'album'),
 				'where' => array('t2.member_id', $member_id),
-				'limit' => \Config::get('album.articles.limit'),
+				'limit' => $limit,
 				'order_by' => array('id' => 'desc'),
 			), $page);
 			$data['member'] = $member;

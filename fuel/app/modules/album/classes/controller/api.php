@@ -25,14 +25,13 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$this->check_response_format('html');
 
-			$page      = (int)\Input::get('page', 1);
 			$member_id = (int)\Input::get('member_id', 0);
 			$is_member_page = (int)\Input::get('is_member_page', 0);
-
+			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 			$data = Model_Album::get_pager_list(array(
 				'related'  => 'member',
 				'where'    => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id)),
-				'limit'    => \Config::get('album.articles.limit'),
+				'limit'    => $limit,
 				'order_by' => array('created_at' => 'desc'),
 			), $page);
 			$data['is_member_page'] = $is_member_page;

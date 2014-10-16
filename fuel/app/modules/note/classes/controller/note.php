@@ -34,15 +34,16 @@ class Controller_Note extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(term('site.latest', 'note', 'site.list'));
+		list($limit, $page) = $this->common_get_pager_list_params(conf('view_params_default.list.limit'), conf('view_params_default.list.limit_max'));
 		$data = Model_Note::get_pager_list(array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0, false, array(array('is_published', 1))),
 			'order_by' => array('created_at' => 'desc'),
-			'limit'    => conf('view_params_default.list.limit'),
-		));
+			'limit'    => $limit,
+		), $page);
 		$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('note', $this->u->id, $data['list'], 'Note') : array();
+		$this->set_title_and_breadcrumbs(term('site.latest', 'note', 'site.list'));
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 	}
@@ -61,8 +62,7 @@ class Controller_Note extends \Controller_Site
 		$is_draft = $is_mypage ? \Util_string::cast_bool_int(\Input::get('is_draft', 0)) : 0;
 		$is_published = \Util_toolkit::reverse_bool($is_draft, true);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('note', 'site.list')), null, $member);
-		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
+		list($limit, $page) = $this->common_get_pager_list_params(conf('view_params_default.list.limit'), conf('view_params_default.list.limit_max'));
 		$data = Model_Note::get_pager_list(array(
 			'where'    => \Site_Model::get_where_params4list(
 				$member->id,
@@ -70,14 +70,16 @@ class Controller_Note extends \Controller_Site
 				$is_mypage,
 				array(array('is_published', $is_published))
 			),
-			'limit'    => conf('view_params_default.list.limit'),
+			'limit' => $limit,
 			'order_by' => array('created_at' => 'desc'),
-		));
+		), $page);
 		$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('note', $this->u->id, $data['list'], 'Note') : array();
 		$data['member']       = $member;
 		$data['is_mypage']    = $is_mypage;
 		$data['is_draft']     = $is_draft;
+		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('note', 'site.list')), null, $member);
+		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 		$this->template->content = \View::forge('member', $data);
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 	}

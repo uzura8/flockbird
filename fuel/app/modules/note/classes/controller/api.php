@@ -25,7 +25,7 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$this->check_response_format('html');
 
-			$page      = (int)\Input::get('page', 1);
+			list($limit, $page) = $this->common_get_pager_list_params(conf('view_params_default.list.limit'), conf('view_params_default.list.limit_max'));
 			$member_id = (int)\Input::get('member_id', 0);
 
 			$member    = null;
@@ -42,7 +42,7 @@ class Controller_Api extends \Controller_Site_Api
 					$is_mypage,
 					array(array('is_published', $is_published))
 				),
-				'limit'    => conf('view_params_default.list.limit'),
+				'limit'    => $limit,
 				'order_by' => array('created_at' => 'desc'),
 			), $page);
 			$data['is_draft'] = $is_draft;

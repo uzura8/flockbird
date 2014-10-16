@@ -36,14 +36,15 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(term('site.latest', 'album', 'site.list'));
-		$this->template->post_footer = \View::forge('_parts/load_masonry');
+		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_Album::get_pager_list(array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
 			'order_by' => array('id' => 'desc'),
-			'limit'    => \Config::get('album.articles.limit'),
-		));
+			'limit'    => $limit,
+		), $page);
+		$this->set_title_and_breadcrumbs(term('site.latest', 'album', 'site.list'));
+		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
@@ -63,12 +64,13 @@ class Controller_Album extends \Controller_Site
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
 
+		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_Album::get_pager_list(array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id)),
 			'order_by' => array('id' => 'desc'),
-			'limit'    => \Config::get('album.articles.limit'),
-		));
+			'limit'    => $limit,
+		), $page);
 		$data['member'] = $member;
 		$data['is_member_page'] = true;
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -193,7 +195,6 @@ class Controller_Album extends \Controller_Site
 	{
 		$album = Model_Album::check_authority($id, null, 'member');
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
-		//$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => array('created_at', 'desc')));
 
 		$data = Model_AlbumImage::get_pager_list(array(
 			'related'  => array('file', 'album'),
