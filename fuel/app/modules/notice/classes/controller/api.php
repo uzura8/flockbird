@@ -24,15 +24,14 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$this->check_response_format('json');
 
-			$page = (int)\Input::get('page', 1);
-			$data = Model_NoticeStatus::get_pager_list4member_id($this->u->id, \Config::get('notice.articles.limit'), $page);
+			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('notice.articles.limit_max'), \Config::get('notice.articles.limit_max'));
+			$data = Model_NoticeStatus::get_pager_list4member_id($this->u->id, $limit, $page);
 
 			$status_code = 200;
 			$list_array = array();
 			foreach ($data['list'] as $key => $obj)
 			{
 				$row = $obj->to_array();
-
 				$row['members_count'] = Model_NoticeMemberFrom::get_count4notice_id($row['notice_id']);
 				$row['members'] = array();
 				$notice_member_froms = Model_NoticeMemberFrom::get4notice_id($row['notice_id'], \Config::get('notice.noticeMemberFrom.limit'));
@@ -49,6 +48,7 @@ class Controller_Api extends \Controller_Site_Api
 				'list' => $list_array,
 				'page' => $data['page'],
 				'next_page' => $data['next_page'],
+				'is_detail' => (bool)\Input::get('is_detail', 0),
 			);
 		}
 		catch(\HttpNotFoundException $e)

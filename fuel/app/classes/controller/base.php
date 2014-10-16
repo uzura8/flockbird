@@ -215,6 +215,15 @@ class Controller_Base extends Controller_Hybrid
 		return array($limit, $is_latest, $is_desc, $since_id, $max_id);
 	}
 
+	public function common_get_pager_list_params($limit_default, $limit_max = 0, $limit_param_name = 'limit', $page_param_name = 'page')
+	{
+		$page = (int)\Input::get($page_param_name, 1);
+		$limit = (int)\Input::get($limit_param_name, $limit_default);
+		if ($limit > $limit_max) $limit = $limit_max;
+
+		return array($limit, $page);
+	}
+
 
 	/**
 	 * 以下、site, admin 共通 controller

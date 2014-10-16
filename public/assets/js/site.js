@@ -187,14 +187,17 @@ $(document).on('click', '.js-popover', function(){
 $(document).on('click', '.js-modal', function(){
 	var target = $(this).data('target');
 	var getUri = $(this).data('uri');
-	var templateSelecor = $(this).data('tmpl');
+	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
+	var templateSelector = $(this).data('tmpl') ? $(this).data('tmpl') : '';
+	var template = templateSelector ? Handlebars.compile($(templateSelector).html()) : null;
 
 	var option = {};
 	if (getUri) {
 		$.ajax({
 			type: 'GET',
 			url: get_url(getUri),
-			dataType: 'text',
+			data : getData,
+			dataType : templateSelector ? 'json' : 'text',
 			beforeSend: function(xhr, settings) {
 				GL.execute_flg = true;
 				$("#article").append(get_loading_image_tag('loading_article'));
@@ -203,23 +206,8 @@ $(document).on('click', '.js-modal', function(){
 				GL.execute_flg = false;
 				$("#loading_article").remove();
 			},
-			success: function(response, status){
-				if (templateSelecor) {
-					var templateSelecor = $(this).data('tmpl');
-					var source = $(templateSelecor).html();
-					var template = Handlebars.compile(source);
-					var obj = $.parseJSON(response);
-					if (obj.list) {
-						$.each(obj.list, function(i, val) {
-							var html = template(val);
-							$(contentSelector).append(html);
-						});
-					} else {
-						var html = 'ありません。';
-					}
-				} else {
-					var html = response;
-				}
+			success: function(result, status){
+				var html = templateSelector ? template(result) : result;
 				$(target + ' .modal-body').html(html);
 				$(target).modal(option);
 			},

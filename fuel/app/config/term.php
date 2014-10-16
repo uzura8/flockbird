@@ -95,6 +95,8 @@ $config = array(
 		'shot' => '撮影',
 		'see_more' => 'もっとみる',
 		'see_latest' => '最新をみる',
+		'unread' => '未読',
+		'AlreadyRead' => '既読',
 	),
 	'member' => array(
 		'view' => 'メンバー',

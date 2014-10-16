@@ -8,16 +8,11 @@ return array(
 		),
 	),
 	'articles' => array(
+		'limit' => 3,
+		'limit_max' => 5,
+	),
+	'modalArticles' => array(
 		'limit' => 2,
-		'limit_max' => 3,
-		'trim_width' => array(
-			//'title' => 88,
-			'body'  => 500,
-			'title_in_body' => 50,
-		),
-		'truncate_lines' => array(
-			'body'  => 5,
-		),
 	),
 	'noticeMemberFrom' => array(
 		'limit' => 2,

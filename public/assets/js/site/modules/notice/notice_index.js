@@ -1,3 +1,3 @@
 $(function() {
-	loadNotice();
+	loadNotice({'is_detail': 1});
 })

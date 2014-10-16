@@ -6,23 +6,13 @@ function loadNotice() {
 	var getUri             = 'notice/api/list.json';
 	var parentListSelector = '#article_list';
 
-	var pushStateInfo = {};
-	if (isAddHisttory) {
-		var trigerObj = trigerSelector ? $(trigerSelector) : null;
-		if (trigerObj && trigerObj.attr('href') && trigerObj.attr('href') != '#') {
-			pushStateInfo['url'] = trigerObj.attr('href');
-		} else {
-			pushStateInfo['keys'] = ['page'];
-		}
-	}
-
 	loadList(
 		getUri,
 		parentListSelector,
 		trigerSelector,
 		'append',
 		getData,
-		pushStateInfo,
+		'',
 		'#notices-template'
 	);
 }
