@@ -53,7 +53,7 @@
 	'album' => $album,
 	'list' => $list,
 	'page' => $page,
-	'is_next' => $is_next,
+	'next_page' => $next_page,
 	'is_member_page' => $is_member_page,
 	'liked_album_image_ids' => isset($liked_album_image_ids) ? $liked_album_image_ids : array(),
 )); ?>

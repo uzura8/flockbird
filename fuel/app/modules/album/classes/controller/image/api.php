@@ -65,7 +65,7 @@ class Controller_Image_api extends \Controller_Site_Api
 				$member_id_colmn  = 't2.member_id';
 			}
 			$params['where'] = \Site_Model::get_where_params4list($target_member_id, $self_member_id, $is_mypage, $where, $member_id_colmn);
-			$data = \Site_Model::get_simple_pager_list('album_image', $page, $params, 'Album');
+			$data = Model_AlbumImage::get_pager_list($params, $page);
 			$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list'], 'Album') : array();
 
@@ -121,12 +121,12 @@ class Controller_Image_api extends \Controller_Site_Api
 		try
 		{
 			list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
-			$data = \Site_Model::get_simple_pager_list('album_image', $page, array(
+			$data = Model_AlbumImage::get_pager_list(array(
 				'related' => array('file', 'album'),
 				'where' => array('t2.member_id', $member_id),
 				'limit' => \Config::get('album.articles.limit'),
 				'order_by' => array('id' => 'desc'),
-			), 'Album');
+			), $page);
 			$data['member'] = $member;
 			$response = \View::forge('image/_parts/list', $data);
 			$status_code = 200;

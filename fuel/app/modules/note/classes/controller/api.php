@@ -34,7 +34,7 @@ class Controller_Api extends \Controller_Site_Api
 			if ($member_id) list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
 			$is_draft = $is_mypage ? \Util_string::cast_bool_int(\Input::get('is_draft', 0)) : 0;
 			$is_published = \Util_toolkit::reverse_bool($is_draft, true);
-			$data = \Site_Model::get_simple_pager_list('note', $page, array(
+			$data = Model_Note::get_pager_list(array(
 				'related'  => 'member',
 				'where'    => \Site_Model::get_where_params4list(
 					$member_id,
@@ -44,7 +44,7 @@ class Controller_Api extends \Controller_Site_Api
 				),
 				'limit'    => conf('view_params_default.list.limit'),
 				'order_by' => array('created_at' => 'desc'),
-			), 'Note');
+			), $page);
 			$data['is_draft'] = $is_draft;
 			$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 				\Site_Model::get_liked_ids('note', $this->u->id, $data['list'], 'Note') : array();

@@ -154,13 +154,15 @@ echo render('_parts/comment/list', $data);
 </div>
 <?php endif; ?>
 
+<?php if ($next_page): ?>
 <nav id="page-nav">
 <?php
-$uri = sprintf('note/api/list.html?page=%d', $page + 1);
+$uri = sprintf('note/api/list.html?page=%d', $next_page);
 if (!empty($member))   $uri .= '&member_id='.$member->id;
 if (!empty($is_draft)) $uri .= '&is_draft='.$is_draft;
 echo Html::anchor($uri, '');
 ?>
 </nav>
+<?php endif; ?>
 
 <?php if (IS_API): ?></body></html><?php endif; ?>

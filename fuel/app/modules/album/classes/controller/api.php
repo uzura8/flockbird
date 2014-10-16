@@ -29,12 +29,12 @@ class Controller_Api extends \Controller_Site_Api
 			$member_id = (int)\Input::get('member_id', 0);
 			$is_member_page = (int)\Input::get('is_member_page', 0);
 
-			$data = \Site_Model::get_simple_pager_list('album', $page, array(
+			$data = Model_Album::get_pager_list(array(
 				'related'  => 'member',
 				'where'    => \Site_Model::get_where_params4list($member_id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member_id)),
 				'limit'    => \Config::get('album.articles.limit'),
 				'order_by' => array('created_at' => 'desc'),
-			), 'Album');
+			), $page);
 			$data['is_member_page'] = $is_member_page;
 
 			$response = \View::forge('_parts/list', $data);

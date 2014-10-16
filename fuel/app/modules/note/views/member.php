@@ -15,7 +15,7 @@
 <?php echo render('_parts/list', array(
 	'list' => $list,
 	'page' => $page,
-	'is_next' => $is_next,
+	'next_page' => $next_page,
 	'member' => $member,
 	'is_draft' => $is_draft,
 	'liked_note_ids' => $liked_note_ids,

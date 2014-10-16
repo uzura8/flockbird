@@ -164,10 +164,10 @@ echo render('_parts/comment/list', $data);
 </div><!-- row -->
 <?php endif; ?>
 
-<?php if (empty($is_simple_view)): ?>
+<?php if (empty($is_simple_view) && !empty($next_page)): ?>
 <nav id="page-nav">
 <?php
-$uri = sprintf('album/image/api/list.html?page=%d', $page + 1);
+$uri = sprintf('album/image/api/list.html?page=%d', $next_page);
 if (!empty($album))
 {
 	$uri .= '&album_id='.$album->id;

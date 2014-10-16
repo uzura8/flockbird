@@ -361,12 +361,12 @@ class Site_Util
 					'limit'    => \Config::get('timeline.articles.thumbnail.limit.default'),
 					'order_by' => array('created_at' => 'asc'),
 				), 'Album');
-				$images['count_all'] = \Site_Model::get_count('album_image', array(
+				$images['count_all'] = \Album\Model_AlbumImage::get_count(array(
 					'where' => \Site_Model::get_where_public_flag4access_from(
 						$access_from,
 						array(array('album_id', $foreign_id))
 					),
-				), 'Album');
+				));
 				$images['parent_page_uri']  = 'album/'.$foreign_id;
 				break;
 

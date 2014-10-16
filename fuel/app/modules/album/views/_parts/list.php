@@ -50,12 +50,12 @@ $before_album_member_id = $album->member_id;
 )); ?>
 <?php endif; ?>
 <?php
-$album_image_count = \Site_Model::get_count('album_image', array(
+$album_image_count = \Album\Model_AlbumImage::get_count(array(
 	'where' => \Site_Model::get_where_public_flag4access_from(
 		$access_from,
 		array(array('album_id', $album->id))
 	),
-), 'Album');
+));
 ?>
 			<div class="article">
 				<div class="body"><?php echo nl2br(strim($album->body, \Config::get('album.articles.trim_width.body'))) ?></div>
@@ -84,13 +84,15 @@ $menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
 </div><!-- row -->
 <?php endif; ?>
 
+<?php if (!empty($next_page)): ?>
 <nav id="page-nav">
 <?php
-$uri = sprintf('album/api/list.html?page=%d', $page + 1);
+$uri = sprintf('album/api/list.html?page=%d', $next_page);
 if (!empty($member)) $uri .= '&member_id='.$member->id;
 if (!empty($is_member_page)) $uri .= '&is_member_page=1';
 echo Html::anchor($uri, '');
 ?>
 </nav>
+<?php endif; ?>
 
 <?php if (IS_API): ?></body></html><?php endif; ?>

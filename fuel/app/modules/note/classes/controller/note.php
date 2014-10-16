@@ -35,12 +35,12 @@ class Controller_Note extends \Controller_Site
 	public function action_list()
 	{
 		$this->set_title_and_breadcrumbs(term('site.latest', 'note', 'site.list'));
-		$data = \Site_Model::get_simple_pager_list('note', 1, array(
+		$data = Model_Note::get_pager_list(array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0, false, array(array('is_published', 1))),
 			'order_by' => array('created_at' => 'desc'),
 			'limit'    => conf('view_params_default.list.limit'),
-		), 'Note');
+		));
 		$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('note', $this->u->id, $data['list'], 'Note') : array();
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -63,7 +63,7 @@ class Controller_Note extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('note', 'site.list')), null, $member);
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
-		$data = \Site_Model::get_simple_pager_list('note', 1, array(
+		$data = Model_Note::get_pager_list(array(
 			'where'    => \Site_Model::get_where_params4list(
 				$member->id,
 				\Auth::check() ? $this->u->id : 0,
@@ -72,7 +72,7 @@ class Controller_Note extends \Controller_Site
 			),
 			'limit'    => conf('view_params_default.list.limit'),
 			'order_by' => array('created_at' => 'desc'),
-		), 'Note');
+		));
 		$data['liked_note_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('note', $this->u->id, $data['list'], 'Note') : array();
 		$data['member']       = $member;

@@ -130,6 +130,13 @@ class Model extends \Orm\Model
 		return array('list' => $list, 'page' => $page, 'next_page' => $next_page);
 	}
 
+	public static function get_count($params = array(), \Orm\Query $query = null)
+	{
+		if (!$query) $query = self::get_pager_list_query($params);
+
+		return $query->count();
+	}
+
 	public static function get_pager_list_query($params = array())
 	{
 		$query = self::query();

@@ -38,12 +38,12 @@ class Controller_Album extends \Controller_Site
 	{
 		$this->set_title_and_breadcrumbs(term('site.latest', 'album', 'site.list'));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
-		$data = \Site_Model::get_simple_pager_list('album', 1, array(
+		$data = Model_Album::get_pager_list(array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
 			'order_by' => array('id' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
-		), 'Album');
+		));
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
@@ -63,12 +63,12 @@ class Controller_Album extends \Controller_Site
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
 
-		$data = \Site_Model::get_simple_pager_list('album', 1, array(
+		$data = Model_Album::get_pager_list(array(
 			'related'  => 'member',
 			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id)),
 			'order_by' => array('id' => 'desc'),
 			'limit'    => \Config::get('album.articles.limit'),
-		), 'Album');
+		));
 		$data['member'] = $member;
 		$data['is_member_page'] = true;
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -87,7 +87,7 @@ class Controller_Album extends \Controller_Site
 		$this->check_browse_authority($album->public_flag, $album->member_id);
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 
-		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
+		$data = Model_AlbumImage::get_pager_list(array(
 			'related'  => array('file', 'album'),
 			'where'    => \Site_Model::get_where_params4list(
 				0,
@@ -96,7 +96,7 @@ class Controller_Album extends \Controller_Site
 				array(array('album_id', $id))
 			),
 			'order_by' => array('id' => 'desc'),
-		), 'Album');
+		));
 
 		$data['album_images'] = array();
 		if (\Config::get('album.display_setting.detail.display_slide_image'))
@@ -195,7 +195,7 @@ class Controller_Album extends \Controller_Site
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 		//$album_images = Model_AlbumImage::find('all', array('where' => array('album_id' => $id), 'order_by_rows' => array('created_at', 'desc')));
 
-		$data = \Site_Model::get_simple_pager_list('album_image', 1, array(
+		$data = Model_AlbumImage::get_pager_list(array(
 			'related'  => array('file', 'album'),
 			'where'    => \Site_Model::get_where_params4list(
 				0,
@@ -204,7 +204,7 @@ class Controller_Album extends \Controller_Site
 				array(array('album_id', $id))
 			),
 			'order_by' => array('id' => 'desc'),
-		), 'Album');
+		));
 		$data['album'] = $album;
 		$data['disabled_to_update'] = $disabled_to_update;
 
