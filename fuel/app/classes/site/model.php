@@ -87,15 +87,27 @@ class Site_Model
 
 		if ($value == 'related')
 		{
-			if (empty($value_type['table']) || empty($value_type['property']) || empty($obj->{$value_type['table']}))
-			{
-				throw new \FuelException('Orm observer setting error.');
-			}
-
-			return $obj->{$value_type['table']}->{$value_type['property']};
+			return self::get_related_value($obj, $value_type);
 		}
 
 		throw new \FuelException('Orm observer setting error.');
+	}
+
+	public static function get_related_value(\Orm\Model $obj, $relateds)
+	{
+		if (!Arr::is_assoc($relateds)) throw new InvalidArgumentException('Second parameter must be assoc.');
+
+		foreach ($relateds as $table => $values)
+		{
+			if (!is_array($values))
+			{
+				return $obj->{$table}->{$values};
+			}
+			foreach ($values as $related_table => $value_col)
+			{
+				return $obj->{$table}->{$related_table}->{$value_col};
+			}
+		}
 	}
 
 	public static function get4relation($model_to, array $conditions, \Orm\Model $model_obj_from)

@@ -43,7 +43,7 @@ function getNoticeContentUriMiddlePath(foreign_table)
 		case 'note':
 			return foreign_table;
 		case 'album_image':
-			return 'album/' + foreign_table;
+			return 'album/image';
 	}
 	return '';
 }

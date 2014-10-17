@@ -111,10 +111,7 @@ class Model_TimelineComment extends \MyOrm\Model
 					'type_key' => array('comment' => 'value'),
 					'member_id_from' => array('member_id' => 'property'),
 					'member_id_to' => array(
-						'related' => array(
-							'table' => 'timeline',
-							'property' => 'member_id',
-						),
+						'related' => array('timeline' => 'member_id'),
 					),
 				),
 			);

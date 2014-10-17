@@ -104,10 +104,7 @@ class Model_NoteComment extends \MyOrm\Model
 					'type_key' => array('comment' => 'value'),
 					'member_id_from' => array('member_id' => 'property'),
 					'member_id_to' => array(
-						'related' => array(
-							'table' => 'note',
-							'property' => 'member_id',
-						),
+						'related' => array('note' => 'member_id'),
 					),
 				),
 			);
