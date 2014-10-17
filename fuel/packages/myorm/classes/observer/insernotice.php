@@ -33,7 +33,7 @@ class Observer_InsertNotice extends \Orm\Observer
 		{
 			return;
 		}
-		$obj_notice = \Notice\Model_Notice::check_and_create($foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type($type_key));
+		$obj_notice = \Notice\Model_Notice::check_and_create($foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type($type_key), $member_id_to);
 		\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id_from);
 		foreach ($notice_member_ids as $notice_member_id)
 		{

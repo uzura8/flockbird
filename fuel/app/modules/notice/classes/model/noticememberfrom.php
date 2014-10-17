@@ -20,16 +20,8 @@ class Model_NoticeMemberFrom extends \MyOrm\Model
 
 	protected static $_properties = array(
 		'id',
-		'notice_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('required', 'valid_string' => array('numeric')),
-			'form' => array('type' => false),
-		),
-		'member_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('required', 'valid_string' => array('numeric')),
-			'form' => array('type' => false),
-		),
+		'notice_id',
+		'member_id',
 		'created_at' => array('form' => array('type' => false)),
 	);
 
@@ -56,6 +48,12 @@ class Model_NoticeMemberFrom extends \MyOrm\Model
 		),
 	);
 
+	public static function _init()
+	{
+		static::$_properties['notice_id'] = \Util_Orm::get_relational_numeric_key_prop();
+		static::$_properties['member_id'] = \Util_Orm::get_relational_numeric_key_prop();
+	}
+
 	public static function check_and_create($notice_id, $member_id)
 	{
 		if (!$obj = self::get4notice_id_and_member_id($notice_id, $member_id))
@@ -78,18 +76,21 @@ class Model_NoticeMemberFrom extends \MyOrm\Model
 			->get_one();
 	}
 
-	public static function get4notice_id($notice_id, $limit, $order_by = array('id' => 'desc'))
+	public static function get4notice_id($notice_id, $limit, $ignore_member_id = 0, $order_by = array('id' => 'desc'))
 	{
-		$query = self::query()
-			->where('notice_id', $notice_id)
-			->order_by($order_by);
+		$query = self::query()->where('notice_id', $notice_id);
+		if ($ignore_member_id) $query->where('member_id', '<>', $ignore_member_id);
+		$query->order_by($order_by);
 		if ($limit) $query->rows_limit($limit);
 
 		return $query->get();
 	}
 
-	public static function get_count4notice_id($notice_id)
+	public static function get_count4notice_id($notice_id, $ignore_member_id = 0)
 	{
-		return self::query()->where('notice_id', $notice_id)->count();
+		$query = self::query()->where('notice_id', $notice_id);
+		if ($ignore_member_id) $query->where('member_id', '<>', $ignore_member_id);
+
+		return $query->count();
 	}
 }

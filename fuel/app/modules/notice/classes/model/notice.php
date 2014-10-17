@@ -5,6 +5,14 @@ class Model_Notice extends \MyOrm\Model
 {
 	protected static $_table_name = 'notice';
 
+	protected static $_belongs_to = array(
+		'member' => array(
+			'key_from' => 'member_id',
+			'model_to' => 'Model_Member',
+			'key_to' => 'id',
+		),
+	);
+
 	protected static $_properties = array(
 		'id',
 		'foreign_table' => array(
@@ -12,16 +20,13 @@ class Model_Notice extends \MyOrm\Model
 			'validation' => array('trim', 'required', 'max_length' => array(20)),
 			'form' => array('type' => false),
 		),
-		'foreign_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('required', 'valid_string' => array('numeric')),
-			'form' => array('type' => false),
-		),
+		'foreign_id',
 		'type' => array(
 			'data_type' => 'integer',
 			'validation' => array('required', 'valid_string' => array('numeric'), 'max_length' => array(2)),
 			'form' => array('type' => false),
 		),
+		'member_id',
 		'body' => array(
 			'data_type' => 'text',
 			'validation' => array('trim'),
@@ -51,11 +56,13 @@ class Model_Notice extends \MyOrm\Model
 
 	public static function _init()
 	{
+		static::$_properties['member_id'] = \Util_Orm::get_relational_numeric_key_prop();
+		static::$_properties['foreign_id'] = \Util_Orm::get_relational_numeric_key_prop();
 		static::$_properties['type']['validation']['in_array'][] = \Config::get('notice.types');
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_accept_foreign_tables();
 	}
 
-	public static function check_and_create($foreign_table, $foreign_id, $type)
+	public static function check_and_create($foreign_table, $foreign_id, $type, $member_id)
 	{
 		$since_datetime = \Date::forge(strtotime('-'.\Config::get('notice.periode_to_update.default')))->format('mysql');
 		if (!$obj = self::get_last4foreign_data($foreign_table, $foreign_id, $type, $since_datetime))
@@ -64,6 +71,7 @@ class Model_Notice extends \MyOrm\Model
 				'foreign_table' => $foreign_table,
 				'foreign_id' => $foreign_id,
 				'type' => $type,
+				'member_id' => $member_id,
 				'body' => Site_Util::get_notice_body($foreign_table, $type),
 			));
 			$obj->save();

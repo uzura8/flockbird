@@ -15,21 +15,13 @@ class Model_MemberWatchContent extends \MyOrm\Model
 
 	protected static $_properties = array(
 		'id',
-		'member_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('required', 'valid_string' => array('numeric')),
-			'form' => array('type' => false),
-		),
+		'member_id',
 		'foreign_table' => array(
 			'data_type' => 'varchar',
 			'validation' => array('trim', 'required', 'max_length' => array(20)),
 			'form' => array('type' => false),
 		),
-		'foreign_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('required', 'valid_string' => array('numeric')),
-			'form' => array('type' => false),
-		),
+		'foreign_id',
 		'created_at' => array('form' => array('type' => false)),
 	);
 
@@ -45,6 +37,8 @@ class Model_MemberWatchContent extends \MyOrm\Model
 
 	public static function _init()
 	{
+		static::$_properties['member_id'] = \Util_Orm::get_relational_numeric_key_prop();
+		static::$_properties['foreign_id'] = \Util_Orm::get_relational_numeric_key_prop();
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_accept_foreign_tables();
 	}
 

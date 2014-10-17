@@ -35,7 +35,7 @@ class Observer_DeleteNotice extends \Orm\Observer
 			{
 				// delete notice_member_from
 				$is_delete = self::delete_notice_member_from($notice->id, $obj->member_id);
-				if ($is_delete && !\Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom', array('notice_id' => $notice->id)))
+				if ($is_delete && !\Notice\Model_NoticeMemberFrom::get_count4notice_id($notice->id, $notice->member_id))
 				{
 					// delete notice
 					self::delete_notice_unread_cache($notice->id);

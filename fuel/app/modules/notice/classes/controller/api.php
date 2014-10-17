@@ -32,9 +32,9 @@ class Controller_Api extends \Controller_Site_Api
 			foreach ($data['list'] as $key => $obj)
 			{
 				$row = $obj->to_array();
-				$row['members_count'] = Model_NoticeMemberFrom::get_count4notice_id($row['notice_id']);
+				$row['members_count'] = Model_NoticeMemberFrom::get_count4notice_id($row['notice_id'], $this->u->id);
 				$row['members'] = array();
-				$notice_member_froms = Model_NoticeMemberFrom::get4notice_id($row['notice_id'], \Config::get('notice.noticeMemberFrom.limit'));
+				$notice_member_froms = Model_NoticeMemberFrom::get4notice_id($row['notice_id'], \Config::get('notice.noticeMemberFrom.limit'), $this->u->id);
 				foreach ($notice_member_froms as $notice_member_from)
 				{
 					$row['members'][] = \Model_Member::get_basic_data($notice_member_from->member_id);
