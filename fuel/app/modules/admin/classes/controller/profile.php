@@ -383,7 +383,7 @@ class Controller_Profile extends Controller_Admin {
 			if (in_array($col, array('id', 'sort_order', 'created_at', 'updated_at'))) continue;
 			$obj->$col = $values[$col];	
 		}
-		if (!isset($obj->sort_order) || is_null($obj->sort_order)) $obj->sort_order = \Site_Model::get_next_sort_order('profile');
+		if (!isset($obj->sort_order) || is_null($obj->sort_order)) $obj->sort_order = \Model_Profile::get_next_sort_order();
 
 		return $obj;
 	}

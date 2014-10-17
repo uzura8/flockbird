@@ -353,15 +353,15 @@ class Site_Util
 
 			case \Config::get('timeline.types.album'):
 			case \Config::get('timeline.types.album_image'):
-				list($images['list'], $images['count']) = \Site_Model::get_list_and_count('album_image', array(
+				list($images['list'], $images['count']) = \Album\Model_AlbumImage::get_list_and_count(array(
 					'where' => \Site_Model::get_where_public_flag4access_from(
 						$access_from,
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
 					),
 					'limit'    => \Config::get('timeline.articles.thumbnail.limit.default'),
 					'order_by' => array('created_at' => 'asc'),
-				), 'Album');
-				$images['count_all'] = \Album\Model_AlbumImage::get_count(array(
+				));
+				$images['count_all'] = \Album\Model_AlbumImage::get_list_count(array(
 					'where' => \Site_Model::get_where_public_flag4access_from(
 						$access_from,
 						array(array('album_id', $foreign_id))
@@ -371,14 +371,14 @@ class Site_Util
 				break;
 
 			case \Config::get('timeline.types.album_image_timeline'):
-				list($images['list'], $images['count']) = \Site_Model::get_list_and_count('album_image', array(
+				list($images['list'], $images['count']) = \Album\Model_AlbumImage::get_list_and_count(array(
 					'where' => \Site_Model::get_where_public_flag4access_from(
 						$access_from,
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
 					),
 					'limit'    => \Config::get('timeline.articles.thumbnail.limit.album_image_timeline'),
 					'order_by' => array('created_at' => 'asc'),
-				), 'Album');
+				));
 				$images['count_all'] = $images['count'];
 				$images['parent_page_uri']  = 'timeline/'.$timeline_id;
 				break;

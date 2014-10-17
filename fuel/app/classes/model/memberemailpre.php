@@ -38,8 +38,8 @@ class Model_MemberEmailPre extends \Orm\Model
 	public static function _init()
 	{
 		static::$_properties['member_id'] = Util_Orm::get_relational_numeric_key_prop();
-		static::$_properties['email'] = Util_Orm::get_prop('member_auth', 'email');
-		static::$_properties['token'] = Util_Orm::get_prop('member_pre', 'token');
+		static::$_properties['email'] = Model_MemberAuth::property('email');
+		static::$_properties['token'] = Model_MemberPre::property('token');
 		static::$_properties['token']['form']['type'] = false;
 	}
 

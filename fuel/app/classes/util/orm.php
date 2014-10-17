@@ -1,6 +1,14 @@
 <?php
 class Util_Orm
 {
+	public static function get_model_name($table, $namespace = '')
+	{
+		$model = '\Model_'.Inflector::camelize($table);
+		if ($namespace) $model = sprintf('\%s%s', ucfirst($namespace), $model);
+
+		return $model;
+	}
+
 	public static function conv_col2array($objs, $column)
 	{
 		$return = array();
@@ -23,14 +31,6 @@ class Util_Orm
 		return $return;
 	}
 
-	public static function get_prop($table, $column, $namespace = '')
-	{
-		$model = Site_Model::get_model_name($table, $namespace);
-		$model_obj = $model::forge();
-
-		return $model_obj::property($column);
-	}
-
 	public static function get_relational_numeric_key_prop($is_required = true)
 	{
 		$field = array(
@@ -43,16 +43,7 @@ class Util_Orm
 		return $field;
 	}
 
-	public static function get_changed_values(\Orm\Model $obj, $property = null)
-	{
-		$values = $obj->get_diff();
-		if (!$values) return false;
-
-		if (!$property) return $values;
-
-		return array($values[0][$property], $values[1][$property]);
-	}
-
+	// \MyOrm\Model::get_count 推奨
 	public static function get_count_all($model_name, $conditions = array())
 	{
 		$query = $model_name::query();
@@ -61,6 +52,7 @@ class Util_Orm
 		return $query->count();
 	}
 
+	// \MyOrm\Model::get_last 推奨
 	public static function get_last_row($model_name, $conditions = array(), $sort_col = 'id')
 	{
 		$query = $model_name::query();
@@ -70,14 +62,9 @@ class Util_Orm
 		return $query->get_one();
 	}
 
-	public static function check_is_changed(\Orm\Model $obj, array $target_properties, array $before_values)
+	public static function check_ids_in_models($target_ids, $objs, $id_column_name = 'id')
 	{
-		foreach ($target_properties as $property)
-		{
-			if ($obj->{$property} != $before_values[$property]) return true;
-		}
-
-		return false;
+		return Util_Array::array_in_array($target_ids, self::conv_col2array($objs, $column));
 	}
 
 	public static function get_related_table_values_recursive(\Orm\Model$obj, $related_table_props = array())
@@ -95,6 +82,26 @@ class Util_Orm
 		}
 
 		return $values;
+	}
+
+	public static function check_is_changed(\Orm\Model $obj, array $target_properties, array $before_values)
+	{
+		foreach ($target_properties as $property)
+		{
+			if ($obj->{$property} != $before_values[$property]) return true;
+		}
+
+		return false;
+	}
+
+	public static function get_changed_values(\Orm\Model $obj, $property = null)
+	{
+		$values = $obj->get_diff();
+		if (!$values) return false;
+
+		if (!$property) return $values;
+
+		return array($values[0][$property], $values[1][$property]);
 	}
 
 	public static function check_is_updated(\Orm\Model $obj, $check_properties = array(), $ignore_properties = array())
@@ -161,7 +168,7 @@ class Util_Orm
 		if (empty($ignore_properties)) return false;
 
 		$ignore_properties = (array)$ignore_properties;
-		$all_properties = \Util_Db::get_columns('timeline');
+		$all_properties = \Util_Db::get_columns($obj::get_table_name());
 		foreach ($all_properties as $property)
 		{
 			if (in_array($property, $ignore_properties)) continue;

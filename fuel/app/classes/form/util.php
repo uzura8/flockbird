@@ -1,10 +1,11 @@
 <?php
-
 class Form_Util
 {
 	public static function get_model_field($table, $column, $namespace = '', $label = '')
 	{
-		$props = Util_Orm::get_prop($table, $column, $namespace);
+		$model = Util_Orm::get_model_name($table, $namespace);
+		$obj = $model::forge();
+		$props = $obj::property($column);
 		if (!$props || empty($props['form']))
 		{
 			throw new \InvalidArgumentException('Second parameter is invalid.');

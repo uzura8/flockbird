@@ -24,7 +24,7 @@ class Site_FileTmp
 		{
 			throw new HttpInvalidInputException('Invalid input data.');
 		}
-		if (!$file_tmps = Site_Model::get4ids('file_tmp', $file_tmp_ids))
+		if (!$file_tmps = Model_FileTmp::get4ids($file_tmp_ids))
 		{
 			throw new FuelException('ファイルが選択されていません。');
 		}
@@ -97,7 +97,7 @@ class Site_FileTmp
 			}
 			$file = Model_File::move_from_file_tmp($file_tmp, $new_filepath, $is_ignore_member_id);
 
-			$model = Site_Model::get_model_name($related_table, $namespace);
+			$model = Util_Orm::get_model_name($related_table, $namespace);
 			$related_table_obj = $model::forge();
 			$related_table_obj->{$parent_id_field} = $parent_id;
 			$related_table_obj->file_id = $file->id;

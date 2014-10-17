@@ -84,7 +84,7 @@ class Observer_CreatedAtCopyFromRelationalTable extends \Orm\Observer
 						return false;
 					}
 					$namespace = \Timeline\Site_Util::get_namespace4foreign_table($obj->{$value_from});
-					$model_from = \Site_Model::get_model_name($obj->{$value_from}, $namespace);
+					$model_from = \Util_Orm::get_model_name($obj->{$value_from}, $namespace);
 				}
 			}
 		}

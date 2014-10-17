@@ -41,14 +41,6 @@ class Util_Db
 		return $syllabary_range_list[$initial];
 	}
 
-	public static function get_ids_from_model_objects($model_objects, $id_column_name = 'id')
-	{
-		$ids = array();
-		foreach ($model_objects as $model_object) $ids[] = (int)$model_object->$id_column_name;
-
-		return $ids;
-	}
-
 	public static function get_columns($table, $is_column_only = true)
 	{
 		$list_columns = DB::list_columns($table);

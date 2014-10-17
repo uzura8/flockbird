@@ -266,15 +266,6 @@ class Model_Timeline extends \MyOrm\Model
 			->get_one();
 	}
 
-	public static function get4ids($timeline_ids)
-	{
-		if (!is_array($timeline_ids)) $timeline_ids = (array)$timeline_ids;
-
-		return self::query()
-			->where('id', 'in', $timeline_ids)
-			->get();
-	}
-
 	public static function get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids, $type = null, $is_last_one = false)
 	{
 		$query = self::query()->where('foreign_table', $foreign_table);

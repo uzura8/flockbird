@@ -351,7 +351,7 @@ class Controller_Album extends \Controller_Site
 			{
 				$error = '実施対象が選択されていません';
 			}
-			if (!$error && !\Site_Util::check_ids_in_model_objects($posted_album_image_ids, $album_images))
+			if (!$error && !\Util_Orm::check_ids_in_models($posted_album_image_ids, $album_images))
 			{
 				$error = '実施対象が正しく選択されていません';
 			}

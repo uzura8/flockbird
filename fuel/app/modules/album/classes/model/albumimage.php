@@ -233,28 +233,6 @@ class Model_AlbumImage extends \MyOrm\Model
 		return \Util_db::conv_col($result);
 	}
 
-	public static function get4ids($album_image_ids, $limit = 0, $sort = array('id' => 'asc'))
-	{
-		if (!$album_image_ids = \Util_Array::cast_values($album_image_ids, 'int', true)) return null;
-
-		$query = self::query()
-			->related(array('album', 'file'))
-			->where('id', 'in', $album_image_ids);
-
-		$count_all = $query->count();
-
-		if ($sort)
-		{
-			foreach ($sort as $column => $order)
-			{
-				$query->order_by($column, $order);
-			}
-		}
-		if ($limit) $query->rows_limit($limit);
-
-		return $query->get();
-	}
-
 	public static function get4file_id($file_id)
 	{
 		return self::query()->where('file_id', $file_id)->get_one();

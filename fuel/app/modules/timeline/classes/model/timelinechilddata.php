@@ -124,8 +124,7 @@ class Model_TimelineChildData extends \MyOrm\Model
 			// 暫定的に album_image 限定
 			if ($obj->foreign_table != 'album_image') continue;
 
-			$model = \Site_Model::get_model_name('album_image', 'Album');
-			$child_obj = $model::check_authority($obj->foreign_id);
+			$child_obj = \Album\Model_AlbumImage::check_authority($obj->foreign_id);
 			if ($public_flag_range_max === false || \Site_Util::check_is_expanded_public_flag_range($public_flag_range_max, $child_obj->public_flag))
 			{
 				$public_flag_range_max = $child_obj->public_flag;

@@ -31,7 +31,7 @@ class Controller_Profile_Option_Api extends Controller_Api
 
 			$profile_option->label = $label;
 			$profile_option->profile_id = $profile_id;
-			$profile_option->sort_order = \Site_Model::get_next_sort_order('profile_option');
+			$profile_option->sort_order = \Model_ProfileOption::get_next_sort_order();
 
 			\DB::start_transaction();
 			$profile_option->save();

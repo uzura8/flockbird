@@ -32,9 +32,9 @@ class Model_MemberPre extends \Orm\Model
 
 	public static function _init()
 	{
-		static::$_properties['name']  = Util_Orm::get_prop('member', 'name');
-		static::$_properties['email'] = Util_Orm::get_prop('member_auth', 'email');
-		static::$_properties['password'] = Util_Orm::get_prop('member_auth', 'password');
+		static::$_properties['name'] = Model_Member::property('name');
+		static::$_properties['email'] = Model_MemberAuth::property('email');
+		static::$_properties['password'] = Model_MemberAuth::property('password');
 	}
 
 	public static function get4token($token)

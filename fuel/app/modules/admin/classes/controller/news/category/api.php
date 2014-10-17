@@ -31,7 +31,7 @@ class Controller_News_Category_Api extends Controller_Api
 
 			$news_category->name       = $name;
 			$news_category->label      = $label;
-			$news_category->sort_order = \Site_Model::get_next_sort_order('news_category', 'News');
+			$news_category->sort_order = \News\Model_NewsCategory::get_next_sort_order();
 
 			\DB::start_transaction();
 			$news_category->save();

@@ -50,7 +50,7 @@ $before_album_member_id = $album->member_id;
 )); ?>
 <?php endif; ?>
 <?php
-$album_image_count = \Album\Model_AlbumImage::get_count(array(
+$album_image_count = \Album\Model_AlbumImage::get_list_count(array(
 	'where' => \Site_Model::get_where_public_flag4access_from(
 		$access_from,
 		array(array('album_id', $album->id))

@@ -92,28 +92,6 @@ class Model_NewsFile extends \MyOrm\Model
 		return \Util_db::conv_col($result);
 	}
 
-	public static function get4ids($ids, $limit = 0, $sort = array('id' => 'asc'))
-	{
-		if (!$ids = \Util_Array::cast_values($ids, 'int', true)) return null;
-
-		$query = self::query()
-			->related(array('news', 'file'))
-			->where('id', 'in', $ids);
-
-		$count_all = $query->count();
-
-		if ($sort)
-		{
-			foreach ($sort as $column => $order)
-			{
-				$query->order_by($column, $order);
-			}
-		}
-		if ($limit) $query->rows_limit($limit);
-
-		return $query->get();
-	}
-
 	public static function get4file_id($file_id)
 	{
 		return self::query()->where('file_id', $file_id)->get_one();

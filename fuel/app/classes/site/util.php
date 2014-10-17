@@ -150,13 +150,6 @@ class Site_Util
 		return $form;
 	}
 
-	public static function check_ids_in_model_objects($target_ids, $model_objects)
-	{
-		$ids = Util_db::get_ids_from_model_objects($model_objects);
-
-		return Util_Array::array_in_array($target_ids, $ids);
-	}
-
 	public static function merge_module_configs($config, $config_name)
 	{
 		$modules = Module::loaded();

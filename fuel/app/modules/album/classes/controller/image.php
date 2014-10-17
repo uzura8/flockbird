@@ -86,7 +86,7 @@ class Controller_Image extends \Controller_Site
 			),
 			'order_by' => array('id' => 'desc'),
 		);
-		$ids = \Site_Model::get_col_array('album_image', 'id', $params, 'Album');
+		$ids = Model_AlbumImage::get_col_array('id', $params);
 		list($data['before_id'], $data['after_id']) = \Util_Array::get_neighborings($id, $ids);
 
 		$title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);

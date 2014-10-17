@@ -63,7 +63,7 @@ class Observer_DeleteNotice extends \Orm\Observer
 		// 事前に unread cache を削除
 		if (\Config::get('notice.cache.unreadCount.isEnabled'))
 		{
-			$member_ids = \Site_Model::get_col_array('notice_status', 'member_id', array('where' => array('notice_id' => $notice_id)), 'Notice');
+			$member_ids = \Notice\Model_NoticeStatus::get_col_array('member_id', array('where' => array('notice_id' => $notice_id)));
 			foreach ($member_ids as $member_id) \Notice\Site_Util::delete_unread_count_cache($member_id);
 		}
 	}

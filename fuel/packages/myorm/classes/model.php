@@ -3,6 +3,11 @@ namespace MyOrm;
 
 class Model extends \Orm\Model
 {
+	public static function get_table_name()
+	{
+		return static::$_table_name;
+	}
+
 	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')
 	{
 		if (!$id) throw new \HttpNotFoundException;
@@ -106,7 +111,7 @@ class Model extends \Orm\Model
 
 	public static function get_pager_list($params = array(), $page = 1, \Orm\Query $query = null)
 	{
-		if (!$query) $query = self::get_pager_list_query($params);
+		if (!$query) $query = self::get_list_query($params);
 		$count = $query->count();
 
 		// limit, offset
@@ -130,14 +135,14 @@ class Model extends \Orm\Model
 		return array('list' => $list, 'page' => $page, 'next_page' => $next_page);
 	}
 
-	public static function get_count($params = array(), \Orm\Query $query = null)
+	public static function get_list_count($params = array(), \Orm\Query $query = null)
 	{
-		if (!$query) $query = self::get_pager_list_query($params);
+		if (!$query) $query = self::get_list_query($params);
 
 		return $query->count();
 	}
 
-	public static function get_pager_list_query($params = array())
+	public static function get_list_query($params = array())
 	{
 		$query = self::query();
 
@@ -171,20 +176,20 @@ class Model extends \Orm\Model
 						$query->$method_open();
 						foreach ($where as $key_child => $where_child)
 						{
-							$query = \Site_Model::add_where($query, $where_child, $key_child);
+							$query = self::add_where($query, $where_child, $key_child);
 						}
 						$query = $query->$method_close();
 					}
 					else
 					{
-						$query = \Site_Model::add_where($query, $where);
+						$query = self::add_where($query, $where);
 					}
 				}
 			}
 			else
 			{
 				$where = $params['where'];
-				$query = \Site_Model::add_where($query, $where);
+				$query = self::add_where($query, $where);
 			}
 		}
 		// order by
@@ -199,6 +204,101 @@ class Model extends \Orm\Model
 				}
 				$query->order_by($key, $value);
 			}
+		}
+
+		return $query;
+	}
+
+	public static function get_list_and_count($params = array())
+	{
+		$query = self::get_list_query($params);
+		$count = $query->count();
+
+		if (!empty($params['limit']))
+		{
+			$query->rows_limit($params['limit']);
+		}
+		if (!empty($params['offset']))
+		{
+			$query->rows_offset($params['offset']);
+		}
+		$list = $query->get();
+
+		return array($list, $count);
+	}
+
+	public static function get_count($conditions = array())
+	{
+		$query = self::query();
+		if ($conditions) $query = $query->where($conditions);
+
+		return $query->count();
+	}
+
+	public static function get4ids($ids, $limit = 0, $sort = array('id' => 'asc'), $relateds = array())
+	{
+		if (!is_array($ids)) $ids = (array)$ids;
+		if (!$ids = \Util_Array::cast_values($ids, 'int', true)) throw new \InvalidArgumentException('First parameter is invalid.');
+
+		$query = self::query()->where('id', 'in', $ids);
+		if ($relateds) $query->related($relateds);
+		if ($sort)
+		{
+			foreach ($sort as $column => $order)
+			{
+				$query->order_by($column, $order);
+			}
+		}
+		if ($limit) $query->rows_limit($limit);
+
+		return $query->get();
+	}
+
+	public static function get_next_sort_order($sort_order_col_name = 'sort_order')
+	{
+		$max = (int)self::query()->max($sort_order_col_name);
+
+		return Site_Util::get_next_sort_order_num($max);
+	}
+
+	public static function get_col_array($column, $params = array())
+	{
+		$params['select'] = $column;
+		$query = self::get_list_query($params);
+
+		return \Util_Orm::conv_col2array($query->get(), $column);
+	}
+
+	public static function get_last($conditions = array(), $sort_col = 'id')
+	{
+		$query = self::query();
+		if ($conditions) $query->where($conditions);
+		$query->order_by($sort_col, 'desc')->rows_limit(1);
+
+		return $query->get_one();
+	}
+
+	private static function add_where(\Orm\Query $query, $wheres, $key = null)
+	{
+		$method = 'where';
+		if ($key)
+		{
+			if ($key === 'or')
+			{
+				$method = 'or_where';
+			}
+			elseif ($key === 'and')
+			{
+				$method = 'and_where';
+			}
+		}
+		if (count($wheres) == 2)
+		{
+			$query = $query->$method($wheres[0], $wheres[1]);
+		}
+		elseif (count($wheres) === 3)
+		{
+			$query = $query->$method($wheres[0], $wheres[1], $wheres[2]);
 		}
 
 		return $query;
