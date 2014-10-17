@@ -97,6 +97,9 @@ class Controller_Note extends \Controller_Site
 		$note = Model_Note::check_authority($note_id);
 		$this->check_browse_authority($note->public_flag, $note->member_id);
 
+		// 既読処理
+		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'note', $id, 'comment');
+
 		// note_album_image
 		$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
 

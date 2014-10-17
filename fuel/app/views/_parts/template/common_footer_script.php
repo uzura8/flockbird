@@ -23,6 +23,9 @@ function get_term(key) {
 		'do_like': '<?php echo term('form.do_like'); ?>',
 		'undo_like': '<?php echo term('form.undo_like'); ?>',
 <?php endif; ?>
+<?php if (Module::loaded('note')): ?>
+		'note': '<?php echo term('note'); ?>',
+<?php endif; ?>
 <?php if (Module::loaded('album')): ?>
 		'album': '<?php echo term('album'); ?>',
 		'album_image': '<?php echo term('album_image'); ?>',

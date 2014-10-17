@@ -93,6 +93,34 @@ class Model_NoteComment extends \MyOrm\Model
 				'property_from_member_id' => 'member_id',
 			);
 		}
+
+		if (is_enabled('notice'))
+		{
+			static::$_observers['MyOrm\Observer_InsertNotice'] = array(
+				'events'   => array('after_insert'),
+				'update_properties' => array(
+					'foreign_table' => array('note' => 'value'),
+					'foreign_id' => array('note_id' => 'property'),
+					'type_key' => array('comment' => 'value'),
+					'member_id_from' => array('member_id' => 'property'),
+					'member_id_to' => array(
+						'related' => array(
+							'table' => 'note',
+							'property' => 'member_id',
+						),
+					),
+				),
+			);
+			$type = \Notice\Site_Util::get_notice_type('comment');
+			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
+				'events' => array('before_delete'),
+				'conditions' => array(
+					'foreign_table' => array('note' => 'value'),
+					'foreign_id' => array('note_id' => 'property'),
+					'type' => array($type => 'value'),
+				),
+			);
+		}
 	}
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id')
