@@ -105,7 +105,7 @@ class Test_Model_TimelineComment extends \TestCase
 		self::save_comment(self::$member_id, 'Test comment2.');
 		$timeline_comment = self::save_comment(self::$member_id, 'Test comment3.');
 
-		// note_comment delete
+		// timeline_comment delete
 		\Util_Develop::sleep();
 		$timeline_comment->delete();
 
@@ -156,7 +156,7 @@ class Test_Model_TimelineComment extends \TestCase
 		$foreign_id = self::$timeline_id;
 		if ($is_test_after_read) $read_count = \Notice\Site_Util::change_status2read($member_id_to, self::$foreign_table, $timeline_id, self::$type_key);
 		$countup_num = $is_countup_exp ? 1 : 0;
-		$notice_count_all_before = \Util_Orm::get_count_all('\Notice\Model_Notice');
+		$notice_count_all_before = \Notice\Model_Notice::get_count();
 
 		// set cache
 		$notice_count_before = \Notice\Site_Util::get_unread_count($member_id_to);
@@ -186,7 +186,7 @@ class Test_Model_TimelineComment extends \TestCase
 
 		// Model_Notice
 		// 件数
-		$notice_count_all = \Util_Orm::get_count_all('\Notice\Model_Notice');
+		$notice_count_all = \Notice\Model_Notice::get_count();
 		$notice_count_all_countup_num = $is_created_record_notice_exp ? 1 : 0;
 		$this->assertEquals($notice_count_all_before + $notice_count_all_countup_num, $notice_count_all);
 
@@ -194,7 +194,7 @@ class Test_Model_TimelineComment extends \TestCase
 		if ($notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type(self::$type_key)))
 		{
 			$notice_status = \Notice\Model_NoticeStatus::get4member_id_and_notice_id($member_id_to, $notice->id);
-			$notice_member_from = \Util_Orm::get_last_row('\Notice\Model_NoticeMemberFrom');
+			$notice_member_from = \Notice\Model_NoticeMemberFrom::get_last();
 			if ($mc_notice_comment !== 0 && $member_id_to != $member_id_from)
 			{
 				$this->assertEquals($member_id_from, $notice_member_from->member_id);
@@ -250,7 +250,7 @@ class Test_Model_TimelineComment extends \TestCase
 		}
 		$timeline_id = self::$timeline_id;
 		$foreign_id = self::$timeline_id;
-		$watch_count_all_before = \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent');
+		$watch_count_all_before = \Notice\Model_MemberWatchContent::get_count();
 		// 既読処理
 		$read_count = \Notice\Site_Util::change_status2read($member_id_from, self::$foreign_table, $timeline_id, self::$type_key);
 
@@ -269,7 +269,7 @@ class Test_Model_TimelineComment extends \TestCase
 			$this->assertNull($member_watch_content);
 		}
 		// 件数
-		$watch_count_all = \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent');
+		$watch_count_all = \Notice\Model_MemberWatchContent::get_count();
 		$watch_count_all_countup_num = $is_countup_watch_exp ? 1 : 0;
 		$this->assertEquals($watch_count_all_before + $watch_count_all_countup_num, $watch_count_all);
 
@@ -323,10 +323,10 @@ class Test_Model_TimelineComment extends \TestCase
 		self::set_timeline();
 		$timeline_id = self::$timeline_id;
 		$foreign_id = self::$timeline_id;
-		$notice_count_all_before = \Util_Orm::get_count_all('\Notice\Model_Notice');
-		$notice_status_count_all_before = \Util_Orm::get_count_all('\Notice\Model_NoticeStatus');
-		$notice_member_from_count_all_before = \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom');
-		$member_watch_content_count_all_before = \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent');
+		$notice_count_all_before = \Notice\Model_Notice::get_count();
+		$notice_status_count_all_before = \Notice\Model_NoticeStatus::get_count();
+		$notice_member_from_count_all_before = \Notice\Model_NoticeMemberFrom::get_count();
+		$member_watch_content_count_all_before = \Notice\Model_MemberWatchContent::get_count();
 
 		// 他人がコメント
 		$timeline_comment = self::save_comment(2, 'Test comment1.');
@@ -334,10 +334,10 @@ class Test_Model_TimelineComment extends \TestCase
 		$this->assertNotNull($notice);
 
 		// 件数確認
-		$this->assertEquals($notice_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_Notice'));
-		$this->assertEquals($notice_status_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_NoticeStatus'));
-		$this->assertEquals($notice_member_from_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom'));
-		$this->assertEquals($member_watch_content_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent'));
+		$this->assertEquals($notice_count_all_before + 1, \Notice\Model_Notice::get_count());
+		$this->assertEquals($notice_status_count_all_before + 1, \Notice\Model_NoticeStatus::get_count());
+		$this->assertEquals($notice_member_from_count_all_before + 1, \Notice\Model_NoticeMemberFrom::get_count());
+		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());
 
 		// 関連テーブルのレコードが作成されていることを確認
 		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
@@ -349,10 +349,10 @@ class Test_Model_TimelineComment extends \TestCase
 		$timeline_comment->delete();
 
 		// 件数確認
-		$this->assertEquals($notice_count_all_before, \Util_Orm::get_count_all('\Notice\Model_Notice'));
-		$this->assertEquals($notice_status_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeStatus'));
-		$this->assertEquals($notice_member_from_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom'));
-		$this->assertEquals($member_watch_content_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent'));// watch は解除されない
+		$this->assertEquals($notice_count_all_before, \Notice\Model_Notice::get_count());
+		$this->assertEquals($notice_status_count_all_before, \Notice\Model_NoticeStatus::get_count());
+		$this->assertEquals($notice_member_from_count_all_before, \Notice\Model_NoticeMemberFrom::get_count());
+		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());// watch は解除されない
 
 		// 関連テーブルのレコードが削除されていることを確認
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
@@ -368,10 +368,10 @@ class Test_Model_TimelineComment extends \TestCase
 		$this->assertNotNull($notice);
 
 		// 件数確認
-		$this->assertEquals($notice_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_Notice'));
-		$this->assertEquals($notice_status_count_all_before + 2, \Util_Orm::get_count_all('\Notice\Model_NoticeStatus'));
-		$this->assertEquals($notice_member_from_count_all_before + 2, \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom'));
-		$this->assertEquals($member_watch_content_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent'));
+		$this->assertEquals($notice_count_all_before + 1, \Notice\Model_Notice::get_count());
+		$this->assertEquals($notice_status_count_all_before + 2, \Notice\Model_NoticeStatus::get_count());
+		$this->assertEquals($notice_member_from_count_all_before + 2, \Notice\Model_NoticeMemberFrom::get_count());
+		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());
 
 		// 関連テーブルのレコードが作成されていることを確認
 		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(2, $notice->id));
@@ -385,10 +385,10 @@ class Test_Model_TimelineComment extends \TestCase
 		$timeline_comment->delete();
 
 		// 件数確認
-		$this->assertEquals($notice_count_all_before, \Util_Orm::get_count_all('\Notice\Model_Notice'));
-		$this->assertEquals($notice_status_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeStatus'));
-		$this->assertEquals($notice_member_from_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom'));
-		$this->assertEquals($member_watch_content_count_all_before + 1, \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent'));// watch は解除されない
+		$this->assertEquals($notice_count_all_before, \Notice\Model_Notice::get_count());
+		$this->assertEquals($notice_status_count_all_before, \Notice\Model_NoticeStatus::get_count());
+		$this->assertEquals($notice_member_from_count_all_before, \Notice\Model_NoticeMemberFrom::get_count());
+		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());// watch は解除されない
 
 		// 関連テーブルのレコードが削除されていることを確認
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(2, $notice->id));
@@ -409,10 +409,10 @@ class Test_Model_TimelineComment extends \TestCase
 		$timeline->delete();
 
 		// 件数確認
-		$this->assertEquals($notice_count_all_before, \Util_Orm::get_count_all('\Notice\Model_Notice'));
-		$this->assertEquals($notice_status_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeStatus'));
-		$this->assertEquals($notice_member_from_count_all_before, \Util_Orm::get_count_all('\Notice\Model_NoticeMemberFrom'));
-		$this->assertEquals($member_watch_content_count_all_before, \Util_Orm::get_count_all('\Notice\Model_MemberWatchContent'));
+		$this->assertEquals($notice_count_all_before, \Notice\Model_Notice::get_count());
+		$this->assertEquals($notice_status_count_all_before, \Notice\Model_NoticeStatus::get_count());
+		$this->assertEquals($notice_member_from_count_all_before, \Notice\Model_NoticeMemberFrom::get_count());
+		$this->assertEquals($member_watch_content_count_all_before, \Notice\Model_MemberWatchContent::get_count());
 
 		// 関連テーブルのレコードが削除されていることを確認
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));

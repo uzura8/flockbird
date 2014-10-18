@@ -139,6 +139,11 @@ class Model_NoteComment extends \MyOrm\Model
 		return $obj;
 	}
 
+	public static function get4note_id($note_id)
+	{
+		return self::query()->where('note_id', $note_id)->get();
+	}
+
 	public static function get_count4note_id($note_id)
 	{
 		if (!empty(self::$count_per_note[$note_id])) return self::$count_per_note[$note_id];

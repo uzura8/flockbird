@@ -103,6 +103,16 @@ class Model_Note extends \MyOrm\Model
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 
+		if (is_enabled('notice'))
+		{
+			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
+				'events' => array('before_delete'),
+				'conditions' => array(
+					'foreign_table' => array('note' => 'value'),
+					'foreign_id' => array('id' => 'property'),
+				),
+			);
+		}
 		if (is_enabled('timeline'))
 		{
 			$type_note = \Config::get('timeline.types.note');

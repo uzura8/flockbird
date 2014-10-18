@@ -119,6 +119,16 @@ class Model_AlbumImage extends \MyOrm\Model
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 
+		if (is_enabled('notice'))
+		{
+			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
+				'events' => array('before_delete'),
+				'conditions' => array(
+					'foreign_table' => array('album_image' => 'value'),
+					'foreign_id' => array('id' => 'property'),
+				),
+			);
+		}
 		if (\Module::loaded('timeline'))
 		{
 			$type_album_image_profile = \Config::get('timeline.types.album_image_profile');
