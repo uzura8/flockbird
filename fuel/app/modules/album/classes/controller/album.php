@@ -438,7 +438,7 @@ class Controller_Album extends \Controller_Site
 		try
 		{
 			\DB::start_transaction();
-			$album->delete_relations();
+			$album->delete();
 			\DB::commit_transaction();
 			//if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 

@@ -217,7 +217,7 @@ class Test_Model_Album extends \TestCase
 		$album_filesize_total = self::get_album_filesize_total($album_id);
 		$member_filesize_before = self::get_member_filesize_total($member_id);
 
-		$album->delete_relations();
+		$album->delete();
 
 		// 件数
 		// album

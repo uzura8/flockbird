@@ -82,7 +82,7 @@ class Controller_Api extends \Controller_Site_Api
 
 			\DB::start_transaction();
 			$album = Model_Album::check_authority($id, $this->u->id, 'member');
-			$album->delete_relations();
+			$album->delete();
 			\DB::commit_transaction();
 
 			$response['status'] = 1;

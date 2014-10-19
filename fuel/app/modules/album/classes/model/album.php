@@ -72,6 +72,9 @@ class Model_Album extends \MyOrm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		'MyOrm\Observer_DeleteAlbum' => array(
+			'events' => array('before_delete'),
+		),
 	);
 
 	public static function _init()
@@ -171,22 +174,6 @@ class Model_Album extends \MyOrm\Model
 		}
 
 		return array($album, $moved_files, $is_changed);
-	}
-
-	public function delete_relations()
-	{
-		// Delete album_image file.
-		$album_images = Model_AlbumImage::get4album_id($this->id, true);
-		foreach ($album_images as $album_image)
-		{
-			$album_image->delete();
-		}
-
-		// timeline 投稿の削除
-		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $this->id);
-
-		// Delete album.
-		return $this->delete();
 	}
 
 	public function update_public_flag_with_relations($public_flag, $is_update_album_images = false)
