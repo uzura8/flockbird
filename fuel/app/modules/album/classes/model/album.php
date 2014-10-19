@@ -173,30 +173,20 @@ class Model_Album extends \MyOrm\Model
 		return array($album, $moved_files, $is_changed);
 	}
 
-	public static function delete_relations(Model_Album $album, $id = null)
+	public function delete_relations()
 	{
-		if (!$album)
-		{
-			if (!$id || !$album = self::find($id, array('rows_limit' => 1, 'related' => 'member')))
-			{
-				throw new \Exception('Invalid album id.');
-			}
-		}
-
-		$member_id = $album->member_id;
-
 		// Delete album_image file.
-		$album_images = Model_AlbumImage::get4album_id($album->id, true);
+		$album_images = Model_AlbumImage::get4album_id($this->id, true);
 		foreach ($album_images as $album_image)
 		{
 			$album_image->delete();
 		}
 
 		// timeline 投稿の削除
-		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $album->id);
+		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $this->id);
 
 		// Delete album.
-		return $album->delete();
+		return $this->delete();
 	}
 
 	public function update_public_flag_with_relations($public_flag, $is_update_album_images = false)

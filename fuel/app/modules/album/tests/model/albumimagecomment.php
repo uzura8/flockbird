@@ -388,7 +388,7 @@ class Test_Model_AlbumImageComment extends \TestCase
 		$this->assertNotNull($notice);
 
 		// delete album_image
-		Model_Album::delete_relations(self::$album);
+		self::$album->delete_relations();
 
 		// 件数確認
 		$this->assertEquals($notice_count_all_before, \Notice\Model_Notice::get_count());

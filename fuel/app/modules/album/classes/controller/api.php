@@ -82,9 +82,8 @@ class Controller_Api extends \Controller_Site_Api
 
 			\DB::start_transaction();
 			$album = Model_Album::check_authority($id, $this->u->id, 'member');
-			$deleted_files = Model_Album::delete_relations($album);
+			$album->delete_relations();
 			\DB::commit_transaction();
-			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 			$response['status'] = 1;
 			$status_code = 200;
