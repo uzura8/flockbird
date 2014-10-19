@@ -375,6 +375,33 @@ class Test_Model_AlbumImageComment extends \TestCase
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 3));
 		$this->assertNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $album_image_id, 3));
 		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+
+		// album delete test
+		// setup
+		self::$album_image = self::set_album_image(null, 1, self::$album->id);
+		$foreign_id = self::$album_image->id;
+		$album_image_id = self::$album_image->id;
+
+		// comment athers
+		$album_image_comment = $this->save_comment(3, 'Test comment1.');
+		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key));
+		$this->assertNotNull($notice);
+
+		// delete album_image
+		Model_Album::delete_relations(self::$album);
+
+		// 件数確認
+		$this->assertEquals($notice_count_all_before, \Notice\Model_Notice::get_count());
+		$this->assertEquals($notice_status_count_all_before, \Notice\Model_NoticeStatus::get_count());
+		$this->assertEquals($notice_member_from_count_all_before, \Notice\Model_NoticeMemberFrom::get_count());
+		$this->assertEquals($member_watch_content_count_all_before, \Notice\Model_MemberWatchContent::get_count());
+
+		// 関連テーブルのレコードが削除されていることを確認
+		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
+		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 3));
+		$this->assertNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $album_image_id, 3));
+		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+
 	}
 
 	private function save_comment($member_id, $body = null)
