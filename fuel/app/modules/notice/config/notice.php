@@ -8,7 +8,7 @@ return array(
 		),
 	),
 	'articles' => array(
-		'limit' => 3,
+		'limit' => 2,
 		'limit_max' => 5,
 	),
 	'modalArticles' => array(

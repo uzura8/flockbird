@@ -24,7 +24,7 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$this->check_response_format('json');
 
-			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('notice.articles.limit_max'), \Config::get('notice.articles.limit_max'));
+			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('notice.articles.limit'), \Config::get('notice.articles.limit_max'));
 			$data = Model_NoticeStatus::get_pager_list4member_id($this->u->id, $limit, $page);
 
 			$status_code = 200;

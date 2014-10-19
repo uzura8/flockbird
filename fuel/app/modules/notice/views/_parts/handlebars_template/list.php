@@ -10,7 +10,7 @@
 {{/each}}
 {{#if next_page}}
 {{#if is_detail}}
-<a href="#" data-uri="notice/api/list.json" data-get_data="{{conv2objStr 'page' next_page}}" data-list="#article_list" data-template="#notices-template" id="listMoreBox_notice_detail" class="listMoreBox js-ajax-loadList"><?php echo term('site.see_more'); ?></a>
+<a href="#" data-uri="notice/api/list.json" data-get_data="{{conv2objStr 'page' next_page 'is_detail' 1}}" data-list="#article_list" data-template="#notices-template" id="listMoreBox_notice_detail" class="listMoreBox js-ajax-loadList"><?php echo term('site.see_more'); ?></a>
 {{else}}
 <?php echo Html::anchor('member/notice', term('site.see_more'), array('class' => 'listMoreBox')); ?>
 {{/if}}
