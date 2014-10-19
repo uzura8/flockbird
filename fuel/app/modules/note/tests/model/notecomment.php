@@ -25,6 +25,7 @@ class Test_Model_NoteComment extends \TestCase
 	{
 		self::$note_before = self::set_note();
 		self::$is_check_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
+		self::$is_check_notice_cache = (is_enabled('notice') && \Config::get('notice.cache.unreadCount.isEnabled'));
 	}
 
 	protected function setUp()
@@ -358,7 +359,7 @@ class Test_Model_NoteComment extends \TestCase
 
 		// 他人がコメント
 		$note_comment = self::save_comment(2, 'Test comment1.');
-		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$note_id, \Notice\Site_Util::get_notice_type(self::$type_key));
+		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $note_id, \Notice\Site_Util::get_notice_type(self::$type_key));
 		$this->assertNotNull($notice);
 
 		// 件数確認
@@ -370,8 +371,8 @@ class Test_Model_NoteComment extends \TestCase
 		// 関連テーブルのレコードが作成されていることを確認
 		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNotNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 2));
-		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, self::$note_id, 2));
-		$this->assertNotNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $note_id, 2));
+		$this->assertNotNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 
 		// コメントを削除
 		$note_comment->delete();
@@ -385,14 +386,14 @@ class Test_Model_NoteComment extends \TestCase
 		// 関連テーブルのレコードが削除されていることを確認
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 2));
-		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, self::$note_id, 2));// watch は解除されない
-		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $note_id, 2));// watch は解除されない
+		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 
 
 		// 自分もコメント
 		$note_comment = self::save_comment(2, 'Test comment2-2.');
 		self::save_comment(1, 'Test comment1.');
-		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$note_id, \Notice\Site_Util::get_notice_type(self::$type_key));
+		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $note_id, \Notice\Site_Util::get_notice_type(self::$type_key));
 		$this->assertNotNull($notice);
 
 		// 件数確認
@@ -406,8 +407,8 @@ class Test_Model_NoteComment extends \TestCase
 		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNotNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 2));
 		$this->assertNotNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, self::$member_id));
-		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, self::$note_id, 2));
-		$this->assertNotNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $note_id, 2));
+		$this->assertNotNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 
 		// コメントを削除
 		$note_comment->delete();
@@ -423,17 +424,17 @@ class Test_Model_NoteComment extends \TestCase
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 2));
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, self::$member_id));
-		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, self::$note_id, 2));// watch は解除されない
-		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $note_id, 2));// watch は解除されない
+		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 
 
 		// 他人がコメント
 		$note_comment = self::save_comment(3, 'Test comment1.');
-		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$note_id, \Notice\Site_Util::get_notice_type(self::$type_key));
+		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $note_id, \Notice\Site_Util::get_notice_type(self::$type_key));
 		$this->assertNotNull($notice);
 
 		// note 削除
-		$note = Model_note::find(self::$note_id);
+		$note = Model_note::find($note_id);
 		$note->delete_with_relations();
 
 		// 件数確認
@@ -445,8 +446,8 @@ class Test_Model_NoteComment extends \TestCase
 		// 関連テーブルのレコードが削除されていることを確認
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 3));
-		$this->assertNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, self::$note_id, 3));
-		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, self::$note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
+		$this->assertNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $note_id, 3));
+		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $note_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 	}
 
 	private static function set_note()
@@ -474,5 +475,10 @@ class Test_Model_NoteComment extends \TestCase
 		$comment->save();
 
 		return $comment;
+	}
+
+	private static function check_no_cache($member_id)
+	{
+		return is_null(\Site_Develop::get_cache(\Notice\Site_Util::get_unread_count_cache_key($member_id), \Config::get('notice.cache.unreadCount.expir')));
 	}
 }
