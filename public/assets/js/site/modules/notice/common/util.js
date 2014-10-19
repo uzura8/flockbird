@@ -71,6 +71,8 @@ function convertNoticeType(type)
 	{
 		case '3':
 			return get_term('comment');
+		case '4':
+			return get_term('like');
 	}
 	return '';
 }
