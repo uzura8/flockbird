@@ -133,7 +133,7 @@ class Util_Array
 	public static function unset_item($target_value, array $array)
 	{
 		$target_key = array_search($target_value, $array);
-		if (!is_null($target_key)) unset($array[$target_key]);
+		if ($target_key !== false) unset($array[$target_key]);
 
 		 return $array;
 	}
