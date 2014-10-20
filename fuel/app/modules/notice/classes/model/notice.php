@@ -94,12 +94,26 @@ class Model_Notice extends \MyOrm\Model
 			->get_one();
 	}
 
-	public static function get4foreign_data($foreign_table, $foreign_id, $type)
+	public static function get4foreign_data($foreign_table, $foreign_id, $types = null)
 	{
-		return self::query()
+		if ($types && !is_array($types)) $types = (array)$types;
+
+		$query = self::query()
 			->where('foreign_table', $foreign_table)
-			->where('foreign_id', $foreign_id)
-			->where('type', $type)
-			->get();
+			->where('foreign_id', $foreign_id);
+
+		if ($types)
+		{
+			if (count($types) == 1)
+			{
+				$query->where('type', $types[0]);
+			}
+			else
+			{
+				$query->where('type', 'in', $types);
+			}
+		}
+
+		return $query->get();
 	}
 }

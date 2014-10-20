@@ -57,7 +57,7 @@ class Controller_Image extends \Controller_Site
 		$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 
 		// 既読処理
-		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album_image', $id, 'comment');
+		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album_image', $id);
 
 		// album image_comment
 		$default_params = array('latest' => 1);

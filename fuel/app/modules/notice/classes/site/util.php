@@ -72,9 +72,9 @@ class Site_Util
 		throw new \InvalidArgumentException('Parameter is invalid.');
 	}
 
-	public static function change_status2read($member_id, $foreign_table, $foreign_id, $type_key)
+	public static function change_status2read($member_id, $foreign_table, $foreign_id, $type_keys = null)
 	{
-		$notices = Model_Notice::get4foreign_data($foreign_table, $foreign_id, self::get_notice_type($type_key));
+		$notices = Model_Notice::get4foreign_data($foreign_table, $foreign_id, self::convert_type_keys2types($type_keys));
 		$reduce_num = 0;
 		foreach ($notices as $notice)
 		{
@@ -83,6 +83,20 @@ class Site_Util
 		self::delete_unread_count_cache($member_id);
 
 		return $reduce_num;
+	}
+
+	protected static function convert_type_keys2types($type_keys = null)
+	{
+		$types = array();
+		if ($type_keys) return $types;
+
+		if (!is_array($type_keys)) $type_keys = (array)$type_keys;
+		foreach ($type_keys as $type_key)
+		{
+			$types[] = self::get_notice_type($type_key);
+		}
+
+		return $types;
 	}
 
 	public static function get_unread_count($member_id)
