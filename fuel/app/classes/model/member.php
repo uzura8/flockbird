@@ -70,8 +70,8 @@ class Model_Member extends \MyOrm\Model
 			'form' => array('type' => 'radio'),
 		),
 		'birthyear' => array(
-			'data_type' => 'integer',
-			'validation' => array('trim', 'numeric_min' => array(1900), 'numeric_max' => array(2100)),
+			'data_type' => 'int',
+			'validation' => array('numeric_min' => array(1900), 'numeric_max' => array(2100)),
 			'form' => array('type' => 'select'),
 		),
 		'birthyear_public_flag' => array(

@@ -208,7 +208,7 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 		}
 
 		// check if we already have an account with this email address or username
-		$duplicate = \Model_MemberAuth::query()->where('email', $email)->get_one();;
+		$duplicate = \Model_MemberAuth::query()->where('email', $email)->get_one();
 
 		// did we find one?
 		if ($duplicate)
