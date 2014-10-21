@@ -267,16 +267,16 @@ class Test_Model_TimelineLike extends \TestCase
 		//   追加コメントが通知されるか？
 		$data[] = array(6, 4, 1, 1, 4,  true,  true, 0);// #0: 他人が自分に -> 自分が追加コメント
 		$data[] = array(6, 4, 1, 1, 5, false,  true, 1);// #1: 他人が自分に -> 他人が追加コメント
-		$data[] = array(6, 6, 1, 1, 5, false, false, 0);// #2: 自分が自分に -> 他人が追加コメント
+		$data[] = array(6, 6, 1, 1, 5, false, false, 1);// #2: 自分が自分に -> 他人が追加コメント
 		$data[] = array(6, 6, 1, 1, 6, false, false, 0);// #3: 自分が自分に -> 自分が追加コメント
 		// 自分がイイねした投稿をウォッチしない(設定が NULL)
 		$data[] = array(6, 8, 1, null, 9, false, false, 0);// #4: 他人が自分に -> 他人が追加コメント
-		$data[] = array(6, 6, 1, null, 9, false, false, 0);// #5: 自分が自分に -> 他人が追加コメント
+		$data[] = array(6, 6, 1, null, 9, false, false, 1);// #5: 自分が自分に -> 他人が追加コメント
 		$data[] = array(6, 6, 1, null, 6, false, false, 0);// #6: 自分が自分に -> 自分が追加コメント
 		//// 自分がイイねした投稿をウォッチしない
 		$data[] = array(7, 4, 1, 0, 4, false, false, 0);// #7:  他人が自分に -> 自分が追加コメント
 		$data[] = array(7, 4, 1, 0, 5, false, false, 0);// #8:  他人が自分に -> 他人が追加コメント
-		$data[] = array(7, 7, 1, 0, 5, false, false, 0);// #9: 自分が自分に -> 他人が追加コメント
+		$data[] = array(7, 7, 1, 0, 5, false, false, 1);// #9: 自分が自分に -> 他人が追加コメント
 		$data[] = array(7, 7, 1, 0, 7, false, false, 0);// #10: 自分が自分に -> 自分が追加コメント
 
 		return $data;
