@@ -1,5 +1,5 @@
 <?php
-class Model_MemberEmailPre extends \Orm\Model
+class Model_MemberEmailPre extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_email_pre';
 	protected static $_belongs_to = array(

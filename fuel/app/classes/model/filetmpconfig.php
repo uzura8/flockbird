@@ -1,5 +1,5 @@
 <?php
-class Model_FileTmpConfig extends \Orm\Model
+class Model_FileTmpConfig extends \MyOrm\Model
 {
 	protected static $_table_name = 'file_tmp_config';
 

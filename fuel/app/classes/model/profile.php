@@ -1,6 +1,6 @@
 <?php
 
-class Model_Profile extends \Orm\Model
+class Model_Profile extends \MyOrm\Model
 {
 	protected static $_table_name = 'profile';
 

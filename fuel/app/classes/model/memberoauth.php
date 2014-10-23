@@ -1,5 +1,5 @@
 <?php
-class Model_MemberOauth extends \Orm\Model
+class Model_MemberOauth extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_oauth';
 	protected static $_has_one = array(

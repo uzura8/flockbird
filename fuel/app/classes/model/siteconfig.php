@@ -1,5 +1,5 @@
 <?php
-class Model_SiteConfig extends \Orm\Model
+class Model_SiteConfig extends \MyOrm\Model
 {
 	protected static $_table_name = 'site_config';
 	protected static $_properties = array(

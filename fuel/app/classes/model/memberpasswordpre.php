@@ -1,5 +1,5 @@
 <?php
-class Model_MemberPasswordPre extends \Orm\Model
+class Model_MemberPasswordPre extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_password_pre';
 	protected static $_belongs_to = array(

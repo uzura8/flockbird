@@ -1,7 +1,7 @@
 <?php
 namespace Timeline;
 
-class Model_MemberFollowTimeline extends \Orm\Model
+class Model_MemberFollowTimeline extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_follow_timeline';
 

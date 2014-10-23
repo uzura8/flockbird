@@ -1,5 +1,5 @@
 <?php
-class Model_Comment extends \Orm\Model
+class Model_Comment extends \MyOrm\Model
 {
 	protected static $_belongs_to = array('post', 'user');
 

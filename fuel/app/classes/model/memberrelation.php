@@ -1,6 +1,6 @@
 <?php
 
-class Model_MemberRelation extends \Orm\Model
+class Model_MemberRelation extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_relation';
 	protected static $_has_one = array(

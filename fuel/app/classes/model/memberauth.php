@@ -1,6 +1,6 @@
 <?php
 
-class Model_MemberAuth extends \Orm\Model
+class Model_MemberAuth extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_auth';
 	protected static $_has_one = array(

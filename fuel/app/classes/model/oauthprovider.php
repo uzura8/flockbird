@@ -1,5 +1,5 @@
 <?php
-class Model_OauthProvider extends \Orm\Model
+class Model_OauthProvider extends \MyOrm\Model
 {
 	protected static $_table_name = 'oauth_provider';
 	protected static $_properties = array(

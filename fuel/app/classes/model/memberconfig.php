@@ -1,5 +1,5 @@
 <?php
-class Model_MemberConfig extends \Orm\Model
+class Model_MemberConfig extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_config';
 	protected static $_belongs_to = array(

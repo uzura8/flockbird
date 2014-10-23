@@ -1,5 +1,5 @@
 <?php
-class Model_MemberPre extends \Orm\Model
+class Model_MemberPre extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_pre';
 	protected static $_properties = array(

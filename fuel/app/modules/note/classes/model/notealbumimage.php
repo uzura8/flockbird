@@ -1,7 +1,7 @@
 <?php
 namespace Note;
 
-class Model_NoteAlbumImage extends \Orm\Model
+class Model_NoteAlbumImage extends \MyOrm\Model
 {
 	protected static $_table_name = 'note_album_image';
 
