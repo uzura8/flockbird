@@ -43,7 +43,7 @@ class Util_Orm
 		return $field;
 	}
 
-	// \MyOrm\Model::get_count 推奨
+	// recommend to use \MyOrm\Model::get_count.
 	public static function get_count_all($model_name, $conditions = array())
 	{
 		$query = $model_name::query();
@@ -52,7 +52,7 @@ class Util_Orm
 		return $query->count();
 	}
 
-	// \MyOrm\Model::get_last 推奨
+	// recommend to use \MyOrm\Model::get_last.
 	public static function get_last_row($model_name, $conditions = array(), $sort_col = 'id')
 	{
 		$query = $model_name::query();
