@@ -22,7 +22,7 @@ class Site_Model
 		if ($max_id || $since_id) $query->and_where_open();
 		if ($is_mytimeline)
 		{
-			if ($follow_timeline_ids = self::get_follow_timeline_ids($self_member_id))
+			if ($follow_timeline_ids = Model_MemberFollowTimeline::get_cols('timeline_id', array('member_id' => $self_member_id)))
 			{
 				$query->or_where_open();
 					$query->and_where_open();
@@ -151,17 +151,6 @@ class Site_Model
 		}
 
 		return null;
-	}
-
-	public static function get_follow_timeline_ids($member_id)
-	{
-		return \Util_db::conv_col(
-			\DB::select('timeline_id')->from('member_follow_timeline')
-				->where('member_id', $member_id)
-				->order_by('updated_at', 'desc')
-				->limit(\Config::get('timeline.follow_timeline_limit_max'))
-				->execute()->as_array()
-		);
 	}
 
 	public static function save_timeline($member_id, $public_flag = null, $type_key = null, $foreign_id = null, $save_datetime = null, $body = null, Model_Timeline $timeline = null, $child_foreign_ids = array())
