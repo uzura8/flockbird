@@ -137,4 +137,14 @@ class Util_Array
 
 		 return $array;
 	}
+
+	public static function rand_weighted(array $array)
+	{
+		$sum  = array_sum($array);
+		$rand = rand(1, $sum);
+		foreach($array as $key => $weight)
+		{
+			if (($sum -= $weight) < $rand) return $key;
+		}
+	}
 }

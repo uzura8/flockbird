@@ -15,14 +15,28 @@ define('PRJ_ENVIRONMENT', 'PRODUCTION');
 
 // DBサーバ接続設定
 $GLOBALS['DSN']['production'] = array(
+	// MasterDB 設定
 	'default' => array(
+		'type'        => 'pdo',
 		'connection'  => array(
 			'dsn'        => 'mysql:host=localhost;dbname=dbname',
 			'username'   => 'root',
 			'password'   => '',
 		),
-		'profiling' => true,
+		'connection_rate' => 0,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続). 0 を指定すると更新時のみ接続
+		//'readonly' => array(),// readonly は指定しない(connection_rate 設定が効かなくなる)
 	),
+	//// SlaveDB 設定
+	//'slave1' => array(
+	//	'type'        => 'pdo',
+	//	'connection'  => array(
+	//		'dsn'        => 'mysql:host=localhost;dbname=dbname',
+	//		'username'   => 'root',
+	//		'password'   => '',
+	//	),
+	//	'table_prefix' => '',
+	//	'connection_rate' => 1,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続)
+	//),
 );
 
 // 暗号化キー(ASCII文字列)

@@ -3,6 +3,100 @@ namespace MyOrm;
 
 class Model extends \Orm\Model
 {
+	protected static $_write_connection;
+	protected static $_write_connection_default;
+	protected static $_connection;
+	protected static $_connection_default;
+
+	/**
+	 * Fetch the database connection name to use
+	 *
+	 * @param	bool	if true return the writeable connection (if set)
+	 * @return  null|string
+	 */
+	public static function connection($writeable = false)
+	{
+		// if in tracsaction, conection force to be writable.
+		if (\DB::in_transaction()) $writeable = true;
+
+		if ($writeable)
+		{
+			if (empty(static::$_write_connection))
+			{
+				static::$_write_connection = static::get_write_connection_default();
+			}
+
+			return static::$_write_connection;
+		}
+
+		if (empty(static::$_connection))
+		{
+			static::$_connection = static::get_read_connection_default();
+		}
+
+		return static::$_connection;
+	}
+
+	protected static function get_write_connection_default()
+	{
+		if (static::$_write_connection_default) return static::$_write_connection_default;
+
+		if (!$db_configs = \Config::get('db')) \FuelException('Db setting error.');
+
+		if (!empty($db_configs['active'])) return $db_configs['active'];
+
+		return static::search_write_connection_default();
+	}
+
+	protected static function search_write_connection_default()
+	{
+		$connection_set_first = '';
+		foreach ($db_configs as $db => $config)
+		{
+			if (!static::check_is_db_config($config)) continue;
+
+			// set first set db to master db.
+			static::$_write_connection_default = $db;
+			break;
+		}
+		if (empty(static::$_write_connection_default)) \FuelException('Db setting error.');
+
+		return static::$_write_connection_default;
+	}
+
+	public static function get_read_connection_default()
+	{
+		if (static::$_connection_default) return static::$_connection_default;
+		static::$_connection_default = static::get_read_connection_random();
+
+		return static::$_connection_default;
+	}
+
+	protected static function get_read_connection_random()
+	{
+		$connection_rates = array();
+		$db_configs = \Config::get('db');
+		foreach ($db_configs as $db => $config)
+		{
+			if (!static::check_is_db_config($config)) continue;
+
+			$connection_rates[$db] = 1;
+			if (isset($config['connection_rate'])) $connection_rates[$db] = $config['connection_rate'];
+		}
+
+		return \Util_Array::rand_weighted($connection_rates);
+	}
+
+	protected static function check_is_db_config($config)
+	{
+		if (empty($config)) return false;
+		if (!is_array($config)) return false;
+		if (empty($config['type'])) return false;
+		if (!in_array($config['type'], array('pdo', 'mysql', 'mysqli'))) return false;
+
+		return true;
+	}
+
 	public static function get_table_name()
 	{
 		return static::$_table_name;
