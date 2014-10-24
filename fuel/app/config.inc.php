@@ -29,6 +29,16 @@ if (!defined('PRJ_MAX_FILE_UPLOADS')) define('PRJ_MAX_FILE_UPLOADS', ini_get('ma
 // ImageMagick のパス(ImageMagick を使用する場合のみ)
 if (!defined('PRJ_IMAGE_IMGMAGICK_PATH')) define('PRJ_IMAGE_IMGMAGICK_PATH', '');
 
+// profiling 設定 ON 時はプロファイラにクエリ情報を追加する
+if (PRJ_PROFILING)
+{
+	$env_key = strtolower(PRJ_ENVIRONMENT);
+	foreach ($GLOBALS['DSN'][$env_key] as $db => $config)
+	{
+		if (isset($GLOBALS['DSN'][$env_key][$db]['profiling'])) continue;
+		$GLOBALS['DSN'][$env_key][$db]['profiling'] = true;
+	}
+}
 
 if (!defined('PRJ_DOMAIN') && !empty($_SERVER['HTTP_HOST'])) define('PRJ_DOMAIN', $_SERVER['HTTP_HOST']);
 if (!defined('PRJ_URI_PATH')) define('PRJ_URI_PATH', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
