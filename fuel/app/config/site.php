@@ -6,7 +6,7 @@ $config = array(
 		'ajax_timeout' => 10000,
 	),
 	'login_uri' => array(
-		'site'  => 'auth/login',
+		'site' => 'auth/login',
 	),
 	'original_user_id' => array(
 		'site'  => 1,

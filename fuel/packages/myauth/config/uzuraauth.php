@@ -44,4 +44,18 @@ return array(
 	 * $_POST key for login password
 	 */
 	'password_post_key' => 'password',
+
+	/**
+	 * setting for account lock
+	 */
+	'accountLock' => array(
+		'isEnabled' => true,
+		'loginFailAcceptCount' => 10,
+		'recoveryTime' => 60 * 10,
+		'isLogging' => true,
+		'isSentNotificationMail' => array(
+			'member' => true,
+			'admin' => array('admin@example.com'),
+		),
+	),
 );

@@ -36,33 +36,44 @@ class Controller_Auth extends Controller_Site
 
 		if (Input::method() == 'POST')
 		{
-			if ($this->login_val->run())
+			try
 			{
 				Util_security::check_csrf();
+				if (!$this->login_val->run()) throw new FuelException($this->login_val->show_errors());
+				$post = $this->login_val->validated();
+				$posted_email = Arr::get($post, \Config::get('uzuraauth.username_post_key'));
+				$posted_password = Arr::get($post, \Config::get('uzuraauth.password_post_key'));
+
 				$auth = Auth::instance();
-
-				// check the credentials. This assumes that you have the previous table created
-				if (Auth::check() or $auth->login(Input::post('email'), Input::post('password')))
+				// account lock check.
+				if ($auth->check_is_account_locked($posted_email))
 				{
-					// does the user want to be remembered?
-					if (Input::param('rememberme', false))
-					{
-						// create the remember-me cookie
-						Auth::remember_me();
-					}
-					else
-					{
-						// delete the remember-me cookie if present
-						Auth::dont_remember_me();
-					}
+					throw new FuelException('アカウントがロックされています');
+				}
+				// login check.
+				if (!Auth::check() && !$auth->login($posted_email, $posted_password))
+				{
+					throw new FuelException;
+				}
 
-					// credentials ok, go right in
-					return $this->login_succeeded($destination);
+				// does the user want to be remembered?
+				if (Input::param('rememberme', false))
+				{
+					// create the remember-me cookie
+					Auth::remember_me();
 				}
 				else
 				{
-					$this->login_failed(false);
+					// delete the remember-me cookie if present
+					Auth::dont_remember_me();
 				}
+
+				// credentials ok, go right in
+				return $this->login_succeeded($destination);
+			}
+			catch(FuelException $e)
+			{
+				$this->login_failed(false, $e->getMessage());
 			}
 		}
 
@@ -152,10 +163,10 @@ class Controller_Auth extends Controller_Site
 		return $this->provider_login($provider, $response);
 	}
 
-	protected function login_failed($is_redirect = true)
+	protected function login_failed($is_redirect = true, $message = null)
 	{
-		Session::set_flash('error', 'ログインに失敗しました');
-		if ($is_redirect) Response::redirect('auth/login');
+		Session::set_flash('error', $message ?: 'ログインに失敗しました');
+		if ($is_redirect) Response::redirect(conf('login_uri.site'));
 	}
 
 	public function provider_login($provider, $response = null)

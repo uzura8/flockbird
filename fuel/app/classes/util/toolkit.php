@@ -156,4 +156,14 @@ class Util_Toolkit
 	{
 		return shell_exec("{$command} 2>&1");
 	}
+
+	public static function log_error($message)
+	{
+		\Log::error(
+			$message.': '.
+			\Input::uri().' '.
+			\Input::ip().
+			' "'.\Input::user_agent().'"'
+		);
+	}
 }

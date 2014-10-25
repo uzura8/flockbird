@@ -51,6 +51,18 @@ class Util_Date
 		return true;
 	}
 
+	public static function check_is_passed($past_time, $intarval_time, $base_time = '', $is_time_format = true)
+	{
+		if (!$is_time_format)
+		{
+			$past_time = strtotime($past_time);
+			if ($base_time) $base_time = strtotime($base_time);
+		}
+		if (!$base_time) $base_time = Date::time()->get_timestamp();
+
+		return $base_time > ($past_time + $intarval_time);
+	}
+
 	public static function sprit_date_str($date, $is_return_assoc = false, $delimiter = '-')
 	{
 		$items = explode($delimiter, $date);

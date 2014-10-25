@@ -17,15 +17,7 @@ class Util_security
 	{
 		if ( ! self::check_csrf_token($value))
 		{
-			if ($is_output_log)
-			{
-				\Log::error(
-					'CSRF: '.
-					\Input::uri().' '.
-					\Input::ip().
-					' "'.\Input::user_agent().'"'
-				);
-			}
+			if ($is_output_log) Util_Toolkit::log_error('CSRF');
 			throw new HttpInvalidInputException('Invalid input data');
 		}
 	}

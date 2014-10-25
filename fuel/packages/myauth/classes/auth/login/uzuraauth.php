@@ -96,6 +96,8 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 			return false;
 		}
 
+		if ($this->check_is_account_locked($email)) return false;
+
 		$password    = $this->hash_password($password);
 		$member_auth = \Model_MemberAuth::query()
 			->where('email', $email)
@@ -104,6 +106,7 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 
 		if (!$member_auth)
 		{
+			$this->countup_account_lock_count($email);
 			\Session::delete('member_id');
 			\Session::delete('login_hash');
 
@@ -113,6 +116,7 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 
 		\Session::set('member_id', $member_auth->member_id);
 		\Session::set('login_hash', $this->create_login_hash());
+		if (\Config::get('uzuraauth.accountLock.isEnabled')) \Session::delete('login_failed');
 		\Session::instance()->rotate();
 
 		return true;
@@ -571,6 +575,13 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 		return \Model_Member::find($id, array('rows_limit' => 1, 'related' => 'member_auth'));
 	}
 
+	private static function get_member_id4email($email)
+	{
+		if (!$member_auth = \Model_MemberAuth::query()->where('email', $email)->get_one()) return false;
+
+		return $member_auth->member_id;
+	}
+
 	/**
 	 * Perform the actual login check
 	 *
@@ -578,6 +589,150 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 	 */
 	public function validate_user()
 	{
+	}
+
+	/**
+	 * Account locked check
+	 *
+	 * @return  bool
+	 */
+	public function check_is_account_locked($email)
+	{
+		if (!\Config::get('uzuraauth.accountLock.isEnabled')) return false;
+		$login_failed_info = \Session::get('login_failed', array());
+		if (!$login_failed_info = \Session::get('login_failed', array())) return false;
+
+		if (!isset($login_failed_info[$email]['last_execute_time'])) return false;
+		if (\Util_Date::check_is_passed($login_failed_info[$email]['last_execute_time'], \Config::get('uzuraauth.accountLock.recoveryTime')))
+		{
+			$this->reset_account_lock_count($email);
+			return false;
+		}
+
+		if (!isset($login_failed_info[$email]['count'])) return false;
+		if ($login_failed_info[$email]['count'] < \Config::get('uzuraauth.accountLock.loginFailAcceptCount')) return false;
+
+		return true;
+	}
+
+	/**
+	 * Set account lock information.
+	 *
+	 * @return  bool
+	 */
+	private function countup_account_lock_count($email)
+	{
+		if (!\Config::get('uzuraauth.accountLock.isEnabled')) return;
+
+		$login_failed_info = \Session::get('login_failed', array());
+		$login_failed_count_current = isset($login_failed_info[$email]['count']) ? $login_failed_info[$email]['count'] : 0;
+		$login_failed_count_current++;
+		\Session::set('login_failed', array(
+			$email => array(
+				'count' => $login_failed_count_current,
+				'last_execute_time' => \Date::time()->get_timestamp(),
+			),
+		));
+
+		if ($login_failed_count_current >= \Config::get('uzuraauth.accountLock.loginFailAcceptCount'))
+		{
+			if (\Config::get('uzuraauth.accountLock.isLogging')) \Util_Toolkit::log_error('account_lock: '.$email);
+			$this->sent_noticication_mail($email);
+		}
+
+		return $login_failed_count_current;
+	}
+
+	/**
+	 * Reset account lock information.
+	 *
+	 * @return  bool
+	 */
+	private function reset_account_lock_count($email)
+	{
+		if (!\Config::get('uzuraauth.accountLock.isEnabled')) return;
+
+		\Session::set('login_failed', array(
+			$email => array(
+				'count' => 0,
+				'last_execute_time' => null,
+			),
+		));
+	}
+
+	/**
+	 * Sent account lock notificaton mail.
+	 *
+	 * @return  bool
+	 */
+	private function sent_noticication_mail($email)
+	{
+		if ($notification_mail_info = \Config::get('uzuraauth.accountLock.isSentNotificationMail', array())) return false;
+		if (empty($notification_mail_info['member']) && empty($notification_mail_info['admin'])) return false;
+
+		$send_mails = array();
+		$member = null;
+		if ($admin_mails = \Config::get('uzuraauth.accountLock.isSentNotificationEmail.admin')) $send_mails = $admin_mails;
+		if (\Config::get('uzuraauth.accountLock.isSentNotificationEmail.member') && $member_id = static::get_member_id4email($email))
+		{
+			$member = static::get_member4id($id);
+			$send_mails[] = $email;
+		}
+
+		$maildata = array(
+			'from_name' => \Config::get('mail.member_setting_common.from_name'),
+			'from_address' => \Config::get('mail.member_setting_common.from_mail_address'),
+		);
+		$maildata['member_id'] = $member ? $member->id : '';
+		$maildata['member_name'] = $member ? $member->name : '';
+		foreach ($send_mails as $send_mail)
+		{
+			$maildata['to_address'] = $send_mail;
+			$maildata['is_admin'] = in_array($send_mail, $admin_mails);
+			if (!$maildata['is_admin'] && $member) $maildata['to_name'] = $member->name;
+			try
+			{
+				$this->send_account_lock_mail($maildata);
+			}
+			catch(EmailValidationFailedException $e)
+			{
+				\Util_Toolkit::log_error('account_lock_mail_error: email validation error');
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				\Util_Toolkit::log_error('account_lock_mail_error: email sending error');
+			}
+			catch(FuelException $e)
+			{
+				\Util_Toolkit::log_error('account_lock_mail_error');
+			}
+		}
+	}
+
+	private function send_account_lock_mail($data)
+	{
+		$data['subject'] = 'アカウントがロックされました';
+		$data['body'] = <<< END
+アカウントがロックされました。
+
+====================
+ログインに失敗したメールアドレス: {$data['login_failed_email']}
+====================
+
+END;
+		if ($is_admin)
+		{
+			$data['body'] .= <<< END
+管理者向け情報
+====================
+member_id: {$data['member_id']}
+ニックネーム: {$data['member_name']}
+====================
+
+END;
+		}
+
+		Util_toolkit::sendmail($data);
 	}
 }
 
