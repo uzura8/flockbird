@@ -82,6 +82,8 @@ $response->body((string) $response);
 
 // This will add the execution time and memory usage to the output.
 // Comment this out if you don't use it.
+if (PRJ_ENVIRONMENT == 'DEVELOPMENT')
+{
 if (strpos($response->body(), '{exec_time}') !== false or strpos($response->body(), '{mem_usage}') !== false)
 {
 	$bm = Profiler::app_total();
@@ -92,6 +94,7 @@ if (strpos($response->body(), '{exec_time}') !== false or strpos($response->body
 			$response->body()
 		)
 	);
+}
 }
 
 $response->send(true);
