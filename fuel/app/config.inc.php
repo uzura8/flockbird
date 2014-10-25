@@ -8,6 +8,27 @@ define('PRJ_BASEPATH', realpath(APPPATH.'../../').DIRECTORY_SEPARATOR);
 // config.php の読み込み
 require PRJ_BASEPATH.'config.php';
 
+// error level 設定
+switch (PRJ_ENVIRONMENT)
+{
+	case 'DEVELOPMENT':
+		define('PRJ_ERROR_REPORTING', E_ALL);
+		define('PRJ_DISPLAY_ERRORS', 1);
+		break;
+	case 'TEST':
+		define('PRJ_ERROR_REPORTING', E_ALL ^ E_NOTICE);
+		define('PRJ_DISPLAY_ERRORS', 1);
+		break;
+	case 'STAGING':
+	case 'PRODUCTION':
+	default:
+		define('PRJ_ERROR_REPORTING', 0);
+		define('PRJ_DISPLAY_ERRORS', 0);
+		break;
+}
+error_reporting(PRJ_ERROR_REPORTING);
+ini_set('display_errors', PRJ_DISPLAY_ERRORS);
+
 // 公開ディレクトリ
 if (!defined('PRJ_PUBLIC_DIR')) define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public/');
 
@@ -52,27 +73,6 @@ $prefix = '';
 //if (PRJ_ENVIRONMENT == 'STAGING') $prefix = 'stg.';
 //if (PRJ_ENVIRONMENT == 'TEST') $prefix = 'test.';
 define('PRJ_BASE_URL', sprintf('%s://%s%s%s', $protocol, $prefix, PRJ_DOMAIN, PRJ_URI_PATH));
-
-// error level 設定
-switch (PRJ_ENVIRONMENT)
-{
-	case 'DEVELOPMENT':
-		define('PRJ_ERROR_REPORTING', E_ALL);
-		define('PRJ_DISPLAY_ERRORS', 1);
-		break;
-	case 'TEST':
-		define('PRJ_ERROR_REPORTING', E_ALL ^ E_NOTICE);
-		define('PRJ_DISPLAY_ERRORS', 1);
-		break;
-	case 'STAGING':
-	case 'PRODUCTION':
-	default:
-		define('PRJ_ERROR_REPORTING', 0);
-		define('PRJ_DISPLAY_ERRORS', 0);
-		break;
-}
-error_reporting(PRJ_ERROR_REPORTING);
-ini_set('display_errors', PRJ_DISPLAY_ERRORS);
 
 // public_flag 定義
 //  非公開は 0, 他は値が大きいほど公開範囲が狭くなるように定義する
