@@ -14,7 +14,7 @@ define('PRJ_ENVIRONMENT', 'PRODUCTION');
 //define('PRJ_URI_PATH', '/');
 
 // DBサーバ接続設定
-$GLOBALS['DSN']['production'] = array(
+$GLOBALS['_PRJ_DSN']['production'] = array(
 	// MasterDB 設定
 	'default' => array(
 		'type'        => 'pdo',

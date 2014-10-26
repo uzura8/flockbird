@@ -54,10 +54,10 @@ if (!defined('PRJ_IMAGE_IMGMAGICK_PATH')) define('PRJ_IMAGE_IMGMAGICK_PATH', '')
 if (PRJ_PROFILING)
 {
 	$env_key = strtolower(PRJ_ENVIRONMENT);
-	foreach ($GLOBALS['DSN'][$env_key] as $db => $config)
+	foreach ($GLOBALS['_PRJ_DSN'][$env_key] as $db => $config)
 	{
-		if (isset($GLOBALS['DSN'][$env_key][$db]['profiling'])) continue;
-		$GLOBALS['DSN'][$env_key][$db]['profiling'] = true;
+		if (isset($GLOBALS['_PRJ_DSN'][$env_key][$db]['profiling'])) continue;
+		$GLOBALS['_PRJ_DSN'][$env_key][$db]['profiling'] = true;
 	}
 }
 
