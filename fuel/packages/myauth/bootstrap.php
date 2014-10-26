@@ -16,6 +16,7 @@
 Autoloader::add_core_namespace('MyAuth');
 
 Autoloader::add_classes(array(
+	'MyAuth\\Auth_Login_Driver'     => __DIR__.'/classes/auth/login/driver.php',
 	'MyAuth\\Auth_Login_Simpleauth' => __DIR__.'/classes/auth/login/simpleauth.php',
 	'MyAuth\\Auth_Login_Uzuraauth'  => __DIR__.'/classes/auth/login/uzuraauth.php',
 ));

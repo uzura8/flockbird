@@ -8,7 +8,7 @@ namespace MyAuth;
  * @package     Fuel
  * @subpackage  Auth
  */
-class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
+class Auth_Login_Uzuraauth extends Auth_Login_Driver
 {
 
 	public static function _init()
@@ -98,7 +98,7 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 
 		if ($this->check_is_account_locked($email)) return false;
 
-		$password    = $this->hash_password($password);
+		$password    = $this->hash_password($password, $email);
 		$member_auth = \Model_MemberAuth::query()
 			->where('email', $email)
 			->where('password', $password)
@@ -248,7 +248,7 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 			$member_auth = \Model_MemberAuth::forge();
 			$member_auth->member_id = $member->id;
 			$member_auth->email     = $email;
-			$member_auth->password  = $this->hash_password((string) $password);
+			$member_auth->password  = $this->hash_password((string) $password, $email);
 			$member_auth->save();
 		}
 		catch (\FuelException $e)
@@ -289,32 +289,17 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 
 		// validate the values passed and assume the update array
 		$update = array();
-		if (array_key_exists('password', $values))
-		{
-			if (empty($values['old_password'])
-				or $current_member_auth->password != $this->hash_password(trim($values['old_password'])))
-			{
-				throw new \SimpleUserWrongPassword('Old password is invalid');
-			}
 
-			$password = trim(strval($values['password']));
-			if ($password === '')
-			{
-				throw new \SimpleUserUpdateException('Password can\'t be empty.', 6);
-			}
-			$update['password'] = $this->hash_password($password);
-			unset($values['password']);
-		}
-		if (array_key_exists('old_password', $values))
-		{
-			unset($values['old_password']);
-		}
 		if (array_key_exists('email', $values))
 		{
 			$email = filter_var(trim($values['email']), FILTER_VALIDATE_EMAIL);
 			if ( ! $email)
 			{
 				throw new \SimpleUserUpdateException('Email address is not valid', 7);
+			}
+			if ( ! array_key_exists('password', $values))
+			{
+				throw new \SimpleUserUpdateException('Need posted password to change email address');
 			}
 
 			$matches = \Model_MemberAuth::query()
@@ -329,6 +314,28 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 
 			$update['email'] = $email;
 			unset($values['email']);
+		}
+		$new_email_for_salt = array_key_exists('email', $update) ? $update['email'] : $current_member_auth->email;
+
+		if (array_key_exists('password', $values))
+		{
+			if (empty($values['old_password'])
+				or $current_member_auth->password != $this->hash_password(trim($values['old_password']), $current_member_auth->email))
+			{
+				throw new \SimpleUserWrongPassword('Old password is invalid');
+			}
+
+			$password = trim(strval($values['password']));
+			if ($password === '')
+			{
+				throw new \SimpleUserUpdateException('Password can\'t be empty.', 6);
+			}
+			$update['password'] = $this->hash_password($password, $new_email_for_salt);
+			unset($values['password']);
+		}
+		if (array_key_exists('old_password', $values))
+		{
+			unset($values['old_password']);
 		}
 
 		// load the updated values into the object
@@ -408,13 +415,11 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 
 	public function change_password_simple($member_id, $new_password)
 	{
-		$password_hash = $this->hash_password($new_password);
-
 		if (!$member_auth = \Model_MemberAuth::query()->where('member_id', $member_id)->get_one())
 		{
 			throw new \SimpleUserUpdateException('Member_id was invalid.');
 		}
-		$member_auth->password = $password_hash;
+		$member_auth->password = $this->hash_password($new_password, $member_auth->email);
 		$result = $member_auth->save();
 		if (!$result)
 		{
@@ -567,7 +572,7 @@ class Auth_Login_Uzuraauth extends \Auth\Auth_Login_Driver
 		if (!$member = self::get_member4id($member_id)) return false;
 		if (!$member->member_auth->password) return false;
 
-		return $member->member_auth->password == $this->hash_password($password);
+		return $member->member_auth->password == $this->hash_password($password, $member->member_auth->email);
 	}
 
 	private static function get_member4id($id)

@@ -226,10 +226,11 @@ END;
 			$auth = Auth::instance();
 			if ($val->run() && $auth->check_password())
 			{
+				$post = $val->validated();
 				try
 				{
 					DB::start_transaction();
-					if (!$auth->update_user(array('email' => $member_email_pre->email)))
+					if (!$auth->update_user(array('email' => $member_email_pre->email, 'old_password' => $post['password'], 'password' => $post['password'])))
 					{
 						throw new FuelException('change email error.');
 					}
