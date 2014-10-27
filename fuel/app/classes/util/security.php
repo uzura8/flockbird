@@ -26,17 +26,8 @@ class Util_security
 	{
 		if (Input::method() != $method)
 		{
-			if ($is_output_log)
-			{
-				\Log::error(
-					'METHOD: '.
-					\Input::uri().' '.
-					\Input::ip().' '.
-					\Input::method().
-					' "'.\Input::user_agent().'"'
-				);
-			}
-			throw new HttpInvalidInputException('Invalid input data');
+			if ($is_output_log) Util_Toolkit::log_error('METHOD');
+			throw new HttpMethodNotAllowed('Method not allowed');
 		}
 	}
 }
