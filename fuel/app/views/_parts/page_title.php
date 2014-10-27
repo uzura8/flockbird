@@ -2,7 +2,7 @@
 if (isset($label) && empty($label['name'])) unset($label);
 if (isset($label) && empty($label['attr'])) $label['attr'] = 'label-default';
 ?>
-.<h1<?php if (!empty($label)): ?> class="has_label"<?php endif; ?>>
+.<h1 class="h2<?php if (!empty($label)): ?> has_label<?php endif; ?>">
 	<?php echo $name; ?>
 <?php if (!empty($label)): ?>
  <?php echo label($label['name'],
