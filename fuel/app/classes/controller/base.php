@@ -21,6 +21,7 @@ class Controller_Base extends Controller_Hybrid
 		if (!defined('IS_API')) define('IS_API', Input::is_ajax());
 
 		$this->check_ssl_required_request_and_redirect();
+		$this->check_remote_ip();
 		$this->auth_instance = Auth::forge($this->auth_driver);
 		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
 		$this->check_auth_and_response();
@@ -54,6 +55,21 @@ class Controller_Base extends Controller_Hybrid
 		{
 			Response::redirect($ssl_url);
 		}
+	}
+
+	protected function check_remote_ip()
+	{
+		$module = Site_Util::get_module_name();
+		if (empty($GLOBALS['_PRJ_ACCESS_ACCEPT_IPS'][$module])) return;
+		if (in_array(\Input::ip(), $GLOBALS['_PRJ_ACCESS_ACCEPT_IPS'][$module])) return;
+
+		if (IS_API)
+		{
+			$response = new Response(null, 403);
+			$response->send();
+		}
+
+		Response::redirect('error/403');
 	}
 
 	protected function check_auth($is_return_true_for_not_auth_action = true)

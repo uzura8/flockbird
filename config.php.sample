@@ -54,6 +54,11 @@ define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 define('PRJ_SSL_MODE', false);
 
 
+// 管理画面アクセス許可IP設定 (未指定の場合、IP制限しない)
+$GLOBALS['_PRJ_ACCESS_ACCEPT_IPS']['admin'] = array(
+);
+
+
 // サイト名
 define('PRJ_SITE_NAME', 'サンプルSNS');
 define('PRJ_SITE_DESCRIPTION', 'サンプルSNSです');
