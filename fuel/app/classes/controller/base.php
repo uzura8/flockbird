@@ -275,7 +275,7 @@ class Controller_Base extends Controller_Hybrid
 
 	protected function common_FileTmp_post_upload($upload_type = 'img')
 	{
-		$_method = \Input::get_post('_method');
+		$_method = \Input::param('_method');
 		if (isset($_method) && $_method === 'DELETE')
 		{
 			return $this->common_FileTmp_delete_upload($upload_type);
