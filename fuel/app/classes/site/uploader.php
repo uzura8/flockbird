@@ -44,7 +44,6 @@ class Site_Uploader
 			if ($this->options['is_save_exif'] && $this->file->type == 'image/jpeg')
 			{
 				$exif = exif_read_data($tmp_file_path) ?: null;
-				//if ($exif) $exif = Util_string::convert_encoding($exif);
 				if ($exif) $exif = Util_String::validate_exif($exif);
 			}
 

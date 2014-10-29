@@ -247,6 +247,7 @@ class MyUploadHandler extends UploadHandler
 		if ($this->options['is_save_exif'] && $extention == 'jpg')
 		{
 			$exif = exif_read_data($file_path) ?: array();
+			if ($exif) $exif = Util_String::validate_exif($exif);
 		}
 
 		if ($this->options['upload_type'] == 'img')
