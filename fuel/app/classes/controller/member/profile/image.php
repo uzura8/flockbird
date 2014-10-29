@@ -167,7 +167,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 			}
 			else
 			{
-				if (is_enabled('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
+				Model_File::delete_with_timeline($this->u->file_id);
 				$this->u->file_id = null;
 				$this->u->save();
 			}
