@@ -55,12 +55,6 @@ class Controller_Member_Profile_Image extends Controller_Member
 			DB::start_transaction();
 			$file = Site_Member::save_profile_image($this->u);
 			DB::commit_transaction();
-			Site_Upload::make_thumbnails(
-				$file->file_path,
-				$file->filepath,
-				true,
-				(is_enabled('album') && conf('upload.types.img.types.m.save_as_album_image')) ? 'profile' : null
-			);
 			Session::set_flash('message', term('site.picture').'を更新しました。');
 		}
 		catch(FuelException $e)

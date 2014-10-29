@@ -455,4 +455,11 @@ class Site_Upload
 
 		return $name;
 	}
+
+	public static function make_raw_file_from_db($filepath, $filename)
+	{
+		if (!$bin = Model_FileBin::get_bin4file_name($filename)) return false;
+
+		return (bool)file_put_contents(self::get_uploaded_file_real_path($filepath, $filename), $bin);
+	}
 }

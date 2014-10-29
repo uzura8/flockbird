@@ -1,5 +1,5 @@
 <?php
-class Util_string
+class Util_String
 {
 	public static function camelize($underScoredWord)
 	{
@@ -164,5 +164,19 @@ class Util_string
 		$items[] = $str;
 
 		return implode('', $items);
+	}
+
+	public static function validate_exif($value)
+	{
+		// 配列の場合は再帰的に処理
+		if (is_array($value))
+		{
+			return array_map(array('Util_String', 'validate_exif'), $value);
+		}
+
+		$encoding = mb_detect_encoding($value);
+		$value = mb_convert_encoding($value, Fuel::$encoding, $encoding ?: 'auto');
+
+		return trim($value);
 	}
 }

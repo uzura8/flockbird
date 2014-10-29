@@ -17,7 +17,8 @@ class Site_Uploader
 			'path'           => APPPATH.'tmp',
 			'upload_dir'     => PRJ_UPLOAD_DIR.'img/raw/',
 			'is_save_exif'   => conf('upload.types.img.exif.is_use'),
-			'auto_orient'   => true,
+			'is_save_db'     => conf('upload.isSaveDb'),
+			'auto_orient'    => true,
 		);
 		if ($options)
 		{
@@ -25,30 +26,33 @@ class Site_Uploader
 		}
 	}
 
-	public function save($tmp_file_path = null)
+	public function save($uploaded_file_path = null)
 	{
 		try
 		{
-			if (!$tmp_file_path) $tmp_file_path = $this->upload_file();
-			$this->set_file_properties($tmp_file_path);
+			if (!$uploaded_file_path) $uploaded_file_path = $this->upload_file();
+			$this->set_file_properties($uploaded_file_path);
 			if (!Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], conf('upload.check_and_make_dir_level'), $this->options['path_chmod']))
 			{
 				throw new FuelException('ディレクトリの作成に失敗しました。');
 			}
-			if (!Util_file::move($tmp_file_path, $this->file->file_path)) throw new FuelException('Save raw file error.');
+			$tmp_file_path = APPPATH.'tmp/'.$this->file->name;
+			if (!Util_file::move($uploaded_file_path, $tmp_file_path)) throw new FuelException('Save raw file error.');
 
 			// exif データの取得
 			$exif = null;
 			if ($this->options['is_save_exif'] && $this->file->type == 'image/jpeg')
 			{
-				$exif = exif_read_data($this->file->file_path) ?: null;
+				$exif = exif_read_data($tmp_file_path) ?: null;
+				//if ($exif) $exif = Util_string::convert_encoding($exif);
+				if ($exif) $exif = Util_String::validate_exif($exif);
 			}
 
 			$is_resaved = false;
 			// 回転状態の補正
 			if ($this->options['auto_orient'] && !empty($exif['Orientation']))
 			{
-				Util_file::correct_orientation($this->file->file_path, $exif['Orientation']);
+				Util_file::correct_orientation($tmp_file_path, $exif['Orientation']);
 				$is_resaved = true;
 			}
 
@@ -56,15 +60,15 @@ class Site_Uploader
 			$file_size_before = $this->file->size;
 			if ($max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
 			{
-				$this->file->size = Site_Upload::check_max_size_and_resize($this->file->file_path, $max_size);
+				$this->file->size = Site_Upload::check_max_size_and_resize($tmp_file_path, $max_size);
 				$is_resaved = true;
 			}
 			if (conf('upload.types.img.exif.is_remove') && !$is_resaved)
 			{
-				Util_file::resave($this->file->file_path);
+				Util_file::resave($tmp_file_path);
 			}
-
-			$this->save_model_file($exif);
+			$file_bin_id = $this->save_file_bin($tmp_file_path);
+			$this->save_model_file($exif, $file_bin_id);
 		}
 		catch(\FuelException $e)
 		{
@@ -79,7 +83,36 @@ class Site_Uploader
 		return $this->file;
 	}
 
-	protected function save_model_file($exif)
+	protected function save_file_bin($tmp_file_path)
+	{
+		if ($this->options['is_save_db'])
+		{
+			$file_bin_id = $this->save_model_file_bin($tmp_file_path);
+		}
+		else
+		{
+			$file_bin_id = 0;
+			if (!Util_file::move($tmp_file_path, $this->file->file_path)) throw new FuelException('Save raw file error.');
+		}
+
+		return $file_bin_id;
+	}
+
+	protected function save_model_file_bin($file_path)
+	{
+		if (!$bin = Util_file::get_encoded_bin_data($file_path, true))
+		{
+			throw new FuelException('Binary data is invalid.');
+		}
+
+		$model_file_bin = Model_FileBin::forge();
+		$model_file_bin->bin = $bin;
+		$model_file_bin->save();
+
+		return $model_file_bin->id;
+	}
+
+	protected function save_model_file($exif, $file_bin_id = 0)
 	{
 		$model_file = new \Model_File;
 		$model_file->name     = $this->file->name;
@@ -88,6 +121,7 @@ class Site_Uploader
 		$model_file->path     = $this->options['filepath'];
 		$model_file->original_filename = $this->file->original_name;
 		$model_file->member_id         = $this->options['member_id'];
+		if ($file_bin_id) $model_file->file_bin_id = $file_bin_id;
 		if ($exif)
 		{
 			$model_file->exif = serialize($exif);

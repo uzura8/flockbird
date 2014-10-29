@@ -2,6 +2,7 @@
 
 class Site_image
 {
+	private $is_saved_db = false;
 	private $file_cate   = '';
 	private $split_num   = '';
 	private $filename    = '';
@@ -20,6 +21,7 @@ class Site_image
 
 	private function setup($config)
 	{
+		$this->is_saved_db = conf('upload.isSaveDb');
 		if (!$this->set_configs($config))   $this->is_noimage = true;
 		if (!$this->check_configs($config)) $this->is_noimage = true;
 		$this->filepath = sprintf('%s/%s/', $this->file_cate, $this->split_num);
@@ -77,8 +79,13 @@ class Site_image
 	private function check_file()
 	{
 		if ($this->filename == conf('upload.types.img.noimage_filename')) return false;
-		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename)) return false;
 		if (!$this->check_filename()) return false;
+		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename))
+		{
+			if (!$this->is_saved_db) return false;
+
+			return Site_Upload::make_raw_file_from_db($this->filepath, $this->filename);
+		}
 
 		return true;
 	}

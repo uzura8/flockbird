@@ -12,8 +12,12 @@ class Model_FileTmp extends \MyOrm\Model
 	);
 	protected static $_properties = array(
 		'id',
+		'file_bin_id' => array(
+			'data_type' => 'integer',
+			'validation' => array('valid_string' => array('numeric')),
+		),
 		'name' => array(
-			'validation' => array('trim', 'max_length' => array(64)),
+			'validation' => array('trim', 'required', 'max_length' => array(64)),
 		),
 		'path' => array(
 			'validation' => array('trim', 'max_length' => array(64)),
@@ -22,13 +26,15 @@ class Model_FileTmp extends \MyOrm\Model
 			'validation' => array('trim', 'max_length' => array(64)),
 		),
 		'filesize' => array(
-			'validation' => array('trim', 'valid_string' => array('integer')),
+			'data_type' => 'integer',
+			'validation' => array('trim', 'required', 'valid_string' => array('numeric')),
 		),
 		'original_filename' => array(
 			'validation' => array('trim', 'max_length' => array(255)),
 		),
 		'member_id' => array(
-			'validation' => array('trim', 'valid_string' => array('integer')),
+			'data_type' => 'integer',
+			'validation' => array('valid_string' => array('numeric')),
 		),
 		'user_type' => array(
 			'validation' => array('valid_string' => array('integer'), 'in_array' => array(array(0, 1))),
@@ -41,9 +47,6 @@ class Model_FileTmp extends \MyOrm\Model
 		'exif' => array(
 			'data_type' => 'text',
 			'validation' => array('trim'),
-		),
-		'type' => array(
-			'validation' => array('trim', 'max_length' => array(64)),
 		),
 		'shot_at',
 		'created_at',

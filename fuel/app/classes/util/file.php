@@ -317,4 +317,19 @@ class Util_file
 	{
 		return substr($filename, 0, 1) == '.';
 	}
+
+	public static function get_encoded_bin_data($file_path, $is_check_image = false)
+	{
+		if (!is_readable($file_path)) return false;
+
+		$fp = fopen($file_path, 'rb');
+		$image_data = fread($fp, filesize($file_path));
+		fclose($fp);
+
+		// 画像かどうかのチェック
+		if ($is_check_image && !@imagecreatefromstring($image_data)) return false;
+
+		return base64_encode($image_data);
+	}
+
 }

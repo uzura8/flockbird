@@ -89,6 +89,7 @@ CREATE TABLE `contacts` (
 
 CREATE TABLE `file` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `file_bin_id` int(11) NULL COMMENT 'file_bin id',
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
   `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File path',
   `type` varchar(256) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
@@ -107,6 +108,7 @@ CREATE TABLE `file` (
 
 CREATE TABLE `file_tmp` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `file_bin_id` int(11) NULL COMMENT 'file_bin id',
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
   `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File path',
   `type` varchar(256) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
@@ -137,6 +139,14 @@ CREATE TABLE `file_tmp_config` (
   UNIQUE KEY `file_tmp_id_name_UNIQUE_idx` (`file_tmp_id`, `name`),
   CONSTRAINT `file_tmp_config_file_tmp_id_file_tmp_id` FOREIGN KEY (`file_tmp_id`) REFERENCES `file_tmp` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of each temporary files';
+
+CREATE TABLE `file_bin` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `bin` longblob COMMENT 'Content of file',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves content of files';
 
 
 CREATE TABLE `member` (
