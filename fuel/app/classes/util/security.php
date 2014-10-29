@@ -8,7 +8,7 @@ class Util_security
 
 	public static function check_csrf_token($value = null)
 	{
-		$value = $value ?: \Input::post_get(\Config::get('security.csrf_token_key'), 'fail');
+		$value = $value ?: \Input::param(\Config::get('security.csrf_token_key'), 'fail');
 
 		return $value === self::get_csrf();
 	}

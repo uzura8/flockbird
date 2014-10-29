@@ -150,7 +150,7 @@ class Controller_Member_Api extends Controller_Site_Api
 		{
 			case 'timeline_public_flag':
 				$data['public_flag'] = $data[$name];
-				$data['view_icon_only'] = (bool)Input::post_get('icon_only_flag');
+				$data['view_icon_only'] = (bool)Input::param('icon_only_flag');
 				$data['is_mycontents'] = true;
 				$data['without_parent_box'] = true;
 				$data['is_use_in_form'] = true;

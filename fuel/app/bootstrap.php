@@ -16,7 +16,6 @@ Autoloader::add_classes(array(
 	'DBUtil' => APPPATH.'classes/dbutil.php',
 	'Uri' => APPPATH.'classes/uri.php',
 	'Validation' => APPPATH.'classes/validation.php',
-	'Input' => APPPATH.'classes/input.php',
 	'Agent' => APPPATH.'classes/agent.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 ));
