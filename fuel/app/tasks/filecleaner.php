@@ -164,14 +164,14 @@ class FileCleaner
 			throw new \FuelException('This task is not work at prod env.');
 		}
 		$raw_file_dir_path = conf(sprintf('upload.types.%s%s.raw_file_path', $file_type, $is_tmp ? '.tmp' : ''));
-		if (!file_exists($raw_file_dir_path))
+		$cache_file_dir_path = $is_tmp ? null : PRJ_PUBLIC_DIR.conf('upload.types.'.$file_type.'.root_path.cache_dir');
+		if (!file_exists($raw_file_dir_path) && ($cache_file_dir_path && !file_exists($cache_file_dir_path)))
 		{
 			return "File directry '".$raw_file_dir_path."' not exists.";
 		}
-		if (!$file_paths = \Util_file::get_file_recursive($raw_file_dir_path))
-		{
-			return sprintf("No files at '%s'", $raw_file_dir_path);
-		}
+		$file_paths = \Util_file::get_file_recursive($raw_file_dir_path);
+		if ($cache_file_dir_path) $file_paths = array_merge($file_paths, \Util_file::get_file_recursive($cache_file_dir_path));
+		if (!$file_paths) return sprintf("No files at '%s'", $raw_file_dir_path);
 
 		$i = 0;
 		foreach ($file_paths as $file_path)
