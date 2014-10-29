@@ -27,7 +27,7 @@ class MyInputFilters
 		else
 		{
 			// エラーの場合はログに記録
-			static::log_error('Invalid character encoding', $value);
+			Util_Toolkit::log_error('Invalid character encoding: '.urlencode($value));
 			// エラーを表示して終了
 			throw new HttpInvalidInputException('Invalid input data');
 		}
@@ -51,19 +51,9 @@ class MyInputFilters
 		else
 		{
 			// 含まれている場合はログに記録
-			static::log_error('Invalid control characters', $value);
+			Util_Toolkit::log_error('Invalid control characters: '.urlencode($value));
 			// エラーを表示して終了
-			//throw new HttpInvalidInputException('Invalid input data');
-			exit('Invalid input data');
+			throw new HttpInvalidInputException('Invalid input data');
 		}
-	}
-	
-	// エラーをログに記録
-	public static function log_error($msg, $value)
-	{
-		Log::error(
-			$msg . ': ' . Input::uri() . ' ' . urlencode($value) . ' ' .
-			Input::ip() . ' "' . Input::user_agent() . '"'
-		);
 	}
 }
