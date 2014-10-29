@@ -15,6 +15,7 @@ desktop.ini
 /fuel/app/cache/*/*
 /fuel/app/cache/default_config_setting
 /fuel/app/tmp/*
+/fuel/app/media/*
 /fuel/vendor
 /fuel/app/config/crypt.php
 nbproject/

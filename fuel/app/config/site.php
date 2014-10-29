@@ -83,6 +83,7 @@ $config = array(
 		),
 	),
 	'upload' => array(
+		'isSaveDb' => true,
 		'num_of_split_dirs' => 10,
 		'check_and_make_dir_level' => 7,
 		'mkdir_mode' => 0755,
@@ -108,8 +109,8 @@ $config = array(
 					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img/',
 					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img/raw/',
 				),
-				//'raw_file_path' => APPPATH.'cache/media/img/raw/',// raw ファイルを非公開領域に置く場合
-				'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img/raw/',
+				'raw_file_path' => APPPATH.'media/img/raw/',// raw ファイルを非公開領域に置く場合
+				//'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img/raw/',
 				'tmp' => array(
 					'root_path' => array(
 						'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img_tmp/',
@@ -145,7 +146,7 @@ $config = array(
 							'LL' => '600x600',
 						),
 						'default_size' => '50x50xc',
-						'save_as_album_image' => true,
+						'save_as_album_image' => false,
 					),
 				),
 			),
