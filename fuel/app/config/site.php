@@ -105,6 +105,9 @@ $config = array(
 					'is_use' => true,
 					'is_remove' => true,
 				),
+				'delete' => array(
+					'thumnails' => 'syncDelete',// syncDelete: raw ファイル削除時に同時に削除 / later:あとで bach でまとめて削除(未実装)
+				),
 				'root_path' => array(
 					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img/',
 					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img/raw/',

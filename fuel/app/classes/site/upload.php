@@ -71,12 +71,15 @@ class Site_Upload
 		$file = self::get_uploaded_file_real_path($filepath, $filename, 'raw', 'img', $is_tmp);
 		Util_file::remove($file);
 
-		$file_cate = self::get_file_cate_from_filepath($filepath);
-		$sizes = self::get_sizes_all4file_cate($file_cate, $is_tmp);
-		foreach ($sizes as $key => $size)
+		if (conf('upload.types.img.delete.thumnails', 'syncDelete') == 'syncDelete')
 		{
-			$file = self::get_uploaded_file_real_path($filepath, $filename, $is_tmp ? $key : $size, 'img', $is_tmp);
-			Util_file::remove($file);
+			$file_cate = self::get_file_cate_from_filepath($filepath);
+			$sizes = self::get_sizes_all4file_cate($file_cate, $is_tmp);
+			foreach ($sizes as $key => $size)
+			{
+				$file = self::get_uploaded_file_real_path($filepath, $filename, $is_tmp ? $key : $size, 'img', $is_tmp);
+				Util_file::remove($file);
+			}
 		}
 
 		return true;
