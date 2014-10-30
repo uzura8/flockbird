@@ -191,7 +191,7 @@ class MyUploadHandler extends UploadHandler
 			return $file;
 		}
 
-		if ($this->options['upload_type'] == 'img') $file->thumbnail_uri = sprintf('%sthumbnail/%s', $this->options['upload_uri'], $file->name);
+		if ($this->options['upload_type'] == 'img') $file->thumbnail_uri = $this->options['image_versions']['thumbnail']['upload_url'].$file->name;
 		$this->handle_form_data($file, $index);
 		$upload_dir = $this->get_upload_path();
 		$file_path = $this->get_upload_path($file->name);

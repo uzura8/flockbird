@@ -29,4 +29,24 @@ class Controller_Media extends Controller
 			array('Content-Type' => static::$exts['image'][$ext])
 		);
 	}
+
+	public function action_img_tmp($size = null, $file_cate = null, $split_num = null, $filename = null)
+	{
+		$filename = sprintf('%s.%s', $filename, Input::extension());
+		$config = array(
+			'is_tmp'    => true,
+			'file_cate' => $file_cate,
+			'split_num' => $split_num,
+			'size'      => $size,
+			'filename'  => $filename,
+		);
+		$img = new Site_image($config);
+		$ext = $img->get_extension();
+
+		return Response::forge(
+			$img->get_image(),
+			200,
+			array('Content-Type' => static::$exts['image'][$ext])
+		);
+	}
 }

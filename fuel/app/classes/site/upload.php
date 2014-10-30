@@ -222,9 +222,9 @@ class Site_Upload
 		return $path;
 	}
 
-	public static function check_uploaded_file_exists($filepath, $filename, $size = 'raw', $type = 'img')
+	public static function check_uploaded_file_exists($filepath, $filename, $size = 'raw', $type = 'img', $is_tmp = false)
 	{
-		$real_path = self::get_uploaded_file_real_path($filepath, $filename, $size, $type);
+		$real_path = self::get_uploaded_file_real_path($filepath, $filename, $size, $type, $is_tmp);
 
 		return file_exists($real_path);
 	}
@@ -315,7 +315,12 @@ class Site_Upload
 					'auto_orient' => true
 				),
 			);
+			$filepath = \Site_Upload::get_filepath($file_cate, $split_criterion_id);
+			$upload_url = Uri::create(conf('upload.types.img.tmp.root_path.cache_dir').'thumbnail/'.$filepath);
+			$cache_dir_path = PRJ_PUBLIC_DIR.conf('upload.types.img.tmp.root_path.cache_dir');
 			$options['image_versions']['thumbnail'] = array(
+				'upload_dir' => $cache_dir_path.'thumbnail/'.$filepath,
+				'upload_url' => $upload_url,
 				'max_width'  => $uploader_info['thumbnail_sizes']['width'],
 				'max_height' => $uploader_info['thumbnail_sizes']['height'],
 				'crop' => true,
@@ -459,10 +464,10 @@ class Site_Upload
 		return $name;
 	}
 
-	public static function make_raw_file_from_db($filepath, $filename)
+	public static function make_raw_file_from_db($filepath, $filename, $size = 'raw', $file_type = 'img', $is_tmp = false)
 	{
 		if (!$bin = Model_FileBin::get_bin4file_name($filename)) return false;
 
-		return (bool)file_put_contents(self::get_uploaded_file_real_path($filepath, $filename), $bin);
+		return (bool)file_put_contents(self::get_uploaded_file_real_path($filepath, $filename, $size, $file_type, $is_tmp), $bin);
 	}
 }

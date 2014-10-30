@@ -83,7 +83,7 @@ $config = array(
 		),
 	),
 	'upload' => array(
-		'isSaveDb' => true,
+		'isSaveDb' => false,
 		'num_of_split_dirs' => 10,
 		'check_and_make_dir_level' => 7,
 		'mkdir_mode' => 0755,

@@ -3,6 +3,7 @@
 class Site_image
 {
 	private $is_saved_db = false;
+	private $is_tmp      = false;
 	private $file_cate   = '';
 	private $split_num   = '';
 	private $filename    = '';
@@ -47,6 +48,7 @@ class Site_image
 			}
 			$this->$key = $config[$key];
 		}
+		if (!empty($config['is_tmp'])) $this->is_tmp = true;
 
 		return $result;
 	}
@@ -80,11 +82,11 @@ class Site_image
 	{
 		if ($this->filename == conf('upload.types.img.noimage_filename')) return false;
 		if (!$this->check_filename()) return false;
-		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename))
+		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename, $this->size, 'img', $this->is_tmp))
 		{
 			if (!$this->is_saved_db) return false;
 
-			return Site_Upload::make_raw_file_from_db($this->filepath, $this->filename);
+			return Site_Upload::make_raw_file_from_db($this->filepath, $this->filename, $this->size, 'img', $this->is_tmp);
 		}
 
 		return true;
@@ -93,6 +95,8 @@ class Site_image
 	private function set_size()
 	{
 		if ($this->size == 'raw') return;
+		if ($this->size == 'thumbnail') $this->size = conf('upload.types.img.tmp.sizes.thumbnail');
+
 		$this->check_size();
 
 		$item = Site_Upload::conv_size_str_to_array($this->size);
