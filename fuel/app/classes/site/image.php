@@ -41,7 +41,7 @@ class Site_image
 		);
 		foreach ($necessary_keys as $key)
 		{
-			if (empty($config[$key]))
+			if (!isset($config[$key]))
 			{
 				$result = false;
 				continue;
