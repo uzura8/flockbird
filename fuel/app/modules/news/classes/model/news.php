@@ -73,7 +73,7 @@ class Model_News extends \MyOrm\Model
 		'published_at' => array(
 			'data_type' => 'datetime',
 			'label' => '公開日時',
-			'validation' => array('trim', 'valid_date' => array('Y-m-d H:i:s')),
+			'validation' => array('valid_date' => array('Y-m-d H:i:s')),
 			'form' => array('type' => 'text'),
 		),
 		'users_id' => array(
