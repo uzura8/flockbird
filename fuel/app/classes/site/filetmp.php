@@ -18,8 +18,9 @@ class Site_FileTmp
 		{
 			if ($check_selected) throw new HttpInvalidInputException('File not selected.');
 
-			return $file_tmps;
+			return array();
 		}
+
 		if (!$file_tmp_ids = Util_Array::cast_values(array_keys($file_tmps_posted), 'int', true))
 		{
 			throw new HttpInvalidInputException('Invalid input data.');
@@ -40,9 +41,11 @@ class Site_FileTmp
 				$file_tmps[$key]->description = trim($file_tmps_description_posted[$file_tmp->id]);
 			}
 
-			if (!file_exists(conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.$file_tmp->name))
+			$file_tmp_path = conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
+			if (!conf('upload.isSaveDb') && !file_exists($file_tmp_path))
 			{
 				if ($check_file_exists) throw new HttpInvalidInputException('File not exists.');
+
 				if ($is_delete_not_exists_file) $file_tmp->delete();
 				unset($file_tmps[$file_tmp->id]);
 			}
@@ -66,7 +69,7 @@ class Site_FileTmp
 	{
 		if (!in_array($type, array('img', 'file'))) throw new InvalidArgumentException('Parameter type is invalid.');
 
-		$moved_files     = array();
+		$moved_files       = array();
 		$related_table_ids = array();
 		if (!$file_tmps) return array($moved_files, $related_table_ids);
 
@@ -74,26 +77,30 @@ class Site_FileTmp
 		{
 			throw new \InvalidArgumentException('Parameter $related_table is invalid.');
 		}
-		$new_filepath = Site_Upload::get_filepath($file_cate, $parent_id);
-		$new_file_dir  = conf('upload.types.'.$type.'.raw_file_path').$new_filepath;
-		if (!Site_Upload::check_and_make_uploaded_dir($new_file_dir, conf('upload.check_and_make_dir_level'), conf('upload.mkdir_mode')))
-		{
-			throw newFuelException('Failed to make save dirs.');
-		}
 
+		$new_filepath = Site_Upload::get_filepath($file_cate, $parent_id);
+		if (!$is_save_db = conf('upload.isSaveDb'))
+		{
+			$new_file_dir  = conf('upload.types.'.$type.'.raw_file_path').$new_filepath;
+			if (!Site_Upload::check_and_make_uploaded_dir($new_file_dir, conf('upload.check_and_make_dir_level'), conf('upload.mkdir_mode')))
+			{
+				throw newFuelException('Failed to make save dirs.');
+			}
+		}
 		foreach ($file_tmps as $id => $file_tmp)
 		{
 			$old_file_path = conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
-			$new_file_path = $new_file_dir.$file_tmp->name;
-			Util_file::move($old_file_path, $new_file_path);
-			$moved_files[$file_tmp->id] = array(
-				'from' => $old_file_path,
-				'to'   => $new_file_path,
-				'filepath' => $new_filepath,
-			);
+			$moved_files[$file_tmp->id] = array('from' => $old_file_path);
+			if (!$is_save_db)
+			{
+				$new_file_path = $new_file_dir.$file_tmp->name;
+				Util_file::move($old_file_path, $new_file_path);
+				$moved_files[$file_tmp->id]['to'] = $new_file_path;
+				$moved_files[$file_tmp->id]['filepath'] = $new_filepath;
+			}
 			if ($type == 'img')
 			{
-				$moved_files[$file_tmp->id]['from_thumbnail'] = conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.'thumbnail/'.$file_tmp->name;
+				$moved_files[$file_tmp->id]['from_thumbnail'] = conf('upload.types.img.tmp.root_path.cache_dir').'thumbnail/'.$file_tmp->path.$file_tmp->name;
 			}
 			$file = Model_File::move_from_file_tmp($file_tmp, $new_filepath, $is_ignore_member_id);
 
@@ -115,7 +122,11 @@ class Site_FileTmp
 	{
 		foreach ($moved_files as $moved_file)
 		{
-			Site_Upload::make_thumbnails($moved_file['to'], $moved_file['filepath'], true, $additional_sizes_key);
+			if (!empty($moved_file['to']) && !empty($moved_file['filepath']))
+			{
+				Site_Upload::make_thumbnails($moved_file['to'], $moved_file['filepath'], true, $additional_sizes_key);
+			}
+			if (!empty($moved_file['from']) && file_exists($moved_file['from'])) Util_file::remove($moved_file['from']);
 			if (!empty($moved_file['from_thumbnail'])) Util_file::remove($moved_file['from_thumbnail']);
 		}
 	}

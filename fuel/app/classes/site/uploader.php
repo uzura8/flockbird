@@ -86,7 +86,7 @@ class Site_Uploader
 	{
 		if ($this->options['is_save_db'])
 		{
-			$file_bin_id = $this->save_model_file_bin($tmp_file_path);
+			$file_bin_id = Model_FileBin::save_from_file_path($tmp_file_path);
 		}
 		else
 		{
@@ -95,20 +95,6 @@ class Site_Uploader
 		}
 
 		return $file_bin_id;
-	}
-
-	protected function save_model_file_bin($file_path)
-	{
-		if (!$bin = Util_file::get_encoded_bin_data($file_path, true))
-		{
-			throw new FuelException('Binary data is invalid.');
-		}
-
-		$model_file_bin = Model_FileBin::forge();
-		$model_file_bin->bin = $bin;
-		$model_file_bin->save();
-
-		return $model_file_bin->id;
 	}
 
 	protected function save_model_file($exif, $file_bin_id = 0)

@@ -196,30 +196,27 @@ class Site_Upload
 		return $uri_path;
 	}
 
-	public static function get_uploaded_file_real_path($filepath, $filename, $size = 'raw', $file_type = 'img', $is_tmp = false)
+	public static function get_uploaded_dir_path($filepath, $size = 'raw', $file_type = 'img', $is_tmp = false)
 	{
 		$key = 'site.upload.types.'.$file_type;
 		if ($is_tmp) $key .= '.tmp';
 		if ($size == 'raw')
 		{
-			$key .= '.raw_file_path';
-			$path = Config::get($key).$filepath.$filename;
+			return Config::get($key.'.raw_file_path').$filepath;
 		}
-		else
+		if ($is_tmp)
 		{
-			if ($is_tmp)
-			{
-				$key .= '.raw_file_path';
-				$path = Config::get($key).$filepath.$size.'/'.$filename;
-			}
-			else
-			{
-				$key .= '.root_path.cache_dir';
-				$path = PRJ_PUBLIC_DIR.Config::get($key).$size.'/'.$filepath.$filename;
-			}
+			return Config::get($key.'.raw_file_path').$filepath.$size.'/';
 		}
 
-		return $path;
+		return PRJ_PUBLIC_DIR.Config::get($key.'.root_path.cache_dir').$size.'/'.$filepath;
+	}
+
+	public static function get_uploaded_file_real_path($filepath, $filename, $size = 'raw', $file_type = 'img', $is_tmp = false)
+	{
+		$dir_path = self::get_uploaded_dir_path($filepath, $size, $file_type, $is_tmp);
+
+		return $dir_path.$filename;
 	}
 
 	public static function check_uploaded_file_exists($filepath, $filename, $size = 'raw', $type = 'img', $is_tmp = false)
@@ -294,6 +291,7 @@ class Site_Upload
 		if (!$file_cate) $file_cate = $is_admin ? 'au' : 'm';
 		$uploader_info = self::get_uploader_info($file_cate, $split_criterion_id, $is_tmp, $upload_type);
 		$options = array(
+			'is_save_db'     => conf('upload.isSaveDb'),
 			'max_file_size'  => PRJ_UPLOAD_MAX_FILESIZE,
 			'max_number_of_files' => $is_multiple_upload ? PRJ_MAX_FILE_UPLOADS : 1,
 			'upload_dir'     => $uploader_info['upload_dir'],
@@ -437,6 +435,7 @@ class Site_Upload
 		{
 			$sizes += $additional_sizes;
 		}
+		//$sizes[] = conf('upload.types.img.tmp.sizes.thumbnail');
 
 		return $sizes;
 	}
@@ -464,10 +463,13 @@ class Site_Upload
 		return $name;
 	}
 
-	public static function make_raw_file_from_db($filepath, $filename, $size = 'raw', $file_type = 'img', $is_tmp = false)
+	public static function make_raw_file_from_db($filename, $dir_path, $is_tmp = false)
 	{
-		if (!$bin = Model_FileBin::get_bin4file_name($filename)) return false;
+		if (!$bin = Model_FileBin::get_bin4file_name($filename, $is_tmp)) return false;
 
-		return (bool)file_put_contents(self::get_uploaded_file_real_path($filepath, $filename, $size, $file_type, $is_tmp), $bin);
+		$file_path = $dir_path.$filename;
+		if (file_put_contents($file_path, $bin)) return $file_path;
+
+		return false;
 	}
 }

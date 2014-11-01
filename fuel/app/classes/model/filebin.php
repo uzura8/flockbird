@@ -29,10 +29,25 @@ class Model_FileBin extends \MyOrm\Model
 		return $is_decode ? base64_decode($obj->bin) : $obj->bin;
 	}
 
-	public static function get_bin4file_name($filename, $is_decode = true)
+	public static function get_bin4file_name($filename, $is_tmp = false, $is_decode = true)
 	{
-		$file = Model_File::get4name($filename);
+		$model = $is_tmp ? 'Model_FileTmp' : 'Model_File';
+		if (!$file = $model::get4name($filename)) return null;
 
 		return self::get_bin4id($file->file_bin_id, $is_decode);
+	}
+
+	public static function save_from_file_path($file_path)
+	{
+		if (!$bin = Util_file::get_encoded_bin_data($file_path, true))
+		{
+			throw new FuelException('Binary data is invalid.');
+		}
+
+		$obj = self::forge();
+		$obj->bin = $bin;
+		$obj->save();
+
+		return $obj->id;
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-class Util_file
+class Util_File
 {
 	public static function move($original_file, $moved_file)
 	{
@@ -330,6 +330,11 @@ class Util_file
 		if ($is_check_image && !@imagecreatefromstring($image_data)) return false;
 
 		return base64_encode($image_data);
+	}
+
+	public static function get_name_from_path($path)
+	{
+		return self::get_path_partial($path);
 	}
 
 }

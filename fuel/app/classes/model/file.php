@@ -120,6 +120,7 @@ class Model_File extends \MyOrm\Model
 	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filepath, $is_ignore_member_id = false)
 	{
 		$file = new self;
+		if ($file_tmp->file_bin_id) $file->file_bin_id = $file_tmp->file_bin_id;
 		$file->name = $file_tmp->name;
 		$file->path = $new_filepath;
 		$file->filesize = $file_tmp->filesize;

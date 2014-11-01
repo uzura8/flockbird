@@ -239,7 +239,7 @@ class Controller_Note extends \Controller_Site
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
-		$files += $file_tmps;
+		$files = array_merge($files, $file_tmps);
 
 		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('note'), term('form.do_edit')), array('/note/'.$id => $note->title), $note->member, 'note');
 		$this->template->post_header = \View::forge('_parts/form_header');

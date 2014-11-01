@@ -82,11 +82,14 @@ class Site_image
 	{
 		if ($this->filename == conf('upload.types.img.noimage_filename')) return false;
 		if (!$this->check_filename()) return false;
-		if (!Site_Upload::check_uploaded_file_exists($this->filepath, $this->filename, $this->size, 'img', $this->is_tmp))
+
+		$raw_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename, 'raw', 'img', $this->is_tmp);
+		$dir_path = Site_Upload::get_uploaded_dir_path($this->filepath, 'raw', 'img', $this->is_tmp);
+		if (!file_exists($raw_file_path))
 		{
 			if (!$this->is_saved_db) return false;
 
-			return Site_Upload::make_raw_file_from_db($this->filepath, $this->filename, $this->size, 'img', $this->is_tmp);
+			return (bool)Site_Upload::make_raw_file_from_db($this->filename, $dir_path, $this->is_tmp);
 		}
 
 		return true;
@@ -95,11 +98,16 @@ class Site_image
 	private function set_size()
 	{
 		if ($this->size == 'raw') return;
-		if ($this->size == 'thumbnail') $this->size = conf('upload.types.img.tmp.sizes.thumbnail');
-
-		$this->check_size();
-
-		$item = Site_Upload::conv_size_str_to_array($this->size);
+		if ($this->size == 'thumbnail')
+		{
+			$size = conf('upload.types.img.tmp.sizes.thumbnail');
+		}
+		else
+		{
+			$this->check_size();
+			$size = $this->size;
+		}
+		$item = Site_Upload::conv_size_str_to_array($size);
 		$this->width       = $item['width'];
 		$this->height      = $item['height'];
 		$this->resize_type = $item['resize_type'];
@@ -170,13 +178,14 @@ class Site_image
 	{
 		if ($this->is_noimage) return $this->get_noimage();
 
-		$original_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename);
+		$original_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename, 'raw', 'img', $this->is_tmp);
 		if ($this->size == 'raw')
 		{
 			return file_get_contents($original_file_path);
 		}
 
-		$base_path = PRJ_UPLOAD_DIR.'img/';
+		$base_path  = PRJ_UPLOAD_DIR;
+		$base_path .= $this->is_tmp ? 'img_tmp/' : 'img/';
 		$target_file_dir = sprintf('%s%s/%s', $base_path, $this->size, $this->filepath);
 		$target_file_path = $target_file_dir.$this->filename;
 		if (!file_exists($target_file_path))

@@ -17,7 +17,7 @@ class MyUploadHandler extends UploadHandler
 			$file->description   = $file_tmp->description;
 			if ($type == 'img')
 			{
-				$file->thumbnail_uri = $this->options['upload_uri'].'thumbnail/'.$file_tmp->name;
+				$file->thumbnail_uri = $this->options['image_versions']['thumbnail']['upload_url'].$file_tmp->name;
 			}
 
 			$files[] = $file;
@@ -267,7 +267,13 @@ class MyUploadHandler extends UploadHandler
 
 		try
 		{
-			$file->id = $this->save_file_tmp($file, $exif);
+			$file_bin_id = 0;
+			if ($this->options['is_save_db'])
+			{
+				$file_bin_id = Model_FileBin::save_from_file_path($file_path);
+				Util_File::remove($file_path);
+			}
+			$file->id = $this->save_file_tmp($file, $file_bin_id, $exif);
 		}
 		catch(\FuelException $e)
 		{
@@ -278,9 +284,10 @@ class MyUploadHandler extends UploadHandler
 		return $file;
 	}
 
-	protected function save_file_tmp($file, $exif = array())
+	protected function save_file_tmp($file, $file_bin_id = null, $exif = array())
 	{
 		$model_file_tmp = new \Model_FileTmp;
+		if ($file_bin_id) $model_file_tmp->file_bin_id = $file_bin_id;
 		$model_file_tmp->name = $file->name;
 		$model_file_tmp->path = $this->options['filepath'];
 		$model_file_tmp->filesize = $file->size;
@@ -405,5 +412,20 @@ class MyUploadHandler extends UploadHandler
 		}
 
 		return true;
+	}
+
+	protected function is_valid_file_object($file_name)
+	{
+		$file_path = $this->get_upload_path($file_name);
+		if (is_file($file_path) && $file_name[0] !== '.')
+		{
+			return true;
+		}
+		if ($this->options['is_save_db'] && !file_exists($file_path))
+		{
+			if (Site_Upload::make_raw_file_from_db($file_name, str_replace($file_name, '', $file_path), true)) return true;
+		}
+
+		return false;
 	}
 }
