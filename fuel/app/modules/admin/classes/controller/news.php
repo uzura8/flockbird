@@ -335,8 +335,8 @@ class Controller_News extends Controller_Admin
 				\Session::set_flash('error', $error_message);
 			}
 		}
-		$images += $image_tmps;
-		$files  += $file_tmps;
+		$images = array_merge($images, $image_tmps);
+		$files = array_merge($files, $file_tmps);
 
 		$this->set_title_and_breadcrumbs(term('form.edit'), array('admin/news' => term('news.view', 'admin.view'), 'admin/news/'.$news->id => $news->title));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
