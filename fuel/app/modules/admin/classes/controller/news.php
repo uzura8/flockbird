@@ -117,6 +117,7 @@ class Controller_News extends Controller_Admin
 			$moved_files = array();
 			$news_image_ids = array();
 			$news_file_ids = array();
+			$error_message = '';
 			try
 			{
 				if ($is_enabled_image) $image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize();
@@ -168,15 +169,22 @@ class Controller_News extends Controller_Admin
 				\Session::set_flash('message', $message);
 				\Response::redirect('admin/news/detail/'.$news->id);
 			}
+			catch(\Database_Exception $e)
+			{
+				$error_message = \Util_Db::get_db_error_message($e);
+			}
 			catch(\FuelException $e)
+			{
+				$error_message = $e->getMessage();
+			}
+			if ($error_message)
 			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
 				if ($moved_images) \Site_FileTmp::move_files_to_tmp_dir($moved_images);
 				if ($moved_files)  \Site_FileTmp::move_files_to_tmp_dir($moved_files);
 				$images = \Site_FileTmp::get_file_objects($image_tmps, $this->u->id, true, 'img');
 				$files  = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id, true, 'file');
-
-				\Session::set_flash('error', $e->getMessage());
+				\Session::set_flash('error', $error_message);
 			}
 		}
 
@@ -237,6 +245,7 @@ class Controller_News extends Controller_Admin
 			$moved_files = array();
 			$news_image_ids = array();
 			$news_file_ids = array();
+			$error_message = '';
 			try
 			{
 				if ($is_enabled_image) $image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize();
@@ -308,15 +317,22 @@ class Controller_News extends Controller_Admin
 				\Session::set_flash('message', $message);
 				\Response::redirect('admin/news/detail/'.$news->id);
 			}
+			catch(\Database_Exception $e)
+			{
+				$error_message = \Util_Db::get_db_error_message($e);
+			}
 			catch(\FuelException $e)
+			{
+				$error_message = $e->getMessage();
+			}
+			if ($error_message)
 			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
 				if ($moved_images) \Site_FileTmp::move_files_to_tmp_dir($moved_images);
 				if ($moved_files)  \Site_FileTmp::move_files_to_tmp_dir($moved_files);
 				$image_tmps = \Site_FileTmp::get_file_objects($image_tmps, $this->u->id, true, 'img');
 				$file_tmps  = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id, true, 'file');
-
-				\Session::set_flash('error', $e->getMessage());
+				\Session::set_flash('error', $error_message);
 			}
 		}
 		$images += $image_tmps;

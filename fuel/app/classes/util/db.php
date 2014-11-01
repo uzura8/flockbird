@@ -146,4 +146,27 @@ class Util_Db
 
 		return $command;
 	}
+
+	public static function get_db_error_message($message = null, $default_message = 'Database error.')
+	{
+		if (is_prod_env()) return $default_message;
+
+		if ($message)
+		{
+			if (is_string($message))
+			{
+				$message = sprintf('unified_code:[%s] platform_code:[%s] message: %s', $error_info[0], $error_info[1], $error_info[2]);
+			}
+			elseif (is_callable(array($message, 'getMessage')))
+			{
+				$message = $message->getMessage();
+			}
+		}
+		if (!$message && $error_info = DB::error_info())
+		{
+			$message = sprintf('unified_code:[%s] platform_code:[%s] message: %s', $error_info[0], $error_info[1], $error_info[2]);
+		}
+
+		return $message;
+	}
 }
