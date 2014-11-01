@@ -9,6 +9,7 @@
 class Test_Model_File extends TestCase
 {
 	protected $files = array();
+	protected $is_save_db = false;
 
 	protected function setUp()
 	{
@@ -17,18 +18,32 @@ class Test_Model_File extends TestCase
 			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No data.');
 		}
+		$this->is_save_db = conf('upload.isSaveDb');
 	}
 
 	public function test_file_exists()
 	{
 		foreach ($this->files as $file)
 		{
-			$this->assertFileExists(self::check_and_get_file_path($file->path, $file->name));
+			if ($this->is_save_db)
+			{
+				$this->assertNotNull(\Model_FileBIn::find($file->file_bin_id));
+			}
+			else
+			{
+				$this->assertFileExists(self::check_and_get_file_path($file->path, $file->name));
+			}
 		}
 	}
 
 	public function test_check_file_size()
 	{
+		if ($this->is_save_db)
+		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
+			$this->markTestSkipped('File is saved in db.');
+		}
+
 		foreach ($this->files as $file)
 		{
 			$test = File::get_size(self::check_and_get_file_path($file->path, $file->name));

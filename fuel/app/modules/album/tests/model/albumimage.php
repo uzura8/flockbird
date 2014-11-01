@@ -340,7 +340,14 @@ class Test_Model_AlbumImage extends \TestCase
 		}
 
 		// file
-		$this->assertTrue(file_exists($file_path));
+		if (conf('upload.isSaveDb'))
+		{
+			$this->assertNotNull(\Model_FileBIn::find(self::$album_image->file->file_bin_id));
+		}
+		else
+		{
+			$this->assertTrue(file_exists($file_path));
+		}
 
 		// album_image delete.
 		self::$album_image->delete();
