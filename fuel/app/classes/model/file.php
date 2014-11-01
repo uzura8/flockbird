@@ -130,6 +130,9 @@ class Model_File extends \MyOrm\Model
 		if (!is_null($file_tmp->exif)) $file->exif = $file_tmp->exif;
 		if (!empty($file_tmp->shot_at)) $file->shot_at = $file_tmp->shot_at;
 		$file->save();
+
+		$file_tmp->file_bin_id = 0;
+		$file_tmp->save();
 		$file_tmp->delete();
 
 		return $file;
