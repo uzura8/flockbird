@@ -142,24 +142,10 @@ class MyUploadHandler extends UploadHandler
 	public function delete($print_response = true, Model_FileTmp $file_tmp = null)
 	{
 		$response = array();
-
-		$file_name = $file_tmp->name;
-		$file_path = $this->get_upload_path($file_name);
-		$success = is_file($file_path) && unlink($file_path);
-		if ($success)
+		if ($file_tmp)
 		{
-			foreach($this->options['image_versions'] as $version => $options)
-			{
-				if (!empty($version))
-				{
-					$file = $this->get_upload_path($file_name, $version);
-					if (is_file($file)) unlink($file);
-				}
-			}
-
-			if ($file_tmp) $file_tmp->delete();
+			$response[$file_tmp->name] = $this->delete_file($file_tmp->name, $this->options['is_save_db']) && $file_tmp->delete();
 		}
-		$response[$file_name] = $success;
 
 		return $this->generate_response($response, $print_response);
 	}
@@ -271,13 +257,13 @@ class MyUploadHandler extends UploadHandler
 			if ($this->options['is_save_db'])
 			{
 				$file_bin_id = Model_FileBin::save_from_file_path($file_path);
-				Util_File::remove($file_path);
+				$this->delete_file($file->name);
 			}
 			$file->id = $this->save_file_tmp($file, $file_bin_id, $exif);
 		}
 		catch(\FuelException $e)
 		{
-			$this->delete_file($file->name);
+			$this->delete_file($file->name, $this->options['is_save_db']);
 			$file->error = 'ファイルの保存に失敗しました。';
 		}
 
@@ -308,10 +294,10 @@ class MyUploadHandler extends UploadHandler
 		return $model_file_tmp->id;
 	}
 
-	protected function delete_file($file_name)
+	protected function delete_file($file_name, $is_delete_db_bin_data = false)
 	{
 		$file_path = $this->get_upload_path($file_name);
-		$success = is_file($file_path)  && unlink($file_path);
+		$success = is_file($file_path) && unlink($file_path);
 		if ($success)
 		{
 			foreach($this->options['image_versions'] as $version => $options)
@@ -322,6 +308,11 @@ class MyUploadHandler extends UploadHandler
 					if (is_file($varsion_file)) unlink($varsion_file);
 				}
 			}
+		}
+
+		if ($is_delete_db_bin_data && $file_bin = Model_FileBin::get4file_name($file_name, true))
+		{
+			$success = (bool)$file_bin->delete();
 		}
 
 		return $success;

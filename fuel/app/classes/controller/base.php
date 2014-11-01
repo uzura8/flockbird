@@ -327,15 +327,26 @@ class Controller_Base extends Controller_Hybrid
 
 			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN, true, null, 0, true, $upload_type);
 			$uploadhandler = new MyUploadHandler($options, false);
+			\DB::start_transaction();
 			$response = $uploadhandler->delete(false, $file_tmp);
+			\DB::commit_transaction();
 			$status_code = 200;
 		}
-		catch(HttpNotFoundException $e)
+		catch(\HttpNotFoundException $e)
 		{
 			$status_code = 404;
 		}
-		catch(FuelException $e)
+		catch(\HttpForbiddenException $e)
 		{
+			$status_code = 403;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
+		catch(\FuelException $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$status_code = 400;
 		}
 

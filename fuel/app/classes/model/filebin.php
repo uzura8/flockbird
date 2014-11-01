@@ -31,10 +31,23 @@ class Model_FileBin extends \MyOrm\Model
 
 	public static function get_bin4file_name($filename, $is_tmp = false, $is_decode = true)
 	{
-		$model = $is_tmp ? 'Model_FileTmp' : 'Model_File';
-		if (!$file = $model::get4name($filename)) return null;
+		if (!$file = self::get_file4name($filename, $is_tmp)) return null;
 
 		return self::get_bin4id($file->file_bin_id, $is_decode);
+	}
+
+	public static function get4file_name($filename, $is_tmp = false)
+	{
+		if (!$file = self::get_file4name($filename, $is_tmp)) return null;
+
+		return self::find($file->file_bin_id);
+	}
+
+	protected static function get_file4name($filename, $is_tmp = false)
+	{
+		$model = $is_tmp ? 'Model_FileTmp' : 'Model_File';
+
+		return $model::get4name($filename);
 	}
 
 	public static function save_from_file_path($file_path)
