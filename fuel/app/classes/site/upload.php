@@ -466,6 +466,7 @@ class Site_Upload
 	public static function make_raw_file_from_db($filename, $dir_path, $is_tmp = false)
 	{
 		if (!$bin = Model_FileBin::get_bin4file_name($filename, $is_tmp)) return false;
+		if (!self:: check_and_make_uploaded_dir($dir_path)) return false;
 
 		$file_path = $dir_path.$filename;
 		if (file_put_contents($file_path, $bin)) return $file_path;

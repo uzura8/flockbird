@@ -60,7 +60,9 @@ class Site_image
 
 	private function check_file_cate()
 	{
-		if (!$is_correct = in_array($this->file_cate, array_keys(conf('upload.types.img.types'))))
+		$file_cate_keys_accepted = array_keys(conf('upload.types.img.types'));
+		if ($this->is_tmp) $file_cate_keys_accepted[] = 'au';
+		if (!$is_correct = in_array($this->file_cate, $file_cate_keys_accepted))
 		{
 			$this->file_cate = null;
 		}
