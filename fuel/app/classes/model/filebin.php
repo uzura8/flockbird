@@ -50,9 +50,9 @@ class Model_FileBin extends \MyOrm\Model
 		return $model::get4name($filename);
 	}
 
-	public static function save_from_file_path($file_path)
+	public static function save_from_file_path($file_path, $is_image = true)
 	{
-		if (!$bin = Util_file::get_encoded_bin_data($file_path, true))
+		if (!$bin = Util_file::get_encoded_bin_data($file_path, $is_image))
 		{
 			throw new FuelException('Binary data is invalid.');
 		}

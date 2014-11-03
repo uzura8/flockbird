@@ -10,9 +10,9 @@ class Site_image
 	private $filepath    = '';
 	private $extension   = 'gif';//noimage 画像の拡張子をデフォルト値とする
 	private $size        = '';
-	private $widtn       = '';
-	private $resize_type = '';
+	private $width       = '';
 	private $height      = '';
+	private $resize_type = '';
 	private $is_noimage  = false;
 
 	public function __construct($config = array())

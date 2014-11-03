@@ -256,8 +256,8 @@ class MyUploadHandler extends UploadHandler
 			$file_bin_id = 0;
 			if ($this->options['is_save_db'])
 			{
-				$file_bin_id = Model_FileBin::save_from_file_path($file_path);
-				$this->delete_file($file->name);
+				$file_bin_id = Model_FileBin::save_from_file_path($file_path, $this->options['upload_type'] == 'img');
+				$this->delete_file($file->name, false, true);
 			}
 			$file->id = $this->save_file_tmp($file, $file_bin_id, $exif);
 		}
@@ -294,11 +294,11 @@ class MyUploadHandler extends UploadHandler
 		return $model_file_tmp->id;
 	}
 
-	protected function delete_file($file_name, $is_delete_db_bin_data = false)
+	protected function delete_file($file_name, $is_delete_db_bin_data = false, $is_delete_raw_file_only = false)
 	{
 		$file_path = $this->get_upload_path($file_name);
 		$success = is_file($file_path) && unlink($file_path);
-		if ($success)
+		if ($success && !$is_delete_raw_file_only)
 		{
 			foreach($this->options['image_versions'] as $version => $options)
 			{
