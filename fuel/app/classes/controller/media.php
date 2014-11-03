@@ -18,12 +18,12 @@ class Controller_Media extends Controller
 			'size'      => $size,
 			'filename'  => $filename,
 		);
-		$img = new Site_image($config);
-		$ext = $img->get_extension();
+		$file = new Site_FileMaker($config);
+		$ext = $file->get_extension();
 		$accept_exts = conf('upload.types.img.accept_format');
 
 		return Response::forge(
-			$img->get_image(),
+			$file->get_data(),
 			200,
 			array('Content-Type' => $accept_exts[$ext])
 		);
@@ -39,12 +39,12 @@ class Controller_Media extends Controller
 			'size'      => $size,
 			'filename'  => $filename,
 		);
-		$img = new Site_image($config);
-		$ext = $img->get_extension();
+		$file = new Site_FileMaker($config);
+		$ext = $file->get_extension();
 		$accept_exts = conf('upload.types.img.accept_format');
 
 		return Response::forge(
-			$img->get_image(),
+			$file->get_data(),
 			200,
 			array('Content-Type' => $accept_exts[$ext])
 		);
@@ -54,13 +54,14 @@ class Controller_Media extends Controller
 	{
 		$filename = sprintf('%s.%s', $filename, Input::extension());
 		$config = array(
+			'type' => 'file',
 			'file_cate' => $file_cate,
 			'split_num' => $split_num,
 			'size'      => $size,
 			'filename'  => $filename,
 		);
-		$file = new Site_File($config);
-		if (!$data = $file->get_file()) throw new HttpNotFoundException();
+		$file = new Site_FileMaker($config);
+		if (!$data = $file->get_data()) throw new HttpNotFoundException();
 		$ext = $file->get_extension();
 		$accept_exts = conf('upload.types.file.accept_format');
 

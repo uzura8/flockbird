@@ -1,7 +1,8 @@
 <?php
 
-class Site_image
+class Site_FileMaker
 {
+	private $type = 'img';
 	private $is_saved_db = false;
 	private $is_tmp      = false;
 	private $file_cate   = '';
@@ -13,7 +14,7 @@ class Site_image
 	private $width       = '';
 	private $height      = '';
 	private $resize_type = '';
-	private $is_noimage  = false;
+	private $is_nofile  = false;
 
 	public function __construct($config = array())
 	{
@@ -23,10 +24,11 @@ class Site_image
 	private function setup($config)
 	{
 		$this->is_saved_db = conf('upload.isSaveDb');
-		if (!$this->set_configs($config))   $this->is_noimage = true;
-		if (!$this->check_configs($config)) $this->is_noimage = true;
+		if (!$this->set_configs($config))   $this->is_nofile = true;
+		if (!$this->check_configs($config)) $this->is_nofile = true;
 		$this->filepath = sprintf('%s/%s/', $this->file_cate, $this->split_num);
-		if (!$this->check_file()) $this->is_noimage = true;
+		if (!$this->check_file()) $this->is_nofile = true;
+		if (!$this->check_size()) $this->is_nofile = true;
 		$this->set_size();
 	}
 
@@ -50,6 +52,9 @@ class Site_image
 		}
 		if (!empty($config['is_tmp'])) $this->is_tmp = true;
 
+		if (!empty($config['type'])) $this->type = $config['type'];
+		if (in_array($this->type, array('img', 'file'))) $success = false;
+
 		return $result;
 	}
 
@@ -60,14 +65,28 @@ class Site_image
 
 	private function check_file_cate()
 	{
-		$file_cate_keys_accepted = array_keys(conf('upload.types.img.types'));
-		if ($this->is_tmp) $file_cate_keys_accepted[] = 'au';
+		$file_cate_keys_accepted = $this->get_accepted_file_cate_list();
 		if (!$is_correct = in_array($this->file_cate, $file_cate_keys_accepted))
 		{
 			$this->file_cate = null;
 		}
 
 		return $is_correct;
+	}
+
+	private function get_accepted_file_cate_list()
+	{
+		if ($this->type == 'file')
+		{
+			$file_cates = array('nw');
+		}
+		else
+		{
+			$file_cates = array_keys(conf('upload.types.img.types'));
+		}
+		if ($this->is_tmp) $file_cates[] = 'au';
+
+		return $file_cates;
 	}
 
 	private function check_split_num()
@@ -82,11 +101,11 @@ class Site_image
 
 	private function check_file()
 	{
-		if ($this->filename == conf('upload.types.img.noimage_filename')) return false;
+		if ($this->type == 'img' && $this->filename == conf('upload.types.img.noimage_filename')) return false;
 		if (!$this->check_filename()) return false;
 
-		$raw_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename, 'raw', 'img', $this->is_tmp);
-		$dir_path = Site_Upload::get_uploaded_dir_path($this->filepath, 'raw', 'img', $this->is_tmp);
+		$raw_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename, 'raw', $this->type, $this->is_tmp);
+		$dir_path = Site_Upload::get_uploaded_dir_path($this->filepath, 'raw', $this->type, $this->is_tmp);
 		if (!file_exists($raw_file_path))
 		{
 			if (!$this->is_saved_db) return false;
@@ -97,16 +116,31 @@ class Site_image
 		return true;
 	}
 
+	private function check_size()
+	{
+		if ($this->type == 'file')
+		{
+			return $this->size == 'raw';
+		}
+
+		if ($this->size == 'raw') return true;
+		if ($this->is_tmp) return $this->size == 'thumbnail';
+
+		return true;
+	}
+
 	private function set_size()
 	{
+		if ($this->type == 'file') return;
 		if ($this->size == 'raw') return;
-		if ($this->size == 'thumbnail')
+
+		if ($this->is_tmp && $this->size == 'thumbnail')
 		{
 			$size = conf('upload.types.img.tmp.sizes.thumbnail');
 		}
 		else
 		{
-			$this->check_size();
+			$this->validate_size();
 			$size = $this->size;
 		}
 		$item = Site_Upload::conv_size_str_to_array($size);
@@ -115,7 +149,7 @@ class Site_image
 		$this->resize_type = $item['resize_type'];
 	}
 
-	private function check_size()
+	private function validate_size()
 	{
 		$default_size = conf('upload.types.img.defaults.default_size');
 		if (!$this->size)
@@ -143,7 +177,7 @@ class Site_image
 		if (empty($this->filename)) return false;
 
 		$ext = Util_file::get_extension_from_filename($this->filename);
-		$accept_formats = Site_Upload::get_accept_format();
+		$accept_formats = Site_Upload::get_accept_format($this->type);
 		if (!$accept_formats || !in_array($ext, $accept_formats)) return false;
 
 		$this->extension = $ext;
@@ -151,37 +185,15 @@ class Site_image
 		return true;
 	}
 
-	public function get_noimage()
+	public function get_data()
 	{
-		return file_get_contents($this->get_noimage_file_path());
-	}
-
-	private function get_noimage_file_path()
-	{
-		$original_noimage_filename  = conf('upload.types.img.noimage_filename');
-		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
-		if (!$this->file_cate) return $original_noimage_file_path;
-		if ($this->size == 'raw') return $original_noimage_file_path;
-
-		$noimage_filename  = $this->file_cate.'_'.$original_noimage_filename;
-		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
-
-		$noimage_file_dir  = sprintf('%simg/%s/%s/all', PRJ_UPLOAD_DIR, $this->size, $this->file_cate);
-		$noimage_file_path = $noimage_file_dir.'/'.$noimage_filename;
-		if (!file_exists($noimage_file_path))
+		if ($this->is_nofile)
 		{
-			$this->make_image($original_noimage_file_path, $noimage_file_dir, $noimage_filename);
+			return ($this->type == 'img') ? $this->get_noimage() : false;
 		}
 
-		return $noimage_file_path;
-	}
-
-	public function get_image()
-	{
-		if ($this->is_noimage) return $this->get_noimage();
-
-		$original_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename, 'raw', 'img', $this->is_tmp);
-		if ($this->size == 'raw')
+		$original_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename, 'raw', $this->type, $this->is_tmp);
+		if ($this->type == 'file' || $this->size == 'raw')
 		{
 			return file_get_contents($original_file_path);
 		}
@@ -208,5 +220,30 @@ class Site_image
 	public function get_extension()
 	{
 		return $this->extension;
+	}
+
+	public function get_noimage()
+	{
+		return file_get_contents($this->get_noimage_file_path());
+	}
+
+	private function get_noimage_file_path()
+	{
+		$original_noimage_filename  = conf('upload.types.img.noimage_filename');
+		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
+		if (!$this->file_cate) return $original_noimage_file_path;
+		if ($this->size == 'raw') return $original_noimage_file_path;
+
+		$noimage_filename  = $this->file_cate.'_'.$original_noimage_filename;
+		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
+
+		$noimage_file_dir  = sprintf('%simg/%s/%s/all', PRJ_UPLOAD_DIR, $this->size, $this->file_cate);
+		$noimage_file_path = $noimage_file_dir.'/'.$noimage_filename;
+		if (!file_exists($noimage_file_path))
+		{
+			$this->make_image($original_noimage_file_path, $noimage_file_dir, $noimage_filename);
+		}
+
+		return $noimage_file_path;
 	}
 }
