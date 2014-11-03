@@ -208,6 +208,11 @@ $config = array(
 			),
 		),
 	),
+	'db' => array(
+		'fileBin' => array(
+			'configKey' => 'file_bin_db',
+		),
+	),
 	'view_params_default' => array(
 		'list' => array(
 			'limit' => 2,

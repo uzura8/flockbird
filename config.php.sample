@@ -26,17 +26,6 @@ $GLOBALS['_PRJ_DSN']['production'] = array(
 		'connection_rate' => 0,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続). 0 を指定すると更新時のみ接続
 		//'readonly' => array(),// readonly は指定しない(connection_rate 設定が効かなくなる)
 	),
-	//// SlaveDB 設定
-	//'slave1' => array(
-	//	'type'        => 'pdo',
-	//	'connection'  => array(
-	//		'dsn'        => 'mysql:host=localhost;dbname=dbname',
-	//		'username'   => 'root',
-	//		'password'   => '',
-	//	),
-	//	'table_prefix' => '',
-	//	'connection_rate' => 1,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続)
-	//),
 );
 
 // 暗号化キー(ASCII文字列)
@@ -112,6 +101,34 @@ define('PRJ_IMAGE_OUTPUT_IMAGE_QUALITY', 98);
 
 // メンバーごとにアップロードファイルサイズの上限を設けるかどうか
 define('PRJ_IS_LIMIT_UPLOAD_FILE_SIZE', false);
+
+
+//// 複数DBサーバ接続設定
+//$GLOBALS['_PRJ_DSN']['production'] = array(
+//	// SlaveDB 設定
+//	'slave1' => array(
+//		'type'        => 'pdo',
+//		'connection'  => array(
+//			'dsn'        => 'mysql:host=localhost;dbname=slave_dbname',
+//			'username'   => 'root',
+//			'password'   => '',
+//		),
+//		'table_prefix' => '',
+//		'connection_rate' => 1,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続)
+//	),
+//	// file_bin DB 設定
+//	'file_bin_db' => array(
+//		'type'        => 'pdo',
+//		'connection'  => array(
+//			'dsn'        => 'mysql:host=localhost;dbname=file_bin_dbname',
+//			'username'   => 'root',
+//			'password'   => '',
+//		),
+//		'table_prefix' => '',
+//		'connection_rate' => 0,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続). 0 を指定すると更新時のみ接続
+//		//'readonly' => array(),// readonly は指定しない(connection_rate 設定が効かなくなる)
+//	),
+//);
 
 
 // 開発関連設定

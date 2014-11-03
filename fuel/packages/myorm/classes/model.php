@@ -102,6 +102,16 @@ class Model extends \Orm\Model
 		return static::$_table_name;
 	}
 
+	public static function set_connections($db_config_key)
+	{
+		$db_configs = \Config::get('db');
+		if (isset($db_configs[$db_config_key]))
+		{
+			static::$_write_connection = $db_config_key;
+			static::$_connection       = $db_config_key;
+		}
+	}
+
 	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')
 	{
 		if (!$id) throw new \HttpNotFoundException;
