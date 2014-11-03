@@ -66,6 +66,11 @@ class Site_Upload
 		return sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
 	}
 
+	public static function remove_files_all($filepath, $filename, $is_tmp = false)
+	{
+		return self::remove_images($filepath, $filename, $is_tmp) && self::remove_raw_file($filepath, $filename, $is_tmp);
+	}
+
 	public static function remove_images($filepath, $filename, $is_tmp = false)
 	{
 		$file = self::get_uploaded_file_real_path($filepath, $filename, 'raw', 'img', $is_tmp);
@@ -81,6 +86,14 @@ class Site_Upload
 				Util_file::remove($file);
 			}
 		}
+
+		return true;
+	}
+
+	public static function remove_raw_file($filepath, $filename, $is_tmp = false)
+	{
+		$file = self::get_uploaded_file_real_path($filepath, $filename, 'raw', 'file', $is_tmp);
+		Util_file::remove($file);
 
 		return true;
 	}
