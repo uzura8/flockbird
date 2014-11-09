@@ -1,6 +1,6 @@
 <div class="img_box">
 	<?php echo ($before_id) ? Html::anchor('album/image/'.$before_id, '<span class="glyphicon glyphicon-backward"></span><br>前へ', array('class' => 'btn btn-default btn-xs backward')) : ''; ?>
-	<?php echo img($album_image->get_image(), '600x600', '', true, $album_image->name ?: '', false, true); ?>
+	<?php echo img($album_image->get_image(), 'L', '', true, $album_image->name ?: '', false, true); ?>
 	<?php echo ($after_id) ? Html::anchor('album/image/'.$after_id, '<span class="glyphicon glyphicon-forward"></span><br>次へ', array('class' => 'btn btn-default btn-xs forward')) : ''; ?>
 </div>
 <hr>

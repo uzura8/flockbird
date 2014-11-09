@@ -493,45 +493,6 @@ class Controller_Album extends \Controller_Site
 		\Response::redirect('album/'.$album_id);
 	}
 
-	public function action_edit_image()
-	{
-		\Util_security::check_method('POST');
-		\Util_security::check_csrf();
-
-		try
-		{
-			$config = array(
-				'base_path' => sprintf('img/m/%d', \Site_Upload::get_middle_dir($this->u->id)),
-				'sizes'     => conf('upload.types.img.types.ai.sizes'),
-				'max_size'  => conf('upload.types.img.ai.max_size', conf('upload.types.img.defaults.max_size')),
-				'max_file_size' => PRJ_UPLOAD_MAX_FILESIZE,
-			);
-			if ($this->u->get_image()) $config['old_filename'] = $this->u->get_image();
-			$uploader = new \Site_Uploader($config);
-			$uploaded_file = $uploader->execute();
-
-			\DB::start_transaction();
-			$file = ($this->u->file_id) ? \Model_File::find($this->u->file_id) : new \Model_File;
-			$file->name = $uploaded_file['new_filename'];
-			$file->filesize = $uploaded_file['size'];
-			$file->original_filename = $uploaded_file['filename'].'.'.$uploaded_file['extension'];
-			$file->type = $uploaded_file['type'];
-			$file->member_id = $this->u->id;
-			$file->save();
-			\Controller_Base_Site::add_member_filesize_total($file->size);
-			\DB::commit_transaction();
-
-			\Session::set_flash('message', '写真を更新しました。');
-		}
-		catch(\Exception $e)
-		{
-			\DB::rollback_transaction();
-			\Session::set_flash('error', $e->getMessage());
-		}
-
-		\Response::redirect('member/profile/setting_image');
-	}
-
 	private static function get_validation(Model_Album $album, $is_edit = false)
 	{
 		$val = \Validation::forge();

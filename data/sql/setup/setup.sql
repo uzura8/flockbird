@@ -19,7 +19,7 @@ CREATE TABLE `album` (
 CREATE TABLE `album_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_id` int(11) NOT NULL,
-  `file_id` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
   `name` text NULL,
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `comment_count` int(11) NOT NULL DEFAULT '0',
@@ -32,7 +32,7 @@ CREATE TABLE `album_image` (
   KEY `album_id_public_flag_id` (`album_id`,`public_flag`,`id`),
   KEY `album_id_public_flag_shot_at` (`album_id`,`public_flag`,`shot_at`),
   KEY `sort_datetime_idx` (`sort_datetime`),
-  KEY `file_id_idx` (`file_id`),
+  KEY `file_name_idx` (`file_name`),
   CONSTRAINT `album_image_album_id_album_id` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -89,9 +89,7 @@ CREATE TABLE `contacts` (
 
 CREATE TABLE `file` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `file_bin_id` int(11) NULL COMMENT 'file_bin id',
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
-  `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File path',
   `type` varchar(256) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
   `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
@@ -108,9 +106,7 @@ CREATE TABLE `file` (
 
 CREATE TABLE `file_tmp` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `file_bin_id` int(11) NULL COMMENT 'file_bin id',
   `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
-  `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File path',
   `type` varchar(256) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
   `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
@@ -141,11 +137,11 @@ CREATE TABLE `file_tmp_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of each temporary files';
 
 CREATE TABLE `file_bin` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'File path and name',
   `bin` longblob COMMENT 'Content of file',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves content of files';
 
 
@@ -154,7 +150,7 @@ CREATE TABLE `member` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `last_login` datetime DEFAULT NULL,
   `login_hash` varchar(255) DEFAULT NULL,
-  `file_id` varchar(255) DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
   `filesize_total` int(11) NOT NULL DEFAULT 0 COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
   `sex` varchar(16) DEFAULT NULL,
@@ -393,7 +389,7 @@ CREATE TABLE `news` (
 CREATE TABLE `news_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
-  `file_id` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
   `name` text NULL,
   `shot_at` datetime NOT NULL,
   `created_at` datetime NOT NULL,
@@ -401,21 +397,21 @@ CREATE TABLE `news_image` (
   PRIMARY KEY (`id`),
   KEY `news_id_created_at` (`news_id`,`created_at`),
   KEY `news_id_idx` (`news_id`),
-  KEY `file_id_idx` (`file_id`),
+  KEY `file_name_idx` (`file_name`),
   CONSTRAINT `news_image_news_id_news_id` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `news_file` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
-  `file_id` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
   `name` text NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `news_id_created_at` (`news_id`,`created_at`),
   KEY `news_id_idx` (`news_id`),
-  KEY `file_id_idx` (`file_id`),
+  KEY `file_name_idx` (`file_name`),
   CONSTRAINT `news_file_news_id_news_id` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

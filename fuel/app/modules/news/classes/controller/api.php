@@ -109,11 +109,11 @@ class Controller_Api extends \Controller_Rest
 		$confs = conf('upload.types.'.$type);
 		foreach ($files as $key => $file)
 		{
-			$upload_uri = $confs['root_path']['raw_dir'].$file['file_path'].$file['file_name'];
+			$upload_uri = Site_Upload::get_uploaded_file_path($file['file_name'], 'raw', $type, false, true);
 			$files[$key]['file_url_raw'] = \Uri::create($upload_uri);
 			if ($type == 'img')
 			{
-				$upload_uri = $confs['root_path']['cache_dir'].$confs['types']['nw']['sizes']['thumbnail'].'/'.$file['file_path'].$file['file_name'];
+				$upload_uri = Site_Upload::get_uploaded_file_path($file['file_name'], 'thumbnail', $type, false, true);
 				$files[$key]['file_url_thumbnail'] = \Uri::create($upload_uri);
 			}
 

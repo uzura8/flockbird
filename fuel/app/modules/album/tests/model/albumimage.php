@@ -327,7 +327,7 @@ class Test_Model_AlbumImage extends \TestCase
 		$album_image_id = self::$album_image->id;
 		$file_id = self::$album_image->file_id;
 		$file_size = self::$album_image->file->filesize;
-		$file_path = \Site_Upload::get_uploaded_file_real_path(self::$album_image->file->path, self::$album_image->file->name);
+		$file_path = \Site_Upload::get_uploaded_file_path(self::$album_image->file->path, self::$album_image->file->name);
 		$member_filesize_before = self::get_member_filesize_total(self::$member_id);
 
 		// set cover_album_image_id

@@ -16,9 +16,9 @@ class Model_NewsFile extends \MyOrm\Model
 	);
 	protected static $_has_one = array(
 		'file' => array(
-			'key_from' => 'file_id',
+			'key_from' => 'file_name',
 			'model_to' => '\Model_File',
-			'key_to' => 'id',
+			'key_to' => 'name',
 			'cascade_save' => false,
 			'cascade_delete' => true,
 		),
@@ -30,8 +30,8 @@ class Model_NewsFile extends \MyOrm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
-		'file_id' => array(
-			'data_type' => 'integer',
+		'file_name' => array(
+			'validation' => array('trim', 'required', 'max_length' => array(64)),
 			'form' => array('type' => false),
 		),
 		'name' => array(
@@ -61,6 +61,7 @@ class Model_NewsFile extends \MyOrm\Model
 		),
 	);
 
+	protected static $image_prefix = 'nw';
 	protected static $count_list = array();
 
 	public function get_file()

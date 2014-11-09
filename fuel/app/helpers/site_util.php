@@ -70,9 +70,9 @@ function site_header_keywords($keywords = '')
 	return $keywords.','.PRJ_HEADER_KEYWORDS_DEFAULT;
 }
 
-function site_get_screen_name($u)
+function site_get_screen_name($u, $default_value = null)
 {
-	if (!$u) return term('guest');
+	if (!$u) return is_null($default_value) ? term('guest') : $default_value;
 
 	if (!empty($u->name)) return $u->name;
 	if (!empty($u->username)) return $u->username;
@@ -113,55 +113,46 @@ function symbol_bool($bool)
 	return $bool ? symbol('bool.true') : symbol('bool.false');
 }
 
-function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile_image = false, $is_img_responsive = false, $anchor_attrs = array())
+function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile = false, $is_responsive = false, $anchor_attrs = array())
 {
 	$option = array('class' => '');
-	if ($is_img_responsive) $option['class'] = 'img-responsive';
-	$is_raw = $size == 'raw';
-	list($filepath, $filename) = Site_Upload::split_file_object2vars($file);
+	if ($is_responsive) $option['class'] = 'img-responsive';
 
-	$file_cate  = Util_string::get_exploded($filepath, 0, '/');
-	if ($is_profile_image)
+	if (strlen($filename) <= 3)
+	{
+		$file_cate = $filename;
+		$filename = '';
+	}
+	else
+	{
+		$file_cate = Site_Upload::get_file_cate_from_filename($filename);
+	}
+
+	if ($is_profile)
 	{
 		if (!empty($option['class'])) $option['class'] .= ' ';
 		$option['class'] .= 'profile_image';
 	}
 
-	$is_noimage = false;
-	if (empty($filename)) $is_noimage = true;
-	if (!$is_noimage && !Site_Upload::check_filepath_format($filepath)) $is_noimage = true;
-	if ($is_noimage)
+	if (!$size = img_size($file_cate, $size_key)) $size = $size_key;
+	if (empty($filename))
 	{
-		$option['alt'] = $alt ?: 'No image.';
-		$noimage_filename  = conf('upload.types.img.noimage_filename');
-		$noimage_tag = Asset::img('site/'.$noimage_filename, $option);
-		if ($file_cate)
-		{
-			if ($is_raw)
-			{
-				$noimage_file_root_path = sprintf('assets/site/%s_%s', $file_cate, $noimage_filename);
-			}
-			else
-			{
-				$noimage_file_root_path = sprintf('%s/img/%s/%s/all/noimage.gif', PRJ_UPLOAD_DIRNAME, $size, $file_cate);
-			}
-			$noimage_tag = Html::img($noimage_file_root_path, $option);
-		}
+		$noimage_tag = Site_Util::get_noimage_tag($size, $file_cate, $option);
 		if ($link_uri) return Html::anchor($link_uri, $noimage_tag, $anchor_attrs);
 
 		return $noimage_tag;
 	}
-
-	$uri_path_raw = sprintf('%s/img/raw/%s%s', PRJ_UPLOAD_DIRNAME, $filepath, $filename);
-	$uri_path = $is_raw ? $uri_path_raw : sprintf('%s/img/%s/%s%s', PRJ_UPLOAD_DIRNAME, $size, $filepath, $filename);
 	if ($alt) $option['alt'] = $alt;
+
+	$uri_path = Site_Upload::get_uploaded_file_path($filename, $size, 'img', false, true);
 	$image_tag = Html::img($uri_path, $option);
 
 	if ($link_uri) return Html::anchor($link_uri, $image_tag, $anchor_attrs);
+
 	if ($is_link2raw_file)
 	{
 		$anchor_attrs['target'] = '_blank';
-		return Html::anchor($uri_path_raw, $image_tag, $anchor_attrs);
+		return Html::anchor($uri_path, $image_tag, $anchor_attrs);
 	}
 
 	return $image_tag;
@@ -170,6 +161,7 @@ function img($file = array(), $size = '', $link_uri = '', $is_link2raw_file = fa
 function img_size($file_cate, $size, $additional_table = '')
 {
 	if ($additional_table) return Config::get(sprintf('site.upload.types.img.types.%s.additional_sizes.%s.%s', $file_cate, $additional_table, $size));
+
 	return Config::get(sprintf('site.upload.types.img.types.%s.sizes.%s', $file_cate, $size));
 }
 

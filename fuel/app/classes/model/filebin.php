@@ -3,11 +3,14 @@
 class Model_FileBin extends \MyOrm\Model
 {
 	protected static $_table_name = 'file_bin';
+	protected static $_primary_key = array('name');
 	//protected static $_write_connection = 'file_bin_db';
 	//protected static $_connection = 'file_bin_db';
 
 	protected static $_properties = array(
-		'id',
+		'name' => array(
+			'validation' => array('trim', 'required', 'max_length' => array(64)),
+		),
 		'bin',
 		'created_at',
 		'updated_at'
@@ -29,35 +32,19 @@ class Model_FileBin extends \MyOrm\Model
 		static::set_connections(conf('db.fileBin.configKey', 'file_bin_db'));
 	}
 
-	public static function get_bin4id($id, $is_decode = true)
+	public static function get_bin4name($name, $is_decode = true)
 	{
-		$obj = self::query()->where('id', $id)->get_one();
+		if (!$obj = self::find($name)) return false;
 
 		return $is_decode ? base64_decode($obj->bin) : $obj->bin;
 	}
 
-	public static function get_bin4file_name($filename, $is_tmp = false, $is_decode = true)
+	public static function get4name($name, $is_tmp = false)
 	{
-		if (!$file = self::get_file4name($filename, $is_tmp)) return null;
-
-		return self::get_bin4id($file->file_bin_id, $is_decode);
+		return self::find($name);
 	}
 
-	public static function get4file_name($filename, $is_tmp = false)
-	{
-		if (!$file = self::get_file4name($filename, $is_tmp)) return null;
-
-		return self::find($file->file_bin_id);
-	}
-
-	protected static function get_file4name($filename, $is_tmp = false)
-	{
-		$model = $is_tmp ? 'Model_FileTmp' : 'Model_File';
-
-		return $model::get4name($filename);
-	}
-
-	public static function save_from_file_path($file_path, $is_image = true)
+	public static function save_from_file_path($file_path, $save_name = '', $is_image = true)
 	{
 		if (!$bin = Util_file::get_encoded_bin_data($file_path, $is_image))
 		{
@@ -65,9 +52,11 @@ class Model_FileBin extends \MyOrm\Model
 		}
 
 		$obj = self::forge();
+		$filepath = Util_File::get_filepath_from_path($file_path);
+		if (!$save_name) $save_name = Site_Upload::convert_filepath2filename($filepath);
+		$obj->name = $save_name;
 		$obj->bin = $bin;
-		$obj->save();
 
-		return $obj->id;
+		return $obj->save();
 	}
 }

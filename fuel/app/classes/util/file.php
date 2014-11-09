@@ -182,15 +182,6 @@ class Util_File
 		return false;
 	}
 
-	public static function make_filename($original_filename, $extension = '', $prefix = '', $with_extension = true, $delimitter = '_', $is_seccure = false)
-	{
-		$filename = Util_string::get_random($original_filename, $extension, $is_seccure);
-		if ($prefix) $prefix .= $delimitter;
-		if ($with_extension) $filename .= '.'.$extension;
-
-		return $prefix.$filename;
-	}
-
 	public static function make_dir($path, $mode = 0777)
 	{
 		if (file_exists($path))
@@ -295,6 +286,8 @@ class Util_File
 	public static function get_path_partial($path, $length = 1, $offset = 0)
 	{
 		$parts = explode('/', $path);
+		if (count($parts) < $length + $offset) throw new \InvalidArgumentException('Parameter is invalid.');
+
 		$parts = array_reverse($parts);
 		$return = '';
 		for ($i = 0; $i < $length; $i++)
@@ -337,4 +330,8 @@ class Util_File
 		return self::get_path_partial($path);
 	}
 
+	public static function get_filepath_from_path($path)
+	{
+		return self::get_path_partial($path, 3);
+	}
 }

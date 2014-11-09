@@ -17,7 +17,7 @@ class MyUploadHandler extends UploadHandler
 			$file->description   = $file_tmp->description;
 			if ($type == 'img')
 			{
-				$file->thumbnail_uri = $this->options['image_versions']['thumbnail']['upload_url'].$file_tmp->name;
+				$file->thumbnail_uri = $this->options['image_versions']['thumbnail']['upload_url'].Site_Upload::get_filepath_prefix_from_filename($file_tmp->name);
 			}
 
 			$files[] = $file;
@@ -162,11 +162,13 @@ class MyUploadHandler extends UploadHandler
 			$file->error = $this->get_error_message('accept_file_types');
 			return $file;
 		}
-		if (!$file->name = Site_Upload::make_file_name($original_name, $extention, $this->options['upload_dir']))
+		if (!$filename_with_prefix = Site_Upload::make_unique_filename($extention, $this->options['filename_prefix'], $original_name))
 		{
 			$file->error = 'ファイル名の作成に失敗しました。';
 			return $file;
 		}
+		$file->name = str_replace($this->options['filename_prefix'], '', $filename_with_prefix);
+		$file->name_prefix = $this->options['filename_prefix'];
 		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], conf('upload.check_and_make_dir_level'), $this->options['mkdir_mode']))
 		{
 			$file->error = 'ディレクトリの作成に失敗しました。';
@@ -177,7 +179,10 @@ class MyUploadHandler extends UploadHandler
 			return $file;
 		}
 
-		if ($this->options['upload_type'] == 'img') $file->thumbnail_uri = $this->options['image_versions']['thumbnail']['upload_url'].$file->name;
+		if ($this->options['upload_type'] == 'img')
+		{
+			$file->thumbnail_uri = $this->options['image_versions']['thumbnail']['upload_url'].$file->name;
+		}
 		$this->handle_form_data($file, $index);
 		$upload_dir = $this->get_upload_path();
 		$file_path = $this->get_upload_path($file->name);
@@ -222,7 +227,7 @@ class MyUploadHandler extends UploadHandler
 			$file->size = $file_size;
 			if (!$content_range && $this->options['discard_aborted_uploads'])
 			{
-				$this->delete_file($file->name);
+				$this->delete_file($filename_with_prefix);
 				$file->error = 'abort';
 			}
 		}
@@ -256,14 +261,14 @@ class MyUploadHandler extends UploadHandler
 			$file_bin_id = 0;
 			if ($this->options['is_save_db'])
 			{
-				$file_bin_id = Model_FileBin::save_from_file_path($file_path, $this->options['upload_type'] == 'img');
-				$this->delete_file($file->name, false, true);
+				$file_bin_id = Model_FileBin::save_from_file_path($file_path, $filename_with_prefix, $this->options['upload_type'] == 'img');
+				$this->delete_file($filename_with_prefix, false, true);
 			}
 			$file->id = $this->save_file_tmp($file, $file_bin_id, $exif);
 		}
 		catch(\FuelException $e)
 		{
-			$this->delete_file($file->name, $this->options['is_save_db']);
+			$this->delete_file($filename_with_prefix, $this->options['is_save_db']);
 			$file->error = 'ファイルの保存に失敗しました。';
 		}
 
@@ -274,8 +279,8 @@ class MyUploadHandler extends UploadHandler
 	{
 		$model_file_tmp = new \Model_FileTmp;
 		if ($file_bin_id) $model_file_tmp->file_bin_id = $file_bin_id;
-		$model_file_tmp->name = $file->name;
-		$model_file_tmp->path = $this->options['filepath'];
+		$model_file_tmp->name = $this->options['filename_prefix'].$file->name;
+		//$model_file_tmp->path = $this->options['filepath'];
 		$model_file_tmp->filesize = $file->size;
 		$model_file_tmp->type = $file->type;
 		$model_file_tmp->original_filename = $file->original_name;
@@ -294,9 +299,10 @@ class MyUploadHandler extends UploadHandler
 		return $model_file_tmp->id;
 	}
 
-	protected function delete_file($file_name, $is_delete_db_bin_data = false, $is_delete_raw_file_only = false)
+	protected function delete_file($filename, $is_delete_db_bin_data = false, $is_delete_raw_file_only = false)
 	{
-		$file_path = $this->get_upload_path($file_name);
+		$filename_excluded_prefix = str_replace($this->options['filename_prefix'], '', $filename);
+		$file_path = $this->get_upload_path($filename_excluded_prefix);
 		$success = is_file($file_path) && unlink($file_path);
 		if ($success && !$is_delete_raw_file_only)
 		{
@@ -304,13 +310,13 @@ class MyUploadHandler extends UploadHandler
 			{
 				if (!empty($version))
 				{
-					$varsion_file = $this->get_upload_path($file_name, $version);
+					$varsion_file = $this->get_upload_path($filename_excluded_prefix, $version);
 					if (is_file($varsion_file)) unlink($varsion_file);
 				}
 			}
 		}
 
-		if ($is_delete_db_bin_data && $file_bin = Model_FileBin::get4file_name($file_name, true))
+		if ($is_delete_db_bin_data && $file_bin = Model_FileBin::get4name($filename, true))
 		{
 			$success = (bool)$file_bin->delete();
 		}
@@ -405,16 +411,17 @@ class MyUploadHandler extends UploadHandler
 		return true;
 	}
 
-	protected function is_valid_file_object($file_name)
+	protected function is_valid_file_object($filename_excluded_prefix)
 	{
-		$file_path = $this->get_upload_path($file_name);
-		if (is_file($file_path) && $file_name[0] !== '.')
+		$file_path = $this->get_upload_path($filename_excluded_prefix);
+		if (is_file($file_path) && $filename_excluded_prefix[0] !== '.')
 		{
 			return true;
 		}
 		if ($this->options['is_save_db'] && !file_exists($file_path))
 		{
-			if (Site_Upload::make_raw_file_from_db($file_name, str_replace($file_name, '', $file_path), true)) return true;
+			$file_name = $this->options['filename_prefix'].$filename_excluded_prefix;
+			if (Site_Upload::make_raw_file_from_db($file_name, $file_path)) return true;
 		}
 
 		return false;

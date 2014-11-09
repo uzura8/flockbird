@@ -22,16 +22,13 @@ if (\Timeline\Site_Util::check_type_to_get_access_from($type))
 }
 
 $member = Model_Member::check_authority($member_id);
-$img_size = conf('upload.types.img.types.m.sizes.M');
 ?>
 <?php if (isset($liked_timeline_ids)): ?>
 <?php echo Form::hidden('liked_timeline_ids', json_encode($liked_timeline_ids), array('id' => 'liked_timeline_ids')); ?>
 <?php endif; ?>
 <div <?php echo Util_Array::conv_array2attr_string($attr); ?>>
 	<div class="row member_contents">
-		<div class="col-xs-1">
-			<?php echo empty($member) ? img('m', $img_size, '', false, '', true, true) : img($member->get_image(), $img_size, 'member/'.$member->id, false, site_get_screen_name($member), true, true); ?>
-		</div>
+		<div class="col-xs-1"><?php echo img($member->get_image(), 'M', $member ? 'member/'.$member->id : '', false, site_get_screen_name($member), true, true); ?></div>
 		<div class="col-xs-11">
 			<div class="member_info">
 				<b class="fullname"><?php echo empty($member) ? term('member.left') : Html::anchor('member/'.$member->id, $member->name); ?></b>

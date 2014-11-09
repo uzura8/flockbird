@@ -25,64 +25,23 @@ class Site_Upload
 		return array_keys(conf('upload.types.'.$type.'.accept_format'));
 	}
 
-	public static function split_file_object2vars($file)
+	public static function remove_files_all($filename, $is_tmp = false)
 	{
-		if (empty($file)) return false;
-
-		$filename = '';
-		$filepath = '';
-		if (is_object($file))
-		{
-			if (!empty($file->name)) $filename = $file->name;
-			if (!empty($file->path)) $filepath = $file->path;
-		}
-		elseif (is_array($file))
-		{
-			if (!empty($file['name'])) $filename = $file['name'];
-			if (!empty($file['path'])) $filepath = $file['path'];
-		}
-		else
-		{
-			$filepath = $file;
-		}
-
-		return array($filepath, $filename);
+		return self::remove_images($filename, $is_tmp) && self::remove_raw_file($filename, $is_tmp);
 	}
 
-	public static function check_filepath_format($filepath)
+	public static function remove_images($filename, $is_tmp = false)
 	{
-		if (empty($filepath)) return false;
-		return (bool)preg_match(self::get_filepath_format(), $filepath);
-	}
-
-	public static function get_filepath_format()
-	{
-		$ids = array_keys(conf('upload.types.img.types'));
-		return '#('.implode('|', $ids).')/[0-9]+#i';
-	}
-
-	public static function get_filepath($file_cate, $split_criterion_id)
-	{
-		return sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
-	}
-
-	public static function remove_files_all($filepath, $filename, $is_tmp = false)
-	{
-		return self::remove_images($filepath, $filename, $is_tmp) && self::remove_raw_file($filepath, $filename, $is_tmp);
-	}
-
-	public static function remove_images($filepath, $filename, $is_tmp = false)
-	{
-		$file = self::get_uploaded_file_real_path($filepath, $filename, 'raw', 'img', $is_tmp);
+		$file = self::get_uploaded_file_path($filename, 'raw', 'img', $is_tmp);
 		Util_file::remove($file);
 
 		if (conf('upload.types.img.delete.thumnails', 'syncDelete') == 'syncDelete')
 		{
-			$file_cate = self::get_file_cate_from_filepath($filepath);
+			$file_cate = self::get_file_cate_from_filename($filename);
 			$sizes = self::get_sizes_all4file_cate($file_cate, $is_tmp);
 			foreach ($sizes as $key => $size)
 			{
-				$file = self::get_uploaded_file_real_path($filepath, $filename, $is_tmp ? $key : $size, 'img', $is_tmp);
+				$file = self::get_uploaded_file_path($filename, $is_tmp ? $key : $size, 'img', $is_tmp);
 				Util_file::remove($file);
 			}
 		}
@@ -90,9 +49,9 @@ class Site_Upload
 		return true;
 	}
 
-	public static function remove_raw_file($filepath, $filename, $is_tmp = false)
+	public static function remove_raw_file($filename, $is_tmp = false)
 	{
-		$file = self::get_uploaded_file_real_path($filepath, $filename, 'raw', 'file', $is_tmp);
+		$file = self::get_uploaded_file_path($filename, 'raw', 'file', $is_tmp);
 		Util_file::remove($file);
 
 		return true;
@@ -110,12 +69,74 @@ class Site_Upload
 		return $i;
 	}
 
+	public static function get_filepath_prefix_from_filename($filename)
+	{
+		return Util_file::get_path_partial(str_replace('_', '/', $filename), 2).'/';
+	}
+
+	public static function convert_filename2filepath($filename)
+	{
+		return str_replace('_', '/', $filename);
+	}
+
+	public static function convert_filepath2filename($filepath)
+	{
+		return str_replace('/', '_', $filepath);
+	}
+
+	public static function get_file_cate_from_filename($filename)
+	{
+		$parts = explode('_', $filename);
+		if (count($parts) < 1) return false;
+
+		return $parts[0];
+	}
+
 	public static function get_file_cate_from_filepath($filepath)
 	{
 		$parts = explode('/', $filepath);
 		if (count($parts) < 1) return false;
 
 		return $parts[0];
+	}
+
+	public static function get_file_name_from_file_path($file_path)
+	{
+		$parts = explode('/', $file_path);
+		if (count($parts) < 1) return false;
+
+		return array_pop($parts);
+	}
+
+	public static function get_file_dir_path_from_file_path($file_path)
+	{
+		$parts = explode('/', $file_path);
+		if (count($parts) < 1) return false;
+		array_pop($parts);
+
+		return implode('/', $parts);
+	}
+
+	public static function check_filepath_prefix_format($filepath_prefix)
+	{
+		if (empty($filepath_prefix)) return false;
+		return (bool)preg_match(self::get_filepath_prefix_format(), $filepath_prefix);
+	}
+
+	public static function get_filepath_prefix_format()
+	{
+		$ids = array_keys(conf('upload.types.img.types'));
+		return '#('.implode('|', $ids).')/[0-9]+#i';
+	}
+
+	public static function get_filename_prefix($file_cate, $split_criterion_id)
+	{
+		return sprintf('%s_%s_', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
+	}
+
+	public static function get_filepath_prefix($file_cate, $split_criterion_id)
+	{
+		return sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
 	}
 
 	public static function get_file_cate_from_table($table)
@@ -139,14 +160,6 @@ class Site_Upload
 		}
 
 		return false;
-	}
-
-	public static function get_name_cate_from_file_path($file_path)
-	{
-		$parts = explode('/', $file_path);
-		if (count($parts) < 1) return false;
-
-		return array_pop($parts);
 	}
 
 	public static function conv_size_str_to_array($size_string)
@@ -193,48 +206,36 @@ class Site_Upload
 		return filesize($file);
 	}
 
-	public static function get_uploaded_file_uri_path($filepath = '', $filename = '', $size = 'raw', $file_type = 'img')
+	public static function get_uploaded_path($size = 'raw', $file_type = 'img', $is_tmp = false, $is_uri = false, $suffix = '')
 	{
-		if ($size == 'row')
+		if (!in_array($file_type, array('img', 'file')))
 		{
-			$uri_path = conf('upload.types.'.$file_type.'.root_path.raw_dir');
+			throw new InvalidArgumentException('Second parameter is invalid.');
 		}
-		else
-		{
-			$uri_path = conf('upload.types.'.$file_type.'.root_path.cache_dir').$size.'/';
-		}
-		if ($filepath) $uri_path .= $filepath;
-		if ($filepath && $filename) $uri_path .= $filename;
 
-		return $uri_path;
-	}
-
-	public static function get_uploaded_dir_path($filepath, $size = 'raw', $file_type = 'img', $is_tmp = false)
-	{
-		$key = 'site.upload.types.'.$file_type;
+		$key = 'upload.types.'.$file_type;
 		if ($is_tmp) $key .= '.tmp';
-		if ($size == 'raw')
+		if ($is_uri)
 		{
-			return Config::get($key.'.raw_file_path').$filepath;
-		}
-		if ($is_tmp)
-		{
-			return Config::get($key.'.raw_file_path').$filepath.$size.'/';
+			$key .= '.root_path';
+			if ($size == 'raw') return conf($key.'.raw_dir').$suffix;
+
+			return conf($key.'.cache_dir').$size.'/'.$suffix;
 		}
 
-		return PRJ_PUBLIC_DIR.Config::get($key.'.root_path.cache_dir').$size.'/'.$filepath;
+		if ($size == 'raw') return conf($key.'.raw_file_path').$suffix;
+
+		return PRJ_PUBLIC_DIR.conf($key.'.root_path.cache_dir').$size.'/'.$suffix;
 	}
 
-	public static function get_uploaded_file_real_path($filepath, $filename, $size = 'raw', $file_type = 'img', $is_tmp = false)
+	public static function get_uploaded_file_path($filename, $size = 'raw', $file_type = 'img', $is_tmp = false, $is_uri = false)
 	{
-		$dir_path = self::get_uploaded_dir_path($filepath, $size, $file_type, $is_tmp);
-
-		return $dir_path.$filename;
+		return self::get_uploaded_path($size, $file_type, $is_tmp, $is_uri).self::convert_filename2filepath($filename);
 	}
 
-	public static function check_uploaded_file_exists($filepath, $filename, $size = 'raw', $type = 'img', $is_tmp = false)
+	public static function check_uploaded_file_exists($filename, $size = 'raw', $type = 'img', $is_tmp = false)
 	{
-		$real_path = self::get_uploaded_file_real_path($filepath, $filename, $size, $type, $is_tmp);
+		$real_path = self::get_uploaded_file_path($filename, $size, $type, $is_tmp);
 
 		return file_exists($real_path);
 	}
@@ -252,29 +253,21 @@ class Site_Upload
 		return true;
 	}
 
-	public static function get_uploader_info($file_cate, $split_criterion_id, $is_tmp = false, $type = 'img', $with_thumbnails = true)
+	public static function get_uploader_info($file_cate, $filepath_prefix, $is_tmp = false, $type = 'img', $with_thumbnails = true)
 	{
-		$filepath = \Site_Upload::get_filepath($file_cate, $split_criterion_id);
+		$upload_dir = self::get_uploaded_path('raw', $type, $is_tmp, false, $filepath_prefix);
+		$upload_uri = self::get_uploaded_path('raw', $type, $is_tmp, true, $filepath_prefix);
 		$thumbnail_sizes = array();
-		if ($is_tmp)
+		if ($type == 'img' && $with_thumbnails)
 		{
-			if ($type == 'img' && $with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.tmp.sizes.thumbnail'));
-			$upload_dir = conf('upload.types.'.$type.'.tmp.raw_file_path').$filepath;
-			$upload_uri = conf('upload.types.'.$type.'.tmp.root_path.raw_dir').$filepath;
+			$conf_key = $is_tmp ? 'upload.types.img.tmp.sizes.thumbnail' : 'upload.types.img.types.'.$file_cate.'.sizes.thumbnail';
+			$thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf($conf_key));
 		}
-		else
-		{
-			if ($type == 'img' && $with_thumbnails) $thumbnail_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.types.'.$file_cate.'.sizes.thumbnail'));
-			$upload_dir      = conf('upload.types.'.$type.'.raw_file_path').$filepath;
-			$upload_uri      = conf('upload.types.'.$type.'.root_path.raw_dir').$filepath;
-		}
-		$upload_url = Uri::create($upload_uri);
 
 		$info = array(
-			'filepath'   => $filepath,
 			'upload_dir' => $upload_dir,
 			'upload_uri' => $upload_uri,
-			'upload_url' => $upload_url,
+			'upload_url' => Uri::create($upload_uri),
 		);
 		if (!empty($thumbnail_sizes)) $info['thumbnail_sizes'] = $thumbnail_sizes;
 
@@ -292,8 +285,12 @@ class Site_Upload
 	public static function get_uploader_options($member_id, $file_cate = 'm', $split_criterion_id = 0)
 	{
 		if (!$split_criterion_id) $split_criterion_id = $member_id;
-		$options = self::get_uploader_info($file_cate, $split_criterion_id);
+		$filename_prefix = \Site_Upload::get_filename_prefix($file_cate, $split_criterion_id);
+		$filepath_prefix = self::convert_filename2filepath($filename_prefix);
+
+		$options = self::get_uploader_info($file_cate, $filepath_prefix);
 		$options['member_id'] = $member_id;
+		$options['filename_prefix'] = $filename_prefix;
 
 		return $options;
 	}
@@ -302,21 +299,23 @@ class Site_Upload
 	{
 		if (!$split_criterion_id) $split_criterion_id = $member_id;
 		if (!$file_cate) $file_cate = $is_admin ? 'au' : 'm';
-		$uploader_info = self::get_uploader_info($file_cate, $split_criterion_id, $is_tmp, $upload_type);
+		$filename_prefix = self::get_filename_prefix($file_cate, $split_criterion_id);
+		$filepath_prefix = self::convert_filename2filepath($filename_prefix);
+		$uploader_info   = self::get_uploader_info($file_cate, $filepath_prefix, $is_tmp, $upload_type);
 		$options = array(
-			'is_save_db'     => conf('upload.isSaveDb'),
-			'max_file_size'  => PRJ_UPLOAD_MAX_FILESIZE,
+			'is_save_db'      => conf('upload.isSaveDb'),
+			'max_file_size'   => PRJ_UPLOAD_MAX_FILESIZE,
 			'max_number_of_files' => $is_multiple_upload ? PRJ_MAX_FILE_UPLOADS : 1,
-			'upload_dir'     => $uploader_info['upload_dir'],
-			'upload_url'     => $uploader_info['upload_url'],
-			'upload_uri'     => $uploader_info['upload_uri'],
-			'mkdir_mode'     => conf('upload.mkdir_mode'),
-			'member_id'      => $member_id,
-			'upload_type'    => $upload_type,
-			'user_type'      => $is_admin ? 1 : 0,
-			'filepath'       => $uploader_info['filepath'],
-			'is_save_exif'   => false,
-			'image_versions' => array(),
+			'upload_dir'      => $uploader_info['upload_dir'],
+			'upload_url'      => $uploader_info['upload_url'],
+			'upload_uri'      => $uploader_info['upload_uri'],
+			'mkdir_mode'      => conf('upload.mkdir_mode'),
+			'member_id'       => $member_id,
+			'upload_type'     => $upload_type,
+			'user_type'       => $is_admin ? 1 : 0,
+			'filename_prefix' => $filename_prefix,
+			'is_save_exif'    => false,
+			'image_versions'  => array(),
 		);
 		if ($upload_type == 'img')
 		{
@@ -326,12 +325,9 @@ class Site_Upload
 					'auto_orient' => true
 				),
 			);
-			$filepath = \Site_Upload::get_filepath($file_cate, $split_criterion_id);
-			$upload_url = Uri::create(conf('upload.types.img.tmp.root_path.cache_dir').'thumbnail/'.$filepath);
-			$cache_dir_path = PRJ_PUBLIC_DIR.conf('upload.types.img.tmp.root_path.cache_dir');
 			$options['image_versions']['thumbnail'] = array(
-				'upload_dir' => $cache_dir_path.'thumbnail/'.$filepath,
-				'upload_url' => $upload_url,
+				'upload_dir' => self::get_uploaded_path('thumbnail', $upload_type, $is_tmp, false, $filepath_prefix),
+				'upload_url' => Uri::create(self::get_uploaded_path('thumbnail', $upload_type, $is_tmp, true, $filepath_prefix)),
 				'max_width'  => $uploader_info['thumbnail_sizes']['width'],
 				'max_height' => $uploader_info['thumbnail_sizes']['height'],
 				'crop' => true,
@@ -373,10 +369,10 @@ class Site_Upload
 		}
 	}
 
-	public static function make_thumbnails($raw_file_path, $filepath, $is_check_and_make_dir = true, $additional_sizes_key = null)
+	public static function make_thumbnails($raw_file_path, $filepath_prefix, $is_check_and_make_dir = true, $additional_sizes_key = null)
 	{
-		$file_cate = self::get_file_cate_from_filepath($filepath);
-		$file_name = self::get_name_cate_from_file_path($raw_file_path);
+		$file_cate = self::get_file_cate_from_filepath($filepath_prefix);
+		$file_name = self::get_file_name_from_file_path($raw_file_path);
 		$sizes = Config::get(sprintf('site.upload.types.img.types.%s.sizes', $file_cate));
 		if ($additional_sizes_key)
 		{
@@ -387,7 +383,7 @@ class Site_Upload
 		$result = true;
 		foreach ($sizes as $size)
 		{
-			$cache_file_dir_path = sprintf('%s%s/%s', $cache_dir_path, $size, $filepath);
+			$cache_file_dir_path = sprintf('%s%s/%s', $cache_dir_path, $size, $filepath_prefix);
 			if ($is_check_and_make_dir) $res = self::check_and_make_uploaded_dir($cache_file_dir_path);
 			$cache_file_path = $cache_file_dir_path.$file_name;
 			if (self::make_thumbnail($raw_file_path, $cache_file_path, $size) === false) $result = false;// thumbnail の作成
@@ -462,13 +458,13 @@ class Site_Upload
 		return $exif_time;
 	}
 
-	public static function make_file_name($original_filename, $extention, $upload_dir, $retry_count = 3)
+	public static function make_unique_filename($extention, $prefix = '', $original_filename = '', $retry_count = 3)
 	{
-		$name = Util_file::make_filename($original_filename, $extention);
+		$name = self::make_filename($extention, $prefix, $original_filename);
 		$i = 0;
-		while(file_exists($upload_dir.$name))
+		while(Model_File::check_name_exists($name))
 		{
-			$name = Util_file::make_filename($original_filename, $extention);
+			$name = self::make_filename($extention, $prefix, $original_filename);
 			if ($i == $retry_count) return false;
 			$i++;
 		}
@@ -476,12 +472,22 @@ class Site_Upload
 		return $name;
 	}
 
-	public static function make_raw_file_from_db($filename, $dir_path, $is_tmp = false)
+	public static function make_filename($extention, $prefix = '', $original_filename = '', $with_extension = true, $delimitter = '')
 	{
-		if (!$bin = Model_FileBin::get_bin4file_name($filename, $is_tmp)) return false;
-		if (!self:: check_and_make_uploaded_dir($dir_path)) return false;
+		$filename = Util_string::get_random($original_filename, $extention);
+		if ($prefix) $prefix .= $delimitter;
+		if ($with_extension) $filename .= '.'.$extention;
 
-		$file_path = $dir_path.$filename;
+		return $prefix.$filename;
+	}
+
+	public static function make_raw_file_from_db($filename, $file_path)
+	{
+		if (!$bin = Model_FileBin::get_bin4name($filename)) return false;
+
+		if (!$file_dir_path = self::get_file_dir_path_from_file_path($file_path)) return false;
+		if (!self:: check_and_make_uploaded_dir($file_dir_path)) return false;
+
 		if (file_put_contents($file_path, $bin)) return $file_path;
 
 		return false;

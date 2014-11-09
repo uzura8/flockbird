@@ -12,15 +12,8 @@ class Model_FileTmp extends \MyOrm\Model
 	);
 	protected static $_properties = array(
 		'id',
-		'file_bin_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('valid_string' => array('numeric')),
-		),
 		'name' => array(
 			'validation' => array('trim', 'required', 'max_length' => array(64)),
-		),
-		'path' => array(
-			'validation' => array('trim', 'max_length' => array(64)),
 		),
 		'type' => array(
 			'validation' => array('trim', 'max_length' => array(64)),
@@ -65,10 +58,10 @@ class Model_FileTmp extends \MyOrm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_RemoveFile' => array(
-			'events' => array('before_delete'),
-			'is_tmp' => true,
-		),
+		//'MyOrm\Observer_RemoveFile' => array(
+		//	'events' => array('before_delete'),
+		//	'is_tmp' => true,
+		//),
 	);
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id', $user_type = 0)

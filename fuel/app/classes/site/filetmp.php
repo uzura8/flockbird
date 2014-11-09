@@ -41,7 +41,7 @@ class Site_FileTmp
 				$file_tmps[$key]->description = trim($file_tmps_description_posted[$file_tmp->id]);
 			}
 
-			$file_tmp_path = conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
+			$file_tmp_path = Site_Upload::get_uploaded_file_path($file_tmp->name, 'raw', 'img', true);
 			if (!conf('upload.isSaveDb') && !file_exists($file_tmp_path))
 			{
 				if ($check_file_exists) throw new HttpInvalidInputException('File not exists.');
@@ -78,10 +78,10 @@ class Site_FileTmp
 			throw new \InvalidArgumentException('Parameter $related_table is invalid.');
 		}
 
-		$new_filepath = Site_Upload::get_filepath($file_cate, $parent_id);
+		$new_filepath_prefix = Site_Upload::get_filepath_prefix($file_cate, $parent_id);
 		if (!$is_save_db = conf('upload.isSaveDb'))
 		{
-			$new_file_dir  = conf('upload.types.'.$type.'.raw_file_path').$new_filepath;
+			$new_file_dir = Site_Upload::get_uploaded_path('raw', 'img', true, false, $new_filepath_prefix);
 			if (!Site_Upload::check_and_make_uploaded_dir($new_file_dir, conf('upload.check_and_make_dir_level'), conf('upload.mkdir_mode')))
 			{
 				throw newFuelException('Failed to make save dirs.');
@@ -89,25 +89,25 @@ class Site_FileTmp
 		}
 		foreach ($file_tmps as $id => $file_tmp)
 		{
-			$old_file_path = conf('upload.types.'.$type.'.tmp.raw_file_path').$file_tmp->path.$file_tmp->name;
+			$old_file_path = Site_Upload::get_uploaded_file_path($file_tmp->name, 'raw', 'img', true);
 			$moved_files[$file_tmp->id] = array('from' => $old_file_path);
 			if (!$is_save_db)
 			{
 				$new_file_path = $new_file_dir.$file_tmp->name;
 				Util_file::move($old_file_path, $new_file_path);
 				$moved_files[$file_tmp->id]['to'] = $new_file_path;
-				$moved_files[$file_tmp->id]['filepath'] = $new_filepath;
+				$moved_files[$file_tmp->id]['filepath_prefix'] = $new_filepath_prefix;
 			}
 			if ($type == 'img')
 			{
-				$moved_files[$file_tmp->id]['from_thumbnail'] = conf('upload.types.img.tmp.root_path.cache_dir').'thumbnail/'.$file_tmp->path.$file_tmp->name;
+				$moved_files[$file_tmp->id]['from_thumbnail'] = Site_Upload::get_uploaded_file_path($file_tmp->name, 'thumbnail', 'img', true);
 			}
-			$file = Model_File::move_from_file_tmp($file_tmp, $new_filepath, $is_ignore_member_id);
+			$file = Model_File::move_from_file_tmp($file_tmp, $is_ignore_member_id);
 
 			$model = Util_Orm::get_model_name($related_table, $namespace);
 			$related_table_obj = $model::forge();
 			$related_table_obj->{$parent_id_field} = $parent_id;
-			$related_table_obj->file_id = $file->id;
+			$related_table_obj->file_name = $file->name;
 			$related_table_obj->name = $file_tmp->description;
 			$related_table_obj->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
 			if (!is_null($public_flag)) $related_table_obj->public_flag = $public_flag;
@@ -122,9 +122,9 @@ class Site_FileTmp
 	{
 		foreach ($moved_files as $moved_file)
 		{
-			if (!empty($moved_file['to']) && !empty($moved_file['filepath']))
+			if (!empty($moved_file['to']) && !empty($moved_file['filepath_prefix']))
 			{
-				Site_Upload::make_thumbnails($moved_file['to'], $moved_file['filepath'], true, $additional_sizes_key);
+				Site_Upload::make_thumbnails($moved_file['to'], $moved_file['filepath_prefix'], true, $additional_sizes_key);
 			}
 			if (!empty($moved_file['from']) && file_exists($moved_file['from'])) Util_file::remove($moved_file['from']);
 			if (!empty($moved_file['from_thumbnail'])) Util_file::remove($moved_file['from_thumbnail']);

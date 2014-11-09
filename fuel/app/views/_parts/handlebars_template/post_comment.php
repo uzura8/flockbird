@@ -1,11 +1,8 @@
-<?php
-$img_size = conf('upload.types.img.types.m.sizes.'.$size);
-?>
 <script type="text/x-handlebars-template" id="comment_form-template">
 <div class="commentPostBox" id="commentPostBox_{{{this.id}}}">
 	<div class="member_contents row">
 		<div class="col-xs-1">
-			<?php echo img($u->get_image(), $img_size, 'member/'.$u->id, false, site_get_screen_name($u), true, true); ?>
+			<?php echo img($u->get_image(), $size, 'member/'.$u->id, false, site_get_screen_name($u), true, true); ?>
 		</div>
 		<div class="col-xs-11">
 			<div class="main">

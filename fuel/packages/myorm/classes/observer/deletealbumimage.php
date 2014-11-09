@@ -24,9 +24,9 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 		// プロフィール写真の確認 & 削除
 		if ($album->foreign_table == 'member')
 		{
-			if ($album->member->file_id == $obj->file_id)
+			if ($album->member->file_name == $obj->file_name)
 			{
-				$album->member->file_id = null;
+				$album->member->file_name = null;
 				$album->member->save();
 			}
 			// timeline 投稿の削除

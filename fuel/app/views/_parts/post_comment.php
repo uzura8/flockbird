@@ -15,13 +15,10 @@ $parts_attrs     = empty($parts_attrs) ? $parts_attrs_def : array_merge($parts_a
 $parts_attrs_string = Util_Array::conv_array2attr_string($parts_attrs);
 
 $size = empty($size) ? 'S' : strtoupper($size);
-$img_size   = conf('upload.types.img.types.m.sizes.'.$size);
 ?>
 <div<?php if ($parts_attrs_string): ?> <?php echo $parts_attrs_string; ?><?php endif; ?>>
 	<div class="row member_contents">
-		<div class="col-xs-1">
-			<?php echo img($u->get_image(), $img_size, 'member/'.$u->id, false, site_get_screen_name($u), true, true); ?>
-		</div>
+		<div class="col-xs-1"><?php echo img($u->get_image(), $size, 'member/'.$u->id, false, site_get_screen_name($u), true, true); ?></div>
 		<div class="col-xs-11">
 			<div class="main">
 				<b class="fullname"><?php echo Html::anchor('member/'.$u->id, $u->name); ?></b>

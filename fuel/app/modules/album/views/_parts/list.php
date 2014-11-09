@@ -16,7 +16,7 @@ $before_album_member_id = $album->member_id;
 		<div class="imgBox" id="imgBox_<?php echo $album->id ?>">
 			<div class="content"><?php echo img(
 				\Album\Model_AlbumImage::get_album_cover_filename($album->cover_album_image_id, $album->id, $access_from),
-				img_size('ai', 'M'),
+				'M',
 				'album/'.$album->id
 			); ?></div>
 			<h5><?php echo Html::anchor('album/'.$album->id, strim($album->name, \Config::get('album.articles.trim_width.name'))); ?></h5>

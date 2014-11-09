@@ -66,8 +66,8 @@ class Site_Uploader
 			{
 				Util_file::resave($tmp_file_path);
 			}
-			$file_bin_id = $this->save_file_bin($tmp_file_path);
-			$this->save_model_file($exif, $file_bin_id);
+			$this->save_model_file($exif);
+			$this->save_file_bin($tmp_file_path);
 		}
 		catch(\FuelException $e)
 		{
@@ -86,27 +86,22 @@ class Site_Uploader
 	{
 		if ($this->options['is_save_db'])
 		{
-			$file_bin_id = Model_FileBin::save_from_file_path($tmp_file_path);
+			Model_FileBin::save_from_file_path($tmp_file_path, $this->file->name);
 		}
 		else
 		{
-			$file_bin_id = 0;
 			if (!Util_file::move($tmp_file_path, $this->file->file_path)) throw new FuelException('Save raw file error.');
 		}
-
-		return $file_bin_id;
 	}
 
-	protected function save_model_file($exif, $file_bin_id = 0)
+	protected function save_model_file($exif)
 	{
 		$model_file = new \Model_File;
 		$model_file->name     = $this->file->name;
 		$model_file->filesize = $this->file->size;
 		$model_file->type     = $this->file->type;
-		$model_file->path     = $this->options['filepath'];
 		$model_file->original_filename = $this->file->original_name;
 		$model_file->member_id         = $this->options['member_id'];
-		if ($file_bin_id) $model_file->file_bin_id = $file_bin_id;
 		if ($exif)
 		{
 			$model_file->exif = serialize($exif);
@@ -142,13 +137,13 @@ class Site_Uploader
 		$this->file->type = $file_info['mimetype'];
 		if (empty($this->file->original_name)) $this->file->original_name = $file_info['filename'];
 
-		if (!$this->file->name = \Site_Upload::make_file_name($this->file->original_name, $ext, $this->options['upload_dir']))
+		if (!$this->file->name = \Site_Upload::make_unique_filename($ext, $this->options['filename_prefix'], $this->file->original_name, $this->options['upload_dir']))
 		{
 			throw new FuelException('File already exists.');
 		}
 
 		$this->file->file_path = $this->options['upload_dir'].$this->file->name;
-		$this->file->filepath = $this->options['filepath'];
+		//$this->file->filepath = $this->options['filepath'];
 	}
 
 	private function validate()

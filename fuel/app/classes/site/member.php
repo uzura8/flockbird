@@ -4,19 +4,19 @@ class Site_Member
 {
 	public static function save_profile_image(Model_Member $member, $file_path = null)
 	{
-		if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $member->file_id);
+		if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $member->file_name);
 
 		if (Module::loaded('album') && conf('upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
 			list($album_image, $file) = \Album\Model_AlbumImage::save_with_relations($album_id, $member, PRJ_PUBLIC_FLAG_ALL, $file_path, 'album_image_profile');
 
-			$member->file_id = $album_image->file->id;
+			$member->file_name = $album_image->file->id;
 			$member->save();
 		}
 		else
 		{
-			if ($member->file_id && $file_old = Model_File::find($member->file_id))
+			if ($member->file_name && $file_old = Model_File::get4name($member->file_name))
 			{
 				$file_old->delete();
 			}
@@ -25,7 +25,7 @@ class Site_Member
 			$file = $uploadhandler->save();
 			if (!empty($file->error)) throw new FuelException($file->error);
 
-			$member->file_id = $file->id;
+			$member->file_name = $file->name;
 			$member->save();
 
 			// timeline 投稿

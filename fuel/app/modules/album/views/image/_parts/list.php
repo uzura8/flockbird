@@ -5,7 +5,7 @@
 <?php foreach ($list as $album_image): ?>
 	<div class="main_item js-hide-btn" id="main_item_<?php echo $album_image->id; ?>" data-hidden_btn="btn_album_image_edit_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!IS_SP): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
-			<div class="content"><?php echo img($album_image->file, img_size('ai', 'M'), 'album/image/'.$album_image->id); ?></div>
+			<div class="content"><?php echo img($album_image->get_image(), 'M', 'album/image/'.$album_image->id); ?></div>
 <?php if (!empty($is_simple_view)): ?>
 			<div class="description">
 				<small><?php echo strim(\Album\Site_Util::get_album_image_display_name($album_image)); ?></small>

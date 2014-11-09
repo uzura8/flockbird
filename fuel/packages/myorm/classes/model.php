@@ -8,6 +8,8 @@ class Model extends \Orm\Model
 	protected static $_connection;
 	protected static $_connection_default;
 
+	protected static $image_prefix;
+
 	/**
 	 * Fetch the database connection name to use
 	 *
@@ -97,11 +99,6 @@ class Model extends \Orm\Model
 		return true;
 	}
 
-	public static function get_table_name()
-	{
-		return static::$_table_name;
-	}
-
 	public static function set_connections($db_config_key)
 	{
 		$db_configs = \Config::get('db');
@@ -110,6 +107,19 @@ class Model extends \Orm\Model
 			static::$_write_connection = $db_config_key;
 			static::$_connection       = $db_config_key;
 		}
+	}
+
+	public static function get_table_name()
+	{
+		return static::$_table_name;
+	}
+
+	public function get_image()
+	{
+		if (!static::$image_prefix) return null;
+		if (empty($this->file_name)) return static::$image_prefix;
+
+		return $this->file_name;
 	}
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')

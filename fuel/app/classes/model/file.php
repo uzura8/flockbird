@@ -2,17 +2,11 @@
 class Model_File extends \MyOrm\Model
 {
 	protected static $_table_name = 'file';
+
 	protected static $_properties = array(
 		'id',
-		'file_bin_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('valid_string' => array('numeric')),
-		),
 		'name' => array(
 			'validation' => array('trim', 'required', 'max_length' => array(64)),
-		),
-		'path' => array(
-			'validation' => array('trim', 'max_length' => array(64)),
 		),
 		'type' => array(
 			'validation' => array('trim', 'max_length' => array(64)),
@@ -70,14 +64,6 @@ class Model_File extends \MyOrm\Model
 
 	protected static $name_list = array();
 
-	public static function validate($factory)
-	{
-		$val = Validation::forge($factory);
-		//$val->add_field('title', 'Title', 'required|max_length[255]');
-
-		return $val;
-	}
-
 	public static function calc_filesize_total($member_id = 0)
 	{
 		if (!$member_id) throw new InvalidArgumentException('First parameter is invalid.');
@@ -93,9 +79,9 @@ class Model_File extends \MyOrm\Model
 		if (!empty(self::$name_list[$id])) return self::$name_list[$id];
 
 		self::$name_list[$id] = '';
-		if ($file = self::query()->select('name', 'path')->where('id', $id)->get_one())
+		if ($file = self::query()->select('name')->where('id', $id)->get_one())
 		{
-			self::$name_list[$id] = array('name' => $file->name, 'path' => $file->path);
+			self::$name_list[$id] = $file->name;
 		}
 
 		return self::$name_list[$id];
@@ -104,6 +90,11 @@ class Model_File extends \MyOrm\Model
 	public static function get4name($name)
 	{
 		return self::query()->where('name', $name)->get_one();
+	}
+
+	public static function check_name_exists($name)
+	{
+		return (bool)self::query()->where('name', $name)->get_one();
 	}
 
 	public static function delete_with_timeline($id)
@@ -117,12 +108,10 @@ class Model_File extends \MyOrm\Model
 		return $deleted_filesize;
 	}
 
-	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filepath, $is_ignore_member_id = false)
+	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $is_ignore_member_id = false)
 	{
-		$file = new self;
-		if ($file_tmp->file_bin_id) $file->file_bin_id = $file_tmp->file_bin_id;
+		$file = static::forge();
 		$file->name = $file_tmp->name;
-		$file->path = $new_filepath;
 		$file->filesize = $file_tmp->filesize;
 		$file->original_filename = $file_tmp->original_filename;
 		$file->type = $file_tmp->type;
@@ -131,8 +120,6 @@ class Model_File extends \MyOrm\Model
 		if (!empty($file_tmp->shot_at)) $file->shot_at = $file_tmp->shot_at;
 		$file->save();
 
-		$file_tmp->file_bin_id = 0;
-		$file_tmp->save();
 		$file_tmp->delete();
 
 		return $file;

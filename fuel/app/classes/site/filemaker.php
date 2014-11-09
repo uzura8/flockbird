@@ -7,8 +7,8 @@ class Site_FileMaker
 	private $is_tmp      = false;
 	private $file_cate   = '';
 	private $split_num   = '';
-	private $filename    = '';
-	private $filepath    = '';
+	private $file_name    = '';
+	private $filepath_prefix = '';
 	private $extension   = 'gif';//noimage 画像の拡張子をデフォルト値とする
 	private $size        = '';
 	private $width       = '';
@@ -26,7 +26,8 @@ class Site_FileMaker
 		$this->is_saved_db = conf('upload.isSaveDb');
 		if (!$this->set_configs($config))   $this->is_nofile = true;
 		if (!$this->check_configs($config)) $this->is_nofile = true;
-		$this->filepath = sprintf('%s/%s/', $this->file_cate, $this->split_num);
+		$this->filepath_prefix = Site_Upload::get_filepath_prefix($this->file_cate, $this->split_num);
+		$this->filename = Site_Upload::convert_filepath2filename($this->filepath_prefix.$this->file_name);
 		if (!$this->check_file()) $this->is_nofile = true;
 		if (!$this->check_size()) $this->is_nofile = true;
 		$this->set_size();
@@ -39,7 +40,7 @@ class Site_FileMaker
 			'file_cate',
 			'split_num',
 			'size',
-			'filename',
+			'file_name',
 		);
 		foreach ($necessary_keys as $key)
 		{
@@ -101,16 +102,15 @@ class Site_FileMaker
 
 	private function check_file()
 	{
-		if ($this->type == 'img' && $this->filename == conf('upload.types.img.noimage_filename')) return false;
-		if (!$this->check_filename()) return false;
+		if ($this->type == 'img' && $this->file_name == conf('upload.types.img.noimage_filename')) return false;
+		if (!$this->check_file_name()) return false;
 
-		$raw_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename, 'raw', $this->type, $this->is_tmp);
-		$dir_path = Site_Upload::get_uploaded_dir_path($this->filepath, 'raw', $this->type, $this->is_tmp);
+		$raw_file_path = Site_Upload::get_uploaded_file_path($this->filename, 'raw', $this->type, $this->is_tmp);
 		if (!file_exists($raw_file_path))
 		{
 			if (!$this->is_saved_db) return false;
 
-			return (bool)Site_Upload::make_raw_file_from_db($this->filename, $dir_path, $this->is_tmp);
+			return (bool)Site_Upload::make_raw_file_from_db($this->filename, $raw_file_path);
 		}
 
 		return true;
@@ -172,11 +172,11 @@ class Site_FileMaker
 		}
 	}
 
-	private function check_filename()
+	private function check_file_name()
 	{
-		if (empty($this->filename)) return false;
+		if (empty($this->file_name)) return false;
 
-		$ext = Util_file::get_extension_from_filename($this->filename);
+		$ext = Util_file::get_extension_from_filename($this->file_name);
 		$accept_formats = Site_Upload::get_accept_format($this->type);
 		if (!$accept_formats || !in_array($ext, $accept_formats)) return false;
 
@@ -192,19 +192,18 @@ class Site_FileMaker
 			return ($this->type == 'img') ? $this->get_noimage() : false;
 		}
 
-		$original_file_path = Site_Upload::get_uploaded_file_real_path($this->filepath, $this->filename, 'raw', $this->type, $this->is_tmp);
+		$original_file_path = Site_Upload::get_uploaded_file_path($this->filename, 'raw', $this->type, $this->is_tmp);
 		if ($this->type == 'file' || $this->size == 'raw')
 		{
 			return file_get_contents($original_file_path);
 		}
 
-		$base_path  = PRJ_UPLOAD_DIR;
-		$base_path .= $this->is_tmp ? 'img_tmp/' : 'img/';
-		$target_file_dir = sprintf('%s%s/%s', $base_path, $this->size, $this->filepath);
-		$target_file_path = $target_file_dir.$this->filename;
+		//$target_file_path = Site_Upload::get_uploaded_file_path($this->filename, $this->size, $this->type, $this->is_tmp);
+		$target_file_dir = Site_Upload::get_uploaded_path($this->size, $this->type, $this->is_tmp).$this->filepath_prefix;
+		$target_file_path = $target_file_dir.$this->file_name;
 		if (!file_exists($target_file_path))
 		{
-			$this->make_image($original_file_path, $target_file_dir, $this->filename);
+			$this->make_image($original_file_path, $target_file_dir, $this->file_name);
 		}
 
 		return file_get_contents($target_file_path);
@@ -212,7 +211,7 @@ class Site_FileMaker
 
 	private function make_image($original_file_path, $target_file_dir, $target_filename)
 	{
-		$target_file_path = sprintf('%s/%s', $target_file_dir, $target_filename);
+		$target_file_path = $target_file_dir.$target_filename;
 		Site_Upload::check_and_make_uploaded_dir($target_file_dir);
 		Util_file::resize($original_file_path, $target_file_path, $this->width, $this->height, $this->resize_type);
 	}

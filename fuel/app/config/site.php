@@ -154,6 +154,7 @@ $config = array(
 				),
 			),
 			'file' => array(
+				//'root_path' => array(
 				'root_path' => array(
 					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/file/',
 					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/file/raw/',
@@ -161,6 +162,7 @@ $config = array(
 				//'raw_file_path' => APPPATH.'cache/media/file/raw/',// raw ファイルを非公開領域に置く場合
 				'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/file/raw/',
 				'tmp' => array(
+					//'root_path' => array(
 					'root_path' => array(
 						'cache_dir' => PRJ_UPLOAD_DIRNAME.'/file_tmp/',
 						'raw_dir' => PRJ_UPLOAD_DIRNAME.'/file_tmp/raw/',

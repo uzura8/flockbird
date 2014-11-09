@@ -16,9 +16,9 @@ class Model_AlbumImage extends \MyOrm\Model
 	);
 	protected static $_has_one = array(
 		'file' => array(
-			'key_from' => 'file_id',
+			'key_from' => 'file_name',
 			'model_to' => '\Model_File',
-			'key_to' => 'id',
+			'key_to' => 'name',
 			'cascade_save' => false,
 			'cascade_delete' => true,
 		),
@@ -39,8 +39,12 @@ class Model_AlbumImage extends \MyOrm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
-		'file_id' => array(
+		'file_name' => array(
 			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
+		'file_name' => array(
+			'validation' => array('trim', 'required', 'max_length' => array(64)),
 			'form' => array('type' => false),
 		),
 		'name' => array(
@@ -111,6 +115,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		),
 	);
 
+	protected static $image_prefix = 'ai';
 	protected static $count_par_album_list = array();
 
 	public static function _init()
@@ -209,13 +214,6 @@ class Model_AlbumImage extends \MyOrm\Model
 		if ($target_member_id && $target_member_id != $obj->album->{$member_id_prop}) throw new \HttpForbiddenException;
 
 		return $obj;
-	}
-
-	public function get_image()
-	{
-		if (empty($this->file_id)) return 'ai';
-
-		return \Model_File::get_name($this->file_id);
 	}
 
 	public static function get_count4album_id($album_id)
@@ -363,9 +361,9 @@ class Model_AlbumImage extends \MyOrm\Model
 		// Profile 写真の登録確認&削除
 		if ($album->foreign_table == 'member')
 		{
-			if (in_array($album->member->file_id, $file_ids))
+			if (in_array($album->member->file_name, $file_ids))
 			{
-				$album->member->file_id = null;
+				$album->member->file_name = null;
 				$album->member->save();
 			}
 			// timeline 投稿の削除
@@ -514,6 +512,6 @@ class Model_AlbumImage extends \MyOrm\Model
 		$query->rows_limit(1);
 		$album_image = $query->get_one();
 
-		return (!empty($album_image)) ? $album_image->get_image() : 'ai';
+		return $album_image->get_image();
 	}
 }

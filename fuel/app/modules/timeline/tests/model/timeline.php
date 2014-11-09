@@ -123,7 +123,7 @@ class Test_Model_Timeline extends \TestCase
 
 			$member = \Model_Member::check_authority($obj->member_id);
 			$this->assertNotEmpty($member);
-			$this->assertEquals($member->file_id, $obj->foreign_id);
+			$this->assertEquals($member->file_name, $obj->foreign_id);
 
 			// check for member_id
 			$this->assertEquals($file->member_id, $obj->member_id);

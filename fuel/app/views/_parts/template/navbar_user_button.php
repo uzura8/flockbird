@@ -5,7 +5,7 @@
 <?php endif; ?>
 			<div class="btn-group">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<?php echo img($u->get_image(), '20x20xc', '', false, '', true); ?><span class="hidden-xs-inline"> <?php echo site_get_screen_name($u); ?></span>
+					<?php echo img($u->get_image(), 'SS', '', false, '', true); ?><span class="hidden-xs-inline"> <?php echo site_get_screen_name($u); ?></span>
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">

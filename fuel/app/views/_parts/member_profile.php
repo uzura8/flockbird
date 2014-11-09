@@ -50,12 +50,12 @@ elseif ($page_type != 'detail')
 <?php endif; ?>
 	<div class="row">
 		<div class="col-<?php echo $col_class; ?>-<?php echo $image_col_size; ?>">
-			<div class="imgBox"><?php echo img($member->get_image(), conf('upload.types.img.types.m.sizes.'.$image_size), $profile_page_uri, $is_link2raw_file, site_get_screen_name($member), true, true); ?></div>
+			<div class="imgBox"><?php echo img($member->get_image(), $image_size, $profile_page_uri, $is_link2raw_file, site_get_screen_name($member), true, true); ?></div>
 <?php if (!empty($with_link2profile_image)): ?>
 			<div class="btnBox"><?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera'); ?></div>
 <?php endif; ?>
 <?php if ($is_mypage && $with_image_upload_form): ?>
-<?php 	if ($member->file_id): ?>
+<?php 	if ($member->file_name): ?>
 				<?php echo btn('form.delete', '#', 'js-simplePost', true, 'sm', 'default', array('data-uri' => 'member/profile/image/unset')); ?>
 <?php 	endif; ?>
 <?php echo render('_parts/form/upload_form', array('form_attrs' => array('action' => 'member/profile/image/edit'))); ?>

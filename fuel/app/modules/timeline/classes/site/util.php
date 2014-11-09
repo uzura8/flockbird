@@ -326,18 +326,24 @@ class Site_Util
 		{
 			case \Config::get('timeline.types.album_image_profile'):
 				$images['list']   = array();
-				$images['list'][] = \Album\Model_AlbumImage::check_authority($foreign_id);
-				$images['additional_table'] = 'profile';
-				$images['size']             = 'P_LL';
-				$images['column_count']     = 2;
+				if ($list = \Album\Model_AlbumImage::check_authority($foreign_id))
+				{
+					$images['list'][]           = $list;
+					$images['additional_table'] = 'profile';
+					$images['size']             = 'P_LL';
+					$images['column_count']     = 2;
+				}
 				break;
 
 			case \Config::get('timeline.types.profile_image'):
 				$images['list']   = array();
-				$images['list'][] = \Model_File::find($foreign_id);
-				$images['file_cate']        = 'm';
-				$images['size']             = 'LL';
-				$images['column_count']     = 2;
+				if ($list = \Model_File::find($foreign_id))
+				{
+					$images['list'][]           = $list;
+					$images['file_cate']        = 'm';
+					$images['size']             = 'LL';
+					$images['column_count']     = 2;
+				}
 				break;
 
 			case \Config::get('timeline.types.note'):

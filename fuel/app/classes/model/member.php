@@ -52,8 +52,8 @@ class Model_Member extends \MyOrm\Model
 			'validation' => array('required', 'valid_string' => array('numeric'), 'max_length' => array(1)),
 			'form' => array('type' => false),
 		),
-		'file_id' => array(
-			'validation' => array('valid_string' => array('numeric')),
+		'file_name' => array(
+			'validation' => array('trim', 'max_length' => array(64)),
 			'form' => array('type' => false),
 		),
 		'filesize_total' => array(
@@ -110,6 +110,8 @@ class Model_Member extends \MyOrm\Model
 		),
 	);
 
+	protected static $image_prefix = 'm';
+
 	protected static $basic_list = array();
 
 	public static function _init()
@@ -149,13 +151,6 @@ class Model_Member extends \MyOrm\Model
 		if ($is_return_false_not_set_key) return false;
 
 		return $options;
-	}
-
-	public function get_image()
-	{
-		if (empty($this->file_id)) return 'm';
-
-		return Model_File::get_name($this->file_id) ?: 'm';
 	}
 
 	public static function get_basic_data($id)

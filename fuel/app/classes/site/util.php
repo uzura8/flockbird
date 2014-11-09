@@ -275,6 +275,28 @@ class Site_Util
 		return Arr::previous_by_key($sizes, $size);
 	}
 
+	public static function get_noimage_tag($size, $file_cate = '', $attr = array())
+	{
+		if (empty($attr['alt'])) $attr['alt'] = 'No image.';
+
+		$noimage_filename  = conf('upload.types.img.noimage_filename');
+		$noimage_tag = Asset::img('site/'.$noimage_filename, $attr);
+		if ($file_cate)
+		{
+			if ($size == 'raw')
+			{
+				$noimage_file_root_path = sprintf('assets/site/%s_%s', $file_cate, $noimage_filename);
+			}
+			else
+			{
+				$noimage_file_root_path = sprintf('%s/img/%s/%s/all/%s', PRJ_UPLOAD_DIRNAME, $size, $file_cate, $noimage_filename);
+			}
+			$noimage_tag = Html::img($noimage_file_root_path, $attr);
+		}
+
+		return $noimage_tag;
+	}
+
 	public static function get_next_sort_order_num($num, $min_interval = null)
 	{
 		if (is_null($min_interval)) $min_interval = conf('sort_order.interval');
