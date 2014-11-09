@@ -82,7 +82,7 @@ class Model_NoteAlbumImage extends \MyOrm\Model
 		}
 
 		$query = \Album\Model_AlbumImage::query()
-			->related(array('album', 'file'))
+			->related(array('album'))
 			->where(array('id', 'in', $album_image_ids));
 
 		if ($with_count_all) $count_all = $query->count();
