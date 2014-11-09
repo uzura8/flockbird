@@ -73,7 +73,9 @@ class Site_FileTmp
 		$related_table_ids = array();
 		if (!$file_tmps) return array($moved_files, $related_table_ids);
 
-		if (!$file_cate = Site_Upload::get_file_cate_from_table($related_table))
+		$model = Util_Orm::get_model_name($related_table, $namespace);
+		$related_table_obj = $model::forge();
+		if (!$file_cate = $related_table_obj->get_image_prefix())
 		{
 			throw new \InvalidArgumentException('Parameter $related_table is invalid.');
 		}
@@ -105,7 +107,6 @@ class Site_FileTmp
 			}
 			$file = Model_File::move_from_file_tmp($file_tmp, $new_filename_prefix, $is_ignore_member_id);
 
-			$model = Util_Orm::get_model_name($related_table, $namespace);
 			$related_table_obj = $model::forge();
 			$related_table_obj->{$parent_id_field} = $parent_id;
 			$related_table_obj->file_name = $file->name;

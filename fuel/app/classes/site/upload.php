@@ -157,28 +157,28 @@ class Site_Upload
 		return $new_prefix.$parts[2];
 	}
 
-	public static function get_file_cate_from_table($table)
-	{
-		switch ($table)
-		{
-			case 'member':
-				return 'm';
-				break;
-			case 'album_image':
-				return 'ai';
-				break;
-			case 'news_image':
-				return 'nw';
-				break;
-			case 'news_file':
-				return 'nw';
-				break;
-			default :
-				break;
-		}
+	//public static function get_file_cate_from_table($table)
+	//{
+	//	switch ($table)
+	//	{
+	//		case 'member':
+	//			return 'm';
+	//			break;
+	//		case 'album_image':
+	//			return 'ai';
+	//			break;
+	//		case 'news_image':
+	//			return 'nw';
+	//			break;
+	//		case 'news_file':
+	//			return 'nw';
+	//			break;
+	//		default :
+	//			break;
+	//	}
 
-		return false;
-	}
+	//	return false;
+	//}
 
 	public static function conv_size_str_to_array($size_string)
 	{
@@ -358,8 +358,7 @@ class Site_Upload
 	public static function get_file_objects($model_objs, $parent_id, $is_admin = null, $member_id = null, $type = 'img')
 	{
 		if (!$key = Util_Array::get_first_key($model_objs)) return array();
-		$table = $model_objs[$key]->table();
-		$file_cate = Site_Upload::get_file_cate_from_table($table);
+		$file_cate = $model_objs[$key]->get_image_prefix();
 
 		$options = self::get_upload_handler_options($member_id, $is_admin, false, $file_cate, $parent_id, true, $type);
 		$uploadhandler = new \MyUploadHandler($options, false);
