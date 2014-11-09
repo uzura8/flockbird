@@ -48,7 +48,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			if (!$is_mypage && $album) $is_mypage = $this->check_is_mypage($album->member_id);
 
 			$params = array(
-				'related'  => array('file', 'album'),
+				'related'  => array('album'),
 				'order_by' => array('id' => 'desc'),
 			);
 			if ($limit) $params['limit'] = $limit;
@@ -121,7 +121,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
 			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 			$data = Model_AlbumImage::get_pager_list(array(
-				'related' => array('file', 'album'),
+				'related' => array('album'),
 				'where' => array('t2.member_id', $member_id),
 				'limit' => $limit,
 				'order_by' => array('id' => 'desc'),

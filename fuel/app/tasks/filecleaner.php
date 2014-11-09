@@ -152,18 +152,19 @@ class FileCleaner
 		if (self::$all_delete) return false;
 
 		$model = $is_tmp ? '\Model_FileTmp' : '\Model_File';
-		$file_info = \File::file_info($file_path);
+		if (!$filename = \Site_Upload::get_filename_from_file_path($file_path)) return false;
 
-		return (bool)$model::get4name($file_info['basename']);
+		return (bool)$model::get4name($filename);
 	}
 
 	private static function execute_clean_file($file_type, $is_tmp = false)
 	{
-		if (!self::$absolute_execute && !\Site_Util::check_is_develop_env())
+		if (!self::$absolute_execute && !\Site_Util::check_is_dev_env())
 		{
 			throw new \FuelException('This task is not work at prod env.');
 		}
-		$raw_file_dir_path = conf(sprintf('upload.types.%s%s.raw_file_path', $file_type, $is_tmp ? '.tmp' : ''));
+
+		$raw_file_dir_path = \Site_Upload::get_uploaded_path('raw', $file_type, $is_tmp);
 		$cache_file_dir_path = $is_tmp ? null : PRJ_PUBLIC_DIR.conf('upload.types.'.$file_type.'.root_path.cache_dir');
 		if (!file_exists($raw_file_dir_path) && ($cache_file_dir_path && !file_exists($cache_file_dir_path)))
 		{

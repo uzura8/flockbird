@@ -14,10 +14,16 @@ class Observer_RemoveFile extends \Orm\Observer
 	public function before_delete(\Orm\Model $obj)
 	{
 		\Site_Upload::remove_files_all($obj->name, $this->_is_tmp);
-		if (conf('upload.isSaveDb') && $file_bin = \Model_FileBin::find($obj->name))
-		{
-			$file_bin->delete();
-		}
+		$this->delete_file_bin($obj);
+	}
+
+	protected function delete_file_bin(\Orm\Model $obj)
+	{
+		if (!conf('upload.isSaveDb')) return;
+		if (!$file_bin = \Model_FileBin::get4name($obj->name)) return;
+		if ($this->_is_tmp && \Model_File::get4name($obj->name)) return;
+
+		return $file_bin->delete();
 	}
 }
 // End of file removefile.php

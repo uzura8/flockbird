@@ -54,14 +54,17 @@ class Site_Util
 		return false;
 	}
 
-	public static function check_is_develop_env()
+	public static function check_is_prod_env($is_include_staging = true)
 	{
-		if (!defined('PRJ_ENVIRONMENT') || !PRJ_ENVIRONMENT)
-		{
-			throw new \FuelException('Environment is not defined.');
-		}
+		if (PRJ_ENVIRONMENT == 'PRODUCTION') return true;
+		if ($is_include_staging && PRJ_ENVIRONMENT == 'STAGING') return true;
 
-		return in_array(PRJ_ENVIRONMENT, array('DEVELOPMENT', 'TEST'));
+		return false;
+	}
+
+	public static function check_is_dev_env()
+	{
+		return ! self::check_is_prod_env();
 	}
 
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())

@@ -51,7 +51,7 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 		}
 
 		// file 削除
-		if (!$file = \Model_File::query()->where('id', $obj->file_id)->get_one())
+		if (!$file = \Model_File::get4name($obj->file_name))
 		{
 			throw new \FuelException('Invalid file id.');
 		}

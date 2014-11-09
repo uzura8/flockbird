@@ -11,7 +11,7 @@ class Observer_DeleteAlbum extends \Orm\Observer
 	public function before_delete(\Orm\Model $obj)
 	{
 		// Delete album_image file.
-		$album_images = \Album\Model_AlbumImage::get4album_id($obj->id, true);
+		$album_images = \Album\Model_AlbumImage::get4album_id($obj->id);
 		foreach ($album_images as $album_image)
 		{
 			$album_image->delete();

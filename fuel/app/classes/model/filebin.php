@@ -3,11 +3,11 @@
 class Model_FileBin extends \MyOrm\Model
 {
 	protected static $_table_name = 'file_bin';
-	protected static $_primary_key = array('name');
 	//protected static $_write_connection = 'file_bin_db';
 	//protected static $_connection = 'file_bin_db';
 
 	protected static $_properties = array(
+		'id',
 		'name' => array(
 			'validation' => array('trim', 'required', 'max_length' => array(64)),
 		),
@@ -34,14 +34,14 @@ class Model_FileBin extends \MyOrm\Model
 
 	public static function get_bin4name($name, $is_decode = true)
 	{
-		if (!$obj = self::find($name)) return false;
+		if (!$obj = self::get4name($name)) return false;
 
 		return $is_decode ? base64_decode($obj->bin) : $obj->bin;
 	}
 
-	public static function get4name($name, $is_tmp = false)
+	public static function get4name($name)
 	{
-		return self::find($name);
+		return self::query()->where('name', $name)->get_one();
 	}
 
 	public static function save_from_file_path($file_path, $save_name = '', $is_image = true)

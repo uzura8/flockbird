@@ -33,7 +33,7 @@ class Controller_Image extends \Controller_Site
 
 		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_AlbumImage::get_pager_list(array(
-			'related'  => array('file', 'album'),
+			'related'  => array('album'),
 			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
 			'order_by' => array('id' => 'desc'),
 			'limit'    => $limit,
@@ -92,7 +92,7 @@ class Controller_Image extends \Controller_Site
 		$ids = Model_AlbumImage::get_col_array('id', $params);
 		list($data['before_id'], $data['after_id']) = \Util_Array::get_neighborings($id, $ids);
 
-		$title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
+		$title = Site_Util::get_album_image_page_title($album_image);
 		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->post_footer = \View::forge('_parts/comment/handlebars_template');
@@ -117,7 +117,7 @@ class Controller_Image extends \Controller_Site
 
 		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_AlbumImage::get_pager_list(array(
-			'related' => array('file', 'album'),
+			'related' => array('album'),
 			'where' => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id), array(), 't2.member_id'),
 			'limit' => $limit,
 			'order_by' => array('id' => 'desc'),
@@ -172,7 +172,7 @@ class Controller_Image extends \Controller_Site
 			}
 		}
 
-		$album_image_page_title = Site_Util::get_album_image_page_title($album_image->name, $album_image->file->original_filename);
+		$album_image_page_title = Site_Util::get_album_image_page_title($album_image);
 		$this->set_title_and_breadcrumbs(
 			sprintf('%sを%s', term('album_image'), term('form.do_edit')),
 			array('/album/'.$album_image->album_id => $album_image->album->name, '/album/image/'.$id => $album_image_page_title),

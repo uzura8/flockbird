@@ -108,6 +108,16 @@ class Site_Upload
 		return array_pop($parts);
 	}
 
+	public static function get_filepath_from_file_path($file_path)
+	{
+		return Util_File::get_path_partial($file_path, 3);
+	}
+
+	public static function get_filename_from_file_path($file_path)
+	{
+		return self::convert_filepath2filename(self::get_filepath_from_file_path($file_path));
+	}
+
 	public static function get_file_dir_path_from_file_path($file_path)
 	{
 		$parts = explode('/', $file_path);
@@ -137,6 +147,14 @@ class Site_Upload
 	public static function get_filepath_prefix($file_cate, $split_criterion_id)
 	{
 		return sprintf('%s/%s/', $file_cate, self::get_upload_split_dir_name($split_criterion_id));
+	}
+
+	public static function change_filename_prefix($filename, $new_prefix)
+	{
+		$parts = explode('_', $filename);
+		if (count($parts) != 3) throw new FuelException('File name is invalid.');
+
+		return $new_prefix.$parts[2];
 	}
 
 	public static function get_file_cate_from_table($table)

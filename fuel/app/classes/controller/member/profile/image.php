@@ -87,13 +87,13 @@ class Controller_Member_Profile_Image extends Controller_Member
 			{
 				throw new FuelException('Disabled to set album image as profile image.');
 			}
-			if ($this->u->file_id == $album_image->file_id)
+			if ($this->u->file_name && $this->u->file_name == $album_image->file_name)
 			{
 				throw new FuelException('既に設定されています。');
 			}
 
 			DB::start_transaction();
-			$this->u->file_id = $album_image->file_id;
+			$this->u->file_name = $album_image->file_name;
 			$this->u->save();
 
 			if ($album_image->album->cover_album_image_id != $album_image->id)
@@ -206,10 +206,13 @@ class Controller_Member_Profile_Image extends Controller_Member
 			}
 
 			DB::start_transaction();
-			if ($album_image->file_id == $this->u->file_id)
+			if ($album_image->file_name == $this->u->file_name)
 			{
-				if (is_enabled('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $this->u->file_id);
-				$this->u->file_id = null;
+				if (is_enabled('timeline') && $file_id = \Model_File::get_id4name($album_image->file_name))
+				{
+					\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $file_id);
+				}
+				$this->u->file_name = null;
 				$this->u->save();
 			}
 			$album_image->delete();

@@ -7,7 +7,7 @@
 $file_cate = !empty($images['file_cate']) ? $images['file_cate'] : 'ai';
 if ($file_cate == 'ai' && $image)
 {
-	$file_obj = $image->file;
+	$file_name = $image->file_name;
 	$size = 'M';
 	$link_uri = 'album/image/'.$image->id;
 	$image_name = $image->name;
@@ -15,14 +15,14 @@ if ($file_cate == 'ai' && $image)
 }
 elseif ($file_cate == 'nw' && $image)
 {
-	$file_obj = $image->file;
+	$file_name = $image->file_name;
 	$link_uri = '';
 	$image_name = $image->name;
 	$is_link2raw_file = true;
 }
 else
 {
-	$file_obj = $image;
+	$file_name = $image->name;
 	$file_cate = 'm';
 	$size = 'LL';
 	$link_uri = '';
@@ -32,7 +32,7 @@ else
 if (!empty($images['size'])) $size = $images['size'];
 $additional_table = !empty($images['additional_table']) ? $images['additional_table'] : '';
 
-echo img($file_obj->name, img_size($file_cate, $size, $additional_table), $link_uri, $is_link2raw_file, $image_name ?: '', false, false, array('class' => 'thumbnail'));
+echo img($file_name, $size, $link_uri, $is_link2raw_file, $image_name ?: '', false, false, array('class' => 'thumbnail'));
 ?>
 <?php if (!empty($is_display_name) && $image_name): ?>
 		<small><?php echo $image_name; ?></small>

@@ -298,11 +298,12 @@ class Test_Model_Album extends \TestCase
 
 	private static function get_album_filesize_total($album_id)
 	{
-		$album_images = Model_AlbumImage::get4album_id($album_id, true);
+		$album_images = Model_AlbumImage::get4album_id($album_id);
 		$size = 0;
 		foreach ($album_images as $album_image)
 		{
-			$size += $album_image->file->filesize;
+			$file = \Model_File::get4name($album_image->file_name);
+			$size += $file->filesize;
 		}
 
 		return $size;

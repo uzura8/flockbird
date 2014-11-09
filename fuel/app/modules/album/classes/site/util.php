@@ -3,34 +3,32 @@ namespace Album;
 
 class Site_Util
 {
-	public static function get_album_image_display_name($obj_album_image, $default = '')
+	public static function get_album_image_display_name(Model_AlbumImage $album_image, $default = '')
 	{
-		if (!empty($obj_album_image->name))
+		if (!empty($album_image->name))
 		{
-			return $obj_album_image->name;
+			return $album_image->name;
 		}
 
-		if (!empty($obj_album_image->file) && !empty($obj_album_image->file->original_filename))
+		$file = \Model_File::get4name($album_image->file_name);
+		if ($file && isset($file->original_filename) && strlen($file->original_filename))
 		{
-			return $obj_album_image->file->original_filename;
+			return $file->original_filename;
 		}
 
 		return $default;
 	}
 
-	public static function get_album_image_page_title($album_image_name, $original_filename)
+	public static function get_album_image_page_title(Model_AlbumImage $album_image, $is_accept_hash_filename = false)
 	{
-		$title = term('album_image');
-		if ($album_image_name)
-		{
-			$title = $album_image_name;
-		}
-		elseif ($original_filename)
-		{
-			$title = $original_filename;
-		}
+		if ($album_image->name) return $album_image->name;
 
-		return $title;
+		$file = \Model_File::get4name($album_image->file_name);
+		if ($file && strlen($file->original_filename)) return $file->original_filename;
+
+		if ($is_accept_hash_filename) return $album_image->file_name;
+
+		return term('album_image');
 	}
 
 	public static function check_album_disabled_to_update($album_foreign_table, $is_bool = false)

@@ -91,11 +91,6 @@ class Model_NewsImage extends \MyOrm\Model
 		return \Util_db::conv_col($result);
 	}
 
-	public static function get4file_id($file_id)
-	{
-		return self::query()->where('file_id', $file_id)->get_one();
-	}
-
 	public static function delete_multiple4news_id($news_id)
 	{
 		if (!$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('news_image')->where('news_id', $news_id)->execute()->as_array()))

@@ -325,9 +325,10 @@ class Test_Model_AlbumImage extends \TestCase
 			self::$album_image = $this->get_album_image(array('public_flag' => PRJ_PUBLIC_FLAG_MEMBER));
 		}
 		$album_image_id = self::$album_image->id;
-		$file_id = self::$album_image->file_id;
-		$file_size = self::$album_image->file->filesize;
-		$file_path = \Site_Upload::get_uploaded_file_path(self::$album_image->file->path, self::$album_image->file->name);
+		$file_name = self::$album_image->file_name;
+		$file = \Model_File::get4name($file_name);
+		$file_size = $file->filesize;
+		$file_path = \Site_Upload::get_uploaded_file_path(self::$album_image->file_name);
 		$member_filesize_before = self::get_member_filesize_total(self::$member_id);
 
 		// set cover_album_image_id
@@ -342,7 +343,7 @@ class Test_Model_AlbumImage extends \TestCase
 		// file
 		if (conf('upload.isSaveDb'))
 		{
-			$this->assertNotNull(\Model_FileBIn::find(self::$album_image->file->file_bin_id));
+			$this->assertNotNull(\Model_FileBin::get4name(self::$album_image->file_name));
 		}
 		else
 		{
@@ -356,7 +357,7 @@ class Test_Model_AlbumImage extends \TestCase
 		$this->assertEquals(self::$total_count - 1, \Util_Orm::get_count_all('\Album\Model_AlbumImage'));
 
 		// file
-		$this->assertEmpty(\Model_File::find($file_id));
+		$this->assertEmpty(\Model_File::get4name($file_name));
 		$this->assertFalse(file_exists($file_path));
 
 		// meber_filesize
@@ -457,11 +458,12 @@ class Test_Model_AlbumImage extends \TestCase
 
 	private static function get_album_filesize_total($album_id)
 	{
-		$album_images = Model_AlbumImage::get4album_id($album_id, true);
+		$album_images = Model_AlbumImage::get4album_id($album_id);
 		$size = 0;
 		foreach ($album_images as $album_image)
 		{
-			$size += $album_image->file->filesize;
+			$file = \Model_File::get4name($album_image->file_name);
+			$size += $file->filesize;
 		}
 
 		return $size;

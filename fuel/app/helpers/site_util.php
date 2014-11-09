@@ -387,13 +387,10 @@ function check_and_get_datatime($datetime, $type = null, $default_value = '')
 
 function is_prod_env()
 {
-	if (PRJ_ENVIRONMENT == 'PRODUCTION') return true;
-	if (PRJ_ENVIRONMENT == 'STAGING') return true;
-
-	return false;
+	return Site_Util::check_is_prod_env();
 }
 
 function is_dev_env()
 {
-	return ! is_prod_env();
+	return Site_Util::check_is_dev_env();
 }

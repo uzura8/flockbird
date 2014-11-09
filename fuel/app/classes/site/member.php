@@ -11,7 +11,7 @@ class Site_Member
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
 			list($album_image, $file) = \Album\Model_AlbumImage::save_with_relations($album_id, $member, PRJ_PUBLIC_FLAG_ALL, $file_path, 'album_image_profile');
 
-			$member->file_name = $album_image->file->id;
+			$member->file_name = $album_image->file_name;
 			$member->save();
 		}
 		else

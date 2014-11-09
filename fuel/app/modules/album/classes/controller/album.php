@@ -90,7 +90,7 @@ class Controller_Album extends \Controller_Site
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 
 		$data = Model_AlbumImage::get_pager_list(array(
-			'related'  => array('file', 'album'),
+			'related'  => array('album'),
 			'where'    => \Site_Model::get_where_params4list(
 				0,
 				\Auth::check() ? $this->u->id : 0,
@@ -197,7 +197,7 @@ class Controller_Album extends \Controller_Site
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 
 		$data = Model_AlbumImage::get_pager_list(array(
-			'related'  => array('file', 'album'),
+			'related'  => array('album'),
 			'where'    => \Site_Model::get_where_params4list(
 				0,
 				\Auth::check() ? $this->u->id : 0,

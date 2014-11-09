@@ -87,7 +87,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 $menus = array();
 if (!empty($is_setting_profile_image) && $album_image->album->member_id == $u->id)
 {
-	if ($album_image->file->id != $u->file_id)
+	if ($album_image->file_name != $u->file_name)
 	{
 		$menus[] = array('icon_term' => 'form.set_profile_image', 'href' => '#', 'attr' => array(
 			'class' => 'js-simplePost',

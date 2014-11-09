@@ -14,15 +14,6 @@ class Model_AlbumImage extends \MyOrm\Model
 			'cascade_delete' => false,
 		),
 	);
-	protected static $_has_one = array(
-		'file' => array(
-			'key_from' => 'file_name',
-			'model_to' => '\Model_File',
-			'key_to' => 'name',
-			'cascade_save' => false,
-			'cascade_delete' => true,
-		),
-	);
 //	protected static $_has_many = array(
 //		'album_image_comment' => array(
 //			'key_from' => 'id',
@@ -36,10 +27,6 @@ class Model_AlbumImage extends \MyOrm\Model
 	protected static $_properties = array(
 		'id',
 		'album_id' => array(
-			'data_type' => 'integer',
-			'form' => array('type' => false),
-		),
-		'file_name' => array(
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
@@ -204,7 +191,7 @@ class Model_AlbumImage extends \MyOrm\Model
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id')
 	{
-		if (is_null($related_tables)) $related_tables = array('album', 'file');
+		if (is_null($related_tables)) $related_tables = array('album');
 
 		if (!$id) throw new \HttpNotFoundException;
 
@@ -226,12 +213,9 @@ class Model_AlbumImage extends \MyOrm\Model
 		return self::$count_par_album_list[$album_id];
 	}
 
-	public static function get4album_id($album_id, $with_related = false)
+	public static function get4album_id($album_id)
 	{
-		$query = self::query()->where('album_id', $album_id);
-		if ($with_related) $query->related('file');
-
-		return $query->get();
+		return self::query()->where('album_id', $album_id)->get();
 	}
 
 	public static function get_ids4album_id($album_id, $order_by = 'id')
@@ -239,11 +223,6 @@ class Model_AlbumImage extends \MyOrm\Model
 		$result = \DB::select('id')->from('album_image')->where('album_id', $album_id)->order_by($order_by, 'asc')->execute()->as_array();
 
 		return \Util_db::conv_col($result);
-	}
-
-	public static function get4file_id($file_id)
-	{
-		return self::query()->where('file_id', $file_id)->get_one();
 	}
 
 	public function update_public_flag($public_flag, $is_skip_check_album_disabled_to_update = false)
@@ -269,7 +248,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		}
 	}
 
-	public static function save_with_relations($album_id, $member = null, $public_flag = null, $file_path = null, $timeline_type_key = 'album_image', $optional_values = array())
+	public static function save_with_relations($album_id, \Model_Member $member = null, $public_flag = null, $file_path = null, $timeline_type_key = 'album_image', $optional_values = array())
 	{
 		if (!\Util_Array::array_in_array(array_keys($optional_values), array('name', 'shot_at', 'shot_at_time', 'public_flag')))
 		{
@@ -293,7 +272,7 @@ class Model_AlbumImage extends \MyOrm\Model
 
 		$self = new self;
 		$self->album_id    = $album_id;
-		$self->file_id     = $file->id;
+		$self->file_name   = $file->name;
 		$self->public_flag = $public_flag;
 		$self->shot_at = self::get_shot_at_for_insert(
 			$file->shot_at,
@@ -495,7 +474,6 @@ class Model_AlbumImage extends \MyOrm\Model
 		$public_flag_conds = \Site_Model::get_where_public_flag4access_from($access_from);
 
 		$query = \Util_Orm::add_query_where(self::query(), $public_flag_conds);
-		$query->related('file');
 		if ($cover_album_image_id)
 		{
 			$query->where('id', $cover_album_image_id);
@@ -506,7 +484,6 @@ class Model_AlbumImage extends \MyOrm\Model
 		}
 
 		$query = \Util_Orm::add_query_where(self::query(), $public_flag_conds);
-		$query->related('file');
 		$query->where('album_id', $album_id);
 		$query->order_by('id', 'asc');
 		$query->rows_limit(1);

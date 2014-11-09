@@ -87,6 +87,7 @@ class Site_Uploader
 		if ($this->options['is_save_db'])
 		{
 			Model_FileBin::save_from_file_path($tmp_file_path, $this->file->name);
+			Util_File::remove($tmp_file_path);
 		}
 		else
 		{

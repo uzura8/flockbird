@@ -111,14 +111,14 @@ class SetupDB
 		}
 		self::$database = $database;
 
-		$if_not_exists = self::$absolute_execute || \Site_Util::check_is_develop_env();
+		$if_not_exists = self::$absolute_execute || \Site_Util::check_is_dev_env();
 
 		return \DBUtil::shell_exec_create_database(self::$database, $charset, $if_not_exists);
 	}
 
 	private static function exexute_drop_db($database = null)
 	{
-		if (!self::$absolute_execute && !\Site_Util::check_is_develop_env())
+		if (!self::$absolute_execute && !\Site_Util::check_is_dev_env())
 		{
 			throw new \FuelException('This task is not work at prod env.');
 		}

@@ -79,6 +79,7 @@ class Site_FileTmp
 		}
 
 		$new_filepath_prefix = Site_Upload::get_filepath_prefix($file_cate, $parent_id);
+		$new_filename_prefix = Site_Upload::convert_filepath2filename($new_filepath_prefix);
 		if (!$is_save_db = conf('upload.isSaveDb'))
 		{
 			$new_file_dir = Site_Upload::get_uploaded_path('raw', 'img', true, false, $new_filepath_prefix);
@@ -102,7 +103,7 @@ class Site_FileTmp
 			{
 				$moved_files[$file_tmp->id]['from_thumbnail'] = Site_Upload::get_uploaded_file_path($file_tmp->name, 'thumbnail', 'img', true);
 			}
-			$file = Model_File::move_from_file_tmp($file_tmp, $is_ignore_member_id);
+			$file = Model_File::move_from_file_tmp($file_tmp, $new_filename_prefix, $is_ignore_member_id);
 
 			$model = Util_Orm::get_model_name($related_table, $namespace);
 			$related_table_obj = $model::forge();
