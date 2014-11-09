@@ -3,6 +3,7 @@
 class Model_FileBin extends \MyOrm\Model
 {
 	protected static $_table_name = 'file_bin';
+
 	//protected static $_write_connection = 'file_bin_db';
 	//protected static $_connection = 'file_bin_db';
 
@@ -26,11 +27,6 @@ class Model_FileBin extends \MyOrm\Model
 			'mysql_timestamp' => true,
 		),
 	);
-
-	public static function _init()
-	{
-		static::set_connections(conf('db.fileBin.configKey', 'file_bin_db'));
-	}
 
 	public static function get_bin4name($name, $is_decode = true)
 	{

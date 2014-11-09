@@ -99,16 +99,6 @@ class Model extends \Orm\Model
 		return true;
 	}
 
-	public static function set_connections($db_config_key)
-	{
-		$db_configs = \Config::get('db');
-		if (isset($db_configs[$db_config_key]))
-		{
-			static::$_write_connection = $db_config_key;
-			static::$_connection       = $db_config_key;
-		}
-	}
-
 	public static function get_table_name()
 	{
 		return static::$_table_name;
@@ -120,6 +110,11 @@ class Model extends \Orm\Model
 		if (empty($this->file_name)) return static::$image_prefix;
 
 		return $this->file_name;
+	}
+
+	public function get_image_prefix()
+	{
+		return static::$image_prefix;
 	}
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')
