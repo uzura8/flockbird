@@ -330,12 +330,10 @@ class Controller_Album extends \Controller_Site
 	{
 		$album = Model_Album::check_authority($id, $this->u->id, 'member');
 		$album_images = Model_AlbumImage::find('all', array(
-			'related'  => array('file'),
 			'where'    => array(array('album_id' => $id)),
 			'order_by' => array('id' => 'asc')
 		));
 		$is_disabled_to_update_public_flag = Site_Util::check_album_disabled_to_update($album->foreign_table, true);
-
 		$val = self::get_album_image_validation($is_disabled_to_update_public_flag);
 
 		$shot_at = '';
@@ -343,66 +341,55 @@ class Controller_Album extends \Controller_Site
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
-			$is_delete = \Input::post('clicked_btn') == 'delete';
 
-			$error = '';
-			$posted_album_image_ids = array_map('intval', \Input::post('album_image_ids', array()));
-			if (empty($posted_album_image_ids))
-			{
-				$error = '実施対象が選択されていません';
-			}
-			if (!$error && !\Util_Orm::check_ids_in_models($posted_album_image_ids, $album_images))
-			{
-				$error = '実施対象が正しく選択されていません';
-			}
-
+			$deleted_files = array();
 			$post = array();
-			if (!$error && !$is_delete)
+			try
 			{
-				if ($val->run())
+				$is_delete = \Input::post('clicked_btn') == 'delete';
+				$posted_album_image_ids = array_map('intval', \Input::post('album_image_ids', array()));
+				if (empty($posted_album_image_ids))
 				{
+					throw new \FuelException('実施対象が選択されていません');
+				}
+				if (!\Util_Orm::check_ids_in_models($posted_album_image_ids, $album_images))
+				{
+					throw new \FuelException('実施対象が正しく選択されていません');
+				}
+
+				if (!$is_delete)
+				{
+					if (!$val->run()) throw new \FuelException($val->show_errors());
+
 					$post = $val->validated();
 					if (!strlen($post['name']) && empty($post['shot_at']) && (!$is_disabled_to_update_public_flag && $post['public_flag'] == 99))
 					{
-						$error =  '入力してください';
+						throw new \FuelException('入力してください');
 					}
+				}
+
+				\DB::start_transaction();
+				if ($is_delete)
+				{
+					$result = Model_AlbumImage::delete_multiple($posted_album_image_ids);
+					$message = $result.'件削除しました';
 				}
 				else
 				{
-					$error = $val->show_errors();
-				}
-			}
-
-			if (!$error)
-			{
-				$deleted_files = array();
-				try
-				{
-					$result        = 0;
-					\DB::start_transaction();
-					if ($is_delete)
-					{
-						list($result, $deleted_files) = Model_AlbumImage::delete_multiple($posted_album_image_ids, $album);
-					}
-					else
-					{
-						$result = Model_AlbumImage::update_multiple_each($posted_album_image_ids, $post, $is_disabled_to_update_public_flag);
-					}
+					$result = Model_AlbumImage::update_multiple_each($posted_album_image_ids, $post, $is_disabled_to_update_public_flag);
 					$message = $result.'件更新しました';
-					\DB::commit_transaction();
-
-					if ($is_delete && !empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
-
-					\Session::set_flash('message', $message);
-					\Response::redirect('album/edit_images/'.$id);
 				}
-				catch(\FuelException $e)
-				{
-					if (\DB::in_transaction()) \DB::rollback_transaction();
-					Session::set_flash('error', '更新に失敗しました');
-				}
+				\DB::commit_transaction();
+
+				\Session::set_flash('message', $message);
+				\Response::redirect('album/edit_images/'.$id);
 			}
-			if ($error) \Session::set_flash('error', $error);
+			catch(\FuelException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				$message = $e->getMessage() ?: '更新に失敗しました';
+				\Session::set_flash('error', $message);
+			}
 		}
 
 		$this->set_title_and_breadcrumbs(term('album_image', 'site.management'), array('/album/'.$id => $album->name), $album->member, 'album');

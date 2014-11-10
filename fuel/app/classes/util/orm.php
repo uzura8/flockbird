@@ -64,7 +64,7 @@ class Util_Orm
 
 	public static function check_ids_in_models($target_ids, $objs, $id_column_name = 'id')
 	{
-		return Util_Array::array_in_array($target_ids, self::conv_col2array($objs, $column));
+		return Util_Array::array_in_array($target_ids, self::conv_col2array($objs, $id_column_name));
 	}
 
 	public static function get_related_table_values_recursive(\Orm\Model$obj, $related_table_props = array())

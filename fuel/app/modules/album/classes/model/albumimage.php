@@ -325,50 +325,20 @@ class Model_AlbumImage extends \MyOrm\Model
 		return $is_changed;
 	}
 
-	public static function delete_multiple($ids, \Album\Model_Album $album)
+	public static function delete_multiple(array $ids)
 	{
-		$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('album_image')->where('id', 'in', $ids)->execute()->as_array());
-		$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
+		if (empty($ids)) throw new InvalidArgumentException('Second parameter is invalid.');
+		if (!$album_images = Model_AlbumImage::query()->where('id', 'in', $ids)->get()) return 0;
 
-		// カバー写真が削除された場合の対応
-		if ($album->cover_album_image_id && in_array($album->cover_album_image_id, $ids))
+		$result = 0;
+		foreach ($album_images as $album_image)
 		{
-			$album->cover_album_image_id = null;
-			$album->save();
-		}
+			$album_image->delete();
+			$result++;
+		} 
+		//\Model_Member::recalculate_filesize_total($album->member_id);
 
-		// Profile 写真の登録確認&削除
-		if ($album->foreign_table == 'member')
-		{
-			if (in_array($album->member->file_name, $file_ids))
-			{
-				$album->member->file_name = null;
-				$album->member->save();
-			}
-			// timeline 投稿の削除
-			if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $ids);
-		}
-
-		if (\Module::loaded('timeline'))
-		{
-			// timeline_child_data の削除
-			\Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('album_image', $ids);
-
-			// timeline view cache の削除
-			if (\Module::loaded('note')
-				&& \Config::get('timeline.articles.cache.is_use')
-				&& $album->foreign_table == 'note')
-			{
-				\Timeline\Site_Model::delete_note_view_cache4album_image_id($ids[0]);
-			}
-		}
-
-		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
-		if (!$result = \DB::delete('album_image')->where('id', 'in', $ids)->execute()) throw new \FuelException('Album images delete error.');
-
-		\Model_Member::recalculate_filesize_total($album->member_id);
-
-		return array($result, $deleted_files);
+		return $result;
 	}
 
 	public static function update_multiple_all($ids, $set_value, $is_disabled_to_update_public_flag = false)
