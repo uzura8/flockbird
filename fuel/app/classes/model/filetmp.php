@@ -16,7 +16,7 @@ class Model_FileTmp extends \MyOrm\Model
 			'validation' => array('trim', 'required', 'max_length' => array(64)),
 		),
 		'type' => array(
-			'validation' => array('trim', 'max_length' => array(64)),
+			'validation' => array('trim', 'max_length' => array(256)),
 		),
 		'filesize' => array(
 			'data_type' => 'integer',
