@@ -147,9 +147,8 @@ class Controller_Timeline extends \Controller_Site
 
 			\DB::start_transaction();
 			$timeline = Model_Timeline::check_authority($id, $this->u->id);
-			list($result, $deleted_files) = Site_Model::delete_timeline($timeline, $this->u->id);
+			Site_Model::delete_timeline($timeline, $this->u->id);
 			\DB::commit_transaction();
-			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 			\Session::set_flash('message', term('timeline').'を削除しました。');
 			\Response::redirect('timeline/member');

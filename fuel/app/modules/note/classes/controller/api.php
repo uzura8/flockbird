@@ -86,12 +86,10 @@ class Controller_Api extends \Controller_Site_Api
 
 			$id = (int)$id;
 			if (\Input::post('id')) $id = (int)\Input::post('id');
-			$note = Model_Note::check_authority($id, $this->u->id);
-
 			\DB::start_transaction();
-			$deleted_files = $note->delete_with_relations();
+			$note = Model_Note::check_authority($id, $this->u->id);
+			$note->delete_with_relations();
 			\DB::commit_transaction();
-			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 			$response['status'] = 1;
 			$status_code = 200;

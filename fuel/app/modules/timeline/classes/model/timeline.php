@@ -293,15 +293,11 @@ class Model_Timeline extends \MyOrm\Model
 
 	public static function delete4foreign_table_and_foreign_ids($foreign_table, $foreign_ids)
 	{
-		$deleted_files_all = array();
 		$objs = self::get4foreign_table_and_foreign_ids($foreign_table, $foreign_ids);
 		foreach ($objs as $obj)
 		{
-			list($result, $deleted_files) = Site_Model::delete_timeline($obj, $obj->member_id);
-			$deleted_files_all = array_merge($deleted_files_all, $deleted_files);
+			Site_Model::delete_timeline($obj, $obj->member_id);
 		}
-
-		return $deleted_files_all;
 	}
 
 	public static function get4type_key($type_key)
@@ -392,10 +388,8 @@ class Model_Timeline extends \MyOrm\Model
 		}
 		if ($album_image_ids)
 		{
-			list($result, $deleted_files) = \Album\Model_AlbumImage::delete_multiple($album_image_ids, $album);
+			\Album\Model_AlbumImage::delete_multiple($album_image_ids);
 		}
-		$result = $this->delete();
-
-		return array($result, $deleted_files);
+		$this->delete();
 	}
 }

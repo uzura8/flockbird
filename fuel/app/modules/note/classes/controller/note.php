@@ -262,14 +262,13 @@ class Controller_Note extends \Controller_Site
 	public function action_delete($id = null)
 	{
 		\Util_security::check_csrf();
-		$note = Model_Note::check_authority($id, $this->u->id);
 
 		try
 		{
 			\DB::start_transaction();
-			$deleted_files = $note->delete_with_relations();
+			$note = Model_Note::check_authority($id, $this->u->id);
+			$note->delete_with_relations();
 			\DB::commit_transaction();
-			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 			\Session::set_flash('message', term('note').'を削除しました。');
 		}
 		catch(\FuelException $e)

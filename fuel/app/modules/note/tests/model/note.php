@@ -205,7 +205,7 @@ class Test_Model_Note extends \TestCase
 		$note = $this->get_last_row();
 		$is_draft = !$note->is_published;
 		$note_id = $note->id;
-		$deleted_files = $note->delete_with_relations();
+		$note->delete_with_relations();
 
 		// 件数
 		// note

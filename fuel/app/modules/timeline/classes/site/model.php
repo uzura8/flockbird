@@ -192,14 +192,12 @@ class Site_Model
 		$deleted_files = array();
 		if (Site_Util::check_type($timeline->type, 'album_image_timeline'))
 		{
-			list($result, $deleted_files) = $timeline->delete_with_album_image($member_id);
+			$timeline->delete_with_album_image($member_id);
 		}
 		else
 		{
-			$result = $timeline->delete();
+			$timeline->delete();
 		}
-
-		return array($result, $deleted_files);
 	}
 
 	public static function validate_timeline_viewType($viewType = null)

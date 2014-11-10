@@ -230,10 +230,9 @@ class Model_Note extends \MyOrm\Model
 			$album_image_ids = array();
 			foreach ($album_images as $album_image)
 			{
-				if (empty($album)) $album = $album_image->album;
 				$album_image_ids[] = $album_image->id;
 			}
-			list($result, $deleted_files) = \Album\Model_AlbumImage::delete_multiple($album_image_ids, $album);
+			\Album\Model_AlbumImage::delete_multiple($album_image_ids);
 		}
 
 		// timeline 投稿の削除
@@ -241,8 +240,6 @@ class Model_Note extends \MyOrm\Model
 
 		// note の削除
 		$this->delete();
-
-		return $deleted_files;
 	}
 
 	public function update_public_flag_with_relations($public_flag)

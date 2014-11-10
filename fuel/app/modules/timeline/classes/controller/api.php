@@ -165,9 +165,8 @@ class Controller_Api extends \Controller_Site_Api
 
 			\DB::start_transaction();
 			$timeline = Model_Timeline::check_authority($id, $this->u->id);
-			list($result, $deleted_files) = Site_Model::delete_timeline($timeline, $this->u->id);
+			Site_Model::delete_timeline($timeline, $this->u->id);
 			\DB::commit_transaction();
-			if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
 
 			$response['status'] = 1;
 			$status_code = 200;
