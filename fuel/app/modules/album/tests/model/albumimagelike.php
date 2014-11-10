@@ -450,7 +450,7 @@ class Test_Model_AlbumImageLike extends \TestCase
 
 	private static function get_album_image_like_count()
 	{
-		return \Util_Orm::get_count_all('\Album\Model_AlbumImageLike', array('album_image_id' => self::$album_image->id));
+		return Model_AlbumImageLike::get_count(array('album_image_id' => self::$album_image->id));
 	}
 
 	private static function force_save_album($member_id, $values, Model_Album $album = null)

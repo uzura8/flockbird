@@ -27,7 +27,7 @@ class Test_Model_File extends TestCase
 		{
 			if ($this->is_save_db)
 			{
-				$this->assertNotNull(\Model_FileBIn::find($file->file_bin_id));
+				$this->assertNotNull(\Model_FileBin::get4name($file->name));
 			}
 			else
 			{

@@ -209,7 +209,7 @@ class Test_Model_Note extends \TestCase
 
 		// 件数
 		// note
-		$this->assertEquals(self::$note_count - 1, \Util_Orm::get_count_all('\Note\Model_Note'));
+		$this->assertEquals(self::$note_count - 1, Model_Note::get_count());
 
 		// note_album_image
 		$note_album_images = \Note\Model_NoteAlbumImage::query()->where('note_id', $note_id)->get();

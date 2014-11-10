@@ -136,7 +136,7 @@ class Test_Model_AlbumImage extends \TestCase
 		$is_changed = self::$album_image->update_with_relations($updated_values);
 
 		// 件数
-		$this->assertEquals(self::$total_count, \Util_Orm::get_count_all('\Album\Model_AlbumImage'));
+		$this->assertEquals(self::$total_count, Model_AlbumImage::get_count());
 
 		// 更新値: name
 		if (isset($updated_values['name'])) $this->assertEquals($updated_values['name'], self::$album_image->name);
@@ -354,7 +354,7 @@ class Test_Model_AlbumImage extends \TestCase
 		self::$album_image->delete();
 
 		// 件数
-		$this->assertEquals(self::$total_count - 1, \Util_Orm::get_count_all('\Album\Model_AlbumImage'));
+		$this->assertEquals(self::$total_count - 1, Model_AlbumImage::get_count());
 
 		// file
 		$this->assertEmpty(\Model_File::get4name($file_name));
@@ -410,7 +410,7 @@ class Test_Model_AlbumImage extends \TestCase
 
 	private static function set_count()
 	{
-		self::$total_count = \Util_Orm::get_count_all('\Album\Model_AlbumImage');
+		self::$total_count = Model_AlbumImage::get_count();
 	}
 
 	private static function set_timeline_count()
