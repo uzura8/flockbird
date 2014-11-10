@@ -14,15 +14,6 @@ class Model_NewsFile extends \MyOrm\Model
 			'cascade_delete' => false,
 		),
 	);
-	protected static $_has_one = array(
-		'file' => array(
-			'key_from' => 'file_name',
-			'model_to' => '\Model_File',
-			'key_to' => 'name',
-			'cascade_save' => false,
-			'cascade_delete' => true,
-		),
-	);
 
 	protected static $_properties = array(
 		'id',

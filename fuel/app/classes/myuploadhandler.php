@@ -10,14 +10,16 @@ class MyUploadHandler extends UploadHandler
 		$files = array();
 		foreach ($file_tmps as $file_tmp)
 		{
-			$file = $this->get_file_object($file_tmp->name);
-			$file->is_tmp   = true;
-			$file->id   = $file_tmp->id;
+			$file_name = $this->remove_filename_prefix($file_tmp->name);
+			$file = $this->get_file_object($file_name);
+			$file->is_tmp = true;
+			$file->name_prefix = $this->options['filename_prefix'];
+			$file->id = $file_tmp->id;
 			$file->original_name = $file_tmp->original_filename;
 			$file->description   = $file_tmp->description;
 			if ($type == 'img')
 			{
-				$file->thumbnail_uri = $this->options['image_versions']['thumbnail']['upload_url'].Site_Upload::get_filepath_prefix_from_filename($file_tmp->name);
+				$file->thumbnail_uri = $this->options['image_versions']['thumbnail']['upload_url'].$file_name;
 			}
 
 			$files[] = $file;
@@ -38,15 +40,17 @@ class MyUploadHandler extends UploadHandler
 
 		$file_cate = $model_objs[$key]->get_image_prefix();
 		$cache_size    = conf('upload.types.img.types.'.$file_cate.'.sizes.thumbnail');
-		$cache_dir_uri = conf('upload.types.img.root_path.cache_dir');
 
 		foreach ($model_objs as $model_obj)
 		{
-			if (!$file = $this->get_file_object($model_obj->file->name)) continue;
+			$file_name = $this->remove_filename_prefix($model_obj->file_name);
+			if (!$file = $this->get_file_object($file_name)) continue;
+			$file_obj = Model_File::get4name($model_obj->file_name);
 			$file->is_tmp = false;
+			$file->name_prefix = $this->options['filename_prefix'];
 			$file->id = (int)$model_obj->id;
-			$file->original_name = $model_obj->file->original_filename;
-			$file->thumbnail_uri = sprintf('%s%s/%s%s', $cache_dir_uri, $cache_size, $model_obj->file->path, $model_obj->file->name);
+			$file->original_name = $file_obj->original_filename;
+			$file->thumbnail_uri = Site_Upload::get_uploaded_file_path($model_obj->file_name, $cache_size, 'img', false, true);
 			
 			$file->description   = $model_obj->name;
 			if (!is_null($image_names_posted[$model_obj->id]) && strlen($image_names_posted[$model_obj->id]))
@@ -167,7 +171,7 @@ class MyUploadHandler extends UploadHandler
 			$file->error = 'ファイル名の作成に失敗しました。';
 			return $file;
 		}
-		$file->name = str_replace($this->options['filename_prefix'], '', $filename_with_prefix);
+		$file->name = $this->remove_filename_prefix($filename_with_prefix);
 		$file->name_prefix = $this->options['filename_prefix'];
 		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], conf('upload.check_and_make_dir_level'), $this->options['mkdir_mode']))
 		{
@@ -425,5 +429,10 @@ class MyUploadHandler extends UploadHandler
 		}
 
 		return false;
+	}
+
+	protected function remove_filename_prefix($filename)
+	{
+		return str_replace($this->options['filename_prefix'], '', $filename);
 	}
 }

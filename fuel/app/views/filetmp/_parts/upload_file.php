@@ -27,5 +27,5 @@ if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $mo
 		</div>
 	</div>
 <?php endif; ?>
-	<?php echo Form::hidden(sprintf($prefix.'[%d]', $file->id), $file->name, array('class' => $prefix)); ?>
+	<?php echo Form::hidden(sprintf($prefix.'[%d]', $file->id), $file->name_prefix.$file->name, array('class' => $prefix)); ?>
 </div><!-- panel -->

@@ -367,7 +367,7 @@ class Model extends \Orm\Model
 	{
 		$max = (int)self::query()->max($sort_order_col_name);
 
-		return Site_Util::get_next_sort_order_num($max);
+		return \Site_Util::get_next_sort_order_num($max);
 	}
 
 	public static function get_col_array($column, $params = array())
