@@ -101,6 +101,24 @@ class Model_News extends \MyOrm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		// delete 時に紐づくデータを削除する
+		'MyOrm\Observer_DeleteRelationalTables' => array(
+			'events' => array('before_delete'),
+			'relations' => array(
+				array(
+					'model_to' => '\News\Model_NewsImage',
+					'conditions' => array(
+						'news_id' => array('id' => 'property'),
+					),
+				),
+				array(
+					'model_to' => '\News\Model_NewsFile',
+					'conditions' => array(
+						'news_id' => array('id' => 'property'),
+					),
+				),
+			),
+		),
 	);
 
 	public static function _init()
@@ -120,21 +138,6 @@ class Model_News extends \MyOrm\Model
 		{
 			static::$_properties['body']['validation'][] = 'required';
 		}
-	}
-
-	public function delete_with_relations()
-	{
-		// news_image の削除
-		list($result, $deleted_images) = Model_NewsImage::delete_multiple4news_id($this->id);
-		list($result, $deleted_files)  = Model_NewsFile::delete_multiple4news_id($this->id);
-
-		//// timeline 投稿の削除
-		//if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('news', $this->id);
-
-		// note の削除
-		$this->delete();
-
-		return array($deleted_images, $deleted_files);
 	}
 
 	public static function get4slug($slug)

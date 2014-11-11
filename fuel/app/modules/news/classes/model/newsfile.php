@@ -47,8 +47,14 @@ class Model_NewsFile extends \MyOrm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_DeleteNewsImage' => array(
+		'MyOrm\Observer_DeleteRelationalTables' => array(
 			'events' => array('before_delete'),
+			'relations' => array(
+				'model_to' => '\Model_File',
+				'conditions' => array(
+					'name' => array('file_name' => 'property'),
+				),
+			),
 		),
 	);
 
@@ -82,20 +88,5 @@ class Model_NewsFile extends \MyOrm\Model
 		$result = \DB::select('id')->from('news_file')->where('news_id', $news_id)->order_by($order_by, 'asc')->execute()->as_array();
 
 		return \Util_db::conv_col($result);
-	}
-
-	public static function delete_multiple4news_id($news_id)
-	{
-		if (!$file_ids = \Util_db::conv_col(\DB::select('file_id')->from('news_file')->where('news_id', $news_id)->execute()->as_array()))
-		{
-			return array(true, array());
-		}
-
-		$deleted_files = \DB::select('path', 'name')->from('file')->where('id', 'in', $file_ids)->execute()->as_array();
-
-		if (!$result = \DB::delete('file')->where('id', 'in', $file_ids)->execute()) throw new \FuelException('Files delete error.');
-		if (!$result = \DB::delete('news_file')->where('news_id', $news_id)->execute()) throw new \FuelException('News files delete error.');
-
-		return array($result, $deleted_files);
 	}
 }

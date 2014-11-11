@@ -363,15 +363,12 @@ class Controller_News extends Controller_Admin
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		$news = \News\Model_News::check_authority($id);
-
 		try
 		{
 			\DB::start_transaction();
-			list($deleted_images, $deleted_files) = $news->delete_with_relations();
+			$news = \News\Model_News::check_authority($id);
+			$news->delete();
 			\DB::commit_transaction();
-			if ($deleted_images) \Site_Upload::remove_files($deleted_images);
-			if ($deleted_files)  \Site_Upload::remove_files($deleted_files);
 			\Session::set_flash('message', term('news.view').'を削除しました。');
 		}
 		catch(\FuelException $e)

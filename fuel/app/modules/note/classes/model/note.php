@@ -223,7 +223,6 @@ class Model_Note extends \MyOrm\Model
 
 	public function delete_with_relations()
 	{
-		$deleted_files = array();
 		// album_image の削除
 		if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
