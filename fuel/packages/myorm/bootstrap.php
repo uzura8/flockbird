@@ -23,6 +23,7 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_InsertTimelineCache' => __DIR__.'/classes/observer/inserttimelinecache.php',
 	'MyOrm\\Observer_UpdateTimelineCache' => __DIR__.'/classes/observer/updatetimelinecache.php',
 	'MyOrm\\Observer_UpdateTimeline' => __DIR__.'/classes/observer/updatetimeline.php',
+	'MyOrm\\Observer_UpdateTimelineImportanceLevel' => __DIR__.'/classes/observer/updatetimelineimportancelevel.php',
 	'MyOrm\\Observer_DeleteTimeline' => __DIR__.'/classes/observer/deletetimeline.php',
 	'MyOrm\\Observer_UpdateTimeline4ChildData' => __DIR__.'/classes/observer/updatetimeline4childdata.php',
 	'MyOrm\\Observer_InsertMemberFollowTimeline' => __DIR__.'/classes/observer/insertmemberfollowtimeline.php',

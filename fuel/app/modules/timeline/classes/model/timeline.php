@@ -98,6 +98,12 @@ class Model_Timeline extends \MyOrm\Model
 			'default' => 0,
 			'form' => array('type' => false),
 		),
+		'importance_level' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'validation' => array('max_length' => array(2)),
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 		'sort_datetime' => array('form' => array('type' => false)),
@@ -249,6 +255,13 @@ class Model_Timeline extends \MyOrm\Model
 			);
 			static::$_observers['MyOrm\Observer_DeleteTimeline'] = array(
 				'events' => array('before_delete'),
+			);
+		}
+		if (\Config::get('timeline.importanceLevel.isEnabled'))
+		{
+			// 更新時に timeline の importance_level を更新
+			static::$_observers['MyOrm\Observer_UpdateTimelineImportanceLevel'] = array(
+				'events' => array('before_update'),
 			);
 		}
 	}

@@ -590,4 +590,21 @@ class Site_Util
 
 		return \Cache::get(\Timeline\Site_Util::get_cache_key($timeline->id), \Config::get('timeline.articles.cache.expir'));
 	}
+
+	public static function get_importance_level($comment_count, $like_count)
+	{
+		if (!\Config::get('timeline.importanceLevel.isEnabled', false)) return;
+		if (!$levels = (array)\Config::get('timeline.importanceLevel.levels')) return;
+
+		$comment_count_rate = \Config::get('timeline.importanceLevel.commentCountRate', 2);
+		$point = $comment_count * $comment_count_rate + $like_count;
+
+		krsort($levels);
+		foreach ($levels as $level => $limit)
+		{
+			if ($point > $limit) return (int)$level;
+		}
+
+		return 0;
+	}
 }

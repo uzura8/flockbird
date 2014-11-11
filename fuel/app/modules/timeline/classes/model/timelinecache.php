@@ -61,6 +61,12 @@ class Model_TimelineCache extends \MyOrm\Model
 			'default' => 0,
 			'form' => array('type' => false),
 		),
+		'importance_level' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'validation' => array('required', 'max_length' => array(2)),
+			'form' => array('type' => false),
+		),
 	);
 
 	protected static $_observers = array(

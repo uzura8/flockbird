@@ -1,5 +1,16 @@
 <?php
 return array(
+	'importanceLevel' => array(
+		'isEnabled' => true,
+		'commentCountRate' => 2,
+		'levels' => array(
+			'1' => 3,// level => point
+			'2' => 8,
+			'3' => 16,
+			'4' => 30,
+			'5' => 50,
+		),
+	),
 	'articles' => array(
 		'cache' => array(
 			'is_use'  => false,
