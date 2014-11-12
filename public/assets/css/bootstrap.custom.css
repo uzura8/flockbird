@@ -4,11 +4,9 @@ body {
 	padding-bottom: 10px;
 	min-width: 320px;
 }
-
 .container {
 	width: 100% !important;
 }
-
 .hidden-xs-inline {
   display: inline !important;
 }
@@ -18,17 +16,21 @@ body {
 	body {
 		padding-top: 0;
 	}
-	.container {
-		padding-right: 3px;
-		padding-left: 3px;
+
+	.row {
+		margin-right: -15px;
+		margin-left: -15px;
 	}
+
+	.container > .navbar-header {
+		margin-right: -15px;
+		margin-left: -15px;
+	}
+
 	.navbar-fixed-top
 	{
 		position: relative;
 		top: auto;
-	}
-	.page-header h1 {
-		font-size: ;
 	}
 
 	.input-xlarge {
