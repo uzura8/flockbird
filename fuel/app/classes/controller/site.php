@@ -50,7 +50,8 @@ class Controller_Site extends Controller_Base_Site
 	 */
 	public function action_index()
 	{
-		$this->set_title_and_breadcrumbs(PRJ_SITE_NAME.'メインメニュー', null, null, null, null, true);
+		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
+		$this->template->layout = 'wide';
 		$this->template->content = View::forge('site/index');
 	}
 }

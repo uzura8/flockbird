@@ -36,6 +36,8 @@ class Controller_Base extends Controller_Hybrid
 		$this->set_title_and_breadcrumbs(PRJ_SITE_NAME);
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
+
+		if (!IS_API) $this->template->layout = 'normal';
 	}
 
 	protected function check_ssl_required_request_and_redirect()
@@ -187,12 +189,9 @@ class Controller_Base extends Controller_Hybrid
 	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false)
 	{
 		$title_name = '';
-		if ($title)
-		{
-			list($title_name, $title_label) = static::get_title_parts($title);
-			$this->template->title = $is_no_title ? '' : View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
-		}
-		$this->template->header_title = $title_name ? site_title($title_name) : '';
+		if ($title) list($title_name, $title_label) = static::get_title_parts($title);
+		$this->template->title = (!$is_no_title || $title_name) ? View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label)) : '';
+		$this->template->header_title = site_title($title_name);
 
 		if ($info) $this->template->header_info = View::forge('_parts/information', $info);
 

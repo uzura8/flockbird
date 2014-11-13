@@ -10,8 +10,6 @@ class Controller_Admin extends Controller_Base {
 	public function before()
 	{
 		parent::before();
-
-		if (!IS_API) $this->template->layout = 'normal';
 	}
 	
 	public function action_login()

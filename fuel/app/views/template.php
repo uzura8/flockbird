@@ -23,7 +23,7 @@
 
 <div class="container">
 	<div class="row row-offcanvas row-offcanvas-right">
-		<div class="col-sm-9">
+		<div class="col-sm-<?php if ($layout == 'wide'): ?>12<?php else: ?>9<?php endif; ?>">
 <?php if (!empty($breadcrumbs)): ?>
 <div class="hidden-xs">
 <?php echo render('_parts/template/breadcrumbs', array('list' => $breadcrumbs)); ?>
@@ -53,6 +53,7 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 
 		</div><!--/span-->
 
+<?php if ($layout == 'normal'): ?>
 		<div class="col-sm-3" id="sidebar" role="navigation">
 <?php if (Auth::check()): ?>
 			<?php echo render('_parts/template/profile_img_box'); ?>
@@ -65,6 +66,7 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 <?php endif; ?>
 
 		</div><!--/span-->
+<?php endif; ?>
 	</div><!--/row-->
 
 <?php echo render('_parts/template/footer'); ?>
