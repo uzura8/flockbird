@@ -9,7 +9,7 @@ class Controller_Base_Site extends Controller_Base
 	public function before()
 	{
 		parent::before();
-		$this->set_notification_count();
+		if (!IS_ADMIN) $this->set_notification_count();
 	}
 
 	protected function get_current_user($member_id = null)

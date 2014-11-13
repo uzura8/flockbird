@@ -9,6 +9,12 @@ class Controller_Error extends Controller_Site
 		'500',
 		'invalid',
 	);
+
+	public function before()
+	{
+		if (IS_ADMIN) $this->template = 'admin::template';
+		parent::before();
+	}
 	
 	/**
 	 * The 403 action for the application.
