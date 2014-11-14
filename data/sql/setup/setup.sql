@@ -39,7 +39,7 @@ CREATE TABLE `album_image` (
 CREATE TABLE `album_image_like` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_image_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `member_id_album_image_id_UNIQUE_idx` (`member_id`,`album_image_id`),
@@ -50,7 +50,7 @@ CREATE TABLE `album_image_like` (
 CREATE TABLE `album_image_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_image_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `body` text NOT NULL,
   `like_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE `album_image_comment` (
 CREATE TABLE `album_image_comment_like` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_image_comment_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `member_id_album_image_comment_id_UNIQUE_idx` (`member_id`,`album_image_comment_id`),
@@ -102,7 +102,6 @@ CREATE TABLE `file` (
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
   KEY `member_id_idx` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of files uploaded';
-
 
 CREATE TABLE `file_tmp` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
@@ -319,7 +318,7 @@ CREATE TABLE `note` (
 CREATE TABLE `note_like` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `note_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `member_id_note_id_UNIQUE_idx` (`member_id`,`note_id`),
@@ -331,7 +330,7 @@ CREATE TABLE `note_like` (
 CREATE TABLE `note_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `note_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `body` text NOT NULL,
   `like_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
@@ -346,7 +345,7 @@ CREATE TABLE `note_comment` (
 CREATE TABLE `note_comment_like` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `note_comment_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `member_id_note_comment_id_UNIQUE_idx` (`member_id`,`note_comment_id`),
@@ -624,7 +623,7 @@ CREATE TABLE `timeline_child_data` (
 CREATE TABLE `timeline_like` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timeline_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `member_id_timeline_id_UNIQUE_idx` (`member_id`,`timeline_id`),
@@ -636,7 +635,7 @@ CREATE TABLE `timeline_like` (
 CREATE TABLE `timeline_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timeline_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `body` text NOT NULL,
   `like_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
@@ -650,7 +649,7 @@ CREATE TABLE `timeline_comment` (
 CREATE TABLE `timeline_comment_like` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timeline_comment_id` int(11) NOT NULL,
-  `member_id` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `member_id_timeline_comment_id_UNIQUE_idx` (`member_id`,`timeline_comment_id`),
