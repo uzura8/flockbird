@@ -174,14 +174,14 @@ class Controller_Album extends \Controller_Site
 		}
 
 		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
-		$this->template->post_footer = \View::forge('_parts/upload_footer');
+		$this->template->post_footer = \View::forge('_parts/form/upload_footer');
 		$this->set_title_and_breadcrumbs(
 			term('album_image', 'form.upload'),
 			array('/album/'.$id => $album->name),
 			$album->member,
 			'album'
 		);
-		$this->template->content = \View::forge('upload', array('id' => $id, 'album' => $album, 'files' => $files));
+		$this->template->content = \View::forge('_parts/form/upload', array('id' => $id, 'album' => $album, 'files' => $files));
 	}
 
 	/**

@@ -86,6 +86,7 @@ $config = array(
 		'id' => 'ID',
 		'user' => 'ユーザ',
 		'picture' => '写真',
+		'image' => '写真',
 		'file' => 'ファイル',
 		'title' => 'タイトル',
 		'latest' => '最新の',
@@ -98,6 +99,9 @@ $config = array(
 		'see_latest' => '最新をみる',
 		'unread' => '未読',
 		'AlreadyRead' => '既読',
+		'content' => 'コンテンツ',
+		'forward' => '次へ',
+		'backward' => '前へ',
 	),
 	'member' => array(
 		'view' => 'メンバー',

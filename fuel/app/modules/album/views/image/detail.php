@@ -1,8 +1,9 @@
-<div class="img_box">
-	<?php echo ($before_id) ? Html::anchor('album/image/'.$before_id, '<span class="glyphicon glyphicon-backward"></span><br>前へ', array('class' => 'btn btn-default btn-xs backward')) : ''; ?>
-	<?php echo img($album_image->get_image(), 'L', '', true, $album_image->name ?: '', false, true); ?>
-	<?php echo ($after_id) ? Html::anchor('album/image/'.$after_id, '<span class="glyphicon glyphicon-forward"></span><br>次へ', array('class' => 'btn btn-default btn-xs forward')) : ''; ?>
-</div>
+<?php
+$data = array('image_obj' => $album_image);
+if ($before_id) $data['before_uri'] = 'album/image/'.$before_id;
+if ($after_id) $data['after_uri'] = 'album/image/'.$after_id;
+echo render('_parts/image/detail', $data);
+?>
 <hr>
 
 <?php if (Auth::check() || $comments): ?>

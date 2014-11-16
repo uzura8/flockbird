@@ -1,6 +1,7 @@
 <?php
 
 return array(
+	'isDisplayOriginalFileName' => false,
 	'articles' => array(
 		'limit' => 3,
 		'limit_max' => 5,

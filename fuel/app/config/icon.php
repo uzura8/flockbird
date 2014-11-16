@@ -43,6 +43,7 @@ $config = array(
 		'add' => 'plus',
 		'do_add' => 'plus',
 		'add_picture' => 'camera',
+		'add_image' => 'camera',
 		'add_file' => 'file',
 		'add_link' => 'link',
 		//'comment' => 'コメント',
@@ -101,6 +102,8 @@ $config = array(
 		'shot' => 'camera',
 		'see_more' => 'caret-down',
 		'see_latest' => 'caret-up',
+		'forward' => 'forward',
+		'backward' => 'backward',
 	),
 	'member' => array(
 		'view' => 'user',

@@ -239,6 +239,16 @@ class Controller_Base extends Controller_Hybrid
 		return array($limit, $page);
 	}
 
+	public function check_response_format($accept_formats = array())
+	{
+		if (!$accept_formats) return true;
+
+		if (!is_array($accept_formats)) $accept_formats = (array)$accept_formats;
+		if (!in_array($this->format, $accept_formats)) throw new \HttpNotFoundException();
+
+		return true;
+	}
+
 
 	/**
 	 * 以下、site, admin 共通 controller

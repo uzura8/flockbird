@@ -680,6 +680,18 @@ CREATE TABLE `site_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of this site';
 
 
+CREATE TABLE `site_image` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_user_id` int(11) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `name` text NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `file_name_UNIQUE_idx` (`file_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE `admin_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
@@ -695,5 +707,3 @@ CREATE TABLE `admin_user` (
   UNIQUE KEY `username_UNIQUE_idx` (`username`),
   UNIQUE KEY `email_UNIQUE_idx` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- INSERT INTO `admin_user` VALUES (1,'admin','RTRQWLQkWXL5w3v651COdjbiK6j5/Trs1El8UYDL5q8=',100,'admin@example.jp','','','a:0:{}',NOW(),NOW());

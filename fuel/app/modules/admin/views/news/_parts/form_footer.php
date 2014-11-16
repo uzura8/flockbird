@@ -12,7 +12,7 @@ $(document).ready(function() {
 <?php if (\Auth::member(50)): ?>
 		toolbar: [
 			['font', ['bold', 'italic', 'underline', 'clear']],
-			['insert', ['link']],
+			['insert', ['link', 'picture']],
 			['view', ['fullscreen']]
 		],
 <?php endif; ?>

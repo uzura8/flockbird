@@ -113,10 +113,10 @@ function symbol_bool($bool)
 	return $bool ? symbol('bool.true') : symbol('bool.false');
 }
 
-function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile = false, $is_responsive = false, $anchor_attrs = array())
+function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile = false, $is_responsive = false, $anchor_attr = array(), $img_attr = array())
 {
-	$option = array('class' => '');
-	if ($is_responsive) $option['class'] = 'img-responsive';
+	if (!isset($img_attr['class'])) $img_attr['class'] = '';
+	if ($is_responsive) $img_attr['class'] = 'img-responsive';
 
 	if (strlen($filename) <= 3)
 	{
@@ -130,29 +130,30 @@ function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file =
 
 	if ($is_profile)
 	{
-		if (!empty($option['class'])) $option['class'] .= ' ';
-		$option['class'] .= 'profile_image';
+		if (!empty($img_attr['class'])) $img_attr['class'] .= ' ';
+		$img_attr['class'] .= 'profile_image';
 	}
 
 	if (!$size = img_size($file_cate, $size_key)) $size = $size_key;
 	if (empty($filename))
 	{
-		$noimage_tag = Site_Util::get_noimage_tag($size, $file_cate, $option);
-		if ($link_uri) return Html::anchor($link_uri, $noimage_tag, $anchor_attrs);
+		$noimage_tag = Site_Util::get_noimage_tag($size, $file_cate, $img_attr);
+		if ($link_uri) return Html::anchor($link_uri, $noimage_tag, $anchor_attr);
 
 		return $noimage_tag;
 	}
-	if ($alt) $option['alt'] = $alt;
+	if ($alt) $img_attr['alt'] = $alt;
 
 	$uri_path = Site_Upload::get_uploaded_file_path($filename, $size, 'img', false, true);
-	$image_tag = Html::img($uri_path, $option);
+	$image_tag = Html::img($uri_path, $img_attr);
 
-	if ($link_uri) return Html::anchor($link_uri, $image_tag, $anchor_attrs);
+	if ($link_uri) return Html::anchor($link_uri, $image_tag, $anchor_attr);
 
 	if ($is_link2raw_file)
 	{
-		$anchor_attrs['target'] = '_blank';
-		return Html::anchor($uri_path, $image_tag, $anchor_attrs);
+		$anchor_attr['target'] = '_blank';
+		$uri_path = Site_Upload::get_uploaded_file_path($filename, 'raw', 'img', false, true);
+		return Html::anchor($uri_path, $image_tag, $anchor_attr);
 	}
 
 	return $image_tag;

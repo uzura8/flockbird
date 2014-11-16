@@ -11,16 +11,6 @@ class Controller_Site_Api extends Controller_Base_Site
 		parent::before();
 	}
 
-	public function check_response_format($accept_formats = array())
-	{
-		if (!$accept_formats) return true;
-
-		if (!is_array($accept_formats)) $accept_formats = (array)$accept_formats;
-		if (!in_array($this->format, $accept_formats)) throw new \HttpNotFoundException();
-
-		return true;
-	}
-
 
 	/**
 	 * 以下、共通 controller

@@ -82,6 +82,9 @@ return array(
 			'admin/news/category/api/delete' => array('POST'),
 			'admin/news/category/api/update' => array('POST'),
 			'admin/news/category/image/delete' => array('POST'),
+			'admin/content/image/upload' => array('GET', 'POST'),
+			'admin/content/image/delete' => array('POST'),
+			'admin/content/image/api/delete' => array('POST'),
 			'admin/filetmp/api/upload' => array('GET', 'POST', 'DELETE'),
 			'admin/account/index' => array('GET'),
 		),
@@ -96,6 +99,11 @@ return array(
 			'admin/news/index' => array('GET'),
 			'admin/news/list' => array('GET'),
 			'admin/news/detail' => array('GET'),
+			'admin/content/index' => array('GET'),
+			'admin/content/image/index' => array('GET'),
+			'admin/content/image/list' => array('GET'),
+			'admin/content/image/detail' => array('GET'),
+			'admin/content/image/api/list' => array('GET'),
 		),
 		/**
 		 * Examples
