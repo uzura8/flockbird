@@ -10,7 +10,7 @@ class Site_Util
 			return $album_image->name;
 		}
 
-		if (!\Config::get('album.isDisplayOriginalFileName')) return$default;
+		if (!\Config::get('album.isDisplayOriginalFileName')) return $default;
 
 		$file = \Model_File::get4name($album_image->file_name);
 		if ($file && isset($file->original_filename) && strlen($file->original_filename))

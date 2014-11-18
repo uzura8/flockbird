@@ -118,11 +118,12 @@ class Controller_Image extends \Controller_Site
 		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_AlbumImage::get_pager_list(array(
 			'related' => array('album'),
-			'where' => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id), array(), 't2.member_id'),
+			'where' => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id), array(), 't1.member_id'),
 			'limit' => $limit,
 			'order_by' => array('id' => 'desc'),
 		), $page);
 		$data['member'] = $member;
+		$data['is_member_page'] = true;
 		$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list'], 'Album') : array();
 		$this->template->content = \View::forge('image/_parts/list', $data);

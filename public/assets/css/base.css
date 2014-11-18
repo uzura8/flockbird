@@ -241,11 +241,12 @@ div#main div.row div#main_container {
 }
 #main_container .main_item div.article {
 	text-align: left;
-	padding: 5px 8px;
+	padding: 5px 0;
 	margin: 0;
 }
 #main_container .main_item div.imgBox {
 	position: relative;
+	padding: 0 5px;
 }
 #main_container .main_item div.imgBox .content {
 	text-align: center;
