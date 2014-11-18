@@ -203,21 +203,21 @@ class Site_Util
 		return array('note', 'album', 'album_image', 'timeline', 'member_profile');
 	}
 
-	public static function get_public_flag_coloer_class($public_flag)
+	public static function get_public_flag_name($public_flag)
 	{
-		switch ($public_flag)
-		{
-			case PRJ_PUBLIC_FLAG_ALL:
-				return 'info';
-				break;
-			case PRJ_PUBLIC_FLAG_MEMBER:
-				return 'success';
-				break;
-			default :
-				break;
-		}
+		return term('public_flag.options.'.$public_flag);
+	}
 
-		return 'danger';
+	public static function get_public_flag_icon($public_flag, $with_tag = true)
+	{
+		$icon_key = 'public_flag.options.'.$public_flag;
+
+		return $with_tag ? icon($icon_key, 'fa fa-') : Config::get('icon.'.$icon_key);
+	}
+
+	public static function get_public_flag_coloer_type($public_flag)
+	{
+		return conf('public_flag.colorTypes.'.$public_flag);
 	}
 
 	public static function validate_posted_public_flag($current_public_flag = null, $posted_key = 'public_flag')
@@ -379,5 +379,30 @@ class Site_Util
 	public static function get_api_uri_get_liked_members($path_prefix, $parent_id)
 	{
 		return sprintf('%s/like/api/member/%d.html', $path_prefix, $parent_id);
+	}
+
+	public static function convert_is_secure2public_flag($is_secure)
+	{
+		switch ($is_secure)
+		{
+			case 1:
+				return PRJ_PUBLIC_FLAG_MEMBER;
+			case 0:
+			default :
+				break;
+		}
+
+		return PRJ_PUBLIC_FLAG_ALL;
+	}
+
+	public static function get_is_secure_label_parts($is_secure)
+	{
+		$public_flag = static::convert_is_secure2public_flag($is_secure);
+
+		return array(
+			static::get_public_flag_name($public_flag),
+			static::get_public_flag_icon($public_flag),
+			static::get_public_flag_coloer_type($public_flag)
+		);
 	}
 }

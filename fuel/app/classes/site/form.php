@@ -24,4 +24,14 @@ class Site_Form
 			'value'   => conf('public_flag.default'),
 		);
 	}
+
+	public static function get_form_options4config($config_key, $selected_key = null, $is_return_false_not_set_key = false)
+	{
+		if (!$options = Config::get($config_key)) throw new InvalidArgumentException('First parameter is invalid.');
+
+		if (!is_null($selected_key) && isset($options[$selected_key])) return $options[$selected_key];
+		if ($is_return_false_not_set_key) return false;
+
+		return $options;
+	}
 }

@@ -260,6 +260,12 @@ $config = array(
 	),
 	'public_flag' => array(
 		'default' => PRJ_PUBLIC_FLAG_ALL,
+		'colorTypes' => array(
+			PRJ_PUBLIC_FLAG_PRIVATE => 'danger',
+			PRJ_PUBLIC_FLAG_ALL => 'info',
+			PRJ_PUBLIC_FLAG_MEMBER => 'success',
+			//'friend'  => 'warning',
+		),
 	),
 	'like' => array(
 		'isEnabled'  => true,

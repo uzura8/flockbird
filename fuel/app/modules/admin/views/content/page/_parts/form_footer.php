@@ -1,8 +1,3 @@
-<?php echo render('_parts/datetimepicker_footer', array('attr' => '#published_at_time')); ?>
-<?php if (Config::get('news.image.isEnabled') || Config::get('news.file.isEnabled')): ?>
-<?php echo render('filetmp/_parts/upload_footer'); ?>
-<?php endif; ?>
-<?php echo Asset::js('site/modules/admin/news/common/form.js');?>
 <?php if (Config::get('news.form.isEnabledWysiwygEditor')): ?>
 <?php echo render('_parts/form/summernote/footer'); ?>
 <?php echo render('_parts/form/summernote/moderator_setting'); ?>

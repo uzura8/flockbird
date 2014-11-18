@@ -80,7 +80,7 @@ elseif ($page_type != 'detail')
 <?php if (!$is_simple_list
 				&& check_display_type(conf('profile.sex.displayType'), $display_type)
 				&& check_public_flag($member->sex_public_flag, $access_from)
-				&& $sex = Model_Member::get_sex_options($member->sex, true)): ?>
+				&& $sex = Site_Form::get_form_options4config('term.member.sex.options', $member->sex, true)): ?>
 			<div class="row">
 				<div class="col-xs-4"><label><?php echo term('member.sex.label'); ?></label></div>
 				<div class="col-xs-8"><?php echo $sex; ?></div>

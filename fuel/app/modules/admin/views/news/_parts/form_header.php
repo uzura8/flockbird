@@ -3,5 +3,5 @@
 <?php echo render('filetmp/_parts/upload_header'); ?>
 <?php endif; ?>
 <?php if (Config::get('news.form.isEnabledWysiwygEditor')): ?>
-<?php echo asset::css('summernote.css');?>
+<?php echo render('_parts/form/summernote/header'); ?>
 <?php endif; ?>

@@ -145,8 +145,8 @@ $config = array(
 		'label' => '公開範囲',
 		'options' => array(
 			PRJ_PUBLIC_FLAG_PRIVATE => '非公開',
-			PRJ_PUBLIC_FLAG_ALL => '全公開',
-			PRJ_PUBLIC_FLAG_MEMBER => 'SNS内でのみ公開',
+			PRJ_PUBLIC_FLAG_ALL => 'WEB全体に公開',
+			PRJ_PUBLIC_FLAG_MEMBER => 'メンバーのみに公開',
 			//'friend'  => 'フレンドまで公開',
 		),
 	),

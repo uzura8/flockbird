@@ -49,7 +49,7 @@ class Model_News extends \MyOrm\Model
 				'trim', 'required',
 				'max_length' => array(32),
 				'match_pattern' => array('/^[a-z0-9_-]*[a-z0-9]+[a-z0-9_-]*$/i'),
-				'unique' => array('news.slug')
+				'unique' => array('content_page.slug')
 			),
 			'form' => array('type' => 'text'),
 		),

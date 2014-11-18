@@ -10,6 +10,7 @@ return array(
 				term('news.view', 'site.list') => 'admin/news/',
 				term('news.view', 'form.create') => 'admin/news/create',
 				term('news.category.view') => 'admin/news/category',
+				term('content.page', 'site.management') => 'admin/content/page',
 				term('site.image', 'site.management') => 'admin/content/image',
 			),
 			term('site.view', 'site.management') => array(

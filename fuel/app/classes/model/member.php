@@ -118,9 +118,10 @@ class Model_Member extends \MyOrm\Model
 	{
 		static::$_properties['name']['label'] = term('member.name');
 
+		$sex_options = Site_Form::get_form_options4config('term.member.sex.options');
 		static::$_properties['sex']['label'] = term('member.sex.label');
-		static::$_properties['sex']['form']['options'] = self::get_sex_options();
-		static::$_properties['sex']['validation']['in_array'][] = array_keys(self::get_sex_options());
+		static::$_properties['sex']['form']['options'] = $sex_options;
+		static::$_properties['sex']['validation']['in_array'][] = array_keys($sex_options);
 
 		$options_public_flag = Site_Util::get_public_flags();
 		static::$_properties['sex_public_flag']['label'] = sprintf('%sの%s', term('member.sex.label'), term('public_flag.label'));
@@ -141,16 +142,6 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['birthday_public_flag']['label'] = sprintf('%sの%s', term('member.birthday'), term('public_flag.label'));
 		static::$_properties['birthday_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthday_public_flag']['validation']['in_array'][] = $options_public_flag;
-	}
-
-	public static function get_sex_options($key = null, $is_return_false_not_set_key = false)
-	{
-		$options = Config::get('term.member.sex.options');
-
-		if ($key) return $options[$key];
-		if ($is_return_false_not_set_key) return false;
-
-		return $options;
 	}
 
 	public static function get_basic_data($id)

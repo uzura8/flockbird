@@ -234,11 +234,12 @@ function get_public_flag_label($public_flag, $view_icon_only = false, $return_ty
 {
 	if (!in_array($return_type, array('array', 'icon_term', 'label'))) throw new InvalidArgumentException('Second parameter is invalid.');
 
-	$icon = icon_label('public_flag.options.'.$public_flag, 'icon', $is_hidden_xs, null, 'fa fa-', 'i');
-	$name = $view_icon_only ? '' : icon_label('public_flag.options.'.$public_flag, 'label', $is_hidden_xs, null, 'fa fa-', 'i');
+	$public_flag_key = 'public_flag.options.'.$public_flag;
+	$icon = icon_label($public_flag_key, 'icon', $is_hidden_xs, null, 'fa fa-', 'i');
+	$name = $view_icon_only ? '' : icon_label($public_flag_key, 'label', $is_hidden_xs, null, 'fa fa-', 'i');
 	if ($return_type == 'icon_term') return $icon.$name;
 
-	$color = Site_Util::get_public_flag_coloer_class($public_flag);
+	$color = Site_Util::get_public_flag_coloer_type($public_flag);
 	if ($return_type == 'label') return html_tag('span', array('class' => 'label label-'.$color), $icon.$name);
 
 	return array($name, $icon, 'btn-'.$color);
@@ -394,4 +395,19 @@ function is_prod_env()
 function is_dev_env()
 {
 	return Site_Util::check_is_dev_env();
+}
+
+function label_is_secure($value, $view_icon_only = false, $attrs = array())
+{
+	list($name, $icon_tag, $type) = Site_Util::get_is_secure_label_parts($value);
+	$label_name = $view_icon_only ? $icon_tag : $icon_tag.' '.$name;
+
+	if ($view_icon_only)
+	{
+		$attrs['data-toggle']    = 'tooltip';
+		$attrs['data-placement'] = 'top';
+		$attrs['title']          = $name;
+	}
+
+	return label($label_name, $type, $attrs);
 }

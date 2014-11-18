@@ -692,6 +692,20 @@ CREATE TABLE `site_image` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `content_page` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `slug` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified news (ASCII)',
+  `title` text NOT NULL,
+  `body` text NULL,
+  `admin_users_id` int(11) NOT NULL,
+  `is_secure` tinyint(2) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `slug_UNIQUE_idx` (`slug`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE `admin_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,

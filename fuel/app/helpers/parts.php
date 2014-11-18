@@ -150,5 +150,10 @@ function small_tag($str, $is_enclose_small_tag = true)
 
 function label($name, $type = 'default', $attrs = array())
 {
- return render('_parts/label', array('name' => $name, 'type' => $type, 'attrs' => $attrs));
+	if (empty($type)) $type = 'default';
+	$default_attrs = array('class' => array('label', 'label-'.$type));
+	if (!isset($attrs)) $attrs = array();
+	$attr = Util_Array::conv_arrays2str(array_merge_recursive($default_attrs, $attrs));
+
+	return html_tag('span', $attr, $name);
 }
