@@ -44,6 +44,7 @@ Util_toolkit::include_php_files(APPPATH.'helpers');
 Config::load('site', 'site');
 Config::load('term', 'term');
 Config::load('icon', 'icon');
+Config::load('page', 'page');
 Config::load('mail', 'mail');
 // Config of each module load.
 $modules = Module::loaded();

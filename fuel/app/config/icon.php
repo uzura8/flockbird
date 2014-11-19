@@ -123,6 +123,7 @@ $config = array(
 		//'birthyear_birthday' => '生年月日',
 		//'age' => '年齢',
 		//'generation' => '年代',
+		'registration' => 'plus',
 	),
 	'page' => array(
 		//'view' => '画面',
