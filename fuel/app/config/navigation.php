@@ -44,6 +44,10 @@ $config = array(
 			'site.setting' => 'member/setting/',
 			'site.logout' => 'auth/logout/',
 		),
+		'global_footer' => array(
+			term('site.term') => 'site/term',
+			term('site.privacy_policy') => 'site/privacy_policy',
+		),
 	),
 );
 

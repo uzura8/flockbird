@@ -102,6 +102,8 @@ $config = array(
 		'content' => 'コンテンツ',
 		'forward' => '次へ',
 		'backward' => '前へ',
+		'term' => '利用規約',
+		'privacy_policy' => 'プライバシーポリシー',
 	),
 	'member' => array(
 		'view' => 'メンバー',
