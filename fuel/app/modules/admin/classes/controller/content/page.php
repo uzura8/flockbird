@@ -99,7 +99,7 @@ class Controller_Content_Page extends Controller_Admin
 				$content_page->title     = $post['title'];
 				$content_page->body      = $post['body'];
 				$content_page->is_secure = $post['is_secure'];
-				$content_page->admin_users_id = $this->u->id;
+				$content_page->admin_user_id = $this->u->id;
 				\DB::start_transaction();
 				$content_page->save();
 				\DB::commit_transaction();

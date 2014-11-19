@@ -30,7 +30,7 @@ class Model_ContentPage extends \MyOrm\Model
 			'validation' => array('trim'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
-		'admin_users_id' => array(
+		'admin_user_id' => array(
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),

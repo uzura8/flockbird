@@ -697,7 +697,7 @@ CREATE TABLE `content_page` (
   `slug` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified news (ASCII)',
   `title` text NOT NULL,
   `body` text NULL,
-  `admin_users_id` int(11) NOT NULL,
+  `admin_user_id` int(11) NOT NULL,
   `is_secure` tinyint(2) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
