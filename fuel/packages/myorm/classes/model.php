@@ -130,6 +130,18 @@ class Model extends \Orm\Model
 		return $obj;
 	}
 
+	public static function check_authority4unique_key($unique_key_prop, $value, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')
+	{
+		if (!$value) throw new \HttpNotFoundException;
+
+		$query = self::query()->where($unique_key_prop, $value);
+		if ($related_tables) $query->related($related_tables);
+		if (!$obj = $query->get_one()) throw new \HttpNotFoundException;
+		if ($target_member_id && $obj->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
+
+		return $obj;
+	}
+
 	public static function get_row4unique_key(array $conditions)
 	{
 		return self::query()

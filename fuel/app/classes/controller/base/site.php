@@ -102,7 +102,7 @@ class Controller_Base_Site extends Controller_Base
 		return $this->u->filesize_total;
 	}
 
-	protected function check_browse_authority($public_flag, $member_id)
+	protected function check_browse_authority($public_flag, $member_id = 0)
 	{
 		switch ($public_flag)
 		{
@@ -116,7 +116,7 @@ class Controller_Base_Site extends Controller_Base
 			//	break;
 			case PRJ_PUBLIC_FLAG_PRIVATE:
 			default :
-				if (Auth::check() && $member_id == $this->u->id) return true;
+				if (Auth::check() && $member_id && $member_id == $this->u->id) return true;
 				break;
 		}
 
