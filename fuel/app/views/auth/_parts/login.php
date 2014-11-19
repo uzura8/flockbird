@@ -49,7 +49,7 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!PRJ_SSL_MODE
 		$col_offset_size
 	); ?>
 <?php endif; ?>
-	<?php echo form_anchor('member/register/signup', icon_label('form.create', 'both', false), array('class' => 'btn btn-default btn-warning'), $col_offset_size); ?>
+	<?php echo form_anchor('member/register/signup', icon_label('member.registration', 'both', false), array('class' => 'btn btn-default btn-warning'), $col_offset_size); ?>
 
 <?php echo form_close(); ?>
 <?php if (empty($in_popover)): ?></div><?php endif; ?>
