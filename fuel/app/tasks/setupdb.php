@@ -29,6 +29,7 @@ class SetupDB
 			self::$absolute_execute = false;
 			$result = self::exexute_create_db($database, $charset);
 			if ($result) $result = self::exexute_install_db($database);
+			if ($result) $result = self::insert_default_data();
 		}
 		catch(\FuelException $e)
 		{
@@ -52,6 +53,7 @@ class SetupDB
 			$result = self::exexute_drop_db($database);
 			if ($result) $result = self::exexute_create_db($database, $charset);
 			if ($result) $result = self::exexute_install_db($database);
+			if ($result) $result = self::insert_default_data();
 		}
 		catch(\FuelException $e)
 		{
@@ -103,6 +105,29 @@ class SetupDB
 		return \Util_Task::output_result_message($result, __FUNCTION__.' db', sprintf('Drop db %s.', self::$database));
 	}
 
+	/**
+	 * Usage (from command line):
+	 *
+	 * php oil r setupdb:drop
+	 *
+	 * @return string
+	 */
+	public static function insert_default_data()
+	{
+		\Config::load('db_fixture', 'db_fixture');
+		try
+		{
+			$db_fixtures = \Config::get('db_fixture');
+			$result = self::load_fixtures($db_fixtures);
+		}
+		catch(\FuelException $e)
+		{
+			return \Util_Task::output_message(sprintf('Insert default data error: %s', $e->getMessage()), false);
+		}
+
+		return \Util_Task::output_result_message($result, __FUNCTION__.' db', 'Insert default data.');
+	}
+
 	private static function exexute_create_db($database = null, $charset = null)
 	{
 		if (!$database && !$database = \Util_Db::get_database_name())
@@ -136,6 +161,23 @@ class SetupDB
 		$setup_sql_file = PRJ_BASEPATH.'data/sql/setup/setup.sql';
 
 		return \DBUtil::shell_exec_sql4file($setup_sql_file, $database);
+	}
+
+	private static function load_fixtures($fixtures = array())
+	{
+		if (!$fixtures) return false;
+
+		$i = 0;
+		foreach ($fixtures as $model => $rows)
+		{
+			foreach ($rows as $props)
+			{
+				$obj = $model::forge($props);
+				if ($obj->save()) $i++;
+			}
+		}
+
+		return (bool)$i;
 	}
 }
 /* End of file tasks/setup.php */
