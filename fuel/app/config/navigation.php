@@ -31,9 +31,9 @@ $config = array(
 			term('note') => 'note/',
 			term('album_image') => 'album/image/',
 			term('member.view') => 'member/list/',
-			'Sitemap' => 'sitemap/',
-			'About' => 'about/',
-			'Contact' => 'contact/',
+			'About' => 'site/about',
+			//'Sitemap' => 'site/sitemap',
+			//'Contact' => 'site/contact',
 		),
 		'secure_side' => array(
 			'page.myhome' => 'member/',
@@ -45,8 +45,10 @@ $config = array(
 			'site.logout' => 'auth/logout/',
 		),
 		'global_footer' => array(
+			'About' => 'site/about',
 			term('site.term') => 'site/term',
 			term('site.privacy_policy') => 'site/privacy_policy',
+			//'Contact' => 'site/contact',
 		),
 	),
 );

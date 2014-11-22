@@ -15,5 +15,12 @@ return array(
 			'title' => 'プライバシーポリシー',
 			'body' => '準備中<br>',
 		),
+		array(
+			'slug' => 'about',
+			'is_secure' => 0,
+			'admin_user_id' => 1,
+			'title' => 'このサイトについて',
+			'body' => '準備中<br>',
+		),
 	),
 );
