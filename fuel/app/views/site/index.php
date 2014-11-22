@@ -55,14 +55,7 @@
 
 <?php if (!empty($timeline)): ?>
 <h4><?php echo term('site.latest', 'timeline'); ?></h4>
-<?php echo render('timeline::_parts/list', array(
-	'list' => $timeline['list'],
-	'next_id' => $timeline['next_id'],
-	'since_id' => $timeline['since_id'],
-	'is_display_load_before_link' => $timeline['is_display_load_before_link'],
-	'liked_timeline_ids' => $timeline['liked_timeline_ids'],
-	'see_more_link' => array('uri' => 'timeline'),
-)); ?>
+<?php echo render('timeline::_parts/list', $timeline); ?>
 <?php endif; ?>
 
 <div class="jumbotron">

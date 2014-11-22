@@ -25,31 +25,24 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$this->check_response_format('html');
 
-			$default_params = array(
-				'desc' => 1,
-				'latest' => 1,
-				'limit' => conf('timeline.articles.limit'),
-			);
-			list($limit, $is_latest, $is_desc, $since_id, $max_id)
-				= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
-
 			$member_id     = (int)\Input::get('member_id', 0);
 			$is_mytimeline = (bool)\Input::get('mytimeline', 0);
 			$member = $member_id ? \Model_Member::check_authority($member_id) : null;
 			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
 			$timeline_viewType = $is_mytimeline ? $this->u->timeline_viewType : null;
 			$is_display_load_before_link = (bool)\Input::get('before_link', false);
-
-			list($list, $next_id)
-				= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member_id, $is_mytimeline, $timeline_viewType, $max_id, $limit, $is_latest, $is_desc, $since_id);
-			$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
-				\Site_Model::get_liked_ids('timeline', $this->u->id, $list, 'Timeline') : array();
-
-			$data = array('list' => $list, 'next_id' => $next_id, 'liked_timeline_ids' => $liked_timeline_ids);
+			$data = \Timeline\Site_Util::get_list4view(
+				\Auth::check() ? $this->u->id : 0,
+				$member_id, $is_mytimeline, $timeline_viewType,
+				$this->common_get_list_params(array(
+					'desc' => 1,
+					'latest' => 1,
+					'limit' => conf('timeline.articles.limit'),
+				), conf('timeline.articles.max_limit'), true)
+			);
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;
-			if ($since_id) $data['since_id'] = $since_id;
-			if ($is_display_load_before_link) $data['is_display_load_before_link'] = $is_display_load_before_link;
+			$data['is_display_load_before_link'] = $is_display_load_before_link;
 			$response = \View::forge('_parts/list', $data);
 			$status_code = 200;
 

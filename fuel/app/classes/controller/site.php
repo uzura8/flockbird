@@ -64,6 +64,7 @@ class Controller_Site extends Controller_Base_Site
 			);
 			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		}
+		$data['timeline']['see_more_link'] = array('uri' => 'timeline');
 		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
 		$this->template->layout = 'wide';
 		$this->template->content = View::forge('site/index', $data);

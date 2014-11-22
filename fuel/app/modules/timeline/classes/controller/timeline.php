@@ -34,21 +34,15 @@ class Controller_Timeline extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		$default_params = array(
-			'desc' => 1,
-			'latest' => 1,
-			'limit' => conf('timeline.articles.limit'),
+		$data = \Timeline\Site_Util::get_list4view(
+			\Auth::check() ? $this->u->id : 0,
+			0, false, null,
+			$this->common_get_list_params(array(
+				'desc' => 1,
+				'latest' => 1,
+				'limit' => conf('timeline.articles.limit'),
+			), conf('timeline.articles.max_limit'), true)
 		);
-		list($limit, $is_latest, $is_desc, $since_id, $max_id)
-			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
-		list($list, $next_id)
-			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, 0, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
-		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
-			\Site_Model::get_liked_ids('timeline', $this->u->id, $list, 'Timeline') : array();
-
-		$data = array('list' => $list, 'next_id' => $next_id, 'liked_timeline_ids' => $liked_timeline_ids);
-		if ($since_id) $data['since_id'] = $since_id;
-		if ($max_id) $data['is_display_load_before_link'] = true;
 
 		$this->set_title_and_breadcrumbs(term('site.latest', 'timeline', 'site.list'));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
@@ -66,24 +60,16 @@ class Controller_Timeline extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
-
-		$default_params = array(
-			'desc' => 1,
-			'latest' => 1,
-			'limit' => conf('timeline.articles.limit'),
+		$data = \Timeline\Site_Util::get_list4view(
+			\Auth::check() ? $this->u->id : 0,
+			$member->id, false, null,
+			$this->common_get_list_params(array(
+				'desc' => 1,
+				'latest' => 1,
+				'limit' => conf('timeline.articles.limit'),
+			), conf('timeline.articles.max_limit'), true)
 		);
-		list($limit, $is_latest, $is_desc, $since_id, $max_id)
-			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
-		list($list, $next_id)
-			= Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
-		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
-			\Site_Model::get_liked_ids('timeline', $this->u->id, $list, 'Timeline') : array();
-
-		$data = array('list' => $list, 'next_id' => $next_id, 'liked_timeline_ids' => $liked_timeline_ids);
 		if ($member) $data['member'] = $member;
-		if ($since_id) $data['since_id'] = $since_id;
-		if ($max_id) $data['is_display_load_before_link'] = true;
-
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('timeline', 'site.list')), null, $member);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/list', $data);

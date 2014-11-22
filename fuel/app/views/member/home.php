@@ -9,12 +9,5 @@
 
 <?php if (is_enabled('timeline')): ?>
 <h3><?php echo sprintf('%sさんの%s', $member->name, term('timeline')); ?></h3>
-<?php echo render('timeline::_parts/list', array(
-	'list' => $list,
-	'next_id' => $next_id,
-	'since_id' => $since_id,
-	'is_display_load_before_link' => $is_display_load_before_link,
-	'member' => $member,
-	'liked_timeline_ids' => $liked_timeline_ids,
-)); ?>
+<?php echo render('timeline::_parts/list', $timeline); ?>
 <?php endif; ?>
