@@ -62,11 +62,11 @@ class Controller_Site extends Controller_Base_Site
 					'limit' => Config::get('page.site.index.timeline.list.limit'),
 				), Config::get('page.site.index.timeline.list.limit_max'), true)
 			);
+			$data['timeline']['see_more_link'] = array('uri' => 'timeline');
 			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		}
-		$data['timeline']['see_more_link'] = array('uri' => 'timeline');
+		if (Config::get('page.site.index.slide.isEnabled')) $this->template->top_content = View::forge('site/_parts/slide');
 		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
-		$this->template->layout = 'wide';
 		$this->template->content = View::forge('site/index', $data);
 	}
 }

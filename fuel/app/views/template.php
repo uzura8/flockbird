@@ -22,6 +22,11 @@
 <?php echo render('_parts/template/navbar'); ?>
 
 <div class="container">
+<?php if (isset($top_content)): ?>
+	<div id="top_content">
+<?php echo $top_content; ?>
+	</div><!-- #top_content -->
+<?php endif; ?>
 	<div class="row row-offcanvas row-offcanvas-right">
 		<div class="col-sm-<?php if ($layout == 'wide'): ?>12<?php else: ?>9<?php endif; ?>">
 <?php if (!empty($breadcrumbs)): ?>
