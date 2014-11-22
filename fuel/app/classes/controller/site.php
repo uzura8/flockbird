@@ -53,7 +53,7 @@ class Controller_Site extends Controller_Base_Site
 		$data = array();
 		if (Config::get('page.site.index.timeline.isEnabled') && is_enabled('timeline'))
 		{
-			$data['timeline'] = \Timeline\Site_Util::get_list4view(
+			$data['timelines'] = \Timeline\Site_Util::get_list4view(
 				\Auth::check() ? $this->u->id : 0,
 				0, false, null,
 				$this->common_get_list_params(array(
@@ -62,9 +62,24 @@ class Controller_Site extends Controller_Base_Site
 					'limit' => Config::get('page.site.index.timeline.list.limit'),
 				), Config::get('page.site.index.timeline.list.limit_max'), true)
 			);
-			$data['timeline']['see_more_link'] = array('uri' => 'timeline');
-			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
+			$data['timelines']['see_more_link'] = array('uri' => 'timeline');
+			//$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		}
+		if (Config::get('page.site.index.albumImage.isEnabled') && is_enabled('album'))
+		{
+			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('page.site.index.albumImage.list.limit'), \Config::get('page.site.index.albumImage.list.limit_max'));
+			$data['album_images'] =\Album\ Model_AlbumImage::get_pager_list(array(
+				'related'  => array('album'),
+				'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
+				'order_by' => array('id' => 'desc'),
+				'limit'    => $limit,
+			), $page);
+			$data['album_images']['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
+				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['album_images']['list'], 'Album') : array();
+			$data['album_images']['column_count'] = \Config::get('page.site.index.albumImage.list.column_count');
+			//$this->template->post_footer = \View::forge('image/_parts/list_footer');
+		}
+		$this->template->post_footer = \View::forge('site/_parts/index_footer');
 		if (Config::get('page.site.index.slide.isEnabled')) $this->template->top_content = View::forge('site/_parts/slide');
 		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
 		$this->template->content = View::forge('site/index', $data);

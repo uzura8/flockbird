@@ -1,44 +1,12 @@
-<?php if (!empty($timeline)): ?>
-<h4><?php echo term('site.latest', 'timeline'); ?></h4>
-<?php echo render('timeline::_parts/list', $timeline); ?>
+<?php if (!empty($timelines)): ?>
+<h3><?php echo term('site.latest', 'timeline'); ?></h3>
+<?php echo render('timeline::_parts/list', $timelines); ?>
 <?php endif; ?>
 
-<div class="jumbotron">
-	<h1>Hello, world!</h1>
-	<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-	<p><a class="btn btn-primary btn-default btn-lg">Learn more &raquo;</a></p>
-</div>
-<div class="row">
-	<div class="col-md-4">
-		<h2>Heading</h2>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-		<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-	</div><!--/col-md -->
-	<div class="col-md-4">
-		<h2>Heading</h2>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-		<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-	</div><!--/col-md -->
-	<div class="col-md-4">
-		<h2>Heading</h2>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-		<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-	</div><!--/col-md -->
-</div><!--/row-->
-<div class="row">
-	<div class="col-md-4">
-		<h2>Heading</h2>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-		<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-	</div><!--/col-md -->
-	<div class="col-md-4">
-		<h2>Heading</h2>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-		<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-	</div><!--/col-md -->
-	<div class="col-md-4">
-		<h2>Heading</h2>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-		<p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-	</div><!--/col-md -->
-</div><!--/row-->
+<?php if (!empty($album_images)): ?>
+<h3><?php echo term('site.latest', 'album_image'); ?></h3>
+<?php echo render('album::image/_parts/list', $album_images); ?>
+<?php 	if (isset($album_images['next_page']) && $album_images['next_page'] > 1): ?>
+<?php echo Html::anchor('album/image', icon_label('site.see_more', 'both', false, null, 'fa fa-'), array('class' => 'listMoreBox')); ?>
+<?php 	endif; ?>
+<?php endif; ?>

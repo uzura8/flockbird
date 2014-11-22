@@ -16,11 +16,11 @@ $config = array(
 					'limit_max' => 5,
 				),
 			),
-			'album_image' => array(
+			'albumImage' => array(
 				'isEnabled' => true,
 				'list' => array(
-					'limit' => 3,
-					'limit_max' => 5,
+					'limit' => 10,
+					'limit_max' => 10,
 				),
 			),
 		),
