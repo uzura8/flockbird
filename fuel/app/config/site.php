@@ -149,7 +149,7 @@ $config = array(
 							'LL' => '600x600',
 						),
 						'default_size' => '50x50xc',
-						'save_as_album_image' => false,
+						'save_as_album_image' => true,
 					),
 				),
 			),
