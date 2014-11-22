@@ -1,9 +1,9 @@
-<?php if (!empty($timelines)): ?>
+<?php if (!empty($timelines['list'])): ?>
 <h3><?php echo term('site.latest', 'timeline'); ?></h3>
 <?php echo render('timeline::_parts/list', $timelines); ?>
 <?php endif; ?>
 
-<?php if (!empty($album_images)): ?>
+<?php if (!empty($album_images['list'])): ?>
 <h3><?php echo term('site.latest', 'album_image'); ?></h3>
 <?php echo render('album::image/_parts/list', $album_images); ?>
 <?php 	if (isset($album_images['next_page']) && $album_images['next_page'] > 1): ?>
