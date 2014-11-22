@@ -1,3 +1,20 @@
+@media (min-width: 992px) {
+	.navbar .navbar-brand {
+		padding-right: 15px !important;
+	}
+}
+
+.navbar-brand {
+	position: relative;
+	padding: 16px 0 15px 56px !important;
+}
+
+.navbar-brand img {
+	position: absolute;
+	top: 9px;
+	left: 15px;
+}
+
 .article {
 	margin-bottom: 25px;
 	padding-bottom: 15px;

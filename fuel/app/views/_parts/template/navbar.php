@@ -10,7 +10,10 @@
 <?php if (IS_ADMIN): ?>
 			<a class="navbar-brand" href="<?php echo Uri::create('admin'); ?>"><?php echo PRJ_SITE_NAME.term('admin.view', 'page.view'); ?></a>
 <?php else: ?>
-			<a class="navbar-brand" href="<?php echo Uri::create('/'); ?>"><?php echo PRJ_SITE_NAME; ?></a>
+			<a class="navbar-brand" href="<?php echo Uri::create('/'); ?>">
+				<?php echo Html::img('assets/img/ico/logo.png', array('alt' => PRJ_SITE_NAME)); ?>
+				<span class="hidden-xs hidden-sm"><?php echo PRJ_SITE_NAME; ?></span>
+			</a>
 <?php endif; ?>
 <?php echo render_module('_parts/template/navbar_user_button', isset($path) ? array('path' => $path) : array(), IS_ADMIN ? 'admin' : ''); ?>
 		</div>
