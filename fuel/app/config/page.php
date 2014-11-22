@@ -9,6 +9,20 @@ $config = array(
 				'site_lead' => '',
 				'isDisplayRegisterBtn' => true,
 			),
+			'timeline' => array(
+				'isEnabled' => true,
+				'list' => array(
+					'limit' => 3,
+					'limit_max' => 5,
+				),
+			),
+			'album_image' => array(
+				'isEnabled' => true,
+				'list' => array(
+					'limit' => 3,
+					'limit_max' => 5,
+				),
+			),
 		),
 	),
 );

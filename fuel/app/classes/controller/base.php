@@ -215,7 +215,7 @@ class Controller_Base extends Controller_Hybrid
 		return array($title_name, $title_label);
 	}
 
-	public function common_get_list_params($defaults = array(), $limit_max = 0)
+	public function common_get_list_params($defaults = array(), $limit_max = 0, $is_return_assoc = false)
 	{
 		$limit     = (int)\Input::get('limit', isset($defaults['limit']) ? $defaults['limit'] : conf('view_params_default.list.limit'));
 		$is_latest = (bool)\Input::get('latest', isset($defaults['latest']) ? $defaults['latest'] : 0);
@@ -226,6 +226,17 @@ class Controller_Base extends Controller_Hybrid
 		if (!$limit_max) $limit_max = conf('view_params_default.list.limit_max');
 		if ($limit > $limit_max) $limit = $limit_max;
 		if (\Input::get('limit') == 'all') $limit = $limit_max;
+
+		if ($is_return_assoc)
+		{
+			return array(
+				'limit' => $limit,
+				'is_latest' => $is_latest,
+				'is_desc' => $is_desc,
+				'since_id' => $since_id,
+				'max_id' => $max_id,
+			);
+		}
 
 		return array($limit, $is_latest, $is_desc, $since_id, $max_id);
 	}

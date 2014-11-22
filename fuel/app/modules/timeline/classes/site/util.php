@@ -607,4 +607,29 @@ class Site_Util
 
 		return 0;
 	}
+
+	public static function get_list4view($self_member_id = 0, $target_member_id = 0, $is_mytimeline = false, $viewType = null, $params = array())
+	{
+		list($list, $next_id) = Site_Model::get_list(
+			$self_member_id,
+			$target_member_id,
+			$is_mytimeline,
+			$viewType,
+			$params['max_id'],
+			$params['limit'],
+			$params['is_latest'],
+			$params['is_desc'],
+			$params['since_id']
+		);
+		$liked_timeline_ids = (conf('like.isEnabled') && $self_member_id) ? \Site_Model::get_liked_ids('timeline', $self_member_id, $list, 'Timeline') : array();
+		$data = array(
+			'list' => $list,
+			'next_id' => $next_id,
+			'since_id' => $params['since_id'] ?: 0,
+			'is_display_load_before_link' => $params['max_id'] ? true : false,
+			'liked_timeline_ids' => $liked_timeline_ids,
+		);
+
+		return $data;
+	}
 }

@@ -7,6 +7,7 @@
 	'link_uri' => $is_mypage ? 'member/profile' : 'member/profile/'.$member->id,
 )); ?>
 
+<?php if (is_enabled('timeline')): ?>
 <h3><?php echo sprintf('%sさんの%s', $member->name, term('timeline')); ?></h3>
 <?php echo render('timeline::_parts/list', array(
 	'list' => $list,
@@ -16,3 +17,4 @@
 	'member' => $member,
 	'liked_timeline_ids' => $liked_timeline_ids,
 )); ?>
+<?php endif; ?>

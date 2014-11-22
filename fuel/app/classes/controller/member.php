@@ -32,34 +32,38 @@ class Controller_Member extends Controller_Site
 	{
 		$id = (int)$id;
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($id);
-		$default_params = array(
-			'desc' => 1,
-			'latest' => 1,
-			'limit' => conf('timeline.articles.limit'),
-		);
-		list($limit, $is_latest, $is_desc, $since_id, $max_id)
-			= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
-		list($list, $next_id)
-			= \Timeline\Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
-		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
-			\Site_Model::get_liked_ids('timeline', $this->u->id, $list, 'Timeline') : array();
-
 		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
-
-		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
-		$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
-		$this->template->content = \View::forge('member/home', array(
+		$data = array(
 			'member' => $member,
 			'member_profiles' => $member_profiles,
 			'is_mypage' => $is_mypage,
 			'access_from' => $access_from,
 			'display_type' => 'summery',
-			'list' => $list,
-			'next_id' => $next_id,
-			'since_id' => $since_id ?: 0,
-			'is_display_load_before_link' => $max_id ? true : false,
-			'liked_timeline_ids' => $liked_timeline_ids,
-		));
+		);
+
+		if (is_enabled('timeline'))
+		{
+			$default_params = array(
+				'desc' => 1,
+				'latest' => 1,
+				'limit' => conf('timeline.articles.limit'),
+			);
+			list($limit, $is_latest, $is_desc, $since_id, $max_id)
+				= $this->common_get_list_params($default_params, conf('timeline.articles.max_limit'));
+			list($list, $next_id)
+				= \Timeline\Site_Model::get_list(\Auth::check() ? $this->u->id : 0, $member->id, false, null, $max_id, $limit, $is_latest, $is_desc, $since_id);
+			$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
+				\Site_Model::get_liked_ids('timeline', $this->u->id, $list, 'Timeline') : array();
+			$data['list'] = $list;
+			$data['next_id'] = $next_id;
+			$data['since_id'] = $since_id ?: 0;
+			$data['is_display_load_before_link'] = $max_id ? true : false;
+			$data['liked_timeline_ids'] = $liked_timeline_ids;
+			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
+		}
+
+		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
+		$this->template->content = \View::forge('member/home', $data);
 	}
 
 	/**

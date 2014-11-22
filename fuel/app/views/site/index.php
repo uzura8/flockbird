@@ -53,6 +53,18 @@
 </div><!-- /.carousel -->
 <?php endif; ?>
 
+<?php if (!empty($timeline)): ?>
+<h4><?php echo term('site.latest', 'timeline'); ?></h4>
+<?php echo render('timeline::_parts/list', array(
+	'list' => $timeline['list'],
+	'next_id' => $timeline['next_id'],
+	'since_id' => $timeline['since_id'],
+	'is_display_load_before_link' => $timeline['is_display_load_before_link'],
+	'liked_timeline_ids' => $timeline['liked_timeline_ids'],
+	'see_more_link' => array('uri' => 'timeline'),
+)); ?>
+<?php endif; ?>
+
 <div class="jumbotron">
 	<h1>Hello, world!</h1>
 	<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>

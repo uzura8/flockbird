@@ -50,8 +50,22 @@ class Controller_Site extends Controller_Base_Site
 	 */
 	public function action_index()
 	{
+		$data = array();
+		if (Config::get('page.site.index.timeline.isEnabled') && is_enabled('timeline'))
+		{
+			$data['timeline'] = \Timeline\Site_Util::get_list4view(
+				\Auth::check() ? $this->u->id : 0,
+				0, false, null,
+				$this->common_get_list_params(array(
+					'desc' => 1,
+					'latest' => 1,
+					'limit' => Config::get('page.site.index.timeline.list.limit'),
+				), Config::get('page.site.index.timeline.list.limit_max'), true)
+			);
+			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
+		}
 		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
 		$this->template->layout = 'wide';
-		$this->template->content = View::forge('site/index');
+		$this->template->content = View::forge('site/index', $data);
 	}
 }
