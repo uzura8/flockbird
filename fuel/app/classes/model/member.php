@@ -12,13 +12,6 @@ class Model_Member extends \MyOrm\Model
 			'cascade_save' => false,
 			'cascade_delete' => false,
 		),
-		'file' => array(
-			'key_from' => 'file_id',
-			'model_to' => 'Model_File',
-			'key_to' => 'id',
-			'cascade_save' => false,
-			'cascade_delete' => false,
-		),
 	);
 	protected static $_has_many = array(
 		'member_config' => array(
@@ -107,6 +100,9 @@ class Model_Member extends \MyOrm\Model
 		'Orm\Observer_UpdatedAt' => array(
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
+		),
+		'MyOrm\Observer_DeleteMember' => array(
+			'events' => array('before_delete'),
 		),
 	);
 

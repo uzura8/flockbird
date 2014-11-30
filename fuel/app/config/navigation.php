@@ -53,4 +53,4 @@ $config = array(
 	),
 );
 
-return Site_Util::merge_module_configs($config, 'navigation');
+return Site_Config::merge_module_configs($config, 'navigation');

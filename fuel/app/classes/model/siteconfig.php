@@ -6,7 +6,7 @@ class Model_SiteConfig extends \MyOrm\Model
 		'id',
 		'name' => array(
 			'data_type' => 'varchar',
-			'validation' => array('trim', 'required', 'max_length' => array(64)),
+			'validation' => array('trim', 'required', 'max_length' => array(64), 'unique' => array('site_config.name')),
 			'form' => array('type' => false),
 		),
 		'value' => array(

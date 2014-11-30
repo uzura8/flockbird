@@ -87,6 +87,8 @@ return array(
 			'admin/content/page/edit' => array('GET', 'POST'),
 			'admin/content/image/upload' => array('GET', 'POST'),
 			'admin/content/image/delete' => array('POST'),
+			'admin/content/template/mail/edit' => array('GET', 'POST'),
+			'admin/content/template/mail/reset' => array('POST'),
 			'admin/content/image/api/delete' => array('POST'),
 			'admin/filetmp/api/upload' => array('GET', 'POST', 'DELETE'),
 			'admin/account/index' => array('GET'),
@@ -109,6 +111,8 @@ return array(
 			'admin/content/image/list' => array('GET'),
 			'admin/content/image/detail' => array('GET'),
 			'admin/content/image/api/list' => array('GET'),
+			'admin/content/template/mail/index' => array('GET'),
+			'admin/content/template/mail/list' => array('GET'),
 		),
 		/**
 		 * Examples

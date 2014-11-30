@@ -2,9 +2,6 @@
 
 class Controller_Member_Leave extends Controller_Site
 {
-	protected $check_not_auth_action = array(
-	);
-
 	public function before()
 	{
 		parent::before();
@@ -41,29 +38,27 @@ class Controller_Member_Leave extends Controller_Site
 	{
 		$form = $this->form_leave();
 		$val  = $form->validation();
+		if (!$val->run())
+		{
+			Session::set_flash('error', $val->show_errors());
+			$this->action_index();
+			return;
+		}
 
 		$auth = Auth::instance();
-		if ($val->run() && $auth->check_password())
+		if (!$auth->check_password())
 		{
-			$this->set_title_and_breadcrumbs(
-				term('site.left', 'form.confirm'),
-				array('member/setting' => term('site.setting', 'form.update'), 'member/leave' => term('site.left')),
-				$this->u
-			);
-			$this->template->content = View::forge('member/leave/confirm', array('input' => $val->validated()));
-		}
-		else
-		{
-			if ($val->show_errors())
-			{
-				Session::set_flash('error', $val->show_errors());
-			}
-			else
-			{
-				Session::set_flash('error', term('site.password').'が正しくありません');
-			}
+			Session::set_flash('error', term('site.password').'が正しくありません');
 			$this->action_index();
+			return;
 		}
+
+		$this->set_title_and_breadcrumbs(
+			term('site.left', 'form.confirm'),
+			array('member/setting' => term('site.setting', 'form.update'), 'member/leave' => term('site.left')),
+			$this->u
+		);
+		$this->template->content = View::forge('member/leave/confirm', array('input' => $val->validated()));
 	}
 
 	public function action_delete()
@@ -73,66 +68,77 @@ class Controller_Member_Leave extends Controller_Site
 
 		$form = $this->form_leave();
 		$val  = $form->validation();
-
-		$auth = Auth::instance();
-		if ($val->run() && $auth->check_password())
+		if (!$val->run())
 		{
-			$data = array();
-			$data['to_name']      = $this->u->name;
-			$data['to_address']   = $this->u->member_auth->email;
-			$data['from_name']    = \Config::get('mail.member_leave_mail.from_name');
-			$data['from_address'] = \Config::get('mail.member_leave_mail.from_mail_address');
-			$data['subject']      = \Config::get('mail.member_leave_mail.subject');
-
-			$data['body'] = <<< END
-{$data['to_name']} 様
-
-退会が完了しました。
-END;
-
-			try
-			{
-				DB::start_transaction();
-				$auth->delete_user($this->u->id);
-				DB::commit_transaction();
-				$auth->logout();
-				Util_toolkit::sendmail($data);
-				Session::set_flash('message', term('site.left').'が完了しました。');
-				Response::redirect(conf('login_uri.site'));
-			}
-			catch(EmailValidationFailedException $e)
-			{
-				$this->display_error('メンバー退会: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-			}
-			catch(EmailSendingFailedException $e)
-			{
-				$this->display_error('メンバー退会: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-			}
-			catch(FuelException $e)
-			{
-				if (DB::in_transaction()) DB::rollback_transaction();
-				Session::set_flash('error', '退会に失敗しました。');
-				$this->action_index();
-			}
-		}
-		else
-		{
-			if ($val->show_errors())
-			{
-				Session::set_flash('error', $val->show_errors());
-			}
-			else
-			{
-				Session::set_flash('error', term('site.password').'が正しくありません');
-			}
+			Session::set_flash('error', $val->show_errors());
 			$this->action_index();
+			return;
 		}
+
+		//$auth = Auth::instance();
+		if (!$this->auth_instance->check_password())
+		{
+			Session::set_flash('error', term('site.password').'が正しくありません');
+			$this->action_index();
+			return;
+		}
+
+		$error_message = '';
+		$is_transaction_rollback = false;
+		try
+		{
+			$to_name = $this->u->name;
+			$to_email = $this->u->member_auth->email;
+			DB::start_transaction();
+			$this->auth_instance->logout();
+			$this->auth_instance->delete_user($this->u->id);
+			unset($this->auth_instance);
+			DB::commit_transaction();
+
+			$mail = new Site_Mail('memberLeave');
+			$mail->send($to_email, array('to_name' => $to_name));
+
+			Session::set_flash('message', term('site.left').'が完了しました。');
+			Response::redirect(conf('login_uri.site'));
+		}
+		catch(EmailValidationFailedException $e)
+		{
+			Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
+			$error_message = 'メール送信エラー';
+		}
+		catch(EmailSendingFailedException $e)
+		{
+			Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
+			$error_message = 'メール送信エラー';
+		}
+		catch(SimpleUserUpdateException $e)
+		{
+			$is_transaction_rollback = true;
+			$error_message = term('member.view').'が存在しません。';
+		}
+		catch(Database_Exception $e)
+		{
+			$is_transaction_rollback = true;
+			$error_message = Util_Db::get_db_error_message($e);
+		}
+		catch(FuelException $e)
+		{
+			$is_transaction_rollback = true;
+			if (!$error_message = $e->getMessage()) $error_message = term('site.left').'に失敗しました。';
+		}
+		if ($error_message)
+		{
+			if ($is_transaction_rollback && DB::in_transaction()) DB::rollback_transaction();
+			Session::set_flash('error', $error_message);
+		}
+
+		$this->action_index();
 	}
 
 	public function form_leave()
 	{
 		$add_fields = array('password' => Form_Util::get_model_field('member_auth', 'password'));
-		$form = \Site_Util::get_form_instance('leave', null, true, $add_fields, array('value' => '確認'));
+		$form = \Site_Util::get_form_instance('leave', null, true, $add_fields, array('value' => term('form.do_confirm')));
 
 		return $form;
 	}

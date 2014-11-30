@@ -52,4 +52,16 @@ class Model_MemberPasswordPre extends \MyOrm\Model
 	{
 		return self::query()->where('token', $token)->related('member')->get_one();
 	}
+
+	public static function save_with_token($member_id, $email)
+	{
+		if (!$obj = self::get4member_id($member_id)) $obj = self::forge();
+
+		$obj->member_id = $member_id;
+		$obj->email = $email;
+		$obj->token = Security::generate_token();
+		if (!$obj->save()) return false;
+
+		return $obj->token;
+	}
 }

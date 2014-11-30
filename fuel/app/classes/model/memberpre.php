@@ -41,4 +41,15 @@ class Model_MemberPre extends \MyOrm\Model
 	{
 		return self::query()->where('token', $token)->get_one();
 	}
+
+	public static function save_with_token($email, $password)
+	{
+		$obj = self::forge();
+		$obj->email = $email;
+		$obj->password = $password;
+		$obj->token = Security::generate_token();
+		if (!$obj->save()) return false;
+
+		return $obj->token;
+	}
 }

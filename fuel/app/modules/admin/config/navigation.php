@@ -12,6 +12,7 @@ return array(
 				term('news.category.view') => 'admin/news/category',
 				term('content.page', 'site.management') => 'admin/content/page',
 				term('site.image', 'site.management') => 'admin/content/image',
+				term('site.mail', 'site.template', 'site.management') => 'admin/content/template/mail',
 			),
 			term('site.view', 'site.management') => array(
 				term('profile', 'site.setting') => 'admin/profile/',

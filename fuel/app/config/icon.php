@@ -17,6 +17,7 @@ $config = array(
 		'update' => 'refresh',
 		'updated' => 'refresh',
 		//'confirm' => '確認',
+		//'do_confirm' => '確認',
 		'back' => 'arrow-left',
 		'error' => 'warning-sign',
 		'draft' => 'save',
@@ -60,6 +61,10 @@ $config = array(
 		//'do_post' => '投稿する',
 		'save' => 'save',
 		'do_save' => 'save',
+		'do_reset_default' => array(
+			'key' => 'undo',
+			'prefix' => 'fa fa-',
+		),
 	),
 	'site' => array(
 		//'view' => 'サイト',
@@ -155,4 +160,4 @@ $config = array(
 	),
 );
 
-return Site_Util::merge_module_configs($config, 'icon');
+return Site_Config::merge_module_configs($config, 'icon');

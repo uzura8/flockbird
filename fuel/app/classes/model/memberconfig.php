@@ -11,7 +11,11 @@ class Model_MemberConfig extends \MyOrm\Model
 	);
 	protected static $_properties = array(
 		'id',
-		'member_id' => array('form' => array('type' => false)),
+		'member_id' => array(
+			'data_type' => 'varchar',
+			'validation' => array('required'),
+			'form' => array('type' => false),
+		),
 		'name' => array(
 			'data_type' => 'varchar',
 			'validation' => array('trim', 'required', 'max_length' => array(64)),

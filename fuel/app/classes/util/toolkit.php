@@ -80,24 +80,6 @@ class Util_Toolkit
 		return $output;
 	}
 
-	public static function create_hash()
-	{
-		self::_mt_srand();
-
-		return md5(uniqid(mt_rand(), true));
-	}
-
-	private static function _mt_srand()
-	{
-		if (version_compare(phpversion(), '4.2.0', '<'))
-		{
-			list($usec, $sec) = explode(' ', microtime());
-			$seed = (float)$sec + ((float)$usec * 100000);
-
-			mt_srand($seed);
-		}
-	}
-
 	public static function get_neighboring_value_in_array($list, $target)
 	{
 		$list = (array)$list;

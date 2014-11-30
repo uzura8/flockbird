@@ -68,37 +68,51 @@ class Controller_Member_Recover extends Controller_Site
 			return;
 		}
 
+		$error_message = '';
+		$is_transaction_rollback = false;
 		try
 		{
 			$maildata = array();
 			DB::start_transaction();
-			$maildata['token'] = $this->save_member_password_pre($member_auth->member_id, $post['email']);
+			$token = Model_MemberPasswordPre::save_with_token($member_auth->member_id, $post['email']);
 			DB::commit_transaction();
-			$maildata['to_name']      = $member_auth->member->name;
-			$maildata['to_address']   = $post['email'];
-			$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
-			$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
-			$maildata['subject']      = \Config::get('mail.member_resend_password.subject');
-			$this->send_confirm_reset_password_mail($maildata);
+
+			$mail = new Site_Mail('memberResendPassword');
+			$mail->send($post['email'], array(
+				'to_name' => $member_auth->member->name,
+				'register_url' => sprintf('%s?token=%s', uri::create('member/recover/reset_password'), $token),
+			));
 
 			Session::set_flash('message', $message);
 			Response::redirect(conf('login_uri.site'));
 		}
 		catch(EmailValidationFailedException $e)
 		{
-			$this->display_error(term('site.password').'のリセット: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+			Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
+			$error_message = 'メール送信エラー';
 		}
 		catch(EmailSendingFailedException $e)
 		{
-			$this->display_error(term('site.password').'のリセット: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+			Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
+			$error_message = 'メール送信エラー';
+		}
+		catch(\Database_Exception $e)
+		{
+			$is_transaction_rollback = true;
+			$error_message = \Util_Db::get_db_error_message($e);
 		}
 		catch(FuelException $e)
 		{
-			if (DB::in_transaction())\DB::rollback_transaction();
-			Session::set_flash('error', $e->getMessage());
-			$this->action_resend_password();
-			return;
+			$is_transaction_rollback = true;
+			$error_message = $e->getMessage();
 		}
+		if ($error_message)
+		{
+			if ($is_transaction_rollback && DB::in_transaction()) DB::rollback_transaction();
+			Session::set_flash('error', $error_message);
+		}
+
+		$this->action_resend_password();
 	}
 
 	/**
@@ -127,53 +141,59 @@ class Controller_Member_Recover extends Controller_Site
 			Util_security::check_csrf();
 			$auth = Auth::instance();
 
-			if ($val->run())
+			$error_message = '';
+			$is_transaction_rollback = false;
+			try
 			{
+				if (!$val->run())
+				{
+					throw new FuelException($val->show_errors() ?: term('site.password').'が正しくありません');
+				}
 				$post = $val->validated();
-				try
-				{
-					$maildata = array();
-					$maildata['from_name']    = Config::get('mail.member_setting_common.from_name');
-					$maildata['from_address'] = Config::get('mail.member_setting_common.from_mail_address');
-					$maildata['subject']      = Config::get('mail.member_reset_password.subject');
-					$maildata['to_address']   = $member_password_pre->email;
-					$maildata['to_name']      = $member_password_pre->member->name;
-					DB::start_transaction();
-					$auth->change_password_simple($member_password_pre->member_id, $post['password']);
-					$member_password_pre->delete();// 仮登録情報の削除
-					DB::commit_transaction();
-					$this->send_reset_password_mail($maildata);
+				$to_email = $member_password_pre->email;
+				$to_name  = $member_password_pre->member->name;
 
-					$auth->login($member_password_pre->email, $post['password']);
-					Session::set_flash('message', term('site.password').'を登録しました。');
-					Response::redirect('member');
-				}
-				catch(EmailValidationFailedException $e)
-				{
-					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-					return;
-				}
-				catch(EmailSendingFailedException $e)
-				{
-					$this->display_error('メンバー登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-					return;
-				}
-				catch(Auth\SimpleUserUpdateException $e)
-				{
-					if (DB::in_transaction())\DB::rollback_transaction();
-					Session::set_flash('error', term('site.password').'の登録に失敗しました。');
-				}
+				DB::start_transaction();
+				$auth->change_password_simple($member_password_pre->member_id, $post['password']);
+				$member_password_pre->delete();// 仮登録情報の削除
+				DB::commit_transaction();
+
+				$mail = new Site_Mail('memberResetPassword');
+				$mail->send($to_email, array('to_name' => $to_name));
+
+				$auth->login($to_email, $post['password']);
+				Session::set_flash('message', term('site.password').'を登録しました。');
+				Response::redirect('member');
 			}
-			else
+			catch(EmailValidationFailedException $e)
 			{
-				if ($val->show_errors())
-				{
-					Session::set_flash('error', $val->show_errors());
-				}
-				else
-				{
-					Session::set_flash('error', term('site.password').'が正しくありません');
-				}
+				Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
+				$error_message = 'メール送信エラー';
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
+				$error_message = 'メール送信エラー';
+			}
+			catch(Auth\SimpleUserUpdateException $e)
+			{
+				$is_transaction_rollback = true;
+				$error_message = term('site.password').'の登録に失敗しました。';
+			}
+			catch(\Database_Exception $e)
+			{
+				$is_transaction_rollback = true;
+				$error_message = \Util_Db::get_db_error_message($e);
+			}
+			catch(FuelException $e)
+			{
+				$is_transaction_rollback = true;
+				$error_message = $e->getMessage();
+			}
+			if ($error_message)
+			{
+				if ($is_transaction_rollback && DB::in_transaction()) DB::rollback_transaction();
+				Session::set_flash('error', $error_message);
 			}
 		}
 
@@ -202,56 +222,4 @@ class Controller_Member_Recover extends Controller_Site
 
 		return Site_Util::get_form_instance('reset_password', null, true, $add_fields, array('value' => '変更'));
 	}
-
-	private function save_member_password_pre($member_id, $email)
-	{
-		$member_password_pre = Model_MemberPasswordPre::get4member_id($member_id);
-		if (!$member_password_pre) $member_password_pre = Model_MemberPasswordPre::forge();
-
-		$member_password_pre->member_id = $member_id;
-		$member_password_pre->email = $email;
-		$member_password_pre->token = Util_toolkit::create_hash();
-		$member_password_pre->save();
-
-		return $member_password_pre->token;
-	}
-
-	private function send_confirm_reset_password_mail($data)
-	{
-		if (!is_array($data)) $data = (array)$data;
-
-		$register_url = sprintf('%s?token=%s', uri::create('member/recover/reset_password'), $data['token']);
-		$site_name = PRJ_SITE_NAME;
-
-		$data['body'] = <<< END
-こんにちは、{$data['to_name']}さん
-
-{$site_name} は、あなたのアカウントのパスワードをリセットするように依頼を受けました。
-
-パスワードをリセットしたい場合、下記のリンクをクリックしてください (もしくは、URLをコピペしてブラウザに入力してください)。
-{$register_url}
-
-パスワードをリセットしたくない場合は、このメッセージを無視してください。 パスワードはリセットされません。
-
-END;
-
-		util_toolkit::sendmail($data);
-	}
-
-	private function send_reset_password_mail($data)
-	{
-		if (!is_array($data)) $data = (array)$data;
-
-		$site_name = PRJ_SITE_NAME;
-
-		$data['body'] = <<< END
-{$data['to_name']} さん
-
-パスワードを再登録しました。
-
-END;
-
-		util_toolkit::sendmail($data);
-	}
-
 }

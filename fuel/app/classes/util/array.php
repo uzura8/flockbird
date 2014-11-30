@@ -147,4 +147,18 @@ class Util_Array
 			if (($sum -= $weight) < $rand) return $key;
 		}
 	}
+
+	public static function conv_arrays2key_value_str($list, $delimitter = null)
+	{
+		if (is_null($delimitter)) $delimitter = PHP_EOL;
+		if (!is_array($list)) $list = (array)$list;
+
+		$returns =  array();
+		foreach ($list as $key => $value)
+		{
+			$returns[] = is_string($key) ? sprintf('%s: %s', $key, $value) : $value;
+		}
+
+		return implode($delimitter, $returns);
+	}
 }

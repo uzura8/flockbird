@@ -1,11 +1,16 @@
 <?php
-
 return array(
 	'login_uri' => array(
 		'admin' => 'admin/login',
 	),
 	'original_user_id' => array(
 		'admin'  => 1,
+	),
+	'mail' => array(
+		'admin' => array(
+			'from_name' => '管理者',
+			'from_email' => PRJ_ADMIN_MAIL,
+		),
 	),
 	'upload' => array(
 		'types' => array(

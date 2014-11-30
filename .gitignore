@@ -10,7 +10,7 @@ desktop.ini
 *.tmproj
 /tags
 /fuel/tags
-/fuel/app/logs/*/*/*
+/fuel/app/logs/*/*
 /fuel/app/cache/*
 /fuel/app/cache/*/*
 /fuel/app/cache/default_config_setting

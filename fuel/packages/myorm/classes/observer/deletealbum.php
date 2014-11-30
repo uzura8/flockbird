@@ -21,4 +21,4 @@ class Observer_DeleteAlbum extends \Orm\Observer
 		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $obj->id);
 	}
 }
-// End of file deletealbumimage.php
+// End of file deletealbum.php

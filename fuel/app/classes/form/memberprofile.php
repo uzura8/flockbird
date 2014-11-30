@@ -293,9 +293,9 @@ class Form_MemberProfile
 		);
 	}
 
-	public function set_validation($add_fields = array())
+	public function set_validation($add_fields = array(), $fieldset = 'default')
 	{
-		$this->validation = \Validation::forge();
+		$this->validation = \Validation::forge($fieldset);
 
 		// member
 		$this->set_validation_member_field('name');

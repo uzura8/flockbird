@@ -2,4 +2,4 @@
 $config = array(
 );
 
-return Site_Util::merge_module_configs($config, 'db_fixture');
+return Site_Config::merge_module_configs($config, 'db_fixture');

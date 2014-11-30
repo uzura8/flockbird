@@ -52,62 +52,60 @@ class Controller_Member_setting extends Controller_Member
 		$form = $this->form_setting_password();
 		$val  = $form->validation();
 
-		if ($val->run())
-		{
-			$post = $val->validated();
-
-			$data = array();
-			$data['to_name']      = $this->u->name;
-			$data['to_address']   = $this->u->member_auth->email;
-			$data['from_name']    = \Config::get('mail.member_setting_common.from_name');
-			$data['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
-			$data['subject']      = \Config::get('mail.member_setting_password.subject');
-
-			$term_password = term('site.password');
-			$data['body'] = <<< END
-{$data['to_name']} 様
-
-{$term_password}を変更しました。
-
-END;
-
-			try
-			{
-				DB::start_transaction();
-				$this->change_password($post['old_password'], $post['password']);
-				DB::commit_transaction();
-				Util_toolkit::sendmail($data);
-				Session::set_flash('message', term('site.password').'を変更しました。');
-				Response::redirect('member/setting');
-			}
-			catch(EmailValidationFailedException $e)
-			{
-				$this->display_error(term('site.password', 'form.update').': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-			}
-			catch(EmailSendingFailedException $e)
-			{
-				$this->display_error(term('site.password', 'form.update').': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-			}
-			catch(WrongPasswordException $e)
-			{
-				if (DB::in_transaction()) \DB::rollback_transaction();
-				Session::set_flash('error', sprintf('現在の%sが正しくありません。', term('site.password')));
-				$this->action_password();
-				return;
-			}
-			catch(FuelException $e)
-			{
-				if (DB::in_transaction()) \DB::rollback_transaction();
-				Session::set_flash('error', $e->getMessage());
-				$this->action_password();
-				return;
-			}
-		}
-		else
+		if (!$val->run())
 		{
 			Session::set_flash('error', $val->show_errors());
 			$this->action_password();
+			return;
 		}
+		$post = $val->validated();
+
+		$error_message = '';
+		$is_transaction_rollback = false;
+		try
+		{
+			DB::start_transaction();
+			$this->change_password($post['old_password'], $post['password']);
+			DB::commit_transaction();
+
+			$mail = new Site_Mail('memberSettingPassword');
+			$mail->send($this->u->member_auth->email, array('to_name' => $this->u->name));
+
+			Session::set_flash('message', term('site.password').'を変更しました。');
+			Response::redirect('member/setting');
+		}
+		catch(EmailValidationFailedException $e)
+		{
+			Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
+			$error_message = 'メール送信エラー';
+		}
+		catch(EmailSendingFailedException $e)
+		{
+			Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
+			$error_message = 'メール送信エラー';
+		}
+		catch(WrongPasswordException $e)
+		{
+			$is_transaction_rollback = true;
+			$error_message = sprintf('現在の%sが正しくありません。', term('site.password'));
+		}
+		catch(Database_Exception $e)
+		{
+			$is_transaction_rollback = true;
+			$error_message = Util_Db::get_db_error_message($e);
+		}
+		catch(FuelException $e)
+		{
+			$is_transaction_rollback = true;
+			$error_message = $e->getMessage();
+		}
+		if ($error_message)
+		{
+			if ($is_transaction_rollback && DB::in_transaction()) DB::rollback_transaction();
+			Session::set_flash('error', $error_message);
+		}
+
+		$this->action_password();
 	}
 
 	/**
@@ -170,37 +168,50 @@ END;
 			return;
 		}
 
+		$error_message = '';
+		$is_transaction_rollback = false;
 		try
 		{
-			$maildata = array();
 			DB::start_transaction();
-			$maildata['token'] = $this->save_member_email_pre($this->u->id, $post['email']);
+			$token = Model_MemberEmailPre::save_with_token($this->u->id, $post['email']);
 			DB::commit_transaction();
-			$maildata['to_name']      = $this->u->name;
-			$maildata['to_address']   = $post['email'];
-			$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
-			$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
-			$maildata['subject']      = \Config::get('mail.member_confirm_change_email.subject');
-			$this->send_confirm_change_email_mail($maildata);
+
+			$mail = new Site_Mail('memberChangeEmailConfirm');
+			$mail->send($this->u->member_auth->email, array(
+				'to_name' => $this->u->name,
+				'register_url' => sprintf('%s?token=%s', Uri::Create('member/setting/change_email'), $token),
+			));
 
 			Session::set_flash('message', $message);
 			Response::redirect($redirect_uri);
 		}
 		catch(EmailValidationFailedException $e)
 		{
-			$this->display_error(term('site.email', 'form.update').': 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
+			Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
+			$error_message = 'メール送信エラー';
 		}
 		catch(EmailSendingFailedException $e)
 		{
-			$this->display_error(term('site.email', 'form.update').': 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
+			Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
+			$error_message = 'メール送信エラー';
+		}
+		catch(Database_Exception $e)
+		{
+			$is_transaction_rollback = true;
+			$error_message = Util_Db::get_db_error_message($e);
 		}
 		catch(FuelException $e)
 		{
-			if (DB::in_transaction())\DB::rollback_transaction();
-			Session::set_flash('error', $e->getMessage());
-			$this->action_email();
-			return;
+			$is_transaction_rollback = true;
+			$error_message = $e->getMessage();
 		}
+		if ($error_message)
+		{
+			if ($is_transaction_rollback && DB::in_transaction()) DB::rollback_transaction();
+			Session::set_flash('error', $error_message);
+		}
+
+		$this->action_email();
 	}
 
 	/**
@@ -224,63 +235,60 @@ END;
 		{
 			Util_security::check_csrf();
 			$auth = Auth::instance();
-			if ($val->run() && $auth->check_password())
+
+			$error_message = '';
+			$is_transaction_rollback = false;
+			try
 			{
+				if (!$val->run()) throw new FuelException($val->show_errors());
+				if (!$auth->check_password()) throw new FuelException(term('site.password').'が正しくありません。');
 				$post = $val->validated();
-				try
-				{
-					DB::start_transaction();
-					if (!$auth->update_user(array('email' => $member_email_pre->email, 'old_password' => $post['password'], 'password' => $post['password'])))
-					{
-						throw new FuelException('change email error.');
-					}
-					$member = Model_Member::check_authority($member_email_pre->member_id);
-					$email = $member_email_pre->email;
-					$member_email_pre->delete();// 仮登録情報の削除
-					DB::commit_transaction();
 
-					$maildata = array();
-					$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
-					$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
-					$maildata['subject']      = \Config::get('mail.member_change_email.subject');
-					$maildata['to_address']   = $email;
-					$maildata['to_name']      = $member->name;
-					$this->send_change_email_mail($maildata);
+				DB::start_transaction();
+				if (!$auth->update_user(array('email' => $member_email_pre->email, 'old_password' => $post['password'], 'password' => $post['password'])))
+				{
+					throw new FuelException('change email error.');
+				}
+				$member = Model_Member::check_authority($member_email_pre->member_id);
+				$email = $member_email_pre->email;
+				$member_email_pre->delete();// 仮登録情報の削除
+				DB::commit_transaction();
 
-					Session::set_flash('message', term('site.email').'を変更しました。');
-					Response::redirect('member');
-				}
-				catch(EmailValidationFailedException $e)
-				{
-					$this->display_error(term('member.view').'登録: 送信エラー', __METHOD__.' email validation error: '.$e->getMessage());
-					return;
-				}
-				catch(EmailSendingFailedException $e)
-				{
-					$this->display_error(term('member.view').'登録: 送信エラー', __METHOD__.' email sending error: '.$e->getMessage());
-					return;
-				}
-				catch(\Auth\SimpleUserUpdateException $e)
-				{
-					if (DB::in_transaction())\DB::rollback_transaction();
-					Session::set_flash('error', sprintf('その%sは登録できません。', term('site.email')));
-				}
-				catch(FuelException $e)
-				{
-					if (DB::in_transaction())\DB::rollback_transaction();
-					Session::set_flash('error', term('site.email').'の変更に失敗しました。');
-				}
+				$mail = new Site_Mail('memberChangeEmail');
+				$mail->send($email, array('to_name' => $member->name));
+
+				Session::set_flash('message', term('site.email').'を変更しました。');
+				Response::redirect('member');
 			}
-			else
+			catch(EmailValidationFailedException $e)
 			{
-				if ($val->show_errors())
-				{
-					Session::set_flash('error', $val->show_errors());
-				}
-				else
-				{
-					Session::set_flash('error', term('site.password').'が正しくありません。');
-				}
+				Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
+				$error_message = 'メール送信エラー';
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
+				$error_message = 'メール送信エラー';
+			}
+			catch(Auth\SimpleUserUpdateException $e)
+			{
+				$is_transaction_rollback = true;
+				$error_message = term('site.email').'の変更に失敗しました。';
+			}
+			catch(\Database_Exception $e)
+			{
+				$is_transaction_rollback = true;
+				$error_message = \Util_Db::get_db_error_message($e);
+			}
+			catch(FuelException $e)
+			{
+				$is_transaction_rollback = true;
+				if (!$error_message = $e->getMessage()) $error_message = term('site.email').'の変更に失敗しました。';
+			}
+			if ($error_message)
+			{
+				if ($is_transaction_rollback && DB::in_transaction()) DB::rollback_transaction();
+				Session::set_flash('error', $error_message);
 			}
 		}
 
@@ -348,53 +356,5 @@ END;
 		if ($member_email_pre->member_id != $this->u->id) return false;
 
 		return $member_email_pre;
-	}
-
-	private function save_member_email_pre($member_id, $email)
-	{
-		$member_email_pre = Model_MemberEmailPre::get4member_id($member_id);
-		if (!$member_email_pre) $member_email_pre = Model_MemberEmailPre::forge();
-
-		$member_email_pre->member_id = $member_id;
-		$member_email_pre->email     = $email;
-		$member_email_pre->token     = Util_toolkit::create_hash();
-		$member_email_pre->save();
-
-		return $member_email_pre->token;
-	}
-
-	private function send_confirm_change_email_mail($data)
-	{
-		if (!is_array($data)) $data = (array)$data;
-
-		$register_url = sprintf('%s?token=%s', uri::create('member/setting/change_email'), $data['token']);
-
-		$term_email = term('site.email');
-		$data['body'] = <<< END
-こんにちは、{$data['to_name']}さん
-
-まだ{$term_email}の変更は完了しておりません。
-
-以下の URL をクリックすることにより、{$term_email}の変更が完了します。
-{$register_url}
-
-END;
-
-		util_toolkit::sendmail($data);
-	}
-
-	private function send_change_email_mail($data)
-	{
-		if (!is_array($data)) $data = (array)$data;
-
-		$term_email = term('site.email');
-		$data['body'] = <<< END
-こんにちは、{$data['to_name']}さん
-
-{$term_email}の変更が完了しました。
-
-END;
-
-		util_toolkit::sendmail($data);
 	}
 }

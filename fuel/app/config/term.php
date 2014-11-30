@@ -18,6 +18,7 @@ $config = array(
 		'do_update' => '変更する',
 		'updated' => '更新',
 		'confirm' => '確認',
+		'do_confirm' => '確認する',
 		'back' => '戻る',
 		'error' => 'エラー',
 		'draft' => '下書き保存',
@@ -60,6 +61,7 @@ $config = array(
 		'do_post' => '投稿する',
 		'save' => '保存',
 		'do_save' => '保存する',
+		'do_reset_default' => 'デフォルトに戻す',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -104,6 +106,7 @@ $config = array(
 		'backward' => '前へ',
 		'term' => '利用規約',
 		'privacy_policy' => 'プライバシーポリシー',
+		'template' => 'テンプレート',
 	),
 	'member' => array(
 		'view' => 'メンバー',
@@ -155,4 +158,4 @@ $config = array(
 	),
 );
 
-return Site_Util::merge_module_configs($config, 'term');
+return Site_Config::merge_module_configs($config, 'term');

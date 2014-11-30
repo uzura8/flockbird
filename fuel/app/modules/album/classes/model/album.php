@@ -194,15 +194,17 @@ class Model_Album extends \MyOrm\Model
 		$this->save();
 	}
 
-	public static function get4member_id($member_id, array $cols = array(), $with_foreigns = true)
+	public static function get4member_id($member_id, $cols = array(), $with_foreigns = true, $limit = null)
 	{
-		$obj = self::query();
-		foreach ($cols as $col) $obj = $obj->select($col);
-		$obj = $obj->where('member_id', $member_id)->order_by('id', 'asc');
-		if (!$with_foreigns) $obj = $obj->where('foreign_table', '');
-		$obj = $obj->order_by('id', 'asc');
+		if (!is_array($cols)) $cols = (array)$cols;
+		$query = self::query();
+		foreach ($cols as $col) $query->select($col);
+		$query->where('member_id', $member_id);
+		if (!$with_foreigns) $query->where('foreign_table', '');
+		if ($limit) $query->rows_limit($limit);
+		$query->order_by('id', 'asc');
 
-		return $obj->get();
+		return $query->get();
 	}
 
 	public static function get_album_for_foreign_table($member_id, $table_name)

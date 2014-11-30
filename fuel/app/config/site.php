@@ -11,6 +11,25 @@ $config = array(
 	'original_user_id' => array(
 		'site'  => 1,
 	),
+	'batch' => array(
+		'limit' => array(
+			'delete' => array(
+				'default' => 1000,
+			),
+		),
+	),
+	'mail' => array(
+		'site' => array(
+			'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
+			'from_email' => PRJ_ADMIN_MAIL,
+		),
+		'log' => array(
+			'develop' => array(
+				'isEnabled' => true,
+				'file_path' => APPPATH.'logs/development/mail.log',
+			),
+		),
+	),
 	'ssl_required' => array(
 		'modules' => array(
 			'admin',
@@ -315,10 +334,10 @@ $config = array(
 		),
 	),
 );
-$config = Site_Util::merge_module_configs($config, 'site');
+$config = Site_Config::merge_module_configs($config, 'site');
 try
 {
-	$config = Site_Util::merge_db_configs($config, 'site_config');
+	$config = Site_Config::merge_db_configs($config, 'site_config');
 }
 catch(Database_Exception $e)
 {

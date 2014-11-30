@@ -680,6 +680,19 @@ CREATE TABLE `site_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of this site';
 
 
+CREATE TABLE `template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Configuration name',
+  `format` varchar(25) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'format of template',
+  `title` varchar(255) NULL,
+  `body` text NULL COLLATE utf8_unicode_ci COMMENT 'Configuration value',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of this site';
+
+
 CREATE TABLE `site_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `admin_user_id` int(11) NOT NULL,

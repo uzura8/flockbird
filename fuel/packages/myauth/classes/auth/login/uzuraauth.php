@@ -392,7 +392,7 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 			return (bool) $this->update_user(array('old_password' => $old_password, 'password' => $new_password), $member_id);
 		}
 		// Only catch the wrong password exception
-		catch (SimpleUserWrongPassword $e)
+		catch (\SimpleUserWrongPassword $e)
 		{
 			return false;
 		}

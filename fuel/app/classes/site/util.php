@@ -123,7 +123,7 @@ class Site_Util
 				if (in_array($btn_field, array('submit', 'button')))
 				{
 					$btn_name = $btn_field;
-					$btn_attr = array('type'=> $btn_field, 'value' => '送信', 'class' => 'btn btn-default btn-primary');
+					$btn_attr = array('type'=> $btn_field, 'value' => term('form.do_submit'), 'class' => 'btn btn-default btn-primary');
 				}
 			}
 			else
@@ -159,8 +159,9 @@ class Site_Util
 		foreach ($modules as $module => $path)
 		{
 			Config::load($module.'::'.$config_name, $module.'_'.$config_name);
-			$module_config = Config::get($module.'_'.$config_name);
-			if (!empty($module_config)) $config = array_merge_recursive($config, $module_config);
+			if (!$module_config = Config::get($module.'_'.$config_name)) continue;
+
+			$config = array_merge_recursive($config, $module_config);
 		}
 
 		return $config;
@@ -174,6 +175,67 @@ class Site_Util
 		{
 			$key = str_replace('_', '.', $name);
 			Arr::set($configs, $key, $value);
+		}
+
+		return $configs;
+	}
+
+	public static function setup_configs_template($configs)
+	{
+		$configs = static::merge_db_configs_template($configs);
+		$configs = static::setup_configs_template_body($configs);
+
+		return $configs;
+	}
+
+	public static function merge_db_configs_template($configs)
+	{
+		if ($db_configs = Model_Template::query()->get())
+		{
+			foreach ($db_configs as $db_config)
+			{
+				$key = str_replace('_', '.', $db_config->name);
+				$values = array();
+				if ($db_config->type) $values['type'] = $db_config->type;
+				if ($db_config->title) $values['title'] = $db_config->title;
+				if ($db_config->body) $values['body'] = $db_config->body;
+				if (!$values) continue;
+
+				Arr::set($configs, $key, $values);
+			}
+		}
+
+		return $configs;
+	}
+
+	public static function setup_configs_template_body($configs)
+	{
+		foreach ($configs as $type => $types)
+		{
+			foreach ($types as $module => $modules)
+			{
+				foreach ($modules as $item_key => $items)
+				{
+					if (!isset($items['body'])) continue;
+					if (!is_array($items['body'])) continue;
+
+					if (!empty($items['body']['default']['file']))
+					{
+						$ext = (!empty($items['format'])) ? $items['format'] : 'php';
+						$body = file_get_contents(sprintf('%sviews/%s.%s', APPPATH, $items['body']['default']['file'], $ext));
+					}
+					elseif (!empty($items['body']['default']['value']))
+					{
+						$body = $items['body']['default']['value'];
+					}
+					else
+					{
+						continue;
+					}
+					$key = implode('.', array($type, $module, $item_key, 'body'));
+					Arr::set($configs, $key, $body);
+				}
+			}
 		}
 
 		return $configs;

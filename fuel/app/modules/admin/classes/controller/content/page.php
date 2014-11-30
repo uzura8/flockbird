@@ -245,4 +245,4 @@ class Controller_Content_Page extends Controller_Admin
 	}
 }
 
-/* End of news.php */
+/* End of page.php */

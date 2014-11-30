@@ -9,4 +9,4 @@ $routes = array(
 	'member/profile/image/(\d+)'  => 'member/profile/image/index/$1',
 );
 
-return Site_Util::merge_module_configs($routes, 'routes');
+return Site_Config::merge_module_configs($routes, 'routes');

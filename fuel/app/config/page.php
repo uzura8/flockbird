@@ -27,4 +27,4 @@ $config = array(
 	),
 );
 
-return Site_Util::merge_module_configs($config, 'page');
+return Site_Config::merge_module_configs($config, 'page');
