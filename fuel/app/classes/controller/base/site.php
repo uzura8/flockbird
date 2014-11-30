@@ -4,17 +4,28 @@ class Controller_Base_Site extends Controller_Base
 {
 	protected $auth_driver = 'UzuraAuth';
 	protected $after_auth_uri = 'member';
+	protected $member_config;
 	protected $notification_counts = array();
 
 	public function before()
 	{
 		parent::before();
-		if (!IS_ADMIN) $this->set_notification_count();
+		if (!IS_ADMIN && Auth::check())
+		{
+			$this->set_notification_count();
+			$this->set_current_member_config();
+		}
 	}
 
-	protected function get_current_user($member_id = null)
+	protected function get_current_user()
 	{
-		return Model_Member::set_member_config_property_default_value($this->auth_instance->get_member());
+		return $this->auth_instance->get_member();
+	}
+
+	protected function set_current_member_config()
+	{
+		$this->member_config = Site_Member::get_member_config_with_default_value($this->u->id);
+		View::set_global('member_config', $this->member_config);
 	}
 
 	protected function check_auth_and_is_mypage($member_id = 0, $is_api = false)

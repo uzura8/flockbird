@@ -21,7 +21,7 @@
 
 <div id="timeline_setting" class="text-right">
 	<span class="text-muted"><?php echo term('site.display', 'site.setting'); ?>:</span>
-	<?php echo render('member/_parts/timeline_viewType_selecter', array('id' => $u->id, 'timeline_viewType' => $u->timeline_viewType)); ?>
+	<?php echo render('member/_parts/timeline_viewType_selecter', array('id' => $u->id, 'timeline_viewType' => $member_config->timeline_viewType)); ?>
 </div>
 
 <div id="article_list" data-type="ajax"></div>

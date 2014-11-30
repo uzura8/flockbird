@@ -106,4 +106,22 @@ class Site_Member
 
 		return $return_member_ids;
 	}
+
+	public static function get_member_config_with_default_value($member_id)
+	{
+		$member_config = new stdClass();
+		$default_values = Form_MemberConfig::get_default_values();
+		foreach ($default_values as $name => $value)
+		{
+			$member_config->$name = $value;
+		}
+
+		$member_config_objs = Model_MemberConfig::get4member_id($member_id);
+		foreach ($member_config_objs as $obj)
+		{
+			$member_config->{$obj->name} = $obj->value;
+		}
+
+		return $member_config;
+	}
 }

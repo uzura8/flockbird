@@ -28,7 +28,7 @@
 
 <?php if (is_enabled('timeline')): ?>
 	<?php echo form_text(
-		\Timeline\Form_MemberConfig::get_viewType_options($u->timeline_viewType),
+		\Timeline\Form_MemberConfig::get_viewType_options($member_config->timeline_viewType),
 		term('timeline', 'site.display', 'site.setting'),
 		$label_col_size,
 		true,

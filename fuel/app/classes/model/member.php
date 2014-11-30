@@ -13,19 +13,6 @@ class Model_Member extends \MyOrm\Model
 			'cascade_delete' => false,
 		),
 	);
-	protected static $_has_many = array(
-		'member_config' => array(
-			'key_from' => 'id',
-			'model_to' => 'Model_MemberConfig',
-			'key_to' => 'member_id',
-		)
-	);
-	protected static $_eav = array(
-		'member_config' => array(
-			'attribute' => 'name',	// the key column in the related table contains the attribute
-			'value' => 'value',		// the value column in the related table contains the value
-		)
-	);
 
 	protected static $_properties = array(
 		'id',
@@ -175,16 +162,5 @@ class Model_Member extends \MyOrm\Model
 			->value('filesize_total', $expr)
 			->where('id', intval($member_id))
 			->execute();
-	}
-
-	public static function set_member_config_property_default_value(self $obj)
-	{
-		$default_values = Form_MemberConfig::get_default_values();
-		foreach ($default_values as $name => $value)
-		{
-			if (!isset($obj->$name)) $obj->$name = $value;
-		}
-
-		return $obj;
 	}
 }

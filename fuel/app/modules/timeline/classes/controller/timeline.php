@@ -86,7 +86,7 @@ class Controller_Timeline extends \Controller_Site
 		$this->template->post_header = \View::forge('member/_parts/myhome_header');
 		$this->template->post_footer = \View::forge('member/_parts/myhome_footer');
 		$this->set_title_and_breadcrumbs(term('page.myhome'), null, null, null, null, true, true);
-		$this->template->content = \View::forge('member/myhome', array('public_flag' => $this->u->timeline_public_flag));
+		$this->template->content = \View::forge('member/myhome', array('public_flag' => $this->member_config->timeline_public_flag));
 	}
 
 	/**

@@ -29,7 +29,7 @@ class Controller_Api extends \Controller_Site_Api
 			$is_mytimeline = (bool)\Input::get('mytimeline', 0);
 			$member = $member_id ? \Model_Member::check_authority($member_id) : null;
 			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
-			$timeline_viewType = $is_mytimeline ? $this->u->timeline_viewType : null;
+			$timeline_viewType = $is_mytimeline ? $this->member_config->timeline_viewType : null;
 			$is_display_load_before_link = (bool)\Input::get('before_link', false);
 			$data = \Timeline\Site_Util::get_list4view(
 				\Auth::check() ? $this->u->id : 0,
