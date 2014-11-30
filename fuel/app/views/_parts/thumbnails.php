@@ -30,7 +30,6 @@ else
 	$is_link2raw_file = true;
 }
 if (!empty($images['size'])) $size = $images['size'];
-$additional_table = !empty($images['additional_table']) ? $images['additional_table'] : '';
 
 echo img($file_name, $size, $link_uri, $is_link2raw_file, $image_name ?: '', false, false, array('class' => 'thumbnail'));
 ?>

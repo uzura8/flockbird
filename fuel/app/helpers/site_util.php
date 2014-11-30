@@ -128,13 +128,19 @@ function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file =
 		$file_cate = Site_Upload::get_file_cate_from_filename($filename);
 	}
 
+	$additional_table = '';
 	if ($is_profile)
 	{
+		if (conf('upload.types.img.types.m.save_as_album_image'))
+		{
+			$size_key = 'P_'.$size_key;
+			$additional_table = 'profile';
+		}
 		if (!empty($img_attr['class'])) $img_attr['class'] .= ' ';
 		$img_attr['class'] .= 'profile_image';
 	}
 
-	if (!$size = img_size($file_cate, $size_key)) $size = $size_key;
+	if (!$size = img_size($file_cate, $size_key, $additional_table)) $size = $size_key;
 	if (empty($filename))
 	{
 		$noimage_tag = Site_Util::get_noimage_tag($size, $file_cate, $img_attr);

@@ -328,10 +328,8 @@ class Site_Util
 				$images['list']   = array();
 				if ($list = \Album\Model_AlbumImage::check_authority($foreign_id))
 				{
-					$images['list'][]           = $list;
-					$images['additional_table'] = 'profile';
-					$images['size']             = 'P_LL';
-					$images['column_count']     = 2;
+					$images['list'][]       = $list;
+					$images['column_count'] = 2;
 				}
 				break;
 
@@ -339,10 +337,10 @@ class Site_Util
 				$images['list']   = array();
 				if ($list = \Model_File::find($foreign_id))
 				{
-					$images['list'][]           = $list;
-					$images['file_cate']        = 'm';
-					$images['size']             = 'LL';
-					$images['column_count']     = 2;
+					$images['list'][]       = $list;
+					$images['file_cate']    = 'm';
+					$images['size']         = 'LL';
+					$images['column_count'] = 2;
 				}
 				break;
 
@@ -353,8 +351,7 @@ class Site_Util
 					array('id' => 'asc'),
 					true
 				);
-				$images['additional_table'] = 'note';
-				$images['parent_page_uri']  = 'note/'.$foreign_id;
+				$images['parent_page_uri'] = 'note/'.$foreign_id;
 				break;
 
 			case \Config::get('timeline.types.album'):
