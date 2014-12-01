@@ -131,10 +131,11 @@ function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file =
 	$additional_table = '';
 	if ($is_profile)
 	{
-		if (conf('upload.types.img.types.m.save_as_album_image'))
+		if (conf('upload.types.img.types.m.save_as_album_image') && $filename != '' && $file_cate != 'm')
 		{
 			$size_key = 'P_'.$size_key;
 			$additional_table = 'profile';
+			if (!$file_cate) $file_cate = 'ai';
 		}
 		if (!empty($img_attr['class'])) $img_attr['class'] .= ' ';
 		$img_attr['class'] .= 'profile_image';

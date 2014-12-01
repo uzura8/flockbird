@@ -62,3 +62,4 @@ if (in_array(PRJ_ENVIRONMENT, array('DEVELOPMENT', 'TEST')))
 {
 	Config::load('develop', 'develop');
 }
+Site_Config::regulate_configs_for_module_loaded();

@@ -4,9 +4,7 @@ class Site_Member
 {
 	public static function save_profile_image(Model_Member $member, $file_path = null)
 	{
-		if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $member->file_name);
-
-		if (Module::loaded('album') && conf('upload.types.img.types.m.save_as_album_image'))
+		if (conf('upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
 			list($album_image, $file) = \Album\Model_AlbumImage::save_with_relations($album_id, $member, PRJ_PUBLIC_FLAG_ALL, $file_path, 'album_image_profile');
@@ -16,10 +14,8 @@ class Site_Member
 		}
 		else
 		{
-			if ($member->file_name && $file_old = Model_File::get4name($member->file_name))
-			{
-				$file_old->delete();
-			}
+			if ($member->file_name) Model_File::delete_with_timeline($member->file_name);
+
 			$options = Site_Upload::get_uploader_options($member->id);
 			$uploadhandler = new Site_Uploader($options);
 			$file = $uploadhandler->save();
@@ -29,7 +25,7 @@ class Site_Member
 			$member->save();
 
 			// timeline 投稿
-			if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, 'profile_image', $file->id, $member->updated_at);
+			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, 'profile_image', $file->id, $member->updated_at);
 		}
 
 		return $file;

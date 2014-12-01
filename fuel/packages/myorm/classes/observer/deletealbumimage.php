@@ -51,11 +51,10 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 		}
 
 		// file 削除
-		if (!$file = \Model_File::get4name($obj->file_name))
+		if ($file = \Model_File::get4name($obj->file_name))
 		{
-			throw new \FuelException('Invalid file id.');
+			$file->delete();
 		}
-		$file->delete();
 	}
 }
 // End of file deletealbumimage.php

@@ -89,13 +89,13 @@ class Model_File extends \MyOrm\Model
 		return (bool)self::query()->where('name', $name)->get_one();
 	}
 
-	public static function delete_with_timeline($id)
+	public static function delete_with_timeline($name)
 	{
-		if (!$self = self::find($id)) return false;
+		if (!$obj = self::get4name($name)) return false;
 
-		if (Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $id);
-		$deleted_filesize = $self->filesize;
-		$self->delete();
+		if (is_enabled('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $obj->id);
+		$deleted_filesize = $obj->filesize;
+		$obj->delete();
 
 		return $deleted_filesize;
 	}

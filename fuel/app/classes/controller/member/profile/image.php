@@ -57,6 +57,11 @@ class Controller_Member_Profile_Image extends Controller_Member
 			DB::commit_transaction();
 			Session::set_flash('message', term('site.picture').'を更新しました。');
 		}
+		catch(Database_Exception $e)
+		{
+			if (DB::in_transaction()) DB::rollback_transaction();
+			Session::set_flash('error', Util_Db::get_db_error_message($e));
+		}
 		catch(FuelException $e)
 		{
 			if (DB::in_transaction()) DB::rollback_transaction();
@@ -78,7 +83,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 
 		try
 		{
-			if (!is_enabled('album') || !conf('upload.types.img.types.m.save_as_album_image'))
+			if (!conf('upload.types.img.types.m.save_as_album_image'))
 			{
 				throw new \HttpNotFoundException;
 			}
@@ -96,6 +101,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 			$this->u->file_name = $album_image->file_name;
 			$this->u->save();
 
+			// カバー写真の更新
 			if ($album_image->album->cover_album_image_id != $album_image->id)
 			{
 				$album_image->album->cover_album_image_id = $album_image->id;
@@ -105,29 +111,14 @@ class Controller_Member_Profile_Image extends Controller_Member
 
 			Session::set_flash('message', term('profile', 'site.picture').'を更新しました。');
 		}
+		catch(Database_Exception $e)
+		{
+			if (DB::in_transaction()) DB::rollback_transaction();
+			Session::set_flash('error', Util_Db::get_db_error_message($e));
+		}
 		catch(FuelException $e)
 		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			Session::set_flash('error', $e->getMessage());
-		}
-
-		Response::redirect('member/profile/image');
-
-		try
-		{
-			if (empty($this->u->file_id)) throw new FuelException('No profile image.');
-
-			DB::start_transaction();
-			$this->u->file->delete();
-			$this->u->file_id = null;
-			$this->u->save();
-			DB::commit_transaction();
-
-			Session::set_flash('message', term('site.picture').'を削除しました。');
-		}
-		catch(Exception $e)
-		{
-			DB::rollback_transaction();
+			if (DB::in_transaction()) DB::rollback_transaction();
 			Session::set_flash('error', $e->getMessage());
 		}
 
@@ -140,44 +131,31 @@ class Controller_Member_Profile_Image extends Controller_Member
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_unset($album_image_id = null)
+	public function action_unset()
 	{
 		Util_security::check_csrf();
 
 		try
 		{
-			if (is_enabled('album')) $album_image_id = null;
-			if ($album_image_id)
-			{
-				$album_image = \Album\Model_AlbumImage::check_authority($album_image_id, $this->u->id);
-				if ($album_image->album->foreign_table != 'member')
-				{
-					throw new FuelException('Disabled to set album image as profile image.');
-				}
-			}
-			else
-			{
-				if (empty($this->u->file_id)) throw new FuelException('No profile image.');
-			}
-
 			DB::start_transaction();
-			if ($album_image_id)
+			if (!conf('upload.types.img.types.m.save_as_album_image'))
 			{
-				$album_image->delete();
+				Model_File::delete_with_timeline($this->u->file_name);
 			}
-			else
-			{
-				Model_File::delete_with_timeline($this->u->file_id);
-				$this->u->file_id = null;
-				$this->u->save();
-			}
+			$this->u->file_name = null;
+			$this->u->save();
 			DB::commit_transaction();
 
 			Session::set_flash('message', term('profile', 'site.picture').'を削除しました。');
 		}
+		catch(Database_Exception $e)
+		{
+			if (DB::in_transaction()) DB::rollback_transaction();
+			Session::set_flash('error', Util_Db::get_db_error_message($e));
+		}
 		catch(FuelException $e)
 		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
+			if (DB::in_transaction()) DB::rollback_transaction();
 			Session::set_flash('error', $e->getMessage());
 		}
 
@@ -195,7 +173,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 		try
 		{
 			Util_security::check_csrf();
-			if (!is_enabled('album') || !conf('upload.types.img.types.m.save_as_album_image'))
+			if (!conf('upload.types.img.types.m.save_as_album_image'))
 			{
 				throw new HttpNotFoundException;
 			}
@@ -206,23 +184,19 @@ class Controller_Member_Profile_Image extends Controller_Member
 			}
 
 			DB::start_transaction();
-			if ($album_image->file_name == $this->u->file_name)
-			{
-				if (is_enabled('timeline') && $file_id = \Model_File::get_id4name($album_image->file_name))
-				{
-					\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('file', $file_id);
-				}
-				$this->u->file_name = null;
-				$this->u->save();
-			}
 			$album_image->delete();
 			DB::commit_transaction();
 
 			Session::set_flash('message', term('profile', 'site.picture').'を削除しました。');
 		}
+		catch(Database_Exception $e)
+		{
+			if (DB::in_transaction()) DB::rollback_transaction();
+			Session::set_flash('error', Util_Db::get_db_error_message($e));
+		}
 		catch(FuelException $e)
 		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
+			if (DB::in_transaction()) DB::rollback_transaction();
 			Session::set_flash('error', $e->getMessage());
 		}
 

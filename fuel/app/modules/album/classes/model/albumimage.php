@@ -259,6 +259,7 @@ class Model_AlbumImage extends \MyOrm\Model
 			$public_flag = isset($optional_values['public_flag']) ? $optional_values['public_flag'] : conf('public_flag.default');
 		}
 
+		$album = null;
 		if (empty($member))
 		{
 			$album = Model_Album::find($album_id, array('related' => 'member'));
@@ -280,6 +281,14 @@ class Model_AlbumImage extends \MyOrm\Model
 			isset($optional_values['shot_at']) ? $optional_values['shot_at'] : null
 		);
 		$self->save();
+
+		// カバー写真の更新
+		if ($timeline_type_key == 'album_image_profile')
+		{
+			if (!$album) $album = Model_Album::find($album_id);
+			$album->cover_album_image_id = $self->id;
+			$album->save();
+		}
 
 		// timeline 投稿
 		if (\Module::loaded('timeline'))
