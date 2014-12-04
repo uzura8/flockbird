@@ -23,25 +23,31 @@ function get_term(key) {
 		'do_like': '<?php echo term('form.do_like'); ?>',
 		'undo_like': '<?php echo term('form.undo_like'); ?>',
 <?php endif; ?>
-<?php if (Module::loaded('note')): ?>
+<?php if (is_enabled('notice')): ?>
+		'watch': '<?php echo term('form.watch'); ?>',
+		'do_watch': '<?php echo term('form.do_watch'); ?>',
+		'do_unwatch': '<?php echo term('form.do_unwatch'); ?>',
+<?php endif; ?>
+<?php if (is_enabled('note')): ?>
 		'note': '<?php echo term('note'); ?>',
 <?php endif; ?>
-<?php if (Module::loaded('album')): ?>
+<?php if (is_enabled('album')): ?>
 		'album': '<?php echo term('album'); ?>',
 		'album_image': '<?php echo term('album_image'); ?>',
 <?php endif; ?>
-<?php if (Module::loaded('timeline')): ?>
+<?php if (is_enabled('timeline')): ?>
 		'timeline': '<?php echo term('timeline'); ?>',
 <?php endif; ?>
 		'public_flag': '<?php echo term('public_flag.label'); ?>',
 		'comment': '<?php echo term('form.comment'); ?>',
-		'member': '<?php echo term('member.view'); ?>'
+		'member': '<?php echo term('member.view'); ?>',
+		'show_detail': '<?php echo term('site.show_detail'); ?>'
 	};
 	return terms[key];
 }
 function get_config(key) {
 	var config = {
-<?php if (Module::loaded('timeline')): ?>
+<?php if (is_enabled('timeline')): ?>
 		'timeline_list_limit': <?php echo Config::get('timeline.articles.limit'); ?>,
 <?php endif; ?>
 		'default_ajax_timeout': <?php echo conf('default.ajax_timeout'); ?>,

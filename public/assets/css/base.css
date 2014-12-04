@@ -154,6 +154,7 @@ div.btnBox button {
 	padding-right: 20px;
 }
 .commentBox .boxBtn,
+.article .boxBtn,
 .timelineBox .boxBtn {
 	position: absolute;
 	right: 5px;

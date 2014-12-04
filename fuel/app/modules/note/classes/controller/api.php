@@ -71,6 +71,74 @@ class Controller_Api extends \Controller_Site_Api
 	}
 
 	/**
+	 * Note get_dropdown_menu
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function get_menu($id = null)
+	{
+		$response = '';
+		try
+		{
+			$this->check_response_format('html');
+
+			$id = (int)$id;
+			$note = Model_Note::check_authority($id);
+			$is_detail = (bool)\Input::get('is_detail', 0);
+			$menus = array();
+			if (\Auth::check())
+			{
+				if ($note->member_id != $this->u->id && is_enabled('notice'))
+				{
+					$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id('note', $id, $this->u->id);
+					$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
+						'class' => 'js-watch',
+						'data-uri' => 'member/notice/api/update_watch_status/note/'.$id,
+						'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
+					));
+				}
+				else
+				{
+					if (!$is_detail) $menus[] = array('tag' => 'divider');
+					$menus[] = array('href' => 'note/edit/'.$id, 'icon_term' => 'form.do_edit');
+					if (!$note->is_published)
+					{
+						$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
+							'class' => 'js-simplePost',
+							'data-uri' => 'note/publish/'.$id,
+							'data-msg' => term('form.publish').'しますか？',
+						));
+					}
+					$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
+						'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
+						'data-uri' => $is_detail ? 'note/delete/'.$note->id : 'note/api/delete/'.$id.'.json',
+						'data-msg' => term('form.delete').'します。よろしいですか。',
+						'data-parent' => 'article_'.$id,
+					));
+				}
+			}
+
+			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus));
+			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
 	 * Note delete
 	 * 
 	 * @access  public

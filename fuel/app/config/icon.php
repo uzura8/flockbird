@@ -1,6 +1,9 @@
 <?php
 
 $config = array(
+	'noterm' => array(
+		'dropdown' => 'chevron-down',
+	),
 	'form' => array(
 		'submit' => 'edit',
 		'do_submit' => 'edit',

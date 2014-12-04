@@ -1,6 +1,21 @@
 <?php
 class Site_Model
 {
+	public static function get_model_name($table)
+	{
+		return Util_Orm::get_model_name($table, self::get_namespace4table($table));
+	}
+
+	public static function get_namespace4table($table)
+	{
+		if (preg_match('/^(note|album|timeline)/', $table, $matches))
+		{
+			return ucfirst($matches[1]);
+		}
+
+		return '';
+	}
+
 	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_mypage = false, $where = array(), $member_id_colmn = null)
 	{
 		if ($target_member_id) $where[] = array($member_id_colmn ?: 'member_id', $target_member_id);

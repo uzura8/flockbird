@@ -756,6 +756,51 @@ function update_like_status(selfDomElement) {
 	});
 }
 
+function update_watch_status(selfDomElement) {
+	var postUrl = $(selfDomElement).data('uri');
+	if (!postUrl) return;
+
+	var selfDomElement_html = $(selfDomElement).html();
+
+	var post_data = {};
+	postData = set_token(post_data);
+
+	$.ajax({
+		url : get_url(postUrl),
+		type : 'POST',
+		dataType : 'json',
+		data : postData,
+		timeout: get_config('default_ajax_timeout'),
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			if (selfDomElement) {
+				$(selfDomElement).attr('disabled', true);
+				$(selfDomElement).html(get_loading_image_tag());
+			}
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			$(selfDomElement).attr('disabled', false);
+		},
+		success: function(result){
+			var message = '';
+			if (result.status) {
+				selfDomElement_html = '<i class="glyphicon glyphicon-eye-close"></i> ' + get_term('do_unwatch');
+				msg = get_term('watch') + '対象に追加しました。';
+			} else {
+				selfDomElement_html = '<i class="glyphicon glyphicon-eye-open"></i> ' + get_term('do_watch');
+				msg = get_term('watch') + 'を解除しました。';
+			}
+			$.jGrowl(msg);
+			$(selfDomElement).html(selfDomElement_html);
+		},
+		error: function(result){
+			$(selfDomElement).html(selfDomElement_html);
+			$.jGrowl(get_error_message(result['status'], get_term('watch') + 'に失敗しました。'));
+		}
+	});
+}
+
 function execute_post(uri){
 	var post_data = (arguments.length > 1) ? arguments[1] : {};
 

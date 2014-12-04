@@ -10,23 +10,20 @@
 	)
 )); ?>
 
-<?php if (isset($u) && $u->id == $note->member_id): ?>
+<?php if (Auth::check()): ?>
 <?php
-$menus = array(array('icon_term' => 'form.do_edit', 'href' => 'note/edit/'.$note->id));
-if (!$note->is_published)
-{
-	$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
-		'class' => 'js-simplePost',
-		'data-uri' => 'note/publish/'.$note->id,
-		'data-msg' => term('form.publish').'しますか？',
-	));
-}
-$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
-	'class' => 'js-simplePost',
-	'data-uri' => 'note/delete/'.$note->id,
-	'data-msg' => '削除します。よろしいですか。',
-));
-echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdown_menu_'.$note->id,
+	'class' => array('dropdown', 'boxBtn', 'edit'),
+);
+$dropdown_btn_attr = array(
+	'class' => 'js-dropdown_content_menu',
+	'data-uri' => sprintf('note/api/menu/%d.html?is_detail=1', $note->id),
+	'data-detail_uri' => 'note/'.$note->id,
+	//'data-parent' => 'article_'.$note->id,
+	'data-member_id' => $note->member_id,
+	'data-loaded' => 0,
+);
+echo btn_dropdown('noterm.dropdown', array(), false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);
 ?>
 <?php endif; ?>
-

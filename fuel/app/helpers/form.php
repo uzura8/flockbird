@@ -279,6 +279,7 @@ function form_anchor_delete($post_uri, $anchor_label = null, $attr = null, $offs
 		'data-uri' => $post_uri,
 		'data-msg' => '削除します。よろしいですか？',
 	);
+	if (!is_array($attr)) $attr = (array)$attr;
 	$attr = array_merge($attr_default, $attr);
 	$data = array(
 		'href'   => '#',

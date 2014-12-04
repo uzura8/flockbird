@@ -8,7 +8,7 @@
 $attr = array(
 	'class' => 'article js-hide-btn',
 	'id' => 'article_'.$id,
-	'data-hidden_btn' => 'btn_edit_'.$id,
+	'data-hidden_btn' => 'btn_dropdown_menu_'.$id,
 	'data-hidden_btn_absolute' => 1,
 );
 ?>
@@ -17,41 +17,38 @@ $attr = array(
 			<h4<?php if (!$note->is_published): ?> class="has_label"<?php endif; ?>>
 				<?php echo Html::anchor('note/'.$id, strim($note->title, conf('view_params_default.list.trim_width.title'))); ?>
 <?php if (!$note->is_published): ?>
-				<?php echo render('_parts/label', array('name' => term('form.draft'), 'attr' => 'label-inverse')); ?>
+				<?php echo label(term('form.draft'), null); ?>
 <?php endif; ?>
 			</h4>
 			<div class="list_subtitle">
 <?php echo render('_parts/member_contents_box', array(
 	'member' => $note->member,
 	'model' => 'note',
-	'id' => $note->id,
+	'id' => $id,
 	'size' => 'M',
 	'public_flag' => $note->public_flag,
 	'date' => array('datetime' => $note->published_at ? $note->published_at : $note->updated_at)
 )); ?>
-<?php if (Auth::check() && $note->member_id == $u->id): ?>
 <?php
-$menus = array(array('icon_term' => 'form.do_edit', 'href' => 'note/edit/'.$id));
-if (!$note->is_published)
-{
-	$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
-		'class' => 'js-simplePost',
-		'data-uri' => 'note/publish/'.$note->id,
-		'data-msg' => term('form.publish').'しますか？',
-	));
-}
-$menus[] = array('icon_term' => 'form.do_delete', 'href' => '#', 'attr' => array(
-	'class' => 'js-ajax-delete',
-	'data-parent' => 'article_'.$id,
-	'data-uri' => 'note/api/delete/'.$id.'.json',
-));
-echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'edit', 'id' => 'btn_edit_'.$id));
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdown_menu_'.$id,
+	'class' => array('dropdown', 'boxBtn'),
+);
+$dropdown_btn_attr = array(
+	'class' => 'js-dropdown_content_menu',
+	'data-uri' => sprintf('note/api/menu/%d.html', $id),
+	'data-detail_uri' => 'note/'.$id,
+	//'data-parent' => 'article_'.$id,
+	'data-member_id' => $note->member_id,
+	'data-loaded' => 0,
+);
+$menus = array(array('icon_term' => 'site.show_detail', 'href' => 'note/'.$id));
+echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);
 ?>
-<?php endif; ?>
-			</div>
-		</div>
+			</div><!-- list_subtitle -->
+		</div><!-- header -->
 		<div class="body"><?php echo truncate_lines($note->body, conf('view_params_default.list.truncate_lines.body'), 'note/'.$id); ?></div>
-<?php if (Module::loaded('album') && $images = \Note\Model_NoteAlbumImage::get_album_image4note_id($note->id, 4, array('id' => 'desc'))): ?>
+<?php if (Module::loaded('album') && $images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id, 4, array('id' => 'desc'))): ?>
 <?php echo render('_parts/thumbnails', array('images' => array('list' => $images, 'additional_table' => 'note', 'size' => 'N_M', 'column_count' => 4))); ?>
 <?php endif; ?>
 

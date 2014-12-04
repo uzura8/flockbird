@@ -91,7 +91,7 @@ function btn($term_key, $href = '#', $class_name = '', $with_text = true, $btn_s
 	return Html::anchor($href, $label, $attr);
 }
 
-function btn_dropdown($type = null, $menus = array(), $btn_with_text = true, $btn_size = '', $btn_type = 'default', $is_popover_align_right = false, $btn_group_attrs = array())
+function btn_dropdown($type = null, $menus = array(), $btn_with_text = true, $btn_size = '', $btn_type = '', $is_popover_right = false, $btn_group_attrs = array(), $btn_attrs = array(), $with_caret = true)
 {
 	if (!$btn_type) $btn_type = 'default';
 	$data = array(
@@ -99,9 +99,11 @@ function btn_dropdown($type = null, $menus = array(), $btn_with_text = true, $bt
 		'btn_with_text' => $btn_with_text,
 		'btn_size' => $btn_size,
 		'btn_type' => $btn_type,
-		'is_popover_align_right' => $is_popover_align_right,
+		'is_popover_align_right' => $is_popover_right,
 		'menus' => $menus,
 		'btn_group_attrs' => $btn_group_attrs,
+		'btn_attrs' => $btn_attrs,
+		'with_caret' => $with_caret,
 	);
 	$view = View::forge('_parts/btn_dropdown', $data);
 

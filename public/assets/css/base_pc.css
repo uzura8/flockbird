@@ -6,6 +6,7 @@
 }
 .commentBox .js-ajax-delete,
 .timelineBox .dropdown,
+.article .boxBtn,
 .article .btn-group.edit {
 	display: none;
 }

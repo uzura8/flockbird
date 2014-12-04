@@ -31,6 +31,12 @@ $(document).on('click', '.js-ajax-delete', function(){
 	return false;
 });
 
+$(document).on('click', '.js-watch', function(){
+	if (GL.execute_flg) return false;
+	update_watch_status(this);
+	return false;
+});
+
 if (!is_sp()) {
 	$(document).on({
 		mouseenter:function() {
@@ -136,6 +142,43 @@ $(document).on('click', '.js-display_parts', function(){
 	$('#' + targetId).removeClass('hidden');
 	if (hideSelector) $(hideSelector).addClass('hidden');
 	if (focusSelector) $(focusSelector).focus();
+	return false;
+});
+
+$(document).on('click', '.js-dropdown_content_menu', function(){
+	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
+	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
+	var isLoaded = $(this).data('loaded') ? $(this).data('loaded') : 0;
+	var memberId = $(this).data('member_id') ? parseInt($(this).data('member_id')) : 0;
+	var targetBlock = $(this).next('ul');
+
+	if (isLoaded) return false;
+	if (!get_uid()) return false;
+	//if (memberId != get_uid()) return false;
+
+	var selfObj = $(this);
+	$.ajax({
+		url : get_url(getUri),
+		type : 'GET',
+		dataType : 'text',
+		data : getData,
+		timeout: get_config('default_ajax_timeout'),
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			setLoading(targetBlock);
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			removeLoading(targetBlock);
+		},
+		success: function(response, status) {
+			if (status != 'nocontent' && response.length) targetBlock.append(response);
+			selfObj.data('loaded', '1');
+		},
+		error: function(result, status) {
+			showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
+		}
+	});
 	return false;
 });
 
