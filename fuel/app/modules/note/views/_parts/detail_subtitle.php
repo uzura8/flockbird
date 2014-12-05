@@ -13,7 +13,7 @@
 <?php if (Auth::check()): ?>
 <?php
 $dropdown_btn_group_attr = array(
-	'id' => 'btn_dropdown_menu_'.$note->id,
+	'id' => 'btn_dropdown_'.$note->id,
 	'class' => array('dropdown', 'boxBtn', 'edit'),
 );
 $dropdown_btn_attr = array(

@@ -4,7 +4,7 @@ $attr = array(
 	'class' => 'timelineBox js-hide-btn',
 	'id' => 'timelineBox_'.$timeline_id,
 	'data-id' => $timeline_id,
-	'data-hidden_btn' => 'dropdown_'.$timeline_id,
+	'data-hidden_btn' => 'btn_dropdown_'.$timeline_id,
 	'data-hidden_btn_absolute' => 1,
 );
 if (!empty($timeline_cache_id))

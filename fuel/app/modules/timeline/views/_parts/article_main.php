@@ -152,6 +152,7 @@ if (!$is_detail) $link_comment_attr['class'] .= ' hidden';
 
 
 <?php /* edit_button */; ?>
+<?php /*
 <?php
 $dropdown_btn_attr = array(
 	'data-toggle' => 'dropdown',
@@ -165,4 +166,34 @@ if (!$is_detail) $dropdown_btn_attr['data-detail_uri'] = \Timeline\Site_Util::ge
 	<?php echo btn('', '#', 'js-dropdown_tl_menu', false, 'xs', null, $dropdown_btn_attr, 'chevron-down'); ?>
 	<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel"></ul>
 </div>
+*/ ?>
+<li><span class="disabled"><?php echo icon_label('site.show_detail', 'both', false); ?></span></li>
+<?php
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdown_'.$timeline->id,
+	'class' => array('dropdown', 'boxBtn'),
+);
+$dropdown_btn_attr = array(
+	'class' => 'js-dropdown_content_menu',
+	'data-uri' => sprintf('timeline/api/menu/%d.html', $timeline->id),
+	'data-detail_uri' => 'timeline/'.$timeline->id,
+	'data-member_id' => $timeline->member_id,
+	'data-loaded' => 0,
+	'data-parent' => 'timelineBox_'.$timeline->id,
+);
+if ($is_detail) $dropdown_btn_attr['data-uri'] .= '?is_detail=1';
 
+$menus = array();
+$menu_detail_link = array('icon_term' => 'site.show_detail');
+if (!$is_detail)
+{
+	$menu_detail_link['href'] = \Timeline\Site_Util::get_detail_uri($timeline->id, $timeline->type, $foreign_table_obj);
+	$menus[] = $menu_detail_link;
+}
+elseif (!is_enabled('notice'))
+{
+	$menu_detail_link['tag'] = 'disabled';
+	$menus[] = $menu_detail_link;
+}
+echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);
+?>

@@ -83,40 +83,39 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$this->check_response_format('html');
 
+			$is_detail = (bool)\Input::get('is_detail', 0);
 			$id = (int)$id;
 			$note = Model_Note::check_authority($id);
-			$is_detail = (bool)\Input::get('is_detail', 0);
+			$this->check_browse_authority($note->public_flag, $note->member_id);
+
 			$menus = array();
-			if (\Auth::check())
+			if ($note->member_id != $this->u->id && is_enabled('notice'))
 			{
-				if ($note->member_id != $this->u->id && is_enabled('notice'))
+				$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id('note', $id, $this->u->id);
+				$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
+					'class' => 'js-watch',
+					'data-uri' => 'member/notice/api/update_watch_status/note/'.$id,
+					'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
+				));
+			}
+			else
+			{
+				if (!$is_detail) $menus[] = array('tag' => 'divider');
+				$menus[] = array('href' => 'note/edit/'.$id, 'icon_term' => 'form.do_edit');
+				if (!$note->is_published)
 				{
-					$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id('note', $id, $this->u->id);
-					$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
-						'class' => 'js-watch',
-						'data-uri' => 'member/notice/api/update_watch_status/note/'.$id,
-						'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
+					$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
+						'class' => 'js-simplePost',
+						'data-uri' => 'note/publish/'.$id,
+						'data-msg' => term('form.publish').'しますか？',
 					));
 				}
-				else
-				{
-					if (!$is_detail) $menus[] = array('tag' => 'divider');
-					$menus[] = array('href' => 'note/edit/'.$id, 'icon_term' => 'form.do_edit');
-					if (!$note->is_published)
-					{
-						$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
-							'class' => 'js-simplePost',
-							'data-uri' => 'note/publish/'.$id,
-							'data-msg' => term('form.publish').'しますか？',
-						));
-					}
-					$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
-						'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
-						'data-uri' => $is_detail ? 'note/delete/'.$note->id : 'note/api/delete/'.$id.'.json',
-						'data-msg' => term('form.delete').'します。よろしいですか。',
-						'data-parent' => 'article_'.$id,
-					));
-				}
+				$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
+					'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
+					'data-uri' => $is_detail ? 'note/delete/'.$note->id : 'note/api/delete/'.$id.'.json',
+					'data-msg' => term('form.delete').'します。よろしいですか。',
+					'data-parent' => 'article_'.$id,
+				));
 			}
 
 			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus));

@@ -8,7 +8,7 @@
 $attr = array(
 	'class' => 'article js-hide-btn',
 	'id' => 'article_'.$id,
-	'data-hidden_btn' => 'btn_dropdown_menu_'.$id,
+	'data-hidden_btn' => 'btn_dropdown_'.$id,
 	'data-hidden_btn_absolute' => 1,
 );
 ?>
@@ -31,7 +31,7 @@ $attr = array(
 )); ?>
 <?php
 $dropdown_btn_group_attr = array(
-	'id' => 'btn_dropdown_menu_'.$id,
+	'id' => 'btn_dropdown_'.$id,
 	'class' => array('dropdown', 'boxBtn'),
 );
 $dropdown_btn_attr = array(

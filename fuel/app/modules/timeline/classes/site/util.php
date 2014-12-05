@@ -449,6 +449,44 @@ class Site_Util
 		return sprintf('%s%s.json', $path, $id);
 	}
 
+	public static function get_member_watch_content_api_uri(Model_Timeline $timeline)
+	{
+		list($foreign_table, $foreign_id_column) = self::get_member_watch_content_info4timeline_type($timeline->type);
+		if (!$foreign_table || !$foreign_id_column) return '';
+
+		return sprintf('member/notice/api/update_watch_status/%s/%s.json', $foreign_table, $timeline->{$foreign_id_column});
+	}
+
+	public static function get_member_watch_content_info4timeline_type($timeline_type)
+	{
+		$types = \Config::get('timeline.types');
+		$foreign_table = '';
+		$foreign_id_column = '';
+		switch ($timeline_type)
+		{
+			case $types['normal']:
+			case $types['member_register']:
+			case $types['member_name']:
+			case $types['profile_image']:
+			case $types['album']:
+			case $types['album_image_timeline']:
+				$foreign_table = 'timeline';
+				$foreign_id_column = 'id';
+				break;
+			case $types['note']:
+				$foreign_table = 'note';
+				$foreign_id_column = 'foreign_id';
+				break;
+			case $types['album_image']:
+			case $types['album_image_profile']:
+				$foreign_table = 'album_image';
+				$foreign_id_column = 'foreign_id';
+				break;
+		}
+
+		return array($foreign_table, $foreign_id_column);
+	}
+
 	public static function get_public_flag_info(Model_Timeline $timeline)
 	{
 		$info = array(

@@ -65,6 +65,64 @@ class Controller_Api extends \Controller_Site_Api
 	}
 
 	/**
+	 * Api get_dropdown_menu
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function get_menu($id = null)
+	{
+		$response = '';
+		try
+		{
+			$this->check_response_format('html');
+
+			$is_detail = (bool)\Input::get('is_detail', 0);
+			$id = (int)$id;
+			$timeline = Model_Timeline::check_authority($id);
+			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
+
+			$menus = array();
+			if ($timeline->member_id == $this->u->id)
+			{
+				if (!$is_detail) $menus[] = array('tag' => 'divider');
+				$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
+					'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
+					'data-uri' => $is_detail ? 'timeline/delete/'.$timeline->id : Site_Util::get_delete_api_info($timeline),
+					'data-msg' => term('form.delete').'します。よろしいですか。',
+					'data-parent' => 'timelineBox_'.$id,
+				));
+			}
+			elseif ($api_uri = $this->get_member_watch_content_api_uri($timeline))
+			{
+				$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id('timeline', $id, $this->u->id);
+				$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
+					'class' => 'js-watch',
+					'data-uri' => $api_uri,
+					'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
+				));
+			}
+
+			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus));
+			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
 	 * Api post_create
 	 * 
 	 * @access  public
@@ -217,5 +275,12 @@ class Controller_Api extends \Controller_Site_Api
 		}
 
 		$this->response($response, $status_code);
+	}
+
+	private function get_member_watch_content_api_uri(Model_Timeline $timeline)
+	{
+		if (!is_enabled('notice')) return false;
+
+		return Site_Util::get_member_watch_content_api_uri($timeline);
 	}
 }

@@ -8,29 +8,6 @@ $(function() {
 		postLoadTimeline();
 	}
 
-	$(document).on('click', '.js-dropdown_tl_menu', function(){
-		var detail_uri = $(this).data('detail_uri') ? $(this).data('detail_uri') : '';
-		var delete_uri = $(this).data('delete_uri') ? $(this).data('delete_uri') : '';
-		var parent = $(this).data('parent') ? $(this).data('parent') : '';
-		var member_id = $(this).data('member_id') ? parseInt($(this).data('member_id')) : 0;
-
-		var targetBlock = $(this).next('ul');
-		if (targetBlock.html().length) return false;
-
-		var source   = $("#tl_dropdown_menu-tpl").html();
-		var template = Handlebars.compile(source);
-		var val = {};
-		val['detail_uri'] = detail_uri? get_url(detail_uri) : '';
-		if (member_id == get_uid()) {
-			if (delete_uri) {
-				val['delete_uri'] = delete_uri;
-				val['parent_id'] = parent;
-			}
-		}
-		targetBlock.html(template(val));
-		return false;
-	});
-
 	$(document).on('click','.link_show_comment', function(){
 		var id = $(this).data('id') ? $(this).data('id') : 0;
 		var blockSelector = '#comment_list_' + id;
