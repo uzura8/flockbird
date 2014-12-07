@@ -1,5 +1,5 @@
 <?php
-class DisableToUpdatePublicFlagException extends \FuelException {}
+class DisableToUpdateException extends \FuelException {}
 
 class Controller_Site_Api extends Controller_Base_Site
 {

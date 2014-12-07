@@ -12,7 +12,7 @@ if (empty($before_album_member_id) || $album->member_id != $before_album_member_
 }
 $before_album_member_id = $album->member_id;
 ?>
-	<div class="js-hide-btn main_item" id="main_item_<?php echo $album->id; ?>" data-hidden_btn="btn_album_edit_<?php echo $album->id; ?>">
+	<div class="js-hide-btn main_item" id="main_item_<?php echo $album->id; ?>" data-hidden_btn="btn_dropdown_<?php echo $album->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album->id ?>">
 			<div class="content"><?php echo img(
 				\Album\Model_AlbumImage::get_album_cover_filename($album->cover_album_image_id, $album->id, $access_from),
@@ -60,23 +60,22 @@ $album_image_count = \Album\Model_AlbumImage::get_list_count(array(
 			<div class="article">
 				<div class="body"><?php echo nl2br(strim($album->body, \Config::get('album.articles.trim_width.body'))) ?></div>
 				<small><?php echo render('_parts/image_count_link', array('count' => $album_image_count, 'uri' => 'album/slide/'.$album->id.'#slidetop')); ?></small>
-<?php if (!$disable_to_update && Auth::check() && $album->member_id == $u->id): ?>
-
-<?php 	if (\Config::get('album.display_setting.member.display_delete_link')): ?>
-<?php
-$menus = array(array('icon_term' => 'form.do_edit', 'href' => 'album/edit/'.$album->id));
-$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
-	'class' => 'js-ajax-delete',
-	'data-parent' => 'main_item_'.$album->id,
-	'data-uri' => 'album/api/delete/'.$album->id.'.json',
-));
-?>
-				<?php echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_edit', 'id' => 'btn_album_edit_'.$album->id)); ?>
-<?php 	else: ?>
-				<?php echo btn('form.edit', 'album/edit/'.$album->id, 'btn_album_edit', false, 'xs', null, array('id' => 'btn_album_edit_'.$album->id)); ?>
-<?php 	endif; ?>
-<?php endif; ?>
 			</div><!-- article -->
+<?php
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdown_'.$album->id,
+	'class' => array('dropdown', 'boxBtn'),
+);
+$get_uri = sprintf('album/api/menu/%d.html', $album->id);
+$dropdown_btn_attr = array(
+	'class' => 'js-dropdown_content_menu',
+	'data-uri' => sprintf('album/api/menu/%d.html', $album->id),
+	'data-member_id' => $album->member_id,
+	'data-loaded' => 0,
+);
+$menus = array(array('icon_term' => 'site.show_detail', 'href' => 'album/'.$album->id));
+echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);
+?>
 		</div><!-- img_box -->
 	</div><!-- main_item -->
 <?php endforeach; ?>

@@ -33,8 +33,9 @@ class Site_Util
 		return term('album_image');
 	}
 
-	public static function check_album_disabled_to_update($album_foreign_table, $is_bool = false)
+	public static function check_album_disabled_to_update($album_foreign_table, $is_bool = false, $action_type = 'edit')
 	{
+		if (!in_array($action_type, array('edit', 'delete'))) throw new InvalidArgumentException('Third parameter is invalid.');
 		if (!$album_foreign_table) return false;
 		if (!in_array($album_foreign_table, self::get_album_foreign_tables())) return false;
 
@@ -56,7 +57,7 @@ class Site_Util
 				break;
 		}
 
-		return array('message' => sprintf('%s%sは変更できません。', $message_prefix, term('public_flag.label')));
+		return array('message' => sprintf('%s%sは%sできません。', $message_prefix, term('public_flag.label'), term('form.'.$action_type)));
 	}
 
 	public static function get_album_foreign_tables()

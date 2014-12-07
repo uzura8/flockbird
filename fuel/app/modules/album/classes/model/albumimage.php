@@ -229,7 +229,7 @@ class Model_AlbumImage extends \MyOrm\Model
 	{
 		if (!$is_skip_check_album_disabled_to_update && $result = Site_Util::check_album_disabled_to_update($this->album->foreign_table))
 		{
-			throw new \DisableToUpdatePublicFlagException($result['message']);
+			throw new \DisableToUpdateException($result['message']);
 		}
 
 		$this->public_flag = $public_flag;

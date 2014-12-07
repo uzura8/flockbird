@@ -311,7 +311,7 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('album'), term('site.do_edit')), array('/album/'.$id => $album->name), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('album'), term('form.do_edit')), array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->content = \View::forge('_parts/form', array(
 			'val' => $val,
 			'album' => $album,

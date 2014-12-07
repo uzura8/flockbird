@@ -176,7 +176,7 @@ $(document).on('click', '.js-dropdown_content_menu', function(){
 			selfObj.data('loaded', '1');
 		},
 		error: function(result, status) {
-			showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
+			showMessage(getErrorMessage(response.status));
 		}
 	});
 	return false;

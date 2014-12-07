@@ -198,7 +198,7 @@ class Controller_Image_api extends \Controller_Site_Api
 					'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
 					'data-uri' => $is_detail ? 'album/image/delete/'.$album_image->id : 'album/image/api/delete/'.$id.'.json',
 					'data-msg' => term('form.delete').'します。よろしいですか。',
-					'data-parent' => 'article_'.$id,
+					'data-parent' => 'main_item_'.$id,
 				));
 			}
 			elseif (is_enabled('notice'))
@@ -365,7 +365,7 @@ class Controller_Image_api extends \Controller_Site_Api
 
 			return \Response::forge($response, $status_code);
 		}
-		catch(\DisableToUpdatePublicFlagException $e)
+		catch(\DisableToUpdateException $e)
 		{
 			$response = json_encode(array('error' => array('message' => $e->getMessage())));
 			$status_code = 403;

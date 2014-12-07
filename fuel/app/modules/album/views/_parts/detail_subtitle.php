@@ -9,16 +9,20 @@
 	'child_model' => 'album_image',
 	'date'        => array('datetime' => $album->created_at, 'label' => term('site.datetime'))
 )); ?>
-<?php if (!$disabled_to_update && isset($u) && $u->id == $album->member_id): ?>
+<?php if ((Auth::check() && $u->id != $album->member_id) || (Auth::check() && $u->id == $album->member_id && !$disabled_to_update)): ?>
 <?php
-$menus = array(
-	array('icon_term' => 'form.do_edit', 'href' => 'album/edit/'.$album->id),
-	array('icon_term' => 'form.do_delete', 'attr' => array(
-		'class' => 'js-simplePost',
-		'data-uri' => 'album/delete/'.$album->id,
-		'data-msg' => '削除します。よろしいですか。',
-	)),
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdown_'.$album->id,
+	'class' => array('dropdown', 'boxBtn', 'edit'),
 );
-echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));
+$get_uri = sprintf('album/api/menu/%d.html', $album->id);
+$dropdown_btn_attr = array(
+	'class' => 'js-dropdown_content_menu',
+	'data-uri' => sprintf('album/api/menu/%d.html?is_detail=1', $album->id),
+	'data-member_id' => $album->member_id,
+	'data-loaded' => 0,
+);
+$menus = array();
+echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);
 ?>
 <?php endif; ?>

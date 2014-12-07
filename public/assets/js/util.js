@@ -39,3 +39,8 @@ function empty(data){
 
 	return false;
 };
+
+function check_and_add_prefix(targetStr, prefix) {
+	if (targetStr.substr(0, 1) == prefix) return targetStr;
+	return prefix + targetStr;
+}

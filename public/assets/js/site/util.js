@@ -283,19 +283,22 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 
 	$.ajax({
 		url : get_url(post_uri),
-		dataType : "text",
+		dataType : 'json',
 		data : post_data,
 		timeout: get_config('default_ajax_timeout'),
 		type : 'POST',
-		success: function(data){
+		success: function(response){
 			var delete_target_attribute = target_attribute_id ? target_attribute_id : target_attribute_prefix + '_' + id;
 			$(delete_target_attribute).fadeOut();
 			$(delete_target_attribute).remove();
 			updateCounter(counterSelector, -1);
-			if (is_display_message_success) $.jGrowl(msg_prefix + '削除しました。');
+			if (is_display_message_success) {
+				var message = !empty(response.message) ? response.message : msg_prefix + '削除しました。';
+				$.jGrowl(message);
+			}
 		},
-		error: function(data){
-			$.jGrowl(get_error_message(data['status'], msg_prefix + '削除できませんでした。'));
+		error: function(response){
+			$.jGrowl(getErrorMessage(response.status, response.responseJSON.error_messages));
 		}
 	});
 }
@@ -878,8 +881,7 @@ function execute_simple_delete(selfDomElement) {
 	var counterSelector = $(selfDomElement).data('counter') ? $(selfDomElement).data('counter') : '';
 	if (!post_id && !post_uri) return false;
 
-	var parent_attr = parent_id ? '#' + parent_id : '#' + post_id;
-
+	var parent_attr = check_and_add_prefix(parent_id ? parent_id : post_id, '#');
 	delete_item(post_uri, post_id, '', parent_attr, '', msg, counterSelector);
 }
 
