@@ -66,6 +66,7 @@ $config = array(
 	'site' => array(
 		'view' => 'サイト',
 		'signup'  => 'サインアップ',
+		'auth' => '認証',
 		'login' => 'ログイン',
 		'logout' => 'ログアウト',
 		'register' => '登録する',
@@ -107,6 +108,12 @@ $config = array(
 		'term' => '利用規約',
 		'privacy_policy' => 'プライバシーポリシー',
 		'template' => 'テンプレート',
+	),
+	'common' => array(
+		'info' => '情報',
+		'request' => 'リクエスト',
+		'invalid' => '不正な',
+		'error' => 'エラー',
 	),
 	'member' => array(
 		'view' => 'メンバー',

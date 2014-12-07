@@ -46,6 +46,23 @@ function redirect(uri)
 	location.href = get_url(uri);
 }
 
+function getTerm(key)
+{
+	return get_term(key);
+}
+
+function getTerms(keys)
+{
+	var delimitter = (arguments.length > 1) ? arguments[1] : '';
+
+	var terms = '';
+	$.each(keys, function(i, key) {
+		if (term.length && delimitter) terms += delimitter;
+		terms += getTerm(key);
+	});
+	return terms;
+}
+
 function get_error_message(status)
 {
 	var default_message = (arguments.length > 1) ? arguments[1] : '';
@@ -57,6 +74,30 @@ function get_error_message(status)
 		default :
 			return default_message;
 	}
+}
+
+function getErrorMessage(statusCode)
+{
+	var messages = (arguments.length > 1) ? arguments[1] : {};
+	var absoluteMessage = (arguments.length > 2) ? arguments[2] : '';
+
+	if (absoluteMessage) return absoluteMessage;
+	if (!empty(messages.absolute)) return messages.absolute;
+	if (!empty(messages[statusCode])) return messages[statusCode];
+
+	switch (statusCode)
+	{
+		case 401:
+			return getTerms(['auth', 'info']) + 'の取得に失敗しました。' + getTerm('login') + '後、再度実行してください。';
+		case 400:
+		case 403:
+		case 404:
+			return getTerms(['invalid', 'request']) + 'です。';
+		case 500:
+			return 'サーバエラーが発生しました。';
+	}
+
+	return !empty(messages.default) ? messages.default : 'エラーが発生しました。';
 }
 
 function showMessage(msg)
@@ -756,11 +797,11 @@ function update_like_status(selfDomElement) {
 	});
 }
 
-function update_watch_status(selfDomElement) {
+function updateToggle(selfDomElement) {
 	var postUrl = $(selfDomElement).data('uri');
 	if (!postUrl) return;
 
-	var selfDomElement_html = $(selfDomElement).html();
+	var selfDomElementHtmlBefore = $(selfDomElement).html();
 
 	var post_data = {};
 	postData = set_token(post_data);
@@ -782,21 +823,17 @@ function update_watch_status(selfDomElement) {
 			GL.execute_flg = false;
 			$(selfDomElement).attr('disabled', false);
 		},
-		success: function(result){
-			var message = '';
-			if (result.status) {
-				selfDomElement_html = '<i class="glyphicon glyphicon-eye-close"></i> ' + get_term('do_unwatch');
-				msg = get_term('watch') + '対象に追加しました。';
+		success: function(response){
+			$.jGrowl(response.message);
+			if (!empty(response.is_replace)) {
+				$(selfDomElement).replaceWith(response.html);
 			} else {
-				selfDomElement_html = '<i class="glyphicon glyphicon-eye-open"></i> ' + get_term('do_watch');
-				msg = get_term('watch') + 'を解除しました。';
+				$(selfDomElement).html(response.html);
 			}
-			$.jGrowl(msg);
-			$(selfDomElement).html(selfDomElement_html);
 		},
-		error: function(result){
-			$(selfDomElement).html(selfDomElement_html);
-			$.jGrowl(get_error_message(result['status'], get_term('watch') + 'に失敗しました。'));
+		error: function(response, status){
+			$(selfDomElement).html(selfDomElementHtmlBefore);
+			$.jGrowl(getErrorMessage(response.status, response.responseJSON.error_messages));
 		}
 	});
 }

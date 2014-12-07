@@ -97,7 +97,7 @@ class Controller_Api extends \Controller_Site_Api
 			{
 				$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id('timeline', $id, $this->u->id);
 				$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
-					'class' => 'js-watch',
+					'class' => 'js-update_toggle',
 					'data-uri' => $api_uri,
 					'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
 				));

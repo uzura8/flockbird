@@ -3,7 +3,7 @@
 <div class="row">
 <div id="main_container">
 <?php foreach ($list as $album_image): ?>
-	<div class="main_item js-hide-btn" id="main_item_<?php echo $album_image->id; ?>" data-hidden_btn="btn_album_image_edit_<?php echo $album_image->id; ?>">
+	<div class="main_item js-hide-btn" id="main_item_<?php echo $album_image->id; ?>" data-hidden_btn="btn_dropdown_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!IS_SP): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
 			<div class="content"><?php echo img($album_image->get_image(), 'M', 'album/image/'.$album_image->id); ?></div>
 <?php if (!empty($is_simple_view)): ?>
@@ -82,50 +82,23 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 			</div><!-- article -->
 <?php endif; ?>
 
-<?php if (Auth::check()): ?>
 <?php
-$menus = array();
-if (!empty($is_setting_profile_image) && $album_image->album->member_id == $u->id)
-{
-	if ($album_image->file_name != $u->file_name)
-	{
-		$menus[] = array('icon_term' => 'form.set_profile_image', 'href' => '#', 'attr' => array(
-			'class' => 'js-simplePost',
-			'data-uri' => 'member/profile/image/set/'.$album_image->id,
-			'data-msg' => 'プロフィール写真に設定しますか？',
-		));
-	}
-	$menus[] = array('icon_term' => 'form.do_delete', 'href' => '#', 'attr' => array(
-		'class' => 'js-simplePost',
-		'data-uri' => 'member/profile/image/delete/'.$album_image->id,
-	));
-}
-elseif (((!empty($album) && $album->member_id == $u->id) || (!empty($member) && $member->id == $u->id)))
-{
-	$menus[] = array('icon_term' => 'form.do_edit', 'href' => 'album/image/edit/'.$album_image->id);
-	if ($album_image->album->cover_album_image_id == $album_image->id)
-	{
-		$menus[] = array('tag' => 'disabled', 'icon_term' => 'form.set_cover');
-	}
-	else
-	{
-		$menus[] = array('icon_term' => 'form.set_cover', 'attr' => array(
-			'class' => 'link_album_image_set_cover',
-			'id' => 'link_album_image_set_cover_'.$album_image->id,
-		));
-	}
-	$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
-		'class' => 'js-ajax-delete',
-		'data-parent' => 'main_item_'.$album_image->id,
-		'data-uri' => 'album/image/api/delete/'.$album_image->id.'.json',
-	));
-}
-if ($menus)
-{
-	echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_image_edit', 'id' => 'btn_album_image_edit_'.$album_image->id));
-}
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdown_'.$album_image->id,
+	'class' => array('dropdown', 'boxBtn'),
+);
+$get_uri = sprintf('album/image/api/menu/%d.html', $album_image->id);
+if (!empty($is_setting_profile_image)) $get_uri .= '?is_profile=1';
+$dropdown_btn_attr = array(
+	'class' => 'js-dropdown_content_menu',
+	'data-uri' => sprintf('album/image/api/menu/%d.html', $album_image->id),
+	'data-detail_uri' => 'album/image/'.$album_image->id,
+	'data-member_id' => $album_image->album->member_id,
+	'data-loaded' => 0,
+);
+$menus = array(array('icon_term' => 'site.show_detail', 'href' => 'album/image/'.$album_image->id));
+echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);
 ?>
-<?php endif; ?>
 		</div><!-- imgBox -->
 
 <?php if (empty($is_simple_view ) && $comments): ?>

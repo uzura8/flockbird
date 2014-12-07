@@ -28,3 +28,14 @@ function objectSort(object) {
 	}
 	return sorted;
 }
+
+function empty(data){
+	if (data === null) return true;
+	if (data === undefined) return true;
+	if (data === false) return true;
+	if (data === '') return true;
+	if (data === 0) return true;
+	if (data === '0') return true;
+
+	return false;
+};

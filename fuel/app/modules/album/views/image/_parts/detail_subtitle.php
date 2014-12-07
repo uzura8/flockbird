@@ -8,25 +8,21 @@ echo render('_parts/member_contents_box', array(
 	'model'       => 'album_image',
 	'date'        => array('datetime' => $date, 'label' => term('site.shot'))
 )); ?>
-<?php if (isset($u) && $u->id == $album_image->album->member_id): ?>
+
 <?php
-$menus = array(array('icon_term' => 'form.do_edit', 'href' => 'album/image/edit/'.$album_image->id));
-if ($album_image->album->cover_album_image_id == $album_image->id)
-{
-	$menus[] = array('tag' => 'disabled', 'icon_term' => 'form.set_cover');
-}
-else
-{
-	$menus[] = array('icon_term' => 'form.set_cover', 'attr' => array(
-		'class' => 'link_album_image_set_cover',
-		'id' => 'link_album_image_set_cover_'.$album_image->id,
-	));
-}
-$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
-	'class' => 'js-simplePost',
-	'data-uri' => 'album/image/delete/'.$album_image->id,
-	'data-msg' => '削除します。よろしいですか。',
-));
-echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdown_'.$album_image->id,
+	'class' => array('dropdown', 'boxBtn', 'edit'),
+);
+$get_uri = sprintf('album/image/api/menu/%d.html', $album_image->id);
+if (!empty($is_setting_profile_image)) $get_uri .= '?is_profile=1';
+$dropdown_btn_attr = array(
+	'class' => 'js-dropdown_content_menu',
+	'data-uri' => sprintf('album/image/api/menu/%d.html?is_detail=1', $album_image->id),
+	'data-detail_uri' => 'album/image/'.$album_image->id,
+	'data-member_id' => $album_image->album->member_id,
+	'data-loaded' => 0,
+);
+$menus = array();
+echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);
 ?>
-<?php endif; ?>

@@ -31,9 +31,9 @@ $(document).on('click', '.js-ajax-delete', function(){
 	return false;
 });
 
-$(document).on('click', '.js-watch', function(){
+$(document).on('click', '.js-update_toggle', function(){
 	if (GL.execute_flg) return false;
-	update_watch_status(this);
+	updateToggle(this);
 	return false;
 });
 

@@ -139,7 +139,7 @@ class Controller_Image extends \Controller_Site
 	public function action_edit($id = null)
 	{
 		$album_image = Model_Albumimage::check_authority($id, $this->u->id);
-		$val = self::get_validation_object($album_image, true);
+		$val = self::get_validation_object($album_image);
 
 		if (\Input::method() == 'POST')
 		{
@@ -219,14 +219,23 @@ class Controller_Image extends \Controller_Site
 	{
 		$val = \Validation::forge();
 		$val->add_model($album_image);
+		$val->fieldset()->field('file_name')->delete_rule('required');
+
+		if (Site_Util::check_album_disabled_to_update($album_image->album->foreign_table, true))
+		{
+			$val->fieldset()->delete('public_flag');
+			$val->fieldset()->field('public_flag')->delete_rule('required');
+		}
+		else
+		{
+			$val->add('original_public_flag')
+					->add_rule('in_array', \Site_Util::get_public_flags());
+		}
 
 		$val->add('shot_at_time', '撮影日時')
 				->add_rule('required')
 				->add_rule('datetime_except_second')
 				->add_rule('datetime_is_past');
-
-		$val->add('original_public_flag')
-				->add_rule('in_array', \Site_Util::get_public_flags());
 
 		return $val;
 	}

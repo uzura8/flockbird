@@ -75,7 +75,8 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function post_update_watch_status($foreign_table = null, $foreign_id = null)
 	{
-		$response = array('status' => 0);
+		$response = array('status' => 0, 'error_messages' => array());
+		$response['error_messages']['default'] = term('form.watch').'状態の変更に失敗しました。';
 		try
 		{
 			if (!is_enabled('notice')) throw new \HttpNotFoundException();
@@ -90,8 +91,10 @@ class Controller_Api extends \Controller_Site_Api
 
 			$model = \Site_Model::get_model_name($foreign_table);
 			$foreign_obj = $model::check_authority($foreign_id);
-			$this->check_browse_authority($foreign_obj->public_flag, $foreign_obj->member_id);
+			$member_id = ($foreign_table == 'album_image') ? $foreign_obj->album->member_id : $foreign_obj->member_id;
+			$this->check_browse_authority($foreign_obj->public_flag, $member_id);
 
+			\DB::start_transaction();
 			$is_registerd = (bool)Model_MemberWatchContent::change_registered_status4unique_key(array(
 				'foreign_table' => $foreign_table,
 				'foreign_id' => $foreign_id,
@@ -100,6 +103,8 @@ class Controller_Api extends \Controller_Site_Api
 			\DB::commit_transaction();
 
 			$response['status'] = (int)$is_registerd;
+			$response['message'] = $is_registerd ? term('form.watch').'対象に追加しました。' : term('form.watch').'を解除しました。';
+			$response['html'] = icon_label($is_registerd ? 'form.do_unwatch' : 'form.do_watch', 'both', false);
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
@@ -116,13 +121,16 @@ class Controller_Api extends \Controller_Site_Api
 		}
 		catch(\Database_Exception $e)
 		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
+			$status_code = 500;
 		}
 		catch(\FuelException $e)
 		{
+			$status_code = 500;
+		}
+		if ($status_code == 500)
+		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
+			$response['error_messages']['500'] = $response['error_messages']['default'];
 		}
 
 		$this->response($response, $status_code);
