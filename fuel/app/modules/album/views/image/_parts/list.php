@@ -91,7 +91,6 @@ $get_uri = sprintf('album/image/api/menu/%d.html', $album_image->id);
 $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('album/image/api/menu/%d.html', $album_image->id),
-	'data-detail_uri' => 'album/image/'.$album_image->id,
 	'data-member_id' => $album_image->album->member_id,
 	'data-loaded' => 0,
 );

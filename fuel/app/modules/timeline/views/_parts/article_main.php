@@ -160,7 +160,6 @@ $dropdown_btn_group_attr = array(
 $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('timeline/api/menu/%d.html', $timeline->id),
-	'data-detail_uri' => 'timeline/'.$timeline->id,
 	'data-member_id' => $timeline->member_id,
 	'data-loaded' => 0,
 	'data-parent' => 'timelineBox_'.$timeline->id,

@@ -37,8 +37,6 @@ $dropdown_btn_group_attr = array(
 $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('note/api/menu/%d.html', $id),
-	'data-detail_uri' => 'note/'.$id,
-	//'data-parent' => 'article_'.$id,
 	'data-member_id' => $note->member_id,
 	'data-loaded' => 0,
 );
