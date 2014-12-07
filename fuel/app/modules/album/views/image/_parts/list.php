@@ -88,7 +88,6 @@ $dropdown_btn_group_attr = array(
 	'class' => array('dropdown', 'boxBtn'),
 );
 $get_uri = sprintf('album/image/api/menu/%d.html', $album_image->id);
-if (!empty($is_setting_profile_image)) $get_uri .= '?is_profile=1';
 $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('album/image/api/menu/%d.html', $album_image->id),
