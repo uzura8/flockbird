@@ -164,7 +164,7 @@ class Model_Album extends \MyOrm\Model
 		$album_image_ids = array();
 		if ($file_tmps)
 		{
-			list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album->id, 'album_id', 'album_image', 'Album', $values['public_flag']);
+			list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album->id, 'album_id', 'album_image', $values['public_flag']);
 		}
 		if (\Module::loaded('timeline'))
 		{

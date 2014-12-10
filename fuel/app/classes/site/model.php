@@ -8,9 +8,16 @@ class Site_Model
 
 	public static function get_namespace4table($table)
 	{
-		if (preg_match('/^(note|album|timeline)/', $table, $matches))
+		if (preg_match('/^(note|album|timeline|news|notice|admin|content)/', $table, $matches))
 		{
 			return ucfirst($matches[1]);
+		}
+		switch ($table)
+		{
+			case 'member_watch_content':
+				return 'Notice';
+			case 'member_follow_timeline':
+				return 'timeline';
 		}
 
 		return '';

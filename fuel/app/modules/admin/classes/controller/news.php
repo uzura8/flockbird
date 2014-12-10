@@ -144,11 +144,11 @@ class Controller_News extends Controller_Admin
 				$news->save();
 				if ($is_enabled_image)
 				{
-					list($moved_images, $news_image_ids) = \Site_FileTmp::save_images($image_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
+					list($moved_images, $news_image_ids) = \Site_FileTmp::save_images($image_tmps, $news->id, 'news_id', 'news_image', null, true);
 				}
 				if ($is_enabled_file)
 				{
-					list($moved_files, $news_file_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_file', 'News', null, true, 'file');
+					list($moved_files, $news_file_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_file', null, true, 'file');
 				}
 				if ($is_enabled_link)
 				{
@@ -282,12 +282,12 @@ class Controller_News extends Controller_Admin
 				$news->save();
 				if ($is_enabled_image)
 				{
-					list($moved_images, $news_image_ids) = \Site_FileTmp::save_images($image_tmps, $news->id, 'news_id', 'news_image', 'News', null, true);
+					list($moved_images, $news_image_ids) = \Site_FileTmp::save_images($image_tmps, $news->id, 'news_id', 'news_image', null, true);
 					\Site_Upload::update_image_objs4file_objects($news_images, $images);
 				}
 				if ($is_enabled_file)
 				{
-					list($moved_files, $news_file_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_file', 'News', null, true, 'file');
+					list($moved_files, $news_file_ids) = \Site_FileTmp::save_images($file_tmps, $news->id, 'news_id', 'news_file', null, true, 'file');
 					\Site_Upload::update_image_objs4file_objects($news_files, $files);
 				}
 				if ($is_enabled_link)

@@ -93,7 +93,7 @@ class Controller_Content_Image extends Controller_Admin
 				//\Site_FileTmp::check_uploaded_under_accepted_filesize($file_tmps, $this->u->filesize_total, \Site_Upload::get_accepted_filesize());
 
 				\DB::start_transaction();
-				list($moved_files, $site_image_ids) = \Site_FileTmp::save_images($file_tmps, $this->u->id, 'admin_user_id', 'site_image', null, null, true);
+				list($moved_files, $site_image_ids) = \Site_FileTmp::save_images($file_tmps, $this->u->id, 'admin_user_id', 'site_image', null, true);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除

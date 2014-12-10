@@ -198,7 +198,7 @@ class Model_Note extends \MyOrm\Model
 			if ($file_tmps)
 			{
 				$album_id = \Album\Model_Album::get_id_for_foreign_table($member_id, 'note');
-				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', 'Album', $this->public_flag);
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', $this->public_flag);
 				\Note\Model_NoteAlbumImage::save_multiple($this->id, $album_image_ids);
 			}
 			if ($album_images && $files) \Site_Upload::update_image_objs4file_objects($album_images, $files, $this->public_flag);

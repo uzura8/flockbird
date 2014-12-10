@@ -65,7 +65,7 @@ class Site_FileTmp
 		return true;
 	}
 
-	public static function save_images($file_tmps, $parent_id, $parent_id_field, $related_table, $namespace = null, $public_flag = null, $is_ignore_member_id = false, $type = 'img')
+	public static function save_images($file_tmps, $parent_id, $parent_id_field, $related_table, $public_flag = null, $is_ignore_member_id = false, $type = 'img')
 	{
 		if (!in_array($type, array('img', 'file'))) throw new InvalidArgumentException('Parameter type is invalid.');
 
@@ -73,7 +73,7 @@ class Site_FileTmp
 		$related_table_ids = array();
 		if (!$file_tmps) return array($moved_files, $related_table_ids);
 
-		$model = Util_Orm::get_model_name($related_table, $namespace);
+		$model = Site_Model::get_model_name($related_table);
 		$related_table_obj = $model::forge();
 		if (!$file_cate = $related_table_obj->get_image_prefix())
 		{
