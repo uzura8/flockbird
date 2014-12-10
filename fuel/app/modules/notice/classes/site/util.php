@@ -40,10 +40,10 @@ class Site_Util
 
 	public static function update_notice_status2unread($member_id_to, $notice_id)
 	{
-		$obj_notice_status = \Notice\Model_NoticeStatus::change_status2unread($member_id_to, $notice_id);
-		if (\Config::get('notice.cache.unreadCount.isEnabled')) \Notice\Site_Util::delete_unread_count_cache($member_id_to);
+		$is_changed_status = \Notice\Model_NoticeStatus::change_status2unread($member_id_to, $notice_id);
+		if (\Config::get('notice.cache.unreadCount.isEnabled') && $is_changed_status) \Notice\Site_Util::delete_unread_count_cache($member_id_to);
 
-		return $obj_notice_status;
+		return $is_changed_status;
 	}
 
 	public static function regiser_watch_content($member_id, $foreign_table, $foreign_id, $type_key)

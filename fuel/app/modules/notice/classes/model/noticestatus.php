@@ -59,15 +59,17 @@ class Model_NoticeStatus extends \MyOrm\Model
 				'notice_id' => $notice_id,
 				'is_read' => 0,
 			));
-			$obj->save();
+
+			return (bool)$obj->save();
 		}
 		elseif ($obj->is_read)
 		{
 			$obj->is_read = 0;
-			$obj->save();
+
+			return (bool)$obj->save();
 		}
 
-		return $obj;
+		return false;
 	}
 
 	public static function change_status2read($member_id, $notice_id)

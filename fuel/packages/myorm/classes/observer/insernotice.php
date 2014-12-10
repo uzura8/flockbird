@@ -58,6 +58,8 @@ class Observer_InsertNotice extends \Orm\Observer
 	*/
 	private function check_already_executed($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key)
 	{
+		if (!self::check_is_target_already_executed($foreign_table, $type_key)) return false;
+
 		$params = array(
 			'foreign_table' => $foreign_table,
 			'foreign_id' => $foreign_id,
@@ -68,10 +70,25 @@ class Observer_InsertNotice extends \Orm\Observer
 		if (!$this->_executed_params)
 		{
 			$this->_executed_params = $params;
+
 			return false;
 		}
 
-		return $params == $this->_executed_params;
+		if ($this->_executed_params != $params)
+		{
+			$this->_executed_params = $params;
+
+			return false;
+		}
+
+		return true;
+	}
+
+	private function check_is_target_already_executed($foreign_table, $type_key)
+	{
+		if ($foreign_table == 'album' && $type_key == 'child_data') return true;
+
+		return false;
 	}
 
 	private function get_variables($obj)

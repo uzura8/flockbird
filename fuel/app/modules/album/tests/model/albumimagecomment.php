@@ -167,10 +167,10 @@ class Test_Model_AlbumImageComment extends \TestCase
 		// お知らせを受け取る
 		$data[] = array(2, 1, 2, false, false, false, false);// #0: 未読 / 自分が自分に
 		$data[] = array(2, 1, 1, false, true,   true,  true);// #1: 未読 / 他人が自分に
-		$data[] = array(2, 1, 1, false, true,  false, false);// #2: 未読 / 再度他人が自分に
+		$data[] = array(2, 1, 1, false, false, false, false);// #2: 未読 / 再度他人が自分に
 		$data[] = array(3, 1, 3, true,  false, false, false);// #3: 既読 / 自分が自分に
-		$data[] = array(3, 1, 1, true,  true,   true,  true);// #4: 既読 / 他人が自分に
-		$data[] = array(3, 1, 1, true,  true,   true, false);// #5: 既読 / 再度他人が自分に
+		$data[] = array(3, 1, 1, true,   true,  true,  true);// #4: 既読 / 他人が自分に
+		$data[] = array(3, 1, 1, true,   true,  true, false);// #5: 既読 / 再度他人が自分に
 
 		// お知らせを受け取らない
 		$data[] = array(4, 0, 1, false, false, false, false);// #6:  未読 / 他人が自分に
