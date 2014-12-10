@@ -16,6 +16,36 @@ class Site_Model
 		return '';
 	}
 
+	public static function get4table_and_id($table, $id, $relateds = array())
+	{
+		$model = self::get_model_name($table);
+		$params = $relateds ? array('related' => $relateds) : array();
+
+		return $model::find($id, $params);
+	}
+
+	public static function get_value4table_and_id($table, $id, $prop)
+	{
+		list($related_table, $related_prop) = self::get_related_table_and_property($table, $prop);
+		$relateds = $related_table ? array($related_table) : array();
+		$model = self::get4table_and_id($table, $id, $relateds);
+
+		return $related_table ? $model->{$related_table}->{$related_prop} : $model->{$prop};
+	}
+
+	public static function get_related_table_and_property($table, $prop)
+	{
+		$related_table = '';
+		$related_prop  = '';
+		if ($table == 'album_image' && $prop == 'member_id')
+		{
+			$related_table = 'album';
+		}
+		if ($related_table && !$related_prop) $related_prop = $prop;
+
+		return array($related_table, $related_prop);
+	}
+
 	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_mypage = false, $where = array(), $member_id_colmn = null)
 	{
 		if ($target_member_id) $where[] = array($member_id_colmn ?: 'member_id', $target_member_id);

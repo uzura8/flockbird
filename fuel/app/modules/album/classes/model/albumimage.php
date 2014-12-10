@@ -113,6 +113,17 @@ class Model_AlbumImage extends \MyOrm\Model
 
 		if (is_enabled('notice'))
 		{
+			static::$_observers['MyOrm\Observer_InsertNotice'] = array(
+				'events'   => array('after_insert'),
+				'update_properties' => array(
+					'foreign_table' => array('album' => 'value'),
+					'foreign_id' => array('album_id' => 'property'),
+					'type_key' => array('child_data' => 'value'),
+					'member_id_from' => array(
+						'related' => array('album' => 'member_id'),
+					),
+				),
+			);
 			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
 				'events' => array('before_delete'),
 				'conditions' => array(
@@ -121,6 +132,7 @@ class Model_AlbumImage extends \MyOrm\Model
 				),
 			);
 		}
+
 		if (\Module::loaded('timeline'))
 		{
 			$type_album_image_profile = \Config::get('timeline.types.album_image_profile');

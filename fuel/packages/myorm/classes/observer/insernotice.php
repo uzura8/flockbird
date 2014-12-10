@@ -23,7 +23,7 @@ class Observer_InsertNotice extends \Orm\Observer
 		list($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key) = self::get_variables($obj);
 
 		// watch content
-		if ($member_id_from != $member_id_to)
+		if ($member_id_to && $member_id_from != $member_id_to)
 		{
 			\Notice\Site_Util::regiser_watch_content($member_id_from, $foreign_table, $foreign_id, $type_key);
 		}
@@ -33,7 +33,7 @@ class Observer_InsertNotice extends \Orm\Observer
 		{
 			return;
 		}
-		$obj_notice = \Notice\Model_Notice::check_and_create($foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type($type_key), $member_id_to);
+		$obj_notice = \Notice\Model_Notice::check_and_create($foreign_table, $foreign_id, \Notice\Site_Util::get_notice_type($type_key));
 		\Notice\Model_NoticeMemberFrom::check_and_create($obj_notice->id, $member_id_from);
 		foreach ($notice_member_ids as $notice_member_id)
 		{
@@ -47,8 +47,7 @@ class Observer_InsertNotice extends \Orm\Observer
 			$this->_update_properties['foreign_table'],
 			$this->_update_properties['foreign_id'],
 			$this->_update_properties['type_key'],
-			$this->_update_properties['member_id_from'],
-			$this->_update_properties['member_id_to']
+			$this->_update_properties['member_id_from']
 		);
 	}
 
@@ -68,6 +67,7 @@ class Observer_InsertNotice extends \Orm\Observer
 				}
 			}
 		}
+		if (!isset($member_id_to)) $member_id_to = 0;
 
 		return array($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key);
 	}

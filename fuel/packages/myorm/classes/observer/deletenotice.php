@@ -34,12 +34,15 @@ class Observer_DeleteNotice extends \Orm\Observer
 			else
 			{
 				// delete notice_member_from
-				$is_delete = self::delete_notice_member_from($notice->id, $obj->member_id);
-				if ($is_delete && !\Notice\Model_NoticeMemberFrom::get_count4notice_id($notice->id, $notice->member_id))
+				if (self::delete_notice_member_from($notice->id, $obj->member_id))
 				{
-					// delete notice
-					self::delete_notice_unread_cache($notice->id);
-					$notice->delete();
+					$parent_content_member_id = \Site_Model::get_value4table_and_id($notice->foreign_table, $notice->foreign_id, 'member_id');
+					if (!\Notice\Model_NoticeMemberFrom::get_count4notice_id($notice->id, $parent_content_member_id))
+					{
+						// delete notice
+						self::delete_notice_unread_cache($notice->id);
+						$notice->delete();
+					}
 				}
 			}
 		}

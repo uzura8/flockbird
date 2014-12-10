@@ -29,8 +29,10 @@ class Site_Util
 	public static function get_notice_target_member_ids($member_id_to, $member_id_from, $foreign_table, $foreign_id, $type_key)
 	{
 		$notice_member_ids = \Util_Orm::conv_col2array(\Notice\Model_MemberWatchContent::get4foreign_data($foreign_table, $foreign_id), 'member_id');
-		if (!in_array($member_id_to, $notice_member_ids)) $notice_member_ids[] = $member_id_to;
+		if ($member_id_to && !in_array($member_id_to, $notice_member_ids)) $notice_member_ids[] = $member_id_to;
 		$notice_member_ids = \Util_Array::unset_item($member_id_from, $notice_member_ids);
+		if (!in_array($type_key, array('comment', 'like'))) return $notice_member_ids;
+
 		$config_key = \Notice\Form_MemberConfig::get_name($type_key);
 
 		return \Site_Member::get_member_ids4config_value($config_key, 1, $notice_member_ids);

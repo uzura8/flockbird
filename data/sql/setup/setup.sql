@@ -446,13 +446,11 @@ CREATE TABLE `notice` (
   `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
   `type` tinyint(2) NOT NULL DEFAULT '0',
-  `member_id` int(11) NOT NULL COMMENT 'Auther id',
   `body` text NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `foreign_table_foreign_id_type_idx` (`foreign_table`,`foreign_id`,`type`),
-  CONSTRAINT `notice_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+  KEY `foreign_table_foreign_id_type_created_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `notice_status` (

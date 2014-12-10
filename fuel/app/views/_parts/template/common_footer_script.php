@@ -34,6 +34,7 @@ function get_term(key) {
 <?php if (is_enabled('album')): ?>
 		'album': '<?php echo term('album'); ?>',
 		'album_image': '<?php echo term('album_image'); ?>',
+		'add_picture': '<?php echo term('form.add_picture'); ?>',
 <?php endif; ?>
 <?php if (is_enabled('timeline')): ?>
 		'timeline': '<?php echo term('timeline'); ?>',

@@ -84,6 +84,16 @@ class Model_Album extends \MyOrm\Model
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_album_foreign_tables();
 
+		if (is_enabled('notice'))
+		{
+			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
+				'events' => array('before_delete'),
+				'conditions' => array(
+					'foreign_table' => array('album' => 'value'),
+					'foreign_id' => array('id' => 'property'),
+				),
+			);
+		}
 		if (\Module::loaded('timeline'))
 		{
 			// 更新時に timeline の sort_datetime を更新

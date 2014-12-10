@@ -50,7 +50,7 @@ function getNoticeContentUriMiddlePath(foreign_table)
 
 function convertNoticeAction(foreign_table, type)
 {
-	return convertNoticeForeignTable(foreign_table) + 'に' + convertNoticeType(type) + 'しました。';
+	return convertNoticeForeignTable(foreign_table) + 'に' + convertNoticeType(foreign_table, type) + 'しました。';
 }
 
 function convertNoticeForeignTable(foreign_table)
@@ -59,13 +59,14 @@ function convertNoticeForeignTable(foreign_table)
 	{
 		case 'timeline':
 		case 'note':
+		case 'album':
 		case 'album_image':
 			return get_term(foreign_table);
 	}
 	return '';
 }
 
-function convertNoticeType(type)
+function convertNoticeType(foreign_table, type)
 {
 	switch (type)
 	{
@@ -73,6 +74,9 @@ function convertNoticeType(type)
 			return get_term('comment');
 		case '4':
 			return get_term('like');
+		case '5':
+			if (foreign_table == 'album') return get_term('add_picture');
+			return '追加';
 	}
 	return '';
 }

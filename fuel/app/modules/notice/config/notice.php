@@ -22,9 +22,11 @@ return array(
 		'update' => 2,
 		'comment' => 3,
 		'like' => 4,
+		'child_data' => 5,
 	),
 	'periode_to_update' => array(
 		'default' => '6 hours',
+		//'default' => '1 minute',
 	),
 	'display_setting' => array(
 	),
