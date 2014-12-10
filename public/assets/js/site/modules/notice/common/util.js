@@ -41,6 +41,7 @@ function getNoticeContentUriMiddlePath(foreign_table)
 	{
 		case 'timeline':
 		case 'note':
+		case 'album':
 			return foreign_table;
 		case 'album_image':
 			return 'album/image';
