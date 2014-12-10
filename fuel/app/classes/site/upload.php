@@ -71,7 +71,7 @@ class Site_Upload
 
 	public static function get_filepath_prefix_from_filename($filename)
 	{
-		return Util_file::get_path_partial(str_replace('_', '/', $filename), 2).'/';
+		return Util_file::get_path_partial(str_replace('_', '/', $filename), 2, 1).'/';
 	}
 
 	public static function convert_filename2filepath($filename)

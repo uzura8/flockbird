@@ -285,12 +285,12 @@ class Util_File
 
 	public static function get_path_partial($path, $length = 1, $offset = 0)
 	{
-		$parts = explode('/', $path);
+		$parts = explode('/', trim($path, '/'));
 		if (count($parts) < $length + $offset) throw new \InvalidArgumentException('Parameter is invalid.');
 
 		$parts = array_reverse($parts);
 		$return = '';
-		for ($i = 0; $i < $length; $i++)
+		for ($i = 0; $i < $length + $offset; $i++)
 		{
 			if ($i < $offset) continue;
 
