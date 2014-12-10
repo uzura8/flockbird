@@ -5,6 +5,7 @@ class Observer_InsertNotice extends \Orm\Observer
 {
 	protected $_relations;
 	protected $_update_properties;
+	protected $_executed_params;
 
 	public function __construct($class)
 	{
@@ -21,6 +22,7 @@ class Observer_InsertNotice extends \Orm\Observer
 	private function execute($obj)
 	{
 		list($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key) = self::get_variables($obj);
+		if (self::check_already_executed($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key)) return;
 
 		// watch content
 		if ($member_id_to && $member_id_from != $member_id_to)
@@ -49,6 +51,27 @@ class Observer_InsertNotice extends \Orm\Observer
 			$this->_update_properties['type_key'],
 			$this->_update_properties['member_id_from']
 		);
+	}
+
+	/**
+	* 実行済みの処理を重複して実行しない
+	*/
+	private function check_already_executed($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key)
+	{
+		$params = array(
+			'foreign_table' => $foreign_table,
+			'foreign_id' => $foreign_id,
+			'member_id_to' => $member_id_to,
+			'member_id_from' => $member_id_from,
+			'type_key' => $type_key,
+		);
+		if (!$this->_executed_params)
+		{
+			$this->_executed_params = $params;
+			return false;
+		}
+
+		return $params == $this->_executed_params;
 	}
 
 	private function get_variables($obj)
