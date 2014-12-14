@@ -190,7 +190,7 @@ class Controller_Base extends Controller_Hybrid
 	{
 		$title_name = '';
 		if ($title) list($title_name, $title_label) = static::get_title_parts($title);
-		$this->template->title = (!$is_no_title || $title_name) ? View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label)) : '';
+		$this->template->title = (!$is_no_title && $title_name) ? View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label)) : '';
 		$this->template->header_title = site_title($title_name);
 
 		if ($info) $this->template->header_info = View::forge('_parts/information', $info);
