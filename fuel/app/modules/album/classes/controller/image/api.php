@@ -207,7 +207,7 @@ class Controller_Image_api extends \Controller_Site_Api
 				$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
 					'class' => 'js-update_toggle',
 					'data-uri' => 'member/notice/api/update_watch_status/album_image/'.$id,
-					'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
+					//'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
 				));
 			}
 

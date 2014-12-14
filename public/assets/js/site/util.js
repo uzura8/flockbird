@@ -802,12 +802,11 @@ function update_like_status(selfDomElement) {
 
 function updateToggle(selfDomElement) {
 	var postUrl = $(selfDomElement).data('uri');
-	if (!postUrl) return;
+	var postData = $(this).data('post_data') ? $(this).data('post_data') : {};
 
 	var selfDomElementHtmlBefore = $(selfDomElement).html();
-
-	var post_data = {};
-	postData = set_token(post_data);
+	postData = set_token(postData);
+	if (!postUrl) return;
 
 	$.ajax({
 		url : get_url(postUrl),

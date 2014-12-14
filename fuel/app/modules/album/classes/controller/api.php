@@ -87,7 +87,7 @@ class Controller_Api extends \Controller_Site_Api
 				$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
 					'class' => 'js-update_toggle',
 					'data-uri' => 'member/notice/api/update_watch_status/album/'.$id,
-					'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
+					//'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
 				));
 			}
 

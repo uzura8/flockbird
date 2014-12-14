@@ -102,7 +102,7 @@ class Controller_Api extends \Controller_Site_Api
 					$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
 						'class' => 'js-update_toggle',
 						'data-uri' => $api_uri,
-						'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
+						//'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
 					));
 				}
 				if (\Config::get('timeline.articleUnfollow.isEnabled'))
@@ -111,7 +111,7 @@ class Controller_Api extends \Controller_Site_Api
 					$menus[] = array('icon_term' => $is_followed ? 'followed' : 'do_follow', 'attr' => array(
 						'class' => 'js-update_toggle',
 						'data-uri' => sprintf('timeline/api/update_follow_status/%d.json', $timeline->id),
-						'data-msg' => $is_followed ? term('follow').'を解除しますか？' : term('follow').'しますか？',
+						//'data-msg' => $is_followed ? term('follow').'を解除しますか？' : term('follow').'しますか？',
 					));
 				}
 			}

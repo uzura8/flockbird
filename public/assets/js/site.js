@@ -32,8 +32,15 @@ $(document).on('click', '.js-ajax-delete', function(){
 });
 
 $(document).on('click', '.js-update_toggle', function(){
+	var confirmMsg = $(this).data('msg') ? $(this).data('msg') : '';
 	if (GL.execute_flg) return false;
-	updateToggle(this);
+	if (confirmMsg.length > 0) {
+		apprise(confirmMsg, {'confirm':true}, function(r) {
+			if (r == true) updateToggle(this);
+		});
+	} else {
+		updateToggle(this);
+	}
 	return false;
 });
 
