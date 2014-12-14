@@ -91,7 +91,7 @@ class Controller_Api extends \Controller_Site_Api
 				));
 			}
 
-			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus));
+			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus, 'is_ajax_loaded' => true));
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)

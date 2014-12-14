@@ -93,6 +93,7 @@ class Controller_Api extends \Controller_Site_Api
 			$foreign_obj = $model::check_authority($foreign_id);
 			$member_id = ($foreign_table == 'album_image') ? $foreign_obj->album->member_id : $foreign_obj->member_id;
 			$this->check_browse_authority($foreign_obj->public_flag, $member_id);
+			if ($member_id == $this->u->id) throw new \HttpForbiddenException;
 
 			\DB::start_transaction();
 			$is_registerd = (bool)Model_MemberWatchContent::change_registered_status4unique_key(array(

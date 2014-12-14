@@ -33,6 +33,12 @@ class Model_MemberWatchContent extends \MyOrm\Model
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
 		),
+		'MyOrm\Observer_MemberWatchContentInserted' => array(
+			'events' => array('after_insert'),
+		),
+		//'MyOrm\Observer_MemberWatchContentDeleted' => array(
+		//	'events' => array('before_delete'),
+		//),
 	);
 
 	public static function _init()

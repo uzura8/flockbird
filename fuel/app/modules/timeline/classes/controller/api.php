@@ -93,17 +93,30 @@ class Controller_Api extends \Controller_Site_Api
 					'data-parent' => 'timelineBox_'.$id,
 				));
 			}
-			elseif ($api_uri = $this->get_member_watch_content_api_uri($timeline))
+			else
 			{
-				$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id('timeline', $id, $this->u->id);
-				$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
-					'class' => 'js-update_toggle',
-					'data-uri' => $api_uri,
-					'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
-				));
+				if ($api_uri = $this->get_member_watch_content_api_uri($timeline))
+				{
+					list($foreign_table, $foreign_id_prop) = Site_Util::get_member_watch_content_info4timeline_type($timeline->type);
+					$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id($foreign_table, $timeline->{$foreign_id_prop}, $this->u->id);
+					$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
+						'class' => 'js-update_toggle',
+						'data-uri' => $api_uri,
+						'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
+					));
+				}
+				if (\Config::get('timeline.articleUnfollow.isEnabled'))
+				{
+					$is_followed = (bool)Model_MemberFollowTimeline::get4timeline_id_and_member_id($timeline->id, $this->u->id);
+					$menus[] = array('icon_term' => $is_followed ? 'followed' : 'do_follow', 'attr' => array(
+						'class' => 'js-update_toggle',
+						'data-uri' => sprintf('timeline/api/update_follow_status/%d.json', $timeline->id),
+						'data-msg' => $is_followed ? term('follow').'を解除しますか？' : term('follow').'しますか？',
+					));
+				}
 			}
 
-			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus));
+			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus, 'is_ajax_loaded' => true));
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
@@ -117,6 +130,68 @@ class Controller_Api extends \Controller_Site_Api
 		catch(\FuelException $e)
 		{
 			$status_code = 400;
+		}
+
+		$this->response($response, $status_code);
+	}
+
+	/**
+	 * Timeline post update_fallow_status
+	 * 
+	 * @access  public
+	 * @return  Response (json)
+	 */
+	public function post_update_follow_status($id = null)
+	{
+		$response = array('status' => 0, 'error_messages' => array());
+		$response['error_messages']['default'] = term('form.fallow').'状態の変更に失敗しました。';
+		try
+		{
+			$this->check_response_format('json');
+			\Util_security::check_csrf();
+
+			$id = (int)$id;
+			if (\Input::post('id')) $id = (int)\Input::post('id');
+			$timeline = Model_Timeline::check_authority($id);
+			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
+			if ($timeline->member_id == $this->u->id) throw new \HttpForbiddenException;// 自分のタイムラインはフォロー解除不可
+
+			\DB::start_transaction();
+			$is_registerd = (bool)Model_MemberFollowTimeline::change_registered_status4unique_key(array(
+				'member_id' => $this->u->id,
+				'timeline_id' => $timeline->id,
+			));
+			\DB::commit_transaction();
+
+			$response['status'] = (int)$is_registerd;
+			$response['message'] = $is_registerd ? term('follow').'しました。' : term('follow').'を解除しました。';
+			$response['html'] = icon_label($is_registerd ? 'followed' : 'do_follow', 'both', false);
+			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
+		catch(\Database_Exception $e)
+		{
+			$status_code = 500;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 500;
+		}
+		if ($status_code == 500)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			$response['error_messages']['500'] = $response['error_messages']['default'];
 		}
 
 		$this->response($response, $status_code);

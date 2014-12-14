@@ -148,13 +148,10 @@ $(document).on('click', '.js-display_parts', function(){
 $(document).on('click', '.js-dropdown_content_menu', function(){
 	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
-	var isLoaded = $(this).data('loaded') ? $(this).data('loaded') : 0;
 	var memberId = $(this).data('member_id') ? parseInt($(this).data('member_id')) : 0;
 	var targetBlock = $(this).next('ul');
 
-	if (isLoaded) return false;
 	if (!get_uid()) return false;
-	//if (memberId != get_uid()) return false;
 
 	var selfObj = $(this);
 	$.ajax({
@@ -172,8 +169,10 @@ $(document).on('click', '.js-dropdown_content_menu', function(){
 			removeLoading(targetBlock);
 		},
 		success: function(response, status) {
-			if (status != 'nocontent' && response.length) targetBlock.append(response);
-			selfObj.data('loaded', '1');
+			if (status != 'nocontent' && response.length) {
+				targetBlock.find('li.ajax_loaded').remove();
+				targetBlock.append(response);
+			}
 		},
 		error: function(result, status) {
 			showMessage(getErrorMessage(response.status));

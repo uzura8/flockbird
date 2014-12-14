@@ -485,7 +485,7 @@ CREATE TABLE `member_watch_content` (
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `foreign_table_foreign_id_member_id_UNIQUE_idx` (`foreign_table`,`foreign_id`,`member_id`),
-  CONSTRAINT `member_watch_contents_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+  CONSTRAINT `member_watch_content_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

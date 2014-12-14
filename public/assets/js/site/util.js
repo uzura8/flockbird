@@ -836,7 +836,8 @@ function updateToggle(selfDomElement) {
 		},
 		error: function(response, status){
 			$(selfDomElement).html(selfDomElementHtmlBefore);
-			$.jGrowl(getErrorMessage(response.status, response.responseJSON.error_messages));
+			var responseMessage = !empty(response.responseJSON) ? response.responseJSON.error_messages : '';
+			$.jGrowl(getErrorMessage(response.status, responseMessage));
 		}
 	});
 }

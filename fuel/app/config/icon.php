@@ -148,8 +148,14 @@ $config = array(
 	'profile' => 'user',
 	//'guest'   => 'Guest',
 	//'follow'  => 'フォロー',
-	//'do_follow' => 'フォローする',
-	//'followed'  => 'フォロー中',
+	'do_follow' => array(
+		'key' => 'square-o',
+		'prefix' => 'fa fa-',
+	),
+	'followed' => array(
+		'key' => 'check-square-o',
+		'prefix' => 'fa fa-',
+	),
 	//'friend' => 'フレンド',
 	//'remember_me'  => '次回から自動的にログイン',
 	'public_flag' => array(

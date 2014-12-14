@@ -48,6 +48,20 @@ class Model_MemberFollowTimeline extends \MyOrm\Model
 
 	public static function get4timeline_id_and_member_id($timeline_id, $member_id)
 	{
-		return self::query()->where('timeline_id', $timeline_id)->where('member_id', $member_id)->get_one();
+		return self::query()->where('member_id', $member_id)->where('timeline_id', $timeline_id)->get_one();
+	}
+
+	public static function check_and_create($timeline_id, $member_id)
+	{
+		if (!$obj = self::get4timeline_id_and_member_id($timeline_id, $member_id))
+		{
+			$obj = self::forge(array(
+				'timeline_id' => $timeline_id,
+				'member_id' => $member_id,
+			));
+			$obj->save();
+		}
+
+		return $obj;
 	}
 }

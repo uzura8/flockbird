@@ -93,7 +93,6 @@ class Model_NoteComment extends \MyOrm\Model
 				'property_from_member_id' => 'member_id',
 			);
 		}
-
 		if (is_enabled('notice'))
 		{
 			static::$_observers['MyOrm\Observer_InsertNotice'] = array(

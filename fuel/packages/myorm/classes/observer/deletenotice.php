@@ -18,14 +18,19 @@ class Observer_DeleteNotice extends \Orm\Observer
 
 	private function execute(\Orm\Model $obj)
 	{
+		// 親記事削除時
+		if (empty($this->_conditions['type']))
+		{
+			// delete member_watch_content
+			self::delete_member_watch_content($obj, $this->_conditions);
+		}
+
 		$notices = \Site_Model::get4relation('\Notice\Model_Notice', $this->_conditions, $obj);
 		foreach ($notices as $notice)
 		{
 			// 親記事削除時
 			if (empty($this->_conditions['type']))
 			{
-				// delete member_watch_content
-				self::delete_member_watch_content($notice->foreign_table, $notice->foreign_id);
 				// delete notice
 				self::delete_notice_unread_cache($notice->id);
 				$notice->delete();
@@ -48,9 +53,9 @@ class Observer_DeleteNotice extends \Orm\Observer
 		}
 	}
 
-	private static function delete_member_watch_content($foreign_table, $foreign_id)
+	private static function delete_member_watch_content($obj, $conditions)
 	{
-		if (!$member_watch_contents = \Notice\Model_MemberWatchContent::get4foreign_data($foreign_table, $foreign_id)) return false;
+		if (!$member_watch_contents = \Site_Model::get4relation('\Notice\Model_MemberWatchContent', $conditions, $obj)) return false;
 		foreach ($member_watch_contents as $member_watch_content) $member_watch_content->delete();
 	}
 

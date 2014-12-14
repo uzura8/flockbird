@@ -83,7 +83,6 @@ class Model_AlbumImageComment extends \MyOrm\Model
 	{
 		if (\Module::loaded('timeline'))
 		{
-			// 更新時に timeline の sort_datetime を更新
 			$observer_key = \Config::get('timeline.types.album');
 			static::$_observers['MyOrm\Observer_InsertMemberFollowTimeline'] = array(
 				'events'   => array('after_insert'),
@@ -98,7 +97,6 @@ class Model_AlbumImageComment extends \MyOrm\Model
 				'property_from_member_id' => 'member_id',
 			);
 		}
-
 		if (is_enabled('notice'))
 		{
 			static::$_observers['MyOrm\Observer_InsertNotice'] = array(

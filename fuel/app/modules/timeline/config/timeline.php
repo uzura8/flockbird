@@ -11,6 +11,9 @@ return array(
 			'5' => 50,
 		),
 	),
+	'articleUnfollow' => array(
+		'isEnabled' => true,
+	),
 	'articles' => array(
 		'cache' => array(
 			'is_use'  => false,
