@@ -227,7 +227,7 @@ class Controller_Api extends \Controller_Site_Api
 		catch(\FuelException $e)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
+			$status_code = 500;
 		}
 
 		$this->response($response, $status_code);

@@ -195,13 +195,23 @@ class Model_Note extends \MyOrm\Model
 		$moved_files = array();
 		if (is_enabled('album'))
 		{
+			$image_public_flag = $this->is_published ? $this->public_flag : PRJ_PUBLIC_FLAG_PRIVATE;
 			if ($file_tmps)
 			{
 				$album_id = \Album\Model_Album::get_id_for_foreign_table($member_id, 'note');
-				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', $this->public_flag);
+				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', $image_public_flag);
 				\Note\Model_NoteAlbumImage::save_multiple($this->id, $album_image_ids);
 			}
-			if ($album_images && $files) \Site_Upload::update_image_objs4file_objects($album_images, $files, $this->public_flag);
+			// フォーム編集時
+			if ($album_images && $files)
+			{
+				\Site_Upload::update_image_objs4file_objects($album_images, $files, $image_public_flag);
+			}
+			// フォーム編集以外で日記が公開された時
+			elseif ($is_published && $saved_album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
+			{
+				foreach ($saved_album_images as $saved_album_image) $saved_album_image->update_public_flag($this->public_flag, true);
+			}
 		}
 
 		if (is_enabled('timeline'))
@@ -248,7 +258,7 @@ class Model_Note extends \MyOrm\Model
 		$this->save();
 
 		// album_image の public_flag の更新
-		if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
+		if ($this->is_published && is_enabled('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			foreach ($album_images as $album_image)
 			{
