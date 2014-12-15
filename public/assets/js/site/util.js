@@ -633,6 +633,7 @@ function load_masonry_item(container_attribute, item_attribute)
 			},
 			// trigger Masonry as a callback
 			function( newElements ) {
+				// TODO: add carousel items.
 				var $newElems = $( newElements ).css({ opacity: 0 });
 				$newElems.imagesLoaded(function(){
 					$newElems.animate({ opacity: 1 });

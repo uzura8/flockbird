@@ -89,6 +89,7 @@ class Controller_Album extends \Controller_Site
 		$this->check_browse_authority($album->public_flag, $album->member_id);
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 
+		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_AlbumImage::get_pager_list(array(
 			'related'  => array('album'),
 			'where'    => \Site_Model::get_where_params4list(
@@ -97,19 +98,14 @@ class Controller_Album extends \Controller_Site
 				$this->check_is_mypage($album->member_id),
 				array(array('album_id', $id))
 			),
+			'limit' => $limit,
 			'order_by' => array('id' => 'desc'),
-		));
+		), $page);
 
-		$data['album_images'] = array();
-		if (\Config::get('album.display_setting.detail.display_slide_image'))
-		{
-			$data['album_images'] = $data['list'];
-		}
 		if (\Config::get('album.display_setting.detail.display_upload_form') && !$disabled_to_update && \Auth::check() && $album->member_id == $this->u->id)
 		{
 			$data['val'] = self::get_validation_public_flag();
 		}
-		$data['list'] = array_slice($data['list'], 0, \Config::get('album.articles.limit'));
 		$data['id'] = $id;
 		$data['album'] = $album;
 		$data['is_member_page'] = true;

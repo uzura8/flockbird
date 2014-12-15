@@ -1,12 +1,12 @@
 <p><?php echo nl2br($album->body) ?></p>
 
 <?php if (Config::get('album.display_setting.detail.display_slide_image')): ?>
-<?php 	if (!empty($album_images)): ?>
+<?php 	if ($list): ?>
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
 	<!-- Wrapper for slides -->
 	<div class="carousel-inner">
 <?php $i = 0; ?>
-<?php 		foreach ($album_images as $album_image): ?>
+<?php 		foreach ($list as $album_image): ?>
 		<div class="item<?php if (!$i): ?> active<?php endif; ?>">
 			<?php echo img($album_image->get_image(), img_size('ai', 'L'), 'album/image/'.$album_image->id); ?>
 <?php if (!empty($album_image->name)): ?>
