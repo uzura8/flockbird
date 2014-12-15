@@ -85,10 +85,14 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_detail($id = null)
 	{
+		$id = (int)$id;
 		$album = Model_Album::check_authority($id, null, 'member');
 		$this->check_browse_authority($album->public_flag, $album->member_id);
-		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 
+		// 既読処理
+		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album', $id);
+
+		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
 		$data = Model_AlbumImage::get_pager_list(array(
 			'related'  => array('album'),
