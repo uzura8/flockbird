@@ -48,8 +48,8 @@ class Controller_Member extends Controller_Site
 				$this->common_get_list_params(array(
 					'desc' => 1,
 					'latest' => 1,
-					'limit' => conf('timeline.articles.limit'),
-				), conf('timeline.articles.max_limit'), true)
+					'limit' => conf('articles.limit', 'timeline'),
+				), conf('articles.limit_max', 'timeline'), true)
 			);
 			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		}

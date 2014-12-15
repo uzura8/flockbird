@@ -96,8 +96,8 @@ $config = array(
 		),
 		'view_params' => array(
 			'list' => array(
-				'limit' => 3,
-				'limit_max' => 5,
+				'limit' => 10,
+				'limit_max' => 12,
 			),
 		),
 	),
@@ -231,32 +231,32 @@ $config = array(
 	),
 	'view_params_default' => array(
 		'list' => array(
-			'limit' => 2,
-			'limit_max' => 3,
+			'limit' => 10,
+			'limit_max' => 12,
 			'trim_width' => array(
 				'title' => 88,
 				'body'  => 500,
 			),
 			'truncate_lines' => array(
-				'body'  => 5,
+				'body'  => 10,
 			),
 			'comment' => array(
-				'limit' => 2,
-				'limit_max' => 3,
+				'limit' => 5,
+				'limit_max' => 8,
 				'trim_width' => 200,
 			),
 		),
 		'detail' => array(
 			'comment' => array(
-				'limit' => 2,
-				'limit_max' => 3,
+				'limit' => 5,
+				'limit_max' => 8,
 			),
 		),
 		'like' => array(
 			'members' => array(
 				'popover' => array(
-					'limit' => 2,
-					'limit_max' => 3,
+					'limit' => 5,
+					'limit_max' => 8,
 				),
 			),
 		),

@@ -35,7 +35,7 @@ class Site_Upload
 		$file = self::get_uploaded_file_path($filename, 'raw', 'img', $is_tmp);
 		Util_file::remove($file);
 
-		if (conf('upload.types.img.delete.thumnails', 'syncDelete') == 'syncDelete')
+		if (conf('upload.types.img.delete.thumnails', null, 'syncDelete') == 'syncDelete')
 		{
 			$file_cate = self::get_file_cate_from_filename($filename);
 			$sizes = self::get_sizes_all4file_cate($file_cate, $is_tmp);
@@ -453,10 +453,10 @@ class Site_Upload
 
 	public static function get_sizes_all4file_cate($file_cate, $is_tmp = false)
 	{
-		if ($is_tmp) return conf('upload.types.img.tmp.sizes', array());
+		if ($is_tmp) return conf('upload.types.img.tmp.sizes', null, array());
 
-		$sizes = conf('upload.types.img.types.'.$file_cate.'.sizes', array());
-		$additional_sizes_list = conf('upload.types.img.types.'.$file_cate.'.additional_sizes', array());
+		$sizes = conf('upload.types.img.types.'.$file_cate.'.sizes', null, array());
+		$additional_sizes_list = conf('upload.types.img.types.'.$file_cate.'.additional_sizes', null, array());
 		foreach ($additional_sizes_list as $key => $additional_sizes)
 		{
 			$sizes += $additional_sizes;

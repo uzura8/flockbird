@@ -4,7 +4,7 @@ class Form_SiteConfig
 {
 	public static function get_values($name, $default_value = null)
 	{
-		return conf($name, $default_value, 'site', '_');
+		return conf($name, 'site', $default_value, '_');
 	}
 
 	public static function get_names($prefixes)

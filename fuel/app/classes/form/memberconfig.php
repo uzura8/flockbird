@@ -9,7 +9,7 @@ class Form_MemberConfig
 
 	public static function get_default_value($key, $default = null)
 	{
-		return conf('member_config_default.'.$key, $default);
+		return conf('member_config_default.'.$key, null, $default);
 	}
 
 	public static function get_value($member_id, $name, $default_value = null)

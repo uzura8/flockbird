@@ -8,11 +8,11 @@ return array(
 		),
 	),
 	'articles' => array(
-		'limit' => 2,
-		'limit_max' => 5,
+		'limit' => 10,
+		'limit_max' => 12,
 	),
 	'modalArticles' => array(
-		'limit' => 2,
+		'limit' => 5,
 	),
 	'noticeMemberFrom' => array(
 		'limit' => 2,
@@ -26,7 +26,6 @@ return array(
 	),
 	'periode_to_update' => array(
 		'default' => '6 hours',
-		//'default' => '1 minute',
 	),
 	'display_setting' => array(
 	),

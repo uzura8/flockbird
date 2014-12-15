@@ -37,8 +37,8 @@ class Controller_Api extends \Controller_Site_Api
 				$this->common_get_list_params(array(
 					'desc' => 1,
 					'latest' => 1,
-					'limit' => conf('timeline.articles.limit'),
-				), conf('timeline.articles.max_limit'), true)
+					'limit' => conf('articles.limit', 'timeline'),
+				), conf('articles.limit_max', 'timeline'), true)
 			);
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;

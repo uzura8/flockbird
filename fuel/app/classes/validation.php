@@ -151,10 +151,10 @@ class Validation extends Fuel\Core\Validation
 
 		if (!$time = strtotime($val)) return false;
 
-		$min_time = (empty($time_range['min'])) ? conf('posted_value_rule_default.time.default.min', strtotime('- 120 years')) : strtotime($time_range['min']);
+		$min_time = (empty($time_range['min'])) ? conf('posted_value_rule_default.time.default.min', null, strtotime('- 120 years')) : strtotime($time_range['min']);
 		if ($time < $min_time) return false;
 
-		$max_time = (empty($time_range['max'])) ? conf('posted_value_rule_default.time.default.max', strtotime('+ 50 years')) : strtotime($time_range['max']);
+		$max_time = (empty($time_range['max'])) ? conf('posted_value_rule_default.time.default.max', null, strtotime('+ 50 years')) : strtotime($time_range['max']);
 		if ($time > $max_time) return false;
 
 		return true;

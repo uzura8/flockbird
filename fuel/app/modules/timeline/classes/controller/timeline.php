@@ -40,8 +40,8 @@ class Controller_Timeline extends \Controller_Site
 			$this->common_get_list_params(array(
 				'desc' => 1,
 				'latest' => 1,
-				'limit' => conf('timeline.articles.limit'),
-			), conf('timeline.articles.max_limit'), true)
+				'limit' => conf('articles.limit', 'timeline'),
+			), conf('articles.limit_max', 'timeline'), true)
 		);
 
 		$this->set_title_and_breadcrumbs(term('site.latest', 'timeline', 'site.list'));
@@ -66,8 +66,8 @@ class Controller_Timeline extends \Controller_Site
 			$this->common_get_list_params(array(
 				'desc' => 1,
 				'latest' => 1,
-				'limit' => conf('timeline.articles.limit'),
-			), conf('timeline.articles.max_limit'), true)
+				'limit' => conf('articles.limit', 'timeline'),
+			), conf('articles.limit_max', 'timeline'), true)
 		);
 		if ($member) $data['member'] = $member;
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('timeline', 'site.list')), null, $member);

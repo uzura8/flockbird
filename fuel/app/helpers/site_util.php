@@ -80,7 +80,7 @@ function site_get_screen_name($u, $default_value = null)
 	return 'ID:'.$u->id;
 }
 
-function conf($item, $default = null, $file = 'site', $replace_delimitter = null)
+function conf($item, $file = 'site', $default = null, $replace_delimitter = null)
 {
 	if (!$file) $file = 'site';
 	if ($replace_delimitter) $item = str_replace($replace_delimitter, '.', $item);
@@ -309,7 +309,7 @@ function check_public_flags($public_flags, $access_from, $strict_cond = true)
 
 function check_display_type($contents_display_type, $page_display_type_str = 'detail')
 {
-	$page_display_type = conf('member.profile.display_type.'.$page_display_type_str, 0);
+	$page_display_type = conf('member.profile.display_type.'.$page_display_type_str, null, 0);
 
 	return $contents_display_type >= $page_display_type;
 }

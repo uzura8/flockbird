@@ -3,16 +3,16 @@
 return array(
 	'isDisplayOriginalFileName' => true,
 	'articles' => array(
-		'limit' => 3,
-		'limit_max' => 5,
+		'limit' => 9,
+		'limit_max' => 12,
 		'trim_width' => array(
 			'name' => 70,
 			'body'  => 500,
 			'subinfo'  => 50,
 		),
 		'comment' => array(
-			'limit' => 2,
-			'limit_max' => 3,
+			'limit' => 3,
+			'limit_max' => 5,
 			'trim_width' => 200,
 		),
 	),
