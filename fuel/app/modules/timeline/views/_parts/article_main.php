@@ -3,7 +3,8 @@ $images = \Timeline\Site_Util::get_timeline_images(
 	$timeline->type,
 	$timeline->foreign_id,
 	$timeline->id,
-	$access_from_member_relation
+	$access_from_member_relation,
+  $is_detail
 );
 ?>
 

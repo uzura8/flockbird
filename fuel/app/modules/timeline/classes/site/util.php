@@ -314,7 +314,7 @@ class Site_Util
 		return in_array($type, $types_to_get_access_from);
 	}
 
-	public static function get_timeline_images($type, $foreign_id, $timeline_id = null, $access_from = null)
+	public static function get_timeline_images($type, $foreign_id, $timeline_id = null, $access_from = null, $is_detail = false)
 	{
 		// defaults
 		$images = array();
@@ -347,7 +347,7 @@ class Site_Util
 			case \Config::get('timeline.types.note'):
 				list($images['list'], $images['count_all']) = \Note\Model_NoteAlbumImage::get_album_image4note_id(
 					$foreign_id,
-					\Config::get('timeline.articles.thumbnail.limit.default'),
+					$is_detail ? 0 : \Config::get('timeline.articles.thumbnail.limit.default'),
 					array('id' => 'asc'),
 					true
 				);
@@ -361,7 +361,7 @@ class Site_Util
 						$access_from,
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
 					),
-					'limit'    => \Config::get('timeline.articles.thumbnail.limit.default'),
+					$is_detail ? 0 : 'limit' => \Config::get('timeline.articles.thumbnail.limit.default'),
 					'order_by' => array('created_at' => 'asc'),
 				));
 				$images['count_all'] = \Album\Model_AlbumImage::get_list_count(array(
@@ -379,7 +379,7 @@ class Site_Util
 						$access_from,
 						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
 					),
-					'limit'    => \Config::get('timeline.articles.thumbnail.limit.album_image_timeline'),
+					$is_detail ? 0 : 'limit' => \Config::get('timeline.articles.thumbnail.limit.album_image_timeline'),
 					'order_by' => array('created_at' => 'asc'),
 				));
 				$images['count_all'] = $images['count'];
