@@ -51,6 +51,7 @@ class Controller_Member extends Controller_Site
 					'limit' => conf('articles.limit', 'timeline'),
 				), conf('articles.limit_max', 'timeline'), true)
 			);
+			$data['timeline']['member'] = $member;
 			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		}
 		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
