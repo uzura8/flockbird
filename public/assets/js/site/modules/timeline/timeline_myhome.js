@@ -62,6 +62,13 @@ $(function() {
 			latest: 1,
 			desc: 1
 		};
+
+		// 「最新をみる」リンクがあれば削除する
+		linkElement = $(listSelector + ' > a.listMoreBox:first');
+		if (!empty(linkElement.data('type')) && linkElement.data('type') == 'see_latest') {
+			linkElement.remove();
+		}
+
 		var nextSelector = getNextSelector(listSelector, position);
 		if (nextSelector) getData['since_id'] = parseInt($(nextSelector).data('list_id'));
 

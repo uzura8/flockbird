@@ -17,7 +17,10 @@ if ($is_display_load_before_link)
 {
 	$first_obj = Util_Array::get_first($list);
 	$gete_data_list = array('since_id' => $first_obj->id);
-	$load_before_link_attr = array_merge($list_more_box_attr_default, array('data-get_data' => json_encode(array_merge($gete_data_list_default, $gete_data_list))));
+	$load_before_link_attr = array_merge($list_more_box_attr_default, array(
+		'data-get_data' => json_encode(array_merge($gete_data_list_default, $gete_data_list)),
+		'data-type' => 'see_latest',
+	));
 	echo html::anchor('#', icon_label('site.see_latest', 'both', false, null, 'fa fa-'), $load_before_link_attr);
 }
 ?>
