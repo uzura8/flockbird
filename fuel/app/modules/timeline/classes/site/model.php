@@ -175,6 +175,7 @@ class Site_Model
 			{
 				$timeline->public_flag = $public_flag;
 			}
+			if ($child_foreign_ids) $timeline->sort_datetime = $save_datetime ?: \Date::time()->format('mysql');
 			if ($timeline->is_changed() && $save_datetime) $timeline->updated_at = $save_datetime;
 		}
 		$timeline->save();
