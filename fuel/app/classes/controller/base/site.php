@@ -42,31 +42,24 @@ class Controller_Base_Site extends Controller_Base
 			$is_mypage = true;
 			$member = $this->u;
 			$access_from = 'self';
-
-			return array($is_mypage, $member, $access_from);
 		}
 		elseif ($this->check_is_mypage($member_id))
 		{
 			$is_mypage = true;
 			$member = $this->u;
 			$access_from = 'self';
-
-			return array($is_mypage, $member, $access_from);
 		}
-		elseif ($this->u && Model_MemberRelation::check_relation('friend', $this->u->id, $member_id))
+		elseif (Auth::check() && Model_MemberRelation::check_relation('friend', $this->u->id, $member_id))
 		{
 			$is_mypage = false;
 			$access_from = 'friend';
-
-			return array($is_mypage, $member, $access_from);
 		}
 		else
 		{
 			$member = Model_Member::check_authority($member_id);
+			$is_mypage = false;
+			$access_from = Auth::check() ? 'member' : 'guest';
 		}
-
-		$is_mypage = false;
-		$access_from = IS_AUTH ? 'member' : 'guest';
 
 		return array($is_mypage, $member, $access_from);
 	}
