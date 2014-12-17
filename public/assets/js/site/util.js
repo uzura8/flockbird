@@ -76,12 +76,13 @@ function get_error_message(status)
 	}
 }
 
-function getErrorMessage(statusCode)
+function getErrorMessage(responseObj)
 {
-	var messages = (arguments.length > 1) ? arguments[1] : {};
-	var absoluteMessage = (arguments.length > 2) ? arguments[2] : '';
+	var defaultMessage = (arguments.length > 1) ? arguments[1] : '';
 
-	if (absoluteMessage) return absoluteMessage;
+	var statusCode = responseObj.status;
+	var messages = !empty(responseObj.responseJSON) ? responseObj.responseJSON.error_messages : '';
+
 	if (!empty(messages.absolute)) return messages.absolute;
 	if (!empty(messages[statusCode])) return messages[statusCode];
 
@@ -97,7 +98,10 @@ function getErrorMessage(statusCode)
 			return 'サーバエラーが発生しました。';
 	}
 
-	return !empty(messages.default) ? messages.default : 'エラーが発生しました。';
+	if (!empty(messages.default)) return messages.default;
+	if (defaultMessage) return defaultMessage;
+
+	return 'エラーが発生しました。';
 }
 
 function showMessage(msg)
@@ -298,7 +302,7 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 			}
 		},
 		error: function(response){
-			$.jGrowl(getErrorMessage(response.status, response.responseJSON.error_messages));
+			showMessage(getErrorMessage(response));
 		}
 	});
 }
@@ -350,7 +354,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 	$.ajax({
 		url : get_url(postUri),
 		type : 'POST',
-		dataType : 'text',
+		dataType : 'json',
 		data : postData,
 		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
@@ -362,8 +366,9 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 			removeLoading(listSelector, trigerSelector, 'btn_loading_image');
 			if (trigerSelector) $(trigerSelector).html(trigerSelectorHtml);
 		},
-		success: function(result){
-			$.jGrowl(postedArticleTerm + 'を投稿しました。');
+		success: function(response){
+			var msg = !empty(response.message) ? response.message : postedArticleTerm + 'を投稿しました。';
+			showMessage(msg);
 			loadList(getUri, listSelector, '', position, getData, null, templateSelector, counterSelector);
 			if (!templateSelector) updateCounter(counterSelector);
 			reset_textarea(textareaSelector, textareaHeight);
@@ -372,8 +377,8 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 				callbackFunc();
 			}
 		},
-		error: function(result){
-			$.jGrowl(get_error_message(result['status'], postedArticleTerm + 'の投稿に失敗しました。'));
+		error: function(response){
+			showMessage(getErrorMessage(response, postedArticleTerm + 'の投稿に失敗しました。'));
 		}
 	});
 }
@@ -835,9 +840,7 @@ function updateToggle(selfDomElement) {
 			}
 		},
 		error: function(response, status){
-			$(selfDomElement).html(selfDomElementHtmlBefore);
-			var responseMessage = !empty(response.responseJSON) ? response.responseJSON.error_messages : '';
-			$.jGrowl(getErrorMessage(response.status, responseMessage));
+			showMessage(getErrorMessage(response));
 		}
 	});
 }

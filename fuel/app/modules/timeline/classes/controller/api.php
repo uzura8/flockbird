@@ -143,8 +143,7 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function post_update_follow_status($id = null)
 	{
-		$response = array('status' => 0, 'error_messages' => array());
-		$response['error_messages']['default'] = term('form.fallow').'状態の変更に失敗しました。';
+		$this->response_body['error_messages']['default'] = term('form.fallow').'状態の変更に失敗しました。';
 		try
 		{
 			$this->check_response_format('json');
@@ -163,9 +162,9 @@ class Controller_Api extends \Controller_Site_Api
 			));
 			\DB::commit_transaction();
 
-			$response['status'] = (int)$is_registerd;
-			$response['message'] = $is_registerd ? term('follow').'しました。' : term('follow').'を解除しました。';
-			$response['html'] = icon_label($is_registerd ? 'followed' : 'do_follow', 'both', false);
+			$this->response_body['status'] = (int)$is_registerd;
+			$this->response_body['message'] = $is_registerd ? term('follow').'しました。' : term('follow').'を解除しました。';
+			$this->response_body['html'] = icon_label($is_registerd ? 'followed' : 'do_follow', 'both', false);
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
@@ -191,10 +190,10 @@ class Controller_Api extends \Controller_Site_Api
 		if ($status_code == 500)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$response['error_messages']['500'] = $response['error_messages']['default'];
+			$this->response_body['error_messages']['500'] = $this->response_body['error_messages']['default'];
 		}
 
-		$this->response($response, $status_code);
+		$this->response($this->response_body, $status_code);
 	}
 
 	/**
@@ -205,7 +204,7 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function post_create()
 	{
-		$response = array('status' => 0);
+		$this->response_body['error_messages']['default'] = term('timeline').'の'.term('form.post').'に失敗しました。';
 		$file_tmps = array();
 		$moved_files = array();
 		$album_image_ids = array();
@@ -258,19 +257,39 @@ class Controller_Api extends \Controller_Site_Api
 			// thumbnail 作成 & tmp_file thumbnail 削除
 			\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
-			$response['status'] = 1;
-			$response['id'] = $timeline->id;
+			$this->response_body['status'] = 1;
+			$this->response_body['message'] = term('timeline').'を'.term('form.post').'しました。';
+			$this->response_body['id'] = $timeline->id;
 			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
+		catch(\Database_Exception $e)
+		{
+			$status_code = 500;
 		}
 		catch(\FuelException $e)
 		{
+			$status_code = 500;
+		}
+		if ($status_code == 500)
+		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
 			if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
-			$status_code = 400;
-			$response['message'] = $e->getMessage();
+			$this->response_body['error_messages']['500'] = $this->response_body['error_messages']['default'];
 		}
 
-		$this->response($response, $status_code);
+		$this->response($this->response_body, $status_code);
 	}
 
 	/**

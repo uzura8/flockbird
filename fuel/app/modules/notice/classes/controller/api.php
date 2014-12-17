@@ -75,8 +75,7 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function post_update_watch_status($foreign_table = null, $foreign_id = null)
 	{
-		$response = array('status' => 0, 'error_messages' => array());
-		$response['error_messages']['default'] = term('form.watch').'状態の変更に失敗しました。';
+		$this->response_body['error_messages']['default'] = term('form.watch').'状態の変更に失敗しました。';
 		try
 		{
 			if (!is_enabled('notice')) throw new \HttpNotFoundException();
@@ -103,9 +102,9 @@ class Controller_Api extends \Controller_Site_Api
 			));
 			\DB::commit_transaction();
 
-			$response['status'] = (int)$is_registerd;
-			$response['message'] = $is_registerd ? term('form.watch').'対象に追加しました。' : term('form.watch').'を解除しました。';
-			$response['html'] = icon_label($is_registerd ? 'form.do_unwatch' : 'form.do_watch', 'both', false);
+			$this->response_body['status'] = (int)$is_registerd;
+			$this->response_body['message'] = $is_registerd ? term('form.watch').'対象に追加しました。' : term('form.watch').'を解除しました。';
+			$this->response_body['html'] = icon_label($is_registerd ? 'form.do_unwatch' : 'form.do_watch', 'both', false);
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
@@ -131,9 +130,9 @@ class Controller_Api extends \Controller_Site_Api
 		if ($status_code == 500)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$response['error_messages']['500'] = $response['error_messages']['default'];
+			$this->response_body['error_messages']['500'] = $this->response_body['error_messages']['default'];
 		}
 
-		$this->response($response, $status_code);
+		$this->response($this->response_body, $status_code);
 	}
 }

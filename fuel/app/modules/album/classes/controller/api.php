@@ -134,8 +134,7 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function post_delete($id = null)
 	{
-		$response = array('status' => 0, 'error_messages' => array());
-		$response['error_messages']['default'] = sprintf('%sの%sに失敗しました。', term('album'), term('form.delete'));
+		$this->response_body['error_messages']['default'] = sprintf('%sの%sに失敗しました。', term('album'), term('form.delete'));
 		try
 		{
 			\Util_security::check_csrf();
@@ -152,8 +151,8 @@ class Controller_Api extends \Controller_Site_Api
 			$album->delete();
 			\DB::commit_transaction();
 
-			$response['status'] = 1;
-			$response['message'] = sprintf('%sを%sしました。', term('album'), term('form.delete'));
+			$this->response_body['status'] = 1;
+			$this->response_body['message'] = sprintf('%sを%sしました。', term('album'), term('form.delete'));
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
@@ -166,7 +165,7 @@ class Controller_Api extends \Controller_Site_Api
 		}
 		catch(\DisableToUpdateException $e)
 		{
-			$response['error_messages']['absolute'] = $e->getMessage();
+			$this->response_body['error_messages']['absolute'] = $e->getMessage();
 			$status_code = 403;
 		}
 		catch(\HttpInvalidInputException $e)
@@ -184,10 +183,10 @@ class Controller_Api extends \Controller_Site_Api
 		if ($status_code == 500)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$response['error_messages']['500'] = $response['error_messages']['default'];
+			$this->response_body['error_messages']['500'] = $this->response_body['error_messages']['default'];
 		}
 
-		$this->response($response, $status_code);
+		$this->response($this->response_body, $status_code);
 	}
 
 	/**

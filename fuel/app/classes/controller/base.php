@@ -10,6 +10,7 @@ class Controller_Base extends Controller_Hybrid
 	protected $auth = 'check_auth';
 	protected $after_auth_uri;
 	protected $acl_has_access = true;
+	protected $response_body;
 
 	public function before()
 	{
@@ -20,24 +21,27 @@ class Controller_Base extends Controller_Hybrid
 		if (!defined('IS_SP')) define('IS_SP', \MyAgent\Agent::is_mobile_device());
 		if (!defined('IS_API')) define('IS_API', Input::is_ajax());
 
+		$this->set_default_data();
 		$this->check_ssl_required_request_and_redirect();
 		$this->check_remote_ip();
 		$this->auth_instance = Auth::forge($this->auth_driver);
 		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
 		$this->check_auth_and_response();
 		$this->set_current_user();
-		$this->set_template_default_data();
 	}
 
-	protected function set_template_default_data()
+	protected function set_default_data()
 	{
-		if (IS_API) return;
+		if (IS_API)
+		{
+			$this->response_body = array('status' => 0, 'message' => '', 'error_messages' => array());
+			return;
+		}
 
+		$this->template->layout = 'normal';
 		$this->set_title_and_breadcrumbs(PRJ_SITE_NAME);
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
-
-		if (!IS_API) $this->template->layout = 'normal';
 	}
 
 	protected function check_ssl_required_request_and_redirect()

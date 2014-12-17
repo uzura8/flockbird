@@ -238,8 +238,7 @@ class Controller_Image_api extends \Controller_Site_Api
 	 */
 	public function post_set_cover($id = null)
 	{
-		$response = array('status' => 0, 'error_messages' => array());
-		$response['error_messages']['default'] = term('form.watch').'状態の変更に失敗しました。';
+		$this->response_body['error_messages']['default'] = term('form.watch').'状態の変更に失敗しました。';
 		try
 		{
 			\Util_security::check_csrf();
@@ -253,13 +252,13 @@ class Controller_Image_api extends \Controller_Site_Api
 			}
 			$album_image->album->cover_album_image_id = $id;
 			\DB::start_transaction();
-			$response['status'] = (bool)$album_image->album->save();
+			$this->response_body['status'] = (bool)$album_image->album->save();
 			\DB::commit_transaction();
 
-			$response['album_id'] = $album_image->album_id;
-			$response['html'] = html_tag('span', array('class' => 'disabled'), term('form.set_cover_already'));
-			$response['is_replace'] = 1;
-			$response['message'] = term('cover_image').'に設定しました。';
+			$this->response_body['album_id'] = $album_image->album_id;
+			$this->response_body['html'] = html_tag('span', array('class' => 'disabled'), term('form.set_cover_already'));
+			$this->response_body['is_replace'] = 1;
+			$this->response_body['message'] = term('cover_image').'に設定しました。';
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
@@ -276,7 +275,7 @@ class Controller_Image_api extends \Controller_Site_Api
 		}
 		catch(AlreadySetToCoverException $e)
 		{
-			$response['error_messages']['409'] = term('form.set_cover_already').'です。';
+			$this->response_body['error_messages']['409'] = term('form.set_cover_already').'です。';
 			$status_code = 409;
 		}
 		catch(\Database_Exception $e)
@@ -290,7 +289,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$status_code = 400;
 		}
 
-		$this->response($response, $status_code);
+		$this->response($this->response_body, $status_code);
 	}
 
 	/**
