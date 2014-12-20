@@ -27,4 +27,14 @@ class Agent
 
 		return $instance;
 	}
+
+	public static function check_legacy_ie($criteria_version = 8)
+	{
+		if (!$criteria_version) return false;
+
+		if (!preg_match('/MSIE\s([\d.]+)/i', \Input::user_agent(), $matches)) return false;
+		$version = floor($matches[1]);
+
+		return $version <= $criteria_version;
+	}
 }

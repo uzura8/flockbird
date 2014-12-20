@@ -1,6 +1,13 @@
 <?php
-
 $config = array(
+	'legacyBrowserSupport' => array(
+		'isEnabled' => true,
+		'legacyIECriteriaVersion' => 8,
+	),
+	'jqueryVersion' => array(
+		'latest' => '2.1.1',
+		'legacy' => '1.11.1',
+	),
 	'default' => array(
 		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
 		'ajax_timeout' => 10000,

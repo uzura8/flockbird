@@ -1,7 +1,14 @@
+<?php
+$jquery_version = conf('jqueryVersion.latest');
+if (conf('legacyBrowserSupport.isEnabled') && \MyAgent\Agent::check_legacy_ie(conf('legacyBrowserSupport.legacyIECriteriaVersion')))
+{
+	$jquery_version = conf('jqueryVersion.legacy');
+}
+?>
 <?php echo Asset::js('handlebars-v1.3.0.js');?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/<?php echo $jquery_version ; ?>/jquery.min.js"></script>
 <script>
-if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/jquery-2.1.1.min.js'); ?>"><\/script>')
+if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/jquery-'.$jquery_version.'.min.js'); ?>"><\/script>')
 </script>
 <?php echo Asset::js('bootstrap.min.js');?>
 <?php echo Asset::js('apprise-1.5.min.js');?>
