@@ -454,9 +454,10 @@ class Form_MemberProfile
 		}
 	}
 
-	public function validate()
+	public function validate($is_edit = false)
 	{
 		if ($this->page_type == 'config') $this->remove_unique_restraint_for_updated_value();
+		if ($is_edit) $this->validation->fieldset()->field('member_name')->delete_rule('unique');
 
 		if (!$this->validation->run()) throw new \FuelException($this->get_validation_errors());
 		$this->validated_values = $this->validation->validated();

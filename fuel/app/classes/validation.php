@@ -27,7 +27,7 @@ class Validation extends Fuel\Core\Validation
 	 * @param   string
 	 * @return  true|Exception
 	 */
-	public static function _validation_no_controll($val, $is_accept_line_and_tab = false)
+	public static function _validation_no_controll($val, $is_accept_line_and_tab = false, $is_throw_input_error = false)
 	{
 		$accept_char = '[:^cntrl:]';
 		if ($is_accept_line_and_tab) $accept_char .= '\r\n\t';
@@ -35,17 +35,13 @@ class Validation extends Fuel\Core\Validation
 		{
 			return true;
 		}
-		else
+		elseif ($is_throw_input_error)
 		{
-			\Log::error(
-				'Invalid controll charactors: '.
-				\Input::uri().' '.
-				urlencode($val).' '.
-				\Input::ip().
-				' "'.\Input::user_agent().'"'
-			);
+			Util_Toolkit::log_error('Invalid control characters: '.urlencode($value));
 			throw new HttpInvalidInputException('Invalid input data');
 		}
+
+		return false;
 	}
 	
 	/**

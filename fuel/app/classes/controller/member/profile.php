@@ -45,7 +45,7 @@ class Controller_Member_Profile extends Controller_Member
 			\Util_security::check_csrf();
 			try
 			{
-				$form_member_profile->validate();
+				$form_member_profile->validate(true);
 				\DB::start_transaction();
 				$form_member_profile->seve();
 				\DB::commit_transaction();

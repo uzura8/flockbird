@@ -148,7 +148,7 @@ CREATE TABLE `file_bin` (
 
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
+  `name` varchar(20) NOT NULL DEFAULT '',
   `last_login` datetime DEFAULT NULL,
   `login_hash` varchar(255) DEFAULT NULL,
   `file_name` varchar(255) DEFAULT NULL,
@@ -163,7 +163,8 @@ CREATE TABLE `member` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `birthday_id` (`birthday`,`id`)
+  KEY `birthday_id` (`birthday`,`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

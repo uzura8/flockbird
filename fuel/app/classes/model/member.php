@@ -20,7 +20,10 @@ class Model_Member extends \MyOrm\Model
 			'validation' => array(
 				'trim',
 				'required',
-				'max_length' => array(255),
+				'min_length' => array(2),
+				'max_length' => array(20),
+				'no_controll',
+				'unique' => array('member.name'),
 			),
 			'form' => array('type' => 'text'),
 		),
