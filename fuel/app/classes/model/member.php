@@ -23,6 +23,7 @@ class Model_Member extends \MyOrm\Model
 				'min_length' => array(2),
 				'max_length' => array(20),
 				'no_controll',
+				'match_pattern' => array('/^[0-9A-Za-z_〃々ぁ-ゖ゛-ゞァ-ヺーヽヾ一-龥０-９Ａ-Ｚａ-ｚ]{2,20}$/u'),
 				'no_platform_dependent_chars',
 				'unique' => array('member.name'),
 			),
