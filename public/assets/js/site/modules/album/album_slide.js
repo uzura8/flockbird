@@ -15,7 +15,7 @@ var slideNumber_max = 0;
 
 $.get(get_url('album/image/api/list.json'), {'album_id':album_id, 'limit':0}, function(json){
 	$.each(json, function(i, data){
-		images[data.id] = basePath + data.file.path + data.file.name;
+		images[data.id] = basePath + data.file_name.replace(/_/g, '/');
 		image_ids.push(data.id);
 	});
 	slideNumber_max = image_ids.length;
@@ -115,8 +115,9 @@ $('.carousel-control').click(function(event) {
 function getImageTag(imageUri, imageId) {
 	var isActive = (arguments.length > 2) ? Boolean(arguments[2]) : false;
 	var classValueAdditional = isActive ? ' active' : '';
+	var imageUrl = get_url(imageUri);
 
-	return '<div class="item' + classValueAdditional + '"><img src="' + imageUri + '" id="image_' + imageId + '"></div>';
+	return '<div class="item' + classValueAdditional + '"><img src="' + imageUrl + '" id="image_' + imageId + '"></div>';
 }
 
 function displayComment(image_id, template) {
