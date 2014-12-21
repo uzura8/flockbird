@@ -1,5 +1,5 @@
 <?php
-require_once APPPATH.'vendor/facebook-php-sdk/facebook.php';
+require_once APPPATH.'vendor'.DS.'facebook-php-sdk'.DS.'facebook.php';
 
 class Controller_Facebook extends Controller_Site
 {

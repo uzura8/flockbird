@@ -7,7 +7,7 @@ class Util_Parser
 	{
 		if (!static::$twig_string_parser)
 		{
-			require_once APPPATH.'vendor/Twig/Autoloader.php';
+			require_once APPPATH.'vendor'.DS.'Twig'.DS.'Autoloader.php';
 			$loader = new Twig_Loader_String();
 			static::$twig_string_parser = new Twig_Environment($loader);
 		}
