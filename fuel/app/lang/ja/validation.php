@@ -7,6 +7,8 @@ return array(
   'valid_email'   => ':label 欄には正しい Email アドレスを入力する必要があります。',
   'unique' => 'その :label は登録できません。',
   'match_pattern' => ':label 欄にエラーがあります。',
+  'no_controll' => ':label 欄に使用できない文字が含まれています。',
+  'no_platform_dependent_chars' => ':label 欄に機種依存文字が含まれています。',
   'alpha_small_char_numeric' => ':label 欄は半角の小文字英字と数字でなければなりません。',
   'match_field' => ':label が一致しません。',
   'unmatch_field' => ':label は異なる値にしてください。',

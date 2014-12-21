@@ -23,6 +23,7 @@ class Model_Member extends \MyOrm\Model
 				'min_length' => array(2),
 				'max_length' => array(20),
 				'no_controll',
+				'no_platform_dependent_chars',
 				'unique' => array('member.name'),
 			),
 			'form' => array('type' => 'text'),

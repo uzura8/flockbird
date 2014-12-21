@@ -45,6 +45,21 @@ class Validation extends Fuel\Core\Validation
 	}
 	
 	/**
+	 * Validate for no_platform_dependent_chars
+	 *
+	 * @param   string
+	 * @param   string
+	 * @return  bool
+	 */
+	public static function _validation_no_platform_dependent_chars($val, $input_encording = null)
+	{
+		require_once APPPATH.'vendor'.DS.'PlatformDependentChars'.DS.'PlatformDependentChars.php';
+		if (!$input_encording) $input_encording = Config::get('encoding');
+
+		return PlatformDependentChars::check($val, $input_encording);
+	}
+
+	/**
 	 * Validate for select, radio, checkbox
 	 *
 	 * @param   string|array
