@@ -179,4 +179,42 @@ class Util_String
 
 		return trim($value);
 	}
+
+	public static function normalize_platform_dependent_chars($value)
+	{
+		$value = self::normalize_platform_dependent_chars_simple($value);
+		require_once APPPATH.'vendor'.DS.'PEAR'.DS.'I18N_UnicodeNormalizer'.DS.'UnicodeNormalizer.php';
+		$normalizer = new I18N_UnicodeNormalizer();
+
+		return $normalizer->normalize($value, 'NFKC');
+	}
+
+	public static function normalize_platform_dependent_chars_simple($value)
+	{
+		$arr = array(
+			'①' => '(1)',
+			'②' => '(2)',
+			'③' => '(3)',
+			'④' => '(4)',
+			'⑤' => '(5)',
+			'⑥' => '(6)',
+			'⑦' => '(7)',
+			'⑧' => '(8)',
+			'⑨' => '(9)',
+			'⑩' => '(10)',
+			'⑪' => '(11)',
+			'⑫' => '(12)',
+			'⑬' => '(13)',
+			'⑭' => '(14)',
+			'⑮' => '(15)',
+			'⑯' => '(16)',
+			'⑰' => '(17)',
+			'⑱' => '(18)',
+			'⑲' => '(19)',
+			'⑳' => '(20)',
+			'№' => 'No.',
+		);
+
+		return str_replace(array_keys($arr), array_values($arr), $value);
+	}
 }

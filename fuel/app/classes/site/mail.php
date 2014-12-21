@@ -89,6 +89,7 @@ class Site_Mail
 		if (!$this->config['title']) return;
 
 		$this->options['subject'] = $this->config['title'];
+		$this->options['subject'] = Util_String::normalize_platform_dependent_chars($this->options['subject']);
 	}
 
 	protected function set_body($data = array())
@@ -96,6 +97,7 @@ class Site_Mail
 		$data += $this->options['common_variables'];
 		$this->options['body']  = $this->parser->render($this->config['body'], $data);
 		$this->options['body'] .= $this->get_signature($data);
+		$this->options['body']  = Util_String::normalize_platform_dependent_chars($this->options['body']);
 	}
 
 	protected function get_signature($data = array())

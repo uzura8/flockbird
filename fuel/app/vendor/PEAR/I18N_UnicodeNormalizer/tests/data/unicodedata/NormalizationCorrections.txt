@@ -1,0 +1,77 @@
+# Unicode Normalization
+#
+# WARNING! This is a subset of the original file for testing purposes
+#
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+# + Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# + Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+# + Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or
+# promote products derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# @category  Internationalization
+# @package   I18N_UnicodeNormalizer
+# @author    Michel Corne <mcorne@yahoo.com>
+# @copyright 2007 Michel Corne
+# @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
+# @version   SVN: $Id: NormalizationCorrections.txt 27 2007-07-03 15:50:30Z mcorne $
+# @link      http://pear.php.net/package/I18N_UnicodeNormalizer
+
+# NormalizationCorrections-5.0.0.txt
+# Date: 2006-07-14, 11:23:00 PDT [KW]
+#
+# This file is a normative contributory data file in the
+# Unicode Character Database.
+#
+# Copyright (c) 1991-2006 Unicode, Inc.
+# For terms of use, see http://www.unicode.org/terms_of_use.html
+#
+# The normalization stabilization policy of the Unicode
+# Consortium ordinarily precludes any change to the decomposition
+# for any character, once established in a relevant version
+# of the UnicodeData.txt data file. However, under certain
+# exceptional (and rare) conditions, an error in a decomposition
+# mapping may be discovered that is truly just an unintended
+# typo in the data, and not a matter of dubious interpretation.
+#
+# Whenever such an error may be found, and if it meets the
+# requirements for possible exceptions to normalization
+# stability, the correction is entered in this data file,
+# so that any implementation depending on absolute stability
+# of normalization, *including* any errors in the data, can
+# safely reconstruct the exact state of the data tables at
+# any given version of Unicode.
+#
+# Currently this list has exactly six entries in it, one for the
+# typo found and corrected in Corrigendum #3, and five for
+# the typos and misidentifications found and corrected in
+# Corrigendum #4. All efforts
+# will be made to keep the entries limited to just those fixes.
+#
+# Interpretation of the fields:
+#   Field 0: Unicode code point
+#   Field 1: Original (erroneous) decomposition
+#   Field 2: Corrected decomposition
+#   Field 3: Version of Unicode for which the correction was
+#            entered into UnicodeData.txt, in n.n.n format.
+#   Comment: Indicates the Unicode Corrigendum which documents
+#            the correction
+#
+# For more information, see UAX #15, Unicode Normalization Forms.
+#
+F951;96FB;964B;3.2.0 # Corrigendum 3

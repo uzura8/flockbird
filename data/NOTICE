@@ -1,4 +1,8 @@
 * fuelphp1.x
+* I18N_UnicodeNormalizer
+  - version: 1.0.0
+  - license: BSD
+  - url: http://pear.php.net/package/I18N_UnicodeNormalizer
 * Mobile Detect
   - version: 2.8.0
   - license: MIT

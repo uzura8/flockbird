@@ -1,0 +1,75 @@
+# Unicode Normalization
+#
+# WARNING! This is a subset of the original file for testing purposes
+#
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+# + Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# + Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+# + Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or
+# promote products derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# @category  Internationalization
+# @package   I18N_UnicodeNormalizer
+# @author    Michel Corne <mcorne@yahoo.com>
+# @copyright 2007 Michel Corne
+# @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
+# @version   SVN: $Id: NormalizationTest-3.2.0.txt 27 2007-07-03 15:50:30Z mcorne $
+# @link      http://pear.php.net/package/I18N_UnicodeNormalizer
+
+# NormalizationTest-3.2.0.txt
+# Date: 2002-03-19,23:31:18 GMT [MD]
+#
+# Normalization Test Suite
+# Format:
+#
+#   Columns (c1, c2,...) are separated by semicolons
+#   Comments are indicated with hash marks
+#
+# CONFORMANCE:
+# 1. The following invariants must be true for all conformant implementations
+#
+#    NFC
+#      c2 ==  NFC(c1) ==  NFC(c2) ==  NFC(c3)
+#      c4 ==  NFC(c4) ==  NFC(c5)
+#
+#    NFD
+#      c3 ==  NFD(c1) ==  NFD(c2) ==  NFD(c3)
+#      c5 ==  NFD(c4) ==  NFD(c5)
+#
+#    NFKC
+#      c4 == NFKC(c1) == NFKC(c2) == NFKC(c3) == NFKC(c4) == NFKC(c5)
+#
+#    NFKD
+#      c5 == NFKD(c1) == NFKD(c2) == NFKD(c3) == NFKD(c4) == NFKD(c5)
+#
+# 2. For every assigned Unicode 3.1.0 code point X that is not specifically
+#    listed in Part 1, the following invariants must be true for all conformant
+#    implementations:
+#
+#      X == NFC(X) == NFD(X) == NFKC(X) == NFKD(X)
+#
+
+# Tests to validate the normalization test coverage
+05B8 05B9 05B1 0591 05C3 05B0 05AC 059F;05B1 05B8 05B9 0591 05C3 05B0 05AC 059F;05B1 05B8 05B9 0591 05C3 05B0 05AC 059F;05B1 05B8 05B9 0591 05C3 05B0 05AC 059F;05B1 05B8 05B9 0591 05C3 05B0 05AC 059F; # (◌ָ◌ֹ◌ֱ◌֑׃◌ְ◌֬◌֟; ◌ֱ◌ָ◌ֹ◌֑׃◌ְ◌֬◌֟; ◌ֱ◌ָ◌ֹ◌֑׃◌ְ◌֬◌֟; ◌ֱ◌ָ◌ֹ◌֑׃◌ְ◌֬◌֟; ◌ֱ◌ָ◌ֹ◌֑׃◌ְ◌֬◌֟; ) HEBREW POINT QAMATS, HEBREW POINT HOLAM, HEBREW POINT HATAF SEGOL, HEBREW ACCENT ETNAHTA, HEBREW PUNCTUATION SOF PASUQ, HEBREW POINT SHEVA, HEBREW ACCENT ILUY, HEBREW ACCENT QARNEY PARA
+09CB;09CB;09C7 09BE;09CB;09C7 09BE; # (ো; ো; ো; ো; ো; ) BENGALI VOWEL SIGN O
+3310;3310;3310;30AE 30AC;30AD 3099 30AB 3099; # (㌐; ㌐; ㌐; ギガ; キ◌゙カ◌゙; ) SQUARE GIGA
+AC01;AC01;1100 1161 11A8;AC01;1100 1161 11A8; # (각; 각; 각; 각; 각; ) HANGUL SYLLABLE GAG
+
+# Additional test to validate the test-data compilation test coverage
+F951;964B;964B;964B;964B; # (�'; 陋; 陋; 陋; 陋; ) CJK COMPATIBILITY IDEOGRAPH-F951

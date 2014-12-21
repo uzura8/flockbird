@@ -1,0 +1,11 @@
+Example 1: NFC-normalization of UTF-8 string 'foo'
+$normalized = I18N_UnicodeNormalizer::toNFC('foo');
+or
+$normalizer = new I18N_UnicodeNormalizer();
+$normalized = $normalizer->normalize('foo', 'NFC')
+
+Example 2: NFC-normalization of ISO-8859-1 string 'foo'
+$normalized = I18N_UnicodeNormalizer::toNFC('foo', 'ISO-8859-1');
+or
+$normalizer = new I18N_UnicodeNormalizer();
+$normalized = $normalizer->normalize('foo', 'NFC', 'ISO-8859-1')

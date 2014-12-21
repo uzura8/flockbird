@@ -31,4 +31,25 @@ class Test_Util_String extends TestCase
 
 		return $data;
 	}
+
+	/**
+	* @dataProvider normalize_platform_dependent_chars_provider
+	*/
+	public function test_normalize_platform_dependent_chars($target = null, $expected = null)
+	{
+		$test = Util_String::normalize_platform_dependent_chars($target);
+		$this->assertEquals($expected, $test);
+	}
+
+	public function normalize_platform_dependent_chars_provider()
+	{
+		$data = array();
+		$data[] = array('', '');
+		$data[] = array('№', 'No.');
+		$data[] = array('①と②と③', '(1)と(2)と(3)');
+		$data[] = array('ⅠとⅡとⅢ', 'IとIIとIII');
+		$data[] = array('㈱と㌘', '(株)とグラム');
+
+		return $data;
+	}
 }

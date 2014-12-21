@@ -1,0 +1,90 @@
+# Unicode Normalization
+#
+# WARNING! This is a subset of the original file for testing purposes
+#
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+# + Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# + Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+# + Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or
+# promote products derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# @category  Internationalization
+# @package   I18N_UnicodeNormalizer
+# @author    Michel Corne <mcorne@yahoo.com>
+# @copyright 2007 Michel Corne
+# @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
+# @version   SVN: $Id: UnicodeData.txt 27 2007-07-03 15:50:30Z mcorne $
+# @link      http://pear.php.net/package/I18N_UnicodeNormalizer
+
+# Multibyte codes and code ranges for compilation tests
+0000;<control>;Cc;0;BN;;;;;N;NULL;;;;
+007F;<control>;Cc;0;BN;;;;;N;DELETE;;;;
+0080;<control>;Cc;0;BN;;;;;N;;;;;
+07FA;NKO LAJANYALAN;Lm;0;R;;;;;N;;;;;
+0901;DEVANAGARI SIGN CANDRABINDU;Mn;0;NSM;;;;;N;;;;;
+3400;<CJK Ideograph Extension A, First>;Lo;0;L;;;;;N;;;;;
+4DB5;<CJK Ideograph Extension A, Last>;Lo;0;L;;;;;N;;;;;
+AC00;<Hangul Syllable, First>;Lo;0;L;;;;;N;;;;;
+D7A3;<Hangul Syllable, Last>;Lo;0;L;;;;;N;;;;;
+FFFD;REPLACEMENT CHARACTER;So;0;ON;;;;;N;;;;;
+10000;LINEAR B SYLLABLE B008 A;Lo;0;L;;;;;N;;;;;
+F0000;<Plane 15 Private Use, First>;Co;0;L;;;;;N;;;;;
+FFFFD;<Plane 15 Private Use, Last>;Co;0;L;;;;;N;;;;;
+100000;<Plane 16 Private Use, First>;Co;0;L;;;;;N;;;;;
+10FFFD;<Plane 16 Private Use, Last>;Co;0;L;;;;;N;;;;;
+
+# Codes for the test-data compilation test coverage
+964B;<CJK Ideograph>;Lo;0;L;;;;;N;;;;; *** ADDED FOR TESTING PURPOSES ***
+F951;CJK COMPATIBILITY IDEOGRAPH-F951;Lo;0;L;964B;;;;N;;;;;
+
+# Codes for the normalization (and compilation) test coverage
+0008;<control>;Cc;0;BN;;;;;N;BACKSPACE;;;;
+0010;<control>;Cc;0;BN;;;;;N;DATA LINK ESCAPE;;;;
+0011;<control>;Cc;0;BN;;;;;N;DEVICE CONTROL ONE;;;;
+0018;<control>;Cc;0;BN;;;;;N;CANCEL;;;;
+0019;<control>;Cc;0;BN;;;;;N;END OF MEDIUM;;;;
+
+0220;LATIN CAPITAL LETTER N WITH LONG RIGHT LEG;Lu;0;L;;;;;N;;;;019E;
+0230;LATIN CAPITAL LETTER O WITH DOT ABOVE AND MACRON;Lu;0;L;022E 0304;;;;N;;;;0231;
+
+0591;HEBREW ACCENT ETNAHTA;Mn;220;NSM;;;;;N;;;;;
+059F;HEBREW ACCENT QARNEY PARA;Mn;230;NSM;;;;;N;;;;;
+05AC;HEBREW ACCENT ILUY;Mn;230;NSM;;;;;N;;;;;
+05B0;HEBREW POINT SHEVA;Mn;10;NSM;;;;;N;;;;;
+05B1;HEBREW POINT HATAF SEGOL;Mn;11;NSM;;;;;N;;;;;
+05B8;HEBREW POINT QAMATS;Mn;18;NSM;;;;;N;;;;;
+05B9;HEBREW POINT HOLAM;Mn;19;NSM;;;;;N;;;;;
+05C3;HEBREW PUNCTUATION SOF PASUQ;Po;0;R;;;;;N;;*;;;
+
+09BE;BENGALI VOWEL SIGN AA;Mc;0;L;;;;;N;;;;;
+09C7;BENGALI VOWEL SIGN E;Mc;0;L;;;;;N;;;;;
+09CB;BENGALI VOWEL SIGN O;Mc;0;L;09C7 09BE;;;;N;;;;;
+
+1100;HANGUL CHOSEONG KIYEOK;Lo;0;L;;;;;N;;g *;;;
+1161;HANGUL JUNGSEONG A;Lo;0;L;;;;;N;;;;;
+11A8;HANGUL JONGSEONG KIYEOK;Lo;0;L;;;;;N;;g *;;;
+
+3099;COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK;Mn;8;NSM;;;;;N;NON-SPACING KATAKANA-HIRAGANA VOICED SOUND MARK;;;;
+30AB;KATAKANA LETTER KA;Lo;0;L;;;;;N;;;;;
+30AC;KATAKANA LETTER GA;Lo;0;L;30AB 3099;;;;N;;;;;
+30AD;KATAKANA LETTER KI;Lo;0;L;;;;;N;;;;;
+30AE;KATAKANA LETTER GI;Lo;0;L;30AD 3099;;;;N;;;;;
+3310;SQUARE GIGA;So;0;L;<square> 30AE 30AC;;;;N;SQUARED GIGA;;;;
+
+AC01;<Hangul Syllable>;Lo;0;L;;;;;N;;;;; *** ADDED FOR TESTING PURPOSES ***

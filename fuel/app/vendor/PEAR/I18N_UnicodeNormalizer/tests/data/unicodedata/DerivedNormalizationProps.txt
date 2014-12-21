@@ -1,0 +1,141 @@
+# Unicode Normalization
+#
+# WARNING! This is a subset of the original file for testing purposes
+#
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+# + Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+# + Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+# + Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or
+# promote products derived from this software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# @category  Internationalization
+# @package   I18N_UnicodeNormalizer
+# @author    Michel Corne <mcorne@yahoo.com>
+# @copyright 2007 Michel Corne
+# @license   http://www.opensource.org/licenses/bsd-license.php The BSD License
+# @version   SVN: $Id: DerivedNormalizationProps.txt 27 2007-07-03 15:50:30Z mcorne $
+# @link      http://pear.php.net/package/I18N_UnicodeNormalizer
+
+# DerivedNormalizationProps-5.0.0.txt
+# Date: 2006-06-07, 17:42:44 GMT [MD]
+#
+# Unicode Character Database
+# Copyright (c) 1991-2006 Unicode, Inc.
+# For terms of use, see http://www.unicode.org/terms_of_use.html
+# For documentation, see UCD.html
+
+# ================================================
+
+# Derived Property: Full_Composition_Exclusion
+#  Generated from: Composition Exclusions + Singletons + Non-Starter Decompositions
+
+F951          ; F900..FA0D    ; Full_Composition_Exclusion # Lo [270] CJK COMPATIBILITY IDEOGRAPH-F900..CJK COMPATIBILITY IDEOGRAPH-FA0D
+
+# ================================================
+
+# Property:	NFD_Quick_Check
+
+#  All code points not explicitly listed for NFD_Quick_Check
+#  have the value Yes (Y).
+
+# @missing: 0000..10FFFF; NFD_QC; Yes
+
+# ================================================
+
+# NFD_Quick_Check=No
+
+0220          ; 0226..0233    ; NFD_QC; N # L&  [14] LATIN CAPITAL LETTER A WITH DOT ABOVE..LATIN SMALL LETTER Y WITH MACRON
+0230          ; 0226..0233    ; NFD_QC; N # L&  [14] LATIN CAPITAL LETTER A WITH DOT ABOVE..LATIN SMALL LETTER Y WITH MACRON
+09CB..09CC    ; NFD_QC; N # Mc   [2] BENGALI VOWEL SIGN O..BENGALI VOWEL SIGN AU
+30AC          ; NFD_QC; N # Lo       KATAKANA LETTER GA
+30AE          ; NFD_QC; N # Lo       KATAKANA LETTER GI
+AC01          ; AC00..D7A3    ; NFD_QC; N # Lo [11172] HANGUL SYLLABLE GA..HANGUL SYLLABLE HIH
+F951          ; F900..FA0D    ; NFD_QC; N # Lo [270] CJK COMPATIBILITY IDEOGRAPH-F900..CJK COMPATIBILITY IDEOGRAPH-FA0D
+
+# ================================================
+
+# Property:	NFC_Quick_Check
+
+#  All code points not explicitly listed for NFC_Quick_Check
+#  have the value Yes (Y).
+
+# @missing: 0000..10FFFF; NFC_QC; Yes
+
+# ================================================
+
+# NFC_Quick_Check=No
+
+F951          ; F900..FA0D    ; NFC_QC; N # Lo [270] CJK COMPATIBILITY IDEOGRAPH-F900..CJK COMPATIBILITY IDEOGRAPH-FA0D
+
+# ================================================
+
+# NFC_Quick_Check=Maybe
+
+09BE          ; NFC_QC; M # Mc       BENGALI VOWEL SIGN AA
+1161          ; 1161..1175    ; NFC_QC; M # Lo  [21] HANGUL JUNGSEONG A..HANGUL JUNGSEONG I
+11A8          ; 11A8..11C2    ; NFC_QC; M # Lo  [27] HANGUL JONGSEONG KIYEOK..HANGUL JONGSEONG HIEUH
+3099..309A    ; NFC_QC; M # Mn   [2] COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK..COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK
+
+# ================================================
+
+# Property:	NFKD_Quick_Check
+
+#  All code points not explicitly listed for NFKD_Quick_Check
+#  have the value Yes (Y).
+
+# @missing: 0000..10FFFF; NFKD_QC; Yes
+
+# ================================================
+
+# NFKD_Quick_Check=No
+
+0230          ; 0226..0233    ; NFKD_QC; N # L&  [14] LATIN CAPITAL LETTER A WITH DOT ABOVE..LATIN SMALL LETTER Y WITH MACRON
+09CB..09CC    ; NFKD_QC; N # Mc   [2] BENGALI VOWEL SIGN O..BENGALI VOWEL SIGN AU
+30AC          ; NFKD_QC; N # Lo       KATAKANA LETTER GA
+30AE          ; NFKD_QC; N # Lo       KATAKANA LETTER GI
+3310          ; 3300..33FF    ; NFKD_QC; N # So [256] SQUARE APAATO..SQUARE GAL
+AC01          ; AC00..D7A3    ; NFKD_QC; N # Lo [11172] HANGUL SYLLABLE GA..HANGUL SYLLABLE HIH
+F951          ; F900..FA0D    ; NFKD_QC; N # Lo [270] CJK COMPATIBILITY IDEOGRAPH-F900..CJK COMPATIBILITY IDEOGRAPH-FA0D
+
+# ================================================
+
+# Property:	NFKC_Quick_Check
+
+#  All code points not explicitly listed for NFKC_Quick_Check
+#  have the value Yes (Y).
+
+# @missing: 0000..10FFFF; NFKC_QC; Yes
+
+# ================================================
+
+# NFKC_Quick_Check=No
+
+3310          ; 3300..33FF    ; NFKC_QC; N # So [256] SQUARE APAATO..SQUARE GAL
+F951          ; F900..FA0D    ; NFKC_QC; N # Lo [270] CJK COMPATIBILITY IDEOGRAPH-F900..CJK COMPATIBILITY IDEOGRAPH-FA0D
+
+# ================================================
+
+# NFKC_Quick_Check=Maybe
+
+09BE          ; NFKC_QC; M # Mc       BENGALI VOWEL SIGN AA
+1161          ; 1161..1175    ; NFKC_QC; M # Lo  [21] HANGUL JUNGSEONG A..HANGUL JUNGSEONG I
+11A8          ; 11A8..11C2    ; NFKC_QC; M # Lo  [27] HANGUL JONGSEONG KIYEOK..HANGUL JONGSEONG HIEUH
+3099          ; 3099..309A    ; NFKC_QC; M # Mn   [2] COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK..COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK
+
+# EOF
