@@ -1,5 +1,8 @@
 <?php
 return array(
+	'mention' => array(
+		'isEnabled'  => true,
+	),
 	'cache' => array(
 		'unreadCount' => array(
 			'isEnabled'  => true,

@@ -97,73 +97,59 @@ class Site_Util
 		throw new \InvalidArgumentException('first parameter is invalid.');;
 	}
 
-	public static function get_timeline_body($type, $body = null, $foreign_table_obj = null, array $optional_info = null)
+	public static function get_timeline_content($timeline_id, $type, $body = null, $foreign_table_obj = null, array $optional_info = null, $is_detail = false)
 	{
-		$is_safe = false;
 		switch ($type)
 		{
 			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
-			case \Config::get('timeline.types.member_name'):// ニックネーム変更
-				break;
+			case \Config::get('timeline.types.album_image_timeline'):
+				return self::get_normal_timeline_body($body, $type, $timeline_id, isset($optional_info['count']) ? $optional_info['count'] : 0, $is_detail);
+
 			case \Config::get('timeline.types.member_register'):// SNS への参加
-				$body = PRJ_SITE_NAME.' に参加しました。';
-				break;
+				return PRJ_SITE_NAME.' に参加しました。';
+
 			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				$body = term('profile', 'site.picture').'を設定しました。';
-				break;
+				return term('profile', 'site.picture').'を設定しました。';
+
 			case \Config::get('timeline.types.note'):// note 投稿
-				$body = term('note').'を投稿しました。';
-				break;
+				return term('note').'を投稿しました。';
+
 			case \Config::get('timeline.types.album'):// album 作成
-				$body = term('album').'を作成しました。';
-				break;
+				return term('album').'を作成しました。';
+
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
-				$is_safe = true;
-				$body = $foreign_table_obj ? render('timeline::_parts/body_for_add_album_image', array(
+				return $foreign_table_obj ? render('timeline::_parts/body_for_add_album_image', array(
 					'album_id' => $foreign_table_obj->id,
 					'name' => $foreign_table_obj->name,
 					'count' => isset($optional_info['count']) ? $optional_info['count'] : 0,
 				)) : null;
-				break;
-			case \Config::get('timeline.types.album_image_timeline'):
-				if (!strlen($body))
-				{
-					$body = sprintf('%sに%sを投稿しました。', term('timeline'), term('site.picture'));
-					if (!empty($optional_info['count']))
-					{
-						$body = sprintf('%sに%sを %d 枚投稿しました。', term('timeline'), term('site.picture'), $optional_info['count']);
-					}
-				}
-				break;
+
+			//case \Config::get('timeline.types.member_name'):// ニックネーム変更
+			//	break;
 		}
 
-		return array($body, $is_safe);
+		return null;
 	}
 
-	public static function get_timeline_content(Model_Timeline $timeline, \Orm\Model $foreign_table_obj = null, $optional_info = array(), $is_detail = false)
+	public static function get_normal_timeline_body($body, $type, $timeline_id, $image_count = 0, $is_detail = false)
 	{
-		list($content, $is_safe_content) = self::get_timeline_body(
-			$timeline->type,
-			$timeline->body,
-			$foreign_table_obj,
-			$optional_info
-		);
-		if ($is_detail) return nl2br($content);
-
-		if (strlen($content) && !$is_safe_content)
+		if (!strlen($body) && $type == \Config::get('timeline.types.album_image_timeline'))
 		{
-			if ($truncate_lines = \Config::get('timeline.articles.truncate_lines.body', false))
+			if (!$image_count)
 			{
-				$content = truncate_lines($content, $truncate_lines, 'timeline/'.$timeline->id);
+				return sprintf('%sに%sを %d 枚投稿しました。', term('timeline'), term('site.picture'), $image_count);
 			}
-			elseif ($trim_width = \Config::get('timeline.articles.trim_width.body', false))
-			{
-				$content = strim($content, $trim_width);
-			}
+
+			return sprintf('%sに%sを投稿しました。', term('timeline'), term('site.picture'));
 		}
 
-		return $content;
+		$truncate_line_props = $is_detail ? array() : array(
+			'line' => conf('articles.truncate_lines.body', 'timeline'),
+			'read_more_uri' => 'timeline/'.$timeline_id
+		);
+
+		return convert_body($body, $truncate_line_props, array('url2link', 'mention2link', 'nl2br'));
 	}
 
 	public static function get_quote_article($type, $foreign_table_obj, $is_detail = false)

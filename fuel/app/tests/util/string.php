@@ -52,4 +52,91 @@ class Test_Util_String extends TestCase
 
 		return $data;
 	}
+
+	/**
+	* @dataProvider mb_strpos_n_provider
+	*/
+	public function test_mb_strpos_n($test = null, $needle = null, $num = null, $expected = null)
+	{
+		$test = Util_String::mb_strpos_n($test, $needle, $num);
+		$this->assertEquals($expected, $test);
+	}
+
+	public function mb_strpos_n_provider()
+	{
+		$data = array();
+
+		$test = <<<EOL
+あ
+い
+うう
+え
+
+EOL;
+		$data[] = array($test, "\n", 3, 6);
+
+		return $data;
+	}
+
+	/**
+	* @dataProvider truncate_lines_provider
+	*/
+	public function test_truncate_lines($str = null, $num = null, $trimmarker = null, $is_rtrim = null, $expected = null)
+	{
+		list($test, $is_truncated) = Util_String::truncate_lines($str, $num, $trimmarker, $is_rtrim);
+		$this->assertEquals($expected, $test);
+	}
+
+	public function truncate_lines_provider()
+	{
+		$data = array();
+		$test = <<<EOL
+あ
+い
+うう
+え
+
+
+oo
+
+EOL;
+		$expected = <<<EOL
+あ
+い
+うう ...
+EOL;
+		$data[] = array($test, 3, '...', true, $expected);
+
+		$expected = <<<EOL
+あ
+い
+うう
+え
+
+...
+EOL;
+		$data[] = array($test, 6, '...', false, $expected);
+
+		$expected = <<<EOL
+あ
+い
+うう
+え ...
+EOL;
+		$data[] = array($test, 6, '...', true, $expected);
+
+		$expected = <<<EOL
+あ
+い
+うう
+え
+
+
+oo
+
+EOL;
+		$data[] = array($test, 10, '...', true, $expected);
+
+		return $data;
+	}
 }

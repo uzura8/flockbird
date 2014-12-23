@@ -212,31 +212,6 @@ function site_get_time($mysql_datetime, $display_type = 'relative', $format = 'Y
 	return $display;
 }
 
-function strim($string, $width = 0, $trimmarker = '...', $is_html = true)
-{
-	if (!$width) return $string;
-
-	$original_width = mb_strlen($string);
-
-	if ($is_html) $string = Site_Util::html_entity_decode($string);
-	$string = mb_strimwidth($string, 0, $width, $trimmarker);
-	if ($is_html) $string = e($string);
-
-	return $string;
-}
-
-function truncate_lines($body, $line, $read_more_uri = '', $is_convert_nl2br = true, $trimmarker = '...')
-{
-	list($body, $is_truncated) = Util_string::truncate_lines($body, $line, $trimmarker, Config::get('encoding'));
-
-	return render('_parts/truncated_body', array(
-		'body' => $body,
-		'is_truncated' => $is_truncated,
-		'read_more_uri' => $read_more_uri,
-		'is_convert_nl2br' => $is_convert_nl2br,
-	));
-}
-
 function get_public_flag_label($public_flag, $view_icon_only = false, $return_type = 'array', $is_hidden_xs = false)
 {
 	if (!in_array($return_type, array('array', 'icon_term', 'label'))) throw new InvalidArgumentException('Second parameter is invalid.');

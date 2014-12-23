@@ -14,7 +14,14 @@ $optional_info = array();
 if (isset($images['count'])) $optional_info['count'] = $images['count'];
 if (isset($images['count_all'])) $optional_info['count_all'] = $images['count_all'];
 $foreign_table_obj = \Timeline\Site_Model::get_foreign_table_obj($timeline->type, $timeline->foreign_id);
-echo \Timeline\Site_Util::get_timeline_content($timeline, $foreign_table_obj, $optional_info, $is_detail);
+echo \Timeline\Site_Util::get_timeline_content(
+	$timeline->id,
+	$timeline->type,
+	$timeline->body,
+	$foreign_table_obj,
+	$optional_info,
+	$is_detail
+);
 ?>
 
 

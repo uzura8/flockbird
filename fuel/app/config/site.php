@@ -246,6 +246,7 @@ $config = array(
 			),
 			'truncate_lines' => array(
 				'body'  => 10,
+				'trimmarker'  => '...',
 			),
 			'comment' => array(
 				'limit' => 5,
@@ -272,6 +273,11 @@ $config = array(
 				'textarea' => array(
 					'height'  => '33px',
 				),
+			),
+		),
+		'post' => array(
+			'link' => array(
+				'text_length'  => '60',
 			),
 		),
 	),

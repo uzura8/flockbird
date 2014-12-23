@@ -393,16 +393,23 @@ class Site_Util
 		return $target_datetime < $lifetime_datetime;
 	}
 
-	public static function check_ext_uri($uri, $is_admin = false)
+	public static function check_ext_uri($url, $is_admin = false)
 	{
-		if ($is_admin && strncmp($uri, 'admin', 5) !== 0)
+		if (preg_match('#(https?\:)?//#', $url))
 		{
-			return true;
+			$items = parse_url($url);
+			if ($items['host'] != PRJ_DOMAIN) return true;
+			if (!$items['path'] && (PRJ_URI_PATH && PRJ_URI_PATH != '/')) return true;
+			if (strpos($items['path'], PRJ_URI_PATH, 0) !== 0) return true;
+			if ($is_admin && strpos($items['path'], PRJ_URI_PATH.'admin', 0) === false)
+			{
+				return true;
+			}
+
+			return false;
 		}
-		elseif (preg_match('#(https?\:)?//#', $uri))
-		{
-			return true;
-		}
+
+		if ($is_admin && strpos($url, 'admin', 0) === false) return true;
 
 		return false;
 	}

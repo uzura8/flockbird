@@ -106,16 +106,22 @@ class Util_String
 		return $pos;
 	}
 
-	public static function truncate_lines($body, $line, $trimmarker = '...', $encoding = null)
+	public static function truncate_lines($body, $line, $trimmarker = '...', $is_rtrim = true, $encoding = null)
 	{
 		$is_truncated = false;
+		if (!$encoding) $encoding = mb_internal_encoding();
 
 		if (!$line) return array($body, $is_truncated);
 		if (!$pos = Util_string::mb_strpos_n($body, "\n", $line, $encoding)) return array($body, $is_truncated);
 
 		$is_truncated = $pos < mb_strlen($body, $encoding);
 		$body = mb_substr($body, 0, $pos, $encoding);
-		if ($is_truncated && $trimmarker) $body .= $trimmarker;
+		if ($is_truncated)
+		{
+			if ($is_rtrim) $body = rtrim($body);
+			if (!Str::ends_with($body, "\n")) $body .= ' ';
+			if ($trimmarker) $body .= $trimmarker;
+		}
 
 		return array($body, $is_truncated);
 	}
