@@ -1,4 +1,6 @@
-$('textarea.autogrow').autogrow();
+$(function(){
+	$('textarea.autogrow').autogrow();
+});
 
 $(document).on('click', '.btn_follow', function(){
 	if (GL.execute_flg) return false;

@@ -112,6 +112,7 @@ function showCommentInput(id, targetBlockName, postUri, getUri, isFocus) {
 		};
 		$('#' + targetBlockName).html(template(val));
 	}
+	$(textareaSelector).autogrow();
 	if (isFocus) $(textareaSelector).focus();
 }
 
