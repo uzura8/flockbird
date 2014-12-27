@@ -15,6 +15,7 @@ Autoloader::add_classes(array(
 	'Database_Query_Builder_Update' => APPPATH.'classes/database/query/builder/update.php',
 	'DBUtil' => APPPATH.'classes/dbutil.php',
 	'Uri' => APPPATH.'classes/uri.php',
+	'Str' => APPPATH.'classes/str.php',
 	'Validation' => APPPATH.'classes/validation.php',
 	'Agent' => APPPATH.'classes/agent.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
