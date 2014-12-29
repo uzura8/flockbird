@@ -11,15 +11,18 @@ class Util_StrTruncater
 	public function __construct($options = array())
 	{
 		$this->options = array(
-			'single_tags' => array('br', 'hr', 'img'),// 閉じタグが不要なタグ
+			'truncated_marker'      => '...',
+			'is_html'          => false,// HTMLタグ・特殊文字をを考慮して切り取るかどうか
+			'is_special_chars' => false,// 特殊文字をを考慮して切り取るかどうか(is_html = true の時のみ有効)
+			'single_tags' => array('br', 'hr', 'img'),// 閉じタグが不要なタグ(is_html = true の時のみ利用)
 		);
 		if ($options) $this->options = $options + $this->options;
 	}
 
-	public function execute($string, $limit, $continuation = '...', $is_html = false)
+	public function execute($string, $limit)
 	{
 		$this->cut_length = $limit;// 切り取り文字数の初期値をセット
-		if ($is_html)
+		if ($this->options['is_html'])
 		{
 			$this->check_length = $limit;// 確認文字数の初期値をセット
 
@@ -29,7 +32,7 @@ class Util_StrTruncater
 			if (!$matches)
 			{
 				// 確認対象文字列に特殊文字を含む場合
-				if ($specialchars = static::get_all_specialchars($string))
+				if ($this->options['is_special_chars'] && $specialchars = static::get_all_specialchars($string))
 				{
 					list($is_finished, $added_cut_length, $offset) = $this->handle_specialchars($string, $specialchars);
 					$this->cut_length += $added_cut_length;// 特殊文字の分の切り詰め文字数を補正
@@ -57,7 +60,7 @@ class Util_StrTruncater
 					$not_tag_str_length = Str::length($match[2]);// tag 以外の文字数
 					$sc_check_target_str = $match[2];// 確認対象文字列(タグ以外)
 					// 確認対象文字列に特殊文字を含む場合
-					if ($specialchars = static::get_all_specialchars($sc_check_target_str))
+					if ($this->options['is_special_chars'] && $specialchars = static::get_all_specialchars($sc_check_target_str))
 					{
 						list($is_finished, $added_cut_length, $offset_sc) = $this->handle_specialchars($sc_check_target_str, $specialchars);
 						$this->cut_length += $added_cut_length;// 特殊文字の分の切り詰め文字数を補正
@@ -80,7 +83,7 @@ class Util_StrTruncater
 		}
 		$new_string  = Str::sub($string, 0, $this->cut_length);// 補正された切り詰め文字数で切り取り
 		$new_string .= (count($this->tags = array_reverse($this->tags)) ? '</'.implode('></',$this->tags).'>' : '');// 閉じタグを適切に補完
-		$new_string .= (Str::length($string) > $this->cut_length ? $continuation : '');// ... を追加
+		$new_string .= (Str::length($string) > $this->cut_length ? $this->options['truncated_marker'] : '');// ... を追加
 
 		return $new_string;
 	}
@@ -144,7 +147,7 @@ class Util_StrTruncater
 	{
 		$sc_check_target_str = Str::sub($string, 0, $first_tag_pos);
 		// 確認対象文字列に特殊文字を含む場合
-		if ($specialchars = static::get_all_specialchars($sc_check_target_str))
+		if ($this->options['is_special_chars'] && $specialchars = static::get_all_specialchars($sc_check_target_str))
 		{
 			list($is_finished, $added_cut_length, $offset) = $this->handle_specialchars($sc_check_target_str, $specialchars);
 			$this->cut_length += $added_cut_length;// 特殊文字の分の切り詰め文字数を補正
