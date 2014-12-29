@@ -79,15 +79,15 @@ EOL;
 	}
 
 	/**
-	* @dataProvider truncate_lines_provider
+	* @dataProvider truncate4line_provider
 	*/
-	public function test_truncate_lines($str = null, $num = null, $trimmarker = null, $is_rtrim = null, $expected = null)
+	public function test_truncate4line($str = null, $num = null, $trimmarker = null, $is_rtrim = null, $expected = null)
 	{
-		list($test, $is_truncated) = Util_String::truncate_lines($str, $num, $trimmarker, $is_rtrim);
+		list($test, $is_truncated) = Util_String::truncate4line($str, $num, $trimmarker, $is_rtrim);
 		$this->assertEquals($expected, $test);
 	}
 
-	public function truncate_lines_provider()
+	public function truncate4line_provider()
 	{
 		$data = array();
 		$test = <<<EOL

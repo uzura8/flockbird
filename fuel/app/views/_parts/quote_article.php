@@ -8,14 +8,15 @@ $body_value = $body['value'];
 if (empty($read_more_uri)) $read_more_uri = '';
 if (!empty($body['truncate_count']))
 {
+	$truncate_options = array('width' => $body['truncate_count']);
 	if ($body['truncate_type'] == 'line')
 	{
-		$body_value = truncate_lines($body['value'], $body['truncate_count'], $read_more_uri);
+		$truncate_options = array(
+			'line' => $body['truncate_count'],
+			'read_more_uri' => $read_more_uri,
+		);
 	}
-	else
-	{
-		$body_value = strim($body['value'], $body['truncate_count']);
-	}
+	$body_value = convert_body($body['value'], $truncate_options, array('url2link', 'mention2link', 'nl2br'));
 }
 ?>
 <div class="quote">

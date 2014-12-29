@@ -80,6 +80,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			foreach ($list as $key => $obj)
 			{
 				$row = $obj->to_array();
+				$row['body'] = convert_body($row['body'], null, array('url2link', 'mention2link'));
 				$row['member'] = Model_Member::get_basic_data($row['member_id']);
 				if (conf('like.isEnabled'))
 				{

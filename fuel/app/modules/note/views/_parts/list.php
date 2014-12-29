@@ -45,7 +45,12 @@ echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_
 ?>
 			</div><!-- list_subtitle -->
 		</div><!-- header -->
-		<div class="body"><?php echo truncate_lines($note->body, conf('view_params_default.list.truncate_lines.body'), 'note/'.$id); ?></div>
+		<div class="body">
+			<?php echo convert_body($note->body, array(
+				'line' => conf('view_params_default.list.truncate_lines.body'),
+				'read_more_uri' => 'note/'.$id,
+			), array('url2link', 'mention2link', 'nl2br')); ?>
+		</div>
 <?php if (Module::loaded('album') && $images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id, 4, array('id' => 'desc'))): ?>
 <?php echo render('_parts/thumbnails', array('images' => array('list' => $images, 'additional_table' => 'note', 'size' => 'N_M', 'column_count' => 4))); ?>
 <?php endif; ?>

@@ -248,6 +248,7 @@ $config = array(
 				'body'  => 10,
 				'trimmarker'  => '...',
 			),
+			'trimmarker'  => '...',
 			'comment' => array(
 				'limit' => 5,
 				'limit_max' => 8,

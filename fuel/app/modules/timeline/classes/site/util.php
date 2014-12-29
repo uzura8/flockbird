@@ -144,12 +144,12 @@ class Site_Util
 			return sprintf('%sに%sを投稿しました。', term('timeline'), term('site.picture'));
 		}
 
-		$truncate_line_props = $is_detail ? array() : array(
-			'line' => conf('articles.truncate_lines.body', 'timeline'),
-			'read_more_uri' => 'timeline/'.$timeline_id
-		);
-
-		return convert_body($body, $truncate_line_props, array('url2link', 'mention2link', 'nl2br'));
+		return convert_body($body, array(
+			'is_detail'     => $is_detail,
+			'width'         => conf('articles.trim_width.body', 'timeline'),
+			'line'          => conf('articles.truncate_lines.body', 'timeline'),
+			'read_more_uri' => 'timeline/'.$timeline_id,
+		), array('url2link', 'mention2link', 'nl2br'));
 	}
 
 	public static function get_quote_article($type, $foreign_table_obj, $is_detail = false)

@@ -23,35 +23,24 @@ function strim($string, $width = 0, $trimmarker = '...', $is_html = true)
 	return $string;
 }
 
-function truncate_lines($body, $line, $read_more_uri = '', $is_convert_nl2br = true, $trimmarker = '...')
+function convert_body($body, $truncate_options = array(), $callbacks = array())
 {
-	list($body, $is_truncated) = Util_String::truncate_lines($body, $line, $trimmarker, true, Config::get('encoding'));
-
-	return render('_parts/truncated_body', array(
-		'body' => $body,
-		'is_truncated' => $is_truncated,
-		'read_more_uri' => $read_more_uri,
-		'is_convert_nl2br' => $is_convert_nl2br,
-	));
-}
-
-function convert_body($body, $truncate_lines_props = array(), $callbacks = array())
-{
-	$is_truncated = false;
-	$read_more_uri = '';
-	if ($truncate_lines_props)
-	{
-		$line = !empty($truncate_lines_props['line']) ? $truncate_lines_props['line'] : conf('view_params_default.list.truncate_lines_props.body');
-		$trimmarker = !empty($truncate_lines_props['trimmarker']) ? $truncate_lines_props['trimmarker'] : conf('view_params_default.list.truncate_lines.trimmarker');
-		list($body, $is_truncated) = Util_string::truncate_lines($body, $line, $trimmarker, true, Config::get('encoding'));
-		if (!empty($truncate_lines_props['read_more_uri'])) $read_more_uri = $truncate_lines_props['read_more_uri'];
-	}
+	$truncate_options_default = array(
+		'is_detail'     => false,
+		'encoding'      => Config::get('encoding'),
+		'width'         => conf('view_params_default.list.trim_width.body'),
+		'line'          => conf('view_params_default.list.truncate_lines.body'),
+		'is_rtrim'      => true,
+		'trimmarker'    => conf('view_params_default.list.trimmarker'),
+		'read_more_uri' => '',
+	);
+	if (!is_array($truncate_options)) $truncate_options = (array)$truncate_options;
+	$truncate_options = $truncate_options + $truncate_options_default;
 
 	return render('_parts/converted_body', array(
 		'body' => $body,
 		'callbacks' => $callbacks,
-		'is_truncated' => $is_truncated,
-		'read_more_uri' => $read_more_uri,
+		'options' => $truncate_options,
 	));
 }
 

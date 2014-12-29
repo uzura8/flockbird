@@ -1,4 +1,6 @@
-<p class="article_body"><?php echo nl2br($note->body) ?></p>
+<div class="article_body">
+<?php echo convert_body($note->body, array('is_detail' => true), array('url2link', 'mention2link', 'nl2br')); ?>
+</div>
 
 <?php if (Module::loaded('album')): ?>
 <?php echo render('album::image/_parts/list', array('list' => $images, 'is_simple_view' => true)); ?>

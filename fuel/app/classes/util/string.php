@@ -95,9 +95,10 @@ class Util_String
 	// n番目に文字列が現れる場所を探す
 	public static function mb_strpos_n($str, $needle, $n = 0, $encoding = null)
 	{
+		$encoding or $encoding = \Fuel::$encoding;
+
 		$pos = 0;
 		$offset = 0;
-		if (!$encoding) $encoding = mb_internal_encoding();
 		$len = mb_strlen($needle, $encoding);
 		while ($n-- > 0 && ($pos = mb_strpos($str, $needle, $offset, $encoding)) !== false) {
 			$offset = $pos + $len;
@@ -106,10 +107,25 @@ class Util_String
 		return $pos;
 	}
 
-	public static function truncate_lines($body, $line, $trimmarker = '...', $is_rtrim = true, $encoding = null)
+	public static function truncate($body, $limit, $trimmarker = '...', $is_html = true, $is_special_chars = false)
 	{
+		$before_count = mb_strlen($body);
+
+		$truncater = new Util_StrTruncater(array(
+			'truncated_marker' => $trimmarker,
+			'is_html' => $is_html,
+			'is_special_chars' => $is_special_chars,
+		));
+		$body = $truncater->execute($body, $limit);
+		$is_truncated = mb_strlen($body) < $before_count;
+
+		return array($body, $is_truncated);
+	}
+
+	public static function truncate4line($body, $line, $trimmarker = '...', $is_rtrim = true, $encoding = null)
+	{
+		$encoding or $encoding = \Fuel::$encoding;
 		$is_truncated = false;
-		if (!$encoding) $encoding = mb_internal_encoding();
 
 		if (!$line) return array($body, $is_truncated);
 		if (!$pos = Util_string::mb_strpos_n($body, "\n", $line, $encoding)) return array($body, $is_truncated);
@@ -119,8 +135,11 @@ class Util_String
 		if ($is_truncated)
 		{
 			if ($is_rtrim) $body = rtrim($body);
-			if (!Str::ends_with($body, "\n")) $body .= ' ';
-			if ($trimmarker) $body .= $trimmarker;
+			if ($trimmarker)
+			{
+				if (!Str::ends_with($body, "\n")) $body .= ' ';
+				$body .= $trimmarker;
+			}
 		}
 
 		return array($body, $is_truncated);
