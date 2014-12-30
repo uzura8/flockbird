@@ -82,11 +82,7 @@ function mention2link($string)
 {
 	if (!conf('mention.isEnabled', 'notice')) return $string;
 
-	$conf = conf('member.name');
-	$accept_str = $conf['accept_strings'];
-	$pattern = sprintf('/(?<![%s])(@|＠)([%s]{%d,%d})(?![%s])/u', $accept_str, $accept_str, $conf['length']['min'], $conf['length']['max'], $accept_str);
-
-	return preg_replace_callback($pattern, 'mention2link_callback', $string);
+	return preg_replace_callback(\Notice\Site_Util::get_match_pattern2mention(), 'mention2link_callback', $string);
 }
 
 function mention2link_callback($matches)

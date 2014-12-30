@@ -12,6 +12,23 @@ class Util_Array
 		return true;
 	}
 
+	public static function delete_in_array($targets, $search_list)
+	{
+		if (!is_array($targets)) $targets = (array)$targets;
+		if (!is_array($search_list)) $search_list = (array)$search_list;
+
+		if (!$search_list) return $targets;
+
+		$return = array();
+		foreach ($targets as $target)
+		{
+			if (in_array($target, $search_list)) continue;
+			$return[] = $target;
+		}
+
+		return $return;
+	}
+
 	public static function get_neighborings($item, $list)
 	{
 		$before = null;

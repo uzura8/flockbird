@@ -64,6 +64,50 @@ class Test_Util_Array extends TestCase
 	}
 
 	/**
+	* @dataProvider delete_in_array_provider
+	*/
+	public function test_delete_in_array($targets = null, $search_list = null, $expected = null)
+	{
+		$test = Util_Array::delete_in_array($targets, $search_list);
+		$this->assertEquals($expected, $test);
+	}
+
+	public function delete_in_array_provider()
+	{
+		$data = array();
+
+		$targets = array(
+			'a',
+			'b',
+			'c',
+			'd',
+			'e',
+		);
+		$data[] = array(
+			$targets,
+			array('c', 'e'),
+			array('a', 'b', 'd'),
+		);
+		$data[] = array(
+			$targets,
+			array('c', 'x'),
+			array('a', 'b', 'd', 'e'),
+		);
+		$data[] = array(
+			$targets,
+			array('x', 'y'),
+			array('a', 'b', 'c', 'd', 'e'),
+		);
+		$data[] = array(
+			$targets,
+			'c',
+			array('a', 'b', 'd', 'e'),
+		);
+
+		return $data;
+	}
+
+	/**
 	* @dataProvider get_neighborings_provider
 	*/
 	public function test_get_neighborings($item = null, $list = null, $expected = null)

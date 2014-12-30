@@ -142,4 +142,20 @@ class Site_Util
 		$cache_key = self::get_unread_count_cache_key($member_id);
 		\Cache::delete($cache_key);
 	}
+
+	public static function get_match_pattern2mention()
+	{
+		$conf = conf('member.name');
+		$accept_str = $conf['accept_strings'];
+
+		return sprintf('/(?<![%s])(@|＠)([%s]{%d,%d})(?![%s])/u', $accept_str, $accept_str, $conf['length']['min'], $conf['length']['max'], $accept_str);
+	}
+
+	public static function check_mention_target($foreign_table, $type_key)
+	{
+		if ($type_key == 'comment') return true;
+		if ($foreign_table == 'timeline' && $type_key == 'create') return true;
+
+		return false;
+	}
 }
