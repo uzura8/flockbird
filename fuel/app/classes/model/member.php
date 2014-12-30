@@ -20,10 +20,7 @@ class Model_Member extends \MyOrm\Model
 			'validation' => array(
 				'trim',
 				'required',
-				'min_length' => array(2),
-				'max_length' => array(20),
 				'no_controll',
-				'match_pattern' => array('/^[0-9A-Za-z_〃々ぁ-ゖ゛-ゞァ-ヺーヽヾ一-龥０-９Ａ-Ｚａ-ｚ]{2,20}$/u'),
 				'no_platform_dependent_chars',
 				'unique' => array('member.name'),
 			),
@@ -105,6 +102,10 @@ class Model_Member extends \MyOrm\Model
 	public static function _init()
 	{
 		static::$_properties['name']['label'] = term('member.name');
+		static::$_properties['name']['validation']['min_length'][] = conf('member.name.length.min');
+		static::$_properties['name']['validation']['max_length'][] = conf('member.name.length.max');
+		static::$_properties['name']['validation']['match_pattern'][]
+			= sprintf('/^[%s]{%d,%d}$/u', conf('member.name.accept_strings'), conf('member.name.length.min'), conf('member.name.length.max'));
 
 		$sex_options = Site_Form::get_form_options4config('term.member.sex.options');
 		static::$_properties['sex']['label'] = term('member.sex.label');
@@ -147,6 +148,11 @@ class Model_Member extends \MyOrm\Model
 		}
 
 		return self::$basic_list[$id];
+	}
+
+	public static function get_one4name($name)
+	{
+		return self::query()->where('name', $name)->get_one();
 	}
 
 	public static function recalculate_filesize_total($member_id = 0)

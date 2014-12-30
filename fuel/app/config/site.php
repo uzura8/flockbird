@@ -72,6 +72,13 @@ $config = array(
 		),
 	),
 	'member' => array(
+		'name' => array(
+			'accept_strings' => '0-9A-Za-z０-９Ａ-Ｚａ-ｚ_〃々ぁ-ゖ゛-ゞァ-ヺーヽヾ一-龥',
+			'length' => array(
+				'min' => 2,
+				'max' => 20,// 20 or less.
+			),
+		),
 		'register' => array(
 			'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
 			'email' => array(
@@ -277,8 +284,10 @@ $config = array(
 			),
 		),
 		'post' => array(
-			'link' => array(
-				'text_length'  => '60',
+			'url2link' => array(
+				'isEnabled'  => true,
+				'textLength'  => '40',
+				'truncatedMarker'  => '...',
 			),
 		),
 	),
