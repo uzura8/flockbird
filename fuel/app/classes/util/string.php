@@ -205,9 +205,11 @@ class Util_String
 		return trim($value);
 	}
 
-	public static function normalize_platform_dependent_chars($value)
+	public static function normalize_platform_dependent_chars($value, $is_use_normalizer = false)
 	{
 		$value = self::normalize_platform_dependent_chars_simple($value);
+		if (!$is_use_normalizer) return $value;
+
 		require_once APPPATH.'vendor'.DS.'PEAR'.DS.'I18N_UnicodeNormalizer'.DS.'UnicodeNormalizer.php';
 		$normalizer = new I18N_UnicodeNormalizer();
 
@@ -237,7 +239,54 @@ class Util_String
 			'⑱' => '(18)',
 			'⑲' => '(19)',
 			'⑳' => '(20)',
+			'Ⅰ' => 'I',
+			'Ⅱ' => 'II',
+			'Ⅲ' => 'III',
+			'Ⅳ' => 'IV',
+			'Ⅴ' => 'V',
+			'Ⅵ' => 'VI',
+			'Ⅶ' => 'VII',
+			'Ⅷ' => 'VIII',
+			'Ⅸ' => 'IX',
+			'Ⅹ' => 'X',
+			'ⅰ' => 'i',
+			'ⅱ' => 'ii',
+			'ⅲ' => 'iii',
+			'ⅳ' => 'iv',
+			'ⅴ' => 'v',
+			'ⅵ' => 'vi',
+			'ⅶ' => 'vii',
+			'ⅷ' => 'viii',
+			'ⅸ' => 'ix',
+			'ⅹ' => 'x',
+			'㊤' => '(上)',
+			'㊥' => '(中)',
+			'㊦' => '(下)',
+			'㊧' => '(左)',
+			'㊨' => '(右)',
+			'㍉' => 'ミリ',
+			'㍍' => 'メートル',
+			'㌔' => 'キロ',
+			'㌘' => 'グラム',
+			'㌕' => 'キログラム',
+			'㌧' => 'トン',
+			'㌦' => 'ドル',
+			'㍑' => 'リットル',
+			'㌫' => 'パーセント',
+			'㌢' => 'センチ',
+			'㎝' => 'cm',
+			'㎏' => 'kg',
+			'㎥' => 'm2',
+			'㏍' => 'K.K.',
+			'℡' => 'TEL',
 			'№' => 'No.',
+			'㍻' => '平成',
+			'㍼' => '昭和',
+			'㍽' => '大正',
+			'㍾' => '明治',
+			'㈱' => '(株)',
+			'㈲' => '(有)',
+			'㈹' => '(代)',
 		);
 
 		return str_replace(array_keys($arr), array_values($arr), $value);

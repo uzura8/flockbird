@@ -20,6 +20,7 @@ class Site_Mail
 			'subject'    => '',
 			'body'    => '',
 			'common_variavles' => array(),
+			'is_use_normalizer' => conf('library.PEAR_I18N_UnicodeNormalizer.isEnabled'),
 			'debug_log_is_enabled' => conf('mail.log.develop.isEnabled'),
 			'debug_log_file_path' => conf('mail.log.develop.file_path'),
 		);
@@ -89,7 +90,7 @@ class Site_Mail
 		if (!$this->config['title']) return;
 
 		$this->options['subject'] = $this->config['title'];
-		$this->options['subject'] = Util_String::normalize_platform_dependent_chars($this->options['subject']);
+		$this->options['subject'] = Util_String::normalize_platform_dependent_chars($this->options['subject'], $this->options['is_use_normalizer']);
 	}
 
 	protected function set_body($data = array())
@@ -97,7 +98,7 @@ class Site_Mail
 		$data += $this->options['common_variables'];
 		$this->options['body']  = $this->parser->render($this->config['body'], $data);
 		$this->options['body'] .= $this->get_signature($data);
-		$this->options['body']  = Util_String::normalize_platform_dependent_chars($this->options['body']);
+		$this->options['body']  = Util_String::normalize_platform_dependent_chars($this->options['body'], $this->options['is_use_normalizer']);
 	}
 
 	protected function get_signature($data = array())

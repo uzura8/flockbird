@@ -25,6 +25,11 @@ $config = array(
 			),
 		),
 	),
+	'library' => array(
+		'PEAR_I18N_UnicodeNormalizer' => array(
+			'isEnabled' => false,
+		),
+	),
 	'mail' => array(
 		'site' => array(
 			'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
