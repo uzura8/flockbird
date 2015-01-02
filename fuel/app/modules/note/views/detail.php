@@ -38,6 +38,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 
 <div id="comment_list">
 <?php echo render('_parts/comment/list', array(
+	'is_detail' => true,
 	'parent' => $note,
 	'list' => $comments,
 	'next_id' => $comment_next_id,

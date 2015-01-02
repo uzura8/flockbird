@@ -32,6 +32,7 @@ if ($parent) $box_attrs['class'] .= sprintf(' commentBox_%d', $parent->id);
 $data = array(
 	'member' => $comment->member,
 	'date' => array('datetime' => $comment->created_at),
+	'is_output_raw_content' => true,
 );
 if (conf('like.isEnabled'))
 {
@@ -45,9 +46,9 @@ if (conf('like.isEnabled'))
 		'is_liked' => isset($liked_ids) ? in_array($comment->id, $liked_ids) : false,
 	);
 }
-if (empty($is_detail) && empty($trim_width)) $trim_width = conf('view_params_default.list.comment.trim_width');
+if (empty($trim_width)) $trim_width = empty($is_detail) ? conf('view_params_default.list.comment.trim_width') : null;
 $content_view = View::forge('_parts/member_contents_box', $data);
-$content_view->set_safe('content', convert_body($comment->body, array('width' => $trim_width), array('url2link', 'mention2link')));
+$content_view->set_safe('content', convert_body($comment->body, array('width' => $trim_width, 'is_detail' => !empty($is_detail)), array('url2link', 'mention2link')));
 echo $content_view->render();
 ?>
 <?php

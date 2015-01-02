@@ -29,6 +29,10 @@ if (isset($content) && strlen($content))
 		}
 		echo convert_body($content, $truncate_options, $callbacks);
 	}
+	else
+	{
+		echo $content;
+	}
 }
 ?>
 <?php if (!empty($quote_article)) echo $quote_article; ?>
