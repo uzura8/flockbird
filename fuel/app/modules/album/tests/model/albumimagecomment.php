@@ -184,6 +184,94 @@ class Test_Model_AlbumImageComment extends \TestCase
 	}
 
 	/**
+	* @dataProvider comment_mention_provider
+	*/
+	public function test_comment_mention($member_id_to, $mc_notice_comment, $member_id_from, $mention_member_ids, $countup_nums_exp, $is_cahced_mention_member_ids_exp, $countup_nums_all_exp)
+	{
+		if (!is_enabled('notice'))
+		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
+			$this->markTestSkipped('notice module is disabled.');
+		}
+
+		// 事前準備
+		\Model_MemberConfig::set_value($member_id_to, \Notice\Form_MemberConfig::get_name(self::$type_key), $mc_notice_comment);
+		$is_new = false;
+		if ($member_id_to != self::$member_id)
+		{
+			self::$member_id = $member_id_to;
+			self::$album_image = self::set_album_image();
+			$is_new = true;
+		}
+		$album_image_id = self::$album_image->id;
+		$foreign_id = self::$album_image->id;
+		$notice_count_all_before = \Notice\Model_Notice::get_count();
+
+		// set cache
+		$notice_counts_before = array();
+		foreach ($mention_member_ids as $mention_member_id)
+		{
+			$notice_counts_before[$mention_member_id] = \Notice\Site_Util::get_unread_count($mention_member_id);
+		}
+
+		// comment save
+		$body = \Site_Test::get_mention_body($mention_member_ids);
+		$comment = self::save_comment($member_id_from, $body);
+		self::$commented_member_id_before = $member_id_from;
+
+		// check_cache
+		if (self::$is_check_notice_cache)
+		{
+			foreach ($mention_member_ids as $mention_member_id)
+			{
+				if (in_array($mention_member_id, $is_cahced_mention_member_ids_exp))
+				{
+					$this->assertFalse(self::check_no_cache($member_id_to));
+				}
+				else
+				{
+					$this->assertTrue(self::check_no_cache($member_id_to));
+				}
+			}
+		}
+
+		foreach ($mention_member_ids as $mention_member_id)
+		{
+			// notice count 取得
+			$notice_count = \Notice\Site_Util::get_unread_count($mention_member_id);
+			if (self::$is_check_notice_cache) $this->assertFalse(self::check_no_cache($mention_member_id));// cache が生成されていることを確認
+			// execute test
+			$this->assertEquals($notice_counts_before[$mention_member_id] + $countup_nums_exp[$mention_member_id], $notice_count);// count up を確認
+		}
+
+		// Model_Notice
+		// 件数
+		$notice_count_all = \Notice\Model_Notice::get_count();
+		$this->assertEquals($notice_count_all_before + $countup_nums_all_exp, $notice_count_all);
+	}
+
+	public function comment_mention_provider()
+	{
+		$data = array();
+
+		//($member_id_to, $mc_notice_comment, $member_id_from, $mention_member_ids, $countup_nums_exp, $is_cahce_deleteds_exp, $countup_nums_all_exp)
+		// お知らせを受け取る
+		$data[] = array(2, 1, 2, array(2), array(2 => 0), array(2), 0);// #0: 自分が自分に / @自分
+		$data[] = array(2, 1, 3, array(2), array(2 => 1, 3 => 0), array(), 1);// #1: Aが自分に / @自分 / type=comment_mention が追加
+		$data[] = array(2, 1, 3, array(3), array(2 => 0, 3 => 0), array(), 1);// #2: Aが自分に / @A / type=comment が追加
+		$data[] = array(2, 1, 3, array(3, 4), array(2 => 0, 3 => 0, 4 => 1), array(), 0);// #3: Aが自分に / @A,B
+		$data[] = array(2, 1, 3, array(3, 4, 5), array(2 => 0, 3 => 0, 4 => 0, 5 => 1), array(), 0);// #4: Aが自分に / @A,B,C
+		$data[] = array(2, 1, 3, array(3, 4, 5), array(2 => 0, 3 => 0, 4 => 0, 5 => 0), array(), 0);// #5: Aが自分に / @A,B,C
+		$data[] = array(3, 1, 4, array(5, 6), array(3 => 1, 5 => 1, 6 => 1), array(), 2);// #6: Aが自分に / @A,B,C
+
+		// お知らせを受け取らない
+		$data[] = array(4, 0, 1, array(), array(4 => 0), array(4), 0);// #0: Aが自分に / mention 無し
+		$data[] = array(4, 0, 1, array(4), array(4 => 1), array(), 1);// #0: Aが自分に / @自分
+
+		return $data;
+	}
+
+	/**
 	* @dataProvider comment_watch_provider
 	*/
 	public function test_comment_watch($member_id_to, $member_id_from, $mc_notice_comment, $mc_watch_commented, $member_id_add_comment, $is_countup_watch_exp, $is_created_watch_exp, $is_countup_exp)
