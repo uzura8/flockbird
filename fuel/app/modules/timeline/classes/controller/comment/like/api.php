@@ -15,7 +15,7 @@ class Controller_Comment_Like_Api extends \Controller_Site_Api
 	 */
 	public function post_update($id = null)
 	{
-		$response = array('status' => 0);
+		$this->response_body['error_messages']['default'] = term('form.like').'に失敗しました。';
 		try
 		{
 			if (!conf('like.isEnabled')) throw new \HttpNotFoundException();
@@ -34,8 +34,10 @@ class Controller_Comment_Like_Api extends \Controller_Site_Api
 			));
 			\DB::commit_transaction();
 
-			$response['status'] = (int)$is_liked;
-			$response['count'] = Model_TimelineCommentLike::get_count4timeline_comment_id($timeline_comment->id);
+			$this->response_body['status'] = (int)$is_liked;
+			$this->response_body['count'] = Model_TimelineCommentLike::get_count4timeline_comment_id($timeline_comment->id);
+			$this->response_body['message'] = $is_liked ? term('form.like').'しました。' : term('form.like').'を取り消しました。';
+			$this->response_body['html'] = icon_label($is_liked ? 'form.do_unlike' : 'form.do_like', 'both', false);
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
@@ -50,13 +52,21 @@ class Controller_Comment_Like_Api extends \Controller_Site_Api
 		{
 			$status_code = 400;
 		}
+		catch(\Database_Exception $e)
+		{
+			$status_code = 500;
+		}
 		catch(\FuelException $e)
 		{
+			$status_code = 500;
+		}
+		if ($status_code == 500)
+		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
+			$this->response_body['error_messages']['500'] = $this->response_body['error_messages']['default'];
 		}
 
-		$this->response($response, $status_code);
+		$this->response($this->response_body, $status_code);
 	}
 
 	/**
