@@ -63,7 +63,7 @@ if (Auth::check())
 		'data-counter' => '#comment_count_'.$note->id,
 		'data-latest' => 1,
 	);
-	echo render('_parts/post_comment', array('button_attrs' => $button_attrs));
+	echo render('_parts/post_comment', array('size' => 'M', 'button_attrs' => $button_attrs));
 }
 ?>
 <?php endif; ?>

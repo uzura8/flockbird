@@ -133,6 +133,7 @@ echo render('_parts/comment/list', $data);
 
 <?php if (Auth::check()): ?>
 <?php echo render('_parts/post_comment', array(
+	'size' => 'M',
 	'parts_attrs' => array('class' => 'commentPostBox hidden', 'id' => 'commentPostBox_'.$id),
 	'button_attrs' => array(
 		'class' => 'js-ajax-postComment btn-sm',
