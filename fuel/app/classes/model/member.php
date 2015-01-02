@@ -133,7 +133,7 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['birthday_public_flag']['validation']['in_array'][] = $options_public_flag;
 	}
 
-	public static function get_basic_data($id)
+	public static function get_one_basic4id($id)
 	{
 		if (!empty(self::$basic_list[$id])) return self::$basic_list[$id];
 
@@ -148,6 +148,17 @@ class Model_Member extends \MyOrm\Model
 		}
 
 		return self::$basic_list[$id];
+	}
+
+	public static function get_basic4ids($ids)
+	{
+		$objs = array();
+		foreach ($ids as $id)
+		{
+			$objs[$id] = self::get_one_basic4id($id);
+		}
+
+		return $objs;
 	}
 
 	public static function get_one4name($name)

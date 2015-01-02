@@ -81,7 +81,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			{
 				$row = $obj->to_array();
 				$row['body'] = convert_body($row['body'], null, array('url2link', 'mention2link'));
-				$row['member'] = Model_Member::get_basic_data($row['member_id']);
+				$row['member'] = Model_Member::get_one_basic4id($row['member_id']);
 				if (conf('like.isEnabled'))
 				{
 					$row['get_like_members_uri'] = sprintf('%s/comment/like/api/member/%d.html', $api_uri_path_prefix, $row['id']);

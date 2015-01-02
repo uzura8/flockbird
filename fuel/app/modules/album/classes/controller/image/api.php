@@ -84,7 +84,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			foreach ($data['list'] as $key => $obj)
 			{
 				$row = $obj->to_array();
-				$row['album']['member'] = \Model_Member::get_basic_data($obj->album->member_id);
+				$row['album']['member'] = \Model_Member::get_one_basic4id($obj->album->member_id);
 				$list_array[] = $row;
 			}
 			// json response
