@@ -1,5 +1,5 @@
 <div id="main_post_box">
-<?php echo render('_parts/post_comment', array(
+<?php echo render('_parts/comment/post', array(
 	'size' => 'M',
 	'button_attrs' => array('id' => 'btn_timeline', 'class' => 'btn btn-default btn_comment'),
 	'textarea_attrs' => array('class' => 'form-control autogrow input_timeline'),

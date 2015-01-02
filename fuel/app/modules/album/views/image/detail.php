@@ -52,7 +52,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 </div>
 
 <?php if (Auth::check()): ?>
-<?php echo render('_parts/post_comment', array('size' => 'M', 'button_attrs' => array(
+<?php echo render('_parts/comment/post', array('size' => 'M', 'button_attrs' => array(
 	'data-post_uri' => 'album/image/comment/api/create/'.$album_image->id.'.json',
 	'data-get_uri' => 'album/image/comment/api/list/'.$album_image->id.'.json',
 	'data-list' => '#comment_list',

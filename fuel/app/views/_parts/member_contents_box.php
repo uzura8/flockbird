@@ -103,7 +103,7 @@ echo render('_parts/comment/list', $data);
 <?php
 $post_comment_button_attrs_def = array('class' => 'btn btn-default btn-sm btn_comment', 'id' => 'btn_comment_'.$parent->id, 'data-parent_id' => $parent->id,);
 $post_comment_button_attrs     = empty($post_comment_button_attrs) ? $post_comment_button_attrs_def : array_merge($post_comment_button_attrs_def, $post_comment_button_attrs);
-echo render('_parts/post_comment', array(
+echo render('_parts/comment/post', array(
 	'u' => $u,
 	'button_attrs' => $post_comment_button_attrs,
 	'textarea_attrs' => array('id' => 'textarea_comment_'.$parent->id),
