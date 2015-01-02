@@ -270,11 +270,11 @@ class Test_Model_TimelineComment extends \TestCase
 			{
 				if (in_array($mention_member_id, $is_cahced_mention_member_ids_exp))
 				{
-					$this->assertFalse(self::check_no_cache($member_id_to));
+					$this->assertFalse(self::check_no_cache($mention_member_id));
 				}
 				else
 				{
-					$this->assertTrue(self::check_no_cache($member_id_to));
+					$this->assertTrue(self::check_no_cache($mention_member_id));
 				}
 			}
 		}
@@ -298,14 +298,14 @@ class Test_Model_TimelineComment extends \TestCase
 	{
 		$data = array();
 
-		//($member_id_to, $mc_notice_comment, $member_id_from, $mention_member_ids, $countup_nums_exp, $is_cahce_deleteds_exp, $countup_nums_all_exp)
+		//($member_id_to, $mc_notice_comment, $member_id_from, $mention_member_ids, $countup_nums_exp, $is_cahced_mention_member_ids_exp, $countup_nums_all_exp)
 		// お知らせを受け取る
 		$data[] = array(2, 1, 2, array(2), array(2 => 0), array(2), 0);// #0: 自分が自分に / @自分
 		$data[] = array(2, 1, 3, array(2), array(2 => 1, 3 => 0), array(), 1);// #1: Aが自分に / @自分 / type=comment_mention が追加
-		$data[] = array(2, 1, 3, array(3), array(2 => 0, 3 => 0), array(), 1);// #2: Aが自分に / @A / type=comment が追加
-		$data[] = array(2, 1, 3, array(3, 4), array(2 => 0, 3 => 0, 4 => 1), array(), 0);// #3: Aが自分に / @A,B
-		$data[] = array(2, 1, 3, array(3, 4, 5), array(2 => 0, 3 => 0, 4 => 0, 5 => 1), array(), 0);// #4: Aが自分に / @A,B,C
-		$data[] = array(2, 1, 3, array(3, 4, 5), array(2 => 0, 3 => 0, 4 => 0, 5 => 0), array(), 0);// #5: Aが自分に / @A,B,C
+		$data[] = array(2, 1, 3, array(3), array(2 => 0, 3 => 0), array(3), 1);// #2: Aが自分に / @A / type=comment が追加
+		$data[] = array(2, 1, 3, array(3, 4), array(2 => 0, 3 => 0, 4 => 1), array(3), 0);// #3: Aが自分に / @A,B
+		$data[] = array(2, 1, 3, array(3, 4, 5), array(2 => 0, 3 => 0, 4 => 0, 5 => 1), array(3, 4), 0);// #4: Aが自分に / @A,B,C
+		$data[] = array(2, 1, 3, array(3, 4, 5), array(2 => 0, 3 => 0, 4 => 0, 5 => 0), array(3, 4, 5), 0);// #5: Aが自分に / @A,B,C
 		$data[] = array(3, 1, 4, array(5, 6), array(3 => 1, 5 => 1, 6 => 1), array(), 2);// #6: Aが自分に / @A,B,C
 
 		// お知らせを受け取らない
