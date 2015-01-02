@@ -227,6 +227,15 @@ class Model_Timeline extends \MyOrm\Model
 
 		if (is_enabled('notice'))
 		{
+			static::$_observers['MyOrm\Observer_InsertNotice'] = array(
+				'events'   => array('after_insert'),
+				'update_properties' => array(
+					'foreign_table' => array('timeline' => 'value'),
+					'foreign_id' => array('id' => 'property'),
+					'type_key' => array('create' => 'value'),
+					'member_id_from' => array('member_id' => 'property'),
+				),
+			);
 			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
 				'events' => array('before_delete'),
 				'conditions' => array(

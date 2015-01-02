@@ -9,8 +9,11 @@ namespace Timeline;
  */
 class Test_Model_Timeline extends \TestCase
 {
+	private static $is_check_notice_cache;
+
 	public static function setUpBeforeClass()
 	{
+		self::$is_check_notice_cache = (is_enabled('notice') && \Config::get('notice.cache.unreadCount.isEnabled'));
 	}
 
 	protected function setUp()
@@ -327,5 +330,75 @@ class Test_Model_Timeline extends \TestCase
 				$this->assertContains($cache->is_follow, array(0, 1));
 			}
 		}
+	}
+
+	/**
+	* @dataProvider mention_provider
+	*/
+	public function test_comment_mention($member_id_from, $mention_member_ids, $countup_nums_exp, $is_cahced_mention_member_ids_exp, $countup_nums_all_exp)
+	{
+		if (!is_enabled('notice'))
+		{
+			\Util_Develop::output_test_info(__FILE__, __LINE__);
+			$this->markTestSkipped('notice module is disabled.');
+		}
+
+		// 事前準備
+		$notice_count_all_before = \Notice\Model_Notice::get_count();
+
+		// set cache
+		$notice_counts_before = array();
+		foreach ($mention_member_ids as $mention_member_id)
+		{
+			$notice_counts_before[$mention_member_id] = \Notice\Site_Util::get_unread_count($mention_member_id);
+		}
+
+		// timeline_comment save
+		$body = \Site_Test::get_mention_body($mention_member_ids);
+		$timeline = Site_Model::save_timeline($member_id_from, PRJ_PUBLIC_FLAG_ALL, 'normal', null, null, $body);
+		$timeline_id = $timeline->id;
+
+		// check_cache
+		if (self::$is_check_notice_cache)
+		{
+			foreach ($mention_member_ids as $mention_member_id)
+			{
+				if (in_array($mention_member_id, $is_cahced_mention_member_ids_exp))
+				{
+					$this->assertFalse(\Notice\Site_Test::check_no_cache4notice_unread($mention_member_id));
+				}
+				else
+				{
+					$this->assertTrue(\Notice\Site_Test::check_no_cache4notice_unread($mention_member_id));
+				}
+			}
+		}
+
+		foreach ($mention_member_ids as $mention_member_id)
+		{
+			// notice count 取得
+			$notice_count = \Notice\Site_Util::get_unread_count($mention_member_id);
+			if (self::$is_check_notice_cache) $this->assertFalse(\Notice\Site_Test::check_no_cache4notice_unread($mention_member_id));// cache が生成されていることを確認
+			// execute test
+			$this->assertEquals($notice_counts_before[$mention_member_id] + $countup_nums_exp[$mention_member_id], $notice_count);// count up を確認
+		}
+
+		// Model_Notice
+		// 件数
+		$notice_count_all = \Notice\Model_Notice::get_count();
+		$this->assertEquals($notice_count_all_before + $countup_nums_all_exp, $notice_count_all);
+	}
+
+	public function mention_provider()
+	{
+		$data = array();
+
+		//($member_id_from, $mention_member_ids, $countup_nums_exp, $is_cahced_mention_member_ids_exp, $countup_nums_all_exp)
+		// お知らせを受け取る
+		$data[] = array(2, array(2), array(2 => 0), array(2), 0);// #0: @自分
+		$data[] = array(2, array(3), array(2 => 0, 3 => 1), array(2), 1);// #1: @自分,A
+		$data[] = array(2, array(3, 4), array(2 => 0, 3 => 1, 4 => 1), array(2), 1);// #2: @自分,A,B
+
+		return $data;
 	}
 }
