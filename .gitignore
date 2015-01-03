@@ -22,7 +22,7 @@ nbproject/
 build
 .idea
 
-config.php
+/config.php
 public_html
 web
 public/xhprof.php
