@@ -71,6 +71,34 @@ class Model_AlbumImageCommentLike extends \MyOrm\Model
 
 	protected static $count_per_album_image_comment = array();
 
+	public static function _init()
+	{
+		if (is_enabled('notice'))
+		{
+			static::$_observers['MyOrm\Observer_InsertNotice'] = array(
+				'events' => array('after_insert'),
+				'update_properties' => array(
+					'foreign_table' => array('album_image_comment' => 'value'),
+					'foreign_id' => array('album_image_comment_id' => 'property'),
+					'type_key' => array('like' => 'value'),
+					'member_id_from' => array('member_id' => 'property'),
+					'member_id_to' => array(
+						'related' => array('album_image_comment' => 'member_id'),
+					),
+				),
+			);
+			$type = \Notice\Site_Util::get_notice_type('like');
+			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
+				'events' => array('before_delete'),
+				'conditions' => array(
+					'foreign_table' => array('album_image_comment' => 'value'),
+					'foreign_id' => array('album_image_comment_id' => 'property'),
+					'type' => array($type => 'value'),
+				),
+			);
+		}
+	}
+
 	public static function get_count4album_image_comment_id($album_image_comment_id)
 	{
 		if (!empty(self::$count_per_album_image_comment[$album_image_comment_id])) return self::$count_per_album_image_comment[$album_image_comment_id];

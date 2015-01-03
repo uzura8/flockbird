@@ -32,6 +32,7 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_InsertMemberFollowTimeline' => __DIR__.'/classes/observer/insertmemberfollowtimeline.php',
 	'MyOrm\\Observer_InsertNotice' => __DIR__.'/classes/observer/insernotice.php',
 	'MyOrm\\Observer_DeleteNotice' => __DIR__.'/classes/observer/deletenotice.php',
+	'MyOrm\\Observer_DeleteUnreadNoticeCountCache' => __DIR__.'/classes/observer/deleteunreadnoticecountcache.php',
 ));
 
 /* End of file bootstrap.php */

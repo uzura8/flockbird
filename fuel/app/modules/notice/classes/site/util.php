@@ -7,6 +7,19 @@ class Site_Util
 	{
 		return array(
 			'note',
+			'note_comment',
+			'album',
+			'album_image',
+			'album_image_comment',
+			'timeline',
+			'timeline_comment',
+		);
+	}
+
+	public static function get_accept_parent_tables()
+	{
+		return array(
+			'note',
 			'album',
 			'album_image',
 			'timeline',
@@ -31,6 +44,8 @@ class Site_Util
 		$notice_member_ids = \Util_Orm::conv_col2array(\Notice\Model_MemberWatchContent::get4foreign_data($foreign_table, $foreign_id), 'member_id');
 		if ($member_id_to && !in_array($member_id_to, $notice_member_ids)) $notice_member_ids[] = $member_id_to;
 		$notice_member_ids = \Util_Array::unset_item($member_id_from, $notice_member_ids);
+
+		if ($type_key == 'comment_like') $type_key = 'like';
 		if (!in_array($type_key, array('comment', 'like'))) return $notice_member_ids;
 
 		$config_key = \Notice\Form_MemberConfig::get_name($type_key);
@@ -68,7 +83,6 @@ class Site_Util
 				break;
 			case 'like':
 				return $prefix.'Liked';
-				break;
 		}
 
 		throw new \InvalidArgumentException('Parameter is invalid.');
@@ -76,12 +90,20 @@ class Site_Util
 
 	public static function change_status2read($member_id, $foreign_table, $foreign_id, $type_keys = null)
 	{
-		$notices = Model_Notice::get4foreign_data($foreign_table, $foreign_id, self::convert_type_keys2types($type_keys));
 		$reduce_num = 0;
+
+		$notices = Model_Notice::get4foreign_data($foreign_table, $foreign_id, self::convert_type_keys2types($type_keys));
 		foreach ($notices as $notice)
 		{
 			if (Model_NoticeStatus::change_status2read($member_id, $notice->id)) $reduce_num++;
 		}
+
+		$notices = Model_Notice::get4parent_data($foreign_table, $foreign_id);
+		foreach ($notices as $notice)
+		{
+			if (Model_NoticeStatus::change_status2read($member_id, $notice->id)) $reduce_num++;
+		}
+
 		self::delete_unread_count_cache($member_id);
 
 		return $reduce_num;

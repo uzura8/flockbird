@@ -1,6 +1,6 @@
 {{#if list}}
 {{#each list}}
-<a href="{{getNoticeContentUrl notice.foreign_table notice.foreign_id}}" class="simpleList-item{{# unless is_read}} simpleList-item-warning{{/unless}}">
+<a href="{{getNoticeContentUrl notice.foreign_table notice.foreign_id notice.parent_table notice.parent_id}}" class="simpleList-item{{# unless is_read}} simpleList-item-warning{{/unless}}">
 	<div>{{getNoticeInfo notice.foreign_table notice.type members members_count}}</div>
 	<small>
 		<span data-livestamp="{{{sort_datetime}}}"></span>

@@ -403,6 +403,7 @@ class Test_Model_TimelineComment extends \TestCase
 	public function test_delete_notice()
 	{
 		// 事前準備
+		\Model_MemberConfig::set_value(1, \Notice\Form_MemberConfig::get_name('comment'), 1);
 		\Model_MemberConfig::set_value(2, \Notice\Form_MemberConfig::get_name(self::$type_key), 1);
 		\Model_MemberConfig::set_value(2, \Notice\Site_Util::get_member_config_name_for_watch_content(self::$type_key), 1);
 		\Model_MemberConfig::set_value(3, \Notice\Form_MemberConfig::get_name(self::$type_key), 1);

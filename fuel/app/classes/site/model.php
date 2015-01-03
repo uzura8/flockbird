@@ -23,6 +23,19 @@ class Site_Model
 		return '';
 	}
 
+	public static function get_parent_table($table, $is_return_with_child_type = false, $accept_child_type = array())
+	{
+		if (!$accept_child_type) $accept_child_type = array('comment', 'like');
+		if (!preg_match('/^([a-zA-Z0-9_]+)_('.implode('|', $accept_child_type).')$/', $table, $matches)) return false;
+
+		$parent_table = $matches[1];
+		$child_type = $matches[2];
+
+		if ($is_return_with_child_type) return array($parent_table, $child_type);
+
+		return $parent_table;
+	}
+
 	public static function get4table_and_id($table, $id, $relateds = array())
 	{
 		$model = self::get_model_name($table);

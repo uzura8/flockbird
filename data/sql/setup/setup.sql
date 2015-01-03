@@ -444,14 +444,17 @@ CREATE TABLE `news_category` (
 
 CREATE TABLE `notice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
-  `foreign_id` int(11) NULL COMMENT 'The id of reference table',
+  `foreign_table` varchar(20) NOT NULL COMMENT 'Reference table name',
+  `foreign_id` int(11) NOT NULL COMMENT 'The id of reference table',
   `type` tinyint(2) NOT NULL DEFAULT '0',
   `body` text NULL,
+  `parent_table` varchar(20) NULL COMMENT 'Use for open page url.',
+  `parent_id` int(11) NULL COMMENT 'Use for open page url.',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `foreign_table_foreign_id_type_created_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`)
+  KEY `foreign_table_foreign_id_type_created_at_idx` (`foreign_table`,`foreign_id`,`type`,`created_at`),
+  KEY `parent_table_parent_id_type_idx` (`parent_table`,`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `notice_status` (

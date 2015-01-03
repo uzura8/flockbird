@@ -90,7 +90,7 @@ class Model_TimelineLike extends \MyOrm\Model
 		if (is_enabled('notice'))
 		{
 			static::$_observers['MyOrm\Observer_InsertNotice'] = array(
-				'events'   => array('after_insert'),
+				'events' => array('after_insert'),
 				'update_properties' => array(
 					'foreign_table' => array('timeline' => 'value'),
 					'foreign_id' => array('timeline_id' => 'property'),

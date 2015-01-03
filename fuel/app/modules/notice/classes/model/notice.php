@@ -23,6 +23,12 @@ class Model_Notice extends \MyOrm\Model
 			'validation' => array('trim'),
 			'form' => array('type' => false),
 		),
+		'parent_table' => array(
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'max_length' => array(20)),
+			'form' => array('type' => false),
+		),
+		'parent_id',
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
@@ -47,9 +53,19 @@ class Model_Notice extends \MyOrm\Model
 
 	public static function _init()
 	{
+		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_accept_foreign_tables();
 		static::$_properties['foreign_id'] = \Util_Orm::get_relational_numeric_key_prop();
 		static::$_properties['type']['validation']['in_array'][] = \Config::get('notice.types');
-		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_accept_foreign_tables();
+		static::$_properties['parent_table']['validation']['in_array'][] = Site_Util::get_accept_parent_tables();
+		static::$_properties['parent_id'] = \Util_Orm::get_relational_numeric_key_prop(false);
+
+		// unread cache を削除
+		if (\Config::get('notice.cache.unreadCount.isEnabled'))
+		{
+			static::$_observers['MyOrm\Observer_DeleteUnreadNoticeCountCache'] = array(
+				'events' => array('before_delete'),
+			);
+		}
 	}
 
 	public static function check_and_create($foreign_table, $foreign_id, $type)
@@ -63,6 +79,14 @@ class Model_Notice extends \MyOrm\Model
 				'type' => $type,
 				'body' => Site_Util::get_notice_body($foreign_table, $type),
 			));
+			if (!in_array($foreign_table, Site_Util::get_accept_parent_tables()) && $parent_table = \Site_Model::get_parent_table($foreign_table))
+			{
+				$obj->parent_table = $parent_table;
+				$foreign_obj_name = \Site_Model::get_model_name($foreign_table);
+				$foreign_obj = $foreign_obj_name::find($foreign_id);
+				$parent_id_prop = $parent_table.'_id';
+				$obj->parent_id = $foreign_obj->{$parent_id_prop};
+			}
 			$obj->save();
 		}
 
@@ -102,6 +126,15 @@ class Model_Notice extends \MyOrm\Model
 				$query->where('type', 'in', $types);
 			}
 		}
+
+		return $query->get();
+	}
+
+	public static function get4parent_data($parent_table, $parent_id)
+	{
+		$query = self::query()
+			->where('parent_table', $parent_table)
+			->where('parent_id', $parent_id);
 
 		return $query->get();
 	}

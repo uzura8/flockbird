@@ -31,8 +31,10 @@ Handlebars.registerHelper('getNoticeInfo', function(foreign_table, type, members
 	return output;
 });
 
-Handlebars.registerHelper('getNoticeContentUrl', function(foreign_table, foreign_id) {
-	return get_url(getNoticeContentUriMiddlePath(foreign_table) + '/' + foreign_id);
+Handlebars.registerHelper('getNoticeContentUrl', function(foreign_table, foreign_id, parent_table, parent_id) {
+	if (!parent_table) parent_table = foreign_table;
+	if (!parent_id) parent_id = foreign_id;
+	return get_url(getNoticeContentUriMiddlePath(parent_table) + '/' + parent_id);
 });
 
 function getNoticeContentUriMiddlePath(foreign_table)
@@ -63,13 +65,20 @@ function convertNoticeAction(foreign_table, type)
 
 function convertNoticeForeignTable(foreign_table)
 {
+	var isComment = false;
+	var matches = foreign_table.match(/^([A-Za-z0-9_]+)_comment$/);
+	if (matches) {
+		isComment = true;
+		foreign_table = matches[1];
+	}
 	switch (foreign_table)
 	{
 		case 'timeline':
 		case 'note':
 		case 'album':
 		case 'album_image':
-			return get_term(foreign_table);
+			var suffix = (isComment) ? get_term('comment') : '';
+			return get_term(foreign_table) + suffix;
 	}
 	return '';
 }
