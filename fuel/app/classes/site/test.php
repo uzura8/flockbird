@@ -14,4 +14,20 @@ class Site_Test
 
 		return $body_prefix.$body_surffix;
 	}
+
+	public static function save_comment($parent_table, $parent_id, $member_id, $body = null)
+	{
+		$model = Site_Model::get_model_name($parent_table.'_comment');
+		$parent_id_prop = $parent_table.'_id';
+
+		if (is_null($body)) $body = 'This is test comment.';
+		$comment = $model::forge(array(
+			'body' => $body,
+			$parent_id_prop => $parent_id,
+			'member_id' => $member_id,
+		));
+		$comment->save();
+
+		return $comment;
+	}
 }

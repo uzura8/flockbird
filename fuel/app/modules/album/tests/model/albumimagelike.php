@@ -9,12 +9,9 @@ namespace Album;
  */
 class Test_Model_AlbumImageLike extends \TestCase
 {
-	private static $album;
 	private static $member_id = 1;
-	private static $liked_member_id_before = 0;
-	private static $upload_file_path;
+	private static $album;
 	private static $album_image;
-	private static $album_image_id;
 	private static $album_image_before;
 	private static $album_image_like_count = 0;
 	private static $is_check_notice_cache;
@@ -23,13 +20,15 @@ class Test_Model_AlbumImageLike extends \TestCase
 
 	public static function setUpBeforeClass()
 	{
-		self::$album_image = self::set_album_image();
+		self::$is_check_notice_cache = (is_enabled('notice') && \Config::get('notice.cache.unreadCount.isEnabled'));
+
+		self::$album_image = \Album\Site_Test::setup_album_image(self::$member_id, null, 1);
+		self::$album = Model_Album::find(self::$album_image->album_id);
 	}
 
 	protected function setUp()
 	{
-		self::$album_image = self::get_album_image();
-		self::$album_image_like_count = self::get_album_image_like_count();
+		self::$album_image_like_count = Model_AlbumImageLike::get_count(array('album_image_id' => self::$album_image->id));
 	}
 
 	/**
@@ -46,7 +45,7 @@ class Test_Model_AlbumImageLike extends \TestCase
 			'album_image_id' => $album_image_id,
 			'member_id' => $member_id,
 		));
-		$album_image = self::get_album_image();
+		$album_image = self::$album_image;
 		$album_image_like = \Util_Orm::get_last_row('\Album\Model_AlbumImageLike', array('album_image_id' => $album_image_id));
 
 		// ä»¶æ•°
@@ -81,51 +80,51 @@ class Test_Model_AlbumImageLike extends \TestCase
 			$this->markTestSkipped('notice module is disabled.');
 		}
 
-		// Ž–‘O€”õ
+		// äº‹å‰æº–å‚™
 		\Model_MemberConfig::set_value($member_id_to, \Notice\Form_MemberConfig::get_name(self::$type_key), $mc_notice_like);
 		$is_new = false;
 		if ($member_id_to != self::$member_id)
 		{
 			self::$member_id = $member_id_to;
-			self::set_album_image();
+			self::$album_image = \Album\Site_Test::setup_album_image(self::$member_id, null, 1);
 			$is_new = true;
 		}
-		$album_image_id = self::$album_image_id;
-		$foreign_id = self::$album_image_id;
+		$album_image_id = self::$album_image->id;
+		$foreign_id = self::$album_image->id;
 		if ($is_test_after_read) $read_count = \Notice\Site_Util::change_status2read($member_id_to, self::$foreign_table, $album_image_id, self::$type_key);
 		$notice_count_all_before = \Notice\Model_Notice::get_count();
 
 		// set cache
 		$notice_count_before = \Notice\Site_Util::get_unread_count($member_id_to);
-		if (self::$is_check_notice_cache) $this->assertFalse(self::check_no_cache($member_id_to));// cache ‚ª¶¬‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ðŠm”F
+		if (self::$is_check_notice_cache) $this->assertFalse(\Notice\Site_Test::check_no_cache4notice_unread($member_id_to));// cache ãŒç”Ÿæˆã•ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèª
+
 
 		// like save
 		$like_id = Model_AlbumImageLike::change_registered_status4unique_key(array(
-			'album_image_id' => self::$album_image_id,
+			'album_image_id' => $album_image_id,
 			'member_id' => $member_id_from
 		));
-		self::$liked_member_id_before = $member_id_from;
 		if (self::$is_check_notice_cache)
 		{
 			if ($is_cahce_deleted_exp)
 			{
-				$this->assertTrue(self::check_no_cache($member_id_to));
+				$this->assertTrue(\Notice\Site_Test::check_no_cache4notice_unread($member_id_to));// cache ãŒç”Ÿæˆã•ã‚Œã¦ã„ãªã„ã“ã¨ã‚’ç¢ºèª
 			}
 			else
 			{
-				$this->assertFalse(self::check_no_cache($member_id_to));
+				$this->assertFalse(\Notice\Site_Test::check_no_cache4notice_unread($member_id_to));// cache ãŒç”Ÿæˆã•ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèª
 			}
 		}
 
-		// notice count ‚ÉŽæ“¾
+		// notice count å–å¾—
 		$notice_count = \Notice\Site_Util::get_unread_count($member_id_to);
-		if (self::$is_check_notice_cache) $this->assertFalse(self::check_no_cache($member_id_to));// cache ‚ª¶¬‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ðŠm”F
+		if (self::$is_check_notice_cache) $this->assertFalse(\Notice\Site_Test::check_no_cache4notice_unread($member_id_to));// cache ãŒç”Ÿæˆã•ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèª
 
 		// execute test
-		$this->assertEquals($notice_count_before + $countup_num, $notice_count);// count up ‚ðŠm”F
+		$this->assertEquals($notice_count_before + $countup_num, $notice_count);// check count up
 
 		// Model_Notice
-		// Œ”
+		// ä»¶æ•°
 		$notice_count_all = \Notice\Model_Notice::get_count();
 		$this->assertEquals($notice_count_all_before + $countup_num_all, $notice_count_all);
 
@@ -147,22 +146,22 @@ class Test_Model_AlbumImageLike extends \TestCase
 		$data = array();
 
 		// ($member_id_to, $mc_notice_like, $member_id_from, $is_test_after_read, $is_cahce_deleted_exp, $countup_num, $countup_num_all)
-		// ‚¨’m‚ç‚¹‚ðŽó‚¯Žæ‚é
-		$data[] = array(2, 1, 2, false, false, 0,  0);// #0: –¢“Ç / Ž©•ª‚ªŽ©•ª‚É
-		$data[] = array(2, 1, 1, false, true,  1,  1);// #1: –¢“Ç / ‘¼l‚ªŽ©•ª‚É
-		$data[] = array(2, 1, 1, false, true, -1, -1);// #2: –¢“Ç / Ä“x‘¼l‚ªŽ©•ª‚É(ƒCƒC‚Ë‚ÌŽæ‚èÁ‚µ)
-		$data[] = array(3, 1, 3, true,  false, 0,  0);// #3: Šù“Ç / Ž©•ª‚ªŽ©•ª‚É
-		$data[] = array(3, 1, 1, true,  true,  1,  1);// #4: Šù“Ç / ‘¼l‚ªŽ©•ª‚É
-		$data[] = array(3, 1, 1, true,  true,  0, -1);// #5: Šù“Ç / Ä“x‘¼l‚ªŽ©•ª‚É(ƒCƒC‚Ë‚ÌŽæ‚èÁ‚µ)
+		// ãŠçŸ¥ã‚‰ã›ã‚’å—ã‘å–ã‚‹
+		$data[] = array(2, 1, 2, false, false, 0,  0);// #0: æœªèª­ / è‡ªåˆ†ãŒè‡ªåˆ†ã«
+		$data[] = array(2, 1, 1, false, true,  1,  1);// #1: æœªèª­ / ä»–äººãŒè‡ªåˆ†ã«
+		$data[] = array(2, 1, 1, false, true, -1, -1);// #2: æœªèª­ / å†åº¦ä»–äººãŒè‡ªåˆ†ã«(ã‚¤ã‚¤ã­ã®å–ã‚Šæ¶ˆã—)
+		$data[] = array(3, 1, 3, true,  false, 0,  0);// #3: æ—¢èª­ / è‡ªåˆ†ãŒè‡ªåˆ†ã«
+		$data[] = array(3, 1, 1, true,  true,  1,  1);// #4: æ—¢èª­ / ä»–äººãŒè‡ªåˆ†ã«
+		$data[] = array(3, 1, 1, true,  true,  0, -1);// #5: æ—¢èª­ / å†åº¦ä»–äººãŒè‡ªåˆ†ã«(ã‚¤ã‚¤ã­ã®å–ã‚Šæ¶ˆã—)
 
-		// ‚¨’m‚ç‚¹‚ðŽó‚¯Žæ‚ç‚È‚¢->Žó‚¯Žæ‚é
-		$data[] = array(4, 0, 1, false, false, 0,  0);// #6:  –¢“Ç / ‘¼l‚ªŽ©•ª‚É
-		$data[] = array(4, 1, 1, false, false, 0,  0);// #7:  –¢“Ç / ‘¼l‚ªŽ©•ª‚É, Žó‚¯Žæ‚é‚É•ÏX
-		$data[] = array(4, 1, 1, false,  true, 1,  1);// #8:  –¢“Ç / ‘¼l‚ªŽ©•ª‚É, Žó‚¯Žæ‚é‚É•ÏX
+		// ãŠçŸ¥ã‚‰ã›ã‚’å—ã‘å–ã‚‰ãªã„->å—ã‘å–ã‚‹
+		$data[] = array(4, 0, 1, false, false, 0,  0);// #6:  æœªèª­ / ä»–äººãŒè‡ªåˆ†ã«
+		$data[] = array(4, 1, 1, false, false, 0,  0);// #7:  æœªèª­ / ä»–äººãŒè‡ªåˆ†ã«, å—ã‘å–ã‚‹ã«å¤‰æ›´
+		$data[] = array(4, 1, 1, false,  true, 1,  1);// #8:  æœªèª­ / ä»–äººãŒè‡ªåˆ†ã«, å—ã‘å–ã‚‹ã«å¤‰æ›´
 
-		// ‚¨’m‚ç‚¹‚ðŽó‚¯Žæ‚é->Žó‚¯Žæ‚ç‚È‚¢
-		$data[] = array(5, null, 1, false, true,  1, 1);//  #9: –¢“Ç / ‘¼l‚ªŽ©•ª‚É
-		$data[] = array(5,    0, 2, false, false, 0, 0);// #10: –¢“Ç / Ä“x‘¼l‚ªŽ©•ª‚É
+		// ãŠçŸ¥ã‚‰ã›ã‚’å—ã‘å–ã‚‹->å—ã‘å–ã‚‰ãªã„
+		$data[] = array(5, null, 1, false, true,  1, 1);//  #9: æœªèª­ / ä»–äººãŒè‡ªåˆ†ã«
+		$data[] = array(5,    0, 2, false, false, 0, 0);// #10: æœªèª­ / å†åº¦ä»–äººãŒè‡ªåˆ†ã«
 
 		return $data;
 	}
@@ -178,20 +177,22 @@ class Test_Model_AlbumImageLike extends \TestCase
 			$this->markTestSkipped('notice module is disabled.');
 		}
 
-		// Ž–‘O€”õ
+		// äº‹å‰æº–å‚™
 		\Model_MemberConfig::set_value($member_id_from, \Notice\Form_MemberConfig::get_name('comment'), $mc_notice_comment);
 		\Model_MemberConfig::set_value($member_id_from, \Notice\Site_Util::get_member_config_name_for_watch_content(self::$type_key), $mc_watch_liked);
+		\Model_MemberConfig::set_value($member_id_add_comment, \Notice\Site_Util::get_member_config_name_for_watch_content('comment'), $mc_watch_liked);
 		$is_new = false;
 		if ($member_id_to != self::$member_id)
 		{
 			self::$member_id = $member_id_to;
-			self::set_album_image();
+			self::$album_image = \Album\Site_Test::setup_album_image(self::$member_id, null, 1);
+			self::$album = Model_Album::find(self::$album_image->album_id);
 			$is_new = true;
 		}
-		$album_image_id = self::$album_image_id;
-		$foreign_id = self::$album_image_id;
+		$album_image_id = self::$album_image->id;
+		$foreign_id = $album_image_id;
 		$watch_count_all_before = \Notice\Model_MemberWatchContent::get_count();
-		// Šù“Çˆ—
+		// change status unread to read
 		$read_count = \Notice\Site_Util::change_status2read($member_id_from, self::$foreign_table, $album_image_id, self::$type_key);
 
 		// like save
@@ -199,7 +200,6 @@ class Test_Model_AlbumImageLike extends \TestCase
 			'album_image_id' => $album_image_id,
 			'member_id' => $member_id_from
 		));
-		self::$liked_member_id_before = $member_id_from;
 
 		// Model_Notice
 		$member_watch_content = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $foreign_id, $member_id_from);
@@ -211,7 +211,7 @@ class Test_Model_AlbumImageLike extends \TestCase
 		{
 			$this->assertNull($member_watch_content);
 		}
-		// Œ”
+		// count check
 		$watch_count_all = \Notice\Model_MemberWatchContent::get_count();
 		$watch_count_all_countup_num = $is_countup_watch_exp ? 1 : 0;
 		$this->assertEquals($watch_count_all_before + $watch_count_all_countup_num, $watch_count_all);
@@ -221,13 +221,13 @@ class Test_Model_AlbumImageLike extends \TestCase
 		$notice_count_before = \Notice\Site_Util::get_unread_count($member_id_from);
 
 		// album_image_comment save
-		$album_image_comment_added = self::save_comment($member_id_add_comment);
+		$album_image_comment_added = \Site_Test::save_comment('album_image', $album_image_id, $member_id_add_comment);
 
-		// notice count ‚ðŽæ“¾
+		// get notice count
 		$notice_count = \Notice\Site_Util::get_unread_count($member_id_from);
 
 		// execute test
-		$this->assertEquals($notice_count_before + $notice_countup_num_exp, $notice_count);// count up ‚ðŠm”F
+		$this->assertEquals($notice_count_before + $notice_countup_num_exp, $notice_count);// check count up
 	}
 
 	public function like_watch_provider()
@@ -235,44 +235,45 @@ class Test_Model_AlbumImageLike extends \TestCase
 		$data = array();
 
 		//($member_id_to, $member_id_from, $mc_notice_comment, $mc_watch_liked, $member_id_add_comment, $is_countup_watch_exp, $is_created_watch_exp, $notice_countup_num_exp)
-		// Ž©•ª‚ªƒCƒC‚Ë‚µ‚½“Še‚ðƒEƒHƒbƒ`‚·‚é
-		//   member_watch_content ƒŒƒR[ƒh‚ª’Ç‰Á‚³‚ê‚é‚©H
-		//   member_watch_content ƒŒƒR[ƒh‚ªì¬‚³‚ê‚é‚©H
-		//   ’Ç‰ÁƒRƒƒ“ƒg‚ª’Ê’m‚³‚ê‚é‚©H
-		$data[] = array(6, 4, 1, 1, 4,  true,  true, 0);// #0: ‘¼l‚ªŽ©•ª‚É -> Ž©•ª‚ª’Ç‰ÁƒRƒƒ“ƒg
-		$data[] = array(6, 4, 1, 1, 5, false,  true, 1);// #1: ‘¼l‚ªŽ©•ª‚É -> ‘¼l‚ª’Ç‰ÁƒRƒƒ“ƒg
-		$data[] = array(6, 6, 1, 1, 5, false, false, 1);// #2: Ž©•ª‚ªŽ©•ª‚É -> ‘¼l‚ª’Ç‰ÁƒRƒƒ“ƒg
-		$data[] = array(6, 6, 1, 1, 6, false, false, 0);// #3: Ž©•ª‚ªŽ©•ª‚É -> Ž©•ª‚ª’Ç‰ÁƒRƒƒ“ƒg
-		// Ž©•ª‚ªƒCƒC‚Ë‚µ‚½“Še‚ðƒEƒHƒbƒ`‚µ‚È‚¢(Ý’è‚ª NULL)
-		$data[] = array(6, 8, 1, null, 9, false, false, 0);// #4: ‘¼l‚ªŽ©•ª‚É -> ‘¼l‚ª’Ç‰ÁƒRƒƒ“ƒg
-		$data[] = array(6, 6, 1, null, 9, false, false, 1);// #5: Ž©•ª‚ªŽ©•ª‚É -> ‘¼l‚ª’Ç‰ÁƒRƒƒ“ƒg
-		$data[] = array(6, 6, 1, null, 6, false, false, 0);// #6: Ž©•ª‚ªŽ©•ª‚É -> Ž©•ª‚ª’Ç‰ÁƒRƒƒ“ƒg
-		//// Ž©•ª‚ªƒCƒC‚Ë‚µ‚½“Še‚ðƒEƒHƒbƒ`‚µ‚È‚¢
-		$data[] = array(7, 4, 1, 0, 4, false, false, 0);// #7:  ‘¼l‚ªŽ©•ª‚É -> Ž©•ª‚ª’Ç‰ÁƒRƒƒ“ƒg
-		$data[] = array(7, 4, 1, 0, 5, false, false, 0);// #8:  ‘¼l‚ªŽ©•ª‚É -> ‘¼l‚ª’Ç‰ÁƒRƒƒ“ƒg
-		$data[] = array(7, 7, 1, 0, 5, false, false, 1);// #9: Ž©•ª‚ªŽ©•ª‚É -> ‘¼l‚ª’Ç‰ÁƒRƒƒ“ƒg
-		$data[] = array(7, 7, 1, 0, 7, false, false, 0);// #10: Ž©•ª‚ªŽ©•ª‚É -> Ž©•ª‚ª’Ç‰ÁƒRƒƒ“ƒg
+		// è‡ªåˆ†ãŒã‚¤ã‚¤ã­ã—ãŸæŠ•ç¨¿ã‚’ã‚¦ã‚©ãƒƒãƒã™ã‚‹
+		//   member_watch_content ãƒ¬ã‚³ãƒ¼ãƒ‰ãŒè¿½åŠ ã•ã‚Œã‚‹ã‹ï¼Ÿ
+		//   member_watch_content ãƒ¬ã‚³ãƒ¼ãƒ‰ãŒä½œæˆã•ã‚Œã‚‹ã‹ï¼Ÿ
+		//   è¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆãŒé€šçŸ¥ã•ã‚Œã‚‹ã‹ï¼Ÿ
+		$data[] = array(6, 4, 1, 1, 4,  true,  true, 0);// #0: ä»–äººãŒè‡ªåˆ†ã« -> è‡ªåˆ†ãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		$data[] = array(6, 4, 1, 1, 5, false,  true, 1);// #1: ä»–äººãŒè‡ªåˆ†ã« -> ä»–äººãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		$data[] = array(6, 6, 1, 1, 5, false, false, 1);// #2: è‡ªåˆ†ãŒè‡ªåˆ†ã« -> ä»–äººãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		$data[] = array(6, 6, 1, 1, 6, false, false, 0);// #3: è‡ªåˆ†ãŒè‡ªåˆ†ã« -> è‡ªåˆ†ãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		// è‡ªåˆ†ãŒã‚¤ã‚¤ã­ã—ãŸæŠ•ç¨¿ã‚’ã‚¦ã‚©ãƒƒãƒã—ãªã„(è¨­å®šãŒ NULL)
+		$data[] = array(6, 8, 1, null, 9, false, false, 0);// #4: ä»–äººãŒè‡ªåˆ†ã« -> ä»–äººãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		$data[] = array(6, 6, 1, null, 9, false, false, 1);// #5: è‡ªåˆ†ãŒè‡ªåˆ†ã« -> ä»–äººãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		$data[] = array(6, 6, 1, null, 6, false, false, 0);// #6: è‡ªåˆ†ãŒè‡ªåˆ†ã« -> è‡ªåˆ†ãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		//// è‡ªåˆ†ãŒã‚¤ã‚¤ã­ã—ãŸæŠ•ç¨¿ã‚’ã‚¦ã‚©ãƒƒãƒã—ãªã„
+		$data[] = array(7, 4, 1, 0, 4, false, false, 0);// #7:  ä»–äººãŒè‡ªåˆ†ã« -> è‡ªåˆ†ãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		$data[] = array(7, 4, 1, 0, 5, false, false, 0);// #8:  ä»–äººãŒè‡ªåˆ†ã« -> ä»–äººãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		$data[] = array(7, 7, 1, 0, 5, false, false, 1);// #9: è‡ªåˆ†ãŒè‡ªåˆ†ã« -> ä»–äººãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
+		$data[] = array(7, 7, 1, 0, 7, false, false, 0);// #10: è‡ªåˆ†ãŒè‡ªåˆ†ã« -> è‡ªåˆ†ãŒè¿½åŠ ã‚³ãƒ¡ãƒ³ãƒˆ
 
 		return $data;
 	}
 
 	public function test_delete_notice()
 	{
-		// Ž–‘O€”õ
+		// äº‹å‰æº–å‚™
 		\Model_MemberConfig::set_value(2, \Notice\Form_MemberConfig::get_name(self::$type_key), 1);
 		\Model_MemberConfig::set_value(2, \Notice\Site_Util::get_member_config_name_for_watch_content(self::$type_key), 1);
 		\Model_MemberConfig::set_value(3, \Notice\Form_MemberConfig::get_name(self::$type_key), 1);
 		\Model_MemberConfig::set_value(3, \Notice\Site_Util::get_member_config_name_for_watch_content(self::$type_key), 1);
 		self::$member_id = 1;
-		self::set_album_image();
-		$album_image_id = self::$album_image_id;
-		$foreign_id = self::$album_image_id;
+		self::$album_image = \Album\Site_Test::setup_album_image(self::$member_id, null, 1);
+		self::$album = Model_Album::find(self::$album_image->album_id);
+		$album_image_id = self::$album_image->id;
+		$foreign_id = self::$album_image->id;
 		$notice_count_all_before = \Notice\Model_Notice::get_count();
 		$notice_status_count_all_before = \Notice\Model_NoticeStatus::get_count();
 		$notice_member_from_count_all_before = \Notice\Model_NoticeMemberFrom::get_count();
 		$member_watch_content_count_all_before = \Notice\Model_MemberWatchContent::get_count();
 
-		// ‘¼l‚ªƒCƒC‚Ë
+		// liked from others.
 		$like_id = Model_AlbumImageLike::change_registered_status4unique_key(array(
 			'album_image_id' => $album_image_id,
 			'member_id' =>2,
@@ -280,55 +281,55 @@ class Test_Model_AlbumImageLike extends \TestCase
 		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key));
 		$this->assertNotNull($notice);
 
-		// Œ”Šm”F
+		// check count
 		$this->assertEquals($notice_count_all_before + 1, \Notice\Model_Notice::get_count());
 		$this->assertEquals($notice_status_count_all_before + 1, \Notice\Model_NoticeStatus::get_count());
 		$this->assertEquals($notice_member_from_count_all_before + 1, \Notice\Model_NoticeMemberFrom::get_count());
 		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());
 
-		// ŠÖ˜Aƒe[ƒuƒ‹‚ÌƒŒƒR[ƒh‚ªì¬‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ðŠm”F
+		// check created related table records.
 		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNotNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 2));
 		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $album_image_id, 2));
 		$this->assertNotNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 
-		// ƒCƒC‚Ë‚ðŽæ‚èÁ‚µ
+		// undo like.
 		$like_id = Model_AlbumImageLike::change_registered_status4unique_key(array(
 			'album_image_id'   => $album_image_id,
 			'member_id' => 2,
 		));
 
-		// Œ”Šm”F
+		// check count
 		$this->assertEquals($notice_count_all_before, \Notice\Model_Notice::get_count());
 		$this->assertEquals($notice_status_count_all_before, \Notice\Model_NoticeStatus::get_count());
 		$this->assertEquals($notice_member_from_count_all_before, \Notice\Model_NoticeMemberFrom::get_count());
-		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());// watch ‚Í‰ðœ‚³‚ê‚È‚¢
+		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());// keep watched
 
-		// ŠÖ˜Aƒe[ƒuƒ‹‚ÌƒŒƒR[ƒh‚ªíœ‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ðŠm”F
+		// check deleted related table records.
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 2));
-		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $album_image_id, 2));// watch ‚Í‰ðœ‚³‚ê‚È‚¢
+		$this->assertNotNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $album_image_id, 2));// keep watched
 		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 
 
-		// ‘¼l‚ÌƒCƒC‚Ë{Ž©•ª‚ªƒRƒƒ“ƒg
+		// others execute like and coment myself.
 		$album_image_like_id = Model_AlbumImageLike::change_registered_status4unique_key(array(
 			'album_image_id' => $album_image_id,
 			'member_id'   => 2,
 		));
-		self::save_comment(1, 'Test comment1.');
+		\Site_Test::save_comment('album_image', $album_image_id, 1, 'Test comment1.');
 		$notice_like = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key));
 		$notice_comment = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type('comment'));
 		$this->assertNotNull($notice_like);
 		$this->assertNotNull($notice_comment);
 
-		// Œ”Šm”F
+		// check count
 		$this->assertEquals($notice_count_all_before + 2, \Notice\Model_Notice::get_count());
 		$this->assertEquals($notice_status_count_all_before + 2, \Notice\Model_NoticeStatus::get_count());
 		$this->assertEquals($notice_member_from_count_all_before + 2, \Notice\Model_NoticeMemberFrom::get_count());
 		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());
 
-		// ŠÖ˜Aƒe[ƒuƒ‹‚ÌƒŒƒR[ƒh‚ªì¬‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ðŠm”F
+		// check created related table records.
 		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(2, $notice_comment->id));
 		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice_like->id));
 		$this->assertNotNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice_like->id, 2));
@@ -337,19 +338,19 @@ class Test_Model_AlbumImageLike extends \TestCase
 		$this->assertNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $album_image_id, self::$member_id));
 		$this->assertNotNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 
-		// ƒCƒC‚Ë‚ðŽæ‚èÁ‚µ
+		// undo like.
 		$like_id = Model_AlbumImageLike::change_registered_status4unique_key(array(
 			'album_image_id' => $album_image_id,
 			'member_id' => 2,
 		));
 
-		// Œ”Šm”F
+		// check count
 		$this->assertEquals($notice_count_all_before + 1, \Notice\Model_Notice::get_count());
 		$this->assertEquals($notice_status_count_all_before + 1, \Notice\Model_NoticeStatus::get_count());
 		$this->assertEquals($notice_member_from_count_all_before + 1, \Notice\Model_NoticeMemberFrom::get_count());
-		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());// watch ‚Í‰ðœ‚³‚ê‚È‚¢
+		$this->assertEquals($member_watch_content_count_all_before + 1, \Notice\Model_MemberWatchContent::get_count());// keep watch
 
-		// ŠÖ˜Aƒe[ƒuƒ‹‚ÌƒŒƒR[ƒh‚ªíœ‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ðŠm”F
+		// check created related table records.
 		$this->assertNotNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(2, $notice_comment->id));
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice_like->id));
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice_like->id, 2));
@@ -359,7 +360,7 @@ class Test_Model_AlbumImageLike extends \TestCase
 		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
 
 
-		// ‘¼l‚ªƒCƒC‚Ë
+		// others execute like.
 		$album_image_like_id = Model_AlbumImageLike::change_registered_status4unique_key(array(
 			'album_image_id' => $album_image_id,
 			'member_id'   => 3,
@@ -367,17 +368,17 @@ class Test_Model_AlbumImageLike extends \TestCase
 		$notice = \Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key));
 		$this->assertNotNull($notice);
 
-		// album_image íœ
+		// delete album_image.
 		$album_image = Model_AlbumImage::find($album_image_id);
 		$album_image->delete();
 
-		// Œ”Šm”F
+		// check count
 		$this->assertEquals($notice_count_all_before, \Notice\Model_Notice::get_count());
 		$this->assertEquals($notice_status_count_all_before, \Notice\Model_NoticeStatus::get_count());
 		$this->assertEquals($notice_member_from_count_all_before, \Notice\Model_NoticeMemberFrom::get_count());
 		$this->assertEquals($member_watch_content_count_all_before, \Notice\Model_MemberWatchContent::get_count());
 
-		// ŠÖ˜Aƒe[ƒuƒ‹‚ÌƒŒƒR[ƒh‚ªíœ‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ðŠm”F
+		// check deleted related table records.
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 3));
 		$this->assertNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $album_image_id, 3));
@@ -386,11 +387,11 @@ class Test_Model_AlbumImageLike extends \TestCase
 
 		// album delete test
 		// setup
-		self::$album_image = self::set_album_image(null, 1, self::$album->id);
+		self::$album_image = \Album\Site_Test::setup_album_image(self::$member_id, null, 1, self::$album->id);
 		$foreign_id = self::$album_image->id;
 		$album_image_id = self::$album_image->id;
 
-		// ‘¼l‚ªƒCƒC‚Ë
+		// others execute like.
 		$album_image_like_id = Model_AlbumImageLike::change_registered_status4unique_key(array(
 			'album_image_id' => $album_image_id,
 			'member_id'   => 4,
@@ -401,96 +402,16 @@ class Test_Model_AlbumImageLike extends \TestCase
 		// delete album_image
 		self::$album->delete();
 
-		// Œ”Šm”F
+		// check count
 		$this->assertEquals($notice_count_all_before, \Notice\Model_Notice::get_count());
 		$this->assertEquals($notice_status_count_all_before, \Notice\Model_NoticeStatus::get_count());
 		$this->assertEquals($notice_member_from_count_all_before, \Notice\Model_NoticeMemberFrom::get_count());
 		$this->assertEquals($member_watch_content_count_all_before, \Notice\Model_MemberWatchContent::get_count());
 
-		// ŠÖ˜Aƒe[ƒuƒ‹‚ÌƒŒƒR[ƒh‚ªíœ‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ðŠm”F
+		// check deleted related table records.
 		$this->assertNull(\Notice\Model_NoticeStatus::get4member_id_and_notice_id(self::$member_id, $notice->id));
 		$this->assertNull(\Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice->id, 3));
 		$this->assertNull(\Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id(self::$foreign_table, $album_image_id, 3));
 		$this->assertNull(\Notice\Model_Notice::get_last4foreign_data(self::$foreign_table, $album_image_id, \Notice\Site_Util::get_notice_type(self::$type_key)));
-	}
-
-	private static function set_album_image($album_image_values = null, $create_count = 1, $album_id = null)
-	{
-		$public_flag = isset($values['public_flag']) ? $values['public_flag'] : PRJ_PUBLIC_FLAG_ALL;
-		if (!$album_id)
-		{
-			$album_values = array(
-				'name' => 'test album_image.',
-				'body' => 'This is test for album_image.',
-				'public_flag' => $public_flag,
-			);
-			self::$album = self::force_save_album(self::$member_id, $album_values);
-		}
-		if (!$album_image_values)
-		{
-			$album_image_values = array(
-				'name' => 'test',
-				'public_flag' => PRJ_PUBLIC_FLAG_ALL,
-			);
-		}
-		for ($i = 0; $i < $create_count; $i++)
-		{
-			self::$upload_file_path = self::setup_upload_file();
-			list($album_image, $file) = Model_AlbumImage::save_with_relations(self::$album->id, null, null, self::$upload_file_path, 'album', $album_image_values);
-		}
-		self::$album_image_id = $album_image->id;
-
-		return $album_image;
-	}
-
-	private static function get_album_image()
-	{
-		return Model_AlbumImage::query()->where('album_id', self::$album->id)->get_one();
-	}
-
-	private static function get_album_image_like_count()
-	{
-		return Model_AlbumImageLike::get_count(array('album_image_id' => self::$album_image->id));
-	}
-
-	private static function force_save_album($member_id, $values, Model_Album $album = null)
-	{
-		// album save
-		if (!$album) $album = Model_Album::forge();
-		$album->name = $values['name'];
-		$album->body = $values['body'];
-		$album->public_flag = $values['public_flag'];
-		$album->member_id = $member_id;
-		$album->save();
-		if (\Module::loaded('timeline'))
-		{
-			\Timeline\Site_Model::save_timeline($member_id, $values['public_flag'], 'album', $album->id, $album->updated_at);
-		}
-
-		return $album;
-	}
-
-	private static function setup_upload_file()
-	{
-		// prepare upload file.
-		$original_file = PRJ_BASEPATH.'data/development/test/media/img/sample_01.jpg';
-		$upload_file = APPPATH.'tmp/sample.jpg';
-		\Util_file::copy($original_file, $upload_file);
-		chmod($upload_file, 0777);
-
-		return $upload_file;
-	}
-
-	private static function save_comment($member_id, $body = null)
-	{
-		if (is_null($body)) $body = 'This is test comment.';
-		$comment = Model_AlbumImageComment::forge(array(
-			'body' => $body,
-			'album_image_id' => self::$album_image_id,
-			'member_id' => $member_id,
-		));
-		$comment->save();
-
-		return $comment;
 	}
 }

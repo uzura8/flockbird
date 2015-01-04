@@ -25,6 +25,8 @@ class Test_Model_NoteCommentLike extends \TestCase
 
 	public static function setUpBeforeClass()
 	{
+		self::$is_check_notice_cache = (is_enabled('notice') && \Config::get('notice.cache.unreadCount.isEnabled'));
+
 		$note = self::set_note();
 		$timeline = \Util_Orm::get_last_row('\Timeline\Model_Timeline');
 		self::$timeline_id = $timeline->id;
@@ -32,7 +34,6 @@ class Test_Model_NoteCommentLike extends \TestCase
 		self::$note_id = $note->id;
 		$note_comment = self::save_comment(self::$note_id, self::$member_id);
 		self::$note_comment_id = $note_comment->id;
-		\Model_MemberConfig::set_value(self::$member_id, \Notice\Form_MemberConfig::get_name('comment'), 0);
 	}
 
 	protected function setUp()
@@ -236,7 +237,7 @@ class Test_Model_NoteCommentLike extends \TestCase
 	{
 		// 事前準備
 		$config_type_key = 'like';
-		\Model_MemberConfig::set_value(1, \Notice\Form_MemberConfig::get_name('comment'), 1);
+		\Model_MemberConfig::set_value(1, \Notice\Form_MemberConfig::get_name('comment'), 0);
 		\Model_MemberConfig::set_value(2, \Notice\Form_MemberConfig::get_name($config_type_key), 1);
 		\Model_MemberConfig::set_value(2, \Notice\Site_Util::get_member_config_name_for_watch_content('comment'), 0);
 		self::$member_id = 1;

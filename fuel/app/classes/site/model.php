@@ -25,9 +25,10 @@ class Site_Model
 
 	public static function get_parent_table($table, $is_return_with_child_type = false, $accept_child_type = array())
 	{
+		if (!is_array($accept_child_type)) $accept_child_type = (array)$accept_child_type;
 		if (!$accept_child_type) $accept_child_type = array('comment', 'like');
-		if (!preg_match('/^([a-zA-Z0-9_]+)_('.implode('|', $accept_child_type).')$/', $table, $matches)) return false;
 
+		if (!preg_match('/^([a-zA-Z0-9_]+)_('.implode('|', $accept_child_type).')$/', $table, $matches)) return false;
 		$parent_table = $matches[1];
 		$child_type = $matches[2];
 
