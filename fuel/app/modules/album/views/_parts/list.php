@@ -58,7 +58,7 @@ $album_image_count = \Album\Model_AlbumImage::get_list_count(array(
 ));
 ?>
 			<div class="article">
-				<div class="body"><?php echo nl2br(strim($album->body, \Config::get('album.articles.trim_width.body'))) ?></div>
+				<div class="body"><?php echo convert_body($album->body, array('width' => conf('articles.trim_width.body', 'album')), array('url2link')) ?></div>
 				<small><?php echo render('_parts/image_count_link', array('count' => $album_image_count, 'uri' => 'album/slide/'.$album->id.'#slidetop')); ?></small>
 			</div><!-- article -->
 <?php

@@ -1,6 +1,7 @@
 <?php
 if ($callbacks)
 {
+	if (!is_array($callbacks)) $callbacks = (array)$callbacks;
 	foreach ($callbacks as $callback)
 	{
 		if (is_callable($callback)) $body = call_user_func($callback, $body);
