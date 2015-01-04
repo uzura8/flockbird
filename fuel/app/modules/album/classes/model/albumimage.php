@@ -478,7 +478,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		$query->where('album_id', $album_id);
 		$query->order_by('id', 'asc');
 		$query->rows_limit(1);
-		$album_image = $query->get_one();
+		if (!$album_image = $query->get_one()) return '';
 
 		return $album_image->get_image();
 	}

@@ -342,14 +342,19 @@ class Site_Util
 
 			case \Config::get('timeline.types.album'):
 			case \Config::get('timeline.types.album_image'):
-				list($images['list'], $images['count']) = \Album\Model_AlbumImage::get_list_and_count(array(
-					'where' => \Site_Model::get_where_public_flag4access_from(
-						$access_from,
-						array(array('id', 'in', Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id)))
-					),
-					$is_detail ? 0 : 'limit' => \Config::get('timeline.articles.thumbnail.limit.default'),
-					'order_by' => array('created_at' => 'asc'),
-				));
+				$images['list'] = array();
+				$images['count'] = 0;
+				if ($album_image_ids = Model_TimelineChildData::get_foreign_ids4timeline_id($timeline_id))
+				{
+					list($images['list'], $images['count']) = \Album\Model_AlbumImage::get_list_and_count(array(
+						'where' => \Site_Model::get_where_public_flag4access_from(
+							$access_from,
+							array(array('id', 'in', $album_image_ids))
+						),
+						$is_detail ? 0 : 'limit' => \Config::get('timeline.articles.thumbnail.limit.default'),
+						'order_by' => array('created_at' => 'asc'),
+					));
+				}
 				$images['count_all'] = \Album\Model_AlbumImage::get_list_count(array(
 					'where' => \Site_Model::get_where_public_flag4access_from(
 						$access_from,
