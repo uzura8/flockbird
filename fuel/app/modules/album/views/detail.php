@@ -1,4 +1,6 @@
-<p><?php echo nl2br($album->body) ?></p>
+<div class="article_body">
+<?php echo convert_body($album->body, array('is_detail' => true), array('url2link', 'nl2br')); ?>
+</div>
 
 <?php if (Config::get('album.display_setting.detail.display_slide_image')): ?>
 <?php 	if ($list): ?>
