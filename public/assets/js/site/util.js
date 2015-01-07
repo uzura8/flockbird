@@ -109,6 +109,14 @@ function showMessage(msg)
 	$.jGrowl(msg);
 }
 
+function getImgUri(file_name, size)
+{
+	var matches = file_name.match(/^([a-z]+)_([0-9]+)_(([a-zA-Z0-9]+).(gif|png|jpg))$/);
+	if (matches) return 'media/img/' + size + '/' + matches[1] + '/' + matches[2] + '/' + matches[3];
+	if (file_name.length > 0) return 'media/img/' + size + '/' + file_name + '/allnoimage.gif';
+	return 'assets/img/site/noimage.gif';
+}
+
 function get_loading_image_tag()
 {
 	var isEncloseBlock = (arguments.length > 0) ? arguments[0] : false;

@@ -10,6 +10,13 @@
 img.profile_image {
 	border-radius: 4px;
 }
+
+.pull-left-img {
+	width: 10%;
+	margin-right: 3%;
+	float: left;
+}
+
 .fullname {
 	color: #333333;
 	font-size: 14px;
