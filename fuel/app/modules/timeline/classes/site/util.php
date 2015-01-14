@@ -413,7 +413,7 @@ class Site_Util
 		return in_array($type, $editable_types);
 	}
 
-	public static function get_delete_api_info(Model_Timeline $timeline)
+	public static function get_delete_api_uri(Model_Timeline $timeline)
 	{
 		$path = '';
 		$id = '';
@@ -431,6 +431,10 @@ class Site_Util
 			case \Config::get('timeline.types.album'):
 				$id  = $timeline->foreign_id;
 				$path = 'album/api/delete/';
+				break;
+			case \Config::get('timeline.types.album_image_profile'):
+				$id  = $timeline->foreign_id;
+				$path = 'album/image/api/delete/';
 				break;
 			default :
 				break;

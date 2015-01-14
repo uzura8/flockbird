@@ -88,7 +88,7 @@ class Controller_Api extends \Controller_Site_Api
 				if (!$is_detail) $menus[] = array('tag' => 'divider');
 				$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
 					'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
-					'data-uri' => $is_detail ? 'timeline/delete/'.$timeline->id : Site_Util::get_delete_api_info($timeline),
+					'data-uri' => $is_detail ? 'timeline/delete/'.$timeline->id : Site_Util::get_delete_api_uri($timeline),
 					'data-msg' => term('form.delete').'します。よろしいですか。',
 					'data-parent' => 'timelineBox_'.$id,
 				));
