@@ -85,6 +85,26 @@ class Validation extends Fuel\Core\Validation
 
 		return true;
 	}
+
+	public static function _validation_not_in_array($val, $compare)
+	{
+		if (Validation::_empty($val))
+		{
+			return true;
+		}
+		
+		if ( ! is_array($val))
+		{
+			$val = array($val);
+		}
+		
+		foreach ($val as $value)
+		{
+			if (in_array($value, $compare)) return false;
+		}
+
+		return true;
+	}
 	
 	/**
 	 * Validate for not required array input

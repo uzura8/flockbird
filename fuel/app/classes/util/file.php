@@ -1,6 +1,25 @@
 <?php
 class Util_File
 {
+	public static function get_file_names($dir_path, $is_directory_only = false, $remove_extentions = false)
+	{
+		$file_names = array();
+		$d = dir($dir_path);
+		while (false !== ($entry = $d->read()))
+		{
+			if ($entry == '.' || $entry == '..') continue;
+			if (!is_dir($entry))
+			{
+				if ($is_directory_only) continue;
+
+				if ($remove_extentions) $entry = static::get_filename_without_extension($entry);
+			}
+			$file_names[] = $entry;
+		}
+
+		return $file_names;
+	}
+
 	public static function move($original_file, $moved_file)
 	{
 		if (!file_exists($original_file))
@@ -130,7 +149,16 @@ class Util_File
 
 	public static function get_extension_from_filename($filename)
 	{
-		return substr($filename, strrpos($filename, '.') + 1);
+		if (!$dot_position = strrpos($filename, '.')) return null;
+
+		return substr($filename, $dot_position + 1);
+	}
+
+	public static function get_filename_without_extension($filename)
+	{
+		if (!$dot_position = strrpos($filename, '.')) return $filename;
+
+		return substr($filename, 0, $dot_position);
 	}
 
 	public static function get_image_type($file_path)

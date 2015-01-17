@@ -67,6 +67,30 @@ class Site_Util
 		return ! self::check_is_prod_env();
 	}
 
+	public static function get_uri_reservede_words($additional_list = array())
+	{
+		$uri_reservede_words = array(
+			// common(汎用)
+			'index',
+			'list',
+			'api',
+			'get',
+			'post',
+			'put',
+			'delete',
+			'create',
+			'edit',
+			// site 特有
+			'comment',
+			'like',
+		);
+		$uri_reservede_words = array_merge($uri_reservede_words, array_keys(Module::loaded()));// modules
+		$uri_reservede_words = array_merge($uri_reservede_words, Util_File::get_file_names(APPPATH.'classes/controller', false, true));// controller files
+		if ($additional_list) $uri_reservede_words = array_merge($uri_reservede_words, $additional_list);
+
+		return array_unique($uri_reservede_words);
+	}
+
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())
 	{
 		$form = Fieldset::forge($name);

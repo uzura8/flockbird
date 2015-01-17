@@ -32,4 +32,46 @@ class Test_Util_File extends TestCase
 
 		return $data;
 	}
+
+	/**
+	* @dataProvider get_extension_from_filename_provider
+	*/
+	public function test_get_extension_from_filename($filename = null, $expected = null)
+	{
+		$test = Util_File::get_extension_from_filename($filename);
+		$this->assertEquals($expected, $test);
+	}
+
+	public function get_extension_from_filename_provider()
+	{
+		$data = array();
+		$data[] = array('aaa.bbb', 'bbb');
+		$data[] = array('aaa.bbb.cc', 'cc');
+		$data[] = array('aa.bb.c.d.e.f.g.h', 'h');
+		$data[] = array('aaa', null);
+		$data[] = array('.cc', null);
+
+		return $data;
+	}
+
+	/**
+	* @dataProvider get_filename_without_extension_provider
+	*/
+	public function test_get_filename_without_extension($filename = null, $expected = null)
+	{
+		$test = Util_File::get_filename_without_extension($filename);
+		$this->assertEquals($expected, $test);
+	}
+
+	public function get_filename_without_extension_provider()
+	{
+		$data = array();
+		$data[] = array('aaa.bbb', 'aaa');
+		$data[] = array('aaa.bbb.cc', 'aaa.bbb');
+		$data[] = array('aa.bb.c.d.e.f.g.h', 'aa.bb.c.d.e.f.g');
+		$data[] = array('aaa', 'aaa');
+		$data[] = array('.cc', '.cc');
+
+		return $data;
+	}
 }

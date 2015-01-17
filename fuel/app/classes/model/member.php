@@ -102,10 +102,14 @@ class Model_Member extends \MyOrm\Model
 	public static function _init()
 	{
 		static::$_properties['name']['label'] = term('member.name');
-		static::$_properties['name']['validation']['min_length'][] = conf('member.name.length.min');
-		static::$_properties['name']['validation']['max_length'][] = conf('member.name.length.max');
-		static::$_properties['name']['validation']['match_pattern'][]
-			= sprintf('/^[%s]{%d,%d}$/u', conf('member.name.accept_strings'), conf('member.name.length.min'), conf('member.name.length.max'));
+		static::$_properties['name']['validation']['min_length'][] = conf('member.name.validation.length.min');
+		static::$_properties['name']['validation']['max_length'][] = conf('member.name.validation.length.max');
+		if (is_enabled('notice') && conf('mention.isEnabled', 'notice'))
+		{
+			static::$_properties['name']['validation']['match_pattern'][] = sprintf('/^(%s)$/u', conf('member.name.validation.match_patterns.register'));
+			$method = conf('member.name.validation.blacklist.method');
+			if (is_callable($method)) static::$_properties['name']['validation']['not_in_array'][] = call_user_func($method);
+		}
 
 		$sex_options = Site_Form::get_form_options4config('term.member.sex.options');
 		static::$_properties['sex']['label'] = term('member.sex.label');

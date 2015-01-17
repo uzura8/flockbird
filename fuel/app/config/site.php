@@ -78,10 +78,18 @@ $config = array(
 	),
 	'member' => array(
 		'name' => array(
-			'accept_strings' => '0-9A-Za-z０-９Ａ-Ｚａ-ｚ_〃々ぁ-ゖ゛-ゞァ-ヺーヽヾ一-龥',
-			'length' => array(
-				'min' => 2,
-				'max' => 20,// 20 or less.
+			'validation' => array(
+				'length' => array(
+					'min' => 2,
+					'max' => 20,// 20 or less.
+				),
+				'match_patterns' => array(
+					'basic' => '0-9A-Za-z０-９Ａ-Ｚａ-ｚ_〃々ぁ-ゖ゛-ゞァ-ヺーヽヾ一-龥',
+					'register' => '[0-9A-Za-z０-９Ａ-Ｚａ-ｚ_〃々ぁ-ゖ゛-ゞァ-ヺーヽヾ一-龥]*[A-Za-zＡ-Ｚａ-ｚ_〃々ぁ-ゖ゛-ゞァ-ヺーヽヾ一-龥]+[0-9A-Za-z０-９Ａ-Ｚａ-ｚ_〃々ぁ-ゖ゛-ゞァ-ヺーヽヾ一-龥]*',
+				),
+				'blacklist' => array(
+					'method' => array('\Site_Member', 'get_prohibited_words_for_name'),
+				),
 			),
 		),
 		'register' => array(

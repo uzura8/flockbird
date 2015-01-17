@@ -2,6 +2,11 @@
 
 class Site_Member
 {
+	public static function get_prohibited_words_for_name()
+	{
+		return \Site_Util::get_uri_reservede_words(Util_File::get_file_names(APPPATH.'classes/controller/member', false, true));
+	}
+
 	public static function save_profile_image(Model_Member $member, $file_path = null)
 	{
 		if (conf('upload.types.img.types.m.save_as_album_image'))
