@@ -167,8 +167,8 @@ class Site_Util
 
 	public static function get_match_pattern2mention()
 	{
-		$conf = conf('member.name');
-		$accept_str = $conf['accept_patterns.basic'];
+		$conf = conf('member.name.validation');
+		$accept_str = $conf['match_patterns']['basic'];
 
 		return sprintf('/(?<![%s])(@|＠)([%s]{%d,%d})(?![%s])/u', $accept_str, $accept_str, $conf['length']['min'], $conf['length']['max'], $accept_str);
 	}
