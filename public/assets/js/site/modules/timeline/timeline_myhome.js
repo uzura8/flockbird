@@ -45,7 +45,8 @@ $(function() {
 	$('#btn_timeline').click(function(){
 		if (GL.execute_flg) return false;
 
-		var body = $('#textarea_comment').val().trim();
+		//var body = $('#textarea_comment').val().trim();
+		var body = $.trim($('#textarea_comment').val());// for legacy IE.
 		var postData = {};
 		$('input[name^="image_tmp"]').each(function(){
 			postData[this.name] = this.value;

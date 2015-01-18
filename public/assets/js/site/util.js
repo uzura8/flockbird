@@ -98,7 +98,7 @@ function getErrorMessage(responseObj)
 			return 'サーバエラーが発生しました。';
 	}
 
-	if (!empty(messages.default)) return messages.default;
+	if (!empty(messages['default'])) return messages['default'];
 	if (defaultMessage) return defaultMessage;
 
 	return 'エラーが発生しました。';
@@ -351,7 +351,8 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 	if (GL.execute_flg) return false;
 	if (!postUri) return false;
 
-	var body = $(textareaSelector).val().trim();
+	//var body = $(textareaSelector).val().trim();
+	var body = $.trim($(textareaSelector).val());// for legacy IE.
 	if (isCheckInput && !body.length) return;
 	postData['body'] = body;
 	postData = set_token(postData);
@@ -412,7 +413,7 @@ function loadItem(container_attribute, item_attribute)
 		navSelector  : '#page-nav',   // ページのナビゲーションを選択
 		nextSelector : '#page-nav a', // 次ページへのリンク
 		itemSelector : item_attribute,    // 持ってくる要素のclass
-		loadingImg   : loading_image_url,
+		loadingImg   : loading_image_url
 	});
 }
 
@@ -597,7 +598,8 @@ function setup_simple_validation_required_popover(input_atter) {
 }
 
 function simple_validation_required(input_atter) {
-	var input_val = $(input_atter).val().trim();
+	//var input_val = $(input_atter).val().trim();
+	var input_val = $.trim($(input_atter).val());// for legacy IE.
 
 	if (input_val.length == 0) {
 		$(input_atter).popover('show');
@@ -908,7 +910,8 @@ function execute_simple_post(selfDomElement) {
 	if (post_keys.length > 0) {
 		$.each(post_keys, function(i, post_key) {
 			var input_attr = '#input_' + post_key;
-			var value = $(input_attr).val().trim();
+			//var value = $(input_attr).val().trim();
+			var value = $.trim($(input_attr).val());// for legacy IE.
 			if (value.length == 0) {
 				has_error = true;
 				return false;
@@ -918,7 +921,8 @@ function execute_simple_post(selfDomElement) {
 	} else {
 		var input_name = $(selfDomElement).data('input_name') ? $(selfDomElement).data('input_name') : 'name';
 		var input_attr = '#input_' + input_name;
-		var value = $(input_attr).val().trim();
+		//var value = $(input_attr).val().trim();
+		var value = $.trim($(input_attr).val());// for legacy IE.
 		if (!value.length) return false;
 		post_data[input_name] = value;
 	}

@@ -11,9 +11,11 @@ function submit_after_confirm(action) {
 		var action_name = '編集';
 		if (action == 'delete') action_name = '削除';
 
-		var name        = $('#form_name').val().trim();
+		//var name        = $('#form_name').val().trim();
+		var name        = $.trim($('#form_name').val());// for legacy IE.
 		var public_flag = $('input[name="public_flag"]:checked').val();
-		var shot_at     = $('#form_shot_at').val().trim();
+		//var shot_at     = $('#form_shot_at').val().trim();
+		var shot_at     = $.trim($('#form_shot_at').val());// for legacy IE.
 		if (action == 'post' && name.length == 0 && public_flag == 99 && shot_at.length == 0) {
 			apprise('入力してください');
 			return false;
