@@ -62,17 +62,17 @@
 * moment.lang_ja.js
   - license: MIT
 * jQuery File Upload Plugin
-  - version: 5.37.0
+  - version: 5.42.2
   - license: MIT
   - url: https://github.com/blueimp/jQuery-File-Upload
 * jQuery File Upload Plugin PHP Class
   - version: 7.0.1
   - license: MIT
 * jQuery Iframe Transport Plugin
-  - version: 1.8.1
+  - version: 1.8.3
   - license: MIT
 * jQuery UI Widget
-  - version: 1.10.3+amd
+  - version: 1.11.1+CommonJS
   - license: MIT
 * Summernote
   - version: 0.5.2
