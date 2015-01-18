@@ -5,8 +5,8 @@ $config = array(
 		'legacyIECriteriaVersion' => 8,
 	),
 	'jqueryVersion' => array(
-		'latest' => '2.1.1',
-		'legacy' => '1.11.1',
+		'latest' => '2.1.3',
+		'legacy' => '1.11.2',
 	),
 	'default' => array(
 		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
