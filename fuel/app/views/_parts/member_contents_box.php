@@ -12,22 +12,21 @@ if (isset($content) && strlen($content))
 {
 	if (empty($is_output_raw_content))
 	{
-		$truncate_options = array();
-		$callbacks = array();
+		$convert_body_options = array();
 		if (!empty($truncate_lines))
 		{
-			$truncate_options['line'] = $truncate_lines;
-			if (empty($read_more_uri)) $truncate_options['read_more_uri'] = $read_more_uri;
+			$convert_body_options['truncate_line'] = $truncate_lines;
+			if (empty($read_more_uri)) $convert_body_options['read_more_uri'] = $read_more_uri;
 		}
 		elseif (!empty($trim_width))
 		{
-			$truncate_options['width'] = $trim_width;
+			$convert_body_options['truncate_width'] = $trim_width;
 		}
-		elseif (!empty($is_convert_nl2br) && $is_convert_nl2br === true)
+		elseif (empty($is_convert_nl2br) || $is_convert_nl2br === false)
 		{
-			$callbacks[] = 'nl2br';
+			$convert_body_options['nl2br'] = false;
 		}
-		echo convert_body($content, $truncate_options, $callbacks);
+		echo convert_body($content, $convert_body_options);
 	}
 	else
 	{

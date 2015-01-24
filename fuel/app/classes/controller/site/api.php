@@ -80,7 +80,11 @@ class Controller_Site_Api extends Controller_Base_Site
 			foreach ($list as $key => $obj)
 			{
 				$row = $obj->to_array();
-				$row['body'] = convert_body($row['body'], null, array('url2link', 'mention2link'));
+				$row['body'] = convert_body($row['body'], array(
+					'nl2br' => false,
+					'is_truncate' => false,
+					'mention2link' => true,
+				));
 				$row['member'] = Model_Member::get_one_basic4id($row['member_id']);
 				if (conf('like.isEnabled'))
 				{

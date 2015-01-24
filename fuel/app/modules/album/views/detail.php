@@ -1,5 +1,5 @@
 <div class="article_body">
-<?php echo convert_body($album->body, array('is_detail' => true), array('url2link', 'nl2br')); ?>
+<?php echo convert_body($album->body, array('is_truncate' => false)); ?>
 </div>
 
 <?php if (Config::get('album.display_setting.detail.display_slide_image')): ?>

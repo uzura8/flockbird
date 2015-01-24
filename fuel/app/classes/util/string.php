@@ -291,4 +291,17 @@ class Util_String
 
 		return str_replace(array_keys($arr), array_values($arr), $value);
 	}
+
+	public static function convert2accepted_charas4cache_id($str, $replaced_char = '-', $is_accepted_dash = false)
+	{
+		$accepted_chars_range_pattern = static::replace2only_accepted_chars($str, 'a-zA-Z0-9_\-');
+		if ($is_accepted_dash) $accepted_chars_range_pattern .= '.';
+
+		return $accepted_chars_range_pattern;
+	}
+
+	public static function replace2only_accepted_chars($str, $accepted_chars_range_pattern, $replaced_char = '-')
+	{
+		return preg_replace('/([^'.$accepted_chars_range_pattern.']{1})/u', $replaced_char, $str);
+	}
 }

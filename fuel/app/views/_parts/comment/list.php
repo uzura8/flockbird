@@ -46,9 +46,13 @@ if (conf('like.isEnabled'))
 		'is_liked' => isset($liked_ids) ? in_array($comment->id, $liked_ids) : false,
 	);
 }
-if (empty($trim_width)) $trim_width = empty($is_detail) ? conf('view_params_default.list.comment.trim_width') : null;
 $content_view = View::forge('_parts/member_contents_box', $data);
-$content_view->set_safe('content', convert_body($comment->body, array('width' => $trim_width, 'is_detail' => !empty($is_detail)), array('url2link', 'mention2link')));
+$content_view->set_safe('content', convert_body($comment->body, array(
+	'nl2br' => false,
+	'is_truncate' => empty($is_detail),
+	'truncate_width' => empty($is_detail) ? conf('view_params_default.list.comment.trim_width') : null,
+	'mention2link' => true,
+)));
 echo $content_view->render();
 ?>
 <?php

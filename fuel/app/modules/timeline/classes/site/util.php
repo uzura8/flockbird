@@ -145,11 +145,12 @@ class Site_Util
 		}
 
 		return convert_body($body, array(
-			'is_detail'     => $is_detail,
-			'width'         => conf('articles.trim_width.body', 'timeline'),
-			'line'          => conf('articles.truncate_lines.body', 'timeline'),
-			'read_more_uri' => 'timeline/'.$timeline_id,
-		), array('url2link', 'mention2link', 'nl2br'));
+			'is_truncate'    => !$is_detail,
+			'truncate_width' => conf('articles.trim_width.body', 'timeline'),
+			'truncate_line'  => conf('articles.truncate_lines.body', 'timeline'),
+			'read_more_uri'  => 'timeline/'.$timeline_id,
+			'mention2link'   => true,
+		));
 	}
 
 	public static function get_quote_article($type, $foreign_table_obj, $is_detail = false)

@@ -598,3 +598,15 @@ a.simpleList-item-warning:focus {
 	color: #8a6d3b;
 	background-color: #faf2cc;
 }
+
+.simpleList-item-media {
+	margin: 5px 0;
+	padding: 8px;
+	background-color: transparent !important;
+	border: 1px solid #ddd !important;
+}
+a.simpleList-item-media:hover,
+a.simpleList-item-media:focus {
+	color: #428bca;
+	box-shadow:0 0 4px rgba(10,10,10,0.6);
+}

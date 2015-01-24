@@ -299,8 +299,16 @@ $config = array(
 		'post' => array(
 			'url2link' => array(
 				'isEnabled'  => true,
-				'textLength'  => '40',
-				'truncatedMarker'  => '...',
+				'truncateWidth'  => '40',
+				'trimmarker' => '...',
+				'displaySummary' => array(
+					'renderAt' => 'server',// 'server' / false / 'client' TODO: find library and impliment
+					'cache' => array(
+						'isEnabled'  => true,
+						'expir' => 60 * 60 * 24,
+						'prefix'  => 'sitesummery_',
+					),
+				),
 			),
 		),
 	),

@@ -80,14 +80,6 @@ function site_get_screen_name($u, $default_value = null)
 	return 'ID:'.$u->id;
 }
 
-function conf($item, $file = 'site', $default = null, $replace_delimitter = null)
-{
-	if (!$file) $file = 'site';
-	if ($replace_delimitter) $item = str_replace($replace_delimitter, '.', $item);
-
-	return Config::get(sprintf('%s.%s', $file, $item), $default);
-}
-
 function term()
 {
 	$keys = func_get_args();
@@ -304,14 +296,6 @@ function profile_value(Model_MemberProfile $member_profile)
 	}
 
 	return $member_profile->value;
-}
-
-function is_enabled($module_name)
-{
-	if (!Module::loaded($module_name)) return false;
-	if (!conf($module_name.'.isEnabled')) return false;
-
-	return true;
 }
 
 function render_module($view_file_path, $data = array(), $module_name = null)
