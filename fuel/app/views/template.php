@@ -7,8 +7,9 @@
 <meta name="description" content="<?php echo $header_description ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
 <meta name="keywords" content="<?php echo site_header_keywords($header_keywords); ?>">
 <title><?php echo $header_title ? $header_title : $title; ?></title>
-<meta name="robots" content="<?php if (PRJ_ENVIRONMENT == 'PRODUCTION'): ?>index,follow<?php else: ?>noindex,nofollow<?php endif; ?>">
+<meta name="robots" content="<?php if (is_prod_env()): ?>index,follow<?php else: ?>noindex,nofollow<?php endif; ?>">
 <?php if (GOOGLE_SITE_VERIFICATION): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
+<?php echo render('_parts/template/site_meta_ogp', array('description' => $header_description)); ?>
 <?php echo render('_parts/template/load_common_css'); ?>
 <?php if (IS_SP): ?><?php echo Asset::css('base_mobile.css');?><?php else: ?><?php echo Asset::css('base_pc.css');?><?php endif; ?>
 <?php echo Asset::css('site.css');?>

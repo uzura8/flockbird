@@ -192,15 +192,24 @@ class Controller_Base extends Controller_Hybrid
 
 	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false)
 	{
+		$common = array('title' =>  PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME);
 		$title_name = '';
-		if ($title) list($title_name, $title_label) = static::get_title_parts($title);
-		$this->template->title = (!$is_no_title && $title_name) ? View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label)) : '';
-		$this->template->header_title = site_title($title_name);
+		$this->template->title = '';
 
+		if ($title) list($title_name, $title_label) = static::get_title_parts($title);
+		if (!$is_no_title && $title_name)
+		{
+			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
+			$common['title'] = $title_name;
+		}
+
+		$this->template->header_title = site_title($title_name);
 		if ($info) $this->template->header_info = View::forge('_parts/information', $info);
 
 		$this->template->breadcrumbs = $is_no_breadcrumbs ? array() :
 			static::get_breadcrumbs($title_name, $middle_breadcrumbs, $member_obj, $member_obj ? $this->check_is_mypage($member_obj->id) : false, $module);
+
+		View::set_global('common', $common);
 	}
 
 	protected static function get_title_parts($title = array())

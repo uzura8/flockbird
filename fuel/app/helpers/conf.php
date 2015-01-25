@@ -15,3 +15,13 @@ function is_enabled($module_name)
 
 	return true;
 }
+
+function is_prod_env()
+{
+	return Site_Util::check_is_prod_env();
+}
+
+function is_dev_env()
+{
+	return Site_Util::check_is_dev_env();
+}

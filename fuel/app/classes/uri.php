@@ -99,4 +99,12 @@ class Uri extends Fuel\Core\Uri
 
 		return $url;
 	}
+
+	public static function check_current_is_base_path()
+	{
+		if (!static::string()) return true;
+		if (static::string() == '') return true;
+
+		return false;
+	}
 }

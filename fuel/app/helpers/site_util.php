@@ -353,16 +353,6 @@ function check_and_get_datatime($datetime, $type = null, $default_value = '')
 	return substr($datetime, 0, $length);
 }
 
-function is_prod_env()
-{
-	return Site_Util::check_is_prod_env();
-}
-
-function is_dev_env()
-{
-	return Site_Util::check_is_dev_env();
-}
-
 function label_is_secure($value, $view_icon_only = false, $attrs = array())
 {
 	list($name, $icon_tag, $type) = Site_Util::get_is_secure_label_parts($value);
