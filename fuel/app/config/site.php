@@ -112,7 +112,7 @@ $config = array(
 		'profile' => array(
 			'display_type' => array(
 				'detail' => '0',
-				'summery' => '1',
+				'summary' => '1',
 				//'always' => '2',// (未実装のため無効)
 			),
 			'birthday' => array(
@@ -306,7 +306,7 @@ $config = array(
 					'cache' => array(
 						'isEnabled'  => true,
 						'expir' => 60 * 60 * 24,
-						'prefix'  => 'sitesummery_',
+						'prefix'  => 'sitesummary_',
 					),
 				),
 			),

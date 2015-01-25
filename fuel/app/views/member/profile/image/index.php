@@ -3,7 +3,7 @@
 	'member' => $member,
 	'member_profiles' => $member_profiles,
 	'access_from' => $access_from,
-	'display_type' => 'summery',
+	'display_type' => 'summary',
 	'with_image_upload_form' => true,
 )); ?>
 

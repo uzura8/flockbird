@@ -1,4 +1,4 @@
-<div class="site_summery">
+<div class="site_summary">
 <a href="<?php echo $url; ?>" target="_blank" class="simpleList-item simpleList-item-media">
 <?php if (!empty($image)): ?>
 	<?php echo Html::img($image, array('class' => 'pull-left-img')); ?>

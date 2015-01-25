@@ -951,7 +951,7 @@ CREATE TABLE `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `name` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified profile name (ASCII)',
   `caption` text NOT NULL,
-  `display_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: display at detail, 2:display at summery, 3:always',
+  `display_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: display at detail, 2:display at summary, 3:always',
   `information` text,
   `placeholder` text,
   `is_required` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'This is a required',

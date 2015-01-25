@@ -22,7 +22,7 @@ class Site_Profile
 	{
 		$options = array(
 			conf('member.profile.display_type.detail')  => $is_simple ? '詳細' : '詳細画面のみ表示',// 0
-			conf('member.profile.display_type.summery') => $is_simple ? '概要' : 'summery にも表示',// 1
+			conf('member.profile.display_type.summary') => $is_simple ? '概要' : 'summary にも表示',// 1
 		);
 		$key_always = conf('member.profile.display_type.always');
 		if ($key_always) $options[$key_always] = $is_simple ? '常に' : '常に表示';// 2

@@ -38,7 +38,7 @@ class Controller_Member extends Controller_Site
 			'member_profiles' => $member_profiles,
 			'is_mypage' => $is_mypage,
 			'access_from' => $access_from,
-			'display_type' => 'summery',
+			'display_type' => 'summary',
 		);
 		if (is_enabled('timeline'))
 		{

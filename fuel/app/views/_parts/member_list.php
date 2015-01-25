@@ -40,7 +40,7 @@ if ($is_display_load_before_link)
 	'access_from' => Auth::check() ? 'member' : 'guest',
 	'is_list' => true,
 	'page_type' => 'list',
-	'display_type' => 'summery',
+	'display_type' => 'summary',
 	'is_simple_list' => $is_simple_list,
 )); ?>
 	</div>

@@ -3,7 +3,7 @@
 	'member' => $member,
 	'member_profiles' => $member_profiles,
 	'access_from' => $access_from,
-	'display_type' => 'summery',
+	'display_type' => 'summary',
 	'link_uri' => $is_mypage ? 'member/profile' : 'member/profile/'.$member->id,
 )); ?>
 

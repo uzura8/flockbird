@@ -4,8 +4,8 @@ class Site_PostedBodyHandler
 {
 	protected $options = array();
 	protected $is_truncated;
-	protected $url2link_site_summery_url;
-	protected $url2link_site_summery_data;
+	protected $url2link_site_summary_url;
+	protected $url2link_site_summary_data;
 	protected $access_device_type;
 
 	public function __construct($options = array())
@@ -50,7 +50,7 @@ class Site_PostedBodyHandler
 
 		$data = array();
 		if ($this->is_truncated && $this->options['read_more_uri']) $data['read_more_uri'] = $this->options['read_more_uri'];
-		if ($this->url2link_site_summery_data) $data['site_summery_data'] = $this->url2link_site_summery_data;
+		if ($this->url2link_site_summary_data) $data['site_summary_data'] = $this->url2link_site_summary_data;
 		$view = View::forge('_parts/converted_body', $data);
 		$view->set_safe('body', $body);
 
@@ -63,7 +63,7 @@ class Site_PostedBodyHandler
 		if (!$this->options['url2link']) return $string;
 
 		$string = preg_replace_callback($this->options['url2link_url_pattern'], array('self', 'url2link_callback'), $string);
-		static::set_url2link_site_summery_data();
+		static::set_url2link_site_summary_data();
 
 		return $string;
 	}
@@ -75,7 +75,7 @@ class Site_PostedBodyHandler
 		$length = $this->options['url2link_truncate_width'];
 		$truncated_marker = $this->options['url2link_trimmarker'];
 
-		if (!$this->url2link_site_summery_url) $this->url2link_site_summery_url = $url;
+		if (!$this->url2link_site_summary_url) $this->url2link_site_summary_url = $url;
 
 		if (strlen($url) > $length)
 		{
@@ -103,22 +103,22 @@ class Site_PostedBodyHandler
 		return Html::anchor($url, $urlstr, $attr);
 	}
 
-	protected function set_url2link_site_summery_data()
+	protected function set_url2link_site_summary_data()
 	{
 		if ($this->options['url2link_display_summary_type'] != 'server') return;
-		if ($this->url2link_site_summery_data) return;
-		if (!$this->url2link_site_summery_url) return;
+		if ($this->url2link_site_summary_data) return;
+		if (!$this->url2link_site_summary_url) return;
 
 		if ($this->options['url2link_summary_cache_is_enabled'])
 		{
-			$this->url2link_site_summery_data = $this->get_url2link_site_summery_data_cache();
+			$this->url2link_site_summary_data = $this->get_url2link_site_summary_data_cache();
 			return;
 		}
 
-		$this->url2link_site_summery_data = static::get_url2link_site_summery_data($this->url2link_site_summery_url);
+		$this->url2link_site_summary_data = static::get_url2link_site_summary_data($this->url2link_site_summary_url);
 	}
 
-	protected static function get_url2link_site_summery_data($url)
+	protected static function get_url2link_site_summary_data($url)
 	{
 		require_once APPPATH.'vendor'.DS.'opengraph'.DS.'OpenGraph.php';
 		$graph = OpenGraph::fetch($url);
@@ -134,28 +134,28 @@ class Site_PostedBodyHandler
 		return $returns;
 	}
 
-	protected function get_url2link_site_summery_data_cache_key()
+	protected function get_url2link_site_summary_data_cache_key()
 	{
-		$target_str = Util_String::convert2accepted_charas4cache_id(preg_replace('#https?://#u', '', $this->url2link_site_summery_url));
+		$target_str = Util_String::convert2accepted_charas4cache_id(preg_replace('#https?://#u', '', $this->url2link_site_summary_url));
 
 		return sprintf('%s%s_%s', $this->options['url2link_summary_cache_prefix'], $target_str, $this->access_device_type);
 	}
 
-	protected function get_url2link_site_summery_data_cache()
+	protected function get_url2link_site_summary_data_cache()
 	{
-		$cache_key = static::get_url2link_site_summery_data_cache_key();
+		$cache_key = static::get_url2link_site_summary_data_cache_key();
 		$cache_expir = $this->options['url2link_summary_cache_expire'];
 		try
 		{
-			$site_summery_data =  \Cache::get($cache_key, $cache_expir);
+			$site_summary_data =  \Cache::get($cache_key, $cache_expir);
 		}
 		catch (\CacheNotFoundException $e)
 		{
-			$site_summery_data = static::get_url2link_site_summery_data($this->url2link_site_summery_url);
-			\Cache::set($cache_key, $site_summery_data, $cache_expir);
+			$site_summary_data = static::get_url2link_site_summary_data($this->url2link_site_summary_url);
+			\Cache::set($cache_key, $site_summary_data, $cache_expir);
 		}
 
-		return $site_summery_data;
+		return $site_summary_data;
 	}
 
 	protected function convert_mention2link($string)
