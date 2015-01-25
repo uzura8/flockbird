@@ -62,9 +62,11 @@ $config = array(
 		'save' => '保存',
 		'do_save' => '保存する',
 		'do_reset_default' => 'デフォルトに戻す',
+		'complete' => '完了',
 	),
 	'site' => array(
 		'view' => 'サイト',
+		'notice' => 'お知らせ',
 		'signup'  => 'サインアップ',
 		'auth' => '認証',
 		'login' => 'ログイン',

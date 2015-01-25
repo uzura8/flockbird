@@ -60,9 +60,9 @@ class Controller_Setting extends Controller_Admin
 			$data = array();
 			$data['to_name']      = $this->u->username;
 			$data['to_address']   = $this->u->email;
-			$data['from_name']    = \Config::get('mail.member_setting_common.from_name');
-			$data['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
-			$data['subject']      = \Config::get('mail.member_setting_password.subject');
+			$data['from_name']    = conf('mail.admin.from_name');
+			$data['from_address'] = conf('mail.admin.from_email');
+			$data['subject']      = term('site.password', 'form.update', 'form.complete').'の'.term('site.notice');
 
 			$term_password = term('site.password');
 			$data['body'] = <<< END
@@ -157,9 +157,9 @@ END;
 				\DB::commit_transaction();
 
 				$maildata = array();
-				$maildata['from_name']    = \Config::get('mail.member_setting_common.from_name');
-				$maildata['from_address'] = \Config::get('mail.member_setting_common.from_mail_address');
-				$maildata['subject']      = \Config::get('mail.member_change_email.subject');
+				$maildata['from_name']    = conf('mail.admin.from_name');
+				$maildata['from_address'] = conf('mail.admin.from_email');
+				$maildata['subject']      = term('site.email', 'form.update', 'form.complete').'の'.term('site.notice');
 				$maildata['to_address']   = $email;
 				$maildata['to_name']      = $this->u->username;
 				$this->send_change_email_mail($maildata);

@@ -65,9 +65,9 @@ class Controller_Account extends Controller_Admin
 				if ($post['email'])
 				{
 					$maildata = array();
-					$maildata['from_name']    = \Config::get('mail.admin.common.from_name');
-					$maildata['from_address'] = \Config::get('mail.admin.common.from_mail_address');
-					$maildata['subject']      = \Config::get('mail.admin.create_user.subject');
+					$maildata['from_name']    = conf('mail.admin.from_name');
+					$maildata['from_address'] = conf('mail.admin.from_email');
+					$maildata['subject']      = term('admin.user.view', 'form.create', 'form.complete').'の'.term('site.notice');
 					$maildata['to_address']   = $post['email'];
 					$maildata['to_name']      = $post['username'];
 					$maildata['password']     = $post['password'];
