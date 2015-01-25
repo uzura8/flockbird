@@ -103,6 +103,7 @@ class Site_Util
 		{
 			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
 			case \Config::get('timeline.types.album_image_timeline'):
+			case \Config::get('timeline.types.member_name'):
 				return self::get_normal_timeline_body($body, $type, $timeline_id, isset($optional_info['count']) ? $optional_info['count'] : 0, $is_detail);
 
 			case \Config::get('timeline.types.member_register'):// SNS への参加
