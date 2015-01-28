@@ -77,6 +77,7 @@ class Controller_Member extends Controller_Site
 			= $this->common_get_list_params($default_params, conf('member.view_params.list.limit_max'));
 		list($list, $next_id) = Model_Member::get_list(null, $limit, $is_latest, $is_desc, $since_id, $max_id);
 
+		$this->template->main_container_attrs = array('data-not_render_site_summary' => 1);
 		$this->template->content = \View::forge('_parts/member_list', array(
 			'list' => $list,
 			'next_id' => $next_id,

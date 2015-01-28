@@ -3,6 +3,7 @@
 class Controller_Error extends Controller_Site
 {
 	protected $check_not_auth_action = array(
+		'400',
 		'403',
 		'404',
 		'405',
@@ -14,6 +15,19 @@ class Controller_Error extends Controller_Site
 	{
 		if (IS_ADMIN) $this->template = 'admin::template';
 		parent::before();
+	}
+	
+	/**
+	 * The 400 action for the application.
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_400()
+	{
+		$this->set_title_and_breadcrumbs('400 Bad Request', null, null, null, null, true);
+		$this->template->content = View::forge('error/common', array('message' => '不正なリクエストです。'));
+		$this->response_status = 400;
 	}
 	
 	/**

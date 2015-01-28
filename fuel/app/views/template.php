@@ -22,7 +22,7 @@
 
 <?php echo render('_parts/template/navbar'); ?>
 
-<div class="container">
+<div class="container" id="main_container"<?php if (!empty($main_container_attrs)): ?> <?php echo Util_Array::conv_array2attr_string($main_container_attrs); ?><?php endif; ?>>
 <?php if (isset($top_content)): ?>
 	<div id="top_content">
 <?php echo $top_content; ?>

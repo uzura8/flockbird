@@ -1,5 +1,9 @@
 $(function(){
 	$('textarea.autogrow').autogrow();
+
+	if (checkIsRenderSiterSummary()) {
+		renderSiteSummary();
+	}
 });
 
 $(document).on('click', '.btn_follow', function(){
@@ -69,6 +73,9 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var templateSelector = $(this).data('template') ? $(this).data('template') : '';
 	var isLatest = $(this).data('latest') ? Boolean($(this).data('latest')) : false;
 	var isDesc = $(this).data('desc') ? Boolean($(this).data('desc')) : false;
+	var isRenderSiteSummary = $(this).data('render_site_summary') ? Boolean($(this).data('render_site_summary')) : get_config('is_render_site_summary_at_client_side');
+
+	var loadCallbacks = isRenderSiteSummary ? [renderSiteSummary] : [];
 
 	var position = isDesc ? 'prepend' : 'append';
 	var nextSelector = getNextSelector(listSelector, position);
@@ -85,7 +92,9 @@ $(document).on('click','.js-ajax-postComment', function(){
 		getData,
 		this,
 		counterSelector,
-		templateSelector
+		templateSelector,
+		[],
+		loadCallbacks
 	);
 	return false;
 });
@@ -241,3 +250,19 @@ $(document).on('click', '.js-modal', function(){
 	}
 	return false;
 });
+
+function checkIsRenderSiterSummary()
+{
+	var divArticleElement,
+			divCommentElement;
+
+	if (!get_config('is_render_site_summary_at_client_side')) return false;
+	if (!empty($('#main_container').data('not_render_site_summary'))) return false;
+
+	divArticleElement = document.getElementById('article_list');
+	if (divArticleElement != null && divArticleElement.hasChildNodes()) return true;
+	divCommentElement = document.getElementById('comment_list');
+	if (divCommentElement != null && divCommentElement.hasChildNodes()) return true;
+
+	return false;
+}

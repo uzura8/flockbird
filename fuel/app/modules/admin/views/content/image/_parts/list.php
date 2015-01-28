@@ -1,9 +1,9 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if ($list): ?>
 <div class="row">
-<div id="main_container">
+<div id="image_list">
 <?php foreach ($list as $image): ?>
-	<div class="main_item js-hide-btn" id="main_item_<?php echo $image->id; ?>" data-hidden_btn="btn_album_image_edit_<?php echo $image->id; ?>">
+	<div class="image_item js-hide-btn" id="image_item_<?php echo $image->id; ?>" data-hidden_btn="btn_album_image_edit_<?php echo $image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $image->id ?>"<?php if (!IS_SP): ?> onmouseover="$('#btn_album_image_edit_<?php echo $image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $image->id ?>').hide();"<?php endif; ?>>
 			<div class="content"><?php echo img($image->get_image(), 'M', 'admin/content/image/'.$image->id); ?></div>
 <?php if (!empty($is_simple_view) && $image->name): ?>
@@ -26,16 +26,16 @@ $menus[] = array(
 );
 $menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
 	'class' => 'js-ajax-delete',
-	'data-parent' => 'main_item_'.$image->id,
+	'data-parent' => 'image_item_'.$image->id,
 	'data-uri' => 'admin/content/image/api/delete/'.$image->id.'.json',
 ));
 echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_image_edit', 'id' => 'btn_album_image_edit_'.$image->id));
 ?>
 		</div><!-- imgBox -->
 
-	</div><!-- main_item -->
+	</div><!-- image_item -->
 <?php endforeach; ?>
-</div><!-- main_container -->
+</div><!-- image_list -->
 </div><!-- row -->
 <?php endif; ?>
 

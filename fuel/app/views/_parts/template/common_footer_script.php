@@ -61,7 +61,8 @@ function get_config(key) {
 		'default_list_comment_limit_max': <?php echo conf('view_params_default.list.comment.limit_max'); ?>,
 		'default_detail_comment_limit_max': <?php echo conf('view_params_default.detail.comment.limit_max'); ?>,
 		'default_form_comment_textarea_height': '<?php echo conf('view_params_default.form.comment.textarea.height'); ?>',
-		'site_public_flag_default': <?php echo conf('public_flag.default'); ?>
+		'site_public_flag_default': <?php echo conf('public_flag.default'); ?>,
+		'is_render_site_summary_at_client_side': <?php echo is_render_site_summary_at_client_side() ? 1 : 0; ?>
 	};
 	return config[key];
 }

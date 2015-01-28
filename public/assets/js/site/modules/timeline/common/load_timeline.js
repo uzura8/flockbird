@@ -78,7 +78,7 @@ function loadTimeline() {
 		pushStateInfo,
 		null,
 		null,
-		postLoadTimeline
+		[postLoadTimeline]
 	);
 }
 
@@ -89,10 +89,11 @@ function postLoadTimeline() {
 	showLinkCommentBlocks();
 	setCommentCount();
 	setLikeCount();
+	renderSiteSummary();
 }
 
 function loadTlComment(getUri, parentListSelector, id) {
-	loadList(getUri, parentListSelector, '', 'replace', {'latest': 1}, null, '#comment-template', '#comment_count_' + id);
+	loadList(getUri, parentListSelector, '', 'replace', {'latest': 1}, null, '#comment-template', '#comment_count_' + id, [renderSiteSummary]);
 	$(parentListSelector).removeClass('unloade_comments');
 }
 

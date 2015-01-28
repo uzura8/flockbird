@@ -211,7 +211,7 @@ function loadList(getUri) {
 	var pushStateInfo      = (arguments.length > 5) ? arguments[5] : null;
 	var templateSelector   = (arguments.length > 6) ? arguments[6] : '';
 	var counterSelector    = (arguments.length > 7) ? arguments[7] : '';
-	var callbackFunc       = (arguments.length > 8) ? arguments[8] : null;
+	var callbackFuncs      = (arguments.length > 8) ? arguments[8] : null;
 
 	var template = templateSelector ? Handlebars.compile($(templateSelector).html()) : null;
 	$.ajax({
@@ -250,9 +250,10 @@ function loadList(getUri) {
 			if (templateSelector && counterSelector && result.count) {
 					$(counterSelector).html(result.count);
 			}
-			if (callbackFunc) {
-				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);
-				callbackFunc();
+			if (callbackFuncs) {
+				$.each(callbackFuncs, function() {
+					this();
+				});
 			}
 			if (pushStateInfo) addHistory(pushStateInfo, getData);
 			//$(parentListSelector).find('textarea').autogrow();
@@ -342,11 +343,12 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 	var trigerSelector    = (arguments.length > 6)  ? arguments[6] : '';
 	var counterSelector   = (arguments.length > 7)  ? arguments[7] : '';
 	var templateSelector  = (arguments.length > 8)  ? arguments[8] : '';
-	var callbackFunc      = (arguments.length > 9)  ? arguments[9] : null;
-	var postData          = (arguments.length > 10) ? arguments[10] : {};
-	var isCheckInput      = (arguments.length > 11) ? arguments[11] : true;
-	var postedArticleTerm = (arguments.length > 12) ? arguments[12] : '';
-	var textareaHeight    = (arguments.length > 13) ? arguments[13] : '33px';
+	var callbackFuncs     = (arguments.length > 9)  ? arguments[9] : null;
+	var callbackFuncsAfterLoadList = (arguments.length > 10) ? arguments[10] : null;
+	var postData          = (arguments.length > 11) ? arguments[11] : {};
+	var isCheckInput      = (arguments.length > 12) ? arguments[12] : true;
+	var postedArticleTerm = (arguments.length > 13) ? arguments[13] : '';
+	var textareaHeight    = (arguments.length > 14) ? arguments[14] : '33px';
 
 	if (GL.execute_flg) return false;
 	if (!postUri) return false;
@@ -378,12 +380,13 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 		success: function(response){
 			var msg = !empty(response.message) ? response.message : postedArticleTerm + 'を投稿しました。';
 			showMessage(msg);
-			loadList(getUri, listSelector, '', position, getData, null, templateSelector, counterSelector);
+			loadList(getUri, listSelector, '', position, getData, null, templateSelector, counterSelector, callbackFuncsAfterLoadList);
 			if (!templateSelector) updateCounter(counterSelector);
 			reset_textarea(textareaSelector, textareaHeight);
-			if (callbackFunc) {
-				if (typeof callbackFunc == 'string') callbackFunc = eval(callbackFunc);
-				callbackFunc();
+			if (callbackFuncs) {
+				$.each(callbackFuncs, function() {
+					this();
+				});
 			}
 		},
 		error: function(response){
@@ -967,4 +970,35 @@ function scroll() {
 
 	var position = targetSelector ? $(targetSelector).offset().top : 0;
 	$('html,body').animate({scrollTop: position}, easing);
+}
+
+function renderSiteSummary() {
+	var template = Handlebars.compile($('#site_summary-template').html());
+	var getUrl = get_url('site/opengraph/api/analysis');
+	$('.site_summary_unrendered').each(function() {
+		var getUri = $(this).data('uri');
+		var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
+		var $selfObj = $(this);
+		$.ajax({
+			url : getUrl,
+			type : 'GET',
+			dataType : 'json',
+			data : getData,
+			cache : true,
+			timeout: get_config('default_ajax_timeout'),
+			success: function(result) {
+				if (result) {
+					$selfObj.html(template(result));
+					$selfObj.removeClass('site_summary_unrendered');
+					$selfObj.addClass('site_summary');
+				} else {
+					$selfObj.removeClass('site_summary_unrendered');
+					$selfObj.addClass('site_summary_renderfailed');
+				}
+			},
+			error: function(result) {
+				//showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
+			}
+		});
+	});
 }

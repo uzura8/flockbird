@@ -3,7 +3,7 @@
 <?php if (!IS_API): ?><?php echo term('album'); ?>がありません。<?php endif; ?>
 <?php else: ?>
 <div class="row">
-<div id="main_container">
+<div id="image_list">
 <?php foreach ($list as $album): ?>
 <?php
 if (empty($before_album_member_id) || $album->member_id != $before_album_member_id)
@@ -12,7 +12,7 @@ if (empty($before_album_member_id) || $album->member_id != $before_album_member_
 }
 $before_album_member_id = $album->member_id;
 ?>
-	<div class="js-hide-btn main_item" id="main_item_<?php echo $album->id; ?>" data-hidden_btn="btn_dropdown_<?php echo $album->id; ?>">
+	<div class="js-hide-btn image_item" id="image_item_<?php echo $album->id; ?>" data-hidden_btn="btn_dropdown_<?php echo $album->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album->id ?>">
 			<div class="content"><?php echo img(
 				\Album\Model_AlbumImage::get_album_cover_filename($album->cover_album_image_id, $album->id, $access_from),
@@ -77,9 +77,9 @@ $menus = array(array('icon_term' => 'site.show_detail', 'href' => 'album/'.$albu
 echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);
 ?>
 		</div><!-- img_box -->
-	</div><!-- main_item -->
+	</div><!-- image_item -->
 <?php endforeach; ?>
-</div><!-- main_container. -->
+</div><!-- image_list. -->
 </div><!-- row -->
 <?php endif; ?>
 

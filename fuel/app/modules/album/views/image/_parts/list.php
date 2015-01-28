@@ -1,9 +1,9 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if ($list): ?>
 <div class="row">
-<div id="main_container">
+<div id="image_list">
 <?php foreach ($list as $album_image): ?>
-	<div class="main_item js-hide-btn" id="main_item_<?php echo $album_image->id; ?>" data-hidden_btn="btn_dropdown_<?php echo $album_image->id; ?>">
+	<div class="image_item js-hide-btn" id="image_item_<?php echo $album_image->id; ?>" data-hidden_btn="btn_dropdown_<?php echo $album_image->id; ?>">
 		<div class="imgBox" id="imgBox_<?php echo $album_image->id ?>"<?php if (!IS_SP): ?> onmouseover="$('#btn_album_image_edit_<?php echo $album_image->id ?>').show();" onmouseout="$('#btn_album_image_edit_<?php echo $album_image->id ?>').hide();"<?php endif; ?>>
 			<div class="content"><?php echo img($album_image->get_image(), 'M', 'album/image/'.$album_image->id); ?></div>
 <?php if (!empty($is_simple_view)): ?>
@@ -129,9 +129,9 @@ echo render('_parts/comment/list', $data);
 ?>
 		</div>
 <?php endif; ?>
-	</div><!-- main_item -->
+	</div><!-- image_item -->
 <?php endforeach; ?>
-</div><!-- main_container -->
+</div><!-- image_list -->
 </div><!-- row -->
 <?php endif; ?>
 

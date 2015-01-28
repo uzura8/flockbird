@@ -32,7 +32,7 @@ class Site_PostedBodyHandler
 			'url2link_trimmarker' => conf('view_params_default.post.url2link.trimmarker'),
 			'url2link_display_summary_type' => conf('view_params_default.post.url2link.displaySummary.renderAt'),
 			'url2link_summary_cache_is_enabled' => conf('view_params_default.post.url2link.displaySummary.cache.isEnabled'),
-			'url2link_summary_cache_expire' => conf('view_params_default.post.url2link.displaySummary.cache.expir'),
+			'url2link_summary_cache_expire' => conf('view_params_default.post.url2link.displaySummary.cache.expire'),
 			'url2link_summary_cache_prefix' => conf('view_params_default.post.url2link.displaySummary.cache.prefix'),
 		);
 		if (!is_array($options)) $options = (array)$options;
@@ -50,6 +50,8 @@ class Site_PostedBodyHandler
 
 		$data = array();
 		if ($this->is_truncated && $this->options['read_more_uri']) $data['read_more_uri'] = $this->options['read_more_uri'];
+		$data['display_summary_type'] = $this->options['url2link_display_summary_type'];
+		if ($this->url2link_site_summary_url) $data['site_summary_url'] = $this->url2link_site_summary_url;
 		if ($this->url2link_site_summary_data) $data['site_summary_data'] = $this->url2link_site_summary_data;
 		$view = View::forge('_parts/converted_body', $data);
 		$view->set_safe('body', $body);
@@ -109,53 +111,12 @@ class Site_PostedBodyHandler
 		if ($this->url2link_site_summary_data) return;
 		if (!$this->url2link_site_summary_url) return;
 
-		if ($this->options['url2link_summary_cache_is_enabled'])
-		{
-			$this->url2link_site_summary_data = $this->get_url2link_site_summary_data_cache();
-			return;
-		}
-
-		$this->url2link_site_summary_data = static::get_url2link_site_summary_data($this->url2link_site_summary_url);
-	}
-
-	protected static function get_url2link_site_summary_data($url)
-	{
-		require_once APPPATH.'vendor'.DS.'opengraph'.DS.'OpenGraph.php';
-		$graph = OpenGraph::fetch($url);
-		$keys = array('title', 'type', 'image', 'url', 'site_name', 'description');
-		$returns = array();
-		foreach ($keys as $key)
-		{
-			if (!isset($graph->{$key})) continue;
-			$returns[$key] = $graph->{$key};
-		}
-		if ($returns && empty($returns['url'])) $returns['url'] = $url;
-
-		return $returns;
-	}
-
-	protected function get_url2link_site_summary_data_cache_key()
-	{
-		$target_str = Util_String::convert2accepted_charas4cache_id(preg_replace('#https?://#u', '', $this->url2link_site_summary_url));
-
-		return sprintf('%s%s_%s', $this->options['url2link_summary_cache_prefix'], $target_str, $this->access_device_type);
-	}
-
-	protected function get_url2link_site_summary_data_cache()
-	{
-		$cache_key = static::get_url2link_site_summary_data_cache_key();
-		$cache_expir = $this->options['url2link_summary_cache_expire'];
-		try
-		{
-			$site_summary_data =  \Cache::get($cache_key, $cache_expir);
-		}
-		catch (\CacheNotFoundException $e)
-		{
-			$site_summary_data = static::get_url2link_site_summary_data($this->url2link_site_summary_url);
-			\Cache::set($cache_key, $site_summary_data, $cache_expir);
-		}
-
-		return $site_summary_data;
+		$this->url2link_site_summary_data = Site_OpenGraph::get_analized_data(
+			$this->url2link_site_summary_url,
+			$this->options['url2link_summary_cache_is_enabled'],
+			$this->options['url2link_summary_cache_prefix'],
+			$this->options['url2link_summary_cache_expire']
+		);
 	}
 
 	protected function convert_mention2link($string)

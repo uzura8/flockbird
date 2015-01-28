@@ -24,3 +24,9 @@
 	loadPopover('#insecure_user_menu', '#insecure_user_popover', content, '', inputs);
 </script>
 <?php endif; ?>
+
+<?php if (is_render_site_summary_at_client_side()): ?>
+<script type="text/x-handlebars-template" id="site_summary-template">
+<?php echo render('_parts/handlebars_template/site_summary'); ?>
+</script>
+<?php endif; ?>

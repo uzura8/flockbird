@@ -1,4 +1,4 @@
-.main_item .btn_album_edit {
+.image_item .btn_album_edit {
 	display: none;
 }
 .imgBox .btn_album_image_edit {
@@ -7,7 +7,7 @@
 .commentBox .js-ajax-delete,
 .timelineBox .dropdown,
 .article .boxBtn,
-.main_item .boxBtn,
+.image_item .boxBtn,
 .article .btn-group.edit {
 	display: none;
 }

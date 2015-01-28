@@ -1,3 +1,3 @@
 $(function(){
-	load_masonry_item('#main_container', '.main_item');
+	load_masonry_item('#image_list', '.image_item');
 });

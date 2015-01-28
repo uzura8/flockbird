@@ -67,10 +67,10 @@ img.profile_image {
 	}
 }
 @media (min-width: 992px) {
-	#main_container .main_item .member_contents .col-xs-11 {
+	#image_list .image_item .member_contents .col-xs-11 {
 		padding-left: 5px !important;
 	}
-	#main_container .main_item .member_contents .col-xs-1 {
+	#image_list .image_item .member_contents .col-xs-1 {
 		padding-top: 3px !important;
 	}
 }
@@ -234,11 +234,11 @@ div#popup_container.ui-draggable #popup_message {
 	color: #000;
 }
 
-div#main div.row div#main_container {
+div#main div.row div#image_list {
 	margin: 0 auto;
 }
 
-#main_container .main_item {
+#image_list .image_item {
 	width: 235px;
 	margin: 5px;
 	padding: 5px 0 5px;
@@ -248,32 +248,32 @@ div#main div.row div#main_container {
 	box-shadow: 0 2px 1px #eee;
 }
 
-#main_container .main_item h5 {
+#image_list .image_item h5 {
 	text-align: center;
 }
-#main_container .main_item div.article {
+#image_list .image_item div.article {
 	text-align: left;
 	padding: 5px 0;
 	margin: 0;
 }
-#main_container .main_item div.imgBox {
+#image_list .image_item div.imgBox {
 	position: relative;
 	padding: 0 5px;
 }
-#main_container .main_item div.imgBox .content {
+#image_list .image_item div.imgBox .content {
 	text-align: center;
 }
-#main_container .main_item div.imgBox .btn-group,
-#main_container .main_item div.imgBox .btn_album_edit
+#image_list .image_item div.imgBox .btn-group,
+#image_list .image_item div.imgBox .btn_album_edit
 {
 	position: absolute;
 	right: 8px;
 	bottom: 0;
 }
-#main_container .main_item div.imgBox .btn-group ul.dropdown-menu li {
+#image_list .image_item div.imgBox .btn-group ul.dropdown-menu li {
 	text-align: left;
 }
-#main_container .main_item div.imgBox div.description {
+#image_list .image_item div.imgBox div.description {
 	text-align: left;
 	margin-left: 15px;
 	padding-right: 50px;
@@ -281,16 +281,16 @@ div#main div.row div#main_container {
 	word-wrap:break-word;
 	overflow:hidden;
 }
-#main_container .main_item div.article .dropdown-menu {
+#image_list .image_item div.article .dropdown-menu {
 	max-width: 170px;
 	min-width: 100px;
 	font-size: 11px;
 }
-#main_container .main_item .commentBox {
+#image_list .image_item .commentBox {
 	padding: 5px 10px 5px 5px;
 }
 
-#main_container .main_item h5 {
+#image_list .image_item h5 {
 	padding: 0 10px;
 	margin: 10px 0 3px;
 	word-break:break-all;
@@ -298,7 +298,7 @@ div#main div.row div#main_container {
 	overflow:hidden;
 }
 
-#main_container .main_item .subinfo {
+#image_list .image_item .subinfo {
 	word-break:break-all;
 	word-wrap:break-word;
 	overflow:hidden;

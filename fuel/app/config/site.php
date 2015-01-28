@@ -302,10 +302,10 @@ $config = array(
 				'truncateWidth'  => '40',
 				'trimmarker' => '...',
 				'displaySummary' => array(
-					'renderAt' => 'server',// 'server' / false / 'client' TODO: find library and impliment
+					'renderAt' => 'client',// 'server' / false / 'client'
 					'cache' => array(
 						'isEnabled'  => true,
-						'expir' => 60 * 60 * 24,
+						'expire' => 60 * 60 * 24,
 						'prefix'  => 'sitesummary_',
 					),
 				),

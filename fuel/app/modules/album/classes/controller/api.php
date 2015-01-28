@@ -77,7 +77,7 @@ class Controller_Api extends \Controller_Site_Api
 						'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
 						'data-uri' => $is_detail ? 'album/delete/'.$album->id : 'album/api/delete/'.$id.'.json',
 						'data-msg' => term('form.delete').'します。よろしいですか。',
-						'data-parent' => 'main_item_'.$id,
+						'data-parent' => 'image_item_'.$id,
 					));
 				}
 			}

@@ -25,3 +25,14 @@ function is_dev_env()
 {
 	return Site_Util::check_is_dev_env();
 }
+
+function is_render_site_summary_at_client_side()
+{
+	static $is_render_site_summary_at_client_side;
+	if (!is_null($is_render_site_summary_at_client_side)) return $is_render_site_summary_at_client_side;
+
+	$conf = conf('view_params_default.post.url2link');
+	$is_render_site_summary_at_client_side = $conf['isEnabled'] && ($conf['displaySummary']['renderAt'] == 'client');
+
+	return $is_render_site_summary_at_client_side;
+}
