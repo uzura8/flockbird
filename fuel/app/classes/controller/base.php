@@ -342,7 +342,7 @@ class Controller_Base extends Controller_Hybrid
 		}
 		catch(FuelException $e)
 		{
-			$status_code = 400;
+			$status_code = 500;
 		}
 
 		return $this->response($response, $status_code);
