@@ -1,9 +1,9 @@
 <?php
-$size = empty($size) ? 'S' : strtoupper($size);
-$img_size = conf('upload.types.img.types.m.sizes.'.$size);
+$size = empty($size) ? 'M' : strtoupper($size);
+//$img_size = conf('upload.types.img.types.m.sizes.'.$size);
 ?>
 <div class="row member_contents">
-	<div class="col-xs-1"><?php echo img($member->get_image(), 'M', $member ? 'member/'.$member->id : '', false, site_get_screen_name($member), true, true); ?></div>
+	<div class="col-xs-1"><?php echo img($member->get_image(), $size, $member ? 'member/'.$member->id : '', false, site_get_screen_name($member), true, true); ?></div>
 	<div class="col-xs-11">
 		<div class="main">
 			<b class="fullname"><?php echo empty($member) ? term('member.left') : Html::anchor('member/'.$member->id, $member->name); ?></b>

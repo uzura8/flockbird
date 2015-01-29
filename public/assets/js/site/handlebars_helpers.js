@@ -21,10 +21,11 @@ Handlebars.registerHelper('img_url', function(filepath, filename) {
 	return get_url('media/img/' + size + '/' + filepath + filename);
 });
 
-Handlebars.registerHelper('conv2objStr', function(key1, value1, key2, value2) {
+Handlebars.registerHelper('conv2objStr', function(key1, value1, key2, value2, key3, value3) {
 	var items = [];
-	if (value1) items.push('&quot;' + key1 + '&quot;:' + value1);
-	if (value2) items.push('&quot;' + key2 + '&quot;:' + value2);
+	if (value1) items.push('&quot;' + key1 + '&quot;:&quot;' + value1 + '&quot;');
+	if (value2) items.push('&quot;' + key2 + '&quot;:&quot;' + value2 + '&quot;');
+	if (value3) items.push('&quot;' + key3 + '&quot;:&quot;' + value3 + '&quot;');
 	if (items.length == 0) return '';
 
 	var objStr = '{' + items.join() + '}';

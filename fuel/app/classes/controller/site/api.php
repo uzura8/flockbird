@@ -37,6 +37,8 @@ class Controller_Site_Api extends Controller_Base_Site
 			}
 			foreach ($auther_member_ids as $member_id) $this->check_browse_authority($parent_obj->public_flag, $member_id);
 
+			$member_profile_image_size = Input::get('image_size') ?: 'M';
+			if (!in_array($member_profile_image_size, array('SS', 'S', 'M'))) $member_profile_image_size = 'M';
 			$default_params = array(
 				'latest' => 1,
 				'limit' => $limit ?: conf('view_params_default.list.comment.limit'),
@@ -57,6 +59,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			if ($this->format == 'html')
 			{
 				$data = array(
+					'image_size' => $member_profile_image_size,
 					'list' => $list,
 					'next_id' => $next_id,
 					'parent' => $parent_obj,
@@ -105,6 +108,10 @@ class Controller_Site_Api extends Controller_Base_Site
 				'parent' => array('id' => $parent_id, 'member_id' => $parent_member_id),
 				'get_uri' => sprintf('%s/comment/api/list/%d.json', $api_uri_path_prefix, $parent_id),
 				'delete_uri' => sprintf('%s/comment/api/delete.json', $api_uri_path_prefix),
+				'image_size' => array(
+					'key' => $member_profile_image_size,
+					'value' => conf('upload.types.img.types.m.sizes.'.$member_profile_image_size),
+				),
 			);
 			if ($since_id) $response['since_id'] = $since_id;
 		}

@@ -34,6 +34,7 @@ $data = array(
 	'date' => array('datetime' => $comment->created_at),
 	'is_output_raw_content' => true,
 );
+if (!empty($image_size)) $data['size'] = $image_size;
 if (conf('like.isEnabled'))
 {
 	$data['like_link'] = array(

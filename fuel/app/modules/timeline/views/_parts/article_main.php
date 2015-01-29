@@ -124,6 +124,7 @@ $data = array(
 	'parent' => $timeline,
 	'list' => $list,
 	'next_id' => $next_id,
+	'image_size' => 'S',
 	'list_more_box_attrs' => array(
 		'id' => 'listMoreBox_comment_'.$timeline->id,
 		'data-uri' => $comment_get_uri,

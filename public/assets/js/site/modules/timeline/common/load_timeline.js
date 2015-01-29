@@ -93,7 +93,7 @@ function postLoadTimeline() {
 }
 
 function loadTlComment(getUri, parentListSelector, id) {
-	loadList(getUri, parentListSelector, '', 'replace', {'latest': 1}, null, '#comment-template', '#comment_count_' + id, [renderSiteSummary]);
+	loadList(getUri, parentListSelector, '', 'replace', {latest: 1, image_size: 'S'}, null, '#comment-template', '#comment_count_' + id, [renderSiteSummary]);
 	$(parentListSelector).removeClass('unloade_comments');
 }
 
