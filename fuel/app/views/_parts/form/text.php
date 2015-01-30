@@ -1,14 +1,17 @@
 <?php
-$label_class = 'col-sm-'.$label_col_sm_size;
-$text_col_sm_size = 12 - $label_col_sm_size;
-if ($label_col_sm_size == 12)
+if (!empty($label))
 {
-	$text_col_sm_size = 12;
+	$label_class = 'col-sm-'.$offset_size;
+	$label_class .= ' control-label';
+	$offset = '';
 }
 else
 {
-	$label_class .= ' control-label';
+	$offset = $offset_size ? 'col-sm-offset-'.$offset_size : '';
 }
+$col = 'col-sm-'.(12 - $offset_size);
+
+
 if ($optional_link)
 {
 	$link_attr_default = array(
@@ -20,11 +23,15 @@ if ($optional_link)
 }
 ?>
 <div class="form-group">
-	<?php echo Form::label($label, '', array('class' => $label_class)); ?>
-	<div class="form-text col-sm-<?php echo $text_col_sm_size; ?>">
+<?php if (!empty($label)): ?>
+	<?php echo Form::label($label, null, array('class' => $label_class)); ?>
+<?php endif; ?>
+	<div class="form-text <?php echo $col; ?><?php if ($offset): ?> <?php echo $offset; ?><?php endif; ?>">
 		<?php echo $value; ?>
 <?php if ($optional_link): ?>
 		<?php echo Html::anchor($optional_link['uri'], !empty($optional_link_text) ? $optional_link_text : $optional_link['text'], $optional_link_attr); ?>
 <?php endif; ?>
 	</div>
 </div>
+
+

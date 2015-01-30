@@ -9,8 +9,14 @@
 		'profiles' => $profiles,
 		'member_profile_public_flags' => $member_profile_public_flags,
 	)); ?>
-	<?php echo form_input($val, 'password', '', 6, 3); ?>
+	<?php echo form_input($val, 'password', '', 6, $label_size); ?>
 	<?php echo Form::hidden('token', Input::param('token')); ?>
-	<?php echo form_button('form.do_edit', 'submit', 'submit', array(), $label_size); ?>
+	<?php echo form_text(
+		anchor('site/term', '利用規約', false, array(), true).' をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
+		null,
+		$label_size,
+		true
+	); ?>
+	<?php echo form_button('同意して登録する', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

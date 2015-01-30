@@ -264,6 +264,10 @@ function form_anchor($href, $anchor_label, $atter = array(), $offset_size = 2, $
 		'is_enclose_small_tag' => $is_enclose_small_tag,
 		'label' => $label,
 	);
+	if (isset($atter['target']) && $atter['target'] == '_blank')
+	{
+		$anchor_label .= ' '.icon('new-window');
+	}
 	$view = \View::forge('_parts/form/anchor', $data);
 	$view->set_safe('anchor_label', $anchor_label);
 
@@ -376,12 +380,12 @@ function form_date(Validation $val, $label, $name_month, $name_day, $label_col_s
 	return render('_parts/form/date', $data);
 }
 
-function form_text($value, $label, $label_col_sm_size = 2, $is_safe_value = false, $optional_link = array())
+function form_text($value, $label, $offset_size = 2, $is_safe_value = false, $optional_link = array())
 {
 	$data = array(
 		'value' => $value,
 		'label' => $label,
-		'label_col_sm_size' => $label_col_sm_size,
+		'offset_size' => $offset_size,
 		'optional_link' => $optional_link,
 	);
 	$view = View::forge('_parts/form/text', $data);
