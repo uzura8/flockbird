@@ -66,6 +66,12 @@ class Controller_Member_Register extends Controller_Site
 				$form_member_profile->set_member_obj($member);
 				$form_member_profile->seve();
 
+				// email が重複する member_pre の削除
+				if ($member_pres = \Model_MemberPre::query()->where('email', $email)->get())
+				{
+					foreach ($member_pres as $member_pre) $member_pre->delete();
+				}
+
 				// timeline 投稿
 				if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id, $member->created_at);
 				DB::commit_transaction();

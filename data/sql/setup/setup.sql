@@ -262,6 +262,7 @@ CREATE TABLE `member_pre` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `email_idx` (`email`),
   UNIQUE KEY `token_UNIQUE_idx` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
