@@ -5,14 +5,15 @@ class Site_Util
 {
 	public static function get_accept_foreign_tables()
 	{
+		// must order for child table to be high priority for using delete method.
 		return array(
-			'note',
-			'note_comment',
-			'album',
-			'album_image',
 			'album_image_comment',
-			'timeline',
+			'album_image',
+			'album',
+			'note_comment',
+			'note',
 			'timeline_comment',
+			'timeline',
 		);
 	}
 

@@ -11,6 +11,7 @@ class Controller_Base extends Controller_Hybrid
 	protected $after_auth_uri;
 	protected $acl_has_access = true;
 	protected $response_body;
+	protected $check_not_auth_action = array();
 
 	public function before()
 	{

@@ -87,18 +87,11 @@ class Controller_Member_Leave extends Controller_Site
 		$is_transaction_rollback = false;
 		try
 		{
-			$to_name = $this->u->name;
-			$to_email = $this->u->member_auth->email;
 			DB::start_transaction();
 			$this->auth_instance->logout();
-			$this->auth_instance->delete_user($this->u->id);
-			unset($this->auth_instance);
+			$message = Site_Member::remove($this->u);
 			DB::commit_transaction();
-
-			$mail = new Site_Mail('memberLeave');
-			$mail->send($to_email, array('to_name' => $to_name));
-
-			Session::set_flash('message', term('site.left').'が完了しました。');
+			Session::set_flash('message', $message);
 			Response::redirect(conf('login_uri.site'));
 		}
 		catch(EmailValidationFailedException $e)

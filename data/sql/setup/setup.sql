@@ -267,6 +267,17 @@ CREATE TABLE `member_pre` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `member_delete_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `name` varchar(255) NULL,
+  `email` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE `member_relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `member_id_to` int(11) NOT NULL COMMENT 'Target member id',

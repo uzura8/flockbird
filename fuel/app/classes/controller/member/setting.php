@@ -2,9 +2,6 @@
 
 class Controller_Member_setting extends Controller_Member
 {
-	protected $check_not_auth_action = array(
-	);
-
 	public function before()
 	{
 		parent::before();

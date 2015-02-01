@@ -63,6 +63,7 @@ $config = array(
 		'do_save' => '保存する',
 		'do_reset_default' => 'デフォルトに戻す',
 		'complete' => '完了',
+		'reserve' => '予約',
 	),
 	'site' => array(
 		'view' => 'サイト',

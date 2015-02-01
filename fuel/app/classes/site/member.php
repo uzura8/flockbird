@@ -125,4 +125,36 @@ class Site_Member
 
 		return $member_config;
 	}
+
+	public static function remove(Model_Member $member)
+	{
+		$name = $member->name;
+		$member_auth = Model_MemberAuth::query()->where('member_id', $member->id)->get_one();
+		$email = $member_auth->email;
+		$member_auth->delete();// Disabled to login.
+		if (conf('member.leave.isRemoveOnBatch'))
+		{
+			$member_delete_queue = Model_MemberDeleteQueue::forge(array(
+				'member_id' => $member->id,
+				'name' => $name,
+				'email' => $email,
+			));
+			$member_delete_queue->save();
+			$message = term('site.left').'を'.term('form.reserve').'しました。';
+		}
+		else
+		{
+			static::delete($member->id, $to_name, $to_email);
+			$message = term('site.left').'が'.term('form.complete').'しました。';
+		}
+
+		return $message;
+	}
+
+	public static function delete($member_id, $name, $email)
+	{
+		Auth::delete_user($member->id);
+		$mail = new Site_Mail('memberLeave');
+		$mail->send($email, array('to_name' => $name));
+	}
 }

@@ -3,15 +3,7 @@
 class Model_MemberAuth extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_auth';
-	protected static $_has_one = array(
-		'member' => array(
-			'key_from' => 'member_id',
-			'model_to' => 'Model_Member',
-			'key_to' => 'id',
-			'cascade_save' => false,
-			'cascade_delete' => true,
-		)
-	);
+
 	protected static $_properties = array(
 		'id',
 		'member_id' => array('form' => array('type' => false)),

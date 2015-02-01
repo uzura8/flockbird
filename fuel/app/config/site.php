@@ -98,6 +98,9 @@ $config = array(
 				'hideUniqueCheck' => true,
 			),
 		),
+		'leave' => array(
+			'isRemoveOnBatch' => true,// TODO: batch is not implemented
+		),
 		'recover' => array(
 			'password' => array(
 				'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
