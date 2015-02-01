@@ -13,7 +13,7 @@ class Controller_Error extends Controller_Site
 
 	public function before()
 	{
-		if (IS_ADMIN) $this->template = 'admin::template';
+		if (defined('IS_ADMIN') && IS_ADMIN) $this->template = 'admin::template';
 		parent::before();
 	}
 	
