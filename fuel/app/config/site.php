@@ -1,5 +1,6 @@
 <?php
 $config = array(
+	'isDisplayTopPageWithoutAuth' => true,
 	'legacyBrowserSupport' => array(
 		'isEnabled' => true,
 		'legacyIECriteriaVersion' => 8,

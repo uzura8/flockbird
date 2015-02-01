@@ -11,9 +11,6 @@
  */
 class Controller_Site extends Controller_Base_Site
 {
-	protected $check_not_auth_action = array(
-		'index',
-	);
 	protected $login_val;
 
 	public function before()
