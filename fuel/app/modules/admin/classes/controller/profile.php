@@ -1,7 +1,9 @@
 <?php
 namespace Admin;
 
-class Controller_Profile extends Controller_Admin {
+class Controller_Profile extends Controller_Admin
+{
+	protected $check_not_auth_action = array();
 
 	public function before()
 	{

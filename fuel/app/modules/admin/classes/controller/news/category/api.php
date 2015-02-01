@@ -3,6 +3,8 @@ namespace Admin;
 
 class Controller_News_Category_Api extends Controller_Api
 {
+	protected $check_not_auth_action = array();
+
 	public function before()
 	{
 		parent::before();

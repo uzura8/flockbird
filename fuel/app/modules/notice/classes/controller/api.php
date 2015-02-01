@@ -3,8 +3,7 @@ namespace Notice;
 
 class Controller_Api extends \Controller_Site_Api
 {
-	protected $check_not_auth_action = array(
-	);
+	protected $check_not_auth_action = array();
 
 	public function before()
 	{

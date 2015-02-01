@@ -1,7 +1,9 @@
 <?php
 namespace Admin;
 
-class Controller_News_Category extends Controller_Admin {
+class Controller_News_Category extends Controller_Admin
+{
+	protected $check_not_auth_action = array();
 
 	public function before()
 	{

@@ -2,8 +2,7 @@
 
 class Controller_FileTmp extends Controller_Site
 {
-	protected $check_not_auth_action = array(
-	);
+	protected $check_not_auth_action = array();
 
 	public function before()
 	{

@@ -3,6 +3,8 @@ namespace Admin;
 
 class Controller_Api extends Controller_Base
 {
+	protected $check_not_auth_action = array();
+
 	public function before()
 	{
 		parent::before();

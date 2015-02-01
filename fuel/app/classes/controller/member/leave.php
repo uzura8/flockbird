@@ -2,6 +2,8 @@
 
 class Controller_Member_Leave extends Controller_Site
 {
+	protected $check_not_auth_action = array();
+
 	public function before()
 	{
 		parent::before();

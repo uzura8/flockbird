@@ -3,8 +3,7 @@ namespace Admin;
 
 class Controller_News_Image_Api extends Controller_Api
 {
-	protected $check_not_auth_action = array(
-	);
+	protected $check_not_auth_action = array();
 
 	public function before()
 	{

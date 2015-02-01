@@ -3,8 +3,7 @@ namespace Admin;
 
 class Controller_News extends Controller_Admin
 {
-	protected $check_not_auth_action = array(
-	);
+	protected $check_not_auth_action = array();
 
 	public function before()
 	{
