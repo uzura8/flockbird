@@ -55,12 +55,25 @@ class Model_File extends \MyOrm\Model
 			'key_to' => 'id',
 			'property_from' => 'filesize',
 		),
-		'MyOrm\Observer_RemoveFile' => array(
-			'events' => array('before_delete'),
-		),
 	);
 
 	protected static $_to_array_exclude = array('exif');
+
+	public static function _init()
+	{
+		if (conf('upload.isRemoveOnBatch'))
+		{
+			static::$_observers['MyOrm\Observer_InsertFileBinDeleteQueue'] = array(
+				'events' => array('before_delete'),
+			);
+		}
+		else
+		{
+			static::$_observers['MyOrm\Observer_RemoveFile'] = array(
+				'events' => array('before_delete'),
+			);
+		}
+	}
 
 	public static function calc_filesize_total($member_id = 0)
 	{

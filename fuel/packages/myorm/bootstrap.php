@@ -16,6 +16,7 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_CountUpToRelations' => __DIR__.'/classes/observer/countuptorelations.php',
 	'MyOrm\\Observer_CountDownToRelations' => __DIR__.'/classes/observer/countdowntorelations.php',
 	'MyOrm\\Observer_RemoveFile' => __DIR__.'/classes/observer/removefile.php',
+	'MyOrm\\Observer_InsertFileBinDeleteQueue' => __DIR__.'/classes/observer/insertfilebindeletequeue.php',
 	'MyOrm\\Observer_AddMemberFilesizeTotal' => __DIR__.'/classes/observer/addmemberfilesizetotal.php',
 	'MyOrm\\Observer_SubtractMemberFilesizeTotal' => __DIR__.'/classes/observer/subtractmemberfilesizetotal.php',
 	'MyOrm\\Observer_DeleteMember' => __DIR__.'/classes/observer/deletemember.php',

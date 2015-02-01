@@ -58,11 +58,25 @@ class Model_FileTmp extends \MyOrm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_RemoveFile' => array(
-			'events' => array('before_delete'),
-			'is_tmp' => true,
-		),
 	);
+
+	public static function _init()
+	{
+		if (conf('upload.isRemoveOnBatch'))
+		{
+			static::$_observers['MyOrm\Observer_InsertFileBinDeleteQueue'] = array(
+				'events' => array('before_delete'),
+				'is_tmp' => true,
+			);
+		}
+		else
+		{
+			static::$_observers['MyOrm\Observer_RemoveFile'] = array(
+				'events' => array('before_delete'),
+				'is_tmp' => true,
+			);
+		}
+	}
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id', $user_type = 0)
 	{

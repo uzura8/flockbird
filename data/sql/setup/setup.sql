@@ -145,6 +145,15 @@ CREATE TABLE `file_bin` (
   UNIQUE KEY `name_UNIQUE_idx` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves content of files';
 
+CREATE TABLE `file_bin_delete_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'File path and name',
+  `is_tmp` tinyint(2) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves content of files';
+
 
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
