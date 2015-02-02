@@ -89,10 +89,8 @@ class Controller_Member_Leave extends Controller_Site
 		$is_transaction_rollback = false;
 		try
 		{
-			DB::start_transaction();
 			$this->auth_instance->logout();
 			$message = Site_Member::remove($this->u);
-			DB::commit_transaction();
 			Session::set_flash('message', $message);
 			Response::redirect(conf('login_uri.site'));
 		}

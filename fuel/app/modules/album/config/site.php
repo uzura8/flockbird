@@ -40,4 +40,12 @@ return array(
 			),
 		),
 	),
+	'batch' => array(
+		'limit' => array(
+			'delete' => array(
+				'album' => 50,
+				'album_image' => 10,
+			),
+		),
+	),
 );

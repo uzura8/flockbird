@@ -90,6 +90,11 @@ class Model_File extends \MyOrm\Model
 		return self::query()->where('name', $name)->get_one();
 	}
 
+	public static function get4names($names)
+	{
+		return self::query()->where('name', 'in', $names)->get();
+	}
+
 	public static function get_id4name($name)
 	{
 		if (!$obj = self::get4name($name)) return false;

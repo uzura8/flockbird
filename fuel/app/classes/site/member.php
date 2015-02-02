@@ -134,12 +134,14 @@ class Site_Member
 		$member_auth->delete();// Disabled to login.
 		if (conf('member.leave.isRemoveOnBatch'))
 		{
+			DB::start_transaction();
 			$member_delete_queue = Model_MemberDeleteQueue::forge(array(
 				'member_id' => $member->id,
 				'name' => $name,
 				'email' => $email,
 			));
 			$member_delete_queue->save();
+			DB::commit_transaction();
 			$message = term('site.left').'を'.term('form.reserve').'しました。';
 		}
 		else
@@ -153,6 +155,10 @@ class Site_Member
 
 	public static function delete($member_id, $name, $email)
 	{
+		//\Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
+		\Album\Site_NoOrmModel::delete_album4member_id($member_id);
+		//\Note\Site_NoOrmModel::delete_note4member_id($member_id);
+		// file_tmp
 		Auth::delete_user($member->id);
 		$mail = new Site_Mail('memberLeave');
 		$mail->send($email, array('to_name' => $name));
