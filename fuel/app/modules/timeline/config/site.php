@@ -8,4 +8,11 @@ return array(
 		'timeline_public_flag' => PRJ_PUBLIC_FLAG_ALL,
 		'timeline_viewType' => 0,
 	),
+	'batch' => array(
+		'limit' => array(
+			'delete' => array(
+				'timeline' => 50,
+			),
+		),
+	),
 );

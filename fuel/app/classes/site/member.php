@@ -155,7 +155,7 @@ class Site_Member
 
 	public static function delete($member_id, $name, $email)
 	{
-		//\Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
+		\Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
 		\Album\Site_NoOrmModel::delete_album4member_id($member_id);
 		//\Note\Site_NoOrmModel::delete_note4member_id($member_id);
 		// file_tmp
