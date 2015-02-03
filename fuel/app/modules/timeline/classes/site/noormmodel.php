@@ -3,10 +3,10 @@ namespace Timeline;
 
 class Site_NoOrmModel
 {
-	public static function delete_timeline4member_id($member_id)
+	public static function delete_timeline4member_id($member_id, $limit = 0)
 	{
 		if (!$limit) $limit = conf('batch.limit.delete.timeline');
-		while ($timeline_ids = \Util_Db::conv_col(DB::select('id')->from('timeline')->where('member_id', $member_id)->as_assoc()->execute()))
+		while ($timeline_ids = \Util_Db::conv_col(\DB::select('id')->from('timeline')->where('member_id', $member_id)->limit($limit)->as_assoc()->execute()))
 		{
 			foreach ($timeline_ids as $timeline_id) static::delete_timeline4id($timeline_id);
 		}
@@ -25,6 +25,10 @@ class Site_NoOrmModel
 			$delete_target_notice_cache_member_ids = \Notice\Site_NoOrmModel::get_notice_status_member_ids4notice_ids($notice_ids);
 			\Notice\Site_NoOrmModel::delete_notice_multiple4ids($notice_ids);
 		}
+		if (!\DB::delete('timeline')->where('id', $timeline_id)->execute())
+		{
+			throw new \FuelException('Failed to delete timeline. id:'.$timeline_id);
+		}
 		\DB::commit_transaction();
 		\DBUtil::set_connection(null);
 
@@ -33,6 +37,7 @@ class Site_NoOrmModel
 		{
 			foreach ($delete_target_notice_cache_member_ids as $member_id) \Notice\Site_Util::delete_unread_count_cache($member_id);
 		}
+		Site_Util::delete_cache($timeline_id);
 	}
 
 	public static function delete_timeline_multiple4foreign_data($foreign_table, $foreign_id)
@@ -56,7 +61,7 @@ class Site_NoOrmModel
 
 	public static function delete_timeline_child_data4timeline_ids($timeline_ids)
 	{
-		if (!$timeline_ids) return false;
+		if (!$timeline_ids) return array();
 
 		foreach ($timeline_ids as $timeline_id) \Timeline\Site_Util::delete_cache($timeline_id);
 
@@ -76,7 +81,7 @@ class Site_NoOrmModel
 
 	public static function delete_timeline4ids($timeline_ids)
 	{
-		if (!$timeline_ids) return false;
+		if (!$timeline_ids) return array();
 
 		foreach ($timeline_idis as $timeline_id) \Timeline\Site_Util::delete_cache($timeline_id);
 

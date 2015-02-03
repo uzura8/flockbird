@@ -118,6 +118,7 @@ CREATE TABLE `file_tmp` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
+  KEY `user_type_member_id_idx` (`user_type`,`member_id`),
   KEY `name_user_type_member_id_idx` (`name`,`user_type`,`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of temporary files uploaded';
 

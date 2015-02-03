@@ -128,10 +128,9 @@ class Site_Member
 
 	public static function remove(Model_Member $member)
 	{
-		$name = $member->name;
 		$member_auth = Model_MemberAuth::query()->where('member_id', $member->id)->get_one();
 		$email = $member_auth->email;
-		$member_auth->delete();// Disabled to login.
+		$name = $member->name;
 		if (conf('member.leave.isRemoveOnBatch'))
 		{
 			DB::start_transaction();
@@ -141,26 +140,52 @@ class Site_Member
 				'email' => $email,
 			));
 			$member_delete_queue->save();
+			$member_auth->delete();
 			DB::commit_transaction();
 			$message = term('site.left').'を'.term('form.reserve').'しました。';
 		}
 		else
 		{
-			static::delete($member->id, $to_name, $to_email);
+			static::delete($member->id, $name, $email);
 			$message = term('site.left').'が'.term('form.complete').'しました。';
 		}
 
 		return $message;
 	}
 
-	public static function delete($member_id, $name, $email)
+	public static function delete($member_id, $name = '', $email = '')
 	{
 		\Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
 		\Album\Site_NoOrmModel::delete_album4member_id($member_id);
 		\Note\Site_NoOrmModel::delete_note4member_id($member_id);
-		// file_tmp
-		Auth::delete_user($member->id);
-		$mail = new Site_Mail('memberLeave');
-		$mail->send($email, array('to_name' => $name));
+		static::delete_file_all4member_id($member_id);
+		static::delete_file_all4member_id($member_id, true);
+
+		DB::start_transaction();
+		if (!Auth::delete_user($member_id)) throw new FuelException('Delete user error. user_id:'.$member_id);
+		DB::commit_transaction();
+
+		if ($name && $email)
+		{
+			$mail = new Site_Mail('memberLeave');
+			$mail->send($email, array('to_name' => $name));
+		}
+	}
+
+	public static function delete_file_all4member_id($member_id, $is_tmp = false, $limit = 0)
+	{
+		if (!$limit) $limit = conf('batch.limit.delete.file', 10);
+
+		$model = Site_Model::get_model_name($is_tmp ? 'file_tmp' : 'file');
+		$query = $model::query();
+		if ($is_tmp) $query->where('user_type', 0);
+		$query->where('member_id', $member_id)->limit($limit);
+
+		while ($objs = $query->get())
+		{
+			DB::start_transaction();
+			foreach ($objs as $obj) $obj->delete();
+			DB::commit_transaction();
+		}
 	}
 }

@@ -3,10 +3,10 @@ namespace Note;
 
 class Site_NoOrmModel
 {
-	public static function delete_note4member_id($member_id)
+	public static function delete_note4member_id($member_id, $limit = 0)
 	{
 		if (!$limit) $limit = conf('batch.limit.delete.note');
-		while ($note_ids = \Util_Db::conv_col(DB::select('id')->from('note')->where('member_id', $member_id)->as_assoc()->execute()))
+		while ($note_ids = \Util_Db::conv_col(\DB::select('id')->from('note')->where('member_id', $member_id)->limit($limit)->as_assoc()->execute()))
 		{
 			foreach ($note_ids as $note_id) static::delete_note4id($note_id);
 		}
@@ -24,6 +24,10 @@ class Site_NoOrmModel
 			$notice_ids = \Notice\Site_NoOrmModel::get_notice_ids4foreign_data('note', $note_id);
 			$delete_target_notice_cache_member_ids = \Notice\Site_NoOrmModel::get_notice_status_member_ids4notice_ids($notice_ids);
 			\Notice\Site_NoOrmModel::delete_notice_multiple4ids($notice_ids);
+		}
+		if (!\DB::delete('note')->where('id', $note_id)->execute())
+		{
+			throw new \FuelException('Failed to delete note. id:'.$note_id);
 		}
 		\DB::commit_transaction();
 		\DBUtil::set_connection(null);

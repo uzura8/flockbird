@@ -49,10 +49,7 @@ class User
 	{
 		try
 		{
-			if (!\Auth::delete_user($user_id))
-			{
-				throw new \FuelException('Failed to delete user.');
-			}
+			\Site_Member::delete($user_id);
 
 			return \Util_Task::output_message(sprintf('Delete site user. id: %d', $user_id));
 		}

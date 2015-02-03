@@ -22,7 +22,8 @@ $config = array(
 	'batch' => array(
 		'limit' => array(
 			'delete' => array(
-				'default' => 1000,
+				'default' => 100,
+				'file' => 10,
 			),
 		),
 	),
@@ -38,7 +39,7 @@ $config = array(
 		),
 		'log' => array(
 			'develop' => array(
-				'isEnabled' => true,
+				'isEnabled' => false,
 				'file_path' => APPPATH.'logs/development/mail.log',
 			),
 		),
@@ -100,7 +101,7 @@ $config = array(
 			),
 		),
 		'leave' => array(
-			'isRemoveOnBatch' => true,// TODO: batch is not implemented
+			'isRemoveOnBatch' => false,// TODO: batch is not implemented
 		),
 		'recover' => array(
 			'password' => array(

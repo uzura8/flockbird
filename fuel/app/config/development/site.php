@@ -12,6 +12,13 @@ return array(
 			),
 		),
 	),
+	'mail' => array(
+		'log' => array(
+			'develop' => array(
+				'isEnabled' => true,
+			),
+		),
+	),
 	'member' => array(
 		'register' => array(
 			'token_lifetime' => '5 minute',// user for function.strtodate. if false, not check lifetime.

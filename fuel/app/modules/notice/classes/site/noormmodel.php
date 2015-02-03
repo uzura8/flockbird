@@ -29,7 +29,7 @@ class Site_NoOrmModel
 
 	public static function get_notice_status_member_ids4notice_ids($notice_ids)
 	{
-		if (!$notice_ids) return false;
+		if (!$notice_ids) return array();
 
 		return \Util_Db::conv_col(\DB::select('notice_id')->from('notice_status')
 			->where('notice_id', 'in', $notice_ids)
@@ -39,7 +39,7 @@ class Site_NoOrmModel
 
 	public static function delete_notice_multiple4ids($notice_ids)
 	{
-		if (!$notice_ids) return false;
+		if (!$notice_ids) return array();
 
 		return \DB::delete('notice')
 			->where('id', 'in', $notice_ids)
