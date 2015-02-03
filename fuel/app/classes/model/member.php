@@ -189,4 +189,9 @@ class Model_Member extends \MyOrm\Model
 			->where('id', intval($member_id))
 			->execute();
 	}
+
+	public static function check_is_active($id)
+	{
+		return (bool)static::get_one_basic4id($id);
+	}
 }

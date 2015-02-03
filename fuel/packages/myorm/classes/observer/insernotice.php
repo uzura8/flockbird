@@ -24,6 +24,8 @@ class Observer_InsertNotice extends \Orm\Observer
 		list($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key) = self::get_variables($obj);
 		if (self::check_already_executed($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key)) return;
 
+		if (!\Model_Member::check_is_active($member_id_to)) $member_id_to = null;
+
 		// watch content
 		if ($member_id_to && $member_id_from != $member_id_to)
 		{

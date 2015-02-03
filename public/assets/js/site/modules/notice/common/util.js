@@ -23,8 +23,10 @@ Handlebars.registerHelper('getNoticeInfo', function(foreign_table, type, members
 	var output = '';
 	$.each(members, function(i, val) {
 		if (output.length) output += ' と ';
+		if (empty(val)) return;
 		output += val.name;
 	});
+	if (!output.length) output = get_term('left_member');
 	if (outputMemberCount) output += ' 他' + outputMemberCount + '人';
 	output += ' が';
 	output += convertNoticeAction(foreign_table, type);
@@ -32,6 +34,7 @@ Handlebars.registerHelper('getNoticeInfo', function(foreign_table, type, members
 });
 
 Handlebars.registerHelper('getImgUri', function(fileName, size) {
+	if (empty(fileName)) fileName = 'm';
 	return get_url(getImgUri(fileName, size));
 });
 
