@@ -163,6 +163,23 @@ $(document).on('click', '.js-display_parts', function(){
 	return false;
 });
 
+$(document).on('click', '.js-insert_text', function(){
+	var inputSelector = $(this).data('input') ? $(this).data('input') : '',
+			openSelector  = $(this).data('open')  ? $(this).data('open') : '',
+			hideSelector  = $(this).data('hide')  ? $(this).data('hide') : '',
+			insertText    = $(this).data('text')  ? $(this).data('text') : '',
+			inputVal = $(inputSelector).val()
+
+	if ($(openSelector).hasClass('hidden')) $(openSelector).removeClass('hidden');
+	if (!$(hideSelector).hasClass('hidden')) $(hideSelector).addClass('hidden');
+	$(inputSelector).focus();
+	if (insertText.length) {
+		if (inputVal.length) inputVal += ' ';
+		$(inputSelector).val(inputVal + insertText + ' ');
+	}
+	return false;
+});
+
 $(document).on('click', '.js-dropdown_content_menu', function(){
 	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};

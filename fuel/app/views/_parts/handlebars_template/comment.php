@@ -14,6 +14,13 @@
 			</div>
 			<div class="sub_info">
 				<small><span data-livestamp="{{{created_at}}}"></span></small>
+<?php if (conf('mention.isEnabled', 'notice')): ?>
+{{#if member}}
+				<small class="ml10">
+					<a href="#" data-input="#textarea_comment_{{{../../parent.id}}}" data-hide="#link_show_comment_form_{{{../../parent.id}}}" data-open="#commentPostBox_{{{../../parent.id}}}" data-text="@{{{member.name}}}" id="link_reply_{{{id}}}" class="js-insert_text"><i class="fa fa-reply"></i><span class="hidden-xs-inline"> 返信する</span></a>
+				</small>
+{{/if}}
+<?php endif; ?>
 <?php if (conf('like.isEnabled')): ?>
 				<small class="ml10">
 					<a href="#" data-uri="{{{get_like_members_uri}}}" data-target="#modal_like_count_{{{comment_table}}}_{{{id}}}" id="link_like_count_{{{comment_table}}}_{{{id}}}" class="js-modal"><i class="glyphicon glyphicon-thumbs-up"></i> <span data-id="{{{id}}}" id="like_count_{{{comment_table}}}_{{{id}}}" class="like_count unset_like_count">{{{like_count}}}</span></a>

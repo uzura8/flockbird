@@ -45,6 +45,12 @@ if (isset($content) && strlen($content))
 			<small><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>
 <?php endif; ?>
 <?php
+// reply link
+if (!empty($reply_link))
+{
+	echo render('notice::_parts/link_reply', $reply_link);
+}
+
 // like count and link
 if (!empty($like_link))
 {

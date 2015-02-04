@@ -135,5 +135,6 @@ function displayComment(image_id, template) {
 			'postUri' : 'album/image/comment/api/create/' + image_id + '.json'
 		};
 		$(listSelector).after(template(val));
+		$('#textarea_comment_' + image_id).autogrow();
 	}
 }

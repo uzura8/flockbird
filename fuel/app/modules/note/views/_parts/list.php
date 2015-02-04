@@ -65,6 +65,7 @@ list($comments, $comment_next_id, $all_comment_count)
 <div class="comment_info">
 <?php // comment_count_and_link
 $link_comment_attr = array(
+	'id' => 'link_show_comment_form_'.$id,
 	'class' => 'js-display_parts link_show_comment_'.$id,
 	'data-target_id' => 'commentPostBox_'.$id,
 	'data-hide_selector' => '.link_show_comment_'.$id,
@@ -75,6 +76,19 @@ echo render('_parts/comment/count_and_link_display', array(
 	'count' => $all_comment_count,
 	'link_attr' => $link_comment_attr,
 )); ?>
+
+<?php // like reply ?>
+<?php if (conf('mention.isEnabled', 'notice') && $note->member): ?>
+<?php
+$data_reply_link = array(
+	'id' => $note->id,
+	'target_id' => $note->id,
+	'member_name' => $note->member->name,
+	'left_margin' => true,
+);
+echo render('notice::_parts/link_reply', $data_reply_link);
+?>
+<?php endif; ?>
 
 <?php // like_count_and_link ?>
 <?php if (conf('like.isEnabled')): ?>

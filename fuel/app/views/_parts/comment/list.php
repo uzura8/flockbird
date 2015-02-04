@@ -47,6 +47,15 @@ if (conf('like.isEnabled'))
 		'is_liked' => isset($liked_ids) ? in_array($comment->id, $liked_ids) : false,
 	);
 }
+if (empty($is_hide_reply_link) && conf('mention.isEnabled', 'notice') && $comment->member)
+{
+	$data['reply_link'] = array(
+		'id' => $comment->id,
+		'target_id' => $parent->id,
+		'member_name' => $comment->member->name,
+		'left_margin' => true,
+	);
+}
 $content_view = View::forge('_parts/member_contents_box', $data);
 $content_view->set_safe('content', convert_body($comment->body, array(
 	'nl2br' => false,

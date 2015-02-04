@@ -15,7 +15,7 @@ $(function() {
 		var postUri = $(blockSelector).data('post_uri') ? $(blockSelector).data('post_uri') : '';
 
 		if (is_sp()) loadTlComment(getUri, blockSelector, id);
-		showCommentInput(id, 'form_comment_' + id, postUri, getUri, false);
+		showCommentInput(id, 'form_comment_' + id, postUri, getUri, true);
 		$(this).parent('small').html('<span>' + get_term('comment') + '</span>');
 		return false;
 	});

@@ -18,6 +18,19 @@ echo render('_parts/comment/count_and_link_display', array(
 	'link_hide_absolute' => true,
 )); ?>
 
+<?php // like reply ?>
+<?php if (conf('mention.isEnabled', 'notice') && $album_image->album->member): ?>
+<?php
+$data_reply_link = array(
+	'id' => $album_image->id,
+	'target_id' => $album_image->id,
+	'member_name' => $album_image->album->member->name,
+	'left_margin' => true,
+);
+echo render('notice::_parts/link_reply', $data_reply_link);
+?>
+<?php endif; ?>
+
 <?php // like_count_and_link ?>
 <?php if (conf('like.isEnabled') && Auth::check()): ?>
 <?php
@@ -37,7 +50,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 
 <div id="comment_list">
 <?php echo render('_parts/comment/list', array(
-	'parent' => $album_image->album,
+	'parent' => $album_image,
 	'list' => $comments,
 	'next_id' => $comment_next_id,
 	'delete_uri' => 'album/image/comment/api/delete.json',
@@ -52,7 +65,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 </div>
 
 <?php if (Auth::check()): ?>
-<?php echo render('_parts/comment/post', array('size' => 'M', 'button_attrs' => array(
+<?php echo render('_parts/comment/post', array('size' => 'M', 'textarea_attrs' => array('id' => 'textarea_comment_'.$album_image->id), 'button_attrs' => array(
 	'data-post_uri' => 'album/image/comment/api/create/'.$album_image->id.'.json',
 	'data-get_uri' => 'album/image/comment/api/list/'.$album_image->id.'.json',
 	'data-list' => '#comment_list',
