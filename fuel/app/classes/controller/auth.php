@@ -200,15 +200,19 @@ class Controller_Auth extends Controller_Site
 		try
 		{
 			$member_oauth = Model_MemberOauth::forge();
-			$val = Validation::forge();
+			$val = Validation::forge('provider_signup');
 			$val->add_model($member_oauth);
+			$val->fieldset()->field('member_id')->delete_rule('required');
 			if (!$val->run($input)) throw new \FuelException($val->show_errors());
 			$input = $val->validated();
 
 			$provider_id = Model_OauthProvider::get_id($provider);
 			\DB::start_transaction();
 			$member = Model_Member::forge();
-			$member->name = $input['service_name'];
+			$member->name = str_replace(' ', '', $input['service_name']);
+			list($member->sex, $member->sex_public_flag) = Site_Oauth::get_sex($response, $provider);
+			list($member->birthyear, $member->birthyear_public_flag) = Site_Oauth::get_birthyear($response, $provider);
+			list($member->birthday, $member->birthday_public_flag) = Site_Oauth::get_birthday($response, $provider);
 			$member->filesize_total = 0;
 			$member->register_type = $provider_id;
 			if ($member->save() === false) throw new \FuelException('Member save failed.');

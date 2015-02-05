@@ -29,7 +29,6 @@ class Model_MemberOauth extends \MyOrm\Model
 		'secret',
 		'expires' => array(
 			'data_type' => 'integer',
-			'validation' => array('trim'),
 			'form' => array('type' => false),
 		),
 		'service_name' => array(
