@@ -168,15 +168,33 @@ $(document).on('click', '.js-insert_text', function(){
 			openSelector  = $(this).data('open')  ? $(this).data('open') : '',
 			hideSelector  = $(this).data('hide')  ? $(this).data('hide') : '',
 			insertText    = $(this).data('text')  ? $(this).data('text') : '',
-			inputVal = $(inputSelector).val()
+			parentId      = $(this).data('parent_id') ? parseInt($(this).data('parent_id')) : 0,
+			inputVal,
+			blockSelector,
+			getUri,
+			postUri;
+	// For rendering input form by template.
+	if (empty($('#commentPostBox_' + parentId).html())) {
+		parentId = parseInt($(this).parents('.comment_list').data('id'));
+		inputSelector = '#textarea_comment_' + parentId;
+		blockSelector = '#comment_list_' + parentId;
+		getUri = $(blockSelector).data('get_uri') ? $(blockSelector).data('get_uri') : '';
+		postUri = $(blockSelector).data('post_uri') ? $(blockSelector).data('post_uri') : '';
+		showCommentInput(parentId, 'form_comment_' + parentId, postUri, getUri, true);
+		$('#link_show_comment_' + parentId).parent('small').html('<span>' + get_term('comment') + '</span>');
 
-	if ($(openSelector).hasClass('hidden')) $(openSelector).removeClass('hidden');
-	if (!$(hideSelector).hasClass('hidden')) $(hideSelector).addClass('hidden');
-	$(inputSelector).focus();
+	// For rendering input form hidden element.
+	} else {
+		if ($(openSelector).hasClass('hidden')) $(openSelector).removeClass('hidden');
+		if (!$(hideSelector).hasClass('hidden')) $(hideSelector).addClass('hidden');
+		$(inputSelector).focus();
+	}
+	inputVal = $(inputSelector).val();
 	if (insertText.length) {
 		if (inputVal.length) inputVal += ' ';
 		$(inputSelector).val(inputVal + insertText + ' ');
 	}
+	if (is_sp()) scroll('#commentPostBox_' + parentId);
 	return false;
 });
 

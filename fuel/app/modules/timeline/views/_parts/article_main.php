@@ -115,6 +115,7 @@ $comment_list_attr = array(
 	'data-id' => $timeline->id,
 	'data-post_uri' => $comment_post_uri,
 	'data-get_uri' => $comment_get_uri,
+	'data-input' => '#textarea_comment_'.$timeline->id,
 );
 ?>
 <div <?php echo Util_Array::conv_array2attr_string($comment_list_attr); ?>>

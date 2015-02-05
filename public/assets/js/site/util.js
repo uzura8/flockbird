@@ -1003,3 +1003,23 @@ function renderSiteSummary() {
 		});
 	});
 }
+
+function showCommentInput(id, targetBlockName, postUri, getUri, isFocus) {
+	if (!get_uid() || !id || !targetBlockName.length) return;
+	if ($('#link_show_comment_form_' + id).size()) $('#link_show_comment_form_' + id).hide();
+	var textareaSelector = '#textarea_comment_' + id;
+	if ($(textareaSelector).size() == 0) {
+		var source   = $("#comment_form-template").html();
+		var template = Handlebars.compile(source);
+		var val = {
+			'id' : id,
+			'postUri' : postUri,
+			'getUri' : getUri,
+			'listSelector' : '#comment_list_' + id,
+			'counterSelector' : '#comment_count_' + id
+		};
+		$('#' + targetBlockName).html(template(val));
+	}
+	$(textareaSelector).autogrow();
+	if (isFocus) $(textareaSelector).focus();
+}

@@ -1,13 +1,11 @@
 <?php
 $link_attr_default = array(
 	'class' => 'js-insert_text',
+	'data-parent_id' => $target_id,
 	'data-text' => '@'.$member_name,
 	'data-open' => '#commentPostBox_'.$target_id,
 	'data-hide' => '#link_show_comment_form_'.$target_id,
 	'data-input' => '#textarea_comment_'.$target_id,
-	//'data-open'  => empty($target_id) ? '#commentPostBox' : '#commentPostBox_'.$target_id,
-	//'data-hide'  => empty($target_id) ? '#link_show_comment_form' : '#link_show_comment_form_'.$target_id,
-	//'data-input' => empty($target_id) ? '#textarea_comment' : '#textarea_comment_'.$target_id,
 );
 if (!isset($link_attr)) $link_attr = array();
 $link_attr = Util_Toolkit::convert_to_attr($link_attr, $link_attr_default);
