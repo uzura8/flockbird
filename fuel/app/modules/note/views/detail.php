@@ -19,19 +19,6 @@ echo render('_parts/comment/count_and_link_display', array(
 	'link_hide_absolute' => true,
 )); ?>
 
-<?php // like reply ?>
-<?php if (conf('mention.isEnabled', 'notice') && $note->member): ?>
-<?php
-$data_reply_link = array(
-	'id' => $note->id,
-	'target_id' => $note->id,
-	'member_name' => $note->member->name,
-	'left_margin' => true,
-);
-echo render('notice::_parts/link_reply', $data_reply_link);
-?>
-<?php endif; ?>
-
 <?php // like_count_and_link ?>
 <?php if (conf('like.isEnabled') && Auth::check()): ?>
 <?php
@@ -76,7 +63,12 @@ if (Auth::check())
 		'data-counter' => '#comment_count_'.$note->id,
 		'data-latest' => 1,
 	);
-	echo render('_parts/comment/post', array('size' => 'M', 'button_attrs' => $button_attrs, 'textarea_attrs' => array('id' => 'textarea_comment_'.$note->id)));
+	echo render('_parts/comment/post', array(
+		'id' => $note->id,
+		'size' => 'M',
+		'button_attrs' => $button_attrs,
+		'textarea_attrs' => array('id' => 'textarea_comment_'.$note->id))
+	);
 }
 ?>
 <?php endif; ?>

@@ -11,6 +11,7 @@ $button_attrs     = (empty($button_attrs)) ? $button_attrs_def : array_merge($bu
 $button_attrs['class'] .= ' pull-right';
 
 $parts_attrs_def = array('class' => 'commentPostBox');
+if (!empty($id)) $parts_attrs_def['id'] = 'commentPostBox_'.$id;
 $parts_attrs     = empty($parts_attrs) ? $parts_attrs_def : array_merge($parts_attrs_def, $parts_attrs);
 $parts_attrs_string = Util_Array::conv_array2attr_string($parts_attrs);
 
