@@ -363,6 +363,14 @@ class Site_Util
 				$images['parent_page_uri'] = 'note/'.$foreign_id;
 				break;
 
+			case \Config::get('timeline.types.thread'):
+				list($images['list'], $images['count_all']) = \Thread\Model_ThreadImage::get4thread_id($foreign_id, 3, true);
+				$images['file_cate']    = 't';
+				$images['size']         = 'M';
+				$images['column_count'] = 3;
+				$images['parent_page_uri'] = 'thread/'.$foreign_id;
+				break;
+
 			case \Config::get('timeline.types.album'):
 			case \Config::get('timeline.types.album_image'):
 				$images['list'] = array();

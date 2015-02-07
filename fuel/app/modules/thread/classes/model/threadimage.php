@@ -76,9 +76,21 @@ class Model_ThreadImage extends \MyOrm\Model
 		return self::$count_list[$thread_id];
 	}
 
-	public static function get4thread_id($thread_id)
+	public static function get4thread_id($thread_id, $limit = 0, $with_count_all = false, $sort = array('created_at' => 'desc'))
 	{
-		return self::query()->where('thread_id', $thread_id)->get();
+		$query = self::query()->where('thread_id', $thread_id);
+		if ($with_count_all) $count_all = $query->count();
+		if ($sort)
+		{
+			foreach ($sort as $column => $order)
+			{
+				$query->order_by($column, $order);
+			}
+		}
+		if ($limit) $query->rows_limit($limit);
+		$list = $query->get();
+
+		return $with_count_all ? array($list, $count_all) : $list;
 	}
 
 	public static function get_ids4thread_id($thread_id, $order_by = 'id')

@@ -64,8 +64,8 @@ class Controller_Thread extends \Controller_Site
 		// 既読処理
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'thread', $id);
 
-		// note_album_image
-		//$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
+		// thread_image
+		$images = Model_ThreadImage::get4thread_id($thread_id);
 
 		// thread_comment
 		$default_params = array('latest' => 1);
@@ -85,7 +85,7 @@ class Controller_Thread extends \Controller_Site
 
 		$data = array(
 			'thread' => $thread,
-			//'images' => $images,
+			'images' => $images,
 			'comments' => $list,
 			'all_comment_count' => $all_comment_count,
 			'comment_next_id' => $next_id,
@@ -106,44 +106,53 @@ class Controller_Thread extends \Controller_Site
 	{
 		$thread = Model_Thread::forge();
 		$val = self::get_validation_object($thread);
-		$files = array();
+		$images = array();
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
-
-			$file_tmps = array();
-			$moved_files = array();
+			$image_tmps = array();
+			$moved_images = array();
+			$thread_image_ids = array();
+			$error_message = '';
 			try
 			{
-				//$file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
+				$image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 
 				\DB::start_transaction();
-				list($is_changed, $moved_files) = $thread->save_with_relations($this->u->id, $post, $file_tmps);
+				$is_changed = $thread->save_with_relations($this->u->id, $post, $image_tmps);
+				list($moved_images, $thread_image_ids) = \Site_FileTmp::save_images($image_tmps, $thread->id, 'thread_id', 'thread_image');
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
-				//\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'thread');
+				\Site_FileTmp::make_and_remove_thumbnails($moved_images);
 
 				$message = sprintf('%sを%sしました。', term('thread'), term('form.create_simple'));
 				\Session::set_flash('message', $message);
 				\Response::redirect('thread/detail/'.$thread->id);
 			}
+			catch(\Database_Exception $e)
+			{
+				$error_message = \Util_Db::get_db_error_message($e);
+			}
 			catch(\FuelException $e)
 			{
+				$error_message = $e->getMessage();
+			}
+			if ($error_message)
+			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
-				if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
-				$files = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id);
-
-				\Session::set_flash('error', $e->getMessage());
+				if ($moved_images) \Site_FileTmp::move_files_to_tmp_dir($moved_images);
+				$images = \Site_FileTmp::get_file_objects($image_tmps, $this->u->id);
+				\Session::set_flash('error', $error_message);
 			}
 		}
 
 		$this->set_title_and_breadcrumbs(term('thread').'を書く', null, $this->u, 'thread');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
-		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
+		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'images' => $images));
 	}
 
 	/**
@@ -157,49 +166,53 @@ class Controller_Thread extends \Controller_Site
 	{
 		$thread = Model_Thread::check_authority($id, $this->u->id);
 		$val = self::get_validation_object($thread, true);
-		$album_images = array();
-		//if (is_enabled('album'))
-		//{
-		//	$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'note');
-		//	$album_images = Model_NoteAlbumImage::get_album_image4note_id($note->id);
-		//}
-		//$files = is_enabled('album') ? \Site_Upload::get_file_objects($album_images, $album_id, false, $this->u->id) : array();
-		$files = array();
-
-		$file_tmps = array();
+		$thread_images = \Thread\Model_ThreadImage::get4thread_id($thread->id);
+		$images = \Site_Upload::get_file_objects($thread_images, $thread->id);
+		$image_tmps = array();
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
 
-			$moved_files = array();
+			$moved_images = array();
+			$news_image_ids = array();
+			$error_message = '';
 			try
 			{
-//				if (is_enabled('album')) $file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
+				$image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
 
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
 
 				\DB::start_transaction();
-				list($is_changed, $moved_files) = $thread->save_with_relations($this->u->id, $post, $file_tmps, $album_images, $files);
+				$thread->save_with_relations($this->u->id, $post);
+				list($moved_images, $thread_image_ids) = \Site_FileTmp::save_images($image_tmps, $thread->id, 'thread_id', 'thread_image');
+				\Site_Upload::update_image_objs4file_objects($thread_images, $images);
 				\DB::commit_transaction();
 
 				// thumbnail 作成 & tmp_file thumbnail 削除
-//				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'thread');
+				\Site_FileTmp::make_and_remove_thumbnails($moved_images);
 
 				$message = sprintf('%sを%sしました。', term('thread'), term('form.edit'));
 				\Session::set_flash('message', $message);
 				\Response::redirect('thread/detail/'.$thread->id);
 			}
+			catch(\Database_Exception $e)
+			{
+				$error_message = \Util_Db::get_db_error_message($e);
+			}
 			catch(\FuelException $e)
 			{
+				$error_message = $e->getMessage();
+			}
+			if ($error_message)
+			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
-				if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
-				$file_tmps = \Site_FileTmp::get_file_objects($file_tmps, $this->u->id);
-
-				\Session::set_flash('error', $e->getMessage());
+				if ($moved_images) \Site_FileTmp::move_files_to_tmp_dir($moved_images);
+				$image_tmps = \Site_FileTmp::get_file_objects($image_tmps, $this->u->id);
+				\Session::set_flash('error', $error_message);
 			}
 		}
-		$files = array_merge($files, $file_tmps);
+		$images = array_merge($images, $image_tmps);
 
 		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('thread'), term('form.do_edit')), array('/thread/'.$id => $thread->title), $thread->member, 'thread');
 		$this->template->post_header = \View::forge('_parts/form_header');
@@ -208,7 +221,7 @@ class Controller_Thread extends \Controller_Site
 			'val' => $val,
 			'thread' => $thread,
 			'is_edit' => true,
-			'files' => $files,
+			'images' => $images,
 		));
 	}
 

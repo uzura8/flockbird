@@ -90,18 +90,12 @@ class Model_Thread extends \MyOrm\Model
 		'MyOrm\Observer_DeleteRelationalTables' => array(
 			'events' => array('before_delete'),
 			'relations' => array(
-				//array(
-				//	'model_to' => '\News\Model_NewsImage',
-				//	'conditions' => array(
-				//		'news_id' => array('id' => 'property'),
-				//	),
-				//),
-				//array(
-				//	'model_to' => '\News\Model_NewsFile',
-				//	'conditions' => array(
-				//		'news_id' => array('id' => 'property'),
-				//	),
-				//),
+				array(
+					'model_to' => '\News\Model_NewsImage',
+					'conditions' => array(
+						'news_id' => array('id' => 'property'),
+					),
+				),
 			),
 		),
 	);
@@ -164,7 +158,7 @@ class Model_Thread extends \MyOrm\Model
 		}
 	}
 
-	public function save_with_relations($member_id, $values, $file_tmps = null, $album_images = array(), $files = array())
+	public function save_with_relations($member_id, $values)
 	{
 		if (!empty($this->member_id) && $this->member_id != $member_id)
 		{
@@ -183,28 +177,6 @@ class Model_Thread extends \MyOrm\Model
 		$is_changed = $this->is_changed();
 		if ($is_changed) $this->save();
 
-		$moved_files = array();
-		//if (is_enabled('album'))
-		//{
-		//	$image_public_flag = $this->public_flag;
-		//	if ($file_tmps)
-		//	{
-		//		$album_id = \Album\Model_Album::get_id_for_foreign_table($member_id, 'note');
-		//		list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', $image_public_flag);
-		//		\Note\Model_NoteAlbumImage::save_multiple($this->id, $album_image_ids);
-		//	}
-		//	// フォーム編集時
-		//	if ($album_images && $files)
-		//	{
-		//		\Site_Upload::update_image_objs4file_objects($album_images, $files, $image_public_flag);
-		//	}
-		//	// フォーム編集以外で日記が公開された時
-		//	elseif ($is_published && $saved_album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
-		//	{
-		//		foreach ($saved_album_images as $saved_album_image) $saved_album_image->update_public_flag($this->public_flag, true);
-		//	}
-		//}
-
 		if (is_enabled('timeline'))
 		{
 			if (!$is_new && $is_changed_public_flag)
@@ -219,42 +191,6 @@ class Model_Thread extends \MyOrm\Model
 			}
 		}
 
-		return array($is_changed, $moved_files);
+		return $is_changed;
 	}
-
-//	public function delete_with_relations()
-//	{
-//		//// album_image の削除
-//		//if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
-//		//{
-//		//	$album_image_ids = array();
-//		//	foreach ($album_images as $album_image)
-//		//	{
-//		//		$album_image_ids[] = $album_image->id;
-//		//	}
-//		//	\Album\Model_AlbumImage::delete_multiple($album_image_ids);
-//		//}
-//
-//		// timeline 投稿の削除
-//		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('thread', $this->id);
-//
-//		// thread の削除
-//		$this->delete();
-//	}
-
-//	public function update_public_flag_with_relations($public_flag)
-//	{
-//		$this->public_flag = $public_flag;
-//		if (!$this->is_changed('public_flag')) return;
-//		$this->save();
-//
-//		// album_image の public_flag の更新
-//		if ($this->is_published && is_enabled('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
-//		{
-//			foreach ($album_images as $album_image)
-//			{
-//				$album_image->update_public_flag($public_flag, true);
-//			}
-//		}
-//	}
 }

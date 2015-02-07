@@ -46,11 +46,21 @@ echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_
 				'read_more_uri' => 'thread/'.$id,
 			)); ?>
 		</div>
-<?php /*
-<?php if (Module::loaded('album') && $images = \Thread\Model_ThreadAlbumImage::get_album_image4note_id($id, 4, array('id' => 'desc'))): ?>
-<?php echo render('_parts/thumbnails', array('images' => array('list' => $images, 'additional_table' => 'note', 'size' => 'N_M', 'column_count' => 4))); ?>
-<?php endif; ?>
-*/ ?>
+
+<?php
+list($images, $count) = \Thread\Model_ThreadImage::get4thread_id($id, 3, true);
+if ($images)
+{
+	echo render('_parts/thumbnails', array('is_display_name' => true, 'images' => array(
+		'list' => $images,
+		'file_cate' => 't',
+		'size' => 'M',
+		'column_count' => 3,
+		'parent_page_uri' => 'thread/'.$id,
+		'count_all' => $count,
+	)));
+}
+?>
 
 <?php
 // thread_comment

@@ -2,11 +2,7 @@
 <?php echo convert_body($thread->body, array('is_truncate' => false)); ?>
 </div>
 
-<?php /*
-<?php if (Module::loaded('album')): ?>
-<?php echo render('album::image/_parts/list', array('list' => $images, 'is_simple_view' => true)); ?>
-<?php endif; ?>
-*/ ?>
+<?php echo render('_parts/thumbnails', array('is_display_name' => true, 'images' => array('list' => $images, 'file_cate' => 't', 'size' => 'M', 'column_count' => 3))); ?>
 
 <?php if (Auth::check() || $comments): ?>
 <h3 id="comments">Comments</h3>
