@@ -86,6 +86,7 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>
 <?php echo site_htmltag_include_js_module();?>
 <?php echo site_htmltag_include_js_action();?>
+<?php echo render('_parts/template/site_footer_optional_script'); ?>
 
 </body>
 </html>

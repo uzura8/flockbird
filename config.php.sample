@@ -67,6 +67,7 @@ define('PRJ_ADMIN_MAIL', 'admin@example.com');
 
 // Google 関連設定
 define('GOOGLE_SITE_VERIFICATION', '');
+define('GOOGLE_ANALYTICS_TRACKING_CODE', '');
 
 
 // Facebook 関連設定
