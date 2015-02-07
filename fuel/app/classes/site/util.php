@@ -286,7 +286,7 @@ class Site_Util
 
 	public static function get_have_public_flags_models()
 	{
-		return array('note', 'album', 'album_image', 'timeline', 'member_profile');
+		return array('note', 'album', 'album_image', 'timeline', 'thread', 'member_profile');
 	}
 
 	public static function get_public_flag_name($public_flag)

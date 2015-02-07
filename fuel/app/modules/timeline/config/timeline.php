@@ -52,6 +52,7 @@ return array(
 		'album_image_profile' => 7,
 		'album_image_timeline' => 8,
 		'member_name' => 9,
+		'thread' => 10,
 	),
 	'periode_to_update' => array(
 		'album' => '1 day',

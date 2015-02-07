@@ -11,6 +11,7 @@ class Site_Util
 			'album_image',
 			'album',
 			'file',
+			'thread',
 		);
 	}
 
@@ -59,6 +60,9 @@ class Site_Util
 				break;
 			case 'note':
 				$foreign_table = 'note';
+				break;
+			case 'thread':
+				$foreign_table = 'thread';
 				break;
 			case 'album':
 				$foreign_table = 'album';
@@ -116,6 +120,9 @@ class Site_Util
 			case \Config::get('timeline.types.note'):// note 投稿
 				return term('note').'を投稿しました。';
 
+			case \Config::get('timeline.types.thread'):// thread 投稿
+				return term('thread').'を投稿しました。';
+
 			case \Config::get('timeline.types.album'):// album 作成
 				return term('album').'を作成しました。';
 
@@ -158,6 +165,7 @@ class Site_Util
 	{
 		$accept_types = array(
 			\Config::get('timeline.types.note'),
+			\Config::get('timeline.types.thread'),
 			\Config::get('timeline.types.album'),
 			\Config::get('timeline.types.album_image'),
 		);
@@ -181,6 +189,10 @@ class Site_Util
 				$title['value'] = $foreign_table_obj->title;
 				$read_more_uri = 'note/'.$foreign_table_obj->id;
 				break;
+			case \Config::get('timeline.types.thread'):
+				$title['value'] = $foreign_table_obj->title;
+				$read_more_uri = 'thread/'.$foreign_table_obj->id;
+				break;
 			case \Config::get('timeline.types.album'):
 				$title['value'] = $foreign_table_obj->name;
 				$read_more_uri = 'album/'.$foreign_table_obj->id;
@@ -200,9 +212,11 @@ class Site_Util
 			case \Config::get('timeline.types.note'):
 				return 'note/'.$foreign_table_obj->id;
 				break;
+			case \Config::get('timeline.types.thread'):
+				return 'thread/'.$foreign_table_obj->id;
+				break;
 			case \Config::get('timeline.types.album'):
 				return 'album/'.$foreign_table_obj->id;
-				break;
 				break;
 		}
 
@@ -241,6 +255,11 @@ class Site_Util
 				$id = $foreign_id;
 				if ($action == 'get') $common_path = 'comment/api/list/'.$foreign_id.'.html';
 				break;
+			case \Config::get('timeline.types.thread'):// thread 投稿
+				$pre_path = 'thread/';
+				$id = $foreign_id;
+				if ($action == 'get') $common_path = 'comment/api/list/'.$foreign_id.'.html';
+				break;
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
 				$pre_path = 'album/image/';
 				$id = $foreign_id;
@@ -271,6 +290,8 @@ class Site_Util
 		{
 			case \Config::get('timeline.types.note'):// note 投稿
 				return \Site_Util::get_api_uri_update_like('note', $foreign_id);
+			case \Config::get('timeline.types.thread'):// thread 投稿
+				return \Site_Util::get_api_uri_update_like('thread', $foreign_id);
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
 				return \Site_Util::get_api_uri_update_like('album_image', $foreign_id);
 		}
@@ -430,6 +451,10 @@ class Site_Util
 				$id  = $timeline->foreign_id;
 				$path = 'note/api/delete/';
 				break;
+			case \Config::get('timeline.types.thread'):
+				$id  = $timeline->foreign_id;
+				$path = 'thread/api/delete/';
+				break;
 			case \Config::get('timeline.types.album'):
 				$id  = $timeline->foreign_id;
 				$path = 'album/api/delete/';
@@ -500,6 +525,10 @@ class Site_Util
 				break;
 			case \Config::get('timeline.types.note'):
 				$info['model'] = 'note';
+				$info['public_flag_target_id'] = $timeline->foreign_id;
+				break;
+			case \Config::get('timeline.types.thread'):
+				$info['model'] = 'thread';
 				$info['public_flag_target_id'] = $timeline->foreign_id;
 				break;
 			case \Config::get('timeline.types.album'):

@@ -1,3 +1,146 @@
+CREATE TABLE `member` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `last_login` datetime DEFAULT NULL,
+  `login_hash` varchar(255) DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `filesize_total` int(11) NOT NULL DEFAULT 0 COMMENT 'Total file size',
+  `register_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
+  `sex` varchar(16) DEFAULT NULL,
+  `sex_public_flag` tinyint(2) NOT NULL DEFAULT 0,
+  `birthyear` int(4) DEFAULT NULL,
+  `birthyear_public_flag` tinyint(2) NOT NULL DEFAULT 0,
+  `birthday` varchar(5) DEFAULT NULL,
+  `birthday_public_flag` tinyint(2) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `birthday_id` (`birthday`,`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_auth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
+  UNIQUE KEY `email_UNIQUE_idx` (`email`),
+  CONSTRAINT `member_auth_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `member_id` int(11) NOT NULL COMMENT 'Member id',
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Configuration name',
+  `value` text NOT NULL COMMENT 'Configuration value',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id_idx` (`member_id`),
+  UNIQUE KEY `member_id_name_UNIQUE_idx` (`member_id`, `name`),
+  CONSTRAINT `member_config_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_email_pre` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
+  UNIQUE KEY `token_UNIQUE_idx` (`token`),
+  KEY `email_idx` (`email`),
+  CONSTRAINT `member_email_pre_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `oauth_provider` (
+  `id` tinyint(2) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_oauth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `oauth_provider_id` tinyint(2) NOT NULL,
+  `uid` varchar(50) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `secret` varchar(255) NULL,
+  `expires` int(11) NULL,
+  `service_name` varchar(255) NULL,
+  `service_url` varchar(255) NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `oauth_provider_id_uid_idx` (`oauth_provider_id`,`uid`),
+  KEY `oauth_provider_id_uid_member_idx` (`oauth_provider_id`,`uid`,`member_id`),
+  CONSTRAINT `member_oauth_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `oauth_provider_id_oauth_provider_id` FOREIGN KEY (`oauth_provider_id`) REFERENCES `oauth_provider` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_password_pre` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
+  UNIQUE KEY `token_UNIQUE_idx` (`token`),
+  CONSTRAINT `member_password_pre_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_pre` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `email_idx` (`email`),
+  UNIQUE KEY `token_UNIQUE_idx` (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_delete_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `name` varchar(255) NULL,
+  `email` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `member_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `member_id_to` int(11) NOT NULL COMMENT 'Target member id',
+  `member_id_from` int(11) NOT NULL COMMENT 'Subject member id',
+  `is_follow` tinyint(1) DEFAULT NULL COMMENT 'The subject member is followed the target',
+  `is_friend` tinyint(1) DEFAULT NULL COMMENT 'The members are friends',
+  `is_friend_pre` tinyint(1) DEFAULT NULL COMMENT 'The members are going to be friends',
+  `is_access_block` tinyint(1) DEFAULT NULL COMMENT 'The subject member is blocked the target',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_to_from_UNIQUE_idx` (`member_id_to`,`member_id_from`),
+  UNIQUE KEY `member_id_from_to_UNIQUE_idx` (`member_id_from`,`member_id_to`),
+  KEY `member_id_to_idx` (`member_id_to`),
+  KEY `member_id_from_idx` (`member_id_from`),
+  CONSTRAINT `member_relationship_member_id_from_member_id` FOREIGN KEY (`member_id_from`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_relationship_member_id_to_member_id` FOREIGN KEY (`member_id_to`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves ralationships of each members';
+
+
 CREATE TABLE `album` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
@@ -13,7 +156,7 @@ CREATE TABLE `album` (
   KEY `member_id_created_at_idx` (`member_id`,`created_at`),
   KEY `public_flag_craeted_at_idx` (`public_flag`,`created_at`),
   KEY `member_id_foreign_table_idx` (`member_id`,`foreign_table`),
-  KEY `member_id_idx` (`member_id`)
+  CONSTRAINT `album_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `album_image` (
@@ -156,158 +299,6 @@ CREATE TABLE `file_bin_delete_queue` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves content of files';
 
 
-CREATE TABLE `member` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL DEFAULT '',
-  `last_login` datetime DEFAULT NULL,
-  `login_hash` varchar(255) DEFAULT NULL,
-  `file_name` varchar(255) DEFAULT NULL,
-  `filesize_total` int(11) NOT NULL DEFAULT 0 COMMENT 'Total file size',
-  `register_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
-  `sex` varchar(16) DEFAULT NULL,
-  `sex_public_flag` tinyint(2) NOT NULL DEFAULT 0,
-  `birthyear` int(4) DEFAULT NULL,
-  `birthyear_public_flag` tinyint(2) NOT NULL DEFAULT 0,
-  `birthday` varchar(5) DEFAULT NULL,
-  `birthday_public_flag` tinyint(2) NOT NULL DEFAULT 0,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `birthday_id` (`birthday`,`id`),
-  UNIQUE KEY `name_UNIQUE_idx` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_auth` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
-  UNIQUE KEY `email_UNIQUE_idx` (`email`),
-  CONSTRAINT `member_auth_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_config` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `member_id` int(11) NOT NULL COMMENT 'Member id',
-  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Configuration name',
-  `value` text NOT NULL COMMENT 'Configuration value',
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `member_id_idx` (`member_id`),
-  UNIQUE KEY `member_id_name_UNIQUE_idx` (`member_id`, `name`),
-  CONSTRAINT `member_config_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_email_pre` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
-  UNIQUE KEY `token_UNIQUE_idx` (`token`),
-  KEY `email_idx` (`email`),
-  CONSTRAINT `member_email_pre_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `oauth_provider` (
-  `id` tinyint(2) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE_idx` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_oauth` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
-  `oauth_provider_id` tinyint(2) NOT NULL,
-  `uid` varchar(50) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `secret` varchar(255) NULL,
-  `expires` int(11) NULL,
-  `service_name` varchar(255) NULL,
-  `service_url` varchar(255) NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `oauth_provider_id_uid_idx` (`oauth_provider_id`,`uid`),
-  KEY `oauth_provider_id_uid_member_idx` (`oauth_provider_id`,`uid`,`member_id`),
-  CONSTRAINT `member_oauth_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `oauth_provider_id_oauth_provider_id` FOREIGN KEY (`oauth_provider_id`) REFERENCES `oauth_provider` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_password_pre` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`),
-  UNIQUE KEY `token_UNIQUE_idx` (`token`),
-  CONSTRAINT `member_password_pre_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_pre` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `email_idx` (`email`),
-  UNIQUE KEY `token_UNIQUE_idx` (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_delete_queue` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
-  `name` varchar(255) NULL,
-  `email` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `member_id_UNIQUE_idx` (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `member_relation` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `member_id_to` int(11) NOT NULL COMMENT 'Target member id',
-  `member_id_from` int(11) NOT NULL COMMENT 'Subject member id',
-  `is_follow` tinyint(1) DEFAULT NULL COMMENT 'The subject member is followed the target',
-  `is_friend` tinyint(1) DEFAULT NULL COMMENT 'The members are friends',
-  `is_friend_pre` tinyint(1) DEFAULT NULL COMMENT 'The members are going to be friends',
-  `is_access_block` tinyint(1) DEFAULT NULL COMMENT 'The subject member is blocked the target',
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `member_id_to_from_UNIQUE_idx` (`member_id_to`,`member_id_from`),
-  UNIQUE KEY `member_id_from_to_UNIQUE_idx` (`member_id_from`,`member_id_to`),
-  KEY `member_id_to_idx` (`member_id_to`),
-  KEY `member_id_from_idx` (`member_id_from`),
-  CONSTRAINT `member_relationship_member_id_from_member_id` FOREIGN KEY (`member_id_from`) REFERENCES `member` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `member_relationship_member_id_to_member_id` FOREIGN KEY (`member_id_to`) REFERENCES `member` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves ralationships of each members';
-
-
 CREATE TABLE `migration` (
   `name` varchar(50) NOT NULL,
   `type` varchar(25) NOT NULL,
@@ -334,7 +325,8 @@ CREATE TABLE `note` (
   KEY `member_id_is_published_published_at_public_flag_idx` (`member_id`,`is_published`,`published_at`,`public_flag`),
   KEY `member_id_created_at_idx` (`member_id`,`created_at`),
   KEY `public_flag_craeted_at_idx` (`public_flag`,`created_at`),
-  KEY `is_published_published_at_public_flag_idx` (`is_published`,`published_at`,`public_flag`)
+  KEY `is_published_published_at_public_flag_idx` (`is_published`,`published_at`,`public_flag`),
+  CONSTRAINT `note_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -680,6 +672,74 @@ CREATE TABLE `member_follow_timeline` (
   UNIQUE KEY `member_id_timeline_id_UNIQUE_idx` (`member_id`,`timeline_id`),
   CONSTRAINT `member_follow_timeline_member_id_timeline_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
   CONSTRAINT `member_follow_timeline_timeline_id_timeline_id` FOREIGN KEY (`timeline_id`) REFERENCES `timeline` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `thread` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` text NOT NULL,
+  `body` text NOT NULL,
+  `public_flag` tinyint(2) NOT NULL DEFAULT '0',
+  `member_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL DEFAULT '0',
+  `comment_count` int(11) NOT NULL DEFAULT '0',
+  `like_count` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `sort_datetime` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `public_flag_srot_datetime_category_id_idx` (`public_flag`,`sort_datetime`,`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `thread_like` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `thread_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_thread_id_UNIQUE_idx` (`member_id`,`thread_id`),
+  KEY `thread_id_id_idx` (`thread_id`,`id`),
+  CONSTRAINT `thread_like_thread_id_thread_id` FOREIGN KEY (`thread_id`) REFERENCES `thread` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `thread_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `thread_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `body` text NOT NULL,
+  `like_count` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `thread_id_id_idx` (`thread_id`,`id`),
+  KEY `member_id_idx` (`member_id`),
+  CONSTRAINT `thread_comment_thread_id_thread_id` FOREIGN KEY (`thread_id`) REFERENCES `thread` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `thread_comment_like` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `thread_comment_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_id_thread_comment_id_UNIQUE_idx` (`member_id`,`thread_comment_id`),
+  KEY `thread_comment_id_id_idx` (`thread_comment_id`,`id`),
+  CONSTRAINT `thread_comment_like_thread_comment_id_thread_comment_id` FOREIGN KEY (`thread_comment_id`) REFERENCES `thread_comment` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `thread_image` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `thread_id` int(11) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `name` text NULL,
+  `shot_at` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `thread_id_created_at` (`thread_id`,`created_at`),
+  KEY `thread_id_idx` (`thread_id`),
+  KEY `file_name_idx` (`file_name`),
+  CONSTRAINT `thread_image_thread_id_thread_id` FOREIGN KEY (`thread_id`) REFERENCES `thread` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

@@ -144,6 +144,8 @@ class Site_Model
 		{
 			case \Config::get('timeline.types.note'):
 				return \Note\Model_Note::find($foreign_id);
+			case \Config::get('timeline.types.thread'):
+				return \thread\Model_thread::find($foreign_id);
 			case \Config::get('timeline.types.album'):
 			case \Config::get('timeline.types.album_image'):
 			case \Config::get('timeline.types.album_image_timeline'):
@@ -190,7 +192,6 @@ class Site_Model
 
 	public static function delete_timeline(Model_Timeline $timeline, $member_id)
 	{
-		$deleted_files = array();
 		if (Site_Util::check_type($timeline->type, 'album_image_timeline'))
 		{
 			$timeline->delete_with_album_image($member_id);
