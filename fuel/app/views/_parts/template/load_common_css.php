@@ -1,4 +1,8 @@
-<?php echo Asset::css('bootstrap.min.css');?>
+<?php
+$theme_name = conf('cssTheme');
+$bootstrap_css_file = ($theme_name && $theme_name != 'default') ? sprintf('bootstrap.min.%s.css', $theme_name) : 'bootstrap.min.css';
+?>
+<?php echo Asset::css($bootstrap_css_file);?>
 <?php echo Asset::css('bootstrap.custom.css');?>
 <?php echo Asset::css('apprise.min.css');?>
 <?php echo Asset::css('jquery.jgrowl.min.css');?>
