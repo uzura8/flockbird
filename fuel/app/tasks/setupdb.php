@@ -159,8 +159,18 @@ class SetupDB
 	private static function exexute_install_db($database = null)
 	{
 		$setup_sql_file = PRJ_BASEPATH.'data/sql/setup/setup.sql';
+		if (!\DBUtil::shell_exec_sql4file($setup_sql_file, $database)) return false;
 
-		return \DBUtil::shell_exec_sql4file($setup_sql_file, $database);
+		if (!$modules = \Module::loaded()) return true;
+
+		foreach ($modules as $module => $path)
+		{
+			$setup_sql_file = $path.'data/sql/setup/setup.sql';
+			if (!file_exists($setup_sql_file)) continue;
+			if (!\DBUtil::shell_exec_sql4file($setup_sql_file, $database)) return false;
+		}
+
+		return true;
 	}
 
 	private static function load_fixtures($fixtures = array())
