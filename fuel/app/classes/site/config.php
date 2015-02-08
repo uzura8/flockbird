@@ -9,7 +9,7 @@ class Site_Config
 			Config::load($module.'::'.$config_name, $module.'_'.$config_name);
 			if (!$module_config = Config::get($module.'_'.$config_name)) continue;
 
-			$config = array_merge_recursive($config, $module_config);
+			$config = Arr::merge($config, $module_config);
 		}
 
 		return $config;
