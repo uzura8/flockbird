@@ -537,6 +537,7 @@ class Site_Util
 				break;
 			case \Config::get('timeline.types.thread'):
 				$info['model'] = 'thread';
+				$info['option_type'] = 'public';
 				$info['public_flag_target_id'] = $timeline->foreign_id;
 				break;
 			case \Config::get('timeline.types.album'):

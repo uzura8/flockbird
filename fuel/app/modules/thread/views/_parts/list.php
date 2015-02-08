@@ -22,6 +22,7 @@ $attr = array(
 	'id' => $id,
 	'size' => 'M',
 	'public_flag' => $thread->public_flag,
+	'public_flag_option_type' => 'public',
 	'date' => array('datetime' => $thread->sort_datetime)
 )); ?>
 <?php

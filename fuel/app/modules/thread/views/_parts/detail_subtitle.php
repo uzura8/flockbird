@@ -2,6 +2,7 @@
 	'member'      => $thread->member,
 	'id'          => $thread->id,
 	'public_flag' => $thread->public_flag,
+	'public_flag_option_type' => 'public',
 	'model'       => 'thread',
 	'size'        => 'M',
 	'date'        => array(

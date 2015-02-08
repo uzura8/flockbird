@@ -273,10 +273,11 @@ class Site_Util
 		return html_entity_decode($value, $flags, $encoding);
 	}
 
-	public static function get_public_flags()
+	public static function get_public_flags($type = 'default')
 	{
+		if (!in_array($type, array('default', 'public'))) throw new InvalidArgumentException('First parameter is invalid.');
 		$public_flags = array();
-		if (defined('PRJ_PUBLIC_FLAG_PRIVATE')) $public_flags[] = PRJ_PUBLIC_FLAG_PRIVATE;
+		if (defined('PRJ_PUBLIC_FLAG_PRIVATE') && $type != 'public') $public_flags[] = PRJ_PUBLIC_FLAG_PRIVATE;
 		if (defined('PRJ_PUBLIC_FLAG_ALL'))     $public_flags[] = PRJ_PUBLIC_FLAG_ALL;
 		if (defined('PRJ_PUBLIC_FLAG_MEMBER'))  $public_flags[] = PRJ_PUBLIC_FLAG_MEMBER;
 		//if (defined('PRJ_PUBLIC_FLAG_FRIEND'))  $public_flags[] = PRJ_PUBLIC_FLAG_FRIEND;
@@ -306,21 +307,21 @@ class Site_Util
 		return conf('public_flag.colorTypes.'.$public_flag);
 	}
 
-	public static function validate_posted_public_flag($current_public_flag = null, $posted_key = 'public_flag')
+	public static function validate_posted_public_flag($current_public_flag = null, $type = 'default', $posted_key = 'public_flag')
 	{
 		$public_flag = \Input::post($posted_key, null);
 		if (is_null($public_flag)) throw new \HttpInvalidInputException('Invalid input data');
 
 		$public_flag = (int)$public_flag;
-		if (!in_array($public_flag, self::get_public_flags())) throw new \HttpInvalidInputException('Invalid input data');
+		if (!in_array($public_flag, self::get_public_flags($type))) throw new \HttpInvalidInputException('Invalid input data');
 		if ($current_public_flag && $current_public_flag == $public_flag) throw new \HttpInvalidInputException('Invalid input data');
 
 		return $public_flag;
 	}
 
-	public static function validate_params_for_update_public_flag($current_public_flag = null, $posted_key = 'public_flag', $is_check_posted_model = true)
+	public static function validate_params_for_update_public_flag($current_public_flag = null, $type = 'default', $posted_key = 'public_flag', $is_check_posted_model = true)
 	{
-		$public_flag = self::validate_posted_public_flag($current_public_flag, $posted_key);
+		$public_flag = self::validate_posted_public_flag($current_public_flag, $type, $posted_key);
 
 		$model = null;
 		if ($is_check_posted_model)

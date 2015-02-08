@@ -1,10 +1,10 @@
 <?php
 class Site_Form
 {
-	public static function get_public_flag_options($key = null)
+	public static function get_public_flag_options($key = null, $type = 'default')
 	{
 		$options = array();
-		$public_flags = Site_Util::get_public_flags();
+		$public_flags = Site_Util::get_public_flags($type);
 		foreach ($public_flags as $public_flag)
 		{
 			$options[$public_flag] = term('public_flag.options.'.$public_flag);
@@ -15,12 +15,12 @@ class Site_Form
 		return $options;
 	}
 
-	public static function get_public_flag_configs($is_select = false)
+	public static function get_public_flag_configs($is_select = false, $type = 'default')
 	{
 		return array(
 			'type'    => $is_select ? 'select' : 'radio',
 			'label'   => term('public_flag.label'),
-			'options' => self::get_public_flag_options(),
+			'options' => self::get_public_flag_options(null, $type),
 			'value'   => conf('public_flag.default'),
 		);
 	}

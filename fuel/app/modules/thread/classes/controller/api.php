@@ -189,14 +189,14 @@ class Controller_Api extends \Controller_Site_Api
 			if (\Input::post('id')) $id = (int)\Input::post('id');
 			$thread = Model_Thread::check_authority($id, $this->u->id);
 
-			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($thread->public_flag);
+			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($thread->public_flag, 'public');
 
 			\DB::start_transaction();
 			$thread->public_flag = $public_flag;
 			$thread->save();
 			\DB::commit_transaction();
 
-			$data = array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true, 'without_parent_box' => true);
+			$data = array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'option_type' => 'public', 'is_mycontents' => true, 'without_parent_box' => true);
 			$response = \View::forge('_parts/public_flag_selecter', $data);
 			$status_code = 200;
 

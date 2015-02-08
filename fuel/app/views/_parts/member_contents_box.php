@@ -72,6 +72,7 @@ if (isset($public_flag, $model, $id))
 		'is_mycontents' => $is_mycontents,
 	);
 	if (!empty($child_model)) $data['child_model'] = $child_model;
+	if (!empty($public_flag_option_type)) $data['option_type'] = $public_flag_option_type;
 	echo render('_parts/public_flag_selecter', $data);
 }
 ?>

@@ -60,6 +60,7 @@ $data = array(
 	'member_id' => $timeline->member_id,
 );
 if (!empty($child_model)) $data['child_model'] = $child_model;
+if (!empty($public_flag_info['option_type'])) $data['option_type'] = $public_flag_info['option_type'];
 echo render('_parts/public_flag_selecter', $data);
 ?>
 		</div><!-- sub_info -->

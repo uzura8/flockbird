@@ -102,8 +102,8 @@ class Model_Thread extends \MyOrm\Model
 
 	public static function _init()
 	{
-		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
-		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
+		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs(false, 'public');
+		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags('public');
 
 		if (is_enabled('notice'))
 		{

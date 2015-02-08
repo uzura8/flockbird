@@ -1,6 +1,7 @@
 <?php
 list($name, $icon, $btn_color) = get_public_flag_label($public_flag, isset($view_icon_only) ? $view_icon_only : false, 'array', true);
 if (!empty($model)) $model_uri = str_replace('_', '/', $model);
+if (empty($option_type)) $option_type = 'default';
 ?>
 
 <?php if (!empty($disabled_to_update)): ?>
@@ -42,7 +43,7 @@ if (isset($use_in_cache, $member_id) && $use_in_cache)
 		<?php echo $icon.$name; ?> <span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" role="menu">
-<?php $public_flags = \Site_Util::get_public_flags(); ?>
+<?php $public_flags = \Site_Util::get_public_flags($option_type); ?>
 <?php foreach ($public_flags as $public_flag_value): ?>
 <?php $label = get_public_flag_label($public_flag_value, false, 'icon_term'); ?>
 <?php if ($public_flag == $public_flag_value): ?>
