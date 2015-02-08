@@ -584,8 +584,7 @@ CREATE TABLE `timeline` (
   `updated_at` datetime NOT NULL,
   `sort_datetime` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `timeline_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE,
-  KEY `member_id_idx` (`member_id`),
+  KEY `member_id_type_idx` (`member_id`,`type`),
   KEY `group_id_idx` (`group_id`),
   KEY `page_id_idx` (`page_id`),
   KEY `foreign_table_foreign_id_type_idx` (`foreign_table`,`foreign_id`,`type`)

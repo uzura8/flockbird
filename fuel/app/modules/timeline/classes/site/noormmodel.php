@@ -6,7 +6,13 @@ class Site_NoOrmModel
 	public static function delete_timeline4member_id($member_id, $limit = 0)
 	{
 		if (!$limit) $limit = conf('batch.limit.delete.timeline');
-		while ($timeline_ids = \Util_Db::conv_col(\DB::select('id')->from('timeline')->where('member_id', $member_id)->limit($limit)->as_assoc()->execute()))
+		$undelete_types = array(Site_Util::get_type4key('thread'));
+		while ($timeline_ids = \Util_Db::conv_col(
+			\DB::select('id')->from('timeline')
+				->where('member_id', $member_id)
+				->where('type', 'not in', $undelete_types)
+				->limit($limit)->as_assoc()->execute())
+		)
 		{
 			foreach ($timeline_ids as $timeline_id) static::delete_timeline4id($timeline_id);
 		}
