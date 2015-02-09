@@ -23,6 +23,8 @@ build
 .idea
 
 /config.php
+/public/modules/*
+/public/assets/*/modules/*
 public_html
 web
 public/xhprof.php
