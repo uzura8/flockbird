@@ -513,6 +513,9 @@ div.navbar-header div.navbar-btn div.notice button.notified:focus {
 	color: #fff;
 	background-color: transparent;
 }
+div.navbar-header div.navbar-btn div.notice {
+	margin-right: 5px;
+}
 div.navbar-header div.navbar-btn div.notice button.notified {
 	color: #999;
 }

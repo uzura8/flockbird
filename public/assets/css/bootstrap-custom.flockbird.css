@@ -42,6 +42,11 @@ body {
 	.hidden-xs-inline {
 		display: none !important;
 	}
+
+	.navbar .container .navbar-header .navbar-btn {
+		margin-right: 5px;
+	}
+
 }
 
 @media (min-width: 768px) {
