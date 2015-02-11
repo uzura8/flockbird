@@ -25,9 +25,10 @@ build
 /config.php
 /public/modules/*
 /public/assets/*/modules/*
-public_html
-web
-public/xhprof.php
+/public/dist
+/public/xhprof.php
+/web
+/public_html
 
 fuel/app/views/welcome/*
 fuel/app/classes/controller/test.php
