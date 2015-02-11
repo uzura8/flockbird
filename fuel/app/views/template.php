@@ -12,7 +12,7 @@
 <?php echo render('_parts/template/site_meta_ogp', array('description' => $header_description)); ?>
 <?php echo render('_parts/template/load_common_css'); ?>
 <?php if (IS_SP): ?><?php echo Asset::css('base_mobile.css');?><?php else: ?><?php echo Asset::css('base_pc.css');?><?php endif; ?>
-<?php echo Asset::css('site.css');?>
+<?php echo render('_parts/template/load_site_css'); ?>
 <?php echo render('_parts/template/load_common_favicon'); ?>
 <?php if (isset($post_header)): ?>
 <?php echo $post_header; ?>
