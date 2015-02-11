@@ -9,10 +9,7 @@ $config = array(
 		'latest' => '2.1.3',
 		'legacy' => '1.11.2',
 	),
-	'bootstrapCssTheme' => array(
-		'name' => 'default',// default / cerulean / flatly / sandstone / simplex / united / yeti / uzura
-		'withThemeCss' => false,
-	),
+	'bootstrapCssTheme' => 'default',// default / cerulean / flatly / sandstone / simplex / united / yeti / uzura
 	'default' => array(
 		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
 		'ajax_timeout' => 10000,
