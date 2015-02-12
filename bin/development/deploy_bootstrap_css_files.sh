@@ -6,4 +6,4 @@ if [ ! -d fuel ]; then
 fi
 cd fuel/app/tmp/bootstrap/
 grunt dist
-cp dist/css/bootstrap.min.css public/assets/css/bootstrap.uzura.min.css
+cp dist/css/bootstrap.min.css ../../../../public/assets/css/bootstrap.uzura.min.css
