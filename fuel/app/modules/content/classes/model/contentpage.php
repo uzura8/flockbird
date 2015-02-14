@@ -70,11 +70,6 @@ class Model_ContentPage extends \MyOrm\Model
 		}
 	}
 
-	public static function get4slug($slug)
-	{
-		return self::query()->where('slug', $slug)->get_one();
-	}
-
 	public static function check_exists4slug($slug)
 	{
 		return (bool)self::get4slug($slug);

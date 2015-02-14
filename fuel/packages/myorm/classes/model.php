@@ -214,6 +214,11 @@ class Model extends \Orm\Model
 		return self::query()->order_by($order_by)->get();
 	}
 
+	public static function get4slug($slug)
+	{
+		return self::query()->where('slug', $slug)->get_one();
+	}
+
 	public static function change_registered_status4unique_key(array $params)
 	{
 		if ($obj = self::get_row4unique_key($params))
