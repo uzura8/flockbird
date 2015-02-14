@@ -91,4 +91,24 @@ class Test_Site_Upload extends TestCase
 		// size の確認
 		if (!$is_thumbnail) $this->assertEquals($file->filesize, $file_info['size']);
 	}
+
+	/**
+	* @dataProvider test_convert2decimal_geolocation_provider
+	*/
+	public function test_convert2decimal_geolocation($ref, $decimal60_values, $expected = null)
+	{
+		$test = Site_Upload::convert2decimal_geolocation($ref, $decimal60_values);
+		$this->assertEquals($expected, $test);
+	}
+
+	public function test_convert2decimal_geolocation_provider()
+	{
+		$data = array();
+		$data[] = array('N', array('35/1', '3978/100', '0/1'),  35.663);
+		$data[] = array('E', array('139/1', '4264/100', '0/1'), 139.71066666667);
+		$data[] = array('S', array('36/1', '39/100', '1846/100'), -36.011627777778);
+		$data[] = array('W', array('137/1', '48/1', '126/100'),  -137.80035);
+
+		return $data;
+	}
 }

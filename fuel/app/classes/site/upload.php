@@ -475,6 +475,44 @@ class Site_Upload
 		return $exif_time;
 	}
 
+	public static function get_exif_location($exif)
+	{
+		if (empty($exif['GPSLatitudeRef'])) return null;
+		if (empty($exif['GPSLatitude'])) return null;
+		if (empty($exif['GPSLongitudeRef'])) return null;
+		if (empty($exif['GPSLongitude'])) return null;
+
+		if (!$lat = static::convert2decimal_geolocation($exif['GPSLatitudeRef'], $exif['GPSLatitude'])) return false;
+		if (!$lnt = static::convert2decimal_geolocation($exif['GPSLongitudeRef'], $exif['GPSLongitude'])) return false;
+
+		return array($lat, $lnt);
+	}
+
+	public static function convert2decimal_geolocation($ref, array $decimal60_values)
+	{
+		if (!in_array($ref, array('N', 'S', 'E', 'W'))) return false;
+		if (count($decimal60_values) < 3) return false;
+
+		//60進数から10進数に変換
+		$degree = static::convert_exif_gps_str2int($decimal60_values[0]);
+		$min    = static::convert_exif_gps_str2int($decimal60_values[1]);
+		$sec    = static::convert_exif_gps_str2int($decimal60_values[2]);
+		$decimal10_value = $degree + ($min / 60) + ($sec / 3600);
+
+		if (in_array($ref, array('N', 'S')) && $decimal10_value > 90) return false;
+		if (in_array($ref, array('E', 'W')) && $decimal10_value > 180) return false;
+
+		//南緯、または西経の場合はマイナスにして返却
+		return (in_array($ref, array('S', 'W'))) ? ($decimal10_value * -1) : $decimal10_value;
+	}
+
+	public static function convert_exif_gps_str2int($slus_exploded_string)
+	{
+		$list = explode('/', $slus_exploded_string);
+
+		return (int)$list[0] / (int)$list[1];
+	}
+
 	public static function make_unique_filename($extention, $prefix = '', $original_filename = '', $retry_count = 3)
 	{
 		$name = self::make_filename($extention, $prefix, $original_filename);

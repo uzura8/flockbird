@@ -14,6 +14,15 @@ class Model_AlbumImage extends \MyOrm\Model
 			'cascade_delete' => false,
 		),
 	);
+	protected static $_has_one = array(
+		'album_image_location' => array(
+			'key_from' => 'id',
+			'model_to' => '\Album\Model_AlbumImageLocation',
+			'key_to' => 'album_image_id',
+			'cascade_save' => false,
+			'cascade_delete' => false,
+		)
+	);
 //	protected static $_has_many = array(
 //		'album_image_comment' => array(
 //			'key_from' => 'id',
@@ -111,6 +120,12 @@ class Model_AlbumImage extends \MyOrm\Model
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 
+		if (conf('albumImageLoction.saveFromExif', 'album'))
+		{
+			static::$_observers['MyOrm\Observer_SaveAlbumImageLocation'] = array(
+				'events' => array('after_insert'),
+			);
+		}
 		if (is_enabled('notice'))
 		{
 			static::$_observers['MyOrm\Observer_InsertNotice'] = array(

@@ -613,3 +613,14 @@ a.simpleList-item-media:focus {
 	color: #428bca;
 	box-shadow:0 0 4px rgba(10,10,10,0.6);
 }
+
+#map {
+	height: 400px;
+}
+.popin {
+	background: none repeat scroll 0 0 #fff;
+	border-radius: 2px;
+	box-shadow: 0 0 20px #999;
+	padding: 15px;
+	margin-bottom: 20px;
+}

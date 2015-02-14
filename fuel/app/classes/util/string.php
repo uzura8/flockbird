@@ -203,6 +203,10 @@ class Util_String
 		{
 			$value = mb_convert_encoding($value, Fuel::$encoding, $encoding ?: 'auto');
 		}
+		else
+		{
+			$value = '';
+		}
 
 		return trim($value);
 	}

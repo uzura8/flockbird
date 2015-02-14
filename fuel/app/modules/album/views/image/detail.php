@@ -60,3 +60,10 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 	'data-counter' => '#comment_count_'.$album_image->id,
 ))); ?>
 <?php endif; ?>
+
+<?php if ($locations): ?>
+<h3>Map</h3>
+<div class="popin">
+<div id="map"></div>
+</div>
+<?php endif; ?>

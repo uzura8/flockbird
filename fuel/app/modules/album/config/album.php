@@ -2,6 +2,9 @@
 
 return array(
 	'isDisplayOriginalFileName' => true,
+	'albumImageLoction' => array(
+		'saveFromExif' => true,
+	),
 	'articles' => array(
 		'limit' => 9,
 		'limit_max' => 12,
@@ -23,6 +26,12 @@ return array(
 		'detail' => array(
 			'display_upload_form' => false,
 			'display_slide_image' => false,
+			'displayMap' => true,
+		),
+		'image' => array(
+			'detail' => array(
+				'displayMap' => true,
+			),
 		),
 	),
 );

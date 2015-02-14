@@ -207,6 +207,13 @@ class Model extends \Orm\Model
 		return array($is_return_array ? $list_array : $list, $next_id, $all_records_count);
 	}
 
+	public static function get_all($order_by = null)
+	{
+		if (empty($order_by)) $order_by = array('id' => 'asc');
+
+		return self::query()->order_by($order_by)->get();
+	}
+
 	public static function change_registered_status4unique_key(array $params)
 	{
 		if ($obj = self::get_row4unique_key($params))

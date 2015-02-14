@@ -1,0 +1,70 @@
+<?php
+namespace Album;
+
+class Model_AlbumImageLocation extends \MyOrm\Model
+{
+	protected static $_table_name = 'album_image_location';
+
+	protected static $_belongs_to = array(
+		'album_image' => array(
+			'key_from' => 'album_image_id',
+			'model_to' => '\Album\Model_AlbumImage',
+			'key_to' => 'id',
+			'cascade_save' => false,
+			'cascade_delete' => false,
+		),
+	);
+
+	protected static $_properties = array(
+		'id',
+		'album_image_id' => array(
+			'data_type' => 'integer',
+			'validation' => array('required', 'max_length' => array(11)),
+			'form' => array('type' => false),
+		),
+		'latitude' => array(
+			'data_type' => 'DECIMAL',
+			'validation' => array('required'),
+			'form' => array('type' => false),
+		),
+		'longitude' => array(
+			'data_type' => 'DECIMAL',
+			'validation' => array('required'),
+			'form' => array('type' => false),
+		),
+		//'latlng' => array(
+		//	'data_type' => 'geometry',
+		//	'validation' => array('required'),
+		//	'form' => array('type' => false),
+		//),
+		'created_at',
+		'updated_at',
+	);
+
+	protected static $_observers = array(
+		'Orm\Observer_Validation' => array(
+			'events' => array('before_save'),
+		),
+		'Orm\Observer_CreatedAt' => array(
+			'events' => array('before_insert'),
+			'mysql_timestamp' => true,
+		),
+		'Orm\Observer_UpdatedAt' => array(
+			'events' => array('before_save'),
+			'mysql_timestamp' => true,
+		),
+		//'MyOrm\Observer_ConvertGeometryData' => array(
+		//	'events' => array('before_save', 'after_load'),
+		//),
+	);
+
+	public static function get_locations4album_image_id($album_image_id)
+	{
+		$obj = self::query()
+			->select('latitude', 'longitude')
+			->where('album_image_id', $album_image_id)
+			->get_one();
+
+		return $obj ? array($obj->latitude, $obj->longitude) : null;
+	}
+}

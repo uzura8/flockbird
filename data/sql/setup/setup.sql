@@ -215,6 +215,21 @@ CREATE TABLE `album_image_comment_like` (
   CONSTRAINT `aicl_album_image_comment_id_aic_id` FOREIGN KEY (`album_image_comment_id`) REFERENCES `album_image_comment` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `album_image_location` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `album_image_id` int(11) NOT NULL,
+  `latitude`  DECIMAL(9,6) NOT NULL DEFAULT '0',
+  `longitude` DECIMAL(9,6) NOT NULL DEFAULT '0',
+  -- `latlng` geometry NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `album_image_id_UNIQUE_idx` (`album_image_id`),
+  KEY `latitude_longitude_idx` (`latitude`,`longitude`),
+  CONSTRAINT `album_image_location_album_image_id_album_image_id` FOREIGN KEY (`album_image_id`) REFERENCES `album_image` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

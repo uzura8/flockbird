@@ -55,6 +55,7 @@ class Controller_Image extends \Controller_Site
 		$id = (int)$id;
 		$album_image = Model_Albumimage::check_authority($id);
 		$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
+		$locations = conf('display_setting.image.detail.displayMap', 'album') ? Model_AlbumImageLocation:: get_locations4album_image_id($id) : null;
 
 		// 既読処理
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album_image', $id);
@@ -71,6 +72,7 @@ class Controller_Image extends \Controller_Site
 
 		$data = array(
 			'album_image' => $album_image,
+			'locations' => $locations,
 			'comments' => $list,
 			'all_comment_count' => $all_comment_count,
 			'comment_next_id' => $next_id,
@@ -95,7 +97,10 @@ class Controller_Image extends \Controller_Site
 		$title = Site_Util::get_album_image_page_title($album_image);
 		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
-		$this->template->post_footer = \View::forge('_parts/comment/handlebars_template');
+		$this->template->post_footer = \View::forge('image/_parts/detail_footer', array(
+			'album_image' => $album_image,
+			'locations' => $locations,
+		));
 		$this->template->content = \View::forge('image/detail', $data);
 	}
 
