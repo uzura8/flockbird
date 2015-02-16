@@ -152,7 +152,7 @@ $config = array(
 		'types' => array(
 			'img' => array(
 				'accepted_max_size' => array(
-					'default' => '600x600',
+					'default' => '1200x1200',
 				),
 				'exif' => array(
 					'is_use' => true,

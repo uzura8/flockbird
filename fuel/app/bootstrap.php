@@ -47,6 +47,7 @@ Config::load('term', 'term');
 Config::load('icon', 'icon');
 Config::load('page', 'page');
 Config::load('template', 'template');
+Config::load('exif', 'exif');
 // Config of each module load.
 $modules = Module::loaded();
 foreach ($modules as $module => $path)

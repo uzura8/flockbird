@@ -106,7 +106,7 @@ class Site_Uploader
 		if ($exif)
 		{
 			$model_file->exif = serialize($exif);
-			if ($exif_time = Site_Upload::get_exif_datetime($exif))
+			if ($exif_time = Util_Exif::get_original_datetime($exif))
 			{
 				$model_file->shot_at = $exif_time;
 			}

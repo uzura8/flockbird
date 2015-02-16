@@ -26,7 +26,7 @@ class Observer_SaveAlbumImageLocation extends \Orm\Observer
 
 		$exif = unserialize($file->exif);
 
-		return \Site_Upload::get_exif_location($exif);
+		return \Util_Exif::get_location($exif);
 	}
 }
 // End of file savealbumimagelocation.php
