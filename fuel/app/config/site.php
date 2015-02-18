@@ -154,13 +154,7 @@ $config = array(
 				'accepted_max_size' => array(
 					'default' => '1200x1200',
 				),
-				'exif' => array(
-					'is_use' => true,
-					'is_remove' => true,
-				),
-				'delete' => array(
-					'thumnails' => 'syncDelete',// syncDelete: raw ファイル削除時に同時に削除 / later:あとで bach でまとめて削除(未実装)
-				),
+				'thumbnailsDeleteType' => 'sameTime',// sameTime: raw ファイル削除時に同時に削除 / bach:あとで bach でまとめて削除(未実装)
 				'root_path' => array(
 					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img/',
 					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img/raw/',

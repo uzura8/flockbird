@@ -16,10 +16,16 @@ class Site_Uploader
 			'path_chmod'     => conf('upload.mkdir_mode'),
 			'path'           => APPPATH.'tmp',
 			'upload_dir'     => PRJ_UPLOAD_DIR.'img/raw/',
-			'is_save_exif'   => conf('upload.types.img.exif.is_use'),
 			'is_save_db'     => conf('upload.isSaveDb'),
 			'auto_orient'    => true,
+			'is_clear_exif_on_file' => conf('isClearFromFile', 'exif'),
+			'is_save_exif_to_db'    => conf('isSaveToDb.isEnabled', 'exif'),
+			'exif_accept_tags'      => array(),
+			'exif_ignore_tags'      => array(),
 		);
+		if (conf('isSaveToDb.filterTags.accept.isEnabled', 'exif')) $this->options['exif_accept_tags'] = conf('isSaveToDb.filterTags.accept.tags', 'exif');
+		if (conf('isSaveToDb.filterTags.ignore.isEnabled', 'exif')) $this->options['exif_ignore_tags'] = conf('isSaveToDb.filterTags.ignore.tags', 'exif');
+
 		if ($options)
 		{
 			$this->options = $options + $this->options;
@@ -32,7 +38,7 @@ class Site_Uploader
 		{
 			if (!$uploaded_file_path) $uploaded_file_path = $this->upload_file();
 			$this->set_file_properties($uploaded_file_path);
-			if (!Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], conf('upload.check_and_make_dir_level'), $this->options['path_chmod']))
+			if (!Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], null, $this->options['path_chmod']))
 			{
 				throw new FuelException('ディレクトリの作成に失敗しました。');
 			}
@@ -40,11 +46,10 @@ class Site_Uploader
 			if (!Util_file::move($uploaded_file_path, $tmp_file_path)) throw new FuelException('Save raw file error.');
 
 			// exif データの取得
-			$exif = null;
-			if ($this->options['is_save_exif'] && $this->file->type == 'image/jpeg')
+			$exif = array();
+			if ($this->options['is_save_exif_to_db'] && $this->file->type == 'image/jpeg')
 			{
-				$exif = exif_read_data($tmp_file_path) ?: null;
-				if ($exif) $exif = Util_String::validate_exif($exif);
+				$exif = \Util_Exif::get_exif($tmp_file_path, $this->options['exif_accept_tags'], $this->options['exif_ignore_tags']);
 			}
 
 			$is_resaved = false;
@@ -60,11 +65,12 @@ class Site_Uploader
 			if ($max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
 			{
 				$this->file->size = Site_Upload::check_max_size_and_resize($tmp_file_path, $max_size);
-				$is_resaved = true;
+				$is_resaved = $this->file->size != $file_size_before;
 			}
-			if (conf('upload.types.img.exif.is_remove') && !$is_resaved)
+			if ($this->options['is_clear_exif_on_file'] && !$is_resaved)
 			{
 				Util_file::resave($tmp_file_path);
+				$this->file->size = File::get_size($tmp_file_path);
 			}
 			$this->save_model_file($exif);
 			$this->save_file_bin($tmp_file_path);

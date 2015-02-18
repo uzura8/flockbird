@@ -2,25 +2,26 @@
 
 class Util_Exif
 {
-	public static function get_exif($file_path, $target_tags = array())
+	public static function get_exif($file_path, $accept_tags = array(), $ignore_tags = array())
 	{
 		$exifs = exif_read_data($file_path) ?: array();
 		if ($exifs)
 		{
-			if ($target_tags)
+			if ($accept_tags)
 			{
-				$exifs = static::filter($exifs, $target_tags);
+				$exifs = static::filter_accepted($exifs, $accept_tags);
 			}
 			else
 			{
-				$exifs = util_string::validate_exif($exifs);
+				if ($ignore_tags) $exifs = static::filter_ignored($exifs, $ignore_tags);
+				$exifs = static::validate_exif($exifs);
 			}
 		}
 
 		return $exifs;
 	}
 
-	public static function filter($exifs, $target_tags)
+	public static function filter_accepted($exifs, $target_tags)
 	{
 		$filtered = array();
 		foreach ($target_tags as $tag)
@@ -41,6 +42,16 @@ class Util_Exif
 		return $filtered;
 	}
 
+	public static function filter_ignored($exifs, $target_tags)
+	{
+		foreach ($target_tags as $tag)
+		{
+			if (isset($exifs[$tag])) unset($exifs[$tag]);
+		}
+
+		return $exifs;
+	}
+
 	public static function validate_exif($value)
 	{
 		// 配列の場合は再帰的に処理
@@ -48,7 +59,6 @@ class Util_Exif
 		{
 			return array_map(array('Util_Exif', 'validate_exif'), $value);
 		}
-
 		if ($encoding = mb_detect_encoding($value))
 		{
 			$value = mb_convert_encoding($value, \Fuel::$encoding, $encoding ?: 'auto');

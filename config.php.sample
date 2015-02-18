@@ -91,7 +91,7 @@ define('PRJ_GOOGLE_APP_SECRET', '');
 // 未指定の場合は php.ini の値
 // define('PRJ_MAX_FILE_UPLOADS', 20);
 
-// 画像ライブラリの指定 ( gd / imagemagick )
+// 画像ライブラリの指定 ( gd / imagick / imagemagick )
 define('PRJ_IMAGE_DRIVER', 'gd');
 
 // ImageMagick のパス(ImageMagick を使用する場合のみ)

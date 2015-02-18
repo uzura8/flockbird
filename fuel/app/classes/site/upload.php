@@ -35,7 +35,7 @@ class Site_Upload
 		$file = self::get_uploaded_file_path($filename, 'raw', 'img', $is_tmp);
 		Util_file::remove($file);
 
-		if (conf('upload.types.img.delete.thumnails', null, 'syncDelete') == 'syncDelete')
+		if (conf('upload.types.img.thumbnailsDeleteType', null, 'sameTime') == 'sameTime')
 		{
 			$file_cate = self::get_file_cate_from_filename($filename);
 			$sizes = self::get_sizes_all4file_cate($file_cate, $is_tmp);
@@ -332,9 +332,11 @@ class Site_Upload
 			'upload_type'     => $upload_type,
 			'user_type'       => $is_admin ? 1 : 0,
 			'filename_prefix' => $filename_prefix,
-			'is_save_exif'    => false,
-			'exif_tags'       => array(),
 			'image_versions'  => array(),
+			'is_clear_exif_on_file' => false,
+			'is_save_exif_to_db'    => false,
+			'exif_accept_tags'      => array(),
+			'exif_ignore_tags'      => array(),
 		);
 		if ($upload_type == 'img')
 		{
@@ -344,8 +346,6 @@ class Site_Upload
 				$options['image_library'] = 1;
 				$options['convert_bin'] = PRJ_IMAGE_IMGMAGICK_PATH.'convert';
 			}
-			$options['is_save_exif'] = conf('upload.types.img.exif.is_use');
-			if (conf('filterTags.isEnabled', 'exif')) $options['exif_tags'] = conf('filterTags.accepted', 'exif');
 			$options['image_versions'] = array(
 				'' => array(
 					'auto_orient' => true
@@ -358,6 +358,11 @@ class Site_Upload
 				'max_height' => $uploader_info['thumbnail_sizes']['height'],
 				'crop' => true,
 			);
+
+			$options['is_clear_exif_on_file'] = conf('isClearFromFile', 'exif');
+			$options['is_save_exif_to_db']    = conf('isSaveToDb.isEnabled', 'exif');
+			if (conf('isSaveToDb.filterTags.accept.isEnabled', 'exif')) $options['exif_accept_tags'] = conf('isSaveToDb.filterTags.accept.tags', 'exif');
+			if (conf('isSaveToDb.filterTags.ignore.isEnabled', 'exif')) $options['exif_ignore_tags'] = conf('isSaveToDb.filterTags.ignore.tags', 'exif');
 		}
 
 		return $options;

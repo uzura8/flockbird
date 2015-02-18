@@ -173,7 +173,7 @@ class MyUploadHandler extends UploadHandler
 		}
 		$file->name = $this->remove_filename_prefix($filename_with_prefix);
 		$file->name_prefix = $this->options['filename_prefix'];
-		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], conf('upload.check_and_make_dir_level'), $this->options['mkdir_mode']))
+		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], null, $this->options['mkdir_mode']))
 		{
 			$file->error = 'ディレクトリの作成に失敗しました。';
 			return $file;
@@ -223,7 +223,8 @@ class MyUploadHandler extends UploadHandler
 			$file->url = $this->get_download_url($file->name);
 			if ($this->is_valid_image_file($file_path))
 			{
-				$this->handle_image_file($file_path, $file);
+				// make thumbnails with exif data.
+				if (!$this->options['is_clear_exif_on_file']) $this->handle_image_file($file_path, $file);
 			}
 		}
 		else
@@ -239,9 +240,9 @@ class MyUploadHandler extends UploadHandler
 
 		// exif データの取得
 		$exif = array();
-		if ($this->options['is_save_exif'] && $extention == 'jpg')
+		if ($this->options['is_save_exif_to_db'] && $extention == 'jpg')
 		{
-			$exif = \Util_Exif::get_exif($file_path, $this->options['exif_tags']);
+			$exif = \Util_Exif::get_exif($file_path, $this->options['exif_accept_tags'], $this->options['exif_ignore_tags']);
 		}
 
 		if ($this->options['upload_type'] == 'img')
@@ -252,7 +253,9 @@ class MyUploadHandler extends UploadHandler
 			{
 				$file->size = Site_Upload::check_max_size_and_resize($file_path, $max_size);
 			}
-			if (conf('upload.types.img.exif.is_remove') && $file_size_before == $file->size)
+			// Exif情報の削除
+			$is_resaved = $file->size != $file_size_before;
+			if ($this->options['is_clear_exif_on_file'] && !$is_resaved)
 			{
 				Util_file::resave($file_path);
 				$file->size = File::get_size($file_path);

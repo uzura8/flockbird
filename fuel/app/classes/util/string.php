@@ -191,26 +191,6 @@ class Util_String
 		return implode('', $items);
 	}
 
-	public static function validate_exif($value)
-	{
-		// 配列の場合は再帰的に処理
-		if (is_array($value))
-		{
-			return array_map(array('Util_String', 'validate_exif'), $value);
-		}
-
-		if ($encoding = mb_detect_encoding($value))
-		{
-			$value = mb_convert_encoding($value, Fuel::$encoding, $encoding ?: 'auto');
-		}
-		else
-		{
-			$value = '';
-		}
-
-		return trim($value);
-	}
-
 	public static function normalize_platform_dependent_chars($value, $is_use_normalizer = false)
 	{
 		$value = self::normalize_platform_dependent_chars_simple($value);
