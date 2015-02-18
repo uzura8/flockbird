@@ -139,6 +139,30 @@ class Util_Toolkit
 		return shell_exec("{$command} 2>&1");
 	}
 
+	/**
+	 * Executes the specified imagemagick executable and returns the output.
+	 *
+	 * @param   string   $program   The name of the executable.
+	 * @param   string   $params    The parameters of the executable.
+	 * @param   boolean  $passthru  Returns the output if false or pass it to browser.
+	 * @return  mixed    Either returns the output or returns nothing.
+	 */
+	public static function exec_command($command, $params, $passthru = false)
+	{
+		$code = 0;
+		$output = null;
+
+		$command .= " ".$params;
+		$passthru ? passthru($command) : exec($command, $output, $code);
+
+		if ($code != 0)
+		{
+			throw new \FuelException("imagemagick failed to edit the image. Returned with $code.<br /><br />Command:\n <code>$command</code>");
+		}
+
+		return $output;
+	}
+
 	public static function log_error($message)
 	{
 		\Log::error(
