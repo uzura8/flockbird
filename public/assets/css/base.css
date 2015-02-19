@@ -264,7 +264,8 @@ div#main div.row div#image_list {
 	text-align: center;
 }
 #image_list .image_item div.imgBox .btn-group,
-#image_list .image_item div.imgBox .btn_album_edit
+#image_list .image_item div.imgBox .btn_album_edit,
+#image_list .image_item div.imgBox .public_flag
 {
 	position: absolute;
 	right: 8px;
