@@ -69,7 +69,7 @@ class Site_Uploader
 			}
 			if ($this->options['is_clear_exif_on_file'] && !$is_resaved)
 			{
-				Util_file::resave($tmp_file_path);
+				Site_Upload::clear_exif($tmp_file_path);
 				$this->file->size = File::get_size($tmp_file_path);
 			}
 			$this->save_model_file($exif);

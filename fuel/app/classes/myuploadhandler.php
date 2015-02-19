@@ -257,7 +257,7 @@ class MyUploadHandler extends UploadHandler
 			$is_resaved = $file->size != $file_size_before;
 			if ($this->options['is_clear_exif_on_file'] && !$is_resaved)
 			{
-				Util_file::resave($file_path);
+				Site_Upload::clear_exif($file_path);
 				$file->size = File::get_size($file_path);
 			}
 		}

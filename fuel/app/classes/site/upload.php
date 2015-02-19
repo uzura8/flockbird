@@ -513,4 +513,28 @@ class Site_Upload
 
 		return false;
 	}
+
+	public static function clear_exif($path, $driver = null)
+	{
+		if (!$driver) $driver = Config::get('image.driver');
+		if (PRJ_IMAGE_DRIVER == 'imagemagick')
+		{
+			$command = PRJ_IMAGE_IMGMAGICK_PATH.'convert';
+			$params  = sprintf('"%s" -strip "%s"', $path, $path);
+			Util_Toolkit::exec_command($command, $params, false, true);
+		}
+		elseif (PRJ_IMAGE_DRIVER == 'imagick')
+		{
+			$im = new \Imagick($path);
+			$im->stripImage();
+			$im->writeImage($path);
+			$im->destroy();
+		}
+		else
+		{
+			Util_file::resave($path);
+		}
+
+		return File::get_size($path);
+	}
 }
