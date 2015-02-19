@@ -27,7 +27,7 @@ class Controller_News_Image_Api extends Controller_Api
 			if (\Input::post('id')) $id = (int)\Input::post('id');
 
 			\DB::start_transaction();
-			$news_image = \News\Model_NewsImage::check_authority($id, null, array('news', 'file'));
+			$news_image = \News\Model_NewsImage::check_authority($id, null, 'news');
 			$news_image->delete();
 			\DB::commit_transaction();
 
