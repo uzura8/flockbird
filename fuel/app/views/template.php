@@ -11,7 +11,6 @@
 <?php if (GOOGLE_SITE_VERIFICATION): ?>  <meta name="google-site-verification" content="<?php echo GOOGLE_SITE_VERIFICATION; ?>" /><?php endif; ?>
 <?php echo render('_parts/template/site_meta_ogp', array('description' => $header_description)); ?>
 <?php echo render('_parts/template/load_common_css'); ?>
-<?php if (IS_SP): ?><?php echo Asset::css('base_mobile.css');?><?php else: ?><?php echo Asset::css('base_pc.css');?><?php endif; ?>
 <?php echo render('_parts/template/load_site_css'); ?>
 <?php echo render('_parts/template/load_common_favicon'); ?>
 <?php if (isset($post_header)): ?>
