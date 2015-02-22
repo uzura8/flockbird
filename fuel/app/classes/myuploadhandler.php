@@ -223,8 +223,7 @@ class MyUploadHandler extends UploadHandler
 			$file->url = $this->get_download_url($file->name);
 			if ($this->is_valid_image_file($file_path))
 			{
-				// make thumbnails with exif data.
-				if (!$this->options['is_clear_exif_on_file']) $this->handle_image_file($file_path, $file);
+				$this->handle_image_file($file_path, $file);
 			}
 		}
 		else
