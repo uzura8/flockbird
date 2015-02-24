@@ -48,6 +48,7 @@ $config = array(
 		'do_add' => 'plus',
 		'add_picture' => 'camera',
 		'add_image' => 'camera',
+		'insert_picture' => 'plus',
 		'add_file' => 'file',
 		'add_link' => 'link',
 		//'comment' => 'コメント',

@@ -625,3 +625,7 @@ a.simpleList-item-media:focus {
 	padding: 15px;
 	margin-bottom: 20px;
 }
+
+.appriseOverlay {
+	z-index: 1060;
+}

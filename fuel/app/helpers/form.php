@@ -228,10 +228,10 @@ function form_radio(Validation $val, $name, $default_value = null, $label_col_sm
 	return render('_parts/form/radio', $data);
 }
 
-function form_button($term_key = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2)
+function form_button($term_key = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2, $label = null)
 {
 	if (!$term_key) $term_key = 'form.submit';
-	$label = icon_label($term_key, 'both', false);
+	$button_label = icon_label($term_key, 'both', false);
 
 	$atter_default = array(
 		'class' => 'btn btn-default btn-primary',
@@ -247,9 +247,10 @@ function form_button($term_key = '', $type = 'submit', $name = '', $atter = arra
 		'name'  => $name,
 		'atter' => $atter,
 		'offset_size' => $offset_size,
+		'label' => $label,
 	);
 	$view = \View::forge('_parts/form/button', $data);
-	$view->set_safe('label', $label);
+	$view->set_safe('button_label', $button_label);
 
 	return $view;
 }
@@ -395,20 +396,39 @@ function form_text($value, $label, $offset_size = 2, $is_safe_value = false, $op
 	return $view->render();
 }
 
-function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array(), $model = 'album', $label = null, $offset_size = 2, $upload_type = 'img')
+function form_upload_files($files, $hide_form = false, $is_raw_form = false, $is_horizontal = true, $thumbnail_size = 'M', $selects = array(), $model = 'album', $label = null, $post_uri = null, $insert_target = null, $offset_size = 2, $upload_type = 'img')
 {
 	return render('_parts/form/upload_files', array(
 		'files' => $files,
 		'is_raw_form' => $is_raw_form,
 		'hide_form' => $hide_form,
 		'is_horizontal' => $is_horizontal,
-		'thumbnail_size' => $thumbnail_size,
 		'selects' => $selects,
 		'model' => $model,
 		'label' => $label,
 		'offset_size' => $offset_size,
 		'upload_type' => $upload_type,
+		'post_uri' => $post_uri,
+		'thumbnail_size' => $thumbnail_size,
+		'insert_target' => $insert_target,
 	));
+}
+
+function form_modal($button_label = '', $modal_get_uri = '', $modal_id_name = '', $modal_title = '', $btn_attrs = array(), $label = null, $label_col_sm_size = 2)
+{
+	$data = array(
+		'button_label' => $button_label,
+		'modal_get_uri' => $modal_get_uri,
+		'modal_id_name' => $modal_id_name,
+		'modal_title' => $modal_title,
+		'btn_attrs' => $btn_attrs,
+		'label' => $label,
+		'label_col_sm_size' => $label_col_sm_size,
+	);
+	$view = \View::forge('_parts/form/modal', $data);
+	$view->set_safe('button_label', $button_label);
+
+	return $view;
 }
 
 function form_required_tag($mark = '*')

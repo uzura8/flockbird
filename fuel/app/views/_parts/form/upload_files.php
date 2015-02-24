@@ -19,14 +19,19 @@ $col = 'col-sm-'.(12 - $offset_size);
 <?php 	endif; ?>
 <div class="<?php if ($is_horizontal): ?><?php echo $col; ?><?php if ($offset): ?> <?php echo $offset; ?><?php endif; ?><?php endif; ?>">
 <?php endif; ?>
-<?php echo render('filetmp/upload', array(
+<?php
+$data = array(
 	'files' => $files,
 	'hide_form' => $hide_form,
 	'thumbnail_size' => empty($thumbnail_size) ? 'M' : $thumbnail_size,
 	'selects' => $selects,
 	'model' => $model,
 	'upload_type' => $upload_type,
-)); ?>
+);
+if (!empty($post_uri)) $data['post_uri'] = $post_uri;
+if (!empty($insert_target)) $data['insert_target'] = $insert_target;
+echo render('filetmp/upload', $data);
+?>
 <?php if (!$is_raw_form): ?>
 </div>
 </div><!-- form-group -->

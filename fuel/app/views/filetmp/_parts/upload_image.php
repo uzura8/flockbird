@@ -49,10 +49,28 @@ if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $mo
 			<p><?php echo Form::textarea(
 				sprintf($prefix.'_description[%d]', $file->id),
 				isset($file->description) ? $file->description : '',
-				array('rows' => 2, 'placeholder' => '写真の説明', 'class' => 'form-control')
+				array('rows' => 2, 'placeholder' => '写真の説明', 'class' => 'form-control', 'id' => sprintf($prefix.'_description_%d', $file->id))
 			); ?></p>
 <?php endif; ?>
 			<?php echo Form::hidden(sprintf($prefix.'[%d]', $file->id), $file->name_prefix.$file->name, array('class' => $prefix)); ?>
+<?php // select insert image size ?>
+<?php if (!empty($insert_target) && !empty($file->accept_sizes)): ?>
+			<p><?php echo field_select(null, $value = null, Util_Array::set_key_from_value($file->accept_sizes), array('id' => 'select_size_'.$file->id)); ?></p>
+<?php endif; ?>
+<?php
+// insert image tag button.
+if (!empty($insert_target))
+{
+	$data = array(
+		'class' => 'js-insert_img',
+		'data-id' => $file->id,
+		'data-body' => $insert_target,
+		'data-file_name' => $file->name,
+		'data-file_name_prefix' => $file->name_prefix,
+	);
+	echo btn('form.insert_picture', '#', '', true, 'sm', null, $data, null, 'button', null, false);
+}
+?>
 		</div><!-- caption -->
 	</div><!-- thumbnail -->
 <?php endif; ?>

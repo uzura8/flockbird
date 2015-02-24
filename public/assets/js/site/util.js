@@ -111,11 +111,15 @@ function showMessage(msg)
 
 function getImgUri(file_name, size)
 {
-	if (empty(file_name)) return 'assets/img/site/noimage.gif';
-	var matches = file_name.match(/^([a-z]+)_([0-9]+)_(([a-zA-Z0-9]+).(gif|png|jpg))$/);
-	if (matches) return 'media/img/' + size + '/' + matches[1] + '/' + matches[2] + '/' + matches[3];
-	if (file_name.length > 0) return 'media/img/' + size + '/' + file_name + '/allnoimage.gif';
-	return 'assets/img/site/noimage.gif';
+	var isReturnNoImagePath = (arguments.length > 2) ? arguments[2] : true;
+	var uploadDirName = get_config('upload_dir_name');
+	var matches;
+
+	if (empty(file_name)) return isReturnNoImagePath ? 'assets/img/site/noimage.gif' : '';
+	matches = file_name.match(/^([a-z]+)_([0-9]+)_(([a-zA-Z0-9]+).(gif|png|jpg))$/);
+	if (matches) return uploadDirName + '/img/' + size + '/' + matches[1] + '/' + matches[2] + '/' + matches[3];
+	if (file_name.length > 0) return isReturnNoImagePath ? uploadDirName + '/img/' + size + '/' + file_name + '/allnoimage.gif' : '';
+	return isReturnNoImagePath ? 'assets/img/site/noimage.gif' : '';
 }
 
 function get_loading_image_tag()

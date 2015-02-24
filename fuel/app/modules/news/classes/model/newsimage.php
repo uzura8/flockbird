@@ -87,4 +87,25 @@ class Model_NewsImage extends \MyOrm\Model
 
 		return \Util_db::conv_col($result);
 	}
+
+	public static function save_images($news_id, $files)
+	{
+		$file_cate = static::$image_prefix;
+		$new_filepath_prefix = \Site_Upload::get_filepath_prefix($file_cate, $news_id);
+		$new_filename_prefix = \Site_Upload::convert_filepath2filename($new_filepath_prefix);
+		$returns = array();
+		foreach ($files as $file)
+		{
+			$obj = self::forge();
+			$obj->news_id = $news_id;
+			$obj->file_name = $new_filename_prefix.$file->name;
+			//$obj->name = $file->description;
+			$obj->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
+			$obj->save();
+			$file->id = $obj->id;
+			$returns[] = $file;
+		}
+
+		return $returns;
+	}
 }

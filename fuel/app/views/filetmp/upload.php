@@ -6,7 +6,16 @@ if (!isset($upload_type)) $upload_type = 'img';
 <div id="upload_files_<?php echo $upload_type; ?>" class="<?php if ($hide_form): ?> hidden<?php endif; ?>">
 <div id="files_<?php echo $upload_type; ?>" class="files row">
 <?php if (!empty($files)): ?>
-<?php echo render('filetmp/_parts/upload_images', array('files' => $files, 'thumbnail_size' => $thumbnail_size, 'model' => $model, 'upload_type' => $upload_type)); ?>
+<?php
+$data = array(
+	'files' => $files,
+	'thumbnail_size' => $thumbnail_size,
+	'model' => $model,
+	'upload_type' => $upload_type
+);
+if (!empty($insert_target)) $data['insert_target'] = $insert_target;
+echo render('filetmp/_parts/upload_images', $data);
+?>
 <?php endif; ?>
 </div><!-- #files -->
 <!-- The global progress bar -->
@@ -19,6 +28,12 @@ if (!isset($upload_type)) $upload_type = 'img';
 <form class="form-inline">
 <?php endif; ?>
 	<?php echo Form::hidden('thumbnail_size', isset($thumbnail_size) ? $thumbnail_size : 'M', array('id' => 'thumbnail_size')); ?>
+<?php if (!empty($insert_target)): ?>
+	<?php echo Form::hidden('insert_target', $insert_target, array('id' => 'insert_target')); ?>
+<?php endif; ?>
+<?php if (!empty($post_uri)): ?>
+	<?php echo Form::hidden('post_uri', $post_uri, array('id' => 'post_uri')); ?>
+<?php endif; ?>
 <?php if (!empty($selects)): ?>
 	<div class="form-group">
 <?php endif; ?>

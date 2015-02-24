@@ -330,13 +330,18 @@ class Controller_Base extends Controller_Hybrid
 			{
 				$thumbnail_size = \Input::post('thumbnail_size');
 				if (!\Validation::_validation_in_array($thumbnail_size, array('M', 'S'))) throw new HttpInvalidInputException('Invalid input data');;
+				$insert_target = \Input::post('insert_target');
 			}
 
 			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN, true, null, 0, true, $upload_type);
 			$uploadhandler = new MyUploadHandler($options, false);
 			$files = $uploadhandler->post(false);
 			$files['upload_type'] = $upload_type;
-			if ($upload_type == 'img') $files['thumbnail_size'] = $thumbnail_size;
+			if ($upload_type == 'img')
+			{
+				$files['thumbnail_size'] = $thumbnail_size;
+				$files['insert_target'] = $insert_target;
+			}
 			$status_code = 200;
 
 			if ($this->format == 'html')

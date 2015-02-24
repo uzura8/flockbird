@@ -198,6 +198,27 @@ $(document).on('click', '.js-insert_text', function(){
 	return false;
 });
 
+$(document).on('click', '.js-insert_img', function(){
+	var targetBodySelector = $(this).data('body') ? $(this).data('body') : '';
+	if (!targetBodySelector) return false;
+
+	var fileId = $(this).data('id') ? parseInt($(this).data('id')) : 0;
+	var size = fileId ? $('#select_size_' + fileId).val() : 'raw';
+	var imgNamePrefix = $(this).data('file_name_prefix') ? $(this).data('file_name_prefix') : '';
+	var imgName = $(this).data('file_name') ? $(this).data('file_name') : '';
+	if (!imgNamePrefix || !imgName) return false;
+
+	var imgUri = getImgUri(imgNamePrefix + imgName, size);
+	if (!imgUri) return false;
+	var textAreaSelector = fileId ? '#image_description_' + fileId : '';
+	var textAreaVal = textAreaSelector ? $(textAreaSelector).val() : '';
+	var src = ' src="' + get_url(imgUri) + '"';
+	var alt = textAreaVal ? ' alt="' + textAreaVal + '"' : '';
+	$(targetBodySelector).append('<img' + src + alt + '>');
+	showMessage(get_term('add_picture') + 'しました。');
+	return false;
+});
+
 $(document).on('click', '.js-dropdown_content_menu', function(){
 	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};

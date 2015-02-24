@@ -209,10 +209,13 @@ class Controller_News extends Controller_Admin
 		$news_files = array();
 		$images = array();
 		$files  = array();
-		if ($is_enabled_image = \Config::get('news.image.isEnabled'))
+		$is_enabled_image = conf('image.isEnabled', 'news');
+		$is_insert_body_image = conf('image.isInsertBody', 'news');
+		$is_modal_upload_image = conf('image.isModalUpload', 'news');
+		if ($is_enabled_image && !$is_modal_upload_image)
 		{
 			$news_images = \News\Model_NewsImage::get4news_id($news->id);
-			$images = \Site_Upload::get_file_objects($news_images, $news->id, true, null, 'img');
+			$images = \Site_Upload::get_file_objects($news_images, $news->id, true, null, 'img', $is_insert_body_image);
 		}
 		if ($is_enabled_file = \Config::get('news.file.isEnabled'))
 		{

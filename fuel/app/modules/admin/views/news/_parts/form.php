@@ -7,11 +7,33 @@
 <?php else: ?>
 	<?php echo form_textarea($val, 'body', isset($news) ? $news->body : ''); ?>
 <?php endif; ?>
-<?php if (Config::get('news.image.isEnabled')): ?>
-	<?php echo form_upload_files($images, $images ? false : true, false, true, 'M', array(), 'news', term('site.picture')); ?>
+</small>
+<?php if (conf('image.isEnabled', 'news')): ?>
+<?php 	if (conf('image.isModalUpload', 'news')): ?>
+	<?php echo form_modal(
+		icon_label('form.add_picture'),
+		sprintf('admin/news/image/api/list/%d.html', $news->id),
+		'modal_images', term('form.add_picture'),
+		null,
+		term('site.picture')
+	); ?>
+<?php 	else: ?>
+	<?php echo form_upload_files(
+		$images,
+		$images ? false : true,
+		false,
+		true,
+		'M',
+		array(),
+		'news',
+		term('site.picture'),
+		sprintf('admin/news/image/api/upload/%d.html', $news->id),
+		'.note-editable'
+	); ?>
+<?php 	endif; ?>
 <?php endif; ?>
-<?php if (Config::get('news.file.isEnabled')): ?>
-	<?php echo form_upload_files($files, $files ? false : true, false, true, 'M', array(), 'news', term('site.file'), 2, 'file'); ?>
+<?php if (conf('file.isEnabled', 'news')): ?>
+	<?php echo form_upload_files($files, $files ? false : true, false, true, 'M', array(), 'news', term('site.file'), null, null, 2, 'file'); ?>
 <?php endif; ?>
 <?php if (Config::get('news.link.isEnabled')): ?>
 	<div class="form-group">

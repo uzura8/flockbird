@@ -24,9 +24,12 @@ $(function () {
 		.parent().addClass($.support.fileInput ? undefined : 'disabled');
 
 	$('#file_select_img').fileupload({
-		url: get_file_upload_post_uri('img'),
+		url: $('#post_uri').val() ? get_url($('#post_uri').val()) : get_file_upload_post_uri('img'),
 		dataType: 'text',
-		formData: {thumbnail_size: $('#thumbnail_size').val()},
+		formData: {
+			thumbnail_size: $('#thumbnail_size').val(),
+			insert_target: $('#insert_target').val()
+		},
 		start: function (e) {
 			$('#progress_img .progress-bar').css('width', 0);
 		},

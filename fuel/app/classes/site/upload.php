@@ -313,7 +313,7 @@ class Site_Upload
 		return $options;
 	}
 
-	public static function get_upload_handler_options($member_id, $is_admin = false, $is_tmp = true, $file_cate = null, $split_criterion_id = 0, $is_multiple_upload = true, $upload_type = 'img')
+	public static function get_upload_handler_options($member_id, $is_admin = false, $is_tmp = true, $file_cate = null, $split_criterion_id = 0, $is_multiple_upload = true, $upload_type = 'img', $with_accept_sizes = false)
 	{
 		if (!$split_criterion_id) $split_criterion_id = $member_id;
 		if (!$file_cate) $file_cate = $is_admin ? 'au' : 'm';
@@ -322,6 +322,7 @@ class Site_Upload
 		$uploader_info   = self::get_uploader_info($file_cate, $filepath_prefix, $is_tmp, $upload_type);
 		$options = array(
 			'is_save_db'      => conf('upload.isSaveDb'),
+			'is_tmp'          => $is_tmp,
 			'max_file_size'   => PRJ_UPLOAD_MAX_FILESIZE,
 			'max_number_of_files' => $is_multiple_upload ? PRJ_MAX_FILE_UPLOADS : 1,
 			'upload_dir'      => $uploader_info['upload_dir'],
@@ -359,6 +360,12 @@ class Site_Upload
 				'crop' => true,
 			);
 
+			if ($with_accept_sizes && $accept_size = conf('upload.types.img.types.'.$file_cate.'.sizes'))
+			{
+				$accept_size[] = 'raw';
+				$options['accept_sizes'] =  array_unique($accept_size);
+			}
+
 			$options['is_clear_exif_on_file'] = conf('isClearFromFile', 'exif');
 			$options['is_save_exif_to_db']    = conf('isSaveToDb.isEnabled', 'exif');
 			if (conf('isSaveToDb.filterTags.accept.isEnabled', 'exif')) $options['exif_accept_tags'] = conf('isSaveToDb.filterTags.accept.tags', 'exif');
@@ -368,12 +375,12 @@ class Site_Upload
 		return $options;
 	}
 
-	public static function get_file_objects($model_objs, $parent_id, $is_admin = null, $member_id = null, $type = 'img')
+	public static function get_file_objects($model_objs, $parent_id, $is_admin = null, $member_id = null, $type = 'img', $with_accept_sizes = false)
 	{
 		if (!$key = Util_Array::get_first_key($model_objs)) return array();
 		$file_cate = $model_objs[$key]->get_image_prefix();
 
-		$options = self::get_upload_handler_options($member_id, $is_admin, false, $file_cate, $parent_id, true, $type);
+		$options = self::get_upload_handler_options($member_id, $is_admin, false, $file_cate, $parent_id, true, $type, $with_accept_sizes);
 		$uploadhandler = new \MyUploadHandler($options, false);
 
 		return $uploadhandler->get_file_objects_from_related_model($model_objs, \Input::post(($type == 'img') ? 'image_description' : 'file_description'));

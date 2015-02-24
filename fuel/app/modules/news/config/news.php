@@ -7,6 +7,8 @@ return array(
 	),
 	'image' => array(
 		'isEnabled' => true,
+		'isInsertBody' => true,
+		'isModalUpload' => false,// modal(TODO: implement to file upload)
 	),
 	'file' => array(
 		'isEnabled' => true,

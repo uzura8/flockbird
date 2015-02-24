@@ -53,10 +53,11 @@ class MyUploadHandler extends UploadHandler
 			$file->thumbnail_uri = Site_Upload::get_uploaded_file_path($model_obj->file_name, $cache_size, 'img', false, true);
 			
 			$file->description   = $model_obj->name;
-			if (!is_null($image_names_posted[$model_obj->id]) && strlen($image_names_posted[$model_obj->id]))
+			if (isset($image_names_posted[$model_obj->id]) && strlen($image_names_posted[$model_obj->id]))
 			{
 				$file->description = $image_names_posted[$model_obj->id];
 			}
+			if (!empty($this->options['accept_sizes'])) $file->accept_sizes = $this->options['accept_sizes'];
 			$files[] = $file;
 		}
 
@@ -157,7 +158,7 @@ class MyUploadHandler extends UploadHandler
 	protected function handle_file_upload($uploaded_file, $original_name, $size, $type, $error, $index = null, $content_range = null)
 	{
 		$file = new \stdClass();
-		$file->is_tmp = true;
+		$file->is_tmp = $this->options['is_tmp'];
 		$file->original_name = $original_name;
 		$file->size = $this->fix_integer_overflow(intval($size));
 		$file->type = $type;
@@ -259,6 +260,8 @@ class MyUploadHandler extends UploadHandler
 				Site_Upload::clear_exif($file_path);
 				$file->size = File::get_size($file_path);
 			}
+
+			if (!empty($this->options['accept_sizes'])) $file->accept_sizes = $this->options['accept_sizes'];
 		}
 
 		try
@@ -269,7 +272,7 @@ class MyUploadHandler extends UploadHandler
 				$file_bin_id = Model_FileBin::save_from_file_path($file_path, $filename_with_prefix, $this->options['upload_type'] == 'img');
 				$this->delete_file($filename_with_prefix, false, true);
 			}
-			$file->id = $this->save_file_tmp($file, $file_bin_id, $exif);
+			$file->id = $this->save_file($file, $file_bin_id, $exif);
 		}
 		catch(\FuelException $e)
 		{
@@ -280,28 +283,28 @@ class MyUploadHandler extends UploadHandler
 		return $file;
 	}
 
-	protected function save_file_tmp($file, $file_bin_id = null, $exif = array())
+	protected function save_file($file, $file_bin_id = null, $exif = array())
 	{
-		$model_file_tmp = new \Model_FileTmp;
-		if ($file_bin_id) $model_file_tmp->file_bin_id = $file_bin_id;
-		$model_file_tmp->name = $this->options['filename_prefix'].$file->name;
-		//$model_file_tmp->path = $this->options['filepath'];
-		$model_file_tmp->filesize = $file->size;
-		$model_file_tmp->type = $file->type;
-		$model_file_tmp->original_filename = $file->original_name;
-		$model_file_tmp->member_id = $this->options['member_id'];
-		$model_file_tmp->user_type = $this->options['user_type'];
+		$model_file_name = $this->options['is_tmp'] ? '\Model_FileTmp' : '\Model_File';
+		$model_file = $model_file_name::forge();
+		if ($file_bin_id) $model_file->file_bin_id = $file_bin_id;
+		$model_file->name = $this->options['filename_prefix'].$file->name;
+		$model_file->filesize = $file->size;
+		$model_file->type = $file->type;
+		$model_file->original_filename = $file->original_name;
+		if ($this->options['member_id']) $model_file->member_id = $this->options['member_id'];
+		if ($this->options['is_tmp']) $model_file->user_type = $this->options['user_type'];
 		if ($exif)
 		{
-			$model_file_tmp->exif = serialize($exif);
+			$model_file->exif = serialize($exif);
 			if ($exif_time = Util_Exif::get_original_datetime($exif))
 			{
-				$model_file_tmp->shot_at = $exif_time;
+				$model_file->shot_at = $exif_time;
 			}
 		}
-		if (!$model_file_tmp->save()) throw new \FuelException('Failed to save file.');
+		if (!$model_file->save()) throw new \FuelException('Failed to save file.');
 
-		return $model_file_tmp->id;
+		return $model_file->id;
 	}
 
 	protected function delete_file($filename, $is_delete_db_bin_data = false, $is_delete_raw_file_only = false)

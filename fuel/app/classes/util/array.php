@@ -178,4 +178,12 @@ class Util_Array
 
 		return implode($delimitter, $returns);
 	}
+
+	public static function set_key_from_value(array $array)
+	{
+		$returns = array();
+		foreach ($array as $value) $returns[$value] = $value;
+
+		return $returns;
+	}
 }

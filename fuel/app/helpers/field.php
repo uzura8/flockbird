@@ -27,3 +27,15 @@ function field_public_flag($value = null, $type = 'select', $atter = array(), $n
 
 	return render('_parts/field/radio', $data);
 }
+
+function field_select($name = null, $value = null, $options = array(), $attr = array())
+{
+	$attr['class'] = 'form-control';
+	
+	return render('_parts/field/select', array(
+		'name' => $name,
+		'value' => $value,
+		'options' => $options,
+		'atter' => $attr,
+	));
+}

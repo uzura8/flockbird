@@ -45,6 +45,7 @@ $config = array(
 		'add' => '追加',
 		'do_add' => '追加する',
 		'add_picture' => '写真を追加',
+		'insert_picture' => '写真を挿入',
 		'add_file' => 'ファイルを追加',
 		'add_link' => 'リンクを追加',
 		'comment' => 'コメント',

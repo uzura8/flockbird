@@ -18,7 +18,7 @@ return array(
 						'sizes' => array(
 							'M' => '220x220',
 							'L' => '600x600',
-							'thumbnail' => '220x220',
+							'thumbnail' => '220x220xc',
 						),
 						'sizes_tmp' => array(
 							'S' => '80x80',

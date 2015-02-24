@@ -169,7 +169,7 @@ $config = array(
 					//'raw_file_path' => APPPATH.'cache/media/img_tmp/raw/',// raw ファイルを非公開領域に置く場合
 					'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img_tmp/raw/',
 					'sizes' => array(
-						'thumbnail' => '320x320',
+						'thumbnail' => '320x320xc',
 					),
 				),
 				'noimage_filename' => 'noimage.gif',
