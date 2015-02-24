@@ -24,7 +24,7 @@ class Util_security
 
 	public static function check_method($method, $is_output_log = true)
 	{
-		if (Input::method() != $method)
+		if (Input::method() != strtoupper($method))
 		{
 			if ($is_output_log) Util_Toolkit::log_error('METHOD');
 			throw new HttpMethodNotAllowed('Method not allowed');

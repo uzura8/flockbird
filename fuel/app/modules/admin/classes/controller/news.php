@@ -93,6 +93,12 @@ class Controller_News extends Controller_Admin
 	 */
 	public function action_create()
 	{
+		// if insert image mode, forbidden to display create form.
+		if (conf('image.isInsertBody', 'news'))
+		{
+			throw new \HttpNotFoundException;
+		}
+
 		$news = \News\Model_News::forge();
 		$val = self::get_validation_object($news);
 		$images = array();
@@ -194,6 +200,22 @@ class Controller_News extends Controller_Admin
 	}
 
 	/**
+	 * News create_instantly
+	 *   if insert image mode, forbidden to display create form.
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_create_instantly()
+	{
+		if (!conf('image.isInsertBody', 'news')) throw new \HttpNotFoundException;
+		\Util_security::check_method('post');
+		\Util_security::check_csrf();
+		$news = \News\Model_News::create_instantly($this->u->id);
+		\Response::redirect('admin/news/edit/'.$news->id);
+	}
+
+	/**
 	 * News edit
 	 * 
 	 * @access  public
@@ -203,7 +225,6 @@ class Controller_News extends Controller_Admin
 	public function action_edit($id = null)
 	{
 		$news = \News\Model_News::check_authority($id);
-
 		$val = self::get_validation_object($news);
 		$news_images = array();
 		$news_files = array();

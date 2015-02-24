@@ -865,10 +865,9 @@ function updateToggle(selfDomElement) {
 
 function execute_post(uri){
 	var post_data = (arguments.length > 1) ? arguments[1] : {};
+	var post_url = uri.match(/^https?:\/\//) ? uri : get_url(uri);
 
-	var post_url = get_url(uri);
 	post_data = set_token(post_data);
-
 	$('<form>', {action: post_url, method: 'post', id: 'tmp_form'}).appendTo(document.body);
 	var tmp_form = $('#tmp_form');
 	$.each(post_data, function(key, val){
@@ -878,21 +877,23 @@ function execute_post(uri){
 }
 
 function post_submit(selfDomElement) {
-	var post_data = (arguments.length > 1) ? arguments[1] : {};
-	var uri = $(selfDomElement).data('uri') ? $(selfDomElement).data('uri') : '';
-	var confirm_msg = $(selfDomElement).data('msg') ? $(selfDomElement).data('msg') : '';
-	var destination = $(selfDomElement).data('destination') ? $(selfDomElement).data('destination') : '';
-
-	if (destination.length > 0) post_data['destination'] = destination;
-
-	if (confirm_msg.length > 0) {
-		apprise(confirm_msg, {'confirm':true}, function(r) {
-			if (r == true) execute_post(uri, post_data);
+	var postData    = (arguments.length > 1) ? arguments[1] : {},
+			uri         = $(selfDomElement).data('uri'),
+			href        = $(selfDomElement).attr('href'),
+			confirmMsg  = $(selfDomElement).data('msg'),
+			destination = $(selfDomElement).data('destination'),
+			postUri;
+	if (href && href == '#') href = '';
+	if (!href && !uri) return false;
+	postUri = href ? href : get_url(uri);
+	if (destination) postData['destination'] = destination;
+	if (confirmMsg) {
+		apprise(confirmMsg, {confirm: true}, function(r) {
+			if (r == true) execute_post(postUri, postData);
 		});
 		return;
 	}
-
-	execute_post(uri, post_data);
+	execute_post(postUri, postData);
 }
 
 function execute_simple_delete(selfDomElement) {

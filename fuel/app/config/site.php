@@ -13,6 +13,7 @@ $config = array(
 	'default' => array(
 		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
 		'ajax_timeout' => 10000,
+		'dateFormat' => 'Y/m/d',
 	),
 	'login_uri' => array(
 		'site' => 'auth/login',

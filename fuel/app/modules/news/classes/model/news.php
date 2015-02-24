@@ -144,4 +144,17 @@ class Model_News extends \MyOrm\Model
 	{
 		return (bool)self::get4slug($slug);
 	}
+
+	public static function create_instantly($user_id)
+	{
+		$obj = self::forge();
+		$obj->slug         = Site_Util::get_slug();
+		$obj->title        = date(conf('default.dateFormat')).'の'.term('news.view');
+		$obj->users_id     = $user_id;
+		$obj->token        = \Security::generate_token();
+		$obj->is_published = 0;
+		$obj->save();
+
+		return $obj;
+	}
 }

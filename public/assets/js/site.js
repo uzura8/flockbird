@@ -25,9 +25,23 @@ $(document).on('click', '.js-simplePost', function(){
 });
 
 $(document).on('click', '.js-simpleLink', function(){
-	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
-	if (!getUri.length) return false;
-	location.href = get_url(getUri);
+	var confirm_msg = $(this).data('msg') ? $(this).data('msg') : '',
+			getUri = $(this).data('uri') ? $(this).data('uri') : '',
+			href = $(this).attr('href'),
+			location_to;
+
+	if (href && href == '#') href = '';
+	if (!href && !getUri) return false;
+	location_to = href ? href : get_url(getUri);
+	close_dropdown_menu(this);
+
+	if (confirm_msg.length > 0) {
+		apprise(confirm_msg, {'confirm':true}, function(r) {
+			if (r == true) location.href = location_to;
+		});
+		return false;
+	}
+	location.href = location_to;
 	return false;
 });
 
