@@ -159,3 +159,16 @@ function label($name, $type = 'default', $attrs = array())
 
 	return html_tag('span', $attr, $name);
 }
+
+function navigation_link($label, $values, $is_admin = false)
+{
+	$href = $values;
+	$attr = array();
+	if (is_array($values))
+	{
+		$href = isset($values['href']) ? $values['href'] : '';
+		if (isset($values['attr'])) $attr = $values['attr'];
+	}
+
+	return $is_admin ? anchor($href, $label, true, $attr) : anchor_icon($href, $label, $attr);
+}

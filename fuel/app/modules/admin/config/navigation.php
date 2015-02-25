@@ -8,7 +8,13 @@ $configs = array(
 			),
 			term('site.content', 'site.management') => array(
 				term('news.view', 'site.list') => 'admin/news/',
-				//term('news.view', 'form.create') => 'admin/news/create',
+				term('news.view', 'form.create') => conf('image.isInsertBody', 'news') ? array(
+					'href' => 'admin/news/create_instantly',
+					'attr' => array(
+						'class' => 'js-simplePost',
+						'data-msg' => term('news.view').'を'.term('form.create').'します。よろしいですか？',
+					),
+				) : 'admin/news/create',
 				term('news.category.view') => 'admin/news/category',
 				term('content.page', 'site.management') => 'admin/content/page',
 				term('site.image', 'site.management') => 'admin/content/image',
@@ -52,12 +58,5 @@ $configs = array(
 		),
 	),
 );
-
-//if (is_enabled('news') && conf('image.isInsertBody', 'news'))
-//{
-//	$key_cate = term('site.content', 'site.management');
-//	$key_link = term('news.view', 'form.create');
-//	if (isset($configs['admin']['secure_global_head'][$key_cate][$key_link])) unset($configs['admin']['secure_global_head'][$key_cate][$key_link]);
-//}
 
 return $configs;

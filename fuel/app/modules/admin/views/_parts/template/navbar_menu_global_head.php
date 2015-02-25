@@ -9,12 +9,12 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#menu<?php echo $i; ?>"><?php echo $name; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 <?php 		foreach ($value as $item_name => $item_path): ?>
-							<li><?php echo anchor($item_path, $item_name, true); ?></li>
+							<li><?php echo navigation_link($item_name, $item_path, true); ?></li>
 <?php 		endforeach; ?>
 						</ul>
 						</li>
 <?php 	elseif (\Admin\Site_Util::check_exists_accessible_uri($value)): ?>
-					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo anchor($value, $name, true); ?></li>
+					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo navigation_link($name, $value, true); ?></li>
 <?php 	endif; ?>
 <?php		$i++; ?>
 <?php endforeach; ?>
@@ -31,12 +31,12 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#menu<?php echo $i; ?>"><?php echo $name; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 <?php 		foreach ($value as $item_name => $item_path): ?>
-							<li><?php echo anchor($item_path, $item_name, true); ?></li>
+							<li><?php echo navigation_link($item_name, $item_path, true); ?></li>
 <?php 		endforeach; ?>
 						</ul>
 						</li>
 <?php 	elseif (\Admin\Site_Util::check_exists_accessible_uri($value)): ?>
-					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo anchor($value, $name, true); ?></li>
+					<li<?php if (isset($path) && Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo navigation_link($name, $value, true); ?></li>
 <?php 	endif; ?>
 <?php		$i++; ?>
 <?php endforeach; ?>
