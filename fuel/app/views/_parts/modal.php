@@ -3,7 +3,7 @@ $block_attrs_default = array(
 	'class' => array('modal', 'fade'),
 	'tabindex' => '-1',
 	'role' => 'dialog',
-	'aria-labelledby' => '',
+	//'aria-labelledby' => '',
 	'aria-hidden' => 'true',
 );
 $block_attrs = Util_Array::conv_arrays2str(array_merge_recursive($block_attrs_default, isset($block_attrs) ? $block_attrs : array()));
@@ -19,7 +19,7 @@ if (!isset($is_display_footer_close_btn)) $is_display_footer_close_btn = false;
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 <?php endif; ?>
 <?php if (!empty($title)): ?>
-				<h4 class="modal-title" id="myModalLabel"><?php echo $title; ?></h4>
+				<h4 class="modal-title"><?php echo $title; ?></h4>
 <?php endif; ?>
 			</div>
 <?php endif; ?>
