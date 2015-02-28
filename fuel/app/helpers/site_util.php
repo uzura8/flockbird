@@ -112,7 +112,7 @@ function symbol_bool($bool)
 	return $bool ? symbol('bool.true') : symbol('bool.false');
 }
 
-function img_uri($filename = '', $size_key = '', $is_profile = false, $is_return_with_size = false)
+function img_uri($filename = '', $size_key = '', $is_profile = false, $is_return_file_info = false)
 {
 	if (strlen($filename) <= 3)
 	{
@@ -136,14 +136,14 @@ function img_uri($filename = '', $size_key = '', $is_profile = false, $is_return
 	}
 	if (!$size = img_size($file_cate, $size_key, $additional_table)) $size = $size_key;
 	$file_path = Site_Upload::get_uploaded_file_path($filename, $size, 'img', false, true);
-	if ($is_return_with_size) return array($file_path, $size);
+	if ($is_return_file_info) return array($file_path, $filename, $file_cate, $size);
 
 	return $file_path;
 }
 
 function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile = false, $is_responsive = false, $anchor_attr = array(), $img_attr = array())
 {
-	list($uri_path, $size) = img_uri($filename, $size_key, $is_profile, true);
+	list($uri_path, $filename, $file_cate, $size) = img_uri($filename, $size_key, $is_profile, true);
 
 	if (!isset($img_attr['class'])) $img_attr['class'] = '';
 	if ($is_responsive) $img_attr['class'] = 'img-responsive';
