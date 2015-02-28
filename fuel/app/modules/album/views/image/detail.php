@@ -61,9 +61,16 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 ))); ?>
 <?php endif; ?>
 
-<?php if ($locations): ?>
-<h3>Map</h3>
-<div class="popin">
-<div id="map"></div>
-</div>
+<?php if (is_enabled_map('image/detail', 'album')): ?>
+<?php echo render('_parts/map/detail', array(
+	'locations' => $locations,
+	'save_uri' => \Album\Site_Util::get_save_location_api_uri($album_image->id),
+	'markers' => $locations ? \Album\Site_Util::get_map_markers($locations) : array(),
+	'marker_template' => '#map-marker-image-template',
+	'marker_images' => array(
+		'uri' => img_uri($album_image->get_image(), 'M'),
+		'alt' => $album_image->name,
+	),
+)); ?>
 <?php endif; ?>
+

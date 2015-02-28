@@ -55,7 +55,10 @@ function get_term(key) {
 function get_config(key) {
 	var config = {
 <?php if (is_enabled('timeline')): ?>
-		'timeline_list_limit': <?php echo Config::get('timeline.articles.limit'); ?>,
+		'timeline_list_limit': <?php echo conf('articles.limit', 'timeline'); ?>,
+<?php endif; ?>
+<?php if (is_enabled_map()): ?>
+		'mapParams': <?php echo json_encode(conf('map.paramsDefault')); ?>,
 <?php endif; ?>
 		'default_ajax_timeout': <?php echo conf('default.ajax_timeout'); ?>,
 		'default_list_limit': <?php echo conf('view_params_default.list.limit'); ?>,

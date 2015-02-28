@@ -69,6 +69,8 @@ $config = array(
 			'key' => 'undo',
 			'prefix' => 'fa fa-',
 		),
+		'set_location' => 'map-marker',
+		'do_set_location' => 'map-marker',
 	),
 	'site' => array(
 		//'view' => 'サイト',

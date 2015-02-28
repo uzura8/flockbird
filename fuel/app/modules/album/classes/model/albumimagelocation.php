@@ -23,14 +23,16 @@ class Model_AlbumImageLocation extends \MyOrm\Model
 			'form' => array('type' => false),
 		),
 		'latitude' => array(
+			'label' => '緯度',
 			'data_type' => 'DECIMAL',
-			'validation' => array('required'),
-			'form' => array('type' => false),
+			'validation' => array('required', 'numeric_between' => array(-90, 90)),
+			'form' => array('type' => 'text'),
 		),
 		'longitude' => array(
+			'label' => '経度',
 			'data_type' => 'DECIMAL',
-			'validation' => array('required'),
-			'form' => array('type' => false),
+			'validation' => array('required', 'numeric_between' => array(-180, 180)),
+			'form' => array('type' => 'text'),
 		),
 		//'latlng' => array(
 		//	'data_type' => 'geometry',

@@ -105,11 +105,8 @@ function symbol_bool($bool)
 	return $bool ? symbol('bool.true') : symbol('bool.false');
 }
 
-function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile = false, $is_responsive = false, $anchor_attr = array(), $img_attr = array())
+function img_uri($filename = '', $size_key = '', $is_profile = false, $is_return_with_size = false)
 {
-	if (!isset($img_attr['class'])) $img_attr['class'] = '';
-	if ($is_responsive) $img_attr['class'] = 'img-responsive';
-
 	if (strlen($filename) <= 3)
 	{
 		$file_cate = $filename;
@@ -129,11 +126,27 @@ function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file =
 			$additional_table = 'profile';
 			if (!$file_cate) $file_cate = 'ai';
 		}
+	}
+	if (!$size = img_size($file_cate, $size_key, $additional_table)) $size = $size_key;
+	$file_path = Site_Upload::get_uploaded_file_path($filename, $size, 'img', false, true);
+	if ($is_return_with_size) return array($file_path, $size);
+
+	return $file_path;
+}
+
+function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file = false, $alt = '', $is_profile = false, $is_responsive = false, $anchor_attr = array(), $img_attr = array())
+{
+	list($uri_path, $size) = img_uri($filename, $size_key, $is_profile, true);
+
+	if (!isset($img_attr['class'])) $img_attr['class'] = '';
+	if ($is_responsive) $img_attr['class'] = 'img-responsive';
+
+	if ($is_profile)
+	{
 		if (!empty($img_attr['class'])) $img_attr['class'] .= ' ';
 		$img_attr['class'] .= 'profile_image';
 	}
 
-	if (!$size = img_size($file_cate, $size_key, $additional_table)) $size = $size_key;
 	if (empty($filename))
 	{
 		$noimage_tag = Site_Util::get_noimage_tag($size, $file_cate, $img_attr);
@@ -142,8 +155,6 @@ function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file =
 		return $noimage_tag;
 	}
 	if ($alt) $img_attr['alt'] = $alt;
-
-	$uri_path = Site_Upload::get_uploaded_file_path($filename, $size, 'img', false, true);
 	$image_tag = Html::img($uri_path, $img_attr);
 
 	if ($link_uri) return Html::anchor($link_uri, $image_tag, $anchor_attr);
@@ -366,4 +377,12 @@ function label_is_secure($value, $view_icon_only = false, $attrs = array())
 	}
 
 	return label($label_name, $type, $attrs);
+}
+
+function is_enabled_map($action = null, $module = null)
+{
+	if (!$action) return conf('map.isEnabled');
+	$action_key = str_replace('/', '.', $action);
+
+	return conf('map.isEnabled') && conf('display_setting.'.$action_key.'.displayMap', $module, false);
 }

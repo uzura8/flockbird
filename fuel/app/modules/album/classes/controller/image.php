@@ -55,7 +55,7 @@ class Controller_Image extends \Controller_Site
 		$id = (int)$id;
 		$album_image = Model_Albumimage::check_authority($id);
 		$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
-		$locations = conf('display_setting.image.detail.displayMap', 'album') ? Model_AlbumImageLocation:: get_locations4album_image_id($id) : null;
+		$locations = is_enabled_map('image/detail', 'album') ? Model_AlbumImageLocation::get_locations4album_image_id($id) : null;
 
 		// 既読処理
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album_image', $id);

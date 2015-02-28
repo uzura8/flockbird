@@ -65,6 +65,8 @@ $config = array(
 		'do_reset_default' => 'デフォルトに戻す',
 		'complete' => '完了',
 		'reserve' => '予約',
+		'set_location' => '位置情報設定',
+		'do_set_location' => '位置情報を設定する',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -112,6 +114,7 @@ $config = array(
 		'term' => '利用規約',
 		'privacy_policy' => 'プライバシーポリシー',
 		'template' => 'テンプレート',
+		'location' => '位置情報',
 	),
 	'common' => array(
 		'info' => '情報',

@@ -323,6 +323,15 @@ $config = array(
 	'sort_order' => array(
 		'interval' => 10,
 	),
+	'map' => array(
+		'isEnabled' => true,
+		'paramsDefault' => array(
+			'div' => '#map',
+			'lat' => 35.65858,
+			'lng' => 139.745433,
+			'zoom' => 15,
+		),
+	),
 	'public_flag' => array(
 		'default' => PRJ_PUBLIC_FLAG_ALL,
 		'colorTypes' => array(

@@ -1028,3 +1028,48 @@ function showCommentInput(id, targetBlockName, postUri, getUri, isFocus) {
 	$(textareaSelector).autogrow();
 	if (isFocus) $(textareaSelector).focus();
 }
+
+function simpleAjaxPost(postUri)
+{
+	var postData           = (arguments.length > 1) ? arguments[1] : {},
+			trigerSelector     = (arguments.length > 2) ? arguments[2] : '',
+			defaultMessage     = (arguments.length > 3) ? arguments[3] : '',
+			callbackFuncs      = (arguments.length > 4) ? arguments[4] : [],
+			trigerSelectorHtml = (trigerSelector) ? $(trigerSelector).html() : '';
+
+	if (GL.execute_flg) return false;
+	if (!postUri) return false;
+
+	postData = set_token(postData);
+	$.ajax({
+		url : get_url(postUri),
+		type : 'POST',
+		dataType : 'json',
+		data : postData,
+		timeout: get_config('default_ajax_timeout'),
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			setLoading(null, trigerSelector, 'btn_loading_image');
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			removeLoading(null, trigerSelector, 'btn_loading_image');
+			if (trigerSelector) $(trigerSelector).html(trigerSelectorHtml);
+		},
+		success: function(response){
+			var msg = !empty(response.message) ? response.message : defaultMessage;
+			showMessage(msg);
+			if (callbackFuncs) {
+				$.each(callbackFuncs, function() {
+					this();
+				});
+			}
+		},
+		error: function(response){
+			GL.execute_flg = false;
+			removeLoading(null, trigerSelector, 'btn_loading_image');
+			if (trigerSelector) $(trigerSelector).html(trigerSelectorHtml);
+			showMessage(getErrorMessage(response));
+		}
+	});
+}

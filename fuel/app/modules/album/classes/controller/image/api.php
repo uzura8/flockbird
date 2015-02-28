@@ -293,6 +293,71 @@ class Controller_Image_api extends \Controller_Site_Api
 	}
 
 	/**
+	 * Api post_save_location
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function post_save_location($id = null)
+	{
+		$this->response_body['error_messages']['default'] = sprintf('%sの%sに失敗しました。', term('site.location'), term('form.save'));
+		try
+		{
+			\Util_security::check_csrf();
+
+			$id = (int)$id;
+			if (\Input::post('id')) $id = (int)\Input::post('id');
+			$album_image = Model_AlbumImage::check_authority($id, $this->u->id, 'album_image_location');
+
+			$album_image_location = $album_image->album_image_location ?: Model_AlbumImageLocation::forge();
+			$val = \Validation::forge();
+			$val->add_model($album_image_location);
+			$val->fieldset()->field('album_image_id')->delete_rule('required');
+			if (!$val->run()) throw new \HttpInvalidInputException($val->show_errors());
+			$post = $val->validated();
+
+			\DB::start_transaction();
+			$album_image_location->album_image_id = $id;
+			$album_image_location->latitude = $post['latitude'];
+			$album_image_location->longitude = $post['longitude'];
+			$this->response_body['status'] = (bool)$album_image_location->save();
+			\DB::commit_transaction();
+
+			$this->response_body['album_image_location'] = $album_image_location;
+			$this->response_body['message'] = sprintf('%sを%sしました。', term('site.location'), term('form.save'));
+			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
+		catch(AlreadySetToCoverException $e)
+		{
+			$status_code = 409;
+		}
+		catch(\Database_Exception $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			$status_code = 500;
+		}
+		catch(\FuelException $e)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+			$status_code = 500;
+		}
+
+		$this->response($this->response_body, $status_code);
+	}
+
+	/**
 	 * Album image delete
 	 * 
 	 * @access  public
