@@ -63,6 +63,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 
 <?php if (is_enabled_map('image/detail', 'album')): ?>
 <?php echo render('_parts/map/detail', array(
+	'auther_member_id' => $album_image->album->member_id,
 	'locations' => $locations,
 	'save_uri' => \Album\Site_Util::get_save_location_api_uri($album_image->id),
 	'markers' => $locations ? \Album\Site_Util::get_map_markers($locations) : array(),

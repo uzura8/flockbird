@@ -1,5 +1,12 @@
 <?php
 
+function is_editable($member_id)
+{
+	if (!$member_id) return false;
+	if (!Auth::check()) return false;
+	return Auth::get_member_id() == $member_id;
+}
+
 function site_get_current_page_id($delimitter = '_')
 {
 	$items = array();

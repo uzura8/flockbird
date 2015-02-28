@@ -1,4 +1,5 @@
 <?php
+if (!isset($auther_member_id)) $auther_member_id = 0;
 if (!isset($locations)) $locations = array();
 ?>
 <?php if ($locations || Auth::check()): ?>
@@ -14,7 +15,7 @@ if ($marker_images) $block_attrs['data-images'] = $marker_images;
 	<div <?php echo Util_Array::conv_array2attr_string($block_attrs); ?>></div>
 </div>
 <?php
-if (Auth::check())
+if (is_editable($auther_member_id))
 {
 	$btn_attr = array(
 		'class' => 'js-display_map',
