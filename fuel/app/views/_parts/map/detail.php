@@ -2,7 +2,7 @@
 if (!isset($auther_member_id)) $auther_member_id = 0;
 if (!isset($locations)) $locations = array();
 ?>
-<?php if ($locations || Auth::check()): ?>
+<?php if ($locations || is_editable($auther_member_id)): ?>
 <?php
 $block_attrs = array('id' => 'map');
 if ($locations) $block_attrs['data-map_params'] = array('lat' => $locations[0], 'lng' => $locations[1]);
