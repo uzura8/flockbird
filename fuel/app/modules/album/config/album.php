@@ -35,6 +35,9 @@ return array(
 			'detail' => array(
 				'displayMap' => true,
 			),
+			'edit' => array(
+				'displayMap' => true,
+			),
 		),
 	),
 );

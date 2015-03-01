@@ -429,8 +429,11 @@ function form_modal($button_label = '', $modal_get_uri = '', $modal_id_name = ''
 	return $view;
 }
 
-function form_map($val, $names = array('latitude', 'longitude'), $default_values = array(null, null), $label_col_sm_size = 2, $label = '', $help = '')
+function form_map($val, $names = null, $default_values = null, $label_col_sm_size = 2, $label = '', $help = '')
 {
+	if (is_null($names)) $names = array('latitude', 'longitude');
+	if (is_null($default_values)) $default_values = array(null, null);
+
 	$field_lat = $val->fieldset()->field($names[0]);
 	$field_lng = $val->fieldset()->field($names[1]);
 	$input_atter_lat = array(

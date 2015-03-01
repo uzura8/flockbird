@@ -76,4 +76,14 @@ class Model_AlbumImageLocation extends \MyOrm\Model
 			->where('album_image_id', $album_image_id)
 			->get_one();
 	}
+
+	public static function save4album_image_id($album_image_id, $latitude, $longitude)
+	{
+		$obj = self::get_one4album_image_id($album_image_id) ?: self::forge();
+		$obj->album_image_id = $album_image_id;
+		$obj->latitude  = $latitude;
+		$obj->longitude = $longitude;
+
+		return $obj->save();
+	}
 }

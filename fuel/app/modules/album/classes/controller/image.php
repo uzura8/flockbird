@@ -145,6 +145,8 @@ class Controller_Image extends \Controller_Site
 	{
 		$album_image = Model_Albumimage::check_authority($id, $this->u->id);
 		$val = self::get_validation_object($album_image);
+		$is_enabled_map = is_enabled_map('image/edit', 'album');
+		$location = $is_enabled_map ? Model_AlbumimageLocation::get_locations4album_image_id($id) : null;
 
 		if (\Input::method() == 'POST')
 		{
@@ -154,7 +156,8 @@ class Controller_Image extends \Controller_Site
 
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-				if (empty($post['name']) && empty($post['shot_at_time']))
+				if (empty($post['name']) && empty($post['shot_at_time'])
+					&& ($is_enabled_map && !strlen($post['latitude']) && !strlen($post['longitude'])))
 				{
 					throw new \FuelException('入力してください');
 				}
@@ -171,7 +174,7 @@ class Controller_Image extends \Controller_Site
 				\Session::set_flash('message', term('album_image').'を編集をしました。');
 				\Response::redirect('album/image/'.$album_image->id);
 			}
-			catch(Exception $e)
+			catch(\FuelException $e)
 			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
 				\Session::set_flash('error', $e->getMessage());
@@ -186,9 +189,9 @@ class Controller_Image extends \Controller_Site
 			'album'
 		);
 		$this->template->post_header = \View::forge('_parts/datetimepicker_header');
-		$this->template->post_footer = \View::forge('_parts/datetimepicker_footer', array('attr' => '#shot_at_time', 'max_date' => 'now'));
+		$this->template->post_footer = \View::forge('image/_parts/edit_footer');
 
-		$this->template->content = \View::forge('image/edit', array('val' => $val, 'album_image' => $album_image));
+		$this->template->content = \View::forge('image/edit', array('val' => $val, 'album_image' => $album_image, 'location' => $location));
 	}
 
 	/**
@@ -241,6 +244,15 @@ class Controller_Image extends \Controller_Site
 				->add_rule('required')
 				->add_rule('datetime_except_second')
 				->add_rule('datetime_is_past');
+
+		if (is_enabled_map('image/edit', 'album'))
+		{
+			$val->add('latitude', '緯度')
+				->add_rule('numeric_between', -90, 90);
+
+			$val->add('longitude', '経度')
+				->add_rule('numeric_between', -180, 180);
+		}
 
 		return $val;
 	}

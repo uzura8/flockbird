@@ -358,6 +358,11 @@ class Model_AlbumImage extends \MyOrm\Model
 			$this->update_public_flag($values['public_flag'], true);
 		}
 
+		if (isset($values['latitude']) && strlen($values['latitude']) && isset($values['longitude']) && strlen($values['longitude']))
+		{
+			Model_AlbumImageLocation::save4album_image_id($this->id, $values['latitude'], $values['longitude']);
+		}
+
 		return $is_changed;
 	}
 
@@ -438,13 +443,9 @@ class Model_AlbumImage extends \MyOrm\Model
 				$is_set = true;
 			}
 
-			if (isset($set_value['latitude']) && strlen($set_value['longitude']))
+			if (isset($set_value['latitude']) && strlen($set_value['latitude']) && isset($set_value['longitude']) && strlen($set_value['longitude']))
 			{
-				$album_image_location = Model_AlbumImageLocation::get_one4album_image_id($album_image->id) ?: Model_AlbumImageLocation::forge();
-				$album_image_location->album_image_id = $album_image->id;
-				$album_image_location->latitude = $set_value['latitude'];
-				$album_image_location->longitude = $set_value['longitude'];
-				$album_image_location->save();
+				Model_AlbumImageLocation::save4album_image_id($album_image->id, $set_value['latitude'], $set_value['longitude']);
 			}
 
 			if ($is_set) $result++;;
