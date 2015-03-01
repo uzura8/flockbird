@@ -16,7 +16,9 @@ function submit_after_confirm(action) {
 		var public_flag = $('input[name="public_flag"]:checked').val();
 		//var shot_at     = $('#form_shot_at').val().trim();
 		var shot_at     = $.trim($('#form_shot_at').val());// for legacy IE.
-		if (action == 'post' && name.length == 0 && public_flag == 99 && shot_at.length == 0) {
+		var lat         = $.trim($('#input_lat').val());// for legacy IE.
+		var lng         = $.trim($('#input_lng').val());// for legacy IE.
+		if (action == 'post' && !name.length && public_flag == 99 && !shot_at.length && !lat.length && !lng.length) {
 			apprise('入力してください');
 			return false;
 		}

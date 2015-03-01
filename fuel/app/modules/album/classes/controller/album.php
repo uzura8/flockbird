@@ -334,6 +334,7 @@ class Controller_Album extends \Controller_Site
 			'order_by' => array('id' => 'asc')
 		));
 		$is_disabled_to_update_public_flag = Site_Util::check_album_disabled_to_update($album->foreign_table, true);
+		$is_enabled_map = is_enabled_map('edit_images', 'album');
 		$val = self::get_album_image_validation($is_disabled_to_update_public_flag);
 
 		$shot_at = '';
@@ -362,7 +363,9 @@ class Controller_Album extends \Controller_Site
 					if (!$val->run()) throw new \FuelException($val->show_errors());
 
 					$post = $val->validated();
-					if (!strlen($post['name']) && empty($post['shot_at']) && (!$is_disabled_to_update_public_flag && $post['public_flag'] == 99))
+					if (!strlen($post['name']) && empty($post['shot_at'])
+						&& (!$is_disabled_to_update_public_flag && $post['public_flag'] == 99)
+						&& ($is_enabled_map && !strlen($post['latitude']) && !strlen($post['longitude'])))
 					{
 						throw new \FuelException('入力してください');
 					}
@@ -391,11 +394,9 @@ class Controller_Album extends \Controller_Site
 				\Session::set_flash('error', $message);
 			}
 		}
-
 		$this->set_title_and_breadcrumbs(term('album_image', 'site.management'), array('/album/'.$id => $album->name), $album->member, 'album');
 		$this->template->post_header = \View::forge('_parts/datetimepicker_header');
-		$this->template->post_footer = \View::forge('_parts/datetimepicker_footer', array('attr' => '#shot_at', 'max_date' => 'now'));
-
+		$this->template->post_footer = \View::forge('_parts/edit_images_footer');
 		$data = array(
 			'id' => $id, 'album' => $album,
 			'album_images' => $album_images,
@@ -502,7 +503,7 @@ class Controller_Album extends \Controller_Site
 		$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
 		if (!$is_disabled_to_update_public_flag)
 		{
-			$options = \Site_Form::get_public_flag_options();
+			$options = \Site_Form::get_public_flag_options(null, 'default', true);
 			$val->add('public_flag', term('public_flag.label'), array('options' => $options, 'type' => 'radio'))
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
@@ -512,6 +513,15 @@ class Controller_Album extends \Controller_Site
 			->add_rule('max_length', 16)
 			->add_rule('datetime_except_second')
 			->add_rule('datetime_is_past');
+
+		if (is_enabled_map('edit_images', 'album'))
+		{
+			$val->add('latitude', '緯度')
+				->add_rule('numeric_between', -90, 90);
+
+			$val->add('longitude', '経度')
+				->add_rule('numeric_between', -180, 180);
+		}
 
 		return $val;
 	}

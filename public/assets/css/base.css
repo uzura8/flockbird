@@ -625,6 +625,9 @@ a.simpleList-item-media:focus {
 	padding: 15px;
 	margin-bottom: 20px;
 }
+.popin-noshadow {
+	box-shadow: none !important;
+}
 
 .appriseOverlay {
 	z-index: 1060;

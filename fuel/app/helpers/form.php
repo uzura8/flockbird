@@ -299,15 +299,13 @@ function form_anchor_delete($post_uri, $anchor_label = null, $attr = null, $offs
 	return $view;
 }
 
-function form_public_flag(Validation $val, $default_value = null, $is_select = false, $label_col_sm_size = 2, $with_no_change_option = false, $name = 'public_flag', $is_inline_options = false)
+function form_public_flag(Validation $val, $default_value = null, $is_select = false, $label_col_sm_size = 2, $name = 'public_flag', $is_inline_options = false)
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array('id' => 'form_'.$name);
 	if (is_null($default_value)) $default_value = $field->get_attribute('value', conf('public_flag.default'));
 	$label = $field->get_attribute('label', term('public_flag.label'));
-
 	$options = $field->get_options();
-	if ($with_no_change_option) $options = array(99 => '変更しない') + $options;
 
 	$data = array(
 		'val'   => $val,
@@ -429,6 +427,35 @@ function form_modal($button_label = '', $modal_get_uri = '', $modal_id_name = ''
 	$view->set_safe('button_label', $button_label);
 
 	return $view;
+}
+
+function form_map($val, $names = array('latitude', 'longitude'), $default_values = array(null, null), $label_col_sm_size = 2, $label = '', $help = '')
+{
+	$field_lat = $val->fieldset()->field($names[0]);
+	$field_lng = $val->fieldset()->field($names[1]);
+	$input_atter_lat = array(
+		'type'  =>'hidden',
+		'id'    => 'form_'.$names[0],
+	);
+	$input_atter_lng = array(
+		'type'  =>'hidden',
+		'id'    => 'form_'.$names[1],
+	);
+	if (!is_null($field_lat->get_attribute('value'))) $default_values[0] = $field_lat->get_attribute('value');
+	if (!is_null($field_lng->get_attribute('value'))) $default_values[1] = $field_lng->get_attribute('value');
+	$data = array(
+		'val'   => $val,
+		'names'  => $names,
+		'label' => $label ?: term('site.location'),
+		'default_values' => $default_values,
+		'is_required'   => $field_lat->get_attribute('required') == 'required' && $field_lng->get_attribute('required') == 'required',
+		'input_atter_lat'   => $input_atter_lat,
+		'input_atter_lng'   => $input_atter_lng,
+		'label_col_sm_size' => $label_col_sm_size,
+		'help' => $help,
+	);
+
+	return render('_parts/form/map', $data);
 }
 
 function form_required_tag($mark = '*')

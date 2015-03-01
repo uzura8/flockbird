@@ -5,9 +5,12 @@
 	<?php echo Form::hidden('clicked_btn', '', array('id' => 'clicked_btn')); ?>
 	<?php echo form_input($val, 'name', ''); ?>
 <?php if (!$is_disabled_to_update_public_flag): ?>
-	<?php echo form_public_flag($val, 99, false, 2, true); ?>
+	<?php echo form_public_flag($val, 99); ?>
 <?php endif; ?>
 	<?php echo form_input_datetime($val, 'shot_at', '', null, 5); ?>
+<?php if (is_enabled_map('edit_images', 'album')): ?>
+	<?php echo form_map($val); ?>
+<?php endif; ?>
 	<?php echo form_button('form.edit_all', 'button', 'post', array('id' => 'submit_post')); ?>
 	<?php echo form_button('form.delete_all', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-default btn-danger')); ?>
 </div><!-- well -->

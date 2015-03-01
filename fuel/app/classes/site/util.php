@@ -499,4 +499,15 @@ class Site_Util
 			static::get_public_flag_coloer_type($public_flag)
 		);
 	}
+
+	public static function get_map_markers($locations)
+	{
+		$markers = array();
+		$markers[] = array(
+			'lat' => $locations[0],
+			'lng' => $locations[1],
+		);
+
+		return $markers;
+	}
 }

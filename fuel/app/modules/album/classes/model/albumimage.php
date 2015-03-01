@@ -437,6 +437,16 @@ class Model_AlbumImage extends \MyOrm\Model
 				$album_image->update_public_flag($set_value['public_flag'], true);
 				$is_set = true;
 			}
+
+			if (isset($set_value['latitude']) && strlen($set_value['longitude']))
+			{
+				$album_image_location = Model_AlbumImageLocation::get_one4album_image_id($album_image->id) ?: Model_AlbumImageLocation::forge();
+				$album_image_location->album_image_id = $album_image->id;
+				$album_image_location->latitude = $set_value['latitude'];
+				$album_image_location->longitude = $set_value['longitude'];
+				$album_image_location->save();
+			}
+
 			if ($is_set) $result++;;
 		}
 

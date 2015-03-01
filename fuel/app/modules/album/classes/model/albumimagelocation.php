@@ -69,4 +69,11 @@ class Model_AlbumImageLocation extends \MyOrm\Model
 
 		return $obj ? array($obj->latitude, $obj->longitude) : null;
 	}
+
+	public static function get_one4album_image_id($album_image_id)
+	{
+		return self::query()
+			->where('album_image_id', $album_image_id)
+			->get_one();
+	}
 }

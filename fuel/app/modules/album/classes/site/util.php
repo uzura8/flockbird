@@ -96,15 +96,4 @@ class Site_Util
 	{
 		return sprintf('album/image/api/save_location/%d.json', $album_image_id);
 	}
-
-	public static function get_map_markers($locations)
-	{
-		$markers = array();
-		$markers[] = array(
-			'lat' => $locations[0],
-			'lng' => $locations[1],
-		);
-
-		return $markers;
-	}
 }

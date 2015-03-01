@@ -28,6 +28,9 @@ return array(
 			'display_slide_image' => false,
 			'displayMap' => true,
 		),
+		'edit_images' => array(
+			'displayMap' => true,
+		),
 		'image' => array(
 			'detail' => array(
 				'displayMap' => true,

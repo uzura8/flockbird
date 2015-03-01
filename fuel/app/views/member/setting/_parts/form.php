@@ -9,7 +9,7 @@ $radio_layout_type = isset($form_params['common']['radio']['layout_type']) ? $fo
 <?php foreach ($fields as $name => $field_obj): ?>
 <?php $type = $field_obj->get_attribute('type'); ?>
 <?php if (strpos($name, 'default_public_flag')): ?>
-	<?php echo form_public_flag($val, Input::post($name), false, $label_size, false, $name); ?>
+	<?php echo form_public_flag($val, Input::post($name), false, $label_size, $name); ?>
 <?php elseif ($type == 'select'): ?>
 	<?php echo form_select($val, $name, Input::post($name), $label_size, $label_size); ?>
 <?php elseif ($type == 'radio'): ?>
