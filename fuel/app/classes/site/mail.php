@@ -20,7 +20,7 @@ class Site_Mail
 			'subject'    => '',
 			'body'    => '',
 			'common_variavles' => array(),
-			'is_use_normalizer' => conf('library.PEAR_I18N_UnicodeNormalizer.isEnabled'),
+			'is_use_normalizer' => conf('library.PEAR_I18N_UnicodeNormalizer.isEnabled', null, false),
 			'debug_log_is_enabled' => conf('mail.log.develop.isEnabled'),
 			'debug_log_file_path' => conf('mail.log.develop.file_path'),
 		);

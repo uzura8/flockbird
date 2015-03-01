@@ -30,9 +30,9 @@ $config = array(
 		),
 	),
 	'library' => array(
-		'PEAR_I18N_UnicodeNormalizer' => array(
-			'isEnabled' => false,
-		),
+		//'PEAR_I18N_UnicodeNormalizer' => array(
+		//	'isEnabled' => false, // if set this true, you have to install PEAR/I18N_UnicodeNormalizer.
+		//),
 	),
 	'mail' => array(
 		'site' => array(
