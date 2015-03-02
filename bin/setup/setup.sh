@@ -1,9 +1,5 @@
 #!/bin/sh
 
-git submodule init
-git submodule foreach 'git checkout 1.8/develop'
-git submodule update
-git submodule foreach 'git fetch;git checkout 1.8/develop'
 php composer.phar update
 php oil refine install
 chmod -R 777 fuel/app/media
