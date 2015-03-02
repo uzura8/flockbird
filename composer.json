@@ -137,7 +137,8 @@
         "fuel/parser": "1.7.2",
         "fuelphp/upload": "2.0.1",
         "monolog/monolog": "1.5.*",
-        "michelf/php-markdown": "1.4.0"
+        "michelf/php-markdown": "1.4.0",
+        "uzura8/fuel-packages-opauth": "dev-master"
     },
     "suggest": {
         "dwoo/dwoo" : "Allow Dwoo templating with the Parser package",
