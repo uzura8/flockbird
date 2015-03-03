@@ -114,7 +114,7 @@ function symbol_bool($bool)
 
 function img_uri($filename = '', $size_key = '', $is_profile = false, $is_return_file_info = false)
 {
-	if (strlen($filename) <= 3)
+	if (strlen($filename) <= conf('upload.file_category_max_length'))
 	{
 		$file_cate = $filename;
 		$filename = '';

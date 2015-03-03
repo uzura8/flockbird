@@ -138,6 +138,7 @@ $config = array(
 	'upload' => array(
 		'isSaveDb' => true,
 		'isRemoveOnBatch' => false,// TODO: batch is not implemented
+		'file_category_max_length' => 3,
 		'num_of_split_dirs' => 10,
 		'check_and_make_dir_level' => 7,
 		'mkdir_mode' => 0755,
