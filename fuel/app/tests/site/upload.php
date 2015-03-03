@@ -97,7 +97,7 @@ class Test_Site_Upload extends TestCase
 	*/
 	public function test_convert2decimal_geolocation($ref, $decimal60_values, $expected = null)
 	{
-		$test = Site_Upload::convert2decimal_geolocation($ref, $decimal60_values);
+		$test = Util_Exif::convert2decimal_geolocation($ref, $decimal60_values);
 		$this->assertEquals($expected, $test);
 	}
 
