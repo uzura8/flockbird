@@ -1,8 +1,6 @@
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
-  `last_login` datetime DEFAULT NULL,
-  `login_hash` varchar(255) DEFAULT NULL,
   `file_name` varchar(255) DEFAULT NULL,
   `filesize_total` int(11) NOT NULL DEFAULT 0 COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
@@ -12,6 +10,9 @@ CREATE TABLE `member` (
   `birthyear_public_flag` tinyint(2) NOT NULL DEFAULT 0,
   `birthday` varchar(5) DEFAULT NULL,
   `birthday_public_flag` tinyint(2) NOT NULL DEFAULT 0,
+  `login_hash` varchar(255) DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
+  `previous_login` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),

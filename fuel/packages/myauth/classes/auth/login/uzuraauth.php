@@ -31,9 +31,14 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	}
 
 	/**
-	 * @var  Database_Result  when login succeeded
+	 * @var  \Model_Member  user object for the current user
 	 */
 	protected $member = null;
+
+	/**
+	 * @var  array  Simpleauth compatible permissions array for the current logged-in user
+	 */
+	protected $permissions = array();
 
 	/**
 	 * @var  array  UzuraAuth class config
@@ -43,40 +48,40 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	);
 
 	/**
-	 * Check for login
+	 * Check the user exists
 	 *
 	 * @return  bool
 	 */
-	protected function perform_check()
+	public function validate_user($email = '', $password = '')
 	{
-		$member_id  = \Session::get('member_id');
-		$login_hash = \Session::get('login_hash');
+		// get the user identification and password
+		$email    = trim($email)    ? trim($email)    : trim(\Input::post(\Config::get('uzuraauth.username_post_key', 'email')));
+		$password = trim($password) ? trim($password) : trim(\Input::post(\Config::get('uzuraauth.password_post_key', 'password')));
 
-		// only worth checking if there's both a member_id and login-hash
-		if (!empty($member_id) and !empty($login_hash))
+		// and make sure we have both
+		if (empty($email) or empty($password))
 		{
-			if (is_null($this->member) or $this->member->id != $member_id)
-			{
-				$this->member = self::get_member4id($member_id);
-			}
-
-			// return true when login was verified, and either the hash matches or multiple logins are allowed
-			if ($this->member and (\Config::get('uzuraauth.multiple_logins', false) or $this->member->login_hash === $login_hash))
-			{
-				return true;
-			}
+			return false;
 		}
 
-		// not logged in, do we have remember-me active and a stored member_id?
-		elseif (static::$remember_me and $member_id = static::$remember_me->get('member_id', null))
-		{
-			return $this->force_login($member_id);
-		}
+		// account lock check
+		if ($this->check_is_account_locked($email)) return false;
 
-		\Session::delete('member_id');
-		\Session::delete('login_hash');
+		// hash the password
+		$password    = $this->hash_password($password, $email);
 
-		return false;
+		// and do a lookup of this user
+		$member_auth = \Model_MemberAuth::query()
+			->where('email', $email)
+			->where('password', $password)
+			->get_one();
+
+		if (!$member_auth) return false;
+
+		$member = self::get_member4id($member_auth->member_id);
+
+		// return the user object, or false if not found
+		return $member ?: false;
 	}
 
 	/**
@@ -88,35 +93,27 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	 */
 	public function login($email = '', $password = '')
 	{
-		$email    = trim($email)    ? trim($email)    : trim(\Input::post(\Config::get('uzuraauth.username_post_key', 'email')));
-		$password = trim($password) ? trim($password) : trim(\Input::post(\Config::get('uzuraauth.password_post_key', 'password')));
-
-		if (empty($email) or empty($password))
+		if ( ! ($this->member = $this->validate_user($email, $password)))
 		{
+			// force a logout
+			$this->logout();
+
+			// and signal a failed login
 			return false;
 		}
 
-		if ($this->check_is_account_locked($email)) return false;
+		// register so Auth::logout() can find us
+		\Auth\Auth::_register_verified($this);
 
-		$password    = $this->hash_password($password, $email);
-		$member_auth = \Model_MemberAuth::query()
-			->where('email', $email)
-			->where('password', $password)
-			->get_one();
-
-		if (!$member_auth)
-		{
-			$this->countup_account_lock_count($email);
-			\Session::delete('member_id');
-			\Session::delete('login_hash');
-
-			return false;
-		}
-		$this->member = self::get_member4id($member_auth->member_id);
-
-		\Session::set('member_id', $member_auth->member_id);
+		// store the logged-in user and it's hash in the session
+		//\Session::set('username', $this->user->username);
+		\Session::set('member_id', $this->member->id);
 		\Session::set('login_hash', $this->create_login_hash());
+
+		// reset login failed count.
 		if (\Config::get('uzuraauth.accountLock.isEnabled')) \Session::delete('login_failed');
+
+		// and rotate the session id, we've elevated rights
 		\Session::instance()->rotate();
 
 		return true;
@@ -130,47 +127,43 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	 */
 	public function force_login($member_id = '')
 	{
+		// bail out if we don't have a user
 		if (empty($member_id))
 		{
 			return false;
 		}
 
-		if (!$this->member = self::get_member4id($member_id))
+		// get the user we need to login
+		if ( ! $member_id instanceOf \Model_Member)
 		{
-			\Session::delete('member_id');
-			\Session::delete('login_hash');
-
-			return false;
+			$this->member = self::get_member4id($member_id);
+		}
+		else
+		{
+			$this->member = $member_id;
 		}
 
-		\Session::set('member_id', $this->member->id);
-		\Session::set('login_hash', $this->create_login_hash());
-
-		return true;
-	}
-
-	/**
-	 * Set a remember-me cookie for the passed user id, or for the current
-	 * logged-in user if no id was given
-	 *
-	 * @return  bool  wether or not the cookie was set
-	 */
-	public function remember_me($member_id = null)
-	{
-		// if no user-id is given, get the current user's id
-		if ($member_id === null and isset($this->member->id))
+		// did we find it
+		if ($this->member and ! $this->member->is_new())
 		{
-			$member_id = $this->member->id;
-		}
+			// store the logged-in user and it's hash in the session
+			//\Session::set('username', $this->user->username);
+			\Session::set('member_id', $this->member->id);
+			\Session::set('login_hash', $this->create_login_hash());
 
-		// if we have a session and an id, set it
-		if (static::$remember_me and $member_id)
-		{
-			static::$remember_me->set('member_id', $member_id);
+			// reset login failed count.
+			if (\Config::get('uzuraauth.accountLock.isEnabled')) \Session::delete('login_failed');
+
+			// and rotate the session id, we've elevated rights
+			\Session::instance()->rotate();
+
 			return true;
 		}
 
-		// remember-me not enabled, or no user id available
+		// force a logout
+		$this->logout();
+
+		// and signal a failed login
 		return false;
 	}
 
@@ -181,6 +174,20 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	 */
 	public function logout()
 	{
+		// reset the current user
+		if (\Config::get('uzuraauth.guest_login', true))
+		{
+			//$this->user = \Model\Auth_User::query()
+			//	->where('id', '=', 0)
+			//	->get_one();
+		}
+		else
+		{
+			$this->member = false;
+		}
+
+		// delete the session data identifying this user
+		//\Session::delete('username');
 		\Session::delete('member_id');
 		\Session::delete('login_hash');
 
@@ -190,14 +197,14 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	/**
 	 * Create new user
 	 *
-	 * @param   string
-	 * @param   string
 	 * @param   string  must contain valid email address
-	 * @param   int     group id
-	 * @param   Array
+	 * @param   string
+	 * @param   string
+	 * @param   int     group id: now unuse.
+	 * @param   Array: now unuse.
 	 * @return  bool
 	 */
-	public function create_user($email, $password, $name = '')
+	public function create_user($email, $password, $name = '', $group = 1, Array $profile_fields = array())
 	{
 		// prep the password
 		$password = trim($password);
@@ -208,7 +215,7 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 		// bail out if we're missing username, password or email address
 		if (empty($password) or empty($email))
 		{
-			throw new \SimpleUserUpdateException('Email address or password can\'t be empty.', 1);
+			throw new \SimpleUserUpdateException('Email address or password is not given, or email address is invalid', 1);
 		}
 
 		// check if we already have an account with this email address or username
@@ -234,6 +241,7 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 			$currentuser = 0;
 		}
 
+		// create the new user record
 		try
 		{
 			$member = \Model_Member::forge();
@@ -243,22 +251,22 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 			$member->sex_public_flag = 0;
 			$member->birthyear_public_flag = 0;
 			$member->birthday_public_flag = 0;
-			$member->save();
+			$result = $member->save();
 
 			$member_auth = \Model_MemberAuth::forge();
 			$member_auth->member_id = $member->id;
 			$member_auth->email     = $email;
 			$member_auth->password  = $this->hash_password((string) $password, $email);
-			$member_auth->save();
+			$result = $member_auth->save() && $result;
 		}
-		catch (\FuelException $e)
+		catch (\Exception $e)
 		{
-			return false;
+			$result = false;
 		}
 		$this->member = $member;
 
 		// and the id of the created user, or false if creation failed
-		return $member->id;
+		return $result ? $member->id : false;
 	}
 
 	/**
@@ -278,8 +286,8 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 		}
 
 		// get the current user record
-		$current_member      = \Model_Member::find($member_id, array('rows_limit' => 1));
-		$current_member_auth = \Model_MemberAuth::query()->where('member_id', $member_id)->get_one();
+		$current_member = self::get_member4id($member_id);
+		$current_member_auth = $current_member->member_auth;
 
 		// and bail out if it doesn't exist
 		if (empty($current_member) || empty($current_member_auth))
@@ -289,7 +297,6 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 
 		// validate the values passed and assume the update array
 		$update = array();
-
 		if (array_key_exists('email', $values))
 		{
 			$email = filter_var(trim($values['email']), FILTER_VALIDATE_EMAIL);
@@ -408,20 +415,23 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	public function reset_password($member_id)
 	{
 		$new_password = \Str::random('alnum', 8);
-		$this->change_password_simple($new_password);
+		$this->change_password_simple($member_id, $new_password);
 
 		return $new_password;
 	}
 
 	public function change_password_simple($member_id, $new_password)
 	{
-		if (!$member_auth = \Model_MemberAuth::query()->where('member_id', $member_id)->get_one())
+		if (!$member_id || !$member = self::get_member4id($member_id))
+		{
+			throw new \SimpleUserUpdateException('Failed to reset password, user was invalid.', 8);
+		}
+		if (!$member_auth = $member->member_auth)
 		{
 			throw new \SimpleUserUpdateException('Member_id was invalid.');
 		}
 		$member_auth->password = $this->hash_password($new_password, $member_auth->email);
-		$result = $member_auth->save();
-		if (!$result)
+		if (!$result = $member_auth->save())
 		{
 			throw new \SimpleUserUpdateException('Failed to reset password, member_id was invalid.');
 		}
@@ -437,13 +447,21 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	 */
 	public function delete_user($member_id)
 	{
-		// make sure we have a member to delete
-		if (!$member_id || !$member = self::get_member4id($member_id))
+		// make sure we have a user to delete
+		if (empty($member_id))
 		{
 			throw new \SimpleUserUpdateException('Cannot delete user with empty username', 9);
 		}
 
-		return $member->delete();
+		// get the user object
+		$member = self::get_member4id($member_id);
+
+		// if it was found, delete it
+		if ($member)
+		{
+			return (bool) $member->delete();
+		}
+		return false;
 	}
 
 	/**
@@ -453,19 +471,35 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	 */
 	public function create_login_hash()
 	{
+		// we need a logged-in user to generate a login hash
 		if (empty($this->member))
 		{
 			throw new \SimpleUserUpdateException('User not logged in, can\'t create login hash.', 10);
 		}
 
+		// set the previous and current last login
+		$this->member->previous_login = $this->member->last_login;
 		$last_login = date('Y-m-d H:i:s');
-		$login_hash = sha1(\Config::get('uzuraauth.login_hash_salt').$this->member->id.$last_login);
-
 		$this->member->last_login = $last_login;
-		$this->member->login_hash = $login_hash;
+
+		// generate the new hash
+		$this->member->login_hash = sha1(\Config::get('uzuraauth.login_hash_salt').$this->member->id.$last_login);
+
+		// store it
 		$this->member->save();
 
-		return $login_hash;
+		// and return it
+		return $this->member->login_hash;
+	}
+
+	/**
+	 * Get the member object
+	 *
+	 * @return  mixed  Model_Member object, or false if no user is set
+	 */
+	public function get_member()
+	{
+		return empty($this->member) ? false : $this->member;
 	}
 
 	/**
@@ -499,14 +533,20 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	}
 
 	/**
-	 * Get member object
+	 * Get the user's groups
 	 *
-	 * @return object
+	 * @return  Array  containing the group driver ID & the user's group ID
 	 */
-	public function get_member()
-	{
-		return $this->member ?: false;
-	}
+//	public function get_groups()
+//	{
+//		// bail out if we don't have a user group to return
+//		if (empty($this->user))
+//		{
+//			return false;
+//		}
+//
+//		return array(array('Ormgroup', $this->user->group));
+//	}
 
 	/**
 	 * Get the user's emailaddress
@@ -515,7 +555,7 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	 */
 	public function get_email()
 	{
-		if (empty($this->member))
+		if (empty($this->member) || empty($this->member->member_auth))
 		{
 			return false;
 		}
@@ -551,8 +591,68 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 //		return parent::has_access($condition, $driver, $user);
 //	}
 
-	public function get_groups()
+	/**
+	 * Check for login
+	 *
+	 * @return  bool
+	 */
+	protected function perform_check()
 	{
+		// get the username and login hash from the session
+		$member_id  = \Session::get('member_id');
+		$login_hash = \Session::get('login_hash');
+
+		// only worth checking if there's both a member_id and login-hash
+		if (!empty($member_id) and !empty($login_hash))
+		{
+			// if we don't have a user, or we're logging in from guest mode
+			if (is_null($this->member) or ($this->member->id != $member_id and $this->member->id == 0))
+			{
+				$this->member = self::get_member4id($member_id);
+			}
+
+			// return true when login was verified, and either the hash matches or multiple logins are allowed
+			if ($this->member and (\Config::get('uzuraauth.multiple_logins', false) or $this->member->login_hash === $login_hash))
+			{
+				return true;
+			}
+		}
+
+		// not logged in, do we have remember-me active and a stored member_id?
+		elseif (static::$remember_me and $member_id = static::$remember_me->get('member_id', null))
+		{
+			return $this->force_login($member_id);
+		}
+
+		// force a logout
+		$this->logout();
+
+		return false;
+	}
+
+	/**
+	 * Set a remember-me cookie for the passed user id, or for the current
+	 * logged-in user if no id was given
+	 *
+	 * @return  bool  wether or not the cookie was set
+	 */
+	public function remember_me($member_id = null)
+	{
+		// if no user-id is given, get the current user's id
+		if ($member_id === null and isset($this->member->id))
+		{
+			$member_id = $this->member->id;
+		}
+
+		// if we have a session and an id, set it
+		if (static::$remember_me and $member_id)
+		{
+			static::$remember_me->set('member_id', $member_id);
+			return true;
+		}
+
+		// remember-me not enabled, or no user id available
+		return false;
 	}
 
 	/**
@@ -585,15 +685,6 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 		if (!$member_auth = \Model_MemberAuth::query()->where('email', $email)->get_one()) return false;
 
 		return $member_auth->member_id;
-	}
-
-	/**
-	 * Perform the actual login check
-	 *
-	 * @return  bool
-	 */
-	public function validate_user()
-	{
 	}
 
 	/**

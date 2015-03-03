@@ -4,6 +4,17 @@ namespace MyAuth;
 
 class Auth_Login_Simpleauth extends \Auth\Auth_Login_Simpleauth
 {
+
+	/**
+	 * Create new user
+	 *
+	 * @param   string
+	 * @param   string
+	 * @param   string  must contain valid email address
+	 * @param   int     group id
+	 * @param   Array
+	 * @return  bool
+	 */
 	public function create_user($username, $password, $email, $group = 1, Array $profile_fields = array())
 	{
 		$password = trim($password);
@@ -50,6 +61,15 @@ class Auth_Login_Simpleauth extends \Auth\Auth_Login_Simpleauth
 		return ($result[1] > 0) ? $result[0] : false;
 	}
 
+
+	/**
+	 * Update a user's properties
+	 * Note: Username cannot be updated, to update password the old password must be passed as old_password
+	 *
+	 * @param   Array  properties to be updated including profile fields
+	 * @param   string
+	 * @return  bool
+	 */
 	public function update_user($values, $username = null)
 	{
 		$username = $username ?: $this->user['username'];
@@ -151,6 +171,12 @@ class Auth_Login_Simpleauth extends \Auth\Auth_Login_Simpleauth
 		return $affected_rows > 0;
 	}
 
+
+	/**
+	 * Creates a temporary hash that will validate the current login
+	 *
+	 * @return  string
+	 */
 	public function create_login_hash()
 	{
 		if (empty($this->user))

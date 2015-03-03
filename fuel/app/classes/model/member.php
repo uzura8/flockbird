@@ -70,12 +70,13 @@ class Model_Member extends \MyOrm\Model
 			'form' => array('type' => 'radio'),
 		),
 		'last_login' => array('form' => array('type' => false)),
+		'previous_login' => array('form' => array('type' => false)),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_to_array_exclude = array(
-		'login_hash', 'register_type', 'filesize_total', 'last_login', 'created_at', 'updated_at'
+		'login_hash', 'register_type', 'filesize_total', 'last_login', 'previous_login', 'created_at', 'updated_at'
 	);
 
 	protected static $_observers = array(
