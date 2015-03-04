@@ -20,9 +20,11 @@ function get_id_num(id_string)
 
 function get_url(uri)
 {
-	var isReturnPath = (arguments.length > 1) ? arguments[1] : false;
-	var isReturnCurrentProtocol = (arguments.length > 2) ? arguments[2] : true;
+	var isMediaUri = (arguments.length > 1) ? arguments[1] : false;
+	var isReturnPath = (arguments.length > 2) ? arguments[2] : false;
+	var isReturnCurrentProtocol = (arguments.length > 3) ? arguments[3] : true;
 
+	if (isMediaUri && get_config('mediaBaseUrl')) return get_config('mediaBaseUrl') + uri;
 	if (isReturnPath) return getBasePath() + uri;
 	if (isReturnCurrentProtocol) return getBaseUrl(true) + uri;
 	return getBaseUrl() + uri;

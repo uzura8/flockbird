@@ -226,7 +226,7 @@ $(document).on('click', '.js-insert_img', function(){
 	if (!imgUri) return false;
 	var textAreaSelector = fileId ? '#image_description_' + fileId : '';
 	var textAreaVal = textAreaSelector ? $(textAreaSelector).val() : '';
-	var src = ' src="' + get_url(imgUri) + '"';
+	var src = ' src="' + get_url(imgUri, true) + '"';
 	var alt = textAreaVal ? ' alt="' + textAreaVal + '"' : '';
 	$(targetBodySelector).append('<img' + src + alt + '>');
 	showMessage(get_term('add_picture') + 'しました。');

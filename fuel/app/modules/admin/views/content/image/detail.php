@@ -12,7 +12,7 @@ echo render('_parts/image/detail', $data);
 	<?php echo img($site_image->file_name, $key, '#', false, $site_image->name ?: '', false, false, array('class' => 'pull-left'), array('class' => 'media-object')); ?>
 	<div class="media-body">
 		<h4 class="media-heading"><?php echo $size; ?></h4>
-		<?php echo Uri::create(Site_Upload::get_uploaded_file_path($site_image->file_name, $size, 'img', false, true)); ?>
+		<?php echo Site_Util::get_media_uri(Site_Upload::get_uploaded_file_path($site_image->file_name, $size, 'img', false, true), true); ?>
 	</div>
 </li>
 <?php endforeach; ?>

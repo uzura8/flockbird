@@ -354,7 +354,7 @@ class Site_Upload
 			);
 			$options['image_versions']['thumbnail'] = array(
 				'upload_dir' => self::get_uploaded_path('thumbnail', $upload_type, $is_tmp, false, $filepath_prefix),
-				'upload_url' => Uri::create(self::get_uploaded_path('thumbnail', $upload_type, $is_tmp, true, $filepath_prefix)),
+				'upload_url' => Site_Util::get_media_uri(self::get_uploaded_path('thumbnail', $upload_type, $is_tmp, true, $filepath_prefix), true),
 				'max_width'  => $uploader_info['thumbnail_sizes']['width'],
 				'max_height' => $uploader_info['thumbnail_sizes']['height'],
 				'crop' => true,

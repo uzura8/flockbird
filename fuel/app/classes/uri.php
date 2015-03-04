@@ -87,10 +87,7 @@ class Uri extends Fuel\Core\Uri
 	public static function base($include_index = true, $absolute_protocol = false)
 	{
 		$url = \Config::get('base_url');
-		if (!$absolute_protocol && Input::protocol() == 'https')
-		{
-			$url = preg_replace('#^http://#', 'https://', $url);
-		}
+		if (!$absolute_protocol) $url = static::convert_protocol2resuested($url);
 
 		if ($include_index and \Config::get('index_file'))
 		{
@@ -106,5 +103,12 @@ class Uri extends Fuel\Core\Uri
 		if (static::string() == '') return true;
 
 		return false;
+	}
+
+	public static function convert_protocol2resuested($url)
+	{
+		if (Input::protocol() != 'https') return $url;
+
+		return preg_replace('#^http://#', 'https://', $url);
 	}
 }

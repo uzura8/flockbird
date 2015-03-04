@@ -170,7 +170,8 @@ function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file =
 	{
 		$anchor_attr['target'] = '_blank';
 		$uri_path = Site_Upload::get_uploaded_file_path($filename, 'raw', 'img', false, true);
-		return Html::anchor($uri_path, $image_tag, $anchor_attr);
+
+		return Html::anchor(Site_Util::get_media_uri($uri_path), $image_tag, $anchor_attr);
 	}
 
 	return $image_tag;

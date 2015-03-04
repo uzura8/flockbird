@@ -510,4 +510,11 @@ class Site_Util
 
 		return $markers;
 	}
+
+	public static function get_media_uri($uri, $is_absolute_url = false)
+	{
+		if (PRJ_MEDIA_BASE_URL) return Uri::convert_protocol2resuested(PRJ_MEDIA_BASE_URL.$uri);
+
+		return $is_absolute_url ? Uri::base(false).$uri : Uri::base_path($uri);
+	}
 }

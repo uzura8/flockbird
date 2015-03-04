@@ -16,7 +16,7 @@ class Html extends Fuel\Core\Html
 	{
 		if ( ! preg_match('#^(\w+://)# i', $src))
 		{
-			$src = $is_absolute_url ? \Uri::base(false).$src : Uri::base_path($src);
+			$src = Site_Util::get_media_uri($src, $is_absolute_url);
 		}
 		$attr['src'] = $src;
 		$attr['alt'] = (isset($attr['alt'])) ? $attr['alt'] : pathinfo($src, PATHINFO_FILENAME);

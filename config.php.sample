@@ -131,6 +131,8 @@ define('PRJ_IS_LIMIT_UPLOAD_FILE_SIZE', false);
 //	),
 //);
 
+//// 画像・ファイルサーバを分ける場合のURL設定
+//define('PRJ_MEDIA_BASE_URL', '');
 
 // 開発関連設定
 // プロファイル実行設定
