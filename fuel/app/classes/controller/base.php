@@ -12,6 +12,8 @@ class Controller_Base extends Controller_Hybrid
 	protected $acl_has_access = true;
 	protected $response_body;
 	protected $check_not_auth_action = array();
+	protected $api_accept_formats = array('json');
+	protected $api_not_check_csrf = false;
 
 	public function before()
 	{
@@ -20,7 +22,7 @@ class Controller_Base extends Controller_Hybrid
 		if (!defined('IS_SSL')) define('IS_SSL', Input::protocol() == 'https');
 		if (!defined('IS_ADMIN')) define('IS_ADMIN', $this->check_is_admin_request());
 		if (!defined('IS_SP')) define('IS_SP', \MyAgent\Agent::is_mobile_device());
-		if (!defined('IS_API')) define('IS_API', Input::is_ajax());
+		if (!defined('IS_API')) define('IS_API', Site_Util::check_is_api());
 
 		$this->set_default_data();
 		$this->check_ssl_required_request_and_redirect();
@@ -35,7 +37,15 @@ class Controller_Base extends Controller_Hybrid
 	{
 		if (IS_API)
 		{
-			$this->response_body = array('status' => 0, 'message' => '', 'error_messages' => array());
+			$this->response_body = array(
+				'status' => 0,
+				'message' => '',
+				'errors' => array(
+					'code' => 0,
+					'message' => '',
+				),
+			);
+
 			return;
 		}
 
@@ -196,13 +206,80 @@ class Controller_Base extends Controller_Hybrid
 		exit;
 	}
 
+	protected function controller_common_api(callable $func)
+	{
+		try
+		{
+			$this->check_response_format($this->api_accept_formats);
+			if (Input::method() != 'GET' && !$this->api_not_check_csrf)
+			{
+				Util_security::check_csrf();
+			}
+			$this->response_body = $func();// execute main.
+			$status_code = 200;
+		}
+		catch(\HttpNotFoundException $e)
+		{
+			$status_code = 404;
+		}
+		catch(\HttpForbiddenException $e)
+		{
+			$status_code = 403;
+		}
+		catch(\HttpMethodNotAllowed $e)
+		{
+			$status_code = 405;
+		}
+		catch(\HttpBadRequestException $e)
+		{
+			$status_code = 400;
+		}
+		catch(\HttpInvalidInputException $e)
+		{
+			$status_code = 400;
+		}
+		catch(\ValidationFailedException $e)
+		{
+			$this->response_body['errors']['message'] = Site_Controller::get_error_message($e);
+			$status_code = 400;
+		}
+		catch(\Database_Exception $e)
+		{
+			$this->response_body['errors']['message'] = Site_Controller::get_error_message($e, true);
+			$status_code = 500;
+		}
+		catch(\FuelException $e)
+		{
+			$status_code = 500;
+		}
+		if ($status_code == 500)
+		{
+			if (\DB::in_transaction()) \DB::rollback_transaction();
+		}
+		$response_body = Site_Controller::supply_response_body($this->response_body, $status_code);
+
+		return self::response($response_body, $status_code);
+	}
+
+	protected function set_response_body_api($body)
+	{
+		if ($this->format == 'html' || is_array($body))
+		{
+			$this->response_body = $body;
+		}
+		else
+		{
+			$this->response_body['html'] = $body;
+		}
+	}
+
 	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false)
 	{
 		$common = array('title' =>  PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME);
 		$title_name = '';
 		$this->template->title = '';
 
-		if ($title) list($title_name, $title_label) = static::get_title_parts($title);
+		if ($title) list($title_name, $title_label) = Site_Controller::get_title_parts($title);
 		if (!$is_no_title && $title_name)
 		{
 			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
@@ -216,22 +293,6 @@ class Controller_Base extends Controller_Hybrid
 			static::get_breadcrumbs($title_name, $middle_breadcrumbs, $member_obj, $member_obj ? $this->check_is_mypage($member_obj->id) : false, $module);
 
 		View::set_global('common', $common);
-	}
-
-	protected static function get_title_parts($title = array())
-	{
-		if (is_array($title))
-		{
-			$title_name  = !empty($title['name'])  ? $title['name'] : '';
-			$title_label = !empty($title['label']) ? $title['label'] : array();
-		}
-		else
-		{
-			$title_name  = $title;
-			$title_label = array();
-		}
-
-		return array($title_name, $title_label);
 	}
 
 	public function common_get_list_params($defaults = array(), $limit_max = 0, $is_return_assoc = false)
@@ -287,29 +348,23 @@ class Controller_Base extends Controller_Hybrid
 
 	protected function common_FileTmp_get_upload()
 	{
-		$response = '';
-		try
-		{
-			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
-
+		$this->api_accept_formats = array('html', 'json');
+		$this->api_not_check_csrf = true;
+		$this->controller_common_api(function() {
 			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN);
 			$uploadhandler = new MyUploadHandler($options, false);
 			$file = $uploadhandler->get(false);
-			$status_code = 200;
-
 			if ($this->format == 'html')
 			{
-				$response = View::forge('filetmp/_parts/upload_image', $file);
-				return Response::forge($response, $status_code);
+				$this->response_body = View::forge('filetmp/_parts/upload_image', $file)->render();
 			}
-			$response = $files;
-		}
-		catch(FuelException $e)
-		{
-			$status_code = 400;
-		}
+			else
+			{
+				$this->response_body = $file;
+			}
 
-		$this->response($response, $status_code);
+			return $this->response_body;
+		});
 	}
 
 	protected function common_FileTmp_post_upload($upload_type = 'img')
@@ -320,19 +375,15 @@ class Controller_Base extends Controller_Hybrid
 			return $this->common_FileTmp_delete_upload($upload_type);
 		}
 
-		$response = '';
-		try
-		{
-			//Util_security::check_csrf();
-			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
-
+		$this->api_accept_formats = array('html', 'json');
+		$this->api_not_check_csrf = true;
+		$this->controller_common_api(function() use($upload_type) {
 			if ($upload_type == 'img')
 			{
 				$thumbnail_size = \Input::post('thumbnail_size');
 				if (!\Validation::_validation_in_array($thumbnail_size, array('M', 'S'))) throw new HttpInvalidInputException('Invalid input data');;
 				$insert_target = \Input::post('insert_target');
 			}
-
 			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN, true, null, 0, true, $upload_type);
 			$uploadhandler = new MyUploadHandler($options, false);
 			$files = $uploadhandler->post(false);
@@ -342,58 +393,32 @@ class Controller_Base extends Controller_Hybrid
 				$files['thumbnail_size'] = $thumbnail_size;
 				$files['insert_target'] = $insert_target;
 			}
-			$status_code = 200;
-
 			if ($this->format == 'html')
 			{
-				$response = View::forge('filetmp/_parts/upload_images', $files);
-				return Response::forge($response, $status_code);
+				$this->response_body = View::forge('filetmp/_parts/upload_images', $files)->render();
 			}
-			$response = $files;
-		}
-		catch(FuelException $e)
-		{
-			$status_code = 500;
-		}
+			else
+			{
+				$this->response_body = $files;
+			}
 
-		return $this->response($response, $status_code);
+			return $this->response_body;
+		});
 	}
 
 	protected function common_FileTmp_delete_upload($upload_type = 'img')
 	{
-		$response = '';
-		try
-		{
-			Util_security::check_csrf();
-
+		$this->controller_common_api(function() use($upload_type) {
 			$id = (int)Input::post('id');
 			$file_tmp = Model_FileTmp::check_authority($id, $this->u->id, null, 'member_id', IS_ADMIN ? 1 : 0);
 
 			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN, true, null, 0, true, $upload_type);
 			$uploadhandler = new MyUploadHandler($options, false);
 			\DB::start_transaction();
-			$response = $uploadhandler->delete(false, $file_tmp);
+			$this->response_body = $uploadhandler->delete(false, $file_tmp);
 			\DB::commit_transaction();
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
 
-		return $this->response($response, $status_code);
+			return $this->response_body;
+		});
 	}
 }

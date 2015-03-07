@@ -1,5 +1,7 @@
 <?php
 
+class ValidationFailedException extends \FuelException {}
+
 class Validation extends Fuel\Core\Validation
 {
 	protected function __construct($fieldset)

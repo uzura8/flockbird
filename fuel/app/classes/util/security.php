@@ -22,9 +22,13 @@ class Util_security
 		}
 	}
 
-	public static function check_method($method, $is_output_log = true)
+	public static function check_method($accept_methods, $is_output_log = true)
 	{
-		if (Input::method() != strtoupper($method))
+		if (!$accept_methods) return true;
+
+		if (!is_array($accept_methods)) $accept_methods = (array)$accept_methods;
+		$accept_methods = array_map('strtoupper', $accept_methods);
+		if (!in_array(Input::method(), $accept_methods))
 		{
 			if ($is_output_log) Util_Toolkit::log_error('METHOD');
 			throw new HttpMethodNotAllowed('Method not allowed');

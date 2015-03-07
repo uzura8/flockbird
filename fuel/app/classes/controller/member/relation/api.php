@@ -9,16 +9,19 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 		parent::before();
 	}
 
-	public function post_update($relation_type = null)
+	/**
+	 * post_update
+	 * 
+	 * @access  public
+	 * @return  Response (json)
+	 */
+	public function post_update($member_id_to = null, $relation_type = null)
 	{
-		$response = array();
-		try
-		{
-			Util_security::check_csrf();
-			if ($this->format != 'json') throw new HttpNotFoundException();
+		$this->controller_common_api(function() use($member_id_to, $relation_type) {
+			$this->response_body['errors']['message_default'] = sprintf('%sの%sに%sしました。', term('follow'), term('form.update'), term('site.failure'));
 			if (!self::check_relation_type($relation_type)) throw new HttpNotFoundException();
 
-			$member_id_to = (int)Input::post('id');
+			if (!is_null(Input::post('id'))) $member_id_to = (int)Input::post('id');
 			$member = Model_Member::check_authority($member_id_to);
 			if ($member_id_to == $this->u->id) throw new HttpInvalidInputException;
 
@@ -33,21 +36,13 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 			$member_relation->member_id_from = $this->u->id;
 			$member_relation->save();
 			\DB::commit_transaction();
+			$this->response_body['isFollow'] = (int)$status_after;
+			$this->response_body['html'] = $status_after ? sprintf('<span class="glyphicon glyphicon-ok"></span> %s', term('followed')) : term('do_follow');
+			$this->response_body['attr'] = $status_after ? array('class' => array('add' => 'btn-primary')) : array('class' => array('remove' => 'btn-primary'));
+			$this->response_body['message'] = sprintf('%s%sしました。', term('follow'), $status_after ? 'しました。' : 'を解除');
 
-			$response['status'] = (int)$status_after;
-			$status_code = 200;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+			return $this->response_body;
+		});
 	}
 
 	private static function check_relation_type($relation_type)

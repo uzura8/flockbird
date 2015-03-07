@@ -51,6 +51,12 @@ class Controller_Error extends Controller_Site
 	 */
 	public function action_404()
 	{
+		if (IS_API)
+		{
+			$response_body = Site_Controller::supply_response_body($this->response_body, 404);
+			return $this->response($response_body, 404);
+		}
+
 		$this->set_title_and_breadcrumbs('404 Not Found', null, null, null, null, true);
 		$this->template->content = View::forge('error/404');
 		$this->response_status = 404;

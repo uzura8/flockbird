@@ -94,23 +94,20 @@ $(function() {
 	});
 
 	$(document).on('click','.timeline_viewType', function(){
-		var member_id = $(this).data('member_id') ? parseInt($(this).data('member_id')) : 0;
-		var value = $(this).data('value') ? parseInt($(this).data('value')) : 0;
-
+		var viewType = $(this).data('value') ? parseInt($(this).data('value')) : 0;
 		var text = $(this).html();
 		var parentElement = $(this).parent('li');
 		var buttonElement = $(parentElement).parents('div.btn-group');
-
-		var post_data = {
-			'id'    : member_id,
-			'value' : value,
+		var postData = {
+			name  : 'timeline_viewType',
+			value : viewType
 		};
-		post_data = set_token(post_data);
+
 		$.ajax({
-			url : get_url('member/api/update_config/timeline_viewType.html'),
+			url : get_url('member/setting/api/config.json'),
 			type : 'POST',
-			dataType : 'text',
-			data : post_data,
+			dataType : 'json',
+			data : set_token(postData),
 			timeout: get_config('default_ajax_timeout'),
 			beforeSend: function(xhr, settings) {
 				GL.execute_flg = true;
@@ -121,13 +118,14 @@ $(function() {
 				GL.execute_flg = false;
 			},
 			success: function(result, status, xhr){
-				$(buttonElement).html(result);
+				$(buttonElement).html(result.html);
 				$(buttonElement).removeClass('open');
-				$.jGrowl('表示設定を変更しました。');
+				showMessage(result.message);
 			},
 			error: function(result){
+				GL.execute_flg = false;
 				$(parentElement).html(this);
-				$.jGrowl('表示設定の変更に失敗しました。');
+				showErrorMessage(result);
 			}
 		});
 

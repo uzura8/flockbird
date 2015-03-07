@@ -82,7 +82,7 @@ class Controller_Member extends Controller_Site
 			'list' => $list,
 			'next_id' => $next_id,
 			'since_id' => $since_id,
-			'get_uri' => 'member/api/list.html',
+			'get_uri' => 'member/api/list.json',
 			'history_key' => 'max_id',
 			'is_display_load_before_link' => $max_id ? true : false,
 		));

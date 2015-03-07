@@ -18,11 +18,9 @@ class Controller_Site_Api extends Controller_Base_Site
 
 	protected function get_comment_list($model, $parent_model, $parent_id, $parent_id_prop, $api_uri_path_prefix, $limit = 0, $limit_max = 0, $parent_obj_member_id_relateds = array())
 	{
-		$response = '0';
-		try
+		$this->api_accept_formats = array('json', 'html');
+		$this->controller_common_api(function() use($model, $parent_model, $parent_id, $parent_id_prop, $api_uri_path_prefix, $limit, $limit_max, $parent_obj_member_id_relateds)
 		{
-			$this->check_response_format(array('json', 'html'));
-
 			$parent_id = (int)$parent_id;
 			$parent_obj = $parent_model::check_authority($parent_id);
 			$auther_member_ids = array();
@@ -54,7 +52,6 @@ class Controller_Site_Api extends Controller_Base_Site
 				$liked_ids = \Auth::check() ? \Site_Model::get_liked_ids($comment_table_name, $this->u->id, $list, null, $model.'Like') : array();
 			}
 
-			$status_code = 200;
 			if ($this->format == 'html')
 			{
 				$data = array(
@@ -73,9 +70,8 @@ class Controller_Site_Api extends Controller_Base_Site
 				);
 				if ($since_id) $data['since_id'] = $since_id;
 				if (conf('like.isEnabled')) $data['liked_ids'] = $liked_ids;
-				// html response
 
-				return \Response::forge(\View::forge('_parts/comment/list', $data), $status_code);
+				return View::forge('_parts/comment/list', $data)->render();
 			}
 
 			$list_array = array();
@@ -113,31 +109,18 @@ class Controller_Site_Api extends Controller_Base_Site
 				),
 			);
 			if ($since_id) $response['since_id'] = $since_id;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
 
-		$this->response($response, $status_code);
+			return $response;
+		});
 	}
 
 	protected function get_liked_member_list($like_model, $parent_model, $parent_id, $parent_id_prop, $get_uri, $public_flag_related_table = null, $limit = 0, $limit_max = 0, $parent_obj_member_id_relateds = array())
 	{
-		$response = '';
-		try
+		$this->api_accept_formats = array('json', 'html');
+		$this->controller_common_api(function()
+			use($like_model, $parent_model, $parent_id, $parent_id_prop, $get_uri, $public_flag_related_table, $limit, $limit_max, $parent_obj_member_id_relateds)
 		{
-			if (!conf('like.isEnabled')) throw new \HttpNotFoundException();
-			$this->check_response_format(array('json', 'html'));
-
+			if (!conf('like.isEnabled')) throw new HttpNotFoundException();
 			$parent_id = (int)$parent_id;
 			$parent_obj = $parent_model::check_authority($parent_id);
 			$auther_member_ids = array();
@@ -164,7 +147,6 @@ class Controller_Site_Api extends Controller_Base_Site
 			$params[$parent_id_prop] = $parent_id;
 			list($list, $next_id) = $like_model::get_list($params, $limit, $is_latest, $is_desc, $since_id, $max_id, 'member', ($this->format == 'json'));
 
-			$status_code = 200;
 			if ($this->format == 'html')
 			{
 				$data = array(
@@ -177,7 +159,8 @@ class Controller_Site_Api extends Controller_Base_Site
 					'no_data_message' => sprintf('%sしている%sはいません', term('form.like'), term('member.view')),
 				);
 				if ($since_id) $data['since_id'] = $since_id;
-				return \Response::forge(\View::forge('_parts/member_list', $data), $status_code);
+
+				return View::forge('_parts/member_list', $data)->render();
 			}
 
 			$response = array(
@@ -185,20 +168,8 @@ class Controller_Site_Api extends Controller_Base_Site
 				'list' => $list,
 				'next_id' => $next_id,
 			);
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
 
-		$this->response($response, $status_code);
+			return $response;
+		});
 	}
 }

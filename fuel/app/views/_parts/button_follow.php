@@ -1,9 +1,9 @@
 <?php
 if (empty($size)) $size = 'sm';
 $default_attrs = array(
-	'class' => array('btn', 'btn_follow', 'btn-'.$size),
+	'class' => array('btn', 'btn-default', 'js-update_toggle', 'btn-'.$size),
 	'id' => 'btn_follow_'.$member_id_to,
-	'data-id' => $member_id_to,
+	'data-uri' => sprintf('member/relation/api/update/%d/follow.json', $member_id_to),
 );
 if (!isset($attrs)) $attrs = array();
 $attrs = array_merge_recursive($default_attrs, $attrs);

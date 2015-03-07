@@ -106,6 +106,32 @@ function getErrorMessage(responseObj)
 	return 'エラーが発生しました。';
 }
 
+function showErrorMessage(responseObj)
+{
+	var defaultMessage = (arguments.length > 1) ? arguments[1] : '';
+	showMessage(getErrorMessageNew(responseObj, defaultMessage));
+}
+
+function getErrorMessageNew(responseObj)
+{
+	var defaultMessage = (arguments.length > 1) ? arguments[1] : '';
+	if (!empty(responseObj.responseJSON.errors.message)) return responseObj.responseJSON.errors.message;
+
+	switch (responseObj.status)
+	{
+		case 401:
+			return getTerms(['auth', 'info']) + 'の取得に失敗しました。' + getTerm('login') + '後、再度実行してください。';
+		case 400:
+		case 403:
+		case 404:
+			return getTerms(['invalid', 'request']) + 'です。';
+		case 500:
+			return 'サーバエラーが発生しました。';
+	}
+
+	return 'エラーが発生しました。';
+}
+
 function showMessage(msg)
 {
 	$.jGrowl(msg);
@@ -169,12 +195,15 @@ function removeLoading(blockSelector)
 	var trigerSelector = (arguments.length > 1) ? arguments[1] : '';
 	var loadingBlockId = (arguments.length > 2) ? arguments[2] : '';
 	var isRemoveTrigerSelector = (arguments.length > 3) ? Boolean(arguments[3]) : false;
+	var trigerHtml = (arguments.length > 4) ? arguments[4] : '';
 
 	if (trigerSelector) {
 		$(trigerSelector).attr('disabled', false);
 		if (isRemoveTrigerSelector) {
 			$(trigerSelector).remove();
 			return;
+		} else if (trigerHtml) {
+			$(trigerSelector).html(trigerHtml);
 		}
 	}
 	removeLoadingBlock(loadingBlockId);
@@ -219,12 +248,14 @@ function loadList(getUri) {
 	var templateSelector   = (arguments.length > 6) ? arguments[6] : '';
 	var counterSelector    = (arguments.length > 7) ? arguments[7] : '';
 	var callbackFuncs      = (arguments.length > 8) ? arguments[8] : null;
+	var trigerHtml         = trigerSelector ? $(trigerSelector).html() : '';
+	var html;
 
 	var template = templateSelector ? Handlebars.compile($(templateSelector).html()) : null;
 	$.ajax({
 		url : get_url(getUri),
 		type : 'GET',
-		dataType : templateSelector ? 'json' : 'text',
+		dataType : getUri.split('.').pop() == 'html' ? 'text' : 'json',
 		data : getData,
 		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
@@ -236,7 +267,13 @@ function loadList(getUri) {
 			removeLoading(parentListSelector, trigerSelector, 'list_loading_image');
 		},
 		success: function(result) {
-			var html = template ? template(result) : result;
+			if (template) {
+				html = template(result);
+			} else if (!empty(result.html)) {
+				html = result.html;
+			} else  {
+				html = result;
+			}
 			if (trigerSelector) {
 				var trigarObj = $(trigerSelector);
 				if (position == 'prepend') {
@@ -263,10 +300,12 @@ function loadList(getUri) {
 				});
 			}
 			if (pushStateInfo) addHistory(pushStateInfo, getData);
-			//$(parentListSelector).find('textarea').autogrow();
+			if (!empty(result.message)) showMessage(result.message);
 		},
 		error: function(result) {
-			showMessage(get_error_message(result['status'], '読み込みに失敗しました。'));
+			GL.execute_flg = false;
+			removeLoading(parentListSelector, trigerSelector, 'list_loading_image', null, trigerHtml);
+			showErrorMessage(result, '読み込みに失敗しました。');
 		}
 	});
 }
@@ -727,54 +766,6 @@ function display_form4value(value, target_values, disp_target_forms) {
 	}
 }
 
-function update_follow_status(selfDomElement) {
-	var id = $(selfDomElement).data('id');
-	var selfDomElement_html = $(selfDomElement).html();
-
-	var post_data = {'id': id};
-	post_url = get_url('member/relation/api/update/follow.json');
-	post_data = set_token(post_data);
-
-	var ret = false;
-	$.ajax({
-		url : post_url,
-		type : 'POST',
-		dataType : 'text',
-		data : post_data,
-		timeout: get_config('default_ajax_timeout'),
-		beforeSend: function(xhr, settings) {
-			GL.execute_flg = true;
-			if (selfDomElement) {
-				$(selfDomElement).attr('disabled', true);
-				$(selfDomElement).html(get_loading_image_tag());
-			}
-		},
-		complete: function(xhr, textStatus) {
-			GL.execute_flg = false;
-			$(selfDomElement).attr('disabled', false);
-		},
-		success: function(result){
-			var message
-					resData = $.parseJSON(result);
-			if (resData.status) {
-				$(selfDomElement).addClass('btn-primary');
-				selfDomElement_html = '<span class="glyphicon glyphicon-ok"></span> ' + get_term('follow') + '中';
-				msg = get_term('follow') + 'しました。';
-			} else {
-				$(selfDomElement).removeClass('btn-primary');
-				selfDomElement_html = get_term('follow') + 'する';
-				msg = get_term('follow') + 'を解除しました。';
-			}
-			$.jGrowl(msg);
-			$(selfDomElement).html(selfDomElement_html);
-		},
-		error: function(result){
-			$(selfDomElement).html(selfDomElement_html);
-			$.jGrowl(get_error_message(result['status'], get_term('follow') + 'に失敗しました。'));
-		}
-	});
-}
-
 function update_like_status(selfDomElement) {
 	//var id = $(selfDomElement).data('id');
 	var counterSelector = $(selfDomElement).data('count');
@@ -852,15 +843,20 @@ function updateToggle(selfDomElement) {
 			$(selfDomElement).attr('disabled', false);
 		},
 		success: function(response){
-			$.jGrowl(response.message);
 			if (!empty(response.is_replace)) {
 				$(selfDomElement).replaceWith(response.html);
 			} else {
+				if (response.attr.class.add) {
+					$(selfDomElement).addClass(response.attr.class.add);
+				} else if (response.attr.class.remove) {
+					$(selfDomElement).removeClass(response.attr.class.remove);
+				}
 				$(selfDomElement).html(response.html);
 			}
+			if (!empty(response.message)) showMessage(response.message);
 		},
 		error: function(response, status){
-			showMessage(getErrorMessage(response));
+			showErrorMessage(response);
 		}
 	});
 }

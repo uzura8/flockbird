@@ -15,7 +15,7 @@
 		'atters' => array('id' => 'album_id'),
 	),
 	'public_flag' => $public_flag,
-	'uri_for_update_public_flag' => 'member/api/update_config/timeline_public_flag.html',
+	'uri_for_update_public_flag' => 'member/setting/api/config/timeline_public_flag.html',
 )); ?>
 </div>
 

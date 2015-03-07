@@ -115,6 +115,7 @@ $config = array(
 		'privacy_policy' => 'プライバシーポリシー',
 		'template' => 'テンプレート',
 		'location' => '位置情報',
+		'failure' => '失敗',
 	),
 	'common' => array(
 		'info' => '情報',

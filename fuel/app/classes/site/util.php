@@ -517,4 +517,11 @@ class Site_Util
 
 		return $is_absolute_url ? Uri::base(false).$uri : Uri::base_path($uri);
 	}
+
+	public static function check_is_api()
+	{
+		if (Site_Util::check_is_dev_env() && Input::param('is_api')) return true;
+
+		return Input::is_ajax();
+	}
 }

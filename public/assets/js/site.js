@@ -6,12 +6,6 @@ $(function(){
 	}
 });
 
-$(document).on('click', '.btn_follow', function(){
-	if (GL.execute_flg) return false;
-	update_follow_status(this);
-	return false;
-});
-
 $(document).on('click', '.js-like', function(){
 	if (GL.execute_flg) return false;
 	update_like_status(this);
