@@ -29,16 +29,13 @@ class Controller_Member_Api extends Controller_Site_Api
 			list($limit, $is_latest, $is_desc, $since_id, $max_id)
 				= $this->common_get_list_params($default_params, conf('member.view_params.list.limit_max'));
 			list($list, $next_id) = Model_Member::get_list(null, $limit, $is_latest, $is_desc, $since_id, $max_id);
-			$response_body = \View::forge('_parts/member_list', array(
+			$this->set_response_body_api(array(
 				'list' => $list,
 				'next_id' => $next_id,
 				'since_id' => $since_id,
 				'get_uri' => 'member/api/list.json',
 				'history_key' => 'max_id',
-			))->render();
-			$this->set_response_body_api($response_body);
-
-			return $this->response_body;
+			), '_parts/member_list');
 		});
 	}
 }

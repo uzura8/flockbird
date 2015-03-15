@@ -524,4 +524,12 @@ class Site_Util
 
 		return Input::is_ajax();
 	}
+
+	public static function get_action_uri($table, $id, $action, $api_response_format = null)
+	{
+		$controller_path = Site_Model::convert_table2controller_path($table);
+		if ($api_response_format) return sprintf('%s/api/%s/%d.%s', $controller_path, $action, $id, $api_response_format);
+
+		return sprintf('%s/%s/%d', $controller_path, $action, $id);
+	}
 }

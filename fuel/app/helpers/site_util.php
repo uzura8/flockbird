@@ -331,6 +331,14 @@ function check_acl($acl_path, $method = 'GET', $is_convert_acl_path = false)
 	return Auth::has_access($acl_path.'.'.$method);
 }
 
+function get_uid()
+{
+	if (!Auth::check()) return 0;
+	list(, $member_id) = Auth::get_user_id();
+
+	return (int)$member_id;
+}
+
 function check_original_user($user_id, $is_admin = false)
 {
 	return $user_id == conf(sprintf('original_user_id.%s', $is_admin ? 'admin' : 'site'));

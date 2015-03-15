@@ -1,6 +1,6 @@
 <?php
 list($name, $icon, $btn_color) = get_public_flag_label($public_flag, isset($view_icon_only) ? $view_icon_only : false, 'array', true);
-if (!empty($model)) $model_uri = str_replace('_', '/', $model);
+if (!empty($model)) $model_uri = Site_Model::convert_table2controller_path($model);
 if (empty($option_type)) $option_type = 'default';
 ?>
 

@@ -8,83 +8,30 @@ class Controller_Comment_Like_Api extends \Controller_Site_Api
 	);
 
 	/**
-	 * TimelineComment api like update
+	 * Update like status
 	 * 
 	 * @access  public
-	 * @return  Response (json)
+	 * @param   int  $parent_id  target parent id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_update_like_common
 	 */
-	public function post_update($id = null)
+	public function post_update($parent_id = null)
 	{
-		$this->response_body['error_messages']['default'] = term('form.like').'に失敗しました。';
-		try
-		{
-			if (!conf('like.isEnabled')) throw new \HttpNotFoundException();
-			$this->check_response_format('json');
-			\Util_security::check_csrf();
-
-			$timeline_comment_id = (int)$id;
-			if (\Input::post('id')) $timeline_comment_id = (int)\Input::post('id');
-			$timeline_comment = Model_TimelineComment::check_authority($timeline_comment_id);
-			$this->check_browse_authority($timeline_comment->timeline->public_flag, $timeline_comment->member_id);
-
-			\DB::start_transaction();
-			$is_liked = (bool)Model_TimelineCommentLike::change_registered_status4unique_key(array(
-				'timeline_comment_id' => $timeline_comment->id,
-				'member_id' => $this->u->id
-			));
-			\DB::commit_transaction();
-
-			$this->response_body['status'] = (int)$is_liked;
-			$this->response_body['count'] = Model_TimelineCommentLike::get_count4timeline_comment_id($timeline_comment->id);
-			$this->response_body['message'] = $is_liked ? term('form.like').'しました。' : term('form.like').'を取り消しました。';
-			$this->response_body['html'] = icon_label($is_liked ? 'form.do_unlike' : 'form.do_like', 'both', false);
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\Database_Exception $e)
-		{
-			$status_code = 500;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 500;
-		}
-		if ($status_code == 500)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$this->response_body['error_messages']['500'] = $this->response_body['error_messages']['default'];
-		}
-
-		$this->response($this->response_body, $status_code);
+		return $this->api_update_like_common('timeline_comment', $parent_id, 'timeline');
 	}
 
 	/**
-	 * TimelineComment like get member
+	 * Get liked members
 	 * 
 	 * @access  public
-	 * @return  Response (json)
+	 * @param   int  $parent_id  target parent id
+	 * @return  Response (json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_get_liked_members_common
 	 */
 	public function get_member($parent_id = null)
 	{
-		$result = $this->get_liked_member_list(
-			'\Timeline\Model_TimelineCommentLike',
-			'\Timeline\Model_TimelineComment',
-			$parent_id,
-			'timeline_comment_id',
-			\Site_Util::get_api_uri_get_liked_members('timeline/comment', $parent_id),
-			'timeline'
-		);
-		if ($result) return $result;
+		return $this->api_get_liked_members_common('timeline_comment', $parent_id, 'timeline');
 	}
 }

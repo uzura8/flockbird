@@ -1,8 +1,6 @@
 <?php
 namespace Album;
 
-class AlreadySetToCoverException extends \FuelException {}
-
 class Controller_Image_api extends \Controller_Site_Api
 {
 	protected $check_not_auth_action = array(
@@ -16,434 +14,218 @@ class Controller_Image_api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Api list
+	 * Get list
 	 * 
 	 * @access  public
-	 * @return  Response (html)
+	 * @param   int     $parent_id  target parent record id
+	 * @return  Response(json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
-	public function get_list($album_id = null)
+	public function get_list($parent_id = null)
 	{
-		$response  = '';
-		try
+		$this->api_accept_formats = array('html', 'json');
+		$this->controller_common_api(function() use($parent_id)
 		{
-			$this->check_response_format(array('html', 'json'));
-
-			$album_id  = (int)$album_id;
-			if (!$album_id) $album_id = (int)\Input::get('album_id', 0);
-			$member_id = (int)\Input::get('member_id', 0);
+			$album_id       = (int)\Input::get('album_id') ?: (int)$parent_id;
+			$member_id      = (int)\Input::get('member_id', 0);
 			$is_member_page = (int)\Input::get('is_member_page', 0);
-			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
-
-			$album     = null;
-			$member    = null;
-			$is_mypage = false;
-
-			if ($album_id) $album = Model_Album::check_authority($album_id, null, 'member');
-			if ($member_id) list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
+			$album          = $album_id ? Model_Album::check_authority($album_id, null, 'member') : null;
+			list($is_mypage, $member) = $member_id ? $this->check_auth_and_is_mypage($member_id, true) : array(null, false);
 			if ($album && $member)
 			{
 				$member = null;
 				$is_mypage = false;
 			}
 			if (!$is_mypage && $album) $is_mypage = $this->check_is_mypage($album->member_id);
-
-			$params = array(
-				'related'  => array('album'),
-				'order_by' => array('id' => 'desc'),
-			);
-			if ($limit) $params['limit'] = $limit;
-
-			$target_member_id = 0;
-			$self_member_id   = \Auth::check() ? $this->u->id : 0;
-			$member_id_colmn  = null;
-			$where            = array();
-			if ($album) $where = array(array('album_id', $album_id));
-			if ($member)
-			{
-				$target_member_id = $member->id;
-				$member_id_colmn  = 't1.member_id';
-			}
-			$params['where'] = \Site_Model::get_where_params4list($target_member_id, $self_member_id, $is_mypage, $where, $member_id_colmn);
-			$data = Model_AlbumImage::get_pager_list($params, $page);
+			list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+			$params = array();
+			if ($album) $params['where'] = array('album_id', $album_id);
+			$data = Site_Model::get_album_images($limit, $page, get_uid(), $member, $is_mypage, $params, $this->format != 'html');
 			$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
-				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list'], 'Album') : array();
+				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list']) : array();
 
 			if ($this->format == 'html')
 			{
 				$data['is_member_page'] = $is_member_page;
 				if (!empty($album))  $data['album']  = $album;
 				if (!empty($member)) $data['member'] = $member;
-
-				$response = \View::forge('image/_parts/list', $data);
-				$status_code = 200;
-
-				return \Response::forge($response, $status_code);
 			}
-
-			$list_array = array();
-			foreach ($data['list'] as $key => $obj)
+			else
 			{
-				$row = $obj->to_array();
-				$row['album']['member'] = \Model_Member::get_one_basic4id($obj->album->member_id);
-				$list_array[] = $row;
+				$list_array = array();
+				foreach ($data['list'] as $key => $obj)
+				{
+					$row = $obj->to_array();
+					$row['album']['member'] = \Model_Member::get_one_basic4id($obj->album->member_id);
+					$list_array[] = $row;
+				}
+				// json response
+				$data = $list_array;
 			}
-			// json response
-			$response = $list_array;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
 
-		$this->response($response, $status_code);
+			$this->set_response_body_api($data, $this->format == 'html' ? 'image/_parts/list' : null);
+		});
 	}
 
 	/**
-	 * Api member
+	 * Get list by member
 	 * 
 	 * @access  public
+	 * @param   int  $member_id  target member_id
 	 * @return  Response (html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
-	public function get_member()
+	public function get_member($member_id = null)
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-
-		$member_id = (int)\Input::get('member_id', 0);
-
-		$response = '';
-		try
+		$this->api_accept_formats = array('html');
+		$this->controller_common_api(function() use($member_id)
 		{
-			list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id, true);
-			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
-			$data = Model_AlbumImage::get_pager_list(array(
-				'related' => array('album'),
-				'where' => array('t2.member_id', $member_id),
-				'limit' => $limit,
-				'order_by' => array('id' => 'desc'),
-			), $page);
-			$data['member'] = $member;
-			$response = \View::forge('image/_parts/list', $data);
-			$status_code = 200;
+			$member_id = \Input::get('member_id', 0) ?: $member_id;
+			list($is_mypage, $member) = $member_id ? $this->check_auth_and_is_mypage($member_id, true) : array(null, false);
+			list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+			$data = Site_Model::get_album_images($limit, $page, get_uid(), $member, $is_mypage, null, $this->format != 'html');
+			$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
+				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list']) : array();
 
-			return \Response::forge($response, $status_code);
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
+			if ($this->format == 'html')
+			{
+				if ($member) $data['member'] = $member;
+			}
+			else
+			{
+				$list_array = array();
+				foreach ($data['list'] as $key => $obj)
+				{
+					$row = $obj->to_array();
+					$row['album']['member'] = \Model_Member::get_one_basic4id($obj->album->member_id);
+					$list_array[] = $row;
+				}
+				// json response
+				$data = $list_array;
+			}
 
-		$this->response($response, $status_code);
+			$this->set_response_body_api($data, $this->format == 'html' ? 'image/_parts/list' : null);
+		});
 	}
 
 	/**
-	 * Album_image get_menu
+	 * Get note edit menu
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  album_image_id
+	 * @return  Response (html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_get_menu_common
 	 */
 	public function get_menu($id = null)
 	{
-		$response = '';
-		try
-		{
-			$this->check_response_format('html');
-
-			$is_detail  = (bool)\Input::get('is_detail', 0);
-			$id = (int)$id;
-			$album_image = Model_AlbumImage::check_authority($id);
-			$member_id = $album_image->album->member_id;
-			$this->check_browse_authority($album_image->public_flag, $member_id);
-
-			$menus = array();
-			if ($member_id == $this->u->id)
-			{
-				if (!$is_detail) $menus[] = array('tag' => 'divider');
-
-				if ($album_image->album->foreign_table == 'member')
-				{
-					if ($album_image->file_name == $this->u->file_name)
-					{
-						$menus[] = array('tag' => 'disabled', 'icon_term' => term(array('profile', 'site.image', 'site.set_already')));
-					}
-					else
-					{
-						$menus[] = array('icon_term' => 'form.set_profile_image', 'href' => '#', 'attr' => array(
-							'class' => 'js-simplePost',
-							'data-uri' => 'member/profile/image/set/'.$album_image->id,
-							'data-msg' => term(array('profile', 'site.image')).'に設定しますか？',
-						));
-					}
-				}
-				else
-				{
-					if ($album_image->album->cover_album_image_id == $album_image->id)
-					{
-						$menus[] = array('tag' => 'disabled', 'icon_term' => 'form.set_cover_already');
-					}
-					else
-					{
-						$menus[] = array('icon_term' => 'form.set_cover', 'attr' => array(
-							'class' => 'js-update_toggle',
-							'data-uri' => 'album/image/api/set_cover/'.$album_image->id.'.json',
-						));
-					}
-				}
-				$menus[] = array('href' => 'album/image/edit/'.$id, 'icon_term' => 'form.do_edit');
-				$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
-					'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
-					'data-uri' => $is_detail ? 'album/image/delete/'.$album_image->id : 'album/image/api/delete/'.$id.'.json',
-					'data-msg' => term('form.delete').'します。よろしいですか。',
-					'data-parent' => 'image_item_'.$id,
-				));
-			}
-			elseif (is_enabled('notice'))
-			{
-				$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id('album_image', $id, $this->u->id);
-				$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
-					'class' => 'js-update_toggle',
-					'data-uri' => 'member/notice/api/update_watch_status/album_image/'.$id,
-					//'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
-				));
-			}
-
-			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus, 'is_ajax_loaded' => true));
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		return $this->api_get_menu_common('album_image', $id, true, 'image_item_', 'album');
 	}
 
 	/**
-	 * Api post_set_cover
+	 * Set album cover image
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  album_image_id
+	 * @return  Response (json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function post_set_cover($id = null)
 	{
-		$this->response_body['error_messages']['default'] = term('form.watch').'状態の変更に失敗しました。';
-		try
+		$this->controller_common_api(function() use($id)
 		{
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
+			$this->response_body['errors']['message_default'] = term('form.watch').'状態の変更に失敗しました。';
+			$id = intval(\Input::post('id') ?: $id);
 			$album_image = Model_AlbumImage::check_authority($id, $this->u->id);
 			if ($album_image->album->cover_album_image_id == $id)
 			{
-				throw new AlreadySetToCoverException;
+				throw new DisableToUpdateException(term('form.set_cover_already').'です。');
 			}
 			$album_image->album->cover_album_image_id = $id;
 			\DB::start_transaction();
-			$this->response_body['status'] = (bool)$album_image->album->save();
+			$status = (bool)$album_image->album->save();
 			\DB::commit_transaction();
+			$data = array(
+				'status' => $status,
+				'album_id' => $album_image->album_id,
+				'html' => html_tag('span', array('class' => 'disabled'), term('form.set_cover_already')),
+				'is_replace' => 1,
+				'message' => term('cover_image').'に設定しました。',
+			);
 
-			$this->response_body['album_id'] = $album_image->album_id;
-			$this->response_body['html'] = html_tag('span', array('class' => 'disabled'), term('form.set_cover_already'));
-			$this->response_body['is_replace'] = 1;
-			$this->response_body['message'] = term('cover_image').'に設定しました。';
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(AlreadySetToCoverException $e)
-		{
-			$this->response_body['error_messages']['409'] = term('form.set_cover_already').'です。';
-			$status_code = 409;
-		}
-		catch(\Database_Exception $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($this->response_body, $status_code);
+			$this->set_response_body_api($data);
+		});
 	}
 
+
 	/**
-	 * Api post_save_location
+	 * Save location data.
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  album_image_id
+	 * @return  Response (json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function post_save_location($id = null)
 	{
-		$this->response_body['error_messages']['default'] = sprintf('%sの%sに失敗しました。', term('site.location'), term('form.save'));
-		try
+		$this->controller_common_api(function() use($id)
 		{
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
+			$this->response_body['errors']['message_default'] = sprintf('%sの%sに失敗しました。', term('site.location'), term('form.save'));
+			$id = intval(\Input::post('id') ?: $id);
 			$album_image = Model_AlbumImage::check_authority($id, $this->u->id, 'album_image_location');
 
 			$album_image_location = $album_image->album_image_location ?: Model_AlbumImageLocation::forge();
 			$val = \Validation::forge();
 			$val->add_model($album_image_location);
 			$val->fieldset()->field('album_image_id')->delete_rule('required');
-			if (!$val->run()) throw new \HttpInvalidInputException($val->show_errors());
+			if (!$val->run()) throw new \ValidationFailedException($val->show_errors());
 			$post = $val->validated();
 
-			\DB::start_transaction();
 			$album_image_location->album_image_id = $id;
 			$album_image_location->latitude = $post['latitude'];
 			$album_image_location->longitude = $post['longitude'];
-			$this->response_body['status'] = (bool)$album_image_location->save();
+			\DB::start_transaction();
+			$status = (bool)$album_image_location->save();
 			\DB::commit_transaction();
+			$data = array(
+				'status' => $status,
+				'album_image_location' => $album_image_location->to_array(),
+				'message' => sprintf('%sを%sしました。', term('site.location'), term('form.save')),
+			);
 
-			$this->response_body['album_image_location'] = $album_image_location;
-			$this->response_body['message'] = sprintf('%sを%sしました。', term('site.location'), term('form.save'));
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(AlreadySetToCoverException $e)
-		{
-			$status_code = 409;
-		}
-		catch(\Database_Exception $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 500;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 500;
-		}
-
-		$this->response($this->response_body, $status_code);
+			$this->set_response_body_api($data);
+		});
 	}
 
 	/**
-	 * Album image delete
+	 * Delete album_image
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  target id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_api_delete_common
 	 */
 	public function post_delete($id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
-
-			\DB::start_transaction();
-			$album_image = Model_AlbumImage::check_authority($id, $this->u->id);
-			$album_image->delete();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 401;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_delete_common('album_image', $id);
 	}
 
 	/**
-	 * Album image update public_flag
+	 * Update public_flag
 	 * 
 	 * @access  public
-	 * @return  Response (html)
+	 * @param   int  $id  target id
+	 * @return  Response(html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_update_public_flag_common
 	 */
-	public function post_update_public_flag()
+	public function post_update_public_flag($id = null)
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-		$response = '0';
-		try
-		{
-			\Util_security::check_csrf();
-
-			$id = (int)\Input::post('id');
-			$icon_only_flag = (int)\Input::post('icon_only_flag', 0);
-			$album_image = Model_AlbumImage::check_authority($id, $this->u->id);
-			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($album_image->public_flag);
-
-			\DB::start_transaction();
-			$album_image->update_public_flag($public_flag);
-			\DB::commit_transaction();
-
-			$response = \View::forge('_parts/public_flag_selecter', array(
-				'model' => $model,
-				'id' => $id,
-				'public_flag' => $public_flag,
-				'is_mycontents' => true,
-				'without_parent_box' => 'true',
-				'view_icon_only' => $icon_only_flag,
-			));
-			$status_code = 200;
-
-			return \Response::forge($response, $status_code);
-		}
-		catch(\DisableToUpdateException $e)
-		{
-			$response = json_encode(array('error' => array('message' => $e->getMessage())));
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			\DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_update_public_flag_common('album_image', $id);
 	}
 }

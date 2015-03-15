@@ -28,7 +28,7 @@ class Site_Util
 
 	public static function get_key4type($target_type = null)
 	{
-		$types = \Config::get('timeeline.types');
+		$types = conf('types', 'timeline');
 		foreach ($types as $key => $type)
 		{
 			if ($type == $target_type) return $key;
@@ -444,45 +444,64 @@ class Site_Util
 		return in_array($type, $editable_types);
 	}
 
+	public static function get_edit_action_uri(Model_Timeline $timeline)
+	{
+		$table = '';
+		$id = 0;
+		switch (static::get_key4type($timeline->type))
+		{
+			case 'note':
+			case 'album':
+			case 'thread':
+				$table = $timeline->foreign_table;
+				$id = $timeline->foreign_id;
+				break;
+			case 'member_name':
+				return 'member/profile/edit';
+			case 'profile_image':
+			case 'album_image_profile':
+				return 'member/profile/image';
+			case 'normal':
+			case 'album_image_timeline':
+			case 'member_register':
+			case 'album_image':
+			default :
+				return '';
+		}
+		if (!$table || !$id) return '';
+
+		return \Site_Util::get_action_uri($table, $id, 'edit');
+	}
+
 	public static function get_delete_api_uri(Model_Timeline $timeline)
 	{
-		$path = '';
-		$id = '';
-		switch ($timeline->type)
+		$table = '';
+		$id = 0;
+		switch (static::get_key4type($timeline->type))
 		{
-			case \Config::get('timeline.types.normal'):
-			case \Config::get('timeline.types.album_image_timeline'):
-				$id  = $timeline->id;
-				$path = 'timeline/api/delete/';
+			case 'normal':
+			case 'album_image_timeline':
+				$table = 'timeline';
+				$id = $timeline->id;
 				break;
-			case \Config::get('timeline.types.note'):
-				$id  = $timeline->foreign_id;
-				$path = 'note/api/delete/';
-				break;
-			case \Config::get('timeline.types.thread'):
-				$id  = $timeline->foreign_id;
-				$path = 'thread/api/delete/';
-				break;
-			case \Config::get('timeline.types.album'):
-				$id  = $timeline->foreign_id;
-				$path = 'album/api/delete/';
-				break;
-			case \Config::get('timeline.types.album_image_profile'):
-				$id  = $timeline->foreign_id;
-				$path = 'album/image/api/delete/';
-				break;
-			default :
+
+			case 'note':
+			case 'album':
+			case 'thread':
+			case 'album_image_profile':
+				$table = $timeline->foreign_table;
+				$id = $timeline->foreign_id;
 				break;
 		}
-		if (!$path || !$id) return '';
+		if (!$table || !$id) return '';
 
-		return sprintf('%s%s.json', $path, $id);
+		return \Site_Util::get_action_uri($table, $id, 'delete', 'json');
 	}
 
 	public static function get_member_watch_content_api_uri(Model_Timeline $timeline)
 	{
 		list($foreign_table, $foreign_id_column) = self::get_member_watch_content_info4timeline_type($timeline->type);
-		if (!$foreign_table || !$foreign_id_column) return '';
+		if (!$foreign_table || !$foreign_id_column) return sprintf('member/notice/api/update_watch_status/timeline/%s.json', $timeline->id);
 
 		return sprintf('member/notice/api/update_watch_status/%s/%s.json', $foreign_table, $timeline->{$foreign_id_column});
 	}
@@ -691,7 +710,7 @@ class Site_Util
 			$params['is_desc'],
 			$params['since_id']
 		);
-		$liked_timeline_ids = (conf('like.isEnabled') && $self_member_id) ? \Site_Model::get_liked_ids('timeline', $self_member_id, $list, 'Timeline') : array();
+		$liked_timeline_ids = (conf('like.isEnabled') && $self_member_id) ? \Site_Model::get_liked_ids('timeline', $self_member_id, $list) : array();
 		$data = array(
 			'list' => $list,
 			'next_id' => $next_id,

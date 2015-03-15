@@ -8,23 +8,25 @@ $(function() {
 		$('.upload').removeClass('hidden');
 		$(this).addClass('hidden');
 
-		var get_data = {};
+		var getData = {
+			limit: 100,
+			cols : ['id', 'name'],
+			no_relateds: 1
+		};
 		$.ajax({
-			url : get_url('album/api/albums.json'),
+			url : get_url('album/api/member.json'),
 			type : 'GET',
 			dataType : 'json',
-			data : get_data,
+			data : getData,
 			timeout: get_config('default_ajax_timeout'),
 			beforeSend: function(xhr, settings) {
-				//GL.execute_flg = true;
 				$('#album_id').attr('disabled', 'disabled');
 			},
 			complete: function(xhr, textStatus) {
-				//GL.execute_flg = false;
 				$('#album_id').removeAttr('disabled');
 			},
 			success: function(result) {
-				$.each(result, function(i, val) {
+				$.each(result.list, function(i, val) {
 					$('#album_id').append('<option value="' + val.id + '">' + val.name + '</option>');
 				});
 			},

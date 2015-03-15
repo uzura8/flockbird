@@ -70,6 +70,7 @@ class Controller_Timeline extends \Controller_Site
 			), conf('articles.limit_max', 'timeline'), true)
 		);
 		if ($member) $data['member'] = $member;
+
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('timeline', 'site.list')), null, $member);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -105,7 +106,7 @@ class Controller_Timeline extends \Controller_Site
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'timeline', $id);
 
 		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
-			\Site_Model::get_liked_ids('timeline', $this->u->id, array($timeline), 'Timeline') : array();
+			\Site_Model::get_liked_ids('timeline', $this->u->id, array($timeline)) : array();
 		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/article', array(

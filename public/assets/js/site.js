@@ -257,7 +257,7 @@ $(document).on('click', '.js-dropdown_content_menu', function(){
 			}
 		},
 		error: function(result, status) {
-			showMessage(getErrorMessage(response));
+			showErrorMessage(result);
 		}
 	});
 	return false;

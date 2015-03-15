@@ -13,124 +13,43 @@ class Controller_Comment_Api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Api get_list
+	 * Get note comments
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $parent_id  target parent id
+	 * @return  Response (json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::get_comment_list
 	 */
 	public function get_list($parent_id = null)
 	{
-		$result = $this->get_comment_list(
-			'\Note\Model_NoteComment',
-			'\Note\Model_Note',
-			$parent_id,
-			'note_id',
-			'note'
-		);
-		if ($result) return $result;
+		$this->api_get_comments_common('note', $parent_id);
 	}
 
 	/**
-	 * Api post_create
+	 * Create note comment
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int     $parent_id  target parent id
+	 * @return  Response(json)
+	 * @see  Controller_Site_Api::api_create_comment_common
 	 */
 	public function post_create($parent_id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			$this->check_response_format('json');
-			\Util_security::check_csrf();
-
-			$note_id = (int)$parent_id;
-			if (\Input::post('id')) $note_id = (int)\Input::post('id');
-			$note = Model_Note::check_authority($note_id);
-			$this->check_browse_authority($note->public_flag, $note->member_id);
-
-			// Lazy validation
-			$body = trim(\Input::post('body', ''));
-			if (!strlen($body)) throw new \HttpInvalidInputException;
-
-			\DB::start_transaction();
-			// Create a new comment
-			$comment = new Model_NoteComment(array(
-				'body' => $body,
-				'note_id' => $note_id,
-				'member_id' => $this->u->id,
-			));
-			$comment->save();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$response['id'] = $comment->id;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_create_comment_common('note', $parent_id);
 	}
 
 	/**
-	 * Api comment delete
+	 * Delete note comment
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  target id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_api_delete_common
 	 */
 	public function post_delete($id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			$this->check_response_format('json');
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
-			$note_comment = Model_NoteComment::check_authority($id);
-
-			\DB::start_transaction();
-			$note_comment->delete();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_delete_common('note_comment', $id);
 	}
 }

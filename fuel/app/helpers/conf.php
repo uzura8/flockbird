@@ -36,3 +36,15 @@ function is_render_site_summary_at_client_side()
 
 	return $is_render_site_summary_at_client_side;
 }
+
+function get_enabled_modules_str($target_modules, $delimitter = '|')
+{
+	foreach ($target_modules as $key => $module)
+	{
+		if (!is_enabled($module)) unset($target_modules[$key]);
+	}
+	if (!$target_modules) return '';
+
+	return implode($delimitter, $target_modules);
+}
+

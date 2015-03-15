@@ -124,7 +124,7 @@ $data = array(
 	'is_hide_reply_link' => true,
 	'like_api_uri_prefix' => 'album/image/comment',
 	'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $comments) ?
-		\Site_Model::get_liked_ids('album_image_comment', $u->id, $comments, 'Album') : array(),
+		\Site_Model::get_liked_ids('album_image_comment', $u->id, $comments) : array(),
 );
 echo render('_parts/comment/list', $data);
 ?>

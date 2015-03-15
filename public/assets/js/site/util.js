@@ -109,12 +109,14 @@ function getErrorMessage(responseObj)
 function showErrorMessage(responseObj)
 {
 	var defaultMessage = (arguments.length > 1) ? arguments[1] : '';
-	showMessage(getErrorMessageNew(responseObj, defaultMessage));
+	showMessage(getErrorMessageNew(responseObj));
 }
 
 function getErrorMessageNew(responseObj)
 {
 	var defaultMessage = (arguments.length > 1) ? arguments[1] : '';
+
+	if (!empty(responseObj.responseText)) return responseObj.responseText;
 	if (!empty(responseObj.responseJSON.errors.message)) return responseObj.responseJSON.errors.message;
 
 	switch (responseObj.status)
@@ -134,6 +136,8 @@ function getErrorMessageNew(responseObj)
 
 function showMessage(msg)
 {
+	var msgDefault = (arguments.length > 1) ? arguments[1] : '';
+	if (!msg && msgDefault) msg = msgDefault;
 	$.jGrowl(msg);
 }
 
@@ -324,26 +328,20 @@ function delete_item(uri)
 	});
 }
 
-function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
+function delete_item_execute_ajax(postUri, id, target_attribute_prefix)
 {
 	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
 	var is_display_message_success = (arguments.length > 4) ? arguments[4] : true;
-	var item_term = (arguments.length > 5) ? arguments[5] : '';
+	var itemTerm = (arguments.length > 5) ? arguments[5] : '';
 	var counterSelector = (arguments.length > 6) ? arguments[6] : '';
-
-	var token_key = get_token_key();
-	var post_data = {};
-	if (id) post_data['id'] = id;
-	post_data['_method'] = 'DELETE';
-	post_data[token_key] = get_token();
-
-	var msg_prefix = '';
-	if (item_term.length > 0) msg_prefix = item_term + 'を';
+	var msgPrefix = (itemTerm.length > 0) ? itemTerm + 'を' : '';
+	var postData = {_method: 'DELETE'};
+	if (id) postData['id'] = id;
 
 	$.ajax({
-		url : get_url(post_uri),
+		url : get_url(postUri),
 		dataType : 'json',
-		data : post_data,
+		data : set_token(postData),
 		timeout: get_config('default_ajax_timeout'),
 		type : 'POST',
 		success: function(response){
@@ -352,12 +350,12 @@ function delete_item_execute_ajax(post_uri, id, target_attribute_prefix)
 			$(delete_target_attribute).remove();
 			updateCounter(counterSelector, -1);
 			if (is_display_message_success) {
-				var message = !empty(response.message) ? response.message : msg_prefix + '削除しました。';
-				$.jGrowl(message);
+				var message = !empty(response.message) ? response.message : msgPrefix + '削除しました。';
+				showMessage(message);
 			}
 		},
 		error: function(response){
-			showMessage(getErrorMessage(response));
+			showErrorMessage(response, '削除に失敗しました。');
 		}
 	});
 }
@@ -767,21 +765,18 @@ function display_form4value(value, target_values, disp_target_forms) {
 }
 
 function update_like_status(selfDomElement) {
-	//var id = $(selfDomElement).data('id');
 	var counterSelector = $(selfDomElement).data('count');
-	var postUrl = $(selfDomElement).data('uri');
-	if (!postUrl) return;
-
 	var selfDomElement_html = $(selfDomElement).html();
-
-	var post_data = {};
-	postData = set_token(post_data);
+	var postUrl = $(selfDomElement).data('uri');
+	var postData = {};
+	var messageDefault;
+	if (!postUrl) return;
 
 	$.ajax({
 		url : get_url(postUrl),
 		type : 'POST',
-		dataType : 'text',
-		data : postData,
+		dataType : 'json',
+		data : set_token(postData),
 		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
@@ -795,24 +790,21 @@ function update_like_status(selfDomElement) {
 			$(selfDomElement).attr('disabled', false);
 		},
 		success: function(result){
-			var message
-					resData = $.parseJSON(result);
-			if (resData.status) {
-				//$(selfDomElement).addClass('btn-primary');
+			if (result.result) {
 				selfDomElement_html = get_term('undo_like');
-				msg = get_term('like') + 'しました。';
+				messageDefault = get_term('like') + 'しました。';
 			} else {
 				$(selfDomElement).removeClass('btn-primary');
 				selfDomElement_html = get_term('do_like');
-				msg = get_term('like') + 'を取り消しました。';
+				messageDefault = get_term('like') + 'を取り消しました。';
 			}
-			if (counterSelector) $(counterSelector).html(resData.count);
-			$.jGrowl(msg);
+			if (counterSelector) $(counterSelector).html(result.count);
 			$(selfDomElement).html(selfDomElement_html);
+			showMessage(result.message, messageDefault);
 		},
 		error: function(result){
 			$(selfDomElement).html(selfDomElement_html);
-			$.jGrowl(get_error_message(result['status'], get_term('like') + 'に失敗しました。'));
+			showErrorMessage(result, get_term('like') + 'に失敗しました。');
 		}
 	});
 }
@@ -820,16 +812,15 @@ function update_like_status(selfDomElement) {
 function updateToggle(selfDomElement) {
 	var postUrl = $(selfDomElement).data('uri');
 	var postData = $(this).data('post_data') ? $(this).data('post_data') : {};
-
 	var selfDomElementHtmlBefore = $(selfDomElement).html();
-	postData = set_token(postData);
+
 	if (!postUrl) return;
 
 	$.ajax({
 		url : get_url(postUrl),
 		type : 'POST',
 		dataType : 'json',
-		data : postData,
+		data : set_token(postData),
 		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
@@ -846,10 +837,12 @@ function updateToggle(selfDomElement) {
 			if (!empty(response.is_replace)) {
 				$(selfDomElement).replaceWith(response.html);
 			} else {
-				if (response.attr.class.add) {
-					$(selfDomElement).addClass(response.attr.class.add);
-				} else if (response.attr.class.remove) {
-					$(selfDomElement).removeClass(response.attr.class.remove);
+				if (!empty(response.attr)) {
+					if (response.attr.class.add) {
+						$(selfDomElement).addClass(response.attr.class.add);
+					} else if (response.attr.class.remove) {
+						$(selfDomElement).removeClass(response.attr.class.remove);
+					}
 				}
 				$(selfDomElement).html(response.html);
 			}

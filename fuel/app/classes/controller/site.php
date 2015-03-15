@@ -72,7 +72,7 @@ class Controller_Site extends Controller_Base_Site
 				'limit'    => $limit,
 			), $page);
 			$data['album_images']['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
-				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['album_images']['list'], 'Album') : array();
+				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['album_images']['list']) : array();
 			$data['album_images']['column_count'] = \Config::get('page.site.index.albumImage.list.column_count');
 			//$this->template->post_footer = \View::forge('image/_parts/list_footer');
 		}

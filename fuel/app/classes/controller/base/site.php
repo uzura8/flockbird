@@ -49,16 +49,17 @@ class Controller_Base_Site extends Controller_Base
 			$member = $this->u;
 			$access_from = 'self';
 		}
-		elseif (Auth::check() && Model_MemberRelation::check_relation('friend', $this->u->id, $member_id))
-		{
-			$is_mypage = false;
-			$access_from = 'friend';
-		}
 		else
 		{
 			$member = Model_Member::check_authority($member_id);
-			$is_mypage = false;
-			$access_from = Auth::check() ? 'member' : 'guest';
+			if (Auth::check())
+			{
+				$access_from = 'member';
+				if (Model_MemberRelation::check_relation('friend', $this->u->id, $member_id))
+				{
+					$access_from = 'friend';
+				}
+			}
 		}
 
 		return array($is_mypage, $member, $access_from);
@@ -106,7 +107,7 @@ class Controller_Base_Site extends Controller_Base
 		return $this->u->filesize_total;
 	}
 
-	protected function check_browse_authority($public_flag, $member_id = 0)
+	protected function check_browse_authority($public_flag, $author_member_id = 0)
 	{
 		switch ($public_flag)
 		{
@@ -120,7 +121,7 @@ class Controller_Base_Site extends Controller_Base
 			//	break;
 			case PRJ_PUBLIC_FLAG_PRIVATE:
 			default :
-				if (Auth::check() && $member_id && $member_id == $this->u->id) return true;
+				if (Auth::check() && $author_member_id && $author_member_id == $this->u->id) return true;
 				break;
 		}
 

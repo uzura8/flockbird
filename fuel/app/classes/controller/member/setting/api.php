@@ -42,8 +42,6 @@ class Controller_Member_Setting_Api extends Controller_Site_Api
 
 			$response_body = self::get_response_for_update_config($name, array('id' => $member_id, $name => $value));
 			$this->set_response_body_api($response_body);
-
-			return $this->response_body;
 		});
 	}
 

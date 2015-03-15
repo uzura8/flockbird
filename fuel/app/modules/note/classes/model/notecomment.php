@@ -121,7 +121,8 @@ class Model_NoteComment extends \MyOrm\Model
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id')
 	{
-		if (is_null($related_tables)) $related_tables = array('note', 'member');
+		if (is_null($related_tables))   $related_tables = array('note', 'member');
+		if (!is_array($related_tables)) $related_tables = (array)$related_tables;
 
 		if (!$id) throw new \HttpNotFoundException;
 

@@ -13,218 +13,117 @@ class Controller_Api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Api list
+	 * Get timeline list
 	 * 
 	 * @access  public
 	 * @return  Response (html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function get_list()
 	{
-		$response = '';
-		try
+		$this->api_accept_formats = 'html';
+		$this->controller_common_api(function()
 		{
-			$this->check_response_format('html');
-
-			$member_id     = (int)\Input::get('member_id', 0);
-			$is_mytimeline = (bool)\Input::get('mytimeline', 0);
-			$member = $member_id ? \Model_Member::check_authority($member_id) : null;
-			if ($is_mytimeline && !\Auth::check()) $is_mytimeline = false;
+			$member_id = (int)\Input::get('member_id', 0);
+			list($is_mypage, $member) = $member_id ? $this->check_auth_and_is_mypage($member_id, true) : array(null, false);
+			$is_mytimeline = \Auth::check() ? (bool)\Input::get('mytimeline', 0) : false;
 			$timeline_viewType = $is_mytimeline ? $this->member_config->timeline_viewType : null;
 			$is_display_load_before_link = (bool)\Input::get('before_link', false);
+
 			$data = \Timeline\Site_Util::get_list4view(
-				\Auth::check() ? $this->u->id : 0,
+				get_uid(),
 				$member_id, $is_mytimeline, $timeline_viewType,
 				$this->common_get_list_params(array(
-					'desc' => 1,
+					'desc'   => 1,
 					'latest' => 1,
-					'limit' => conf('articles.limit', 'timeline'),
+					'limit'  => conf('articles.limit', 'timeline'),
 				), conf('articles.limit_max', 'timeline'), true)
 			);
 			if ($member) $data['member'] = $member;
 			if ($is_mytimeline) $data['mytimeline'] = true;
 			$data['is_display_load_before_link'] = $is_display_load_before_link;
-			$response = \View::forge('_parts/list', $data);
-			$status_code = 200;
 
-			return \Response::forge($response, $status_code);
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+			$this->set_response_body_api($data, '_parts/list');
+		});
 	}
 
 	/**
-	 * Api get_dropdown_menu
+	 * Get timeline edit menu
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  timeline id
+	 * @return  Response (html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_get_menu_common
 	 */
 	public function get_menu($id = null)
 	{
-		$response = '';
-		try
-		{
-			$this->check_response_format('html');
-
-			$is_detail = (bool)\Input::get('is_detail', 0);
-			$id = (int)$id;
-			$timeline = Model_Timeline::check_authority($id);
-			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
-
-			$menus = array();
-			if ($timeline->member_id == $this->u->id)
-			{
-				if (!$is_detail) $menus[] = array('tag' => 'divider');
-				$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
-					'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
-					'data-uri' => $is_detail ? 'timeline/delete/'.$timeline->id : Site_Util::get_delete_api_uri($timeline),
-					'data-msg' => term('form.delete').'します。よろしいですか。',
-					'data-parent' => 'timelineBox_'.$id,
-				));
-			}
-			else
-			{
-				if ($api_uri = $this->get_member_watch_content_api_uri($timeline))
-				{
-					list($foreign_table, $foreign_id_prop) = Site_Util::get_member_watch_content_info4timeline_type($timeline->type);
-					$is_watched = \Notice\Model_MemberWatchContent::get_one4foreign_data_and_member_id($foreign_table, $timeline->{$foreign_id_prop}, $this->u->id);
-					$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
-						'class' => 'js-update_toggle',
-						'data-uri' => $api_uri,
-						//'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
-					));
-				}
-				if (\Config::get('timeline.articleUnfollow.isEnabled'))
-				{
-					$is_followed = (bool)Model_MemberFollowTimeline::get4timeline_id_and_member_id($timeline->id, $this->u->id);
-					$menus[] = array('icon_term' => $is_followed ? 'followed' : 'do_follow', 'attr' => array(
-						'class' => 'js-update_toggle',
-						'data-uri' => sprintf('timeline/api/update_follow_status/%d.json', $timeline->id),
-						//'data-msg' => $is_followed ? term('follow').'を解除しますか？' : term('follow').'しますか？',
-					));
-				}
-			}
-
-			$response = \View::forge('_parts/dropdown_menu', array('menus' => $menus, 'is_ajax_loaded' => true));
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_get_menu_common('timeline', $id, true, 'timelineBox_');
 	}
 
 	/**
-	 * Timeline post update_fallow_status
+	 * Change timeline follow status
 	 * 
 	 * @access  public
+	 * @param   int  $id  timeline id
 	 * @return  Response (json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function post_update_follow_status($id = null)
 	{
-		$this->response_body['error_messages']['default'] = term('form.fallow').'状態の変更に失敗しました。';
-		try
+		$this->controller_common_api(function() use($id)
 		{
-			$this->check_response_format('json');
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
+			$this->response_body['errors']['message_default'] = term('form.fallow').'状態の変更に失敗しました。';
+			$id = intval(\Input::post('id') ?: $id);
 			$timeline = Model_Timeline::check_authority($id);
 			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
-			if ($timeline->member_id == $this->u->id) throw new \HttpForbiddenException;// 自分のタイムラインはフォロー解除不可
+			if ($timeline->member_id == $this->u->id) throw new \HttpBadRequestException;// 自分のタイムラインはフォロー解除不可
 
 			\DB::start_transaction();
-			$is_registerd = (bool)Model_MemberFollowTimeline::change_registered_status4unique_key(array(
+			$is_registerd = (int)Model_MemberFollowTimeline::change_registered_status4unique_key(array(
 				'member_id' => $this->u->id,
 				'timeline_id' => $timeline->id,
 			));
 			\DB::commit_transaction();
 
-			$this->response_body['status'] = (int)$is_registerd;
-			$this->response_body['message'] = $is_registerd ? term('follow').'しました。' : term('follow').'を解除しました。';
-			$this->response_body['html'] = icon_label($is_registerd ? 'followed' : 'do_follow', 'both', false);
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\Database_Exception $e)
-		{
-			$status_code = 500;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 500;
-		}
-		if ($status_code == 500)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$this->response_body['error_messages']['500'] = $this->response_body['error_messages']['default'];
-		}
-
-		$this->response($this->response_body, $status_code);
+			$data = array(
+				'result'  => $is_registerd,
+				'message' => $is_registerd ? term('follow').'しました。' : term('follow').'を解除しました。',
+				'html'    => icon_label($is_registerd ? 'followed' : 'do_follow', 'both', false),
+			);
+			$this->set_response_body_api($data);
+		});
 	}
 
 	/**
-	 * Api post_create
+	 * Create timeline
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int     $parent_id  target parent id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function post_create()
 	{
-		$this->response_body['error_messages']['default'] = term('timeline').'の'.term('form.post').'に失敗しました。';
-		$file_tmps = array();
-		$moved_files = array();
-		$album_image_ids = array();
-		try
+		$this->controller_common_api(function()
 		{
-			\Util_security::check_csrf();
+			$this->response_body['errors']['message_default'] = term('timeline').'の'.term('form.post').'に失敗しました。';
+			$moved_files = array();
+			$album_image_ids = array();
 
 			$timeline = Model_Timeline::forge();
 			$val = \Validation::forge();
 			$val->add_model($timeline);
-			if (!$val->run()) throw new \FuelException($val->show_errors());
+			if (!$val->run()) throw new \ValidationFailedException($val->show_errors());
 			$post = $val->validated();
-
 			$file_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
-
 			if (!strlen($post['body']) && !$file_tmps)
 			{
-				throw new \FuelException('Data is empty.');
+				throw new \ValidationFailedException('Data is empty.');
 			}
-
 			$type_key = 'normal';
 			$album_id = (int)\Input::post('album_id', 0);
 			if ($file_tmps && $album_id)
@@ -232,114 +131,77 @@ class Controller_Api extends \Controller_Site_Api
 				$album = \Album\Model_Album::check_authority($album_id, $this->u->id);
 				if (\Album\Site_Util::check_album_disabled_to_update($album->foreign_table, true))
 				{
-					throw new \FuelException('Album id is invalid.');
+					throw new \ValidationFailedException('Album id is invalid.');
 				}
 				$type_key = 'album_image';
 			}
 
-			\DB::start_transaction();
-			if ($file_tmps)
+			try
 			{
-				if (!$album_id)
+				\DB::start_transaction();
+				if ($file_tmps)
 				{
-					$type_key = 'album_image_timeline';
-					$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'timeline');
+					if (!$album_id)
+					{
+						$type_key = 'album_image_timeline';
+						$album_id = \Album\Model_Album::get_id_for_foreign_table($this->u->id, 'timeline');
+					}
+					list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', $post['public_flag']);
 				}
-				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', $post['public_flag']);
+				else
+				{
+					$album_id = null;
+				}
+				$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], $type_key, $album_id, null, $post['body'], $timeline, $album_image_ids);
+				\DB::commit_transaction();
+
+				// thumbnail 作成 & tmp_file thumbnail 削除
+				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 			}
-			else
+			catch(\Exception $e)
 			{
-				$album_id = null;
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
+				throw $e;
 			}
-			$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], $type_key, $album_id, null, $post['body'], $timeline, $album_image_ids);
-			\DB::commit_transaction();
 
-			// thumbnail 作成 & tmp_file thumbnail 削除
-			\Site_FileTmp::make_and_remove_thumbnails($moved_files);
-
-			$this->response_body['status'] = 1;
-			$this->response_body['message'] = term('timeline').'を'.term('form.post').'しました。';
-			$this->response_body['id'] = $timeline->id;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\Database_Exception $e)
-		{
-			$status_code = 500;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 500;
-		}
-		if ($status_code == 500)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			if ($moved_files) \Site_FileTmp::move_files_to_tmp_dir($moved_files);
-			$this->response_body['error_messages']['500'] = $this->response_body['error_messages']['default'];
-		}
-
-		$this->response($this->response_body, $status_code);
+			$data = array(
+				'id'      => $timeline->id,
+				'message' => term('timeline').'を'.term('form.post').'しました。',
+			);
+			$this->set_response_body_api($data);
+		});
 	}
 
 	/**
-	 * Timeline delete
+	 * Delete timeline
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  target id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function post_delete($id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
-
-			\DB::start_transaction();
-			$timeline = Model_Timeline::check_authority($id, $this->u->id);
-			Site_Model::delete_timeline($timeline, $this->u->id);
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_delete_common('timeline', $id);
 	}
 
 	/**
-	 * Timeline update public_flag
+	 * Update public_flag
 	 * 
 	 * @access  public
-	 * @return  Response (html)
+	 * @param   int  $id  target id
+	 * @return  Response(html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
-	public function post_update_public_flag()
+	public function post_update_public_flag($id = null)
 	{
-		if ($this->format != 'html') throw new \HttpNotFoundException();
-		$response = '0';
-		try
+		$this->accept_formats = 'html';
+		$this->controller_common_api(function() use($id)
 		{
-			\Util_security::check_csrf();
-
-			$id = (int)\Input::post('id');
+			$id = intval(\Input::post('id') ?: $id);
 			$timeline = Model_Timeline::check_authority($id, $this->u->id);
 			list($public_flag, $model) = \Site_Util::validate_params_for_update_public_flag($timeline->public_flag);
 
@@ -353,28 +215,14 @@ class Controller_Api extends \Controller_Site_Api
 			$timeline->save();
 			\DB::commit_transaction();
 
-			$data = array('model' => $model, 'id' => $id, 'public_flag' => $public_flag, 'is_mycontents' => true, 'without_parent_box' => true);
-			$response = \View::forge('_parts/public_flag_selecter', $data);
-
-			return \Response::forge($response, 200);
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			\DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
-	}
-
-	private function get_member_watch_content_api_uri(Model_Timeline $timeline)
-	{
-		if (!is_enabled('notice')) return false;
-
-		return Site_Util::get_member_watch_content_api_uri($timeline);
+			$data = array(
+				'model'              => $model,
+				'id'                 => $id,
+				'public_flag'        => $public_flag,
+				'is_mycontents'      => true,
+				'without_parent_box' => true,
+			);
+			$this->set_response_body_api($data, '_parts/public_flag_selecter');
+		});
 	}
 }

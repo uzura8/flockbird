@@ -135,7 +135,7 @@ $data = array(
 		'data-template' => '#comment-template',
 	),
 	'like_api_uri_prefix' => 'thread/comment',
-	'liked_ids' => (conf('like.isEnabled') && \Auth::check()) ? \Site_Model::get_liked_ids('thread_comment', $u->id, $comments, 'thread') : array(),
+	'liked_ids' => (conf('like.isEnabled') && \Auth::check()) ? \Site_Model::get_liked_ids('thread_comment', $u->id, $comments) : array(),
 );
 echo render('_parts/comment/list', $data);
 ?>

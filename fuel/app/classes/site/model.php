@@ -37,6 +37,30 @@ class Site_Model
 		return $parent_table;
 	}
 
+	public static function get_content_name($table)
+	{
+		$table_infos = static::get_parent_table($table, true);
+		if (is_array($table_infos))
+		{
+			$parent_table = $table_infos[0];
+			$child_type = $table_infos[1];
+		}
+		else
+		{
+			$parent_table = $table;
+			$child_type = '';
+		}
+		$content_name = term($parent_table);
+		if ($child_type) $content_name .= term('form.'.$child_type);
+
+		return $content_name;
+	}
+
+	public static function convert_table2controller_path($table)
+	{
+		return str_replace('_', '/', $table);
+	}
+
 	public static function get4table_and_id($table, $id, $relateds = array())
 	{
 		$model = self::get_model_name($table);
@@ -122,16 +146,16 @@ class Site_Model
 		if ($sort_order == 0) throw new \HttpInvalidInputException('Invalid input data.');
 	}
 
-	public static function get_liked_ids($parent_table, $member_id, array $parent_objs, $namespace = '', $like_model = null, $member_id_prop = 'member_id')
+	public static function get_liked_ids($parent_table, $member_id, array $parent_objs, $member_id_prop = 'member_id')
 	{
 		if (!$parent_objs) return array();
 
-		if (!$like_model) $like_model = Util_Orm::get_model_name($parent_table.'_like', $namespace);
+		$like_model = Site_Model::get_model_name($parent_table.'_like');
 		$parent_foreign_key = $parent_table.'_id';
 
 		return $like_model::get_cols($parent_foreign_key, array(
 			array($member_id_prop => $member_id),
-			array($parent_foreign_key, 'in', \Util_Orm::conv_col2array($parent_objs, 'id'))
+			array($parent_foreign_key, 'in', \Util_Orm::conv_col2array($parent_objs, 'id', true))
 		));
 	}
 
@@ -193,5 +217,28 @@ class Site_Model
 		}
 
 		return $query->get();
+	}
+
+	public static function check_is_orm_obj($data)
+	{
+		if (!$data) return false;
+
+		if (is_array($data))
+		{
+			foreach ($data as $item)
+			{
+				if (is_array($item)) return self::check_is_orm_obj($item);
+				$check_target = $item;
+				break;
+			}
+		}
+		else
+		{
+			$check_target = $data;
+		}
+		if (!is_object($check_target)) return false;
+		if ($check_target instanceof \Orm\Model) return true;
+
+		return false;
 	}
 }

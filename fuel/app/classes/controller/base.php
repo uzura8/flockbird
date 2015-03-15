@@ -37,15 +37,7 @@ class Controller_Base extends Controller_Hybrid
 	{
 		if (IS_API)
 		{
-			$this->response_body = array(
-				'status' => 0,
-				'message' => '',
-				'errors' => array(
-					'code' => 0,
-					'message' => '',
-				),
-			);
-
+			$this->response_body = Site_Controller::get_api_response_body_default();
 			return;
 		}
 
@@ -215,12 +207,17 @@ class Controller_Base extends Controller_Hybrid
 			{
 				Util_security::check_csrf();
 			}
-			$this->response_body = $func();// execute main.
+			$this->response_body = $func() ?: $this->response_body;// execute main.
+			if (Site_Model::check_is_orm_obj($this->response_body)) throw new \FuelException('Response body not allowed Orm obj.');
 			$status_code = 200;
 		}
 		catch(\HttpNotFoundException $e)
 		{
 			$status_code = 404;
+		}
+		catch(\ApiNotAuthorizedException $e)
+		{
+			$status_code = 401;
 		}
 		catch(\HttpForbiddenException $e)
 		{
@@ -243,6 +240,11 @@ class Controller_Base extends Controller_Hybrid
 			$this->response_body['errors']['message'] = Site_Controller::get_error_message($e);
 			$status_code = 400;
 		}
+		catch(\DisableToUpdateException $e)
+		{
+			$this->response_body['errors']['message'] = $e->getMessage() ?: term('form.update').'が禁止されています。';
+			$status_code = 400;
+		}
 		catch(\Database_Exception $e)
 		{
 			$this->response_body['errors']['message'] = Site_Controller::get_error_message($e, true);
@@ -252,24 +254,35 @@ class Controller_Base extends Controller_Hybrid
 		{
 			$status_code = 500;
 		}
+		catch(\Exception $e)
+		{
+			$status_code = 500;
+		}
 		if ($status_code == 500)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
 		}
-		$response_body = Site_Controller::supply_response_body($this->response_body, $status_code);
+		$response_body = Site_Controller::supply_response_body($this->response_body, $status_code, $this->format);
 
 		return self::response($response_body, $status_code);
 	}
 
-	protected function set_response_body_api($body)
+	protected function set_response_body_api($data, $view_file = null)
 	{
-		if ($this->format == 'html' || is_array($body))
+		if (!$view_file)
 		{
-			$this->response_body = $body;
+			$this->response_body = $data;
+			return;
+		}
+
+		$html = \View::forge($view_file, $data)->render();
+		if ($this->format == 'html')
+		{
+			$this->response_body = $html;
 		}
 		else
 		{
-			$this->response_body['html'] = $body;
+			$this->response_body['html'] = $html;
 		}
 	}
 
@@ -321,11 +334,13 @@ class Controller_Base extends Controller_Hybrid
 		return array($limit, $is_latest, $is_desc, $since_id, $max_id);
 	}
 
-	public function common_get_pager_list_params($limit_default, $limit_max = 0, $limit_param_name = 'limit', $page_param_name = 'page')
+	public function common_get_pager_list_params($limit_default = null, $limit_max = null, $limit_param_name = 'limit', $page_param_name = 'page')
 	{
+		if (is_null($limit_default)) $limit_default = conf('view_params_default.list.limit');
+		if (is_null($limit_max)) $limit_max = conf('view_params_default.list.limit_max');
 		$page = (int)\Input::get($page_param_name, 1);
 		$limit = (int)\Input::get($limit_param_name, $limit_default);
-		if ($limit > $limit_max) $limit = $limit_max;
+		if ($limit_max && $limit > $limit_max) $limit = $limit_max;
 
 		return array($limit, $page);
 	}

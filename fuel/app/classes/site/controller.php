@@ -17,6 +17,18 @@ class Site_Controller
 		return array($title_name, $title_label);
 	}
 
+	public static function get_api_response_body_default()
+	{
+		return $response_body_default = array(
+			'status' => 0,
+			'message' => '',
+			'errors' => array(
+				'code' => 0,
+				'message' => '',
+			),
+		);
+	}
+
 	public static function get_error_message($message = null, $is_db_error = false, $default_message = null)
 	{
 		if (is_null($default_message) && $is_db_error) $default_message = 'データベースエラーが発生しました。';
@@ -41,23 +53,41 @@ class Site_Controller
 		return $message ?: $default_message;
 	}
 
-	public static function supply_response_body($response_body = array(), $http_status = null)
+	public static function supply_response_body($response_body = array(), $http_status = null, $format = null, $response_body_default = array())
 	{
 		if (!$response_body || !$http_status) return $response_body;
-		if (!is_array($response_body)) return $response_body;
 
 		if (isset($response_body['message']) && empty($response_body['message'])) unset($response_body['message']);
 
 		if (in_array($http_status, array(200, 201, 202)))
 		{
+			if (!is_array($response_body)) return $response_body;
+
 			$response_body['status'] = 1;
 			if (isset($response_body['errors'])) unset($response_body['errors']);
 
 			return $response_body;
 		}
 
+		if (!$response_body_default) $response_body_default = static::get_api_response_body_default();
+		$accept_keys = array_keys($response_body_default);
+		if (is_array($response_body))
+		{
+			foreach ($response_body as $key => $value)
+			{
+				if (!in_array($key, $accept_keys)) unset($response_body[$key]);
+			}
+		}
+		else
+		{
+			$response_body = $response_body_default;
+		}
+
 		if (empty($response_body['errors']['code'])) $response_body['errors']['code'] = $http_status;
-		if (!empty($response_body['errors']['message'])) return $response_body;
+		if (!empty($response_body['errors']['message']))
+		{
+			return $format == 'html' ? $response_body['errors']['message'] : $response_body;
+		}
 
 		switch ($http_status)
 		{
@@ -82,9 +112,11 @@ class Site_Controller
 			if ($http_status != 401) $message = $response_body['errors']['message_default'];
 			unset($response_body['errors']['message_default']);
 		}
+
 		if (!isset($response_body['errors'])) $response_body['errors'] = array();
 		$response_body['errors']['message'] = $message;
 
-		return $response_body;
+		return $format == 'html' ? $response_body['errors']['message'] : $response_body;
 	}
 }
+

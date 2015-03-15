@@ -24,7 +24,7 @@ echo render('_parts/comment/count_and_link_display', array(
 $data_like_link = array(
 	'id' => $album_image->id,
 	'post_uri' => \Album\Site_Util::get_like_api_uri($album_image->id),
-	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('album_image', $album_image->id),
+	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('album/image', $album_image->id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $album_image->like_count,
 	'left_margin' => true,

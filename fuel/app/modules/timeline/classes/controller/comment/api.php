@@ -12,127 +12,45 @@ class Controller_Comment_Api extends \Controller_Site_Api
 		parent::before();
 	}
 
+
 	/**
-	 * Api get_list
+	 * Get timeline comments
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $parent_id  target parent id
+	 * @return  Response (json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::get_comment_list
 	 */
 	public function get_list($parent_id = null)
 	{
-		$result = $this->get_comment_list(
-			'\Timeline\Model_TimelineComment',
-			'\Timeline\Model_Timeline',
-			$parent_id,
-			'timeline_id',
-			'timeline'
-		);
-		if ($result) return $result;
+		$this->api_get_comments_common('timeline', $parent_id);
 	}
 
 	/**
-	 * Api post_create
+	 * Create timeline comment
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int     $parent_id  target parent id
+	 * @return  Response(json)
+	 * @see  Controller_Site_Api::api_create_comment_common
 	 */
 	public function post_create($parent_id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			$this->check_response_format('json');
-			\Util_security::check_csrf();
-
-			$timeline_id = (int)$parent_id;
-			if (\Input::post('id')) $timeline_id = (int)\Input::post('id');
-			$timeline = Model_Timeline::check_authority($timeline_id);
-			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
-
-			// validation
-			if (Site_Util::check_type_for_post_foreign_table_comment($timeline->type))
-			{
-				throw new \HttpInvalidInputException;
-			}
-			$body = trim(\Input::post('body', ''));
-			if (!strlen($body)) throw new \HttpInvalidInputException;
-
-			\DB::start_transaction();
-			$comment = new Model_TimelineComment(array(
-				'body' => $body,
-				'timeline_id' => $timeline_id,
-				'member_id' => $this->u->id,
-			));
-			$comment->save();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$response['id'] = $comment->id;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_create_comment_common('timeline', $parent_id);
 	}
 
 	/**
-	 * Timeline comment delete
+	 * Delete timeline comment
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  target id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_api_delete_common
 	 */
 	public function post_delete($id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
-
-			\DB::start_transaction();
-			$timeline_comment = Model_TimelineComment::check_authority($id, $this->u->id);
-			$timeline_comment->delete();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_delete_common('timeline_comment', $id);
 	}
 }

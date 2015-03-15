@@ -112,6 +112,12 @@ class Model extends \Orm\Model
 		return $this->file_name;
 	}
 
+	public function update_public_flag($public_flag)
+	{
+		$this->public_flag = $public_flag;
+		return $this->save();
+	}
+
 	public function get_image_prefix()
 	{
 		return static::$image_prefix;
@@ -242,8 +248,9 @@ class Model extends \Orm\Model
 		return \Util_Orm::conv_col2array($query->get(), $col);
 	}
 
-	public static function get_pager_list($params = array(), $page = 1, \Orm\Query $query = null)
+	public static function get_pager_list($params = array(), $page = 1, $is_return_array = false, \Orm\Query $query = null)
 	{
+		if ($is_return_array && isset($params['related'])) unset($params['related']);
 		if (!$query) $query = self::get_list_query($params);
 		$count = $query->count();
 
@@ -264,6 +271,13 @@ class Model extends \Orm\Model
 		$next_page = ($limit && $count > $offset + $limit) ? $page + 1 : 0;
 
 		$list = $query->get();
+		if ($is_return_array)
+		{
+			foreach ($list as $key => $obj)
+			{
+				$list[$key] = $obj->to_array();
+			}
+		}
 
 		return array('list' => $list, 'page' => $page, 'next_page' => $next_page);
 	}
@@ -283,6 +297,7 @@ class Model extends \Orm\Model
 		if (!empty($params['select']))
 		{
 			$selects = is_array($params['select']) ? $params['select'] : (array)$params['select'];
+			if (!is_array($params['select'])) $selects = (array)$params['select'];
 			foreach ($selects as $select)
 			{
 				$query->select($select);

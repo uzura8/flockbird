@@ -13,72 +13,30 @@ class Controller_Like_Api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Timeline like get member
+	 * Update like status
 	 * 
 	 * @access  public
-	 * @return  Response (json)
+	 * @param   int  $parent_id  target parent id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_update_like_common
 	 */
-	public function get_member($parent_id = null)
+	public function post_update($parent_id = null)
 	{
-		$result = $this->get_liked_member_list(
-			'\Timeline\Model_TimelineLike',
-			'\Timeline\Model_Timeline',
-			$parent_id,
-			'timeline_id',
-			\Site_Util::get_api_uri_get_liked_members('timeline', $parent_id)
-		);
-		if ($result) return $result;
+		return $this->api_update_like_common('timeline', $parent_id);
 	}
 
 	/**
-	 * Timeline like post update
+	 * Get liked members
 	 * 
 	 * @access  public
-	 * @return  Response (json)
+	 * @param   int  $parent_id  target parent id
+	 * @return  Response (json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Site_Api::api_get_liked_members_common
 	 */
-	public function post_update($id = null)
+	public function get_member($parent_id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			if (!conf('like.isEnabled')) throw new \HttpNotFoundException();
-			$this->check_response_format('json');
-			\Util_security::check_csrf();
-
-			$timeline_id = (int)$id;
-			if (\Input::post('id')) $timeline_id = (int)\Input::post('id');
-			$timeline = Model_Timeline::check_authority($timeline_id);
-			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
-
-			\DB::start_transaction();
-			$is_liked = (bool)Model_TimelineLike::change_registered_status4unique_key(array(
-				'timeline_id' => $timeline->id,
-				'member_id' => $this->u->id
-			));
-			\DB::commit_transaction();
-
-			$response['status'] = (int)$is_liked;
-			$response['count'] = Model_TimelineLike::get_count4timeline_id($timeline->id);
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		return $this->api_get_liked_members_common('timeline', $parent_id);
 	}
 }

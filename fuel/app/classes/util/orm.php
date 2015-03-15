@@ -9,12 +9,12 @@ class Util_Orm
 		return $model;
 	}
 
-	public static function conv_col2array($objs, $column)
+	public static function conv_col2array($objs, $column, $is_check_array = false)
 	{
 		$return = array();
 		foreach ($objs as $obj)
 		{
-			$return[] = $obj->$column;
+			$return[] = ($is_check_array && is_array($obj)) ? $obj[$column] : $obj->$column;
 		}
 
 		return $return;
@@ -82,6 +82,28 @@ class Util_Orm
 		}
 
 		return $values;
+	}
+
+	/**
+	 * Get related models member_ids
+	 * 
+	 * @access  public
+	 * @param   object  $related_obj  related orm model object
+	 * @param   array   $parent_member_id_relateds  related table and property array
+	 * @return  array   related models member_ids 
+	 */
+	public static function get_related_member_ids(\Orm\Model $related_obj, $related_member_id_relateds = array())
+	{
+		if ($related_member_id_relateds)
+		{
+			$related_member_ids = static::get_related_table_values_recursive($related_obj, $related_member_id_relateds);
+		}
+		else
+		{
+			$related_member_ids[] = $related_obj->member_id;
+		}
+
+		return $related_member_ids;
 	}
 
 	public static function check_is_changed(\Orm\Model $obj, array $target_properties, array $before_values)

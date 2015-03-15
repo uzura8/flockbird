@@ -96,4 +96,40 @@ class Site_Util
 	{
 		return sprintf('album/image/api/save_location/%d.json', $album_image_id);
 	}
+
+	public static function get_album_image_edit_menu(Model_AlbumImage $obj, $member_filename)
+	{
+		$menus = array();
+		if ($obj->album->foreign_table == 'member')
+		{
+			if ($obj->file_name == $member_filename)
+			{
+				$menus[] = array('tag' => 'disabled', 'icon_term' => term(array('profile', 'site.image', 'site.set_already')));
+			}
+			else
+			{
+				$menus[] = array('icon_term' => 'form.set_profile_image', 'href' => '#', 'attr' => array(
+					'class' => 'js-simplePost',
+					'data-uri' => 'member/profile/image/set/'.$obj->id,
+					'data-msg' => term(array('profile', 'site.image')).'に設定しますか？',
+				));
+			}
+		}
+		else
+		{
+			if ($obj->album->cover_album_image_id == $obj->id)
+			{
+				$menus[] = array('tag' => 'disabled', 'icon_term' => 'form.set_cover_already');
+			}
+			else
+			{
+				$menus[] = array('icon_term' => 'form.set_cover', 'attr' => array(
+					'class' => 'js-update_toggle',
+					'data-uri' => \Site_Util::get_action_uri('album_image', $obj->id, 'set_cover', 'json'),
+				));
+			}
+		}
+
+		return $menus;
+	}
 }

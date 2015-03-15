@@ -33,15 +33,9 @@ class Controller_Thread extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		list($limit, $page) = $this->common_get_pager_list_params(conf('view_params_default.list.limit'), conf('view_params_default.list.limit_max'));
-		$data = Model_Thread::get_pager_list(array(
-			'related'  => 'member',
-			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0, false, array()),
-			'order_by' => array('created_at' => 'desc'),
-			'limit'    => $limit,
-		), $page);
-		$data['liked_thread_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
-			\Site_Model::get_liked_ids('thread', $this->u->id, $data['list'], 'Thread') : array();
+		list($limit, $page) = $this->common_get_pager_list_params();
+		$data = Site_Model::get_list($limit, $page, get_uid());
+
 		$this->set_title_and_breadcrumbs(term('thread', 'site.list'));
 		$this->template->content = \View::forge('_parts/list', $data);
 		if (IS_AUTH) $this->template->subtitle = \View::forge('_parts/list_subtitle');
@@ -91,7 +85,7 @@ class Controller_Thread extends \Controller_Site
 			'comment_next_id' => $next_id,
 			'is_liked_self' => $is_liked_self,
 			'liked_ids' => (conf('like.isEnabled') && \Auth::check() && $list) ?
-				\Site_Model::get_liked_ids('thread_comment', $this->u->id, $list, 'Thread') : array(),
+				\Site_Model::get_liked_ids('thread_comment', $this->u->id, $list) : array(),
 		);
 		$this->template->content = \View::forge('detail', $data);
 	}

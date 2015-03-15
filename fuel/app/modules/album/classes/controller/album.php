@@ -36,13 +36,9 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
-		$data = Model_Album::get_pager_list(array(
-			'related'  => 'member',
-			'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
-			'order_by' => array('id' => 'desc'),
-			'limit'    => $limit,
-		), $page);
+		list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+		$data = Site_Model::get_albums($limit, $page, \Auth::check() ? $this->u->id : 0);
+
 		$this->set_title_and_breadcrumbs(term('site.latest', 'album', 'site.list'));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -59,20 +55,12 @@ class Controller_Album extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
+		list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+		$data = Site_Model::get_albums($limit, $page, \Auth::check() ? $this->u->id : 0, $member, $is_mypage);
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('album', 'site.list')), null, $member);
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
-
-		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
-		$data = Model_Album::get_pager_list(array(
-			'related'  => 'member',
-			'where'    => \Site_Model::get_where_params4list($member->id, \Auth::check() ? $this->u->id : 0, $this->check_is_mypage($member->id)),
-			'order_by' => array('id' => 'desc'),
-			'limit'    => $limit,
-		), $page);
-		$data['member'] = $member;
-		$data['is_member_page'] = true;
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
 
@@ -115,7 +103,7 @@ class Controller_Album extends \Controller_Site
 		$data['is_member_page'] = true;
 		$data['disabled_to_update'] = $disabled_to_update;
 		$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
-			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list'], 'Album') : array();
+			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list']) : array();
 
 		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album');
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));

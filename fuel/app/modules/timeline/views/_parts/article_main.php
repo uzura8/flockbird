@@ -138,7 +138,7 @@ $data = array(
 	'counter_selector' => '#comment_count_'.$timeline->id,
 	'absolute_display_delete_btn' => true,
 	'like_api_uri_prefix' => 'timeline/comment',
-	'liked_ids' => (conf('like.isEnabled') && \Auth::check()) ? \Site_Model::get_liked_ids('timeline_comment', $u->id, $list, 'Timeline') : array(),
+	'liked_ids' => (conf('like.isEnabled') && \Auth::check()) ? \Site_Model::get_liked_ids('timeline_comment', $u->id, $list) : array(),
 );
 echo render('_parts/comment/list', $data);
 ?>
