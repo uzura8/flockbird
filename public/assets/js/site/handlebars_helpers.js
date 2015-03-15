@@ -14,11 +14,11 @@ Handlebars.registerHelper('member_url', function(member_id) {
 	return get_url('member/' + member_id);
 });
 
-Handlebars.registerHelper('img_url', function(filepath, filename) {
-	var size = (arguments.length > 2) ? arguments[2] : '50x50xc';
-	if (!filepath) filepath = 'm/all';
-	if (!filename) filename = 'noimage.gif';
-	return get_url('media/img/' + size + '/' + filepath + filename);
+Handlebars.registerHelper('img_url', function(filename) {
+	var size = (arguments.length > 1) ? arguments[1] : '50x50xc';
+	var imgUri = getImgUri(filename, size, false)
+	if (!imgUri) imgUri = 'media/img/' + size + '/m/all/noimage.gif';
+	return get_url(imgUri);
 });
 
 Handlebars.registerHelper('conv2objStr', function(key1, value1, key2, value2, key3, value3) {
