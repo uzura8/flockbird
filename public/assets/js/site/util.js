@@ -368,14 +368,28 @@ function reset_textarea()
 	$(textareaSelector).css('height', textareaHeight);
 }
 
-function getNextSelector(listSelector, position)
+function getSinceId(listSelector, position)
 {
+	var insertPosition,
+		nextElement,
+		listMoreBoxObj,
+		listMoreBoxGetData;
+
 	if (position == 'replace') return '';
 	if (!$(listSelector).html().replace(/[\r\n\s]+/, '')) return '';
 
-	var insertPosition = (position == 'prepend') ? 'first' : 'last';
+	insertPosition = (position == 'prepend') ? 'first' : 'last';
 	nextElement = $(listSelector + ' > div:' + insertPosition);
-	return nextElement ? '#' + nextElement.attr('id') : '';
+	if (!empty(nextElement) && nextElement.attr('id')) {
+		return parseInt($('#' + nextElement.attr('id')).data('id'));
+	}
+
+	listMoreBoxObj = $(listSelector).find('.listMoreBox');
+	if (!empty(listMoreBoxObj)) {
+		listMoreBoxGetData = $(listMoreBoxObj).data('get_data');
+		if (listMoreBoxGetData.max_id) return parseInt(listMoreBoxGetData.max_id);
+	}
+	return 0;
 }
 
 function postComment(postUri, textareaSelector, getUri, listSelector)

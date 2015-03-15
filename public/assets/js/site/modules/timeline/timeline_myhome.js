@@ -72,8 +72,8 @@ $(function() {
 			linkElement.remove();
 		}
 
-		var nextSelector = getNextSelector(listSelector, position);
-		if (nextSelector) getData['since_id'] = parseInt($(nextSelector).data('list_id'));
+		var sinceId = getSinceId(listSelector, position);
+		if (sinceId) getData['since_id'] = sinceId;
 
 		postComment(
 			'timeline/api/create.json',

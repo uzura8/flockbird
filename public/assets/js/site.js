@@ -86,8 +86,8 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var loadCallbacks = isRenderSiteSummary ? [renderSiteSummary] : [];
 
 	var position = isDesc ? 'prepend' : 'append';
-	var nextSelector = getNextSelector(listSelector, position);
-	if (nextSelector) getData['since_id'] = parseInt($(nextSelector).data('id'));
+	var sinceId = getSinceId(listSelector, position);
+	if (sinceId) getData['since_id'] = sinceId;
 	if (isLatest) getData['latest'] = 1;
 	if (isDesc) getData['desc'] = 1;
 
