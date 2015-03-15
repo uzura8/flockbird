@@ -80,6 +80,7 @@ class Model_FileTmp extends \MyOrm\Model
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id', $user_type = 0)
 	{
+		$id = (int)$id;
 		if (!$id) throw new \HttpNotFoundException;
 
 		$params = array('rows_limit' => 1);

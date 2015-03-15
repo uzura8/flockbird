@@ -109,14 +109,14 @@ function getErrorMessage(responseObj)
 function showErrorMessage(responseObj)
 {
 	var defaultMessage = (arguments.length > 1) ? arguments[1] : '';
-	showMessage(getErrorMessageNew(responseObj));
+	showMessage(getErrorMessageNew(responseObj, defaultMessage));
 }
 
 function getErrorMessageNew(responseObj)
 {
 	var defaultMessage = (arguments.length > 1) ? arguments[1] : '';
 
-	if (!empty(responseObj.responseText)) return responseObj.responseText;
+	if (empty(responseObj.responseJSON) && !empty(responseObj.responseText)) return responseObj.responseText;
 	if (!empty(responseObj.responseJSON.errors.message)) return responseObj.responseJSON.errors.message;
 
 	switch (responseObj.status)
@@ -706,18 +706,17 @@ function load_masonry_item(container_attribute, item_attribute)
 	}
 }
 
-function sendArticle(btnObj, post_data, post_uri, parent_box_attr) {
+function sendArticle(btnObj, postData, post_uri, parent_box_attr) {
 	var add_before  = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
-	var msg_success = (arguments.length > 5 && arguments[5]) ? arguments[5] : '投稿に成功しました。';
-	var msg_error   = (arguments.length > 6 && arguments[6]) ? arguments[6] : '投稿に失敗しました。';
+	var msgSuccess = (arguments.length > 5 && arguments[5]) ? arguments[5] : '投稿に成功しました。';
+	var msgError   = (arguments.length > 6 && arguments[6]) ? arguments[6] : '投稿に失敗しました。';
 
-	post_data = set_token(post_data);
 	var btn_html = $(btnObj).html();
 	$.ajax({
 		url : get_url(post_uri),
 		type : 'POST',
 		dataType : 'text',
-		data : post_data,
+		data : set_token(postData),
 		timeout: get_config('default_ajax_timeout'),
 		beforeSend: function(xhr, settings) {
 			GL.execute_flg = true;
@@ -735,14 +734,17 @@ function sendArticle(btnObj, post_data, post_uri, parent_box_attr) {
 			} else {
 				$(parent_box_attr).append(result).fadeIn();
 			}
-			$.each(post_data, function(key, val) {
+			$.each(postData, function(key, val) {
 				var input_attr = '#input_' + key;
 				if ($(input_attr) != null) $(input_attr).val('');
 			});
-			$.jGrowl('profile 選択肢を作成しました。');
+			//$.jGrowl('profile 選択肢を作成しました。');
+			showMessage(msgSuccess);
 		},
 		error: function(result){
-			$.jGrowl(get_error_message(result['status'], 'profile 選択肢の作成に失敗しました。'));
+			GL.execute_flg = false;
+			//$.jGrowl(get_error_message(result['status'], 'profile 選択肢の作成に失敗しました。'));
+			showErrorMessage(result, msgError);
 		}
 	});
 }
@@ -888,15 +890,14 @@ function post_submit(selfDomElement) {
 }
 
 function execute_simple_delete(selfDomElement) {
-	var post_id  = parseInt($(selfDomElement).data('id'));
-	var post_uri  = $(selfDomElement).data('uri');
-	var parent_id = $(selfDomElement).data('parent');
+	var postId  = parseInt($(selfDomElement).data('id'));
+	var postUri  = $(selfDomElement).data('uri');
+	var parentSelector = $(selfDomElement).data('parent');
 	var msg = $(selfDomElement).data('msg') ? $(selfDomElement).data('msg') : '';
 	var counterSelector = $(selfDomElement).data('counter') ? $(selfDomElement).data('counter') : '';
-	if (!post_id && !post_uri) return false;
-
-	var parent_attr = check_and_add_prefix(parent_id ? parent_id : post_id, '#');
-	delete_item(post_uri, post_id, '', parent_attr, '', msg, counterSelector);
+	if (!postId && !postUri) return false;
+	if (!parentSelector) parentSelector = '#' + postId;
+	delete_item(postUri, postId, '', parentSelector, '', msg, counterSelector);
 }
 
 function execute_simple_post(selfDomElement) {

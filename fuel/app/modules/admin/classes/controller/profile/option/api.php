@@ -11,112 +11,82 @@ class Controller_Profile_Option_Api extends Controller_Api
 	}
 
 	/**
-	 * Api post_create
+	 * Create profile option 
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @return  Response(json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see     Controller_Base::controller_common_api
 	 */
-	public function post_create()
+	public function post_create($profile_id = null)
 	{
-		$response = array('status' => 0);
-		try
+		$this->api_accept_formats = array('html', 'json');
+		$this->controller_common_api(function() use($profile_id)
 		{
-			if (!in_array($this->format, array('html', 'json'))) throw new \HttpNotFoundException();
-			\Util_security::check_csrf();
-			$profile_id = (int)\Input::post('id');
+			$profile_id = intval(\Input::post('id') ?: $profile_id);
 			$profile = $this->check_id_and_get_profile($profile_id);
 			$profile_option = \Model_ProfileOption::forge();
 
 			// Lazy validation
 			$label = trim(\Input::post('label', ''));
-			if (!strlen($label)) throw new \HttpInvalidInputException;
+			if (!strlen($label)) throw new \ValidationFailedException('入力してください。');
 
 			$profile_option->label = $label;
 			$profile_option->profile_id = $profile_id;
-			$profile_option->sort_order = \Model_ProfileOption::get_next_sort_order();
-
 			\DB::start_transaction();
-			$profile_option->save();
+			$profile_option->sort_order = \Model_ProfileOption::get_next_sort_order();
+			$result = (bool)$profile_option->save();
 			\DB::commit_transaction();
 
-			$status_code = 200;
+			$data = array(
+				'result' => $result,
+				'id' => $profile_option->id,
+			);
 			if ($this->format == 'html')
 			{
-				$response = \View::forge('_parts/table/simple_row_sortable', array(
-					'id' => $profile_option->id,
-					'name' => $profile_option->label,
+				$data += array(
+					'label' => $profile_option->label,
 					'delete_uri' => 'admin/profile/option/api/delete.json',
-				));
-
-				return \Response::forge($response, $status_code);
+				);
 			}
-			else
-			{
-				$response['status'] = 1;
-				$response['id'] = $profile_option->id;
-			}
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpInvalidInputException $e)
-		{
-			$status_code = 400;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+			$this->set_response_body_api($data, $this->format == 'html' ? '_parts/table/simple_row_sortable' : null);
+		});
 	}
 
 	/**
-	 * Api post delete
+	 * Delete profile option
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  target id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see     Controller_Base::controller_common_api
 	 */
-	public function post_delete($profile_option_id = null)
+	public function post_delete($id = null)
 	{
-		$response = array('status' => 0);
-		try
+		$this->controller_common_api(function() use($id)
 		{
-			\Util_security::check_csrf();
-			$profile_option_id = (int)$profile_option_id;
-			if (\Input::post('id')) $profile_option_id = (int)\Input::post('id');
-			if (!$profile_option_id || !$profile_option = \Model_ProfileOption::find($profile_option_id, array('related' => 'profile')))
-			{
-				throw new \HttpNotFoundException;
-			}
+			$profile_option_id = \Input::post('id') ?: $id;
+			$profile_option = \Model_ProfileOption::check_authority($profile_option_id, 0, 'profile');
 			if (!$profile_option->profile || !in_array($profile_option->profile->form_type, \Site_Profile::get_form_types_having_profile_options()))
 			{
 				throw new \HttpInvalidInputException;
 			}
-
 			\DB::start_transaction();
-			$profile_option->delete();
+			$result = (bool)$profile_option->delete();
 			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+			$this->set_response_body_api(array('result' => $result));
+		});
 	}
 
 	/**
-	 * Api post_update
+	 * Update profile option
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   string  $field  Edit field
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see     \Admin\Controller_Api::common_post_update
 	 */
 	public function post_update($field = null)
 	{
@@ -129,12 +99,13 @@ class Controller_Profile_Option_Api extends Controller_Api
 		{
 			throw new \HttpInvalidInputException('Invalid input data.');
 		}
-		\Site_Model::update_sort_order($ids, \Model_ProfileOption::forge());
+
+		return \Site_Model::update_sort_order($ids, \Model_ProfileOption::forge());
 	}
 
 	private function check_id_and_get_profile($profile_id)
 	{
-		if (!$profile_id || !$profile = \Model_Profile::find($profile_id))
+		if (!$profile_id || !$profile = \Model_Profile::check_authority($profile_id))
 		{
 			throw new \HttpNotFoundException;
 		}

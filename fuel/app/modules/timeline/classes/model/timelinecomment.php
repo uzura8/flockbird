@@ -131,6 +131,7 @@ class Model_TimelineComment extends \MyOrm\Model
 	{
 		if (is_null($related_tables)) $related_tables = array('timeline');
 
+		$id = (int)$id;
 		if (!$id) throw new \HttpNotFoundException;
 
 		$params = array('rows_limit' => 1);

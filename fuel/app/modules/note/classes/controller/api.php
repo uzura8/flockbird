@@ -83,7 +83,7 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function post_delete($id = null)
 	{
-		return $this->api_delete_common('note', $id, 'delete_with_relations');
+		$this->api_delete_common('note', $id, 'delete_with_relations');
 	}
 
 	/**

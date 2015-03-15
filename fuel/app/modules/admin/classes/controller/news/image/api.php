@@ -11,55 +11,45 @@ class Controller_News_Image_Api extends Controller_Api
 	}
 
 	/**
-	 * Api get_list
+	 * Get image list
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @return  Response (html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function get_list($parent_id = null)
 	{
-		$response = '0';
-		try
+		$this->api_accept_formats = 'html';
+		$this->controller_common_api(function() use($parent_id)
 		{
-			$this->check_response_format('html');
-
-			$parent_id = (int)$parent_id;
 			$news = \News\Model_News::check_authority($parent_id);
 			$news_images = \News\Model_NewsImage::get4news_id($news->id);
 			$images = \Site_Upload::get_file_objects($news_images, $news->id, true);
 
-			$status_code = 200;
 			$data = array(
 				'news' => $news,
 				'images' => $images,
 			);
-
-			return \Response::forge(\View::forge('news/image/form', $data), $status_code);
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+			$this->set_response_body_api($data);
+		});
 	}
 
+	/**
+	 * Upload images
+	 * 
+	 * @access  public
+	 * @return  Response (json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
+	 */
 	public function post_upload($parent_id = null)
 	{
-		$upload_type = 'img';
-		$response = '';
-		try
+		$this->api_accept_formats = array('html', 'json');
+		$this->api_not_check_csrf = true;
+		$this->controller_common_api(function() use($parent_id)
 		{
-			//Util_security::check_csrf();
-			$parent_id = (int)$parent_id;
+			$upload_type = 'img';
 			$news = \News\Model_News::check_authority($parent_id);
 			if (!in_array($this->format, array('html', 'json'))) throw new HttpNotFoundException();
 
@@ -79,65 +69,21 @@ class Controller_News_Image_Api extends Controller_Api
 			$files['insert_target'] = $insert_target;
 			$files['model'] = 'news';
 
-			$status_code = 200;
-			if ($this->format == 'html')
-			{
-				$response = \View::forge('filetmp/_parts/upload_images', $files);
-				return \Response::forge($response, $status_code);
-			}
-			$response = $files;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 500;
-		}
-
-		return $this->response($response, $status_code);
+			$this->set_response_body_api($files, $this->format == 'html' ? 'filetmp/_parts/upload_images' : null);
+		});
 	}
 
 	/**
-	 * News image delete
+	 * Delete news image
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  target id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see     Controller_Base::api_delete_common
 	 */
 	public function post_delete($id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
-
-			\DB::start_transaction();
-			$news_image = \News\Model_NewsImage::check_authority($id, null, 'news');
-			$news_image->delete();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_delete_common('news_image', $id, null, term('site.image'));
 	}
 }

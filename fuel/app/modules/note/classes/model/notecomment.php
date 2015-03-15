@@ -124,6 +124,7 @@ class Model_NoteComment extends \MyOrm\Model
 		if (is_null($related_tables))   $related_tables = array('note', 'member');
 		if (!is_array($related_tables)) $related_tables = (array)$related_tables;
 
+		$id = (int)$id;
 		if (!$id) throw new \HttpNotFoundException;
 
 		$params = array('rows_limit' => 1);

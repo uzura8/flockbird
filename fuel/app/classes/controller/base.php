@@ -436,4 +436,51 @@ class Controller_Base extends Controller_Hybrid
 			return $this->response_body;
 		});
 	}
+
+	/**
+	 * Api delete common controller
+	 * 
+	 * @access  protected
+	 * @param   string  $table         Delete target table
+	 * @param   int     $id            Delete target record's id
+	 * @param   string  $method        Excecuting method name
+	 * @param   string  $content_name  Delete target content name for message
+	 * @return  Response(json)  
+	 */
+	protected function api_delete_common($table, $id = null, $method = null, $content_name = '')
+	{
+		$this->controller_common_api(function() use($table, $id, $method, $content_name)
+		{
+			if (!$method) $method = 'delete';
+			$id = intval(\Input::post('id') ?: $id);
+			$model = Site_Model::get_model_name($table);
+			$obj = $model::check_authority($id, IS_ADMIN ? 0 : $this->u->id);
+
+			if (is_enabled('album') && $table == 'album')
+			{
+				if ($result = \Album\Site_Util::check_album_disabled_to_update($obj->foreign_table))
+				{
+					throw new \DisableToUpdateException($result['message']);
+				}
+			}
+			\DB::start_transaction();
+			if ($table == 'timeline')
+			{
+				$result = \Timeline\Site_Model::delete_timeline($obj, $this->u->id);
+			}
+			else
+			{
+				$result = $obj->{$method}();
+			}
+			\DB::commit_transaction();
+			$target_conntent_name = $content_name ?: Site_Model::get_content_name($table);
+			$data = array(
+				'result'  => (bool)$result,
+				'message' => sprintf('%s%sしました。', $target_conntent_name ? $target_conntent_name.'を' : '', term('form.delete')),
+			);
+
+			$this->set_response_body_api($data);
+		});
+	}
+
 }

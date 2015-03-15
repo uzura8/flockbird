@@ -125,6 +125,7 @@ class Model extends \Orm\Model
 
 	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')
 	{
+		$id = (int)$id;
 		if (!$id) throw new \HttpNotFoundException;
 
 		$params = array('rows_limit' => 1);

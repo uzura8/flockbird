@@ -11,10 +11,13 @@ class Controller_Profile_Api extends Controller_Api
 	}
 
 	/**
-	 * Api post_update
+	 * Update profile
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   string  $field  Edit field
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see     \Admin\Controller_Api::common_post_update
 	 */
 	public function post_update($field = null)
 	{
@@ -27,6 +30,7 @@ class Controller_Profile_Api extends Controller_Api
 		{
 			throw new \HttpInvalidInputException('Invalid input data.');
 		}
-		\Site_Model::update_sort_order($ids, \Model_Profile::forge());
+
+		return \Site_Model::update_sort_order($ids, \Model_Profile::forge());
 	}
 }

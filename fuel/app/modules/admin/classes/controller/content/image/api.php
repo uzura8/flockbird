@@ -10,91 +10,39 @@ class Controller_Content_Image_Api extends Controller_Api
 		parent::before();
 	}
 
+
 	/**
-	 * Api list
+	 * Get image list
 	 * 
 	 * @access  public
 	 * @return  Response (html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function get_list()
 	{
-		$response  = '';
-		try
+		$this->api_accept_formats = array('html', 'json');
+		$this->controller_common_api(function()
 		{
-			$this->check_response_format(array('html', 'json'));
 			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('admin.articles.images.limit'), \Config::get('admin.articles.images.limit_max'));
 			$params = array('order_by' => array('id' => 'desc'));
 			if ($limit) $params['limit'] = $limit;
-			$data = \Model_SiteImage::get_pager_list($params, $page);
-
-			if ($this->format == 'html')
-			{
-				$response = \View::forge('content/image/_parts/list', $data);
-				$status_code = 200;
-
-				return \Response::forge($response, $status_code);
-			}
-
-			$list_array = array();
-			foreach ($data['list'] as $key => $obj)
-			{
-				$row = $obj->to_array();
-				$list_array[] = $row;
-			}
-			// json response
-			$response = $list_array;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+			$data = \Model_SiteImage::get_pager_list($params, $page, $this->format == 'json');
+			$this->set_response_body_api($data, $this->format == 'html' ? 'content/image/_parts/list' : null);
+		});
 	}
 
 	/**
-	 * Album image delete
+	 * Delete image
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  target id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
 	public function post_delete($id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			\Util_security::check_csrf();
-
-			$id = (int)$id;
-			if (\Input::post('id')) $id = (int)\Input::post('id');
-
-			\DB::start_transaction();
-			$site_image = \Model_SiteImage::check_authority($id);
-			$site_image->delete();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_delete_common('site_image', $id, null, term('site.image'));
 	}
 }

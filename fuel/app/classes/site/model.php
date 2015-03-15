@@ -144,6 +144,8 @@ class Site_Model
 			$sort_order += $sort_order_interval;
 		}
 		if ($sort_order == 0) throw new \HttpInvalidInputException('Invalid input data.');
+
+		return true;
 	}
 
 	public static function get_liked_ids($parent_table, $member_id, array $parent_objs, $member_id_prop = 'member_id')

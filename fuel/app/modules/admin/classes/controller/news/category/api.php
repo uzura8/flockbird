@@ -11,106 +11,69 @@ class Controller_News_Category_Api extends Controller_Api
 	}
 
 	/**
-	 * Api post_create
+	 * Create category
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @return  Response(json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see     Controller_Base::controller_common_api
 	 */
 	public function post_create()
 	{
-		if (!in_array($this->format, array('html', 'json'))) throw new \HttpNotFoundException();
-
-		$response = array('status' => 0);
-		try
+		$this->api_accept_formats = array('html', 'json');
+		$this->controller_common_api(function()
 		{
-			\Util_security::check_csrf();
 			$news_category = \News\Model_NewsCategory::forge();
-
 			// Lazy validation
 			$name  = trim(\Input::post('name', ''));
 			$label = trim(\Input::post('label', ''));
-			if (!strlen($name) || !strlen($label)) throw new \HttpInvalidInputException;
-
-			$news_category->name       = $name;
-			$news_category->label      = $label;
-			$news_category->sort_order = \News\Model_NewsCategory::get_next_sort_order();
+			if (!strlen($name) || !strlen($label)) throw new \ValidationFailedException('入力してください。');
+			$news_category->name  = $name;
+			$news_category->label = $label;
 
 			\DB::start_transaction();
-			$news_category->save();
+			$news_category->sort_order = \News\Model_NewsCategory::get_next_sort_order();
+			$result = (bool)$news_category->save();
 			\DB::commit_transaction();
-
-			$status_code = 200;
+			$data = array(
+				'result' => $result,
+				'id' => $news_category->id,
+			);
 			if ($this->format == 'html')
 			{
-				$response = \View::forge('_parts/table/simple_row_sortable', array(
-					'id' => $news_category->id,
+				$data += array(
 					'name' => $news_category->name,
 					'label' => $news_category->label,
 					'delete_uri' => sprintf('admin/news/category/api/delete/%s.json', $news_category->id),
 					'edit_uri' => sprintf('admin/news/category/edit/%d', $news_category->id),
-				));
-
-				return \Response::forge($response, $status_code);
+				);
 			}
-			else
-			{
-				$response['status'] = 1;
-				$response['id'] = $news_category->id;
-			}
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+			$this->set_response_body_api($data, $this->format == 'html' ? '_parts/table/simple_row_sortable' : null);
+		});
 	}
 
 	/**
-	 * Api post delete
+	 * Delete category
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   int  $id  target id
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see     Controller_Base::api_delete_common
 	 */
-	public function post_delete($news_category_id = null)
+	public function post_delete($id = null)
 	{
-		$response = array('status' => 0);
-		try
-		{
-			\Util_security::check_csrf();
-			$news_category_id = (int)$news_category_id;
-			if (\Input::post('id')) $news_category_id = (int)\Input::post('id');
-			if (!$news_category_id || !$news_category = \News\Model_NewsCategory::find($news_category_id))
-			{
-				throw new \HttpNotFoundException;
-			}
-
-			\DB::start_transaction();
-			$news_category->delete();
-			\DB::commit_transaction();
-
-			$response['status'] = 1;
-			$status_code = 200;
-		}
-		catch(\HttpNotFoundException $e)
-		{
-			$status_code = 404;
-		}
-		catch(\FuelException $e)
-		{
-			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$status_code = 400;
-		}
-
-		$this->response($response, $status_code);
+		$this->api_delete_common('news_category', $id, null, term('news.category.view'));
 	}
 
 	/**
-	 * Api post_update
+	 * Update category
 	 * 
 	 * @access  public
-	 * @return  Response
+	 * @param   string  $field  Edit field
+	 * @return  Response(json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see     \Admin\Controller_Api::common_post_update
 	 */
 	public function post_update($field = null)
 	{
@@ -123,6 +86,7 @@ class Controller_News_Category_Api extends Controller_Api
 		{
 			throw new \HttpInvalidInputException('Invalid input data.');
 		}
-		\Site_Model::update_sort_order($ids, \News\Model_NewsCategory::forge());
+
+		return \Site_Model::update_sort_order($ids, \News\Model_NewsCategory::forge());
 	}
 }

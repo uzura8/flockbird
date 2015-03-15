@@ -123,6 +123,7 @@ class Model_ThreadComment extends \MyOrm\Model
 	{
 		if (is_null($related_tables)) $related_tables = array('thread', 'member');
 
+		$id = (int)$id;
 		if (!$id) throw new \HttpNotFoundException;
 
 		$params = array('rows_limit' => 1);

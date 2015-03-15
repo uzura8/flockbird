@@ -220,6 +220,7 @@ class Model_AlbumImage extends \MyOrm\Model
 	{
 		if (is_null($related_tables)) $related_tables = array('album');
 
+		$id = (int)$id;
 		if (!$id) throw new \HttpNotFoundException;
 
 		$params = array('rows_limit' => 1);

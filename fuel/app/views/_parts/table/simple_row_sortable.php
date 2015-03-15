@@ -5,7 +5,9 @@
 <?php endif; ?>
 	<td><?php echo btn('form.delete', '#', 'js-ajax-delete', false, 'xs', null, array('data-id' => $id, 'data-uri' => $delete_uri)); ?></td>
 	<td><?php echo $id; ?></td>
+<?php if (!empty($name)): ?>
 	<td><?php echo $name; ?></td>
+<?php endif; ?>
 <?php if (!empty($label)): ?>
 	<td><?php echo $label; ?></td>
 <?php endif; ?>
