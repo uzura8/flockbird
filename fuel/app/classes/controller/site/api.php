@@ -243,7 +243,7 @@ class Controller_Site_Api extends Controller_Base_Site
 						'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
 						'data-uri' => $is_detail ? Site_Util::get_action_uri($table, $id, 'delete') : $delete_api_uri,
 						'data-msg' => term('form.delete').'します。よろしいですか。',
-						'data-parent' => sprintf('%s%d', $parent_selector_prefix ?: 'article_', $id),
+						'data-parent' => sprintf('#%s%d', $parent_selector_prefix ?: 'article_', $id),
 					));
 				}
 				// add divider.

@@ -26,7 +26,7 @@ $menus[] = array(
 );
 $menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
 	'class' => 'js-ajax-delete',
-	'data-parent' => 'image_item_'.$image->id,
+	'data-parent' => '#image_item_'.$image->id,
 	'data-uri' => 'admin/content/image/api/delete/'.$image->id.'.json',
 ));
 echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' => 'btn_album_image_edit', 'id' => 'btn_album_image_edit_'.$image->id));

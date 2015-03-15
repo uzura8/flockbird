@@ -316,24 +316,23 @@ function loadList(getUri) {
 
 function delete_item(uri)
 {
-	var id = (arguments.length > 1) ? arguments[1] : 0;
-	var target_attribute_prefix = (arguments.length > 2) ? arguments[2] : '';
-	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
-	var item_term = (arguments.length > 4) ? arguments[4] : '';
-	var confirm_msg = (arguments.length > 5 && arguments[5].length) ? arguments[5] : '削除します。よろしいですか?';
-	var counterSelector = (arguments.length > 6) ? arguments[6] : '';
+	var deleteTargetSelector = (arguments.length > 1) ? arguments[1] : '';
+	var id = (arguments.length > 2) ? arguments[2] : 0;
+	var itemTerm = (arguments.length > 3) ? arguments[3] : '';
+	var confirmMsg = (arguments.length > 4 && arguments[4].length) ? arguments[4] : '削除します。よろしいですか?';
+	var counterSelector = (arguments.length > 5) ? arguments[5] : '';
 
-	apprise(confirm_msg, {'confirm':true}, function(r) {
-		if (r == true) delete_item_execute_ajax(uri, id, target_attribute_prefix, target_attribute_id, true, item_term, counterSelector);
+	apprise(confirmMsg, {'confirm':true}, function(r) {
+		if (r == true) deleteExecuteAjax(uri, deleteTargetSelector, id, true, itemTerm, counterSelector);
 	});
 }
 
-function delete_item_execute_ajax(postUri, id, target_attribute_prefix)
+function deleteExecuteAjax(postUri, deleteTargetSelector)
 {
-	var target_attribute_id = (arguments.length > 3) ? arguments[3] : '';
-	var is_display_message_success = (arguments.length > 4) ? arguments[4] : true;
-	var itemTerm = (arguments.length > 5) ? arguments[5] : '';
-	var counterSelector = (arguments.length > 6) ? arguments[6] : '';
+	var id = (arguments.length > 2) ? parseInt(arguments[2]) : 0;
+	var is_display_message_success = (arguments.length > 3) ? arguments[3] : true;
+	var itemTerm = (arguments.length > 4) ? arguments[4] : '';
+	var counterSelector = (arguments.length > 5) ? arguments[5] : '';
 	var msgPrefix = (itemTerm.length > 0) ? itemTerm + 'を' : '';
 	var postData = {_method: 'DELETE'};
 	if (id) postData['id'] = id;
@@ -345,9 +344,8 @@ function delete_item_execute_ajax(postUri, id, target_attribute_prefix)
 		timeout: get_config('default_ajax_timeout'),
 		type : 'POST',
 		success: function(response){
-			var delete_target_attribute = target_attribute_id ? target_attribute_id : target_attribute_prefix + '_' + id;
-			$(delete_target_attribute).fadeOut();
-			$(delete_target_attribute).remove();
+			$(deleteTargetSelector).fadeOut();
+			$(deleteTargetSelector).remove();
 			updateCounter(counterSelector, -1);
 			if (is_display_message_success) {
 				var message = !empty(response.message) ? response.message : msgPrefix + '削除しました。';
@@ -897,7 +895,7 @@ function execute_simple_delete(selfDomElement) {
 	var counterSelector = $(selfDomElement).data('counter') ? $(selfDomElement).data('counter') : '';
 	if (!postId && !postUri) return false;
 	if (!parentSelector) parentSelector = '#' + postId;
-	delete_item(postUri, postId, '', parentSelector, '', msg, counterSelector);
+	delete_item(postUri, parentSelector, postId, '', msg, counterSelector);
 }
 
 function execute_simple_post(selfDomElement) {

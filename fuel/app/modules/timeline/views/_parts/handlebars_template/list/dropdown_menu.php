@@ -4,5 +4,5 @@
 {{else}}
 <li><span class="disabled"><?php echo icon_label('site.show_detail', 'both', false); ?></span></li>
 {{/if}}
-{{#if delete_uri}}<li><a href="#" class="js-ajax-delete" data-uri="{{{delete_uri}}}" data-parent="{{{parent_id}}}"><?php echo icon_label('form.do_delete', 'both', false); ?></a></li>{{/if}}
+{{#if delete_uri}}<li><a href="#" class="js-ajax-delete" data-uri="{{{delete_uri}}}" data-parent="#{{{parent_id}}}"><?php echo icon_label('form.do_delete', 'both', false); ?></a></li>{{/if}}
 </script>

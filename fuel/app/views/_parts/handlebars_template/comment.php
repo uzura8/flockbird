@@ -46,6 +46,6 @@
 			</div><!-- sub_info -->
 		</div>
 	</div><!-- row -->
-	<a href="#" data-msg="削除します。よろしいですか？" data-counter="#comment_count_{{{../parent.id}}}" data-uri="{{{../delete_uri}}}" data-parent="commentBox_{{{id}}}" data-id="{{{id}}}" id="btn_comment_delete_{{{id}}}" class="btn btn-default boxBtn btn-xs js-ajax-delete"><i class="glyphicon glyphicon-trash"></i></a>
+	<a href="#" data-msg="削除します。よろしいですか？" data-counter="#comment_count_{{{../parent.id}}}" data-uri="{{{../delete_uri}}}" data-parent="#commentBox_{{{id}}}" data-id="{{{id}}}" id="btn_comment_delete_{{{id}}}" class="btn btn-default boxBtn btn-xs js-ajax-delete"><i class="glyphicon glyphicon-trash"></i></a>
 </div>
 {{/each}}
