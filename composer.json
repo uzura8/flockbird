@@ -139,6 +139,7 @@
         "monolog/monolog": "1.5.*",
         "michelf/php-markdown": "1.4.0",
         "twig/twig" : "1.*",
+        //"aws/aws-sdk-php": "2.*",// if use AWS S3, remove comment out.
         "uzura8/fuel-packages-opauth": "dev-master"
     },
     "suggest": {

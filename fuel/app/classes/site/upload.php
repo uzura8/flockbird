@@ -321,7 +321,7 @@ class Site_Upload
 		$filepath_prefix = self::convert_filename2filepath($filename_prefix);
 		$uploader_info   = self::get_uploader_info($file_cate, $filepath_prefix, $is_tmp, $upload_type);
 		$options = array(
-			'is_save_db'      => conf('upload.isSaveDb'),
+			'storage_type'    => conf('upload.storageType'),
 			'is_tmp'          => $is_tmp,
 			'max_file_size'   => PRJ_UPLOAD_MAX_FILESIZE,
 			'max_number_of_files' => $is_multiple_upload ? PRJ_MAX_FILE_UPLOADS : 1,
@@ -509,13 +509,19 @@ class Site_Upload
 		return $prefix.$filename;
 	}
 
-	public static function make_raw_file_from_db($filename, $file_path)
+	public static function get_bin_from_storage($filename, $strage_type = null)
 	{
-		if (!$bin = Model_FileBin::get_bin4name($filename)) return false;
+		if (!$strage_type) $strage_type = conf('upload.storageType');
+		if (!in_array($strage_type, array('db', 'S3'))) throw new InvalidArgumentException('Second parameter is invalid.');
 
+		return $strage_type == 'db' ? Model_FileBin::get_bin4name($filename) : file_get_contents(Site_S3::get_url($filename));
+	}
+
+	public static function make_raw_file_from_storage($filename, $file_path, $strage_type = null)
+	{
+		if (!$bin = static::get_bin_from_storage($filename, $strage_type)) return false;
 		if (!$file_dir_path = self::get_file_dir_path_from_file_path($file_path)) return false;
 		if (!self:: check_and_make_uploaded_dir($file_dir_path)) return false;
-
 		if (file_put_contents($file_path, $bin)) return $file_path;
 
 		return false;

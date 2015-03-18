@@ -120,7 +120,7 @@ class Controller_Album extends \Controller_Site
 	public function action_upload($id = null)
 	{
 		$id = (int)$id;
-		$album = Model_Album::check_authority($id, null, 'member');
+		$album = Model_Album::check_authority($id, $this->u->id, 'member');
 		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
 		{
 			throw new \HttpForbiddenException;
@@ -439,11 +439,7 @@ class Controller_Album extends \Controller_Site
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		$album_id = (int)$album_id;
-		if (!$album_id || !$album = Model_Album::find($album_id))
-		{
-			throw new \HttpNotFoundException;
-		}
+		$album = Model_Album::check_authority($album_id, $this->u->id, 'member');
 		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
 		{
 			throw new \HttpForbiddenException;
@@ -452,13 +448,17 @@ class Controller_Album extends \Controller_Site
 		try
 		{
 			$val = self::get_validation_public_flag();
-			if (!$val->run()) throw new \FuelException($val->show_errors());
+			if (!$val->run()) throw new \ValidationFailedException($val->show_errors());
 			$post = $val->validated();
 
 			\DB::start_transaction();
 			list($album_image, $file) = Model_AlbumImage::save_with_relations($album_id, $this->u, $post['public_flag'], null, 'album_image');
 			\DB::commit_transaction();
 			\Session::set_flash('message', '写真を投稿しました。');
+		}
+		catch(\ValidationFailedException $e)
+		{
+			\Session::set_flash('error', $e->getMessage());
 		}
 		catch(\FuelException $e)
 		{

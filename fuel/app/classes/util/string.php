@@ -290,4 +290,9 @@ class Util_String
 	{
 		return preg_replace('/([^'.$accepted_chars_range_pattern.']{1})/u', $replaced_char, $str);
 	}
+
+	public static function check_and_add_delimitter($str, $delimitter = '/')
+	{
+		return (substr($str, -1) == $delimitter) ? $str : $str.$delimitter;
+	}
 }

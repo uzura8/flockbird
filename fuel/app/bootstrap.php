@@ -21,6 +21,10 @@ Autoloader::add_classes(array(
 	'Agent' => APPPATH.'classes/agent.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 ));
+if (PRJ_AWS_ACCESS_KEY && PRJ_AWS_SECRET_KEY && PRJ_AWS_S3_BUCKET)
+{
+	Autoloader::add_namespace('Aws', APPPATH.'vendor/aws/aws-sdk-php/src/Aws', true);
+}
 
 // Register the autoloader
 Autoloader::register();

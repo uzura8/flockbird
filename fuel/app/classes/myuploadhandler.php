@@ -149,7 +149,7 @@ class MyUploadHandler extends UploadHandler
 		$response = array();
 		if ($file_tmp)
 		{
-			$response[$file_tmp->name] = $this->delete_file($file_tmp->name, $this->options['is_save_db']) && $file_tmp->delete();
+			$response[$file_tmp->name] = $this->delete_file($file_tmp->name, $this->options['storage_type']) && $file_tmp->delete();
 		}
 
 		return $this->generate_response($response, $print_response);
@@ -232,7 +232,7 @@ class MyUploadHandler extends UploadHandler
 			$file->size = $file_size;
 			if (!$content_range && $this->options['discard_aborted_uploads'])
 			{
-				$this->delete_file($filename_with_prefix);
+				$this->delete_file($filename_with_prefix, $this->options['storage_type']);
 				$file->error = 'abort';
 			}
 		}
@@ -266,28 +266,38 @@ class MyUploadHandler extends UploadHandler
 
 		try
 		{
-			$file_bin_id = 0;
-			if ($this->options['is_save_db'])
+			if ($this->options['storage_type'] != 'normal')
 			{
-				$file_bin_id = Model_FileBin::save_from_file_path($file_path, $filename_with_prefix, $this->options['upload_type'] == 'img');
-				$this->delete_file($filename_with_prefix, false, true);
+				$this->save_file2storage($file_path, $filename_with_prefix);
+				$this->delete_file($filename_with_prefix, $this->options['storage_type'], false, false);
 			}
-			$file->id = $this->save_file($file, $file_bin_id, $exif);
+			$file->id = $this->save_file($file, $exif);
 		}
 		catch(\FuelException $e)
 		{
-			$this->delete_file($filename_with_prefix, $this->options['is_save_db']);
+			$this->delete_file($filename_with_prefix, $this->options['storage_type']);
 			$file->error = 'ファイルの保存に失敗しました。';
 		}
 
 		return $file;
 	}
 
-	protected function save_file($file, $file_bin_id = null, $exif = array())
+	protected function save_file2storage($file_path, $filename_with_prefix)
+	{
+		if ($this->options['storage_type'] == 'db')
+		{
+			Model_FileBin::save_from_file_path($file_path, $filename_with_prefix, $this->options['upload_type'] == 'img');
+		}
+		elseif ($this->options['storage_type'] == 'S3')
+		{
+			Site_S3::save($file_path, $filename_with_prefix);
+		}
+	}
+
+	protected function save_file($file, $exif = array())
 	{
 		$model_file_name = $this->options['is_tmp'] ? '\Model_FileTmp' : '\Model_File';
 		$model_file = $model_file_name::forge();
-		if ($file_bin_id) $model_file->file_bin_id = $file_bin_id;
 		$model_file->name = $this->options['filename_prefix'].$file->name;
 		$model_file->filesize = $file->size;
 		$model_file->type = $file->type;
@@ -307,7 +317,7 @@ class MyUploadHandler extends UploadHandler
 		return $model_file->id;
 	}
 
-	protected function delete_file($filename, $is_delete_db_bin_data = false, $is_delete_raw_file_only = false)
+	protected function delete_file($filename, $storage_type = 'normal', $is_delete_raw_file_only = false, $is_delete_with_storage_data = true)
 	{
 		$filename_excluded_prefix = str_replace($this->options['filename_prefix'], '', $filename);
 		$file_path = $this->get_upload_path($filename_excluded_prefix);
@@ -323,10 +333,15 @@ class MyUploadHandler extends UploadHandler
 				}
 			}
 		}
+		if (!$is_delete_with_storage_data) return $success;
 
-		if ($is_delete_db_bin_data && $file_bin = Model_FileBin::get4name($filename, true))
+		if ($storage_type == 'db')
 		{
-			$success = (bool)$file_bin->delete();
+			if ($file_bin = Model_FileBin::get4name($filename)) $success = (bool)$file_bin->delete();
+		}
+		elseif ($storage_type == 'S3')
+		{
+			$success = (bool)Site_S3::delete($filename);
 		}
 
 		return $success;
@@ -426,10 +441,10 @@ class MyUploadHandler extends UploadHandler
 		{
 			return true;
 		}
-		if ($this->options['is_save_db'] && !file_exists($file_path))
+		if ($this->options['storage_type'] != 'normal' && !file_exists($file_path))
 		{
 			$file_name = $this->options['filename_prefix'].$filename_excluded_prefix;
-			if (Site_Upload::make_raw_file_from_db($file_name, $file_path)) return true;
+			if (Site_Upload::make_raw_file_from_storage($file_name, $file_path, $this->options['storage_type'])) return true;
 		}
 
 		return false;

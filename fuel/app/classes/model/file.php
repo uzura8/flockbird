@@ -134,11 +134,15 @@ class Model_File extends \MyOrm\Model
 		if (!empty($file_tmp->shot_at)) $file->shot_at = $file_tmp->shot_at;
 		$file->save();
 
-		if (conf('upload.isSaveDb'))
+		if (conf('upload.storageType') == 'db')
 		{
 			$file_bin = Model_FileBin::get4name($file_tmp->name);
 			$file_bin->name = $file->name;
 			$file_bin->save();
+		}
+		elseif (conf('upload.storageType') == 'S3')
+		{
+			Site_S3::move($file_tmp->name, $file->name);
 		}
 
 		$file_tmp->delete();

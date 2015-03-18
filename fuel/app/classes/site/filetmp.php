@@ -42,7 +42,7 @@ class Site_FileTmp
 			}
 
 			$file_tmp_path = Site_Upload::get_uploaded_file_path($file_tmp->name, 'raw', 'img', true);
-			if (!conf('upload.isSaveDb') && !file_exists($file_tmp_path))
+			if (conf('upload.storageType') == 'normal' && !file_exists($file_tmp_path))
 			{
 				if ($check_file_exists) throw new HttpInvalidInputException('File not exists.');
 
@@ -82,7 +82,8 @@ class Site_FileTmp
 
 		$new_filepath_prefix = Site_Upload::get_filepath_prefix($file_cate, $parent_id);
 		$new_filename_prefix = Site_Upload::convert_filepath2filename($new_filepath_prefix);
-		if (!$is_save_db = conf('upload.isSaveDb'))
+		$is_save_storage = conf('upload.storageType') != 'normal';
+		if (!$is_save_storage)
 		{
 			$new_file_dir = Site_Upload::get_uploaded_path('raw', 'img', true, false, $new_filepath_prefix);
 			if (!Site_Upload::check_and_make_uploaded_dir($new_file_dir, conf('upload.check_and_make_dir_level'), conf('upload.mkdir_mode')))
@@ -94,7 +95,7 @@ class Site_FileTmp
 		{
 			$old_file_path = Site_Upload::get_uploaded_file_path($file_tmp->name, 'raw', 'img', true);
 			$moved_files[$file_tmp->id] = array('from' => $old_file_path);
-			if (!$is_save_db)
+			if (!$is_save_storage)
 			{
 				$new_file_path = $new_file_dir.$file_tmp->name;
 				Util_file::move($old_file_path, $new_file_path);

@@ -3,7 +3,7 @@
 class Site_FileMaker
 {
 	private $type = 'img';
-	private $is_saved_db = false;
+	private $strage_type;
 	private $is_tmp      = false;
 	private $file_cate   = '';
 	private $split_num   = '';
@@ -23,7 +23,7 @@ class Site_FileMaker
 
 	private function setup($config)
 	{
-		$this->is_saved_db = conf('upload.isSaveDb');
+		$this->strage_type = conf('upload.storageType');
 		if (!$this->set_configs($config))   $this->is_nofile = true;
 		if (!$this->check_configs($config)) $this->is_nofile = true;
 		$this->filepath_prefix = Site_Upload::get_filepath_prefix($this->file_cate, $this->split_num);
@@ -108,9 +108,9 @@ class Site_FileMaker
 		$raw_file_path = Site_Upload::get_uploaded_file_path($this->filename, 'raw', $this->type, $this->is_tmp);
 		if (!file_exists($raw_file_path))
 		{
-			if (!$this->is_saved_db) return false;
+			if ($this->strage_type == 'normal') return false;
 
-			return (bool)Site_Upload::make_raw_file_from_db($this->filename, $raw_file_path);
+			return (bool)Site_Upload::make_raw_file_from_storage($this->filename, $raw_file_path, $this->strage_type);
 		}
 
 		return true;

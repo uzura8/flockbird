@@ -71,7 +71,7 @@ class Test_Site_NoOrmModel extends \TestCase
 		}
 
 		// file
-		if (conf('upload.isSaveDb'))
+		if (conf('upload.storageType') == 'db')
 		{
 			$this->assertNotNull(\Model_FileBin::get4name(self::$album_image->file_name));
 		}

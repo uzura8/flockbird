@@ -341,11 +341,11 @@ class Test_Model_AlbumImage extends \TestCase
 		}
 
 		// file
-		if (conf('upload.isSaveDb'))
+		if (conf('upload.storageType') == 'db')
 		{
 			$this->assertNotNull(\Model_FileBin::get4name(self::$album_image->file_name));
 		}
-		else
+		elseif (conf('upload.storageType') == 'normal')
 		{
 			$this->assertTrue(file_exists($file_path));
 		}

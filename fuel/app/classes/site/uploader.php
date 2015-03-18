@@ -16,7 +16,7 @@ class Site_Uploader
 			'path_chmod'     => conf('upload.mkdir_mode'),
 			'path'           => APPPATH.'tmp',
 			'upload_dir'     => PRJ_UPLOAD_DIR.'img/raw/',
-			'is_save_db'     => conf('upload.isSaveDb'),
+			'storage_type'   => conf('upload.storageType'),
 			'auto_orient'    => true,
 			'is_clear_exif_on_file' => conf('isClearFromFile', 'exif'),
 			'is_save_exif_to_db'    => conf('isSaveToDb.isEnabled', 'exif'),
@@ -90,15 +90,27 @@ class Site_Uploader
 
 	protected function save_file_bin($tmp_file_path)
 	{
-		if ($this->options['is_save_db'])
+		switch ($this->options['storage_type'])
 		{
-			Model_FileBin::save_from_file_path($tmp_file_path, $this->file->name);
+			case 'db':
+				$storage_save_result = (bool)Model_FileBin::save_from_file_path($tmp_file_path, $this->file->name);
+				break;
+			case 'S3':
+				$storage_save_result = (bool)Site_S3::save($tmp_file_path);
+				break;
+			case 'normal':
+			default :
+				$storage_save_result = true;
+				break;
+		}
+		if (!$storage_save_result)
+		{
 			Util_File::remove($tmp_file_path);
+			throw new FuelException('Save raw file error to storage.');
 		}
-		else
-		{
-			if (!Util_file::move($tmp_file_path, $this->file->file_path)) throw new FuelException('Save raw file error.');
-		}
+		if (!$result = (bool)Util_file::move($tmp_file_path, $this->file->file_path)) throw new FuelException('Save raw file error.');
+
+		return $storage_save_result && $result;
 	}
 
 	protected function save_model_file($exif)

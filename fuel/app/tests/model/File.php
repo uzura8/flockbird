@@ -18,7 +18,7 @@ class Test_Model_File extends TestCase
 			\Util_Develop::output_test_info(__FILE__, __LINE__);
 			$this->markTestSkipped('No data.');
 		}
-		$this->is_save_db = conf('upload.isSaveDb');
+		$this->is_save_db = conf('upload.storageType') == 'db';
 	}
 
 	public function test_file_exists()
