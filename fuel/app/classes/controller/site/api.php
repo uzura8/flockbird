@@ -364,7 +364,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			$data = array(
 				'result'  => (int)$is_liked,
 				'message' => sprintf('%s%s。', term('form.like'), $is_liked ? 'しました' : 'を取り消しました'),
-				'count'   => $like_model::{$get_count_method}($parent_obj->id),
+				'count'   => $like_model::$get_count_method($parent_obj->id),
 			);
 
 			$this->set_response_body_api($data);
