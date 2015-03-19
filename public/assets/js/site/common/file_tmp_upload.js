@@ -55,6 +55,7 @@ $(function () {
 		var upload_type = $(this).data('type') ? $(this).data('type') : 'file_tmp';
 		var file_type = $(this).data('file_type') ? $(this).data('file_type') : 'img';
 		var model = $(this).data('model') ? $(this).data('model') : 'album';
+		var parentSelector = '#' + upload_type + '_' + file_id;
 
 		if (model.length > 0 && model != 'album' && model != 'news') model = 'album';
 
@@ -70,7 +71,7 @@ $(function () {
 		}
 		delete_uri += '.json';
 
-		delete_item(delete_uri, file_id, '#' + upload_type);
+		delete_item(delete_uri, parentSelector, file_id);
 		return false;
 	});
 });
