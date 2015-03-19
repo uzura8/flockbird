@@ -1,5 +1,6 @@
 #!/bin/sh
 
+set -e
 php composer.phar update
 php oil refine install
 chmod -R 777 fuel/app/media
