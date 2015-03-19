@@ -10,6 +10,7 @@ class Site_Uploader
 		$this->file = new stdClass();
 
 		$this->options = array(
+			'upload_type'    => 'img',
 			'max_size'       => PRJ_UPLOAD_MAX_FILESIZE,
 			'ext_whitelist'  => array_keys(conf('upload.types.img.accept_format')),
 			'type_whitelist' => array('image'),
@@ -96,7 +97,7 @@ class Site_Uploader
 				$storage_save_result = (bool)Model_FileBin::save_from_file_path($tmp_file_path, $this->file->name);
 				break;
 			case 'S3':
-				$storage_save_result = (bool)Site_S3::save($tmp_file_path);
+				$storage_save_result = (bool)Site_S3::save($tmp_file_path, null, $this->options['upload_type']);
 				break;
 			case 'normal':
 			default :

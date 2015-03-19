@@ -22,7 +22,10 @@ class Observer_RemoveFile extends \Orm\Observer
 		if (conf('upload.storageType') == 'normal') return;
 		if ($this->_is_tmp && \Model_File::get4name($obj->name)) return;
 
-		if (conf('upload.storageType') == 'S3') return \Site_S3::delete($obj->name);
+		if (conf('upload.storageType') == 'S3')
+		{
+			return \Site_S3::delete($obj->name, 'img') && \Site_S3::delete($obj->name, 'file');
+		}
 
 		if (!$file_bin = \Model_FileBin::get4name($obj->name)) return;
 		return $file_bin->delete();

@@ -290,7 +290,7 @@ class MyUploadHandler extends UploadHandler
 		}
 		elseif ($this->options['storage_type'] == 'S3')
 		{
-			Site_S3::save($file_path, $filename_with_prefix);
+			Site_S3::save($file_path, $filename_with_prefix, $this->options['upload_type']);
 		}
 	}
 
@@ -341,7 +341,7 @@ class MyUploadHandler extends UploadHandler
 		}
 		elseif ($storage_type == 'S3')
 		{
-			$success = (bool)Site_S3::delete($filename);
+			$success = (bool)Site_S3::delete($filename, $this->options['upload_type']);
 		}
 
 		return $success;
@@ -444,7 +444,7 @@ class MyUploadHandler extends UploadHandler
 		if ($this->options['storage_type'] != 'normal' && !file_exists($file_path))
 		{
 			$file_name = $this->options['filename_prefix'].$filename_excluded_prefix;
-			if (Site_Upload::make_raw_file_from_storage($file_name, $file_path, $this->options['storage_type'])) return true;
+			if (Site_Upload::make_raw_file_from_storage($file_name, $file_path, $this->options['storage_type'], $this->options['upload_type'])) return true;
 		}
 
 		return false;

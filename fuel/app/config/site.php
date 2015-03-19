@@ -136,7 +136,7 @@ $config = array(
 		),
 	),
 	'upload' => array(
-		'storageType' => 'S3', // normal (local disk) / db / S3 (if multipule server env, chose db or S3)
+		'storageType' => 'db', // normal (local disk) / db / S3 (if multipule server env, chose db or S3)
 		'isRemoveOnBatch' => false,// TODO: batch is not implemented
 		'file_category_max_length' => 3,
 		'num_of_split_dirs' => 10,

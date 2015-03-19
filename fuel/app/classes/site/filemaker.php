@@ -110,7 +110,7 @@ class Site_FileMaker
 		{
 			if ($this->strage_type == 'normal') return false;
 
-			return (bool)Site_Upload::make_raw_file_from_storage($this->filename, $raw_file_path, $this->strage_type);
+			return (bool)Site_Upload::make_raw_file_from_storage($this->filename, $raw_file_path, $this->strage_type, $this->type);
 		}
 
 		return true;

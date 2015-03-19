@@ -106,7 +106,7 @@ class Site_FileTmp
 			{
 				$moved_files[$file_tmp->id]['from_thumbnail'] = Site_Upload::get_uploaded_file_path($file_tmp->name, 'thumbnail', 'img', true);
 			}
-			$file = Model_File::move_from_file_tmp($file_tmp, $new_filename_prefix, $is_ignore_member_id);
+			$file = Model_File::move_from_file_tmp($file_tmp, $new_filename_prefix, $is_ignore_member_id, $type);
 
 			$related_table_obj = $model::forge();
 			$related_table_obj->{$parent_id_field} = $parent_id;

@@ -509,17 +509,17 @@ class Site_Upload
 		return $prefix.$filename;
 	}
 
-	public static function get_bin_from_storage($filename, $strage_type = null)
+	public static function get_bin_from_storage($filename, $strage_type = null, $upload_type = 'img')
 	{
 		if (!$strage_type) $strage_type = conf('upload.storageType');
 		if (!in_array($strage_type, array('db', 'S3'))) throw new InvalidArgumentException('Second parameter is invalid.');
 
-		return $strage_type == 'db' ? Model_FileBin::get_bin4name($filename) : file_get_contents(Site_S3::get_url($filename));
+		return $strage_type == 'db' ? Model_FileBin::get_bin4name($filename) : file_get_contents(Site_S3::get_url($filename, $upload_type));
 	}
 
-	public static function make_raw_file_from_storage($filename, $file_path, $strage_type = null)
+	public static function make_raw_file_from_storage($filename, $file_path, $strage_type = null, $upload_type = 'img')
 	{
-		if (!$bin = static::get_bin_from_storage($filename, $strage_type)) return false;
+		if (!$bin = static::get_bin_from_storage($filename, $strage_type, $upload_type)) return false;
 		if (!$file_dir_path = self::get_file_dir_path_from_file_path($file_path)) return false;
 		if (!self:: check_and_make_uploaded_dir($file_dir_path)) return false;
 		if (file_put_contents($file_path, $bin)) return $file_path;

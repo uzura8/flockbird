@@ -118,7 +118,7 @@ class Model_File extends \MyOrm\Model
 		return $deleted_filesize;
 	}
 
-	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filename_prefix = '', $is_ignore_member_id = false)
+	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filename_prefix = '', $is_ignore_member_id = false, $upload_type = 'img')
 	{
 		$file = static::forge();
 		$file->name = $file_tmp->name;
@@ -142,7 +142,7 @@ class Model_File extends \MyOrm\Model
 		}
 		elseif (conf('upload.storageType') == 'S3')
 		{
-			Site_S3::move($file_tmp->name, $file->name);
+			Site_S3::move($file_tmp->name, $file->name, $upload_type);
 		}
 
 		$file_tmp->delete();
