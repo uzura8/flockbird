@@ -14,7 +14,7 @@ var slideNumber = 0;
 var slideNumber_max = 0;
 
 $.get(get_url('album/image/api/list.json'), {'album_id':album_id, 'limit':0}, function(json){
-	$.each(json, function(i, data){
+	$.each(json.list, function(i, data){
 		images[data.id] = basePath + data.file_name.replace(/_/g, '/');
 		image_ids.push(data.id);
 	});

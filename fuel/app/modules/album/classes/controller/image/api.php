@@ -53,15 +53,15 @@ class Controller_Image_api extends \Controller_Site_Api
 			}
 			else
 			{
+				$album_props = array();
 				$list_array = array();
-				foreach ($data['list'] as $key => $obj)
+				foreach ($data['list'] as $key => $row)
 				{
-					$row = $obj->to_array();
-					$row['album']['member'] = \Model_Member::get_one_basic4id($obj->album->member_id);
+					$row['album']  = Model_Album::get_one_basic4id($row['album_id']);
+					$row['member'] = \Model_Member::get_one_basic4id($row['album']['member_id']);
 					$list_array[] = $row;
 				}
-				// json response
-				$data = $list_array;
+				$data['list'] = $list_array;
 			}
 
 			$this->set_response_body_api($data, $this->format == 'html' ? 'image/_parts/list' : null);

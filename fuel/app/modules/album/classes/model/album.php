@@ -77,6 +77,8 @@ class Model_Album extends \MyOrm\Model
 		),
 	);
 
+	protected static $basic_props = array('id', 'name', 'member_id');
+
 	public static function _init()
 	{
 		static::$_properties['name']['label'] = term('album').'名';

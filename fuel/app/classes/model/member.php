@@ -75,10 +75,6 @@ class Model_Member extends \MyOrm\Model
 		'updated_at' => array('form' => array('type' => false)),
 	);
 
-	protected static $_to_array_exclude = array(
-		'login_hash', 'register_type', 'filesize_total', 'last_login', 'previous_login', 'created_at', 'updated_at'
-	);
-
 	protected static $_observers = array(
 		'Orm\Observer_Validation' => array(
 			'events' => array('before_save'),
@@ -96,9 +92,11 @@ class Model_Member extends \MyOrm\Model
 		),
 	);
 
+	protected static $_to_array_exclude = array(
+		'login_hash', 'register_type', 'filesize_total', 'last_login', 'previous_login', 'created_at', 'updated_at'
+	);
+	protected static $basic_props = array('id', 'name', 'file');
 	protected static $image_prefix = 'm';
-
-	protected static $basic_list = array();
 
 	public static function _init()
 	{
@@ -136,34 +134,6 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['birthday_public_flag']['label'] = sprintf('%sの%s', term('member.birthday'), term('public_flag.label'));
 		static::$_properties['birthday_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthday_public_flag']['validation']['in_array'][] = $options_public_flag;
-	}
-
-	public static function get_one_basic4id($id)
-	{
-		if (!empty(self::$basic_list[$id])) return self::$basic_list[$id];
-
-		self::$basic_list[$id] = array();
-		if ($obj = self::find($id))
-		{
-			self::$basic_list[$id] = array(
-				'id' => $obj->id,
-				'name' => $obj->name,
-				'file' => $obj->get_image(),
-			);
-		}
-
-		return self::$basic_list[$id];
-	}
-
-	public static function get_basic4ids($ids)
-	{
-		$objs = array();
-		foreach ($ids as $id)
-		{
-			$objs[$id] = self::get_one_basic4id($id);
-		}
-
-		return $objs;
 	}
 
 	public static function get_one4name($name)

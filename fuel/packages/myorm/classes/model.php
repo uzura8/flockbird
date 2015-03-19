@@ -9,6 +9,8 @@ class Model extends \Orm\Model
 	protected static $_connection_default;
 
 	protected static $image_prefix;
+	protected static $basic_list_cache = array();
+	protected static $basic_props = array();
 
 	/**
 	 * Fetch the database connection name to use
@@ -451,5 +453,37 @@ class Model extends \Orm\Model
 		}
 
 		return $query;
+	}
+
+	public static function get_one_basic4id($id, $props = array())
+	{
+		if (!empty(static::$basic_list_cache[$id])) return static::$basic_list_cache[$id];
+
+		if (!is_array($props)) $props = (array)$props;
+		if (!$props) $props = static::$basic_props;
+		if (!$props) throw new \FuelException('basic_props not set.');
+
+		static::$basic_list_cache[$id] = array();
+		if ($obj = static::find($id))
+		{
+			static::$basic_list_cache[$id] = array();
+			foreach ($props as $prop)
+			{
+				static::$basic_list_cache[$id][$prop] = $prop == 'file' ? $obj->get_image() : $obj->{$prop};
+			}
+		}
+
+		return static::$basic_list_cache[$id];
+	}
+
+	public static function get_basic4ids($ids, $basic_props = array())
+	{
+		$objs = array();
+		foreach ($ids as $id)
+		{
+			$objs[$id] = static::get_one_basic4id($id, $basic_props);
+		}
+
+		return $objs;
 	}
 }
