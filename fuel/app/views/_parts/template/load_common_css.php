@@ -1,13 +1,4 @@
-<?php
-$bootstrap_css_file = 'bootstrap.min.css';
-$theme_name = conf('bootstrapCssTheme');
-if (!IS_ADMIN && $theme_name && $theme_name != 'default')
-{
-	$bootstrap_css_file = sprintf('bootstrap.%s.min.css', $theme_name);
-}
-?>
-<?php echo Asset::css($bootstrap_css_file);?>
-<?php echo Asset::css('bootstrap-custom.flockbird.css');?>
+<?php echo Asset::css('bootstrap.custom.css');?>
 <?php if (conf('legacyBrowserSupport')): ?>
 <!--[if lt IE 9]>
 	<?php echo Asset::js('html5shiv.js');?>
