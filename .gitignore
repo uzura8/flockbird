@@ -29,6 +29,7 @@ desktop.ini
 /fuel/packages/orm/
 /fuel/packages/parser/
 /fuel/packages/opauth/
+/fuel/packages/less/
 
 # dynamically generated files
 /fuel/app/logs/*/*

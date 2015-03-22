@@ -139,6 +139,7 @@
         "monolog/monolog": "1.5.*",
         "michelf/php-markdown": "1.4.0",
         "twig/twig" : "1.*",
+        "uzura8/fuel-less": "dev-2.0/master ",
         "uzura8/fuel-packages-opauth": "dev-master"
     },
     "suggest": {
