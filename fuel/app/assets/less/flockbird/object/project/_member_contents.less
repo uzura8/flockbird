@@ -1,0 +1,36 @@
+.member_contents {
+	.main {
+		margin-top: @parts-margin-xs;
+	}
+
+	&.row {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.col-xs-1 {
+		padding: 0 !important;
+
+		img {
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+
+	.col-xs-11 {
+		padding: 0 !important;
+	}
+
+	@media (max-width: @screen-sm-max)
+	{
+		.col-xs-11 {
+			padding-left: @parts-padding-xs !important;
+		}
+	}
+
+	@media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
+		.col-xs-11 {
+			padding-left: @parts-padding-md !important;
+		}
+	}
+}

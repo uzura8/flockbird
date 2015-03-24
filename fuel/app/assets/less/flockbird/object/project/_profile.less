@@ -1,0 +1,27 @@
+.profile {
+	position: relative;
+
+	.btnEdit {
+			.abspos_top_right(@parts-margin-sm, @parts-margin-sm);
+		z-index: 1;
+	}
+}
+
+img.profile_image {
+	border-radius: @border-radius-base;
+}
+
+.profile_img_box {
+	position: relative;
+	padding: @parts-padding-sm @parts-padding-xs;
+	margin-bottom: @parts-margin-xs;
+
+	.profile_image {
+		.abspos_top_left(@parts-margin-xs, @parts-margin-sm);
+	}
+
+	.content {
+		margin-left: @image_size_profile_m + @parts-margin-sm + @parts-margin-xs;
+		.posted
+	}
+}

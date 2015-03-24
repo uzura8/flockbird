@@ -8,6 +8,11 @@ return array(
 			{
 				//compile less
 				Asset::less('bootstrap.custom.less');
+				Asset::less('base.less');
+				Asset::less('base_pc.less');
+				Asset::less('base_mobile.less');
+				Asset::less('site.less');
+				Asset::less('admin.less');
 			}
 		},
 	),

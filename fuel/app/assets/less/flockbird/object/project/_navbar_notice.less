@@ -1,0 +1,34 @@
+.navbar-header .navbar-btn .notice {
+	margin-right: @parts-margin-xs;
+
+	button {
+		background-color: transparent;
+		border: none;
+		padding: 0 @parts-padding-sm;
+		color: @navbar-inverse-link-disabled-color;
+		font-size: 22px;
+		position: relative;
+
+		&.notified {
+			color: @navbar-inverse-link-color;
+		}
+
+		&:hover,
+		&:focus,
+		&.notified:hover,
+		&.notified:focus
+		{
+			color: @navbar-inverse-link-hover-color;
+			background-color: transparent;
+		}
+
+		.badge {
+			.abspos_top_right(@parts-margin-md, @parts-margin-xxs);
+			padding: 3px 4px;
+			background-color: #d9534f;
+			font-size: 10px;
+			color: #fff;
+		}
+	}
+}
+

@@ -1,13 +1,13 @@
 @import "bootstrap/bootstrap.less";
+@import "flockbird/variables.less";
 
 @icon-font-path: "../../fonts/";
 
-
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-	padding-top: 65px;
-	padding-bottom: 10px;
-	min-width: 320px;
+	padding-top: @navbar-height + @parts-margin-lg;
+	padding-bottom: @parts-padding-md;
+	min-width: @window-min-width;
 }
 .container {
 	width: 100% !important;
@@ -16,19 +16,19 @@ body {
   display: inline !important;
 }
 
-@media (max-width: @grid-float-breakpoint-max) {
+@media (max-width: @screen-sm-max) {
 	body {
 		padding-top: 0;
 	}
 
 	.row {
-		margin-right: -15px;
-		margin-left: -15px;
+		margin-right: @parts-margin-md * -1;
+		margin-left: @parts-margin-md * -1;
 	}
 
 	.container > .navbar-header {
-		margin-right: -15px;
-		margin-left: -15px;
+		margin-right: @parts-margin-md * -1;
+		margin-left: @parts-margin-md * -1;
 	}
 
 	.navbar-fixed-top
@@ -46,49 +46,92 @@ body {
 	.hidden-xs-inline {
 		display: none !important;
 	}
-
-	.navbar .container .navbar-header .navbar-btn {
-		margin-right: 5px;
-	}
 }
 
 
-@media (min-width: @grid-float-breakpoint) {
-	.navbar .container .navbar-header .navbar-btn {
-		position: absolute;
-		top: 0;
-		right: 15px;
-	}
-
-	body div.jGrowl.top-right {
+@media (min-width: @screen-sm-min) {
+	.jGrowl.top-right {
 		right: 0;
-		top: 50px;
+//		top: @navbar-height + 5 !important;
+	}
+}
+
+.navbar .container {
+	position: relative;
+
+	.navbar-header .navbar-btn {
+		@media (max-width: @screen-sm-max) {
+			& {
+				margin-right: @parts-margin-xs;
+			}
+		}
+
+		@media (min-width: @screen-sm-min) {
+			& {
+				position: absolute;
+				top: 0;
+				right: @parts-margin-xlg;
+			}
+		}
 	}
 }
 
 .nav > li.disabled.nav-header > a {
 	cursor: default;
-	font-size: 12px;
+	font-size: @font-size-small;
 	font-weight: bold;
 	text-transform: uppercase;
 }
 
-.navbar .container {
-	position: relative;
+.dropdown-menu {
+	> li > span {
+		display: block;
+		padding: 3px 20px;
+		clear: both;
+		font-weight: normal;
+		line-height: @line-height-base;
+		color: @dropdown-link-color;
+		white-space: nowrap; // prevent links from randomly breaking onto new lines
+
+		&.disabled {
+			color: @dropdown-link-disabled-color;
+		}
+	}
 }
 
-.navbar .popover {
-	right: 15px!important;
-	min-width: 195px;
+.page-header {
+	margin-top: (@line-height-computed / 2) !important;
 }
-.navbar .popover-content {
-	padding: 9px 0px;
+.page-header h1,
+.header h4
+{
+	margin-top: 0 !important;
+	//z-index: 3;
+	.posted
 }
 
 .form-horizontal .form-text {
-  padding-top: 7px;
-  margin-top: 0;
-  margin-bottom: 0;
+	padding-top: 7px;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.form-group {
+	.text-block {
+		top: 8px;
+		text-align: center;
+	}
+
+	.radio label {
+		.wrap
+	}
+}
+
+.controls input[type="radio"],
+.controls input[type="checkbox"]
+{
+	position: relative;
+	top: -0.2em;
 }
 
 .input-medium {
@@ -97,3 +140,12 @@ body {
 .input-xlarge {
   width: 270px;
 }
+
+.carousel-flex .item {
+	text-align : center;
+
+	img {
+		display: inline !important;
+	}
+}
+

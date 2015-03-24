@@ -1,3 +1,7 @@
+@import "bootstrap/variables.less";
+@import "flockbird/variables.less";
+
+/*
 .navbar {
 	background-color: #001F85;
 	background-image: -moz-linear-gradient(top, #001F85, #031244);
@@ -9,7 +13,6 @@
 	border-color: #252525;
 	filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff001F85', endColorstr='#ff031244', GradientType=0);
 }
-
 .navbar-inverse .brand {
 	color: #C7C4C4;
 }
@@ -17,20 +20,20 @@
 	color: #C7C4C4;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
+*/
 
-#admin_profile_index table th,
-#admin_profile_list table th
-{
-	font-size: 11px;
-	text-align: center;
-}
-#admin_profile_index table th i,
-#admin_profile_list table th i
-{
-	font-size: 14px;
-}
-#admin_profile_index table td,
-#admin_profile_list table td
-{
-	text-align: center;
+#admin_profile_index table,
+#admin_profile_list table {
+	th {
+		font-size: @font-size-small;
+		text-align: center;
+
+		i {
+			font-size: @font-size-base;
+		}
+	}
+
+	td {
+		text-align: center;
+	}
 }

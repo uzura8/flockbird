@@ -1,0 +1,23 @@
+#upload_files_img .file_tmp,
+#upload_files_file .file_tmp
+{
+	margin-bottom: @parts-margin-sm;
+}
+
+.fileinput {
+	.thumbnail {
+		margin-bottom: @parts-margin-sm;
+
+		> img {
+			margin-bottom: 0;
+		}
+	}
+
+	.subinfo {
+		position: relative;
+
+		.delete_file_tmp {
+			.abspos_top_right(@parts-margin-xs * -1);
+		}
+	}
+}

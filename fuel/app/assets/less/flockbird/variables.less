@@ -1,0 +1,57 @@
+@parts-margin-xlg:                 30px;
+@parts-margin-lg:                  20px;
+@parts-margin-md:                  15px;
+@parts-margin-sm:                  10px;
+@parts-margin-xs:                   5px;
+@parts-margin-xxs:                  3px;
+
+@parts-padding-xlg:                30px;
+@parts-padding-lg:                 20px;
+@parts-padding-md:                 15px;
+@parts-padding-sm:                 10px;
+@parts-padding-xs:                  5px;
+@parts-padding-xxs:                 3px;
+
+@window-min-width:                320px;
+
+@parts-default-border:   1px solid #eee;
+
+@image_size_profile_m:             50px;
+@image_size_album_image_m:        220px;
+
+
+.wrap () {
+	text-wrap: wrap;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.posted () {
+	.wrap;
+	overflow:hidden;
+}
+
+.abspos_top_right (@vertical_position: 0; @align_position: 0)
+{
+	position: absolute;
+	top: @vertical_position;
+	right: @align_position;
+}
+.abspos_top_left (@vertical_position: 0; @align_position: 0)
+{
+	position: absolute;
+	top: @vertical_position;
+	left: @align_position;
+}
+.abspos_bottom_right (@vertical_position: 0; @align_position: 0)
+{
+	position: absolute;
+	bottom: @vertical_position;
+	right: @align_position;
+}
+.abspos_bottom_left (@vertical_position: 0; @align_position: 0)
+{
+	position: absolute;
+	bottom: @vertical_position;
+	left: @align_position;
+}

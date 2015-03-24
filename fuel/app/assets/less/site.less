@@ -1,0 +1,52 @@
+@import "bootstrap/variables.less";
+@import "flockbird/variables.less";
+
+.navbar-brand {
+	position: relative;
+	padding: @parts-padding-md 0 @parts-padding-md 56px !important;
+
+	@media (min-width: @screen-md-min) {
+		& {
+			padding-right: @parts-padding-md !important;
+		}
+	}
+
+	img {
+		position: absolute;
+		top: @parts-margin-sm;
+		left: @parts-margin-md;
+	}
+}
+
+.navbar .popover {
+	right: @parts-margin-md!important;
+	min-width: 195px;
+}
+
+.navbar .popover-content {
+	padding: @parts-margin-xs 0;
+
+	.checkbox input {
+		margin-left: (@parts-margin-lg * -1);
+	}
+}
+
+#insecure_user_popover {
+	.form-group .btn {
+		margin-bottom: @parts-margin-xs;
+	}
+
+	label.checkbox {
+		font-size: 85%;
+	}
+}
+
+.popover-content .radio,
+.popover-content .checkbox
+{
+	padding-left: @parts-margin-xs;
+}
+
+#map {
+	height: 400px;
+}
