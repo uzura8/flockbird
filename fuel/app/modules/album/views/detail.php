@@ -4,7 +4,7 @@
 
 <?php if (Config::get('album.display_setting.detail.display_slide_image')): ?>
 <?php 	if ($list): ?>
-<div id="myCarousel" class="carousel slide" data-ride="carousel">
+<div id="myCarousel" class="carousel carousel-flex slide" data-ride="carousel">
 	<!-- Wrapper for slides -->
 	<div class="carousel-inner">
 <?php $i = 0; ?>

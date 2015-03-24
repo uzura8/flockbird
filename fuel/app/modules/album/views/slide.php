@@ -4,7 +4,7 @@
 <div class="row" id="img_comment_box">
 	<div class="col-md-8">
 		<a name="slidetop" id="slidetop"></a>
-		<div id="myCarousel" class="carousel slide" data-ride="carousel">
+		<div id="myCarousel" class="carousel carousel-flex slide" data-ride="carousel">
 			<!-- Wrapper for slides -->
 			<div class="carousel-inner"></div>
 			<!-- Controls -->
