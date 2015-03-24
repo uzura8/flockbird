@@ -15,9 +15,9 @@
 	<?php echo form_button('form.delete_all', 'button', 'delete', array('id' => 'submit_delete', 'class' => 'btn btn-default btn-danger')); ?>
 </div><!-- well -->
 
-<label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
+<label class="checkbox-inline"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
 
-<table id="album_image_list" class="table table-striped">
+<table id="album_image_list" class="table table-striped image_table">
 <tr>
 	<th class="formParts span2">対象選択</th>
 	<th class="span3"><?php echo term('album_image'); ?></th>
@@ -36,7 +36,7 @@
 <?php endforeach; ?>
 </table>
 
-<label class="checkbox"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
+<label class="checkbox-inline"><?php echo Form::checkbox('album_image_all', '', array('class' => 'album_image_all')); ?> 全て選択/解除</label>
 <?php else: ?>
 	<p><?php echo term('album_image'); ?>がありません。</p>
 <?php endif; ?>

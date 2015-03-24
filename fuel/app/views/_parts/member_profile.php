@@ -52,13 +52,19 @@ elseif ($page_type != 'detail')
 		<div class="col-<?php echo $col_class; ?>-<?php echo $image_col_size; ?>">
 			<div class="imgBox"><?php echo img($member->get_image(), $image_size, $profile_page_uri, $is_link2raw_file, site_get_screen_name($member), true, true); ?></div>
 <?php if (!empty($with_link2profile_image)): ?>
-			<div class="btnBox"><?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera'); ?></div>
+			<div class="btnBox">
+				<?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera'); ?>
+			</div>
 <?php endif; ?>
 <?php if ($is_mypage && $with_image_upload_form): ?>
 <?php 	if ($member->file_name): ?>
-				<?php echo btn('form.delete', '#', 'js-simplePost', true, 'sm', 'default', array('data-uri' => 'member/profile/image/unset')); ?>
+			<div class="btnBox">
+				<?php echo btn('form.delete', '#', 'js-simplePost', true, 'sm', 'danger', array('data-uri' => 'member/profile/image/unset', 'class' => 'u-center')); ?>
+			</div>
 <?php 	endif; ?>
-<?php echo render('_parts/form/upload_form', array('form_attrs' => array('action' => 'member/profile/image/edit'))); ?>
+			<div class="mt10">
+				<?php echo render('_parts/form/upload_form', array('form_attrs' => array('action' => 'member/profile/image/edit'))); ?>
+			</div>
 <?php endif; ?>
 		</div>
 		<div class="col-<?php echo $col_class; ?>-<?php echo 12 - $image_col_size; ?>">
@@ -82,7 +88,7 @@ elseif ($page_type != 'detail')
 				&& check_public_flag($member->sex_public_flag, $access_from)
 				&& $sex = Site_Form::get_form_options4config('term.member.sex.options', $member->sex, true)): ?>
 			<div class="row">
-				<div class="col-xs-4"><label><?php echo term('member.sex.label'); ?></label></div>
+				<div class="col-xs-4 u-alr"><label><?php echo term('member.sex.label'); ?></label></div>
 				<div class="col-xs-8"><?php echo $sex; ?></div>
 			</div>
 <?php endif; ?>
@@ -91,7 +97,7 @@ elseif ($page_type != 'detail')
 				&& check_display_type(conf('profile.birthday.birthyear.displayType'), $display_type)
 				&& check_public_flag($member->birthyear_public_flag, $access_from)): ?>
 			<div class="row">
-				<div class="col-xs-4"><label>
+				<div class="col-xs-4 u-alr"><label>
 					<?php if (conf('profile.birthday.birthyear.viewType')): ?><?php echo term('member.age'); ?><?php else: ?><?php echo term('member.birthyear'); ?><?php endif; ?>
 				</label></div>
 				<div class="col-xs-8">
@@ -105,7 +111,7 @@ elseif ($page_type != 'detail')
 				&& check_display_type(conf('profile.birthday.birthday.displayType'), $display_type)
 				&& check_public_flag($member->birthday_public_flag, $access_from)): ?>
 			<div class="row">
-				<div class="col-xs-4"><label><?php echo term('member.birthday'); ?></label></div>
+				<div class="col-xs-4 u-alr"><label><?php echo term('member.birthday'); ?></label></div>
 				<div class="col-xs-8"><?php echo Util_Date::conv_date_format($member->birthday, '%d月%d日'); ?></div>
 			</div>
 <?php endif; ?>
