@@ -53,6 +53,19 @@ desktop.ini
 /web
 /public_html
 
-fuel/app/views/welcome/*
-fuel/app/classes/controller/test.php
-fuel/app/views/test/*
+# module setting
+/fuel/app/modules/*
+!/fuel/app/modules/admin
+!/fuel/app/modules/album
+!/fuel/app/modules/content
+!/fuel/app/modules/development
+!/fuel/app/modules/news
+!/fuel/app/modules/note
+!/fuel/app/modules/notice
+!/fuel/app/modules/thread
+!/fuel/app/modules/timeline
+
+# for develop
+/fuel/app/views/welcome/*
+/fuel/app/classes/controller/test.php
+/fuel/app/views/test/*
