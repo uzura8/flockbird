@@ -13,6 +13,7 @@ return array(
 				Asset::less('base_mobile.less');
 				Asset::less('site.less');
 				Asset::less('admin.less');
+				Asset::less('bootstrap.custom.admin.less');
 			}
 		},
 	),

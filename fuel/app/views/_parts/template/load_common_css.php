@@ -1,4 +1,3 @@
-<?php echo Asset::css('bootstrap.custom.css');?>
 <?php if (conf('legacyBrowserSupport')): ?>
 <!--[if lt IE 9]>
 	<?php echo Asset::js('html5shiv.js');?>
