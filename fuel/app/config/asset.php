@@ -8,4 +8,5 @@ return array(
 	 * These MUST include the trailing slash ('/')
 	 */
 	'url' => PRJ_URI_PATH,
+	'fail_silently' => true,
 );

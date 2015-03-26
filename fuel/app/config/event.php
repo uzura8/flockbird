@@ -6,14 +6,12 @@ return array(
 		{
 			if (Fuel::$env == Fuel::DEVELOPMENT)
 			{
-				//compile less
-				Asset::less('bootstrap.custom.less');
-				Asset::less('base.less');
-				Asset::less('base_pc.less');
-				Asset::less('base_mobile.less');
-				Asset::less('site.less');
-				Asset::less('admin.less');
-				Asset::less('bootstrap.custom.admin.less');
+				$configs = \Config::get('less.less_source_files');
+				foreach ($configs as $config)
+				{
+					//compile less
+					Asset::less($config);
+				}
 			}
 		},
 	),

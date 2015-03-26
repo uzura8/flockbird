@@ -9,6 +9,7 @@ chmod -R 777 public/assets/ccss
 cd fuel/app/assets/less/
 ln -s ../../../vendor/twbs/bootstrap/less bootstrap
 cd ../../../../
+php oil r setupassets
 php oil r setupdb
 php oil r setupmodule
 php oil r user:create sample@example.com password 初期メンバー

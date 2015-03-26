@@ -10,7 +10,6 @@
  * @link       http://fuelphp.com
  */
 
-
 return array(
 
 	/**
@@ -291,7 +290,7 @@ return array(
 		 *
 		 * A path must be set in module_paths for this to work.
 		 */
-		'modules'  => array('notice', 'timeline', 'note', 'album', 'content', 'news', 'thread', 'admin', 'api'),
+		'modules'  => array_merge(array('notice', 'timeline', 'note', 'album', 'content', 'news', 'thread', 'admin', 'api'), $GLOBALS['_PRJ_ADDITIONAL_MODULES']),
 
 		/**
 		 * Classes to autoload & initialize even when not used

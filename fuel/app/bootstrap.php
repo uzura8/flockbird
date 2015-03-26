@@ -19,6 +19,8 @@ Autoloader::add_classes(array(
 	'Html' => APPPATH.'classes/html.php',
 	'Validation' => APPPATH.'classes/validation.php',
 	'Agent' => APPPATH.'classes/agent.php',
+	'Asset' => APPPATH.'classes/asset.php',
+	'Asset_Instance' => APPPATH.'classes/asset/instance.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 ));
 if (PRJ_AWS_ACCESS_KEY && PRJ_AWS_SECRET_KEY && PRJ_AWS_S3_BUCKET)
@@ -53,6 +55,7 @@ Config::load('icon', 'icon');
 Config::load('page', 'page');
 Config::load('template', 'template');
 Config::load('exif', 'exif');
+Config::load('less', 'less');
 // Config of each module load.
 $modules = Module::loaded();
 foreach ($modules as $module => $path)

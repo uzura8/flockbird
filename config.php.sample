@@ -42,6 +42,9 @@ define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
  */
 define('PRJ_SSL_MODE', false);
 
+// 追加読み込みモジュール
+$GLOBALS['_PRJ_ADDITIONAL_MODULES'] = array(
+);
 
 // 管理画面アクセス許可IP設定 (未指定の場合、IP制限しない)
 $GLOBALS['_PRJ_ACCESS_ACCEPT_IPS']['admin'] = array(

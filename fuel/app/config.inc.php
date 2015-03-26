@@ -96,6 +96,12 @@ function _set_default_configs()
 
 		define($key, $value);
 	}
+	_set_default_globals();
+}
+
+function _set_default_globals()
+{
+	if (!isset($GLOBALS['_PRJ_ADDITIONAL_MODULES'])) $GLOBALS['_PRJ_ADDITIONAL_MODULES'] = array();
 }
 
 function _get_default_configs()
