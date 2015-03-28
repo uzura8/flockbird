@@ -69,7 +69,6 @@ define('PRJ_ADMIN_NAME', '運営事務局');
 define('PRJ_ADMIN_MAIL', 'admin@example.com');
 
 // Google 関連設定
-define('GOOGLE_SITE_VERIFICATION', '');
 define('GOOGLE_ANALYTICS_TRACKING_CODE', '');
 
 // AWS 関連設定
