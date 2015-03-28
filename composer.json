@@ -140,7 +140,7 @@
         "michelf/php-markdown": "1.4.0",
         "twig/twig" : "1.*",
         "twbs/bootstrap": "3.*",
-        "uzura8/fuel-less": "dev-2.0/master ",
+        "uzura8/fuel-less": "dev-2.0/master",
         "uzura8/fuel-packages-opauth": "dev-master"
     },
     "suggest": {

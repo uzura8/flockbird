@@ -31,6 +31,7 @@ class Controller_Base extends Controller_Hybrid
 		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
 		$this->check_auth_and_response();
 		$this->set_current_user();
+		self::setup_assets();
 	}
 
 	protected function set_default_data()
@@ -355,6 +356,18 @@ class Controller_Base extends Controller_Hybrid
 		return true;
 	}
 
+	protected static function setup_assets()
+	{
+		if (!is_dev_env()) return;
+		if (IS_API) return;
+
+		$configs = \Config::get('less.less_source_files');
+		foreach ($configs as $config)
+		{
+			//compile less
+			Asset::less($config);
+		}
+	}
 
 	/**
 	 * 以下、site, admin 共通 controller
