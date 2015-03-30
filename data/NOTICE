@@ -2,6 +2,18 @@
   - version: 1.7.2
   - license: MIT
   - url: http://fuelphp.com/
+* fuel-opauth (forked)
+  - version: master
+  - license: MIT
+  - url: https://github.com/andreoav/fuel-opauth
+* fuel-less (forked)
+  - version: 2.0/master
+  - license: MIT
+  - url: https://github.com/kriansa/fuel-less
+* fuelphp-casset
+  - version: 1.21
+  - license: MIT
+  - url: https://github.com/canton7/fuelphp-casset
 * Mobile Detect
   - version: 2.8.0
   - license: MIT
@@ -56,6 +68,7 @@
   - url: https://github.com/websanova/js-url
 * Livestamp.js
   - license: MIT
+  - version: 1.1.2
   - http://mattbradley.github.com/livestampjs/
 * moment.js
   - version: 2.6.0
