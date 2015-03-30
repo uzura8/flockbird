@@ -280,6 +280,7 @@ return array(
 			'myauth',
 			'myagent',
 			'less',
+			'casset',
 		),
 
 		/**

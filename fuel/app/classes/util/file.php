@@ -362,4 +362,14 @@ class Util_File
 	{
 		return self::get_path_partial($path, 3);
 	}
+
+	public static function convert_filename2min($filename)
+	{
+		if (!$dot_position = strrpos($filename, '.')) throw new InvalidArgumentException('First parameter is invalid.');
+
+		$ext = substr($filename, $dot_position + 1);
+		$name_without_ext = substr($filename, 0, $dot_position);
+
+		return sprintf('%s.min.%s', $name_without_ext, $ext);
+	}
 }

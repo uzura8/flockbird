@@ -1,6 +1,10 @@
-<?php //echo Asset::js('bootstrap-datetimepicker.min.js');?>
-<?php echo Asset::js('bootstrap-datetimepicker.js');?>
-<?php echo Asset::js('locales/bootstrap-datetimepicker.ja.js');?>
+<?php
+Asset::js(array(
+	'bootstrap-datetimepicker.js',
+	'locales/bootstrap-datetimepicker.ja.js',
+), null, 'js_datetimepicker', false, true);
+echo Asset::render('js_datetimepicker', false, 'js');
+?>
 <script>
 $(function () {
 	$('<?php echo isset($attr) ? $attr : '#form_date'; ?>').datetimepicker({

@@ -1,1 +1,1 @@
-<?php echo asset::css('bootstrap-datetimepicker.min.css');?>
+<?php echo Asset::css('bootstrap-datetimepicker.css', null, null, false, false, true); ?>

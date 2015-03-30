@@ -6,6 +6,7 @@ php oil refine install
 chmod -R 777 fuel/app/media
 chmod -R 777 public/media
 chmod -R 777 public/assets/ccss
+chmod -R 777 public/assets/cache
 cd fuel/app/assets/less/
 ln -s ../../../vendor/twbs/bootstrap/less bootstrap
 cd ../../../../

@@ -123,6 +123,22 @@
                     "reference": "1.8/develop"
                 }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "canton7/fuelphp-casset",
+                "type": "fuel-package",
+                "version": "1.21",
+                "require": {
+                    "composer/installers": "*"
+                },
+                "source": {
+                    "url": "https://github.com/canton7/fuelphp-casset.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
         }
     ],
     "require": {
@@ -141,6 +157,7 @@
         "twig/twig" : "1.*",
         "twbs/bootstrap": "3.*",
         "uzura8/fuel-less": "dev-2.0/master",
+        "canton7/fuelphp-casset": "1.*",
         "uzura8/fuel-packages-opauth": "dev-master"
     },
     "suggest": {

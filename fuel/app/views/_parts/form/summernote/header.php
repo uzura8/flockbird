@@ -1,1 +1,1 @@
-<?php echo asset::css('summernote.css');?>
+<?php echo Asset::css('summernote.css');?>

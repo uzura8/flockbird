@@ -30,6 +30,7 @@ desktop.ini
 /fuel/packages/parser/
 /fuel/packages/opauth/
 /fuel/packages/less/
+/fuel/packages/casset/
 
 # dynamically generated files
 /fuel/app/logs/*/*
@@ -49,6 +50,7 @@ desktop.ini
 /public/modules/*
 /public/assets/*/modules/*
 /public/assets/ccss/*
+/public/assets/cache/*
 /public/xhprof.php
 /web
 /public_html
