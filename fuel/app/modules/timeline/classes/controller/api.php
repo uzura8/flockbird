@@ -198,7 +198,7 @@ class Controller_Api extends \Controller_Site_Api
 	 */
 	public function post_update_public_flag($id = null)
 	{
-		$this->accept_formats = 'html';
+		$this->api_accept_formats = 'html';
 		$this->controller_common_api(function() use($id)
 		{
 			$id = intval(\Input::post('id') ?: $id);
