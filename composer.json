@@ -133,6 +133,9 @@
                 "require": {
                     "composer/installers": "*"
                 },
+                "extra": {
+                    "installer-name": "casset"
+                },
                 "source": {
                     "url": "https://github.com/canton7/fuelphp-casset.git",
                     "type": "git",
