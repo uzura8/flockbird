@@ -41,7 +41,10 @@ class Controller_Member_Setting_Api extends Controller_Site_Api
 			\DB::commit_transaction();
 
 			$response_body = self::get_response_for_update_config($name, array('id' => $member_id, $name => $value));
-			$this->set_response_body_api($response_body);
+			$this->response_body = $this->format == 'html' ? $response_body : array(
+				'html' => $response_body,
+				'message' => sprintf('%sを%sしました。', term('site.display', 'site.setting'), term('form.update')),
+			);
 		});
 	}
 

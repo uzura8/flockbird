@@ -97,7 +97,7 @@ $(function() {
 
 	$(document).on('click','.timeline_viewType', function(){
 		var viewType = $(this).data('value') ? parseInt($(this).data('value')) : 0;
-		var text = $(this).html();
+		var trigerSelectorHtml = $(this).html();
 		var parentElement = $(this).parent('li');
 		var buttonElement = $(parentElement).parents('div.btn-group');
 		var postData = {
@@ -113,16 +113,19 @@ $(function() {
 			timeout: get_config('default_ajax_timeout'),
 			beforeSend: function(xhr, settings) {
 				GL.execute_flg = true;
-				$(this).remove();
-				$(parentElement).html('<span>' + get_loading_image_tag( + '</span>'));
+				setLoading(null, this, 'btn_loading_image');
 			},
 			complete: function(xhr, textStatus) {
 				GL.execute_flg = false;
+				removeLoading(null, this, 'btn_loading_image');
+				$(this).html(trigerSelectorHtml);
 			},
 			success: function(result, status, xhr){
 				$(buttonElement).html(result.html);
 				$(buttonElement).removeClass('open');
 				showMessage(result.message);
+				$('#article_list').empty();
+				loadTimelineDefault();
 			},
 			error: function(result){
 				GL.execute_flg = false;
@@ -130,9 +133,6 @@ $(function() {
 				showErrorMessage(result);
 			}
 		});
-
-		$('#article_list').empty();
-		loadTimelineDefault();
 
 		return false;
 	});

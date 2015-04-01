@@ -1,4 +1,4 @@
-<div id="main_post_box" class="u-mb-lg">
+<div id="main_post_box" class="u-mb-xs">
 <?php echo render('_parts/comment/post', array(
 	'size' => 'M',
 	'button_attrs' => array('id' => 'btn_timeline', 'class' => 'btn btn-default btn_comment'),
@@ -17,11 +17,11 @@
 	'public_flag' => $public_flag,
 	'uri_for_update_public_flag' => 'member/setting/api/config/timeline_public_flag.html',
 )); ?>
-</div>
 
-<div id="timeline_setting" class="text-right">
-	<span class="text-muted"><?php echo term('site.display', 'site.setting'); ?>:</span>
-	<?php echo render('member/_parts/timeline_viewType_selecter', array('id' => $u->id, 'timeline_viewType' => $member_config->timeline_viewType)); ?>
+	<div id="timeline_setting" class="text-right">
+		<span class="text-muted"><?php echo term('site.display', 'site.setting'); ?>:</span>
+		<?php echo render('member/_parts/timeline_viewType_selecter', array('id' => $u->id, 'timeline_viewType' => $member_config->timeline_viewType)); ?>
+	</div>
 </div>
 
 <div id="article_list" data-type="ajax"></div>
