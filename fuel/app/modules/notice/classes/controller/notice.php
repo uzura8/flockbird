@@ -3,10 +3,7 @@ namespace Notice;
 
 class Controller_Notice extends \Controller_Site
 {
-	protected $check_not_auth_action = array(
-		'index',
-		'list',
-	);
+	protected $check_not_auth_action = array();
 
 	public function before()
 	{
