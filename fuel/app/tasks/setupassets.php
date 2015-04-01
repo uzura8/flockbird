@@ -73,4 +73,4 @@ class SetupAssets
 		return $return_message;
 	}
 }
-/* End of file tasks/deploy.php */
+/* End of file tasks/setupassets.php */

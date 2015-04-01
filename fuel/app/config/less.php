@@ -7,6 +7,7 @@ return array(
 		'base_pc.less',
 		'base_mobile.less',
 		'site.less',
+		'bootstrap.custom.admin.less',
 		'admin.less',
 	),
 );
