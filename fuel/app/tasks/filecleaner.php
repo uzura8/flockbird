@@ -169,7 +169,7 @@ class FileCleaner
 		$cache_file_dir_path_key  = 'upload.types.'.$file_type;
 		if ($is_tmp) $cache_file_dir_path_key .= '.tmp';
 		$cache_file_dir_path_key .= '.root_path.cache_dir';
-		$cache_file_dir_path = PRJ_PUBLIC_DIR.conf($cache_file_dir_path_key);
+		$cache_file_dir_path = DOCROOT.conf($cache_file_dir_path_key);
 
 		if (!file_exists($raw_file_dir_path) && ($cache_file_dir_path && !file_exists($cache_file_dir_path)))
 		{

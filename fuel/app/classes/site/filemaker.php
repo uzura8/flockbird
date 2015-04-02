@@ -229,12 +229,12 @@ class Site_FileMaker
 	private function get_noimage_file_path()
 	{
 		$original_noimage_filename  = conf('upload.types.img.noimage_filename');
-		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
+		$original_noimage_file_path = sprintf('%sassets/img/site/%s', DOCROOT, $original_noimage_filename);
 		if (!$this->file_cate) return $original_noimage_file_path;
 		if ($this->size == 'raw') return $original_noimage_file_path;
 
 		$noimage_filename  = $this->file_cate.'_'.$original_noimage_filename;
-		$original_noimage_file_path = sprintf('%sassets/img/site/%s', PRJ_PUBLIC_DIR, $original_noimage_filename);
+		$original_noimage_file_path = sprintf('%sassets/img/site/%s', DOCROOT, $original_noimage_filename);
 
 		$noimage_file_dir  = sprintf('%simg/%s/%s/all/', PRJ_UPLOAD_DIR, $this->size, $this->file_cate);
 		$noimage_file_path = $noimage_file_dir.'/'.$noimage_filename;

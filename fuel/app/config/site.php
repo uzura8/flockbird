@@ -161,14 +161,14 @@ $config = array(
 					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img/raw/',
 				),
 				'raw_file_path' => APPPATH.'media/img/raw/',// raw ファイルを非公開領域に置く場合
-				//'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img/raw/',
+				//'raw_file_path' => DOCROOT.PRJ_UPLOAD_DIRNAME.'/img/raw/',
 				'tmp' => array(
 					'root_path' => array(
 						'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img_tmp/',
 						'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img_tmp/raw/',
 					),
 					//'raw_file_path' => APPPATH.'cache/media/img_tmp/raw/',// raw ファイルを非公開領域に置く場合
-					'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/img_tmp/raw/',
+					'raw_file_path' => DOCROOT.PRJ_UPLOAD_DIRNAME.'/img_tmp/raw/',
 					'sizes' => array(
 						'thumbnail' => '320x320xc',
 					),
@@ -208,7 +208,7 @@ $config = array(
 					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/file/raw/',
 				),
 				//'raw_file_path' => APPPATH.'cache/media/file/raw/',// raw ファイルを非公開領域に置く場合
-				'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/file/raw/',
+				'raw_file_path' => DOCROOT.PRJ_UPLOAD_DIRNAME.'/file/raw/',
 				'tmp' => array(
 					//'root_path' => array(
 					'root_path' => array(
@@ -216,7 +216,7 @@ $config = array(
 						'raw_dir' => PRJ_UPLOAD_DIRNAME.'/file_tmp/raw/',
 					),
 					//'raw_file_path' => APPPATH.'cache/media/file_tmp/raw/',// raw ファイルを非公開領域に置く場合
-					'raw_file_path' => PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/file_tmp/raw/',
+					'raw_file_path' => DOCROOT.PRJ_UPLOAD_DIRNAME.'/file_tmp/raw/',
 				),
 				'accept_format' => array(
 					'jpg' => 'image/jpeg',

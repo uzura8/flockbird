@@ -243,7 +243,7 @@ class Site_Upload
 
 		if ($size == 'raw') return conf($key.'.raw_file_path').$suffix;
 
-		return PRJ_PUBLIC_DIR.conf($key.'.root_path.cache_dir').$size.'/'.$suffix;
+		return DOCROOT.conf($key.'.root_path.cache_dir').$size.'/'.$suffix;
 	}
 
 	public static function get_uploaded_file_path($filename, $size = 'raw', $file_type = 'img', $is_tmp = false, $is_uri = false)
@@ -415,7 +415,7 @@ class Site_Upload
 		{
 			$sizes += Config::get(sprintf('site.upload.types.img.types.%s.additional_sizes.%s', $file_cate, $additional_sizes_key), array());
 		}
-		$cache_dir_path = PRJ_PUBLIC_DIR.conf('upload.types.img.root_path.cache_dir');
+		$cache_dir_path = DOCROOT.conf('upload.types.img.root_path.cache_dir');
 
 		$result = true;
 		foreach ($sizes as $size)

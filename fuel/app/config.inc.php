@@ -29,12 +29,9 @@ switch (PRJ_ENVIRONMENT)
 error_reporting(PRJ_ERROR_REPORTING);
 ini_set('display_errors', PRJ_DISPLAY_ERRORS);
 
-// 公開ディレクトリ
-if (!defined('PRJ_PUBLIC_DIR')) define('PRJ_PUBLIC_DIR', PRJ_BASEPATH.'public/');
-
 // ファイルをアップロードするディレクトリ
 if (!defined('PRJ_UPLOAD_DIRNAME')) define('PRJ_UPLOAD_DIRNAME', 'media');
-if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', PRJ_PUBLIC_DIR.PRJ_UPLOAD_DIRNAME.'/');
+if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', DOCROOT.PRJ_UPLOAD_DIRNAME.'/');
 //// Controller で Response する場合
 //if (!defined('PRJ_UPLOAD_DIR')) define('PRJ_UPLOAD_DIR', APPPATH.'cache');
 

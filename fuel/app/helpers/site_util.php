@@ -32,7 +32,7 @@ function site_htmltag_include_js_module()
 {
 	$assets_uri = sprintf('site/modules/%s/site.js', Site_Util::get_module_name());
 	$public_uri = 'assets/js/'.$assets_uri;
-	if (!file_exists(PRJ_PUBLIC_DIR.'/'.$public_uri)) return '';
+	if (!file_exists(DOCROOT.'/'.$public_uri)) return '';
 
 	return Asset::js($assets_uri);
 }
@@ -42,7 +42,7 @@ function site_htmltag_include_js_action()
 	$module = Site_Util::get_module_name();
 	$assets_uri = sprintf('site/%s%s_%s.js', $module ? sprintf('modules/%s/', $module) : '', Site_Util::get_controller_name(), Site_Util::get_action_name());
 	$public_uri = 'assets/js/'.$assets_uri;
-	if (!file_exists(PRJ_PUBLIC_DIR.'/'.$public_uri)) return '';
+	if (!file_exists(DOCROOT.'/'.$public_uri)) return '';
 
 	return Asset::js($assets_uri);
 }
