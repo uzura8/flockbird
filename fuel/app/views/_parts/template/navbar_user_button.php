@@ -10,7 +10,7 @@
 				</button>
 				<ul class="dropdown-menu" role="menu">
 <?php foreach (Config::get('navigation.site.secure_user_dropdown') as $name => $path): ?>
-					<li<?php if (Uri::string().'/' == $path): ?><?php echo ' class="active"'; ?><?php endif; ?>><?php echo anchor_icon($path, $name); ?></li>
+					<li<?php if (check_cuurent_uri($path)): ?> class="active"<?php endif; ?>><?php echo anchor_icon($path, $name); ?></li>
 <?php endforeach; ?>
 				</ul>
 			</div>

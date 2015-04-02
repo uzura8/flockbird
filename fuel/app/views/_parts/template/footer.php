@@ -3,7 +3,7 @@
 <?php if (!IS_ADMIN && $navs = Config::get('navigation.site.global_footer')): ?>
 	<ul class="list-inline">
 <?php foreach ($navs as $label => $uri): ?>
-		<li><?php echo anchor($uri, $label); ?></li>
+		<li<?php if (check_cuurent_uri($uri)): ?> class="active"<?php endif; ?>><?php echo anchor($uri, $label); ?></li>
 <?php endforeach; ?>
 	</ul>
 <?php endif; ?>
