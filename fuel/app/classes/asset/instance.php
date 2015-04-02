@@ -123,7 +123,7 @@ class Asset_Instance extends \Less\Asset_Instance
 		$modules = Site_Util::get_active_modules();
 		foreach ($modules as $module => $path)
 		{
-			$file_path = sprintf('%s/assets/less/%s', $path, $lessfile_name);
+			$file_path = sprintf('%sassets/less/%s', $path, $lessfile_name);
 			if (!file_exists($file_path)) continue;
 			$source_file_path = $file_path;
 		}
