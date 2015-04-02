@@ -127,7 +127,11 @@ class Asset_Instance extends \Less\Asset_Instance
 			if (!file_exists($file_path)) continue;
 			$source_file_path = $file_path;
 		}
+		if ($source_file_path) return $source_file_path;
 
-		return $source_file_path ?: \Config::get('asset.less_source_dir').$lessfile_name;
+		$source_file_path = \Config::get('asset.less_source_dir').$lessfile_name;
+		if (file_exists($source_file_path)) return $source_file_path;
+
+		return false;
 	}
 }
