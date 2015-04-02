@@ -540,7 +540,7 @@ class Site_Util
 		foreach ($modules as $module => $module_path)
 		{
 			if (!conf($module.'.isEnabled')) continue;
-			$active_modules[] = $module;
+			$active_modules[$module] = $module_path;
 		}
 
 		return $active_modules;
