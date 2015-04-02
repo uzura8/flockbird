@@ -26,7 +26,7 @@ class Test_Model_AlbumImage extends \TestCase
 		$values = array(
 			'name' => 'test',
 			'body' => 'This is test.',
-			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
+			'public_flag' => FBD_PUBLIC_FLAG_MEMBER,
 		);
 		self::$album = self::force_save_album(self::$member_id, $values);
 		self::set_timeline_count();
@@ -99,10 +99,10 @@ class Test_Model_AlbumImage extends \TestCase
 		$data = array();
 
 		// アルバム編集(変更なし) #0
-		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_MEMBER);
-		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_MEMBER);
-		$data[] = array(PRJ_PUBLIC_FLAG_PRIVATE, PRJ_PUBLIC_FLAG_MEMBER);
-		$data[] = array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_ALL);
+		$data[] = array(FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_MEMBER);
+		$data[] = array(FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_MEMBER);
+		$data[] = array(FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_MEMBER);
+		$data[] = array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_ALL);
 
 		return $data;
 	}
@@ -197,31 +197,31 @@ class Test_Model_AlbumImage extends \TestCase
 		$default_value = array(
 			'name' => 'update test default.',
 			'shot_at' => '2014-01-01 11:11:11',
-			'public_flag' => PRJ_PUBLIC_FLAG_PRIVATE,
+			'public_flag' => FBD_PUBLIC_FLAG_PRIVATE,
 		);
 		$update_value = array(
 			'name' => 'update test default.',
 			'shot_at_time' => '2014-01-01 11:11',
-			'public_flag' => PRJ_PUBLIC_FLAG_PRIVATE,
+			'public_flag' => FBD_PUBLIC_FLAG_PRIVATE,
 		);
-		$data[] = array($default_value, $update_value, '2014-01-01 11:11:11', PRJ_PUBLIC_FLAG_PRIVATE);
+		$data[] = array($default_value, $update_value, '2014-01-01 11:11:11', FBD_PUBLIC_FLAG_PRIVATE);
 
 		// 編集(変更あり) #1
 		$update_value = array(
 			'name' => 'update test edited.',
 			'shot_at_time' => '2014-01-01 11:12',
-			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
+			'public_flag' => FBD_PUBLIC_FLAG_MEMBER,
 		);
-		$data[] = array(null, $update_value, '2014-01-01 11:12:00', PRJ_PUBLIC_FLAG_MEMBER);
+		$data[] = array(null, $update_value, '2014-01-01 11:12:00', FBD_PUBLIC_FLAG_MEMBER);
 
 		// 編集(変更あり) #2
 		$update_value = array(
 			'name' => '',
 			'shot_at' => '2014-01-01 11:13:11',
 			'shot_at_time' => '2014-01-01 11:13',
-			'public_flag' => PRJ_PUBLIC_FLAG_PRIVATE,
+			'public_flag' => FBD_PUBLIC_FLAG_PRIVATE,
 		);
-		$data[] = array(null, $update_value, '2014-01-01 11:13:11', PRJ_PUBLIC_FLAG_PRIVATE);
+		$data[] = array(null, $update_value, '2014-01-01 11:13:11', FBD_PUBLIC_FLAG_PRIVATE);
 
 		return $data;
 	}
@@ -306,14 +306,14 @@ class Test_Model_AlbumImage extends \TestCase
 	public function update_public_flag_provider()
 	{
 		$data = array();
-		$data[] = array(PRJ_PUBLIC_FLAG_PRIVATE, PRJ_PUBLIC_FLAG_PRIVATE, PRJ_PUBLIC_FLAG_PRIVATE);//#0
-		$data[] = array(null, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_MEMBER);//#1
-		$data[] = array(null, PRJ_PUBLIC_FLAG_PRIVATE, PRJ_PUBLIC_FLAG_PRIVATE);//#2
-		$data[] = array(null, PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_ALL);//#3
+		$data[] = array(FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_PRIVATE);//#0
+		$data[] = array(null, FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_MEMBER);//#1
+		$data[] = array(null, FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_PRIVATE);//#2
+		$data[] = array(null, FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_ALL);//#3
 
-		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_MEMBER);//#4
-		$data[] = array(null, PRJ_PUBLIC_FLAG_PRIVATE, PRJ_PUBLIC_FLAG_MEMBER);//#5
-		$data[] = array(null, PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_ALL);//#6
+		$data[] = array(FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_MEMBER);//#4
+		$data[] = array(null, FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_MEMBER);//#5
+		$data[] = array(null, FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_ALL);//#6
 
 		return $data;
 	}
@@ -322,7 +322,7 @@ class Test_Model_AlbumImage extends \TestCase
 	{
 		if (!self::$album_image)
 		{
-			self::$album_image = $this->get_album_image(array('public_flag' => PRJ_PUBLIC_FLAG_MEMBER));
+			self::$album_image = $this->get_album_image(array('public_flag' => FBD_PUBLIC_FLAG_MEMBER));
 		}
 		$album_image_id = self::$album_image->id;
 		$file_name = self::$album_image->file_name;
@@ -382,7 +382,7 @@ class Test_Model_AlbumImage extends \TestCase
 
 	private function get_album_image($values, $create_count = 1, $album_id = null)
 	{
-		$public_flag = isset($values['public_flag']) ? $values['public_flag'] : PRJ_PUBLIC_FLAG_ALL;
+		$public_flag = isset($values['public_flag']) ? $values['public_flag'] : FBD_PUBLIC_FLAG_ALL;
 		if (!$album_id)
 		{
 			$album_values = array(
@@ -448,7 +448,7 @@ class Test_Model_AlbumImage extends \TestCase
 	private static function setup_upload_file()
 	{
 		// prepare upload file.
-		$original_file = PRJ_BASEPATH.'data/development/test/media/img/sample_01.jpg';
+		$original_file = FBD_BASEPATH.'data/development/test/media/img/sample_01.jpg';
 		$upload_file = APPPATH.'tmp/sample.jpg';
 		\Util_file::copy($original_file, $upload_file);
 		chmod($upload_file, 0777);

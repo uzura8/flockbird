@@ -10,8 +10,8 @@
 			<?php echo Html::img('assets/img/site/sample/01.jpg'); ?>
 			<div class="container">
 				<div class="carousel-caption">
-					<h1><?php echo Config::get('page.site.index.slide.title') ?: PRJ_SITE_NAME; ?></h1>
-					<p><?php echo Config::get('page.site.index.slide.lead') ?: PRJ_SITE_DESCRIPTION; ?></p>
+					<h1><?php echo Config::get('page.site.index.slide.title') ?: FBD_SITE_NAME; ?></h1>
+					<p><?php echo Config::get('page.site.index.slide.lead') ?: FBD_SITE_DESCRIPTION; ?></p>
 <?php if (Config::get('page.site.index.slide.isDisplayRegisterBtn') && !Auth::check()): ?>
 					<p><?php echo btn('member.registration', 'member/register/signup', '', true, '', 'primary'); ?></p>
 <?php endif; ?>
@@ -22,8 +22,8 @@
 			<?php echo Html::img('assets/img/site/sample/02.jpg'); ?>
 			<div class="container">
 				<div class="carousel-caption">
-					<h1><?php echo Config::get('page.site.index.slide.title') ?: PRJ_SITE_NAME; ?></h1>
-					<p><?php echo Config::get('page.site.index.slide.lead') ?: PRJ_SITE_DESCRIPTION; ?></p>
+					<h1><?php echo Config::get('page.site.index.slide.title') ?: FBD_SITE_NAME; ?></h1>
+					<p><?php echo Config::get('page.site.index.slide.lead') ?: FBD_SITE_DESCRIPTION; ?></p>
 <?php if (Config::get('page.site.index.slide.isDisplayRegisterBtn') && !Auth::check()): ?>
 					<p><?php echo btn('member.registration', 'member/register/signup', '', true, '', 'primary'); ?></p>
 <?php endif; ?>
@@ -34,8 +34,8 @@
 			<?php echo Html::img('assets/img/site/sample/03.jpg'); ?>
 			<div class="container">
 				<div class="carousel-caption">
-					<h1><?php echo Config::get('page.site.index.slide.title') ?: PRJ_SITE_NAME; ?></h1>
-					<p><?php echo Config::get('page.site.index.slide.lead') ?: PRJ_SITE_DESCRIPTION; ?></p>
+					<h1><?php echo Config::get('page.site.index.slide.title') ?: FBD_SITE_NAME; ?></h1>
+					<p><?php echo Config::get('page.site.index.slide.lead') ?: FBD_SITE_DESCRIPTION; ?></p>
 <?php if (Config::get('page.site.index.slide.isDisplayRegisterBtn') && !Auth::check()): ?>
 					<p><?php echo btn('member.registration', 'member/register/signup', '', true, '', 'primary'); ?></p>
 <?php endif; ?>

@@ -49,21 +49,21 @@ function site_htmltag_include_js_action()
 
 function site_title($title = '', $subtitle = '')
 {
-	$default_title = PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME;
+	$default_title = FBD_SITE_DESCRIPTION.' '.FBD_SITE_NAME;
 
 	if (!$title && !$subtitle)
 	{
 		return $default_title;
 	}
 	if (!$subtitle) $subtitle = $default_title;
-	if (!$title) $title = PRJ_SITE_NAME;
+	if (!$title) $title = FBD_SITE_NAME;
 
 	return sprintf('%s [%s]', $title, $subtitle);
 }
 
 function site_header_keywords($keywords = '')
 {
-	if (!$keywords) return PRJ_HEADER_KEYWORDS_DEFAULT;
+	if (!$keywords) return FBD_HEADER_KEYWORDS_DEFAULT;
 
 	if (is_array($keywords))
 	{
@@ -74,7 +74,7 @@ function site_header_keywords($keywords = '')
 		$keywords = trim($keywords, ',');
 	}
 
-	return $keywords.','.PRJ_HEADER_KEYWORDS_DEFAULT;
+	return $keywords.','.FBD_HEADER_KEYWORDS_DEFAULT;
 }
 
 function site_get_screen_name($u, $default_value = null)
@@ -265,13 +265,13 @@ function check_public_flag($public_flag, $access_from)
 {
 	switch ($public_flag)
 	{
-		case PRJ_PUBLIC_FLAG_PRIVATE:
+		case FBD_PUBLIC_FLAG_PRIVATE:
 			if ($access_from == 'self') return true;
 			break;
-		//case PRJ_PUBLIC_FLAG_FRIEND:
+		//case FBD_PUBLIC_FLAG_FRIEND:
 		//	if (in_array($access_from, array('self', 'friend'))) return true;
 		//	break;
-		case PRJ_PUBLIC_FLAG_MEMBER:
+		case FBD_PUBLIC_FLAG_MEMBER:
 			if (in_array($access_from, array('self', 'friend', 'member'))) return true;
 			break;
 		default :

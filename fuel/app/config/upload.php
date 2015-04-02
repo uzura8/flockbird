@@ -32,7 +32,7 @@ return array(
 	*/
 
 	// maximum size of the uploaded file in bytes. 0 = no maximum
-	'max_size'			=> PRJ_UPLOAD_MAX_FILESIZE,
+	'max_size'			=> FBD_UPLOAD_MAX_FILESIZE,
 
 	// list of file extensions that a user is allowed to upload
 	'ext_whitelist'		=> array('jpg', 'jpeg', 'gif', 'png'),
@@ -67,7 +67,7 @@ return array(
 	'extension'			=> '',
 
 	// default path the uploaded files will be saved to
-	'path'				=> PRJ_UPLOAD_DIR,
+	'path'				=> FBD_UPLOAD_DIR,
 
 	// create the path if it doesn't exist
 	'create_path'		=> true,

@@ -42,11 +42,11 @@ class Site_Mail
 
 	protected function set_common_variables_default()
 	{
-		$this->options['common_variables']['base_url'] = PRJ_BASE_URL;
-		$this->options['common_variables']['site_name'] = PRJ_SITE_NAME;
-		$this->options['common_variables']['site_description'] = PRJ_SITE_DESCRIPTION;
-		$this->options['common_variables']['admin_name'] = PRJ_ADMIN_NAME;
-		$this->options['common_variables']['admin_mail'] = PRJ_ADMIN_MAIL;
+		$this->options['common_variables']['base_url'] = FBD_BASE_URL;
+		$this->options['common_variables']['site_name'] = FBD_SITE_NAME;
+		$this->options['common_variables']['site_description'] = FBD_SITE_DESCRIPTION;
+		$this->options['common_variables']['admin_name'] = FBD_ADMIN_NAME;
+		$this->options['common_variables']['admin_mail'] = FBD_ADMIN_MAIL;
 	}
 
 	protected function setup_config($config_key)

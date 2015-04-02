@@ -23,7 +23,7 @@ return array(
 	 *
 	 * Set this to null to have it automatically detected.
 	 */
-	'base_url'  => PRJ_BASE_URL,
+	'base_url'  => FBD_BASE_URL,
 
 	/**
 	 * url_suffix - Any suffix that needs to be added to
@@ -43,7 +43,7 @@ return array(
 	 */
 	// 'index_file' => false,
 
-	'profiling'  => PRJ_PROFILING,
+	'profiling'  => FBD_PROFILING,
 
 	/**
 	 * Default location for the file cache
@@ -105,7 +105,7 @@ return array(
 	 * Fuel::L_INFO
 	 * Fuel::L_ALL
 	 */
-	'log_threshold'    => in_array(PRJ_ENVIRONMENT, array('PRODUCTION', 'STAGING')) ? Fuel::L_WARNING : Fuel::L_ALL,
+	'log_threshold'    => in_array(FBD_ENVIRONMENT, array('PRODUCTION', 'STAGING')) ? Fuel::L_WARNING : Fuel::L_ALL,
 	// 'log_path'         => APPPATH.'logs/',
 	// 'log_date_format'  => 'Y-m-d H:i:s',
 
@@ -194,7 +194,7 @@ return array(
 		// Restrict the domain that the cookie is available to
 		// 'domain'      => null,
 		// Only transmit cookies over secure connections
-		'secure'      => (PRJ_SSL_MODE == 'ALL'),
+		'secure'      => (FBD_SSL_MODE == 'ALL'),
 		// Only transmit cookies over HTTP, disabling Javascript access
 		// 'http_only'   => false,
 	),
@@ -291,7 +291,7 @@ return array(
 		 *
 		 * A path must be set in module_paths for this to work.
 		 */
-		'modules'  => array_merge(array('notice', 'timeline', 'note', 'album', 'content', 'news', 'thread', 'admin', 'api'), $GLOBALS['_PRJ_ADDITIONAL_MODULES']),
+		'modules'  => array_merge(array('notice', 'timeline', 'note', 'album', 'content', 'news', 'thread', 'admin', 'api'), $GLOBALS['_FBD_ADDITIONAL_MODULES']),
 
 		/**
 		 * Classes to autoload & initialize even when not used

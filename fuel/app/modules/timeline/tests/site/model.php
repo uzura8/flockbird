@@ -57,33 +57,33 @@ class Test_Site_Model extends \TestCase
 			}
 
 			// test for public_flag
-			if ($timeline_cache->public_flag == PRJ_PUBLIC_FLAG_PRIVATE)
+			if ($timeline_cache->public_flag == FBD_PUBLIC_FLAG_PRIVATE)
 			{
 				$this->assertEquals($self_member_id, $timeline_cache->member_id);
 			}
 			if (!$self_member_id)
 			{
-				$this->assertEquals($timeline_cache->public_flag, PRJ_PUBLIC_FLAG_ALL);
+				$this->assertEquals($timeline_cache->public_flag, FBD_PUBLIC_FLAG_ALL);
 			}
 			if ($self_member_id && $timeline_cache->member_id != $self_member_id)
 			{
-				$this->assertTrue(in_array($timeline_cache->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER)));
+				$this->assertTrue(in_array($timeline_cache->public_flag, array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER)));
 			}
 			if ($self_member_id && $self_member_id == $target_member_id)
 			{
-				$this->assertTrue(in_array($timeline_cache->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_PRIVATE)));
+				$this->assertTrue(in_array($timeline_cache->public_flag, array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_PRIVATE)));
 			}
 			if ($self_member_id && $target_member_id && $self_member_id != $target_member_id)
 			{
-				$this->assertTrue(in_array($timeline_cache->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER)));
+				$this->assertTrue(in_array($timeline_cache->public_flag, array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER)));
 			}
 			if ($self_member_id && $is_mytimeline && $timeline_cache->member_id != $self_member_id)
 			{
-				$this->assertTrue(in_array($timeline_cache->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER)));
+				$this->assertTrue(in_array($timeline_cache->public_flag, array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER)));
 			}
 			if ($self_member_id && $is_mytimeline && $timeline_cache->member_id == $self_member_id)
 			{
-				$this->assertTrue(in_array($timeline_cache->public_flag, array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_PRIVATE)));
+				$this->assertTrue(in_array($timeline_cache->public_flag, array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_PRIVATE)));
 			}
 
 			// test for viewType

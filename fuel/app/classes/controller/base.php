@@ -43,7 +43,7 @@ class Controller_Base extends Controller_Hybrid
 		}
 
 		$this->template->layout = 'normal';
-		$this->set_title_and_breadcrumbs(PRJ_SITE_NAME);
+		$this->set_title_and_breadcrumbs(FBD_SITE_NAME);
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
 	}
@@ -51,10 +51,10 @@ class Controller_Base extends Controller_Hybrid
 	protected function check_ssl_required_request_and_redirect()
 	{
 		if (IS_SSL) return;
-		if (!PRJ_SSL_MODE || !in_array(PRJ_SSL_MODE, array('ALL', 'PARTIAL'))) return;
+		if (!FBD_SSL_MODE || !in_array(FBD_SSL_MODE, array('ALL', 'PARTIAL'))) return;
 
 		$ssl_url = Uri::create(Uri::string_with_query(), array(), array(), true);
-		if (PRJ_SSL_MODE == 'ALL') Response::redirect($ssl_url);
+		if (FBD_SSL_MODE == 'ALL') Response::redirect($ssl_url);
 
 		$module = Site_Util::get_module_name();
 		if ($module && in_array($module, conf('ssl_required.modules')))
@@ -70,8 +70,8 @@ class Controller_Base extends Controller_Hybrid
 	protected function check_remote_ip()
 	{
 		$module = Site_Util::get_module_name();
-		if (empty($GLOBALS['_PRJ_ACCESS_ACCEPT_IPS'][$module])) return;
-		if (in_array(\Input::ip(), $GLOBALS['_PRJ_ACCESS_ACCEPT_IPS'][$module])) return;
+		if (empty($GLOBALS['_FBD_ACCESS_ACCEPT_IPS'][$module])) return;
+		if (in_array(\Input::ip(), $GLOBALS['_FBD_ACCESS_ACCEPT_IPS'][$module])) return;
 
 		if (IS_API)
 		{
@@ -289,7 +289,7 @@ class Controller_Base extends Controller_Hybrid
 
 	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false)
 	{
-		$common = array('title' =>  PRJ_SITE_DESCRIPTION.' '.PRJ_SITE_NAME);
+		$common = array('title' =>  FBD_SITE_DESCRIPTION.' '.FBD_SITE_NAME);
 		$title_name = '';
 		$this->template->title = '';
 

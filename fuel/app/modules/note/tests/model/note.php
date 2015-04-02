@@ -162,34 +162,34 @@ class Test_Model_Note extends \TestCase
 			'title' => 'test',
 			'body' => '#0: 通常日記新規投稿',
 			'is_draft' => 0,
-			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+			'public_flag' => FBD_PUBLIC_FLAG_ALL,
 		));
 		// #1: 通常日記編集(変更なし)
 		$data[] = array(1, array(
 			'title' => 'test',
 			'body' => '#1: 通常日記編集(変更なし)',
-			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+			'public_flag' => FBD_PUBLIC_FLAG_ALL,
 			'is_draft' => 0,
 		));
 		// #2: 通常日記編集
 		$data[] = array(1, array(
 			'title' => '#2: 通常日記編集',
 			'body' => 'This is test1.',
-			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
+			'public_flag' => FBD_PUBLIC_FLAG_MEMBER,
 		));
 
 		// #3: 日記下書き
 		$data[] = array(0, array(
 			'title' => 'test2',
 			'body' => '#3: 日記下書き',
-			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
+			'public_flag' => FBD_PUBLIC_FLAG_MEMBER,
 			'is_draft' => 1,
 		));
 		// #4: 日記下書き編集
 		$data[] = array(1, array(
 			'title' => 'test2edit',
 			'body' => '#4: 日記下書き編集',
-			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+			'public_flag' => FBD_PUBLIC_FLAG_ALL,
 			'is_draft' => 1,
 		));
 		// #5: 下書き日記公開
@@ -243,7 +243,7 @@ class Test_Model_Note extends \TestCase
 	//	$values = array(
 	//		'title' => 'test',
 	//		'body' => 'This is test.',
-	//		'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+	//		'public_flag' => FBD_PUBLIC_FLAG_ALL,
 	//	);
 	//	$note->save_with_relations(1, $values);
 	//	$data[] = array($note);
@@ -252,7 +252,7 @@ class Test_Model_Note extends \TestCase
 	//	$values = array(
 	//		'title' => 'test',
 	//		'body' => 'This is test.',
-	//		'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+	//		'public_flag' => FBD_PUBLIC_FLAG_ALL,
 	//		'is_draft' => 1,
 	//	);
 	//	$note->save_with_relations(1, $values);
@@ -321,13 +321,13 @@ class Test_Model_Note extends \TestCase
 		$values = array(
 			'title' => 'test',
 			'body' => 'This is test.',
-			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+			'public_flag' => FBD_PUBLIC_FLAG_ALL,
 		);
 		$note->save_with_relations(1, $values);
-		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER);
+		$data[] = array(FBD_PUBLIC_FLAG_MEMBER);
 
 		// 変更なし
-		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER);
+		$data[] = array(FBD_PUBLIC_FLAG_MEMBER);
 
 		return $data;
 	}

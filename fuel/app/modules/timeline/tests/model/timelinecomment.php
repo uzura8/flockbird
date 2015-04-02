@@ -525,7 +525,7 @@ class Test_Model_TimelineComment extends \TestCase
 
 	private static function set_timeline()
 	{
-		$timeline = Site_Model::save_timeline(self::$member_id, PRJ_PUBLIC_FLAG_ALL, 'normal', null, null, 'This is test.');
+		$timeline = Site_Model::save_timeline(self::$member_id, FBD_PUBLIC_FLAG_ALL, 'normal', null, null, 'This is test.');
 		self::$timeline_id = $timeline->id;
 	}
 

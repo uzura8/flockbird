@@ -17,10 +17,10 @@ class Test_Site_Util extends TestCase
 		$this->assertEquals($expected, $test);
 	}
 
-	//define('PRJ_PUBLIC_FLAG_PRIVATE', 0);
-	//define('PRJ_PUBLIC_FLAG_ALL',     1);
-	//define('PRJ_PUBLIC_FLAG_MEMBER',  2);
-	////define('PRJ_PUBLIC_FLAG_FRIEND',  3);
+	//define('FBD_PUBLIC_FLAG_PRIVATE', 0);
+	//define('FBD_PUBLIC_FLAG_ALL',     1);
+	//define('FBD_PUBLIC_FLAG_MEMBER',  2);
+	////define('FBD_PUBLIC_FLAG_FRIEND',  3);
 	public function check_is_expanded_public_flag_range_provider()
 	{
 		$data = array();
@@ -46,10 +46,10 @@ class Test_Site_Util extends TestCase
 		$this->assertEquals($expected, $test);
 	}
 
-	//define('PRJ_PUBLIC_FLAG_PRIVATE', 0);
-	//define('PRJ_PUBLIC_FLAG_ALL',     1);
-	//define('PRJ_PUBLIC_FLAG_MEMBER',  2);
-	////define('PRJ_PUBLIC_FLAG_FRIEND',  3);
+	//define('FBD_PUBLIC_FLAG_PRIVATE', 0);
+	//define('FBD_PUBLIC_FLAG_ALL',     1);
+	//define('FBD_PUBLIC_FLAG_MEMBER',  2);
+	////define('FBD_PUBLIC_FLAG_FRIEND',  3);
 	public function check_is_reduced_public_flag_range_provider()
 	{
 		$data = array();

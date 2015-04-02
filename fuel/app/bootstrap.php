@@ -23,7 +23,7 @@ Autoloader::add_classes(array(
 	'Asset_Instance' => APPPATH.'classes/asset/instance.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 ));
-if (PRJ_AWS_ACCESS_KEY && PRJ_AWS_SECRET_KEY && PRJ_AWS_S3_BUCKET)
+if (FBD_AWS_ACCESS_KEY && FBD_AWS_SECRET_KEY && FBD_AWS_S3_BUCKET)
 {
 	Autoloader::add_namespace('Aws', APPPATH.'vendor/aws/aws-sdk-php/src/Aws', true);
 }
@@ -39,7 +39,7 @@ Autoloader::register();
  * Fuel::STAGING
  * Fuel::PRODUCTION
  */
-Fuel::$env = (isset($_SERVER['FUEL_ENV']) ? $_SERVER['FUEL_ENV'] : constant('Fuel::'.PRJ_ENVIRONMENT));
+Fuel::$env = (isset($_SERVER['FUEL_ENV']) ? $_SERVER['FUEL_ENV'] : constant('Fuel::'.FBD_ENVIRONMENT));
 
 // include helpers.
 Util_toolkit::include_php_files(APPPATH.'helpers');
@@ -68,7 +68,7 @@ foreach ($modules as $module => $path)
 // Config of navigation load.
 Config::load('navigation', 'navigation');
 
-if (in_array(PRJ_ENVIRONMENT, array('DEVELOPMENT', 'TEST')))
+if (in_array(FBD_ENVIRONMENT, array('DEVELOPMENT', 'TEST')))
 {
 	Config::load('develop', 'develop');
 }

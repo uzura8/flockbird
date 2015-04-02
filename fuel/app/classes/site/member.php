@@ -12,7 +12,7 @@ class Site_Member
 		if (conf('upload.types.img.types.m.save_as_album_image'))
 		{
 			$album_id = \Album\Model_Album::get_id_for_foreign_table($member->id, 'member');
-			list($album_image, $file) = \Album\Model_AlbumImage::save_with_relations($album_id, $member, PRJ_PUBLIC_FLAG_ALL, $file_path, 'album_image_profile');
+			list($album_image, $file) = \Album\Model_AlbumImage::save_with_relations($album_id, $member, FBD_PUBLIC_FLAG_ALL, $file_path, 'album_image_profile');
 
 			$member->file_name = $album_image->file_name;
 			$member->save();
@@ -30,7 +30,7 @@ class Site_Member
 			$member->save();
 
 			// timeline 投稿
-			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, PRJ_PUBLIC_FLAG_ALL, 'profile_image', $file->id, $member->updated_at);
+			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, FBD_PUBLIC_FLAG_ALL, 'profile_image', $file->id, $member->updated_at);
 		}
 
 		return $file;

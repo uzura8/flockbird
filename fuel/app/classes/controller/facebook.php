@@ -8,7 +8,7 @@ class Controller_Facebook extends Controller_Site
 	public function before()
 	{
 		parent::before();
-		if (!PRJ_FACEBOOK_APP_ID) throw new HttpNotFoundException;
+		if (!FBD_FACEBOOK_APP_ID) throw new HttpNotFoundException;
 
 		Config::load('facebook', 'facebook');
 		$this->fb = new Facebook(Config::get('facebook.init'));

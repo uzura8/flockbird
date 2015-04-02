@@ -12,4 +12,4 @@
 //		),
 //	),
 //);
-return $GLOBALS['_PRJ_DSN']['production'];
+return $GLOBALS['_FBD_DSN']['production'];

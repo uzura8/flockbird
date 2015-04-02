@@ -14,4 +14,4 @@
 //		),
 //	),
 //);
-return $GLOBALS['_PRJ_DSN']['test'];
+return $GLOBALS['_FBD_DSN']['test'];

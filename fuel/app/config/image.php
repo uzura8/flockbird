@@ -23,7 +23,7 @@ return array(
 	/**
 	 * The driver to be used. Currently gd, imagemagick or imagick
 	 */
-	'driver' => PRJ_IMAGE_DRIVER,
+	'driver' => FBD_IMAGE_DRIVER,
 	//'driver' => 'imagemagick',
 
 	/**
@@ -41,7 +41,7 @@ return array(
 	/**
 	 * The quality of the image being saved or output, if the format supports it.
 	 */
-	'quality' => PRJ_IMAGE_OUTPUT_IMAGE_QUALITY,
+	'quality' => FBD_IMAGE_OUTPUT_IMAGE_QUALITY,
 
 	/**
 	 * Lets you use a default container for images. Override by Image::output('png') or Image::save('file.png')
@@ -54,7 +54,7 @@ return array(
 	 * The install location of the imagemagick executables.
 	 */
 	//'imagemagick_dir' => '/usr/bin/',
-	'imagemagick_dir' => PRJ_IMAGE_IMGMAGICK_PATH,
+	'imagemagick_dir' => FBD_IMAGE_IMGMAGICK_PATH,
 
 	/**
 	 * Temporary directory to store image files in that are being edited.

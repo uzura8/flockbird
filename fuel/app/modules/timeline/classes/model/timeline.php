@@ -364,7 +364,7 @@ class Model_Timeline extends \MyOrm\Model
 
 	public function update_public_flag_with_check_child_data($public_flag = null)
 	{
-		if (is_null($public_flag)) $public_flag = PRJ_PUBLIC_FLAG_PRIVATE;
+		if (is_null($public_flag)) $public_flag = FBD_PUBLIC_FLAG_PRIVATE;
 
 		$public_flag = self::get_public_flag_for_update_with_check_child_data($public_flag, $this);
 		if ($public_flag === false) return false;

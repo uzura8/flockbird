@@ -56,8 +56,8 @@ class Site_Util
 
 	public static function check_is_prod_env($is_include_staging = true)
 	{
-		if (PRJ_ENVIRONMENT == 'PRODUCTION') return true;
-		if ($is_include_staging && PRJ_ENVIRONMENT == 'STAGING') return true;
+		if (FBD_ENVIRONMENT == 'PRODUCTION') return true;
+		if ($is_include_staging && FBD_ENVIRONMENT == 'STAGING') return true;
 
 		return false;
 	}
@@ -277,10 +277,10 @@ class Site_Util
 	{
 		if (!in_array($type, array('default', 'public'))) throw new InvalidArgumentException('First parameter is invalid.');
 		$public_flags = array();
-		if (defined('PRJ_PUBLIC_FLAG_PRIVATE') && $type != 'public') $public_flags[] = PRJ_PUBLIC_FLAG_PRIVATE;
-		if (defined('PRJ_PUBLIC_FLAG_ALL'))     $public_flags[] = PRJ_PUBLIC_FLAG_ALL;
-		if (defined('PRJ_PUBLIC_FLAG_MEMBER'))  $public_flags[] = PRJ_PUBLIC_FLAG_MEMBER;
-		//if (defined('PRJ_PUBLIC_FLAG_FRIEND'))  $public_flags[] = PRJ_PUBLIC_FLAG_FRIEND;
+		if (defined('FBD_PUBLIC_FLAG_PRIVATE') && $type != 'public') $public_flags[] = FBD_PUBLIC_FLAG_PRIVATE;
+		if (defined('FBD_PUBLIC_FLAG_ALL'))     $public_flags[] = FBD_PUBLIC_FLAG_ALL;
+		if (defined('FBD_PUBLIC_FLAG_MEMBER'))  $public_flags[] = FBD_PUBLIC_FLAG_MEMBER;
+		//if (defined('FBD_PUBLIC_FLAG_FRIEND'))  $public_flags[] = FBD_PUBLIC_FLAG_FRIEND;
 
 		return $public_flags;
 	}
@@ -339,8 +339,8 @@ class Site_Util
 	public static function check_is_expanded_public_flag_range($original_public_flag, $changed_public_flag)
 	{
 		if ($original_public_flag == $changed_public_flag) return false;
-		if ($changed_public_flag == PRJ_PUBLIC_FLAG_PRIVATE)  return false;
-		if ($original_public_flag == PRJ_PUBLIC_FLAG_PRIVATE) return true;
+		if ($changed_public_flag == FBD_PUBLIC_FLAG_PRIVATE)  return false;
+		if ($original_public_flag == FBD_PUBLIC_FLAG_PRIVATE) return true;
 		if ($changed_public_flag < $original_public_flag) return true;
 
 		return false;
@@ -349,8 +349,8 @@ class Site_Util
 	public static function check_is_reduced_public_flag_range($original_public_flag, $changed_public_flag)
 	{
 		if ($original_public_flag == $changed_public_flag) return false;
-		if ($changed_public_flag == PRJ_PUBLIC_FLAG_PRIVATE)  return true;
-		if ($original_public_flag == PRJ_PUBLIC_FLAG_PRIVATE) return false;
+		if ($changed_public_flag == FBD_PUBLIC_FLAG_PRIVATE)  return true;
+		if ($original_public_flag == FBD_PUBLIC_FLAG_PRIVATE) return false;
 		if ($changed_public_flag > $original_public_flag) return true;
 
 		return false;
@@ -379,7 +379,7 @@ class Site_Util
 			}
 			else
 			{
-				$noimage_file_root_path = sprintf('%s/img/%s/%s/all/%s', PRJ_UPLOAD_DIRNAME, $size, $file_cate, $noimage_filename);
+				$noimage_file_root_path = sprintf('%s/img/%s/%s/all/%s', FBD_UPLOAD_DIRNAME, $size, $file_cate, $noimage_filename);
 			}
 			$noimage_tag = Html::img($noimage_file_root_path, $attr);
 		}
@@ -423,10 +423,10 @@ class Site_Util
 		if (preg_match('#(https?\:)?//#', $url))
 		{
 			$items = parse_url($url);
-			if ($items['host'] != PRJ_DOMAIN) return true;
-			if (!$items['path'] && (PRJ_URI_PATH && PRJ_URI_PATH != '/')) return true;
-			if (strpos($items['path'], PRJ_URI_PATH, 0) !== 0) return true;
-			if ($is_admin && strpos($items['path'], PRJ_URI_PATH.'admin', 0) === false)
+			if ($items['host'] != FBD_DOMAIN) return true;
+			if (!$items['path'] && (FBD_URI_PATH && FBD_URI_PATH != '/')) return true;
+			if (strpos($items['path'], FBD_URI_PATH, 0) !== 0) return true;
+			if ($is_admin && strpos($items['path'], FBD_URI_PATH.'admin', 0) === false)
 			{
 				return true;
 			}
@@ -480,13 +480,13 @@ class Site_Util
 		switch ($is_secure)
 		{
 			case 1:
-				return PRJ_PUBLIC_FLAG_MEMBER;
+				return FBD_PUBLIC_FLAG_MEMBER;
 			case 0:
 			default :
 				break;
 		}
 
-		return PRJ_PUBLIC_FLAG_ALL;
+		return FBD_PUBLIC_FLAG_ALL;
 	}
 
 	public static function get_is_secure_label_parts($is_secure)
@@ -513,7 +513,7 @@ class Site_Util
 
 	public static function get_media_uri($uri, $is_absolute_url = false)
 	{
-		if (PRJ_MEDIA_BASE_URL) return Uri::convert_protocol2resuested(PRJ_MEDIA_BASE_URL.$uri);
+		if (FBD_MEDIA_BASE_URL) return Uri::convert_protocol2resuested(FBD_MEDIA_BASE_URL.$uri);
 
 		return $is_absolute_url ? Uri::base(false).$uri : Uri::base_path($uri);
 	}

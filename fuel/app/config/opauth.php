@@ -51,7 +51,7 @@ return array(
 	/**
 	 * A random string used for signing of $auth response.
 	 */
-	'security_salt' => PRJ_ENCRYPTION_KEY,
+	'security_salt' => FBD_ENCRYPTION_KEY,
 	
 	/**
 	 * Higher value, better security, slower hashing.
@@ -84,17 +84,17 @@ return array(
 	'Strategy' => array(
 		// Define strategies and their respective configs here
 		'Facebook' => array(
-			'app_id' => PRJ_FACEBOOK_APP_ID,
-			'app_secret' => PRJ_FACEBOOK_APP_SECRET,
+			'app_id' => FBD_FACEBOOK_APP_ID,
+			'app_secret' => FBD_FACEBOOK_APP_SECRET,
 		),
 		'Twitter' => array(
-			'key' => PRJ_TWITTER_APP_ID,
-			'secret' => PRJ_TWITTER_APP_SECRET,
+			'key' => FBD_TWITTER_APP_ID,
+			'secret' => FBD_TWITTER_APP_SECRET,
 			'verify_credentials_json_url' => 'https://api.twitter.com/1.1/account/verify_credentials.json',
 		),
 		'Google' => array(
-			'client_id' => PRJ_GOOGLE_APP_ID,
-			'client_secret' => PRJ_GOOGLE_APP_SECRET,
+			'client_id' => FBD_GOOGLE_APP_ID,
+			'client_secret' => FBD_GOOGLE_APP_SECRET,
 		),
 	),
 );

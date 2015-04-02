@@ -99,12 +99,12 @@ class Site_Model
 		{
 			if (($target_member_id && $target_member_id != $self_member_id) || !$is_mypage)
 			{
-				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
+				$where[] = array('public_flag', 'IN', array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER));
 			}
 		}
 		else
 		{
-			$where[] = array('public_flag', PRJ_PUBLIC_FLAG_ALL);
+			$where[] = array('public_flag', FBD_PUBLIC_FLAG_ALL);
 		}
 
 		return $where;
@@ -115,13 +115,13 @@ class Site_Model
 		switch ($access_from)
 		{
 			case 'others':
-				$where[] = array('public_flag', PRJ_PUBLIC_FLAG_ALL);
+				$where[] = array('public_flag', FBD_PUBLIC_FLAG_ALL);
 				break;
 			case 'member':
-				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
+				$where[] = array('public_flag', 'IN', array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER));
 				break;
 			case 'friend':
-				$where[] = array('public_flag', 'IN', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_FRIEND));
+				$where[] = array('public_flag', 'IN', array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_FRIEND));
 				break;
 			case 'self':
 			default :

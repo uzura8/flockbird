@@ -12,4 +12,4 @@
 //		),
 //	),
 //);
-return $GLOBALS['_PRJ_DSN']['staging'];
+return $GLOBALS['_FBD_DSN']['staging'];

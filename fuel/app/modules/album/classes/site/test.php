@@ -5,7 +5,7 @@ class Site_Test
 {
 	public static function setup_album_image($member_id, $album_image_values = null, $create_count = 1, $album_id = null)
 	{
-		$public_flag = isset($album_image_values['public_flag']) ? $album_image_values['public_flag'] : PRJ_PUBLIC_FLAG_ALL;
+		$public_flag = isset($album_image_values['public_flag']) ? $album_image_values['public_flag'] : FBD_PUBLIC_FLAG_ALL;
 		if (!$album_id)
 		{
 			$album_values = array(
@@ -20,7 +20,7 @@ class Site_Test
 		{
 			$album_image_values = array(
 				'name' => 'test',
-				'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+				'public_flag' => FBD_PUBLIC_FLAG_ALL,
 			);
 		}
 		for ($i = 0; $i < $create_count; $i++)
@@ -52,7 +52,7 @@ class Site_Test
 	public static function setup_upload_file()
 	{
 		// prepare upload file.
-		$original_file = PRJ_BASEPATH.'data/development/test/media/img/sample_01.jpg';
+		$original_file = FBD_BASEPATH.'data/development/test/media/img/sample_01.jpg';
 		$upload_file = APPPATH.'tmp/sample.jpg';
 		\Util_file::copy($original_file, $upload_file);
 		chmod($upload_file, 0777);

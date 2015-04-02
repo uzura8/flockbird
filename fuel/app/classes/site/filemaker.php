@@ -236,7 +236,7 @@ class Site_FileMaker
 		$noimage_filename  = $this->file_cate.'_'.$original_noimage_filename;
 		$original_noimage_file_path = sprintf('%sassets/img/site/%s', DOCROOT, $original_noimage_filename);
 
-		$noimage_file_dir  = sprintf('%simg/%s/%s/all/', PRJ_UPLOAD_DIR, $this->size, $this->file_cate);
+		$noimage_file_dir  = sprintf('%simg/%s/%s/all/', FBD_UPLOAD_DIR, $this->size, $this->file_cate);
 		$noimage_file_path = $noimage_file_dir.'/'.$noimage_filename;
 		if (!file_exists($noimage_file_path))
 		{

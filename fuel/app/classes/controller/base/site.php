@@ -111,15 +111,15 @@ class Controller_Base_Site extends Controller_Base
 	{
 		switch ($public_flag)
 		{
-			case PRJ_PUBLIC_FLAG_ALL:
+			case FBD_PUBLIC_FLAG_ALL:
 				return true;
 				break;
-			case PRJ_PUBLIC_FLAG_MEMBER:
+			case FBD_PUBLIC_FLAG_MEMBER:
 				if (Auth::check()) return true;
 				break;
-			//case PRJ_PUBLIC_FLAG_FRIEND:
+			//case FBD_PUBLIC_FLAG_FRIEND:
 			//	break;
-			case PRJ_PUBLIC_FLAG_PRIVATE:
+			case FBD_PUBLIC_FLAG_PRIVATE:
 			default :
 				if (Auth::check() && $author_member_id && $author_member_id == $this->u->id) return true;
 				break;

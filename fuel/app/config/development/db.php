@@ -12,4 +12,4 @@
 //		),
 //	),
 //);
-return $GLOBALS['_PRJ_DSN']['development'];
+return $GLOBALS['_FBD_DSN']['development'];

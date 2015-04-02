@@ -508,7 +508,7 @@ class Test_Model_AlbumImageComment extends \TestCase
 
 	private static function set_album_image($album_image_values = null, $create_count = 1, $album_id = null)
 	{
-		$public_flag = isset($values['public_flag']) ? $values['public_flag'] : PRJ_PUBLIC_FLAG_ALL;
+		$public_flag = isset($values['public_flag']) ? $values['public_flag'] : FBD_PUBLIC_FLAG_ALL;
 		if (!$album_id)
 		{
 			$album_values = array(
@@ -522,7 +522,7 @@ class Test_Model_AlbumImageComment extends \TestCase
 		{
 			$album_image_values = array(
 				'name' => 'test',
-				'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+				'public_flag' => FBD_PUBLIC_FLAG_ALL,
 			);
 		}
 		for ($i = 0; $i < $create_count; $i++)
@@ -564,7 +564,7 @@ class Test_Model_AlbumImageComment extends \TestCase
 	private static function setup_upload_file()
 	{
 		// prepare upload file.
-		$original_file = PRJ_BASEPATH.'data/development/test/media/img/sample_01.jpg';
+		$original_file = FBD_BASEPATH.'data/development/test/media/img/sample_01.jpg';
 		$upload_file = APPPATH.'tmp/sample.jpg';
 		\Util_file::copy($original_file, $upload_file);
 		chmod($upload_file, 0777);

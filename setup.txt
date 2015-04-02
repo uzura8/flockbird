@@ -13,7 +13,7 @@
 
 	 DBサーバ接続設定
 	----
-	$GLOBALS['_PRJ_DSN']['production'] = array(
+	$GLOBALS['_FBD_DSN']['production'] = array(
 		'default' => array(
 			'connection'  => array(
 				'dsn'        => 'mysql:host=localhost;dbname=dbname',
@@ -27,7 +27,7 @@
 
 	暗号化キーを指定(ASCII文字列)
 	----
-	define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
+	define('FBD_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 	----
 
 

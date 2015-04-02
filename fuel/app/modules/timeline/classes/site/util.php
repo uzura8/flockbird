@@ -111,7 +111,7 @@ class Site_Util
 				return self::get_normal_timeline_body($body, $type, $timeline_id, isset($optional_info['count']) ? $optional_info['count'] : 0, $is_detail);
 
 			case \Config::get('timeline.types.member_register'):// SNS への参加
-				return PRJ_SITE_NAME.' に参加しました。';
+				return FBD_SITE_NAME.' に参加しました。';
 
 			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)

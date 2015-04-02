@@ -440,7 +440,7 @@ class Test_Model_NoteLike extends \TestCase
 		$values = array(
 			'title' => 'test',
 			'body' => 'This is test.',
-			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+			'public_flag' => FBD_PUBLIC_FLAG_ALL,
 		);
 		$note->save_with_relations(self::$member_id, $values);
 		self::$note_id = $note->id;

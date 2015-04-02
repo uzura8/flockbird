@@ -195,7 +195,7 @@ class Model_Note extends \MyOrm\Model
 		$moved_files = array();
 		if (is_enabled('album'))
 		{
-			$image_public_flag = $this->is_published ? $this->public_flag : PRJ_PUBLIC_FLAG_PRIVATE;
+			$image_public_flag = $this->is_published ? $this->public_flag : FBD_PUBLIC_FLAG_PRIVATE;
 			if ($file_tmps)
 			{
 				$album_id = \Album\Model_Album::get_id_for_foreign_table($member_id, 'note');

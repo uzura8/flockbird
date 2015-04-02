@@ -11,17 +11,17 @@
  */
 
 // xhprof setting
-define('PRJ_XHPROF_PROFILING', true);
-define('PRJ_XHPROF_LIB_PATH', '/var/www/html/xhprof_lib');
-define('PRJ_XHPROF_URL', 'http://dev.example.com/xhprof_html');
+define('FBD_XHPROF_PROFILING', true);
+define('FBD_XHPROF_LIB_PATH', '/var/www/html/xhprof_lib');
+define('FBD_XHPROF_URL', 'http://dev.example.com/xhprof_html');
 
-if (PRJ_XHPROF_PROFILING)
+if (FBD_XHPROF_PROFILING)
 {
-	include_once PRJ_XHPROF_LIB_PATH.'/utils/xhprof_lib.php';
-	include_once PRJ_XHPROF_LIB_PATH.'/utils/xhprof_runs.php';
+	include_once FBD_XHPROF_LIB_PATH.'/utils/xhprof_lib.php';
+	include_once FBD_XHPROF_LIB_PATH.'/utils/xhprof_runs.php';
 	$GLOBALS['xhprof_data'] = '';
 }
-if (PRJ_XHPROF_PROFILING) xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);// start profiling
+if (FBD_XHPROF_PROFILING) xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);// start profiling
 
 
 /**
@@ -111,12 +111,12 @@ if (strpos($response->body(), '{exec_time}') !== false or strpos($response->body
 $response->send(true);
 
 
-if (PRJ_XHPROF_PROFILING) $GLOBALS['xhprof_data'] = xhprof_disable();//stop profiler
-if (PRJ_XHPROF_PROFILING)
+if (FBD_XHPROF_PROFILING) $GLOBALS['xhprof_data'] = xhprof_disable();//stop profiler
+if (FBD_XHPROF_PROFILING)
 {
 	$xhprof_runs = new XHProfRuns_Default();
 	$run_id = $xhprof_runs->save_run($GLOBALS['xhprof_data'], '');
-	$prof_url = sprintf('%s/index.php?run=%s&source=', PRJ_XHPROF_URL, $run_id);
+	$prof_url = sprintf('%s/index.php?run=%s&source=', FBD_XHPROF_URL, $run_id);
 	echo '<div class="well well-sm">';
 	echo sprintf('<a href="%s" target="_blank">See xhprof report</a>', $prof_url);
 	echo '</div>';

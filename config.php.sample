@@ -7,14 +7,14 @@
  * STAGING
  * PRODUCTION
  */
-define('PRJ_ENVIRONMENT', 'PRODUCTION');
+define('FBD_ENVIRONMENT', 'PRODUCTION');
 
 // BASE_URL
-//define('PRJ_DOMAIN', 'sns.example.com');
-//define('PRJ_URI_PATH', '/');
+//define('FBD_DOMAIN', 'sns.example.com');
+//define('FBD_URI_PATH', '/');
 
 // DBサーバ接続設定
-$GLOBALS['_PRJ_DSN']['production'] = array(
+$GLOBALS['_FBD_DSN']['production'] = array(
 	// MasterDB 設定
 	'default' => array(
 		'type'        => 'pdo',
@@ -29,91 +29,91 @@ $GLOBALS['_PRJ_DSN']['production'] = array(
 );
 
 // 暗号化キー(ASCII文字列)
-define('PRJ_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
+define('FBD_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
 /**
  * ssl mode:
- *     使用には PRJ_DOMAIN の SSL 証明書のサーバ設定が必要
+ *     使用には FBD_DOMAIN の SSL 証明書のサーバ設定が必要
  *
  * false    : SSL を使用しない
  * 'ALL'    : 全ページで SSL の使用を必須とする
  * 'PARTIAL': 指定のページのみで SSL の使用を必須とするsite.ssl_required)
  *              fuel/config/site.php の ssl_required で設定
  */
-define('PRJ_SSL_MODE', false);
+define('FBD_SSL_MODE', false);
 
 // 追加読み込みモジュール
-$GLOBALS['_PRJ_ADDITIONAL_MODULES'] = array(
+$GLOBALS['_FBD_ADDITIONAL_MODULES'] = array(
 );
 
 // 管理画面アクセス許可IP設定 (未指定の場合、IP制限しない)
-$GLOBALS['_PRJ_ACCESS_ACCEPT_IPS']['admin'] = array(
+$GLOBALS['_FBD_ACCESS_ACCEPT_IPS']['admin'] = array(
 );
 
 
 // サイト名
-define('PRJ_SITE_NAME', 'サンプルSNS');
-define('PRJ_SITE_DESCRIPTION', 'サンプルSNSです');
-define('PRJ_HEADER_DESCRIPTION_DEFAULT', 'サンプルSNSです。');
-define('PRJ_HEADER_KEYWORDS_DEFAULT', 'SNS,サンプル');
-//define('PRJ_COPYRIGHT', '');
+define('FBD_SITE_NAME', 'サンプルSNS');
+define('FBD_SITE_DESCRIPTION', 'サンプルSNSです');
+define('FBD_HEADER_DESCRIPTION_DEFAULT', 'サンプルSNSです。');
+define('FBD_HEADER_KEYWORDS_DEFAULT', 'SNS,サンプル');
+//define('FBD_COPYRIGHT', '');
 
 // 外部サイト設定
-//define('PRJ_SITE_URL', '');
+//define('FBD_SITE_URL', '');
 
 
 // 運営者名 (お問い合わせフォームに表示)
-define('PRJ_ADMIN_NAME', '運営事務局');
+define('FBD_ADMIN_NAME', '運営事務局');
 
 // 運営者名 (お問い合わせフォームに表示)
-define('PRJ_ADMIN_MAIL', 'admin@example.com');
+define('FBD_ADMIN_MAIL', 'admin@example.com');
 
 // Google 関連設定
 define('GOOGLE_ANALYTICS_TRACKING_CODE', '');
 
 // AWS 関連設定
-define('PRJ_AWS_ACCESS_KEY', '');
-define('PRJ_AWS_SECRET_KEY', '');
-define('PRJ_AWS_S3_BUCKET', '');
-define('PRJ_AWS_S3_PATH', '');
+define('FBD_AWS_ACCESS_KEY', '');
+define('FBD_AWS_SECRET_KEY', '');
+define('FBD_AWS_S3_BUCKET', '');
+define('FBD_AWS_S3_PATH', '');
 
 
 // Facebook 関連設定
-define('PRJ_FACEBOOK_APP_ID', '');
-define('PRJ_FACEBOOK_APP_SECRET', '');
+define('FBD_FACEBOOK_APP_ID', '');
+define('FBD_FACEBOOK_APP_SECRET', '');
 
 // Twitter 関連設定
-define('PRJ_TWITTER_APP_ID', '');
-define('PRJ_TWITTER_APP_SECRET', '');
+define('FBD_TWITTER_APP_ID', '');
+define('FBD_TWITTER_APP_SECRET', '');
 
 // Google 関連設定
-define('PRJ_GOOGLE_APP_ID', '');
-define('PRJ_GOOGLE_APP_SECRET', '');
+define('FBD_GOOGLE_APP_ID', '');
+define('FBD_GOOGLE_APP_SECRET', '');
 
 
 // アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum)
 // 未指定の場合は php.ini の値
-// define('PRJ_UPLOAD_MAX_FILESIZE', 1 * 1024 * 1024);
+// define('FBD_UPLOAD_MAX_FILESIZE', 1 * 1024 * 1024);
 
 // 一度にアップロードできるファイル数
 // 未指定の場合は php.ini の値
-// define('PRJ_MAX_FILE_UPLOADS', 20);
+// define('FBD_MAX_FILE_UPLOADS', 20);
 
 // 画像ライブラリの指定 ( gd / imagick / imagemagick )
-define('PRJ_IMAGE_DRIVER', 'gd');
+define('FBD_IMAGE_DRIVER', 'gd');
 
 // ImageMagick のパス(ImageMagick を使用する場合のみ)
-// define('PRJ_IMAGE_IMGMAGICK_PATH', '/usr/bin/');
+// define('FBD_IMAGE_IMGMAGICK_PATH', '/usr/bin/');
 
 // 画像変換後のQUALITY値
-define('PRJ_IMAGE_OUTPUT_IMAGE_QUALITY', 98);
+define('FBD_IMAGE_OUTPUT_IMAGE_QUALITY', 98);
 
 // メンバーごとにアップロードファイルサイズの上限を設けるかどうか
-define('PRJ_IS_LIMIT_UPLOAD_FILE_SIZE', false);
+define('FBD_IS_LIMIT_UPLOAD_FILE_SIZE', false);
 
 
 //// 複数DBサーバ接続設定
-//$GLOBALS['_PRJ_DSN']['production'] = array(
+//$GLOBALS['_FBD_DSN']['production'] = array(
 //	// SlaveDB 設定
 //	'slave1' => array(
 //		'type'        => 'pdo',
@@ -140,9 +140,9 @@ define('PRJ_IS_LIMIT_UPLOAD_FILE_SIZE', false);
 //);
 
 //// 画像・ファイルサーバを分ける場合のURL設定
-//define('PRJ_MEDIA_BASE_URL', '');
+//define('FBD_MEDIA_BASE_URL', '');
 
 // 開発関連設定
 // プロファイル実行設定
-define('PRJ_PROFILING', false);
+define('FBD_PROFILING', false);
 

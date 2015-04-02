@@ -3,7 +3,7 @@
  * Contact config
  */
 return array(
-	'admin_name'   => PRJ_ADMIN_NAME,
-	'admin_email'  => PRJ_ADMIN_MAIL,
+	'admin_name'   => FBD_ADMIN_NAME,
+	'admin_email'  => FBD_ADMIN_MAIL,
 	'mail_subject' => 'コンタクトフォーム',
 );

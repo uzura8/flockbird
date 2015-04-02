@@ -35,8 +35,8 @@ $config = array(
 	),
 	'mail' => array(
 		'site' => array(
-			'from_name' => PRJ_SITE_NAME.' '.PRJ_ADMIN_NAME,
-			'from_email' => PRJ_ADMIN_MAIL,
+			'from_name' => FBD_SITE_NAME.' '.FBD_ADMIN_NAME,
+			'from_email' => FBD_ADMIN_MAIL,
 		),
 		'log' => array(
 			'develop' => array(
@@ -157,18 +157,18 @@ $config = array(
 				),
 				'thumbnailsDeleteType' => 'sameTime',// sameTime: raw ファイル削除時に同時に削除 / bach:あとで bach でまとめて削除(未実装)
 				'root_path' => array(
-					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img/',
-					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img/raw/',
+					'cache_dir' => FBD_UPLOAD_DIRNAME.'/img/',
+					'raw_dir' => FBD_UPLOAD_DIRNAME.'/img/raw/',
 				),
 				'raw_file_path' => APPPATH.'media/img/raw/',// raw ファイルを非公開領域に置く場合
-				//'raw_file_path' => DOCROOT.PRJ_UPLOAD_DIRNAME.'/img/raw/',
+				//'raw_file_path' => DOCROOT.FBD_UPLOAD_DIRNAME.'/img/raw/',
 				'tmp' => array(
 					'root_path' => array(
-						'cache_dir' => PRJ_UPLOAD_DIRNAME.'/img_tmp/',
-						'raw_dir' => PRJ_UPLOAD_DIRNAME.'/img_tmp/raw/',
+						'cache_dir' => FBD_UPLOAD_DIRNAME.'/img_tmp/',
+						'raw_dir' => FBD_UPLOAD_DIRNAME.'/img_tmp/raw/',
 					),
 					//'raw_file_path' => APPPATH.'cache/media/img_tmp/raw/',// raw ファイルを非公開領域に置く場合
-					'raw_file_path' => DOCROOT.PRJ_UPLOAD_DIRNAME.'/img_tmp/raw/',
+					'raw_file_path' => DOCROOT.FBD_UPLOAD_DIRNAME.'/img_tmp/raw/',
 					'sizes' => array(
 						'thumbnail' => '320x320xc',
 					),
@@ -204,19 +204,19 @@ $config = array(
 			'file' => array(
 				//'root_path' => array(
 				'root_path' => array(
-					'cache_dir' => PRJ_UPLOAD_DIRNAME.'/file/',
-					'raw_dir' => PRJ_UPLOAD_DIRNAME.'/file/raw/',
+					'cache_dir' => FBD_UPLOAD_DIRNAME.'/file/',
+					'raw_dir' => FBD_UPLOAD_DIRNAME.'/file/raw/',
 				),
 				//'raw_file_path' => APPPATH.'cache/media/file/raw/',// raw ファイルを非公開領域に置く場合
-				'raw_file_path' => DOCROOT.PRJ_UPLOAD_DIRNAME.'/file/raw/',
+				'raw_file_path' => DOCROOT.FBD_UPLOAD_DIRNAME.'/file/raw/',
 				'tmp' => array(
 					//'root_path' => array(
 					'root_path' => array(
-						'cache_dir' => PRJ_UPLOAD_DIRNAME.'/file_tmp/',
-						'raw_dir' => PRJ_UPLOAD_DIRNAME.'/file_tmp/raw/',
+						'cache_dir' => FBD_UPLOAD_DIRNAME.'/file_tmp/',
+						'raw_dir' => FBD_UPLOAD_DIRNAME.'/file_tmp/raw/',
 					),
 					//'raw_file_path' => APPPATH.'cache/media/file_tmp/raw/',// raw ファイルを非公開領域に置く場合
-					'raw_file_path' => DOCROOT.PRJ_UPLOAD_DIRNAME.'/file_tmp/raw/',
+					'raw_file_path' => DOCROOT.FBD_UPLOAD_DIRNAME.'/file_tmp/raw/',
 				),
 				'accept_format' => array(
 					'jpg' => 'image/jpeg',
@@ -333,11 +333,11 @@ $config = array(
 		),
 	),
 	'public_flag' => array(
-		'default' => PRJ_PUBLIC_FLAG_ALL,
+		'default' => FBD_PUBLIC_FLAG_ALL,
 		'colorTypes' => array(
-			PRJ_PUBLIC_FLAG_PRIVATE => 'danger',
-			PRJ_PUBLIC_FLAG_ALL => 'info',
-			PRJ_PUBLIC_FLAG_MEMBER => 'success',
+			FBD_PUBLIC_FLAG_PRIVATE => 'danger',
+			FBD_PUBLIC_FLAG_ALL => 'info',
+			FBD_PUBLIC_FLAG_MEMBER => 'success',
 			//'friend'  => 'warning',
 		),
 	),

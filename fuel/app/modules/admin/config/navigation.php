@@ -26,10 +26,10 @@ $configs = array(
 			term('admin.view', 'page.view', 'site.setting') => array(
 				term('admin.account.view', 'site.management') => 'admin/account/',
 			),
-			term('site.view') => PRJ_SITE_URL ?: '/',
+			term('site.view') => FBD_SITE_URL ?: '/',
 		),
 		'insecure_global_head' => array(
-			term('site.view') => PRJ_SITE_URL ?: '/',
+			term('site.view') => FBD_SITE_URL ?: '/',
 		),
 		'secure_user_dropdown' => array(
 			'site.setting' => 'admin/setting/',
@@ -42,7 +42,7 @@ $configs = array(
 		),
 		'insecure_side' => array(
 			term('admin.view', 'page.view', 'page.top') => 'admin/',
-			term('site.view') => PRJ_SITE_URL ?: '/',
+			term('site.view') => FBD_SITE_URL ?: '/',
 		),
 		'secure_side_admin' => array(
 			term('admin.view', 'page.view', 'page.top') => 'admin/',
@@ -50,7 +50,7 @@ $configs = array(
 			term('site.content', 'site.management') => 'admin/news/',
 			term('profile', 'site.setting') => 'admin/profile/',
 			term('admin.view', 'page.view', 'site.setting') => 'admin/account/',
-			term('site.view') => PRJ_SITE_URL ?: '/',
+			term('site.view') => FBD_SITE_URL ?: '/',
 		),
 		'secure_side_user' => array(
 			'site.setting' => 'admin/setting/',

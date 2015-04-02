@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width<?php if (IS_SP): ?>, initial-scale=1.0, maximum-scale=1.0, user-scalable=no<?php endif; ?>">
-<meta name="description" content="<?php echo $header_description ? $header_description : PRJ_HEADER_DESCRIPTION_DEFAULT; ?>">
+<meta name="description" content="<?php echo $header_description ? $header_description : FBD_HEADER_DESCRIPTION_DEFAULT; ?>">
 <meta name="keywords" content="<?php echo site_header_keywords($header_keywords); ?>">
 <title><?php echo $header_title ? $header_title : $title; ?></title>
 <meta name="robots" content="<?php if (is_prod_env()): ?>index,follow<?php else: ?>noindex,nofollow<?php endif; ?>">

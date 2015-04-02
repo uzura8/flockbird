@@ -33,7 +33,7 @@ return array(
 	/**
 	 * Salt for the login hash
 	 */
-	'login_hash_salt' => PRJ_ENCRYPTION_KEY,
+	'login_hash_salt' => FBD_ENCRYPTION_KEY,
 
 	/**
 	 * $_POST key for login email
@@ -55,7 +55,7 @@ return array(
 		'isLogging' => true,
 		'isSentNotificationMail' => array(
 			'member' => true,
-			'admin' => array(PRJ_ADMIN_MAIL),
+			'admin' => array(FBD_ADMIN_MAIL),
 		),
 	),
 );

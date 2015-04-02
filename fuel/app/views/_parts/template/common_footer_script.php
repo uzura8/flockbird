@@ -67,8 +67,8 @@ function get_config(key) {
 		'default_form_comment_textarea_height': '<?php echo conf('view_params_default.form.comment.textarea.height'); ?>',
 		'site_public_flag_default': <?php echo conf('public_flag.default'); ?>,
 		'is_render_site_summary_at_client_side': <?php echo is_render_site_summary_at_client_side() ? 1 : 0; ?>,
-		mediaBaseUrl: '<?php echo PRJ_MEDIA_BASE_URL; ?>',
-		upload_dir_name: '<?php echo PRJ_UPLOAD_DIRNAME; ?>'
+		mediaBaseUrl: '<?php echo FBD_MEDIA_BASE_URL; ?>',
+		upload_dir_name: '<?php echo FBD_UPLOAD_DIRNAME; ?>'
 	};
 	return config[key];
 }

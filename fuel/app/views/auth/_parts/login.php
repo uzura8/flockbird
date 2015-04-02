@@ -5,7 +5,7 @@ if (!empty($in_popover)) $form_attributes['class'] = '';
 $col_sm_size       = empty($in_popover) ? 7 : 12;
 $label_col_sm_size = empty($in_popover) ? 3 : 12;
 $col_offset_size   = empty($in_popover) ? 3 : 0;
-$is_display_form = (empty($in_popover) || (!empty($in_popover) && (!PRJ_SSL_MODE || (PRJ_SSL_MODE && IS_SSL))));
+$is_display_form = (empty($in_popover) || (!empty($in_popover) && (!FBD_SSL_MODE || (FBD_SSL_MODE && IS_SSL))));
 ?>
 <?php echo form_open(false, false, $form_attributes, array('destination' => $destination)); ?>
 <?php if ($is_display_form): ?>
@@ -25,7 +25,7 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!PRJ_SSL_MODE
 	); ?>
 <?php endif; ?>
 
-<?php if (PRJ_FACEBOOK_APP_ID): ?>
+<?php if (FBD_FACEBOOK_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/facebook',
 		icon_label('Facebookで'.term('site.login'), 'both', false, 'facebook-square', 'fa fa-'),
@@ -33,7 +33,7 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!PRJ_SSL_MODE
 		$col_offset_size
 	); ?>
 <?php endif; ?>
-<?php if (PRJ_TWITTER_APP_ID): ?>
+<?php if (FBD_TWITTER_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/twitter',
 		icon_label('Twitterで'.term('site.login'), 'both', false, 'twitter', 'fa fa-'),
@@ -41,7 +41,7 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!PRJ_SSL_MODE
 		$col_offset_size
 	); ?>
 <?php endif; ?>
-<?php if (PRJ_GOOGLE_APP_ID): ?>
+<?php if (FBD_GOOGLE_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/google',
 		icon_label('Googleで'.term('site.login'), 'both', false, 'google', 'fa fa-'),

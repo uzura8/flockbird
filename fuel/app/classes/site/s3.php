@@ -11,7 +11,7 @@ class Site_S3
 
 	public static function _init($options = null)
 	{
-		if (!PRJ_AWS_ACCESS_KEY || !PRJ_AWS_SECRET_KEY || !PRJ_AWS_S3_BUCKET)
+		if (!FBD_AWS_ACCESS_KEY || !FBD_AWS_SECRET_KEY || !FBD_AWS_S3_BUCKET)
 		{
 			throw new FuelException('AWS Constant not set.');
 		}
@@ -22,22 +22,22 @@ class Site_S3
 		if (self::$s3_instantse) return;
 
 		if (!self::$s3_instantse = S3Client::factory(array(
-			'key'  => PRJ_AWS_ACCESS_KEY,
-			'secret' => PRJ_AWS_SECRET_KEY,
+			'key'  => FBD_AWS_ACCESS_KEY,
+			'secret' => FBD_AWS_SECRET_KEY,
 		))) throw new FuelException('S3Client factory failed.');
 	}
 
 	protected static function get_key($file_name, $upload_type = 'img')
 	{
 		if (!in_array($upload_type, array('img', 'file'))) throw new InvalidArgumentException('Second parameter is invalid.');
-		if (!PRJ_AWS_S3_PATH) return $upload_type.'/'.$file_name;
+		if (!FBD_AWS_S3_PATH) return $upload_type.'/'.$file_name;
 
-		return sprintf('%s/%s/%s', trim(PRJ_AWS_S3_PATH, '/'), $upload_type, $file_name);
+		return sprintf('%s/%s/%s', trim(FBD_AWS_S3_PATH, '/'), $upload_type, $file_name);
 	}
 
 	public static function get_url($file_name, $upload_type = 'img')
 	{
-		return sprintf('https://%s.s3.amazonaws.com/%s', PRJ_AWS_S3_BUCKET, static::get_key($file_name, $upload_type));
+		return sprintf('https://%s.s3.amazonaws.com/%s', FBD_AWS_S3_BUCKET, static::get_key($file_name, $upload_type));
 	}
 
 	public static function save($file_path, $file_name = null, $upload_type = 'img', $is_private_acl = false)
@@ -46,7 +46,7 @@ class Site_S3
 		static::set_s3_instanse();
 
 		return self::$s3_instantse->putObject(array(
-			'Bucket' => PRJ_AWS_S3_BUCKET,
+			'Bucket' => FBD_AWS_S3_BUCKET,
 			'Key'    => static::get_key($file_name ?: \Site_Upload::get_file_name_from_file_path($file_path), $upload_type),
 			'Body'   => EntityBody::factory(fopen($file_path, 'r')),
 			'ACL'    => $is_private_acl ? CannedAcl::PRIVATE_ACCESS : CannedAcl::PUBLIC_READ,
@@ -58,7 +58,7 @@ class Site_S3
 		static::set_s3_instanse();
 
 		return self::$s3_instantse->deleteObject(array(
-			'Bucket' => PRJ_AWS_S3_BUCKET,
+			'Bucket' => FBD_AWS_S3_BUCKET,
 			'Key'    => static::get_key($file_name, $upload_type),
 		));
 	}
@@ -68,9 +68,9 @@ class Site_S3
 		static::set_s3_instanse();
 
 		return self::$s3_instantse->copyObject(array(
-			'Bucket' => PRJ_AWS_S3_BUCKET,
+			'Bucket' => FBD_AWS_S3_BUCKET,
 			'Key'    => static::get_key($file_name_to, $upload_type),
-			'CopySource' => PRJ_AWS_S3_BUCKET.'/'.static::get_key($file_name_from, $upload_type),
+			'CopySource' => FBD_AWS_S3_BUCKET.'/'.static::get_key($file_name_from, $upload_type),
 			'ACL'    => $is_private_acl ? CannedAcl::PRIVATE_ACCESS : CannedAcl::PUBLIC_READ,
 		));
 	}
@@ -92,7 +92,7 @@ class Site_S3
 		static::set_s3_instanse();
 
 		return self::$s3_instantse->putObjectAcl(array(
-			'Bucket' => PRJ_AWS_S3_BUCKET,
+			'Bucket' => FBD_AWS_S3_BUCKET,
 			'Key'    => static::get_key($file_name, $upload_type),
 			'ACL'    => $acl,
 		));

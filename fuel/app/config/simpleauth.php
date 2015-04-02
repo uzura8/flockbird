@@ -137,7 +137,7 @@ return array(
 	/**
 	 * Salt for the login hash
 	 */
-	'login_hash_salt' => PRJ_ENCRYPTION_KEY,
+	'login_hash_salt' => FBD_ENCRYPTION_KEY,
 
 	/**
 	 * $_POST key for login username

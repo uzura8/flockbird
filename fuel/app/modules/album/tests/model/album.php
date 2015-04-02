@@ -99,38 +99,38 @@ class Test_Model_Album extends \TestCase
 		$data[] = array(1, array(
 			'name' => 'test',
 			'body' => 'This is test.',
-			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
-		), PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_MEMBER);
+			'public_flag' => FBD_PUBLIC_FLAG_MEMBER,
+		), FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_MEMBER);
 
 		// アルバム編集(変更あり) #1
 		$data[] = array(1, array(
 			'name' => 'test_edit',
 			'body' => 'This is test edit.',
-			'public_flag' => PRJ_PUBLIC_FLAG_PRIVATE,
-		), PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_PRIVATE);
+			'public_flag' => FBD_PUBLIC_FLAG_PRIVATE,
+		), FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_PRIVATE);
 
 		// アルバム編集(album_image の public_flag を変更) #2
 		$data[] = array(1, array(
 			'name' => 'test_edit',
 			'body' => 'This is test edit.',
-			'public_flag' => PRJ_PUBLIC_FLAG_PRIVATE,
+			'public_flag' => FBD_PUBLIC_FLAG_PRIVATE,
 			'is_update_children_public_flag' => 1,
-		), PRJ_PUBLIC_FLAG_PRIVATE, PRJ_PUBLIC_FLAG_PRIVATE);
+		), FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_PRIVATE);
 
 		// アルバム編集(public_flag を拡げる) #3
 		$data[] = array(1, array(
 			'name' => 'test_edit',
 			'body' => 'This is test edit.',
-			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
-		), PRJ_PUBLIC_FLAG_PRIVATE, PRJ_PUBLIC_FLAG_MEMBER);
+			'public_flag' => FBD_PUBLIC_FLAG_MEMBER,
+		), FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_MEMBER);
 
 		// アルバム編集(album と album_image の public_flag を拡げる)
 		$data[] = array(1, array(
 			'name' => 'test_edit',
 			'body' => 'This is test edit.',
-			'public_flag' => PRJ_PUBLIC_FLAG_ALL,
+			'public_flag' => FBD_PUBLIC_FLAG_ALL,
 			'is_update_children_public_flag' => 1,
-		), PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_ALL);
+		), FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_ALL);
 
 		return $data;
 	}
@@ -194,13 +194,13 @@ class Test_Model_Album extends \TestCase
 		$data = array();
 
 		// 変更
-		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER, false);
+		$data[] = array(FBD_PUBLIC_FLAG_MEMBER, false);
 
 		// 変更なし
-		$data[] = array(PRJ_PUBLIC_FLAG_MEMBER, false);
+		$data[] = array(FBD_PUBLIC_FLAG_MEMBER, false);
 
 		// album_image も変更
-		$data[] = array(PRJ_PUBLIC_FLAG_PRIVATE, true);
+		$data[] = array(FBD_PUBLIC_FLAG_PRIVATE, true);
 
 		return $data;
 	}
@@ -249,7 +249,7 @@ class Test_Model_Album extends \TestCase
 		$values = array(
 			'name' => 'test',
 			'body' => 'This is test.',
-			'public_flag' => PRJ_PUBLIC_FLAG_MEMBER,
+			'public_flag' => FBD_PUBLIC_FLAG_MEMBER,
 		);
 		list($album, $album_image, $file) = self::force_save_album(1, $values, $upload_file_path);
 		self::$album = $album;
@@ -288,7 +288,7 @@ class Test_Model_Album extends \TestCase
 	private static function setup_upload_file()
 	{
 		// prepare upload file.
-		$original_file = PRJ_BASEPATH.'data/development/test/media/img/sample_01.jpg';
+		$original_file = FBD_BASEPATH.'data/development/test/media/img/sample_01.jpg';
 		$upload_file = APPPATH.'tmp/sample.jpg';
 		\Util_file::copy($original_file, $upload_file);
 		chmod($upload_file, 0777);

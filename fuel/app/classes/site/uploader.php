@@ -11,12 +11,12 @@ class Site_Uploader
 
 		$this->options = array(
 			'upload_type'    => 'img',
-			'max_size'       => PRJ_UPLOAD_MAX_FILESIZE,
+			'max_size'       => FBD_UPLOAD_MAX_FILESIZE,
 			'ext_whitelist'  => array_keys(conf('upload.types.img.accept_format')),
 			'type_whitelist' => array('image'),
 			'path_chmod'     => conf('upload.mkdir_mode'),
 			'path'           => APPPATH.'tmp',
-			'upload_dir'     => PRJ_UPLOAD_DIR.'img/raw/',
+			'upload_dir'     => FBD_UPLOAD_DIR.'img/raw/',
 			'storage_type'   => conf('upload.storageType'),
 			'auto_orient'    => true,
 			'is_clear_exif_on_file' => conf('isClearFromFile', 'exif'),

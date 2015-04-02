@@ -103,19 +103,19 @@ class Site_Model
 		{
 			$query->or_where_open();
 				$query->where('member_id', 'in', $follow_member_ids);
-				$query->where('public_flag', 'in', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
+				$query->where('public_flag', 'in', array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER));
 			$query->or_where_close();
 		}
 		if ($friend_member_ids)
 		{
 			$query->or_where_open();
 				$query->where('member_id', 'in', $friend_member_ids);
-				$query->where('public_flag', 'in', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER, PRJ_PUBLIC_FLAG_FRIEND));
+				$query->where('public_flag', 'in', array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER, FBD_PUBLIC_FLAG_FRIEND));
 			$query->or_where_close();
 		}
 		if (is_null($follow_member_ids) && is_null($friend_member_ids))
 		{
-			$query->or_where('public_flag', 'in', array(PRJ_PUBLIC_FLAG_ALL, PRJ_PUBLIC_FLAG_MEMBER));
+			$query->or_where('public_flag', 'in', array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER));
 		}
 		$query->or_where('member_id', $self_member_id);
 	}

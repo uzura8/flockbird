@@ -323,8 +323,8 @@ class Site_Upload
 		$options = array(
 			'storage_type'    => conf('upload.storageType'),
 			'is_tmp'          => $is_tmp,
-			'max_file_size'   => PRJ_UPLOAD_MAX_FILESIZE,
-			'max_number_of_files' => $is_multiple_upload ? PRJ_MAX_FILE_UPLOADS : 1,
+			'max_file_size'   => FBD_UPLOAD_MAX_FILESIZE,
+			'max_number_of_files' => $is_multiple_upload ? FBD_MAX_FILE_UPLOADS : 1,
 			'upload_dir'      => $uploader_info['upload_dir'],
 			'upload_url'      => $uploader_info['upload_url'],
 			'upload_uri'      => $uploader_info['upload_uri'],
@@ -342,10 +342,10 @@ class Site_Upload
 		if ($upload_type == 'img')
 		{
 			$options['image_library'] =  0;
-			if (PRJ_IMAGE_DRIVER == 'imagemagick')
+			if (FBD_IMAGE_DRIVER == 'imagemagick')
 			{
 				$options['image_library'] = 1;
-				$options['convert_bin'] = PRJ_IMAGE_IMGMAGICK_PATH.'convert';
+				$options['convert_bin'] = FBD_IMAGE_IMGMAGICK_PATH.'convert';
 			}
 			$options['image_versions'] = array(
 				'' => array(
@@ -530,13 +530,13 @@ class Site_Upload
 	public static function clear_exif($path, $driver = null)
 	{
 		if (!$driver) $driver = Config::get('image.driver');
-		if (PRJ_IMAGE_DRIVER == 'imagemagick')
+		if (FBD_IMAGE_DRIVER == 'imagemagick')
 		{
-			$command = PRJ_IMAGE_IMGMAGICK_PATH.'convert';
+			$command = FBD_IMAGE_IMGMAGICK_PATH.'convert';
 			$params  = sprintf('"%s" -strip "%s"', $path, $path);
 			Util_Toolkit::exec_command($command, $params, false, true);
 		}
-		elseif (PRJ_IMAGE_DRIVER == 'imagick')
+		elseif (FBD_IMAGE_DRIVER == 'imagick')
 		{
 			$im = new \Imagick($path);
 			$im->stripImage();

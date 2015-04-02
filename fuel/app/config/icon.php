@@ -164,9 +164,9 @@ $config = array(
 	'public_flag' => array(
 		'label' => '公開範囲',
 		'options' => array(
-			PRJ_PUBLIC_FLAG_PRIVATE => 'lock',
-			PRJ_PUBLIC_FLAG_ALL => 'globe',
-			PRJ_PUBLIC_FLAG_MEMBER => 'group',
+			FBD_PUBLIC_FLAG_PRIVATE => 'lock',
+			FBD_PUBLIC_FLAG_ALL => 'globe',
+			FBD_PUBLIC_FLAG_MEMBER => 'group',
 			//'friend'  => 'user',
 		),
 	),

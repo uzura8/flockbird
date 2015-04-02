@@ -58,7 +58,7 @@ class Uri extends Fuel\Core\Uri
 	 */
 	public static function base_path($path = null)
 	{
-		return PRJ_URI_PATH.$path;
+		return FBD_URI_PATH.$path;
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Uri extends Fuel\Core\Uri
 	 */
 	public static function create($uri = null, $variables = array(), $get_variables = array(), $secure = null)
 	{
-		if (is_null($secure) && PRJ_SSL_MODE) $secure = Site_Util::check_ssl_required_uri($uri, PRJ_SSL_MODE == 'ALL');
+		if (is_null($secure) && FBD_SSL_MODE) $secure = Site_Util::check_ssl_required_uri($uri, FBD_SSL_MODE == 'ALL');
 
 		return parent::create($uri, $variables, $get_variables, $secure);
 	}

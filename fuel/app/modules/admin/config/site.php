@@ -12,7 +12,7 @@ return array(
 	'mail' => array(
 		'admin' => array(
 			'from_name' => '管理者',
-			'from_email' => PRJ_ADMIN_MAIL,
+			'from_email' => FBD_ADMIN_MAIL,
 		),
 	),
 	'upload' => array(

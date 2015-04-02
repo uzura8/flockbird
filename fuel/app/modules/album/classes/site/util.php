@@ -75,7 +75,7 @@ class Site_Util
 				break;
 			case 'member':
 				$info['name'] = sprintf('%s用%s', term('profile'), term('album'));
-				$info['public_flag'] = PRJ_PUBLIC_FLAG_ALL;
+				$info['public_flag'] = FBD_PUBLIC_FLAG_ALL;
 				break;
 			case 'timeline':
 				$info['name'] = sprintf('%s用%s', term('timeline'), term('album'));

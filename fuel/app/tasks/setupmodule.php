@@ -51,7 +51,7 @@ class SetupModule
 
 	private static function setup_assets($module, $module_dir_path)
 	{
-		$public_dir_path = PRJ_BASEPATH.'public/'	;
+		$public_dir_path = FBD_BASEPATH.'public/'	;
 		if (!file_exists($public_dir_path)) throw new \FuelException('Not exists public dir.');
 		chdir($public_dir_path.'modules/');
 

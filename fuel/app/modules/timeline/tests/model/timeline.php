@@ -55,7 +55,7 @@ class Test_Model_Timeline extends \TestCase
 			$this->assertNotEmpty(\Model_Member::check_authority($obj->foreign_id));
 
 			// check for public_flag.
-			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
+			$this->assertEquals(FBD_PUBLIC_FLAG_ALL, $obj->public_flag);
 
 			// 未使用カラムの値が null か
 			$this->assertEmpty($obj->body);
@@ -78,7 +78,7 @@ class Test_Model_Timeline extends \TestCase
 			$this->assertNotEmpty(\Model_Member::check_authority($obj->foreign_id));
 
 			// check for public_flag.
-			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
+			$this->assertEquals(FBD_PUBLIC_FLAG_ALL, $obj->public_flag);
 		}
 	}
 
@@ -101,8 +101,8 @@ class Test_Model_Timeline extends \TestCase
 			$this->assertEquals($album_image->album->member_id, $obj->member_id);
 
 			// check for public_flag.
-			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
-			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $album_image->public_flag);
+			$this->assertEquals(FBD_PUBLIC_FLAG_ALL, $obj->public_flag);
+			$this->assertEquals(FBD_PUBLIC_FLAG_ALL, $album_image->public_flag);
 
 			// 未使用カラムの値が null か
 			$this->assertEmpty($obj->body);
@@ -132,7 +132,7 @@ class Test_Model_Timeline extends \TestCase
 			$this->assertEquals($file->member_id, $obj->member_id);
 
 			// check for public_flag.
-			$this->assertEquals(PRJ_PUBLIC_FLAG_ALL, $obj->public_flag);
+			$this->assertEquals(FBD_PUBLIC_FLAG_ALL, $obj->public_flag);
 
 			// 未使用カラムの値が null か
 			$this->assertEmpty($obj->body);
@@ -355,7 +355,7 @@ class Test_Model_Timeline extends \TestCase
 
 		// timeline_comment save
 		$body = \Site_Test::get_mention_body($mention_member_ids);
-		$timeline = Site_Model::save_timeline($member_id_from, PRJ_PUBLIC_FLAG_ALL, 'normal', null, null, $body);
+		$timeline = Site_Model::save_timeline($member_id_from, FBD_PUBLIC_FLAG_ALL, 'normal', null, null, $body);
 		$timeline_id = $timeline->id;
 
 		// check_cache

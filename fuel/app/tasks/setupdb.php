@@ -158,7 +158,7 @@ class SetupDB
 
 	private static function exexute_install_db($database = null)
 	{
-		$setup_sql_file = PRJ_BASEPATH.'data/sql/setup/setup.sql';
+		$setup_sql_file = FBD_BASEPATH.'data/sql/setup/setup.sql';
 		if (!\DBUtil::shell_exec_sql4file($setup_sql_file, $database)) return false;
 
 		if (!$modules = \Module::loaded()) return true;
