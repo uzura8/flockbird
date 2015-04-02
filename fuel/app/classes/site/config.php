@@ -3,7 +3,7 @@ class Site_Config
 {
 	public static function merge_module_configs($config, $config_name)
 	{
-		$modules = Site_Util::get_active_modules();
+		$modules = Module::loaded();
 		foreach ($modules as $module => $path)
 		{
 			Config::load($module.'::'.$config_name, $module.'_'.$config_name);

@@ -537,7 +537,7 @@ class Site_Util
 	{
 		$active_modules = array();
 		$modules = Module::loaded();
-		foreach ($modules as $module)
+		foreach ($modules as $module => $module_path)
 		{
 			if (!conf($module.'.isEnabled')) continue;
 			$active_modules[] = $module;
