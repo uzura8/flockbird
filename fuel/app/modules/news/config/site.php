@@ -1,5 +1,4 @@
 <?php
-
 return array(
 	'news' => array(
 		'isEnabled'  => 1,

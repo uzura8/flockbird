@@ -1,5 +1,4 @@
 <?php
-
 return array(
 	'album' => array(
 		'isEnabled'  => 1,

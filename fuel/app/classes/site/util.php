@@ -532,4 +532,17 @@ class Site_Util
 
 		return sprintf('%s/%s/%d', $controller_path, $action, $id);
 	}
+
+	public static function get_active_modules()
+	{
+		$active_modules = array();
+		$modules = Module::loaded();
+		foreach ($modules as $module)
+		{
+			if (!conf($module.'.isEnabled')) continue;
+			$active_modules[] = $module;
+		}
+
+		return $active_modules;
+	}
 }

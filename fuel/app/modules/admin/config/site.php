@@ -1,5 +1,8 @@
 <?php
 return array(
+	'admin' => array(
+		'isEnabled'  => 1,
+	),
 	'login_uri' => array(
 		'admin' => 'admin/login',
 	),

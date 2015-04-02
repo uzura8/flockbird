@@ -180,7 +180,7 @@ class Controller_Base extends Controller_Hybrid
 	protected function check_is_admin_request()
 	{
 		if ($this->is_admin) return true;
-		if (Module::loaded('admin') && Request::main()->route->module == 'admin') return true;
+		if (is_enabled('admin') && Request::main()->route->module == 'admin') return true;
 
 		return false;
 	}

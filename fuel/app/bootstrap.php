@@ -57,7 +57,7 @@ Config::load('template', 'template');
 Config::load('exif', 'exif');
 Config::load('less', 'less');
 // Config of each module load.
-$modules = Module::loaded();
+$modules = Site_Util::get_active_modules();
 foreach ($modules as $module => $path)
 {
 	if (file_exists(sprintf('%sconfig/%s.php', $path, $module)))

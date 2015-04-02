@@ -120,7 +120,7 @@ class Asset_Instance extends \Less\Asset_Instance
 	protected function get_source_less($lessfile_name)
 	{
 		$source_file_path = '';
-		$modules = Module::loaded();
+		$modules = Site_Util::get_active_modules();
 		foreach ($modules as $module => $path)
 		{
 			$file_path = sprintf('%sassets/less/%s', $path, $lessfile_name);

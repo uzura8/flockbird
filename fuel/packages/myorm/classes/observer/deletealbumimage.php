@@ -30,19 +30,19 @@ class Observer_DeleteAlbumImage extends \Orm\Observer
 				$album->member->save();
 			}
 			// timeline 投稿の削除
-			if (\Module::loaded('timeline'))
+			if (is_enabled('timeline'))
 			{
 				\Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album_image', $obj->id);
 			}
 		}
 
-		if (\Module::loaded('timeline'))
+		if (is_enabled('timeline'))
 		{
 			// timeline_child_data の削除
 			\Timeline\Model_TimelineChildData::delete4foreign_table_and_foreign_ids('album_image', $obj->id);
 
 			// timeline view cache の削除
-			if (\Module::loaded('note')
+			if (is_enabled('note')
 				&& \Config::get('timeline.articles.cache.is_use')
 				&& $obj->album->foreign_table == 'note')
 			{

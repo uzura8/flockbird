@@ -73,7 +73,7 @@ class Controller_Member_Register extends Controller_Site
 				}
 
 				// timeline 投稿
-				if (Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id, $member->created_at);
+				if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id, $member->created_at);
 				DB::commit_transaction();
 
 				$mail = new Site_Mail('memberRegister');

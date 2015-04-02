@@ -17,8 +17,8 @@ class Observer_DeleteAlbum extends \Orm\Observer
 			$album_image->delete();
 		}
 
-		// timeline 投稿の削除
-		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $obj->id);
+		// delete timeline
+		if (is_enabled('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('album', $obj->id);
 	}
 }
 // End of file deletealbum.php
