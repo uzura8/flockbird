@@ -169,10 +169,12 @@ class Controller_Base extends Controller_Hybrid
 
 	protected function check_not_auth_action()
 	{
-		if (conf('isDisplayTopPageWithoutAuth') && Site_Util::get_action_path() == Config::get('routes._root_'))
+		if (conf('base.isDisplayTopPageWithoutAuth') && check_cuurent_uri(Config::get('routes._root_'), true))
 		{
 			return true;
 		}
+
+		if (conf('base.isClosed') && !check_cuurent_uri($this->get_login_page_uri())) return false;
 
 		return in_array(Site_Util::get_action_name(IS_API), $this->check_not_auth_action);
 	}

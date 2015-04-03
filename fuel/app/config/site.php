@@ -1,6 +1,5 @@
 <?php
 $config = array(
-	'isDisplayTopPageWithoutAuth' => true,
 	'legacyBrowserSupport' => array(
 		'isEnabled' => true,
 		'legacyIECriteriaVersion' => 8,
@@ -347,6 +346,10 @@ $config = array(
 	'member_config_default' => array(
 	),
 	// site_config default
+	'base' => array(
+		'isClosed' => 0,
+		'isDisplayTopPageWithoutAuth' => 1,
+	),
 	'profile' => array(
 		'name' => array(
 			'isDispConfig' => 1,
