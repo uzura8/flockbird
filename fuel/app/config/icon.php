@@ -71,6 +71,9 @@ $config = array(
 		),
 		'set_location' => 'map-marker',
 		'do_set_location' => 'map-marker',
+		'invite' => 'envelope',
+		'do_invite' => 'envelope',
+		'invite_friend' => 'envelope',
 	),
 	'site' => array(
 		//'view' => 'サイト',

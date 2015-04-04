@@ -21,6 +21,7 @@ Autoloader::add_classes(array(
 	'Agent' => APPPATH.'classes/agent.php',
 	'Asset' => APPPATH.'classes/asset.php',
 	'Asset_Instance' => APPPATH.'classes/asset/instance.php',
+	'Fieldset' => APPPATH.'classes/fieldset.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 ));
 if (FBD_AWS_ACCESS_KEY && FBD_AWS_SECRET_KEY && FBD_AWS_S3_BUCKET)

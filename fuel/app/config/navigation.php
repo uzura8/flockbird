@@ -24,6 +24,7 @@ $config = array(
 		'secure_user_dropdown' => array(
 			'page.myhome' => 'member/',
 			'profile' => 'member/profile/',
+			'form.invite_friend' => 'member/invite/',
 			'site.setting' => 'member/setting/',
 			'site.logout' => 'auth/logout/',
 		),
@@ -55,5 +56,10 @@ $config = array(
 		),
 	),
 );
+
+if (!conf('base.isUserInvite'))
+{
+	unset($config['secure_user_dropdown']['form.invite_friend']);
+}
 
 return Site_Config::merge_module_configs($config, 'navigation');

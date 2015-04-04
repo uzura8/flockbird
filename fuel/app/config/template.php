@@ -126,6 +126,22 @@ $config = array(
 					'to_name' => 'メンバー名',
 				),
 			),
+			'memberInvite' => array(
+				'view' =>'招待メール',
+				'format' =>'twig',
+				//'title' => '{{ site_name }} より招待状が届いています',
+				'title' => '招待状が届いています',
+				'body' => array(
+					'default' => array(
+						'file' => 'mail/member_invite',
+					),
+				),
+				'variables' => array(
+					'register_url' => '登録用URL',
+					'invite_member_name' => '招待者ニックネーム',
+					'invite_message' => '招待メッセージ',
+				),
+			),
 		),
 	),
 );

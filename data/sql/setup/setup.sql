@@ -13,6 +13,7 @@ CREATE TABLE `member` (
   `login_hash` varchar(255) DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
   `previous_login` datetime DEFAULT NULL,
+  `invite_member_id` int(11) NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -24,7 +25,7 @@ CREATE TABLE `member_auth` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NULL,
+  `password` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -103,13 +104,15 @@ CREATE TABLE `member_pre` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `password` varchar(255) NULL,
+  `invite_member_id` int(11) NULL,
   `token` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `email_idx` (`email`),
-  UNIQUE KEY `token_UNIQUE_idx` (`token`)
+  UNIQUE KEY `token_UNIQUE_idx` (`token`),
+  UNIQUE KEY `invite_member_id_email_UNIQUE_idx` (`invite_member_id`,`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `member_delete_queue` (

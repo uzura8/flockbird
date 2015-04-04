@@ -71,6 +71,7 @@ class Model_Member extends \MyOrm\Model
 		),
 		'last_login' => array('form' => array('type' => false)),
 		'previous_login' => array('form' => array('type' => false)),
+		'invite_member_id' => array('form' => array('type' => false)),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
@@ -134,6 +135,8 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['birthday_public_flag']['label'] = sprintf('%sの%s', term('member.birthday'), term('public_flag.label'));
 		static::$_properties['birthday_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthday_public_flag']['validation']['in_array'][] = $options_public_flag;
+
+		static::$_properties['invite_member_id'] = Util_Orm::get_relational_numeric_key_prop(false);
 	}
 
 	public static function get_one4name($name)

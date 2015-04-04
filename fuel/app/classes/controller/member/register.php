@@ -28,14 +28,17 @@ class Controller_Member_Register extends Controller_Site
 
 		if (!$member_pre = $this->check_token())
 		{
-			$this->display_error('メンバー登録: 不正なURL');
-			return;
+			throw new HttpNotFoundException('メンバー登録: 不正なURL');
 		}
 
 		$form_member_profile = new Form_MemberProfile('regist');
 		$add_fields = array();
-		$add_fields['password'] = Form_Util::get_model_field('member_auth', 'password');
 		$add_fields['token']    = Form_Util::get_model_field('member_pre', 'token');
+		$add_fields['password'] = Form_Util::get_model_field('member_auth', 'password');
+		if (!$member_pre->password)
+		{
+			$add_fields['password_confirm'] = Form_Util::get_model_field('member_auth', 'password', '', term('site.password', 'form._confirm'));
+		}
 		$form_member_profile->set_validation($add_fields, 'member_register');
 		$form_member_profile->set_validation_message('match_value', ':labelが正しくありません。');
 
@@ -47,17 +50,27 @@ class Controller_Member_Register extends Controller_Site
 			try
 			{
 				$form_member_profile->validate();
-				DB::start_transaction();
 				$post = $form_member_profile->get_validated_values();
+				if ($member_pre->password && $post['password'] != $member_pre->password)
+				{
+					throw new ValidationFailedException(term('site.password').'が正しくありません。');
+				}
 
+				DB::start_transaction();
 				// create new member
 				$auth = Auth::instance();
-				if (!$member_id = $auth->create_user($member_pre->email, $member_pre->password, $post['member_name']))
+				if (!$member_id = $auth->create_user($member_pre->email, $post['password'], $post['member_name']))
 				{
 					throw new FuelException('create member error.');
 				}
 				$member = $auth->get_member();
 				// 仮登録情報の削除
+				if ($member_pre->invite_member_id)
+				{
+					$member->invite_member_id = $member_pre->invite_member_id;
+					$member->save();
+					// TODO: make friend to invited_member
+				}
 				$email    = $member_pre->email;
 				$password = $member_pre->password;
 				$member_pre->delete();
@@ -87,6 +100,10 @@ class Controller_Member_Register extends Controller_Site
 				Session::set_flash('error', 'ログインに失敗しました');
 				Response::redirect(conf('login_uri.site'));
 			}
+			catch(ValidationFailedException $e)
+			{
+				$error_message = Site_Controller::get_error_message($e);
+			}
 			catch(EmailValidationFailedException $e)
 			{
 				Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
@@ -110,7 +127,7 @@ class Controller_Member_Register extends Controller_Site
 			catch(FuelException $e)
 			{
 				$is_transaction_rollback = true;
-				$error_message = $e->getMessage();
+				$error_message = Site_Controller::get_error_message($e);
 			}
 			if ($error_message)
 			{
@@ -164,6 +181,7 @@ class Controller_Member_Register extends Controller_Site
 
 		if (!$form = Fieldset::instance('confirm_signup')) $form = $this->get_form_signup();
 		$val = $form->validation();
+		$val->fieldset()->field('email')->delete_rule('unique');
 
 		$redirect_uri = conf('login_uri.site');
 		$success_message = '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。';

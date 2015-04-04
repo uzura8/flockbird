@@ -12,6 +12,7 @@ class Model_MemberPre extends \MyOrm\Model
 			'form' => array('type' => 'hidden'),
 			'validation' => array('trim', 'max_length' => array(255)),
 		),
+		'invite_member_id' => array('form' => array('type' => false)),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
@@ -32,9 +33,10 @@ class Model_MemberPre extends \MyOrm\Model
 
 	public static function _init()
 	{
-		static::$_properties['name'] = Model_Member::property('name');
-		static::$_properties['email'] = Model_MemberAuth::property('email');
-		static::$_properties['password'] = Model_MemberAuth::property('password');
+		static::$_properties['name'] = Model_Member::get_property('name');
+		static::$_properties['email'] = Model_MemberAuth::get_property('email');
+		static::$_properties['password'] = Model_MemberAuth::get_property('password', 'required');
+		static::$_properties['invite_member_id'] = Model_Member::get_property('invite_member_id');
 	}
 
 	public static function get4token($token)
@@ -42,12 +44,26 @@ class Model_MemberPre extends \MyOrm\Model
 		return self::query()->where('token', $token)->get_one();
 	}
 
-	public static function save_with_token($email, $password)
+	public static function get4invite_member_id($member_id)
+	{
+		return self::query()->where('invite_member_id', $member_id)->get();
+	}
+
+	public static function get_one4invite_member_id_and_email($member_id, $email)
+	{
+		return self::query()
+			->where('invite_member_id', $member_id)
+			->where('email', $email)
+			->get_one();
+	}
+
+	public static function save_with_token($email, $password, $invite_member_id = null)
 	{
 		$obj = self::forge();
 		$obj->email = $email;
 		$obj->password = $password;
 		$obj->token = Security::generate_token();
+		$obj->invite_member_id = $invite_member_id;
 		if (!$obj->save()) return false;
 
 		return $obj->token;

@@ -10,7 +10,7 @@ class Model_MemberAuth extends \MyOrm\Model
 		'email' => array(
 			'data_type' => 'varchar',
 			'label' => 'メールアドレス',
-			'validation' => array('trim', 'required', 'max_length' => array(255), 'valid_email'),
+			'validation' => array('trim', 'required', 'max_length' => array(255), 'valid_email', 'unique' => array('member_auth.email')),
 			'form' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
 		),
 		'password' => array(

@@ -228,10 +228,10 @@ function form_radio(Validation $val, $name, $default_value = null, $label_col_sm
 	return render('_parts/form/radio', $data);
 }
 
-function form_button($term_key = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2, $label = null)
+function form_button($term_key = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2, $label = null, $absolute_icon_key = null)
 {
-	if (!$term_key) $term_key = 'form.submit';
-	$button_label = icon_label($term_key, 'both', false);
+	if (!$term_key) $term_key = 'form.do_submit';
+	$button_label = icon_label($term_key, 'both', false, $absolute_icon_key);
 
 	$atter_default = array(
 		'class' => 'btn btn-default btn-primary',

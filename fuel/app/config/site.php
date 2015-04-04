@@ -349,6 +349,7 @@ $config = array(
 	'base' => array(
 		'isClosed' => 0,
 		'isDisplayTopPageWithoutAuth' => 1,
+		'isUserInvite' => 1,
 	),
 	'profile' => array(
 		'name' => array(

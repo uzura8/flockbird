@@ -486,4 +486,15 @@ class Model extends \Orm\Model
 
 		return $objs;
 	}
+
+	public static function get_property($column_name, $delete_validation_rules = array())
+	{
+		$property = self::property($column_name);
+		if ($delete_validation_rules && !empty($property['validation']))
+		{
+			$property['validation'] = \Util_Array::delete_in_array($property['validation'], $delete_validation_rules);
+		}
+
+		return $property;
+	}
 }
