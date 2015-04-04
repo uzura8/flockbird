@@ -61,13 +61,14 @@ class Controller_Member_Recover extends Controller_Site
 		$post = $val->validated();
 
 		$message = term('site.password').'のリセット方法をメールで送信しました。';
-		if (!$member_auth = Model_MemberAuth::query()->where('email', $post['email'])->related('member')->get_one())
+		if (!$member_auth = Model_MemberAuth::get4email($post['email']))
 		{
 			Session::set_flash('message', $message);
 			Response::redirect(conf('login_uri.site'));
 			return;
 		}
 
+		$member = Model_Member::check_authority($member_auth->member_id);
 		$error_message = '';
 		$is_transaction_rollback = false;
 		try
@@ -79,7 +80,7 @@ class Controller_Member_Recover extends Controller_Site
 
 			$mail = new Site_Mail('memberResendPassword');
 			$mail->send($post['email'], array(
-				'to_name' => $member_auth->member->name,
+				'to_name' => $member->name,
 				'register_url' => sprintf('%s?token=%s', uri::create('member/recover/reset_password'), $token),
 			));
 
@@ -205,7 +206,7 @@ class Controller_Member_Recover extends Controller_Site
 
 	public function form_resend_password()
 	{
-		$add_fields = array('email' => Form_Util::get_model_field('member_auth', 'email'));
+		$add_fields = array('email' => Form_Util::get_model_field('member_auth', 'email', null, null, 'unique'));
 
 		return Site_Util::get_form_instance('resend_password', null, true, $add_fields, array('value' => term('form.submit')));
 	}
