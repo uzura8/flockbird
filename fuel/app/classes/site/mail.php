@@ -65,37 +65,37 @@ class Site_Mail
 		$this->parser = Util_Parser::get_twig_string_parser();
 	}
 
-	public function send($to_email = null, $body_data = array())
+	public function send($to_email = null, $data = array())
 	{
 		if ($to_email)
 		{
 			$this->options['to_email'] = $to_email;
 		}
-		$body_data['to_email'] = $this->options['to_email'];
+		$data['to_email'] = $this->options['to_email'];
 
-		if (!$this->options['to_name'] && !empty($body_data['to_name']))
+		if (!$this->options['to_name'] && !empty($data['to_name']))
 		{
-			$this->options['to_name'] = $body_data['to_name'];
+			$this->options['to_name'] = $data['to_name'];
 		}
 
-		$this->set_subject();
-		$this->set_body($body_data);
+		$data += $this->options['common_variables'];
+		$this->set_subject($data);
+		$this->set_body($data);
 		$this->validate();
 		$this->sendmail();
 	}
 
-	protected function set_subject()
+	protected function set_subject($data = array())
 	{
 		if ($this->options['subject']) return;
 		if (!$this->config['title']) return;
 
-		$this->options['subject'] = $this->config['title'];
+		$this->options['subject']  = $this->parser->render($this->config['title'], $data);
 		$this->options['subject'] = Util_String::normalize_platform_dependent_chars($this->options['subject'], $this->options['is_use_normalizer']);
 	}
 
 	protected function set_body($data = array())
 	{
-		$data += $this->options['common_variables'];
 		$this->options['body']  = $this->parser->render($this->config['body'], $data);
 		$this->options['body'] .= $this->get_signature($data);
 		$this->options['body']  = Util_String::normalize_platform_dependent_chars($this->options['body'], $this->options['is_use_normalizer']);
