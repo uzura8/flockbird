@@ -13,11 +13,11 @@ $config = array(
 			//'About' => 'about/',
 		),
 		'insecure_global_head' => array(
-			term('member.view') => 'member/list/',
-			term('thread') => 'thread/',
 			term('timeline') => 'timeline/',
+			term('thread') => 'thread/',
 			term('note') => 'note/',
 			term('album_image') => 'album/image/',
+			term('member.view') => 'member/list/',
 			//'Sitemap' => 'sitemap/',
 			//'About' => 'about/',
 		),
