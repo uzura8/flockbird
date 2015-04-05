@@ -223,8 +223,7 @@ class Controller_Member_setting extends Controller_Member
 	{
 		if (!$member_email_pre = $this->check_token_change_email())
 		{
-			$this->display_error(null, null, 'error/403', 403);
-			return;
+			throw new HttpNotFoundException('URLが無効です。');
 		}
 
 		$form = $this->form_change_email();

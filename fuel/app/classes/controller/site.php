@@ -30,17 +30,6 @@ class Controller_Site extends Controller_Base_Site
 		View::set_global('login_val', $this->login_val);
 	}
 
-	protected function display_error($message_display = '', $messsage_log = '', $action = 'error/500', $status = 500)
-	{
-		if ($messsage_log) \Log::error($messsage_log);
-		if ($message_display)
-		{
-			$this->set_title_and_breadcrumbs($message_display);
-		}
-		$this->template->content = View::forge($action);
-		if ($status) $this->response->status = $status;
-	}
-
 	/**
 	 * Site index
 	 * 

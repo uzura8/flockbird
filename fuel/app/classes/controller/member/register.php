@@ -28,7 +28,7 @@ class Controller_Member_Register extends Controller_Site
 
 		if (!$member_pre = $this->check_token())
 		{
-			throw new HttpNotFoundException('メンバー登録: 不正なURL');
+			throw new HttpNotFoundException('URLが無効です。');
 		}
 
 		$form_member_profile = new Form_MemberProfile('regist');

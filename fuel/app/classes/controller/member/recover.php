@@ -130,8 +130,7 @@ class Controller_Member_Recover extends Controller_Site
 		$member_password_pre = Model_MemberPasswordPre::get4token(Input::param('token'));
 		if (!$member_password_pre || Site_Util::check_token_lifetime($member_password_pre->created_at, term('member.recover.password.token_lifetime')))
 		{
-			$this->display_error('メンバー登録: 不正なURL');
-			return;
+			throw new HttpNotFoundException('URLが無効です。');
 		}
 
 		$form = $this->form_reset_password();
