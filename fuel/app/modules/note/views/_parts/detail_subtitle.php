@@ -20,6 +20,7 @@ $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('note/api/menu/%d.html?is_detail=1', $note->id),
 	'data-member_id' => $note->member_id,
+	'data-menu' => '#menu_'.$note->id,
 	'data-loaded' => 0,
 );
 echo btn_dropdown('noterm.dropdown', array(), false, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, false);

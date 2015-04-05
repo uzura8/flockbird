@@ -38,6 +38,7 @@ $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('note/api/menu/%d.html', $id),
 	'data-member_id' => $note->member_id,
+	'data-menu' => '#menu_'.$note->id,
 	'data-loaded' => 0,
 );
 $menus = array(array('icon_term' => 'site.show_detail', 'href' => 'note/'.$id));

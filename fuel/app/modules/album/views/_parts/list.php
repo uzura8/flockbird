@@ -71,6 +71,7 @@ $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('album/api/menu/%d.html', $album->id),
 	'data-member_id' => $album->member_id,
+	'data-menu' => '#menu_'.$album->id,
 	'data-loaded' => 0,
 );
 $menus = array(array('icon_term' => 'site.show_detail', 'href' => 'album/'.$album->id));

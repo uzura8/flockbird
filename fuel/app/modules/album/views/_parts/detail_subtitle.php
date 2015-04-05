@@ -20,6 +20,7 @@ $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('album/api/menu/%d.html?is_detail=1', $album->id),
 	'data-member_id' => $album->member_id,
+	'data-menu' => '#menu_'.$album->id,
 	'data-loaded' => 0,
 );
 $menus = array();

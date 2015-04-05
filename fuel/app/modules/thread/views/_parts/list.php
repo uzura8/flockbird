@@ -34,6 +34,7 @@ $dropdown_btn_attr = array(
 	'class' => 'js-dropdown_content_menu',
 	'data-uri' => sprintf('thread/api/menu/%d.html', $id),
 	'data-member_id' => $thread->member_id,
+	'data-menu' => '#menu_'.$thread->id,
 	'data-loaded' => 0,
 );
 $menus = array(array('icon_term' => 'site.show_detail', 'href' => 'thread/'.$id));
