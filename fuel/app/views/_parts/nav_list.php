@@ -5,7 +5,7 @@
 <?php 	endif; ?>
 <?php 	foreach ($list as $name => $path): ?>
 <?php 		if (IS_ADMIN && !Site_Util::check_ext_uri($path, IS_ADMIN) && Auth::check() && !\Admin\Site_Util::check_exists_accessible_uri($path)) continue; ?>
-	<li<?php if (check_cuurent_uri($path)): ?> class="active"<?php endif; ?>><?php echo anchor_icon($path, $name, null, null, false, null, IS_ADMIN); ?></li>
+	<li<?php if (check_current_uri($path)): ?> class="active"<?php endif; ?>><?php echo anchor_icon($path, $name, null, null, false, null, IS_ADMIN); ?></li>
 <?php 	endforeach; ?>
 </ul>
 <?php endif; ?>

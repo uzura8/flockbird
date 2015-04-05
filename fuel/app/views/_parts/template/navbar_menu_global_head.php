@@ -8,12 +8,12 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#menu<?php echo $i; ?>"><?php echo $name; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 <?php 		foreach ($value as $item_name => $item_path): ?>
-							<li<?php if (check_cuurent_uri($item_path)): ?> class="active"<?php endif; ?>><?php echo navigation_link($item_name, $item_path); ?></li>
+							<li<?php if (check_current_uri($item_path)): ?> class="active"<?php endif; ?>><?php echo navigation_link($item_name, $item_path); ?></li>
 <?php 		endforeach; ?>
 						</ul>
 						</li>
 <?php 	else: ?>
-					<li<?php if (check_cuurent_uri($value)): ?> class="active"<?php endif; ?>><?php echo navigation_link($name, $value); ?></li>
+					<li<?php if (check_current_uri($value)): ?> class="active"<?php endif; ?>><?php echo navigation_link($name, $value); ?></li>
 <?php 	endif; ?>
 <?php		$i++; ?>
 <?php endforeach; ?>
@@ -29,12 +29,12 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#menu<?php echo $i; ?>"><?php echo $name; ?> <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 <?php 		foreach ($value as $item_name => $item_path): ?>
-							<li<?php if (check_cuurent_uri($item_path)): ?> class="active"<?php endif; ?>><?php echo navigation_link($item_name, $item_path); ?></li>
+							<li<?php if (check_current_uri($item_path)): ?> class="active"<?php endif; ?>><?php echo navigation_link($item_name, $item_path); ?></li>
 <?php 		endforeach; ?>
 						</ul>
 						</li>
 <?php 	else: ?>
-					<li<?php if (check_cuurent_uri($value)): ?> class="active"<?php endif; ?>><?php echo navigation_link($name, $value); ?></li>
+					<li<?php if (check_current_uri($value)): ?> class="active"<?php endif; ?>><?php echo navigation_link($name, $value); ?></li>
 <?php 	endif; ?>
 <?php		$i++; ?>
 <?php endforeach; ?>

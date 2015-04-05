@@ -403,7 +403,7 @@ function is_enabled_map($action = null, $module = null)
 	return conf('map.isEnabled') && conf('display_setting.'.$action_key.'.displayMap', $module, false);
 }
 
-function check_cuurent_uri($uri, $is_internal_uri = false)
+function check_current_uri($uri, $is_internal_uri = false)
 {
 	if ($is_internal_uri) return trim(Site_Util::get_action_path()) == trim($uri, '/');
 
