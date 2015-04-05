@@ -112,7 +112,7 @@ class Controller_Member_Leave extends Controller_Site
 		catch(Database_Exception $e)
 		{
 			$is_transaction_rollback = true;
-			$error_message = Util_Db::get_db_error_message($e);
+			$error_message = Site_Controller::get_error_message($e, true);
 		}
 		catch(FuelException $e)
 		{

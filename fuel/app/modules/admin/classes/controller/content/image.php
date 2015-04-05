@@ -149,7 +149,7 @@ class Controller_Content_Image extends Controller_Admin
 		}
 		catch(\Database_Exception $e)
 		{
-			$error_message = \Util_Db::get_db_error_message($e);
+			$error_message = \Site_Controller::get_error_message($e, true);
 		}
 		catch (Exception $e)
 		{

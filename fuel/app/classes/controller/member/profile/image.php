@@ -60,7 +60,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 		catch(Database_Exception $e)
 		{
 			if (DB::in_transaction()) DB::rollback_transaction();
-			Session::set_flash('error', Util_Db::get_db_error_message($e));
+			Session::set_flash('error', Site_Controller::get_error_message($e, true));
 		}
 		catch(FuelException $e)
 		{
@@ -114,7 +114,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 		catch(Database_Exception $e)
 		{
 			if (DB::in_transaction()) DB::rollback_transaction();
-			Session::set_flash('error', Util_Db::get_db_error_message($e));
+			Session::set_flash('error', Site_Controller::get_error_message($e, true));
 		}
 		catch(FuelException $e)
 		{
@@ -151,7 +151,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 		catch(Database_Exception $e)
 		{
 			if (DB::in_transaction()) DB::rollback_transaction();
-			Session::set_flash('error', Util_Db::get_db_error_message($e));
+			Session::set_flash('error', Site_Controller::get_error_message($e, true));
 		}
 		catch(FuelException $e)
 		{
@@ -192,7 +192,7 @@ class Controller_Member_Profile_Image extends Controller_Member
 		catch(Database_Exception $e)
 		{
 			if (DB::in_transaction()) DB::rollback_transaction();
-			Session::set_flash('error', Util_Db::get_db_error_message($e));
+			Session::set_flash('error', Site_Controller::get_error_message($e, true));
 		}
 		catch(FuelException $e)
 		{

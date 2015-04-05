@@ -91,7 +91,7 @@ class Controller_Member_setting extends Controller_Member
 		catch(Database_Exception $e)
 		{
 			$is_transaction_rollback = true;
-			$error_message = Util_Db::get_db_error_message($e);
+			$error_message = Site_Controller::get_error_message($e, true);
 		}
 		catch(FuelException $e)
 		{
@@ -197,7 +197,7 @@ class Controller_Member_setting extends Controller_Member
 		catch(Database_Exception $e)
 		{
 			$is_transaction_rollback = true;
-			$error_message = Util_Db::get_db_error_message($e);
+			$error_message = Site_Controller::get_error_message($e, true);
 		}
 		catch(FuelException $e)
 		{
@@ -277,7 +277,7 @@ class Controller_Member_setting extends Controller_Member
 			catch(\Database_Exception $e)
 			{
 				$is_transaction_rollback = true;
-				$error_message = \Util_Db::get_db_error_message($e);
+				$error_message = \Site_Controller::get_error_message($e, true);
 			}
 			catch(FuelException $e)
 			{

@@ -128,7 +128,7 @@ class Controller_Thread extends \Controller_Site
 			}
 			catch(\Database_Exception $e)
 			{
-				$error_message = \Util_Db::get_db_error_message($e);
+				$error_message = \Site_Controller::get_error_message($e, true);
 			}
 			catch(\FuelException $e)
 			{
@@ -192,7 +192,7 @@ class Controller_Thread extends \Controller_Site
 			}
 			catch(\Database_Exception $e)
 			{
-				$error_message = \Util_Db::get_db_error_message($e);
+				$error_message = \Site_Controller::get_error_message($e, true);
 			}
 			catch(\FuelException $e)
 			{
