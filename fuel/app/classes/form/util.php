@@ -1,9 +1,9 @@
 <?php
 class Form_Util
 {
-	public static function get_model_field($table, $column, $namespace = '', $label = '', $delete_rules = array())
+	public static function get_model_field($table, $column, $label = '', $delete_rules = array())
 	{
-		$model = Util_Orm::get_model_name($table, $namespace);
+		$model = Site_Model::get_model_name($table);
 		$obj = $model::forge();
 		$props = $obj::get_property($column, $delete_rules);
 		if (!$props || empty($props['form']))

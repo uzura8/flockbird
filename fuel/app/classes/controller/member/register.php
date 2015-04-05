@@ -37,7 +37,7 @@ class Controller_Member_Register extends Controller_Site
 		$add_fields['password'] = Form_Util::get_model_field('member_auth', 'password');
 		if (!$member_pre->password)
 		{
-			$add_fields['password_confirm'] = Form_Util::get_model_field('member_auth', 'password', '', term('site.password', 'form._confirm'));
+			$add_fields['password_confirm'] = Form_Util::get_model_field('member_auth', 'password', term('site.password', 'form._confirm'));
 		}
 		$form_member_profile->set_validation($add_fields, 'member_register');
 		$form_member_profile->set_validation_message('match_value', ':labelが正しくありません。');

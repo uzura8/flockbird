@@ -206,7 +206,7 @@ class Controller_Member_Recover extends Controller_Site
 
 	public function form_resend_password()
 	{
-		$add_fields = array('email' => Form_Util::get_model_field('member_auth', 'email', null, null, 'unique'));
+		$add_fields = array('email' => Form_Util::get_model_field('member_auth', 'email', null, 'unique'));
 
 		return Site_Util::get_form_instance('resend_password', null, true, $add_fields, array('value' => term('form.submit')));
 	}
@@ -214,8 +214,8 @@ class Controller_Member_Recover extends Controller_Site
 	public function form_reset_password()
 	{
 		$add_fields = array(
-			'password' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s', term('site.password'))),
-			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', '', sprintf('新しい%s(確認用)', term('site.password'))),
+			'password' => Form_Util::get_model_field('member_auth', 'password', sprintf('新しい%s', term('site.password'))),
+			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', sprintf('新しい%s(確認用)', term('site.password'))),
 			'token' => Form_Util::get_model_field('member_pre', 'token'),
 		);
 		$add_fields['token']['attributes'] = array('type'=>'hidden', 'value' => Input::param('token'));
