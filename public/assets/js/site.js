@@ -231,7 +231,7 @@ $(document).on('click', '.js-dropdown_content_menu', function(){
 	var getUri = $(this).data('uri') ? $(this).data('uri') : '';
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 	var memberId = $(this).data('member_id') ? parseInt($(this).data('member_id')) : 0;
-	var targetBlock = $(this).next('ul');
+	var targetBlock = $(this).data('menu') ? $($(this).data('menu')) : $(this).next('ul');
 
 	if (!get_uid()) return false;
 

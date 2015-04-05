@@ -174,6 +174,7 @@ $dropdown_btn_attr = array(
 	'data-member_id' => $timeline->member_id,
 	'data-loaded' => 0,
 	'data-parent' => 'timelineBox_'.$timeline->id,
+	'data-menu' => '#menu_'.$timeline->id,
 );
 if ($is_detail) $dropdown_btn_attr['data-uri'] .= '?is_detail=1';
 
