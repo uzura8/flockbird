@@ -188,4 +188,14 @@ class Site_Member
 			DB::commit_transaction();
 		}
 	}
+
+	public static function get_accept_member_register_types()
+	{
+		$register_types = array(0);
+		if (FBD_FACEBOOK_APP_ID && FBD_FACEBOOK_APP_SECRET) $register_types[] = 1;
+		if (FBD_TWITTER_APP_ID && FBD_TWITTER_APP_SECRET)   $register_types[] = 2;
+		if (FBD_GOOGLE_APP_ID && FBD_GOOGLE_APP_SECRET)     $register_types[] = 3;
+
+		return $register_types;
+	}
 }

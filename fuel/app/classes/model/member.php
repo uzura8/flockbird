@@ -111,6 +111,8 @@ class Model_Member extends \MyOrm\Model
 			if (is_callable($method)) static::$_properties['name']['validation']['not_in_array'][] = call_user_func($method);
 		}
 
+		static::$_properties['register_type']['validation']['in_array'][] = Site_Member::get_accept_member_register_types();
+
 		$sex_options = Site_Form::get_form_options4config('term.member.sex.options');
 		static::$_properties['sex']['label'] = term('member.sex.label');
 		static::$_properties['sex']['form']['options'] = $sex_options;
