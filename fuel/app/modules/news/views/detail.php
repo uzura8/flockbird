@@ -1,8 +1,10 @@
 <div class="article_body">
-<?php if (Config::get('news.form.isEnabledWysiwygEditor')): ?>
-<?php echo $html_body ?>
+<?php if ($news->format == 1): ?>
+<?php 	echo $html_body ?>
+<?php elseif ($news->format == 2): ?>
+<?php 	echo Markdown::parse($html_body); ?>
 <?php else: ?>
-<?php echo nl2br($news->body) ?>
+<?php 	echo nl2br($news->body) ?>
 <?php endif; ?>
 </div>
 

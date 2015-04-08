@@ -30,6 +30,13 @@ class Model_ContentPage extends \MyOrm\Model
 			'validation' => array('trim'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
+		'format' => array(
+			'data_type' => 'integer',
+			'label' => '形式',
+			'default' => 0,
+			'validation' => array('required', 'valid_string' => array('numeric'), 'max_length' => array(1)),
+			'form' => array('type' => 'select'),
+		),
 		'admin_user_id' => array(
 			'data_type' => 'integer',
 			'form' => array('type' => false),
@@ -59,15 +66,19 @@ class Model_ContentPage extends \MyOrm\Model
 
 	public static function _init()
 	{
+		$format_options = conf('page.form.formats.options', 'content');
+		static::$_properties['format']['form']['options'] = $format_options;
+		static::$_properties['format']['validation']['in_array'][] = array_keys($format_options);
+
 		$is_secure_options = \Site_Form::get_form_options4config('term.isSecure.options');
 		static::$_properties['is_secure']['label'] = term('isSecure.label');
 		static::$_properties['is_secure']['form']['options'] = $is_secure_options;
 		static::$_properties['is_secure']['validation']['in_array'][] = array_keys($is_secure_options);
 
-		if (!\Config::get('content.page.form.isEnabledWysiwygEditor'))
-		{
-			static::$_properties['body']['validation'][] = 'required';
-		}
+		//if (!Site_Util::check_editor_enabled('html_editor'))
+		//{
+		//	static::$_properties['body']['validation'][] = 'required';
+		//}
 	}
 
 	public static function check_exists4slug($slug)

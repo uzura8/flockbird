@@ -207,7 +207,10 @@ $(document).on('click', '.js-insert_text', function(){
 });
 
 $(document).on('click', '.js-insert_img', function(){
-	var targetBodySelector = $(this).data('body') ? $(this).data('body') : '';
+	var selfSelector = $(this).attr('id') ? $(this).attr('id') : this;
+	var btn = document.getElementById(selfSelector);
+	var targetBodySelector = btn.getAttribute("data-body");
+	var isAddElement = (targetBodySelector == '.note-editable');
 	if (!targetBodySelector) return false;
 
 	var fileId = $(this).data('id') ? parseInt($(this).data('id')) : 0;
@@ -222,7 +225,13 @@ $(document).on('click', '.js-insert_img', function(){
 	var textAreaVal = textAreaSelector ? $(textAreaSelector).val() : '';
 	var src = ' src="' + get_url(imgUri, true) + '"';
 	var alt = textAreaVal ? ' alt="' + textAreaVal + '"' : '';
-	$(targetBodySelector).append('<img' + src + alt + '>');
+	var addValue = '<img' + src + alt + '>';
+	if (isAddElement) {
+		$(targetBodySelector).append(addValue);
+	} else {
+		var currentValue = $(targetBodySelector).val();
+		$(targetBodySelector).val(currentValue + addValue)
+	}
 	showMessage(get_term('add_picture') + 'しました。');
 	return false;
 });

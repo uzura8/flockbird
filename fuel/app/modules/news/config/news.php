@@ -17,7 +17,14 @@ return array(
 		'isEnabled' => true,
 	),
 	'form' => array(
-		'isEnabledWysiwygEditor' => true,
+		'formats' => array(
+			'options' => array(
+				//'0' => 'text',
+				'1' => 'html_editor',// enabled to wysiwyg editor(summernote)
+				'2' => 'markdown',//    enabled to markdown editor
+			),
+			'default' => '1',
+		),
 	),
 	'viewParams' => array(
 		'site' => array(

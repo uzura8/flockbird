@@ -38,6 +38,6 @@ class Controller_Page extends \Controller_Site
 
 		$this->set_title_and_breadcrumbs($content_page->title);
 		$this->template->content = \View::forge('page/detail', array('content_page' => $content_page));
-		if (\Config::get('content.page.form.isEnabledWysiwygEditor')) $this->template->content->set_safe('html_body', $content_page->body);
+		if (Site_Util::check_editor_enabled()) $this->template->content->set_safe('html_body', $content_page->body);
 	}
 }

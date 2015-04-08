@@ -65,6 +65,13 @@ class Model_News extends \MyOrm\Model
 			'validation' => array('trim'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
+		'format' => array(
+			'data_type' => 'integer',
+			'label' => '形式',
+			'default' => 0,
+			'validation' => array('required', 'valid_string' => array('numeric'), 'max_length' => array(1)),
+			'form' => array('type' => 'select'),
+		),
 		'is_published' => array(
 			'data_type' => 'integer',
 			'validation' => array('in_array' => array(array(0,1))),
@@ -123,6 +130,10 @@ class Model_News extends \MyOrm\Model
 
 	public static function _init()
 	{
+		$format_options = conf('form.formats.options', 'news');
+		static::$_properties['format']['form']['options'] = $format_options;
+		static::$_properties['format']['validation']['in_array'][] = array_keys($format_options);
+
 		if (\Config::get('news.category.isEnabled'))
 		{
 			static::$_properties['news_category_id']['label'] = term('news.category.simple');
@@ -134,10 +145,10 @@ class Model_News extends \MyOrm\Model
 		{
 			static::$_properties['news_category_id']['form']['type'] = false;
 		}
-		if (!\Config::get('news.form.isEnabledWysiwygEditor'))
-		{
-			static::$_properties['body']['validation'][] = 'required';
-		}
+		//if (!Site_Util::check_editor_enabled('html_editor') || !(conf('image.isEnabled', 'news') && conf('image.isInsertBody', 'news')))
+		//{
+		//	static::$_properties['body']['validation'][] = 'required';
+		//}
 	}
 
 	public static function check_exists4slug($slug)
@@ -153,6 +164,7 @@ class Model_News extends \MyOrm\Model
 		$obj->users_id     = $user_id;
 		$obj->token        = \Security::generate_token();
 		$obj->is_published = 0;
+		$obj->format = conf('form.formats.default', 'news');
 		$obj->save();
 
 		return $obj;

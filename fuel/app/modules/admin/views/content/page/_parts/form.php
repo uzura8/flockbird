@@ -1,8 +1,20 @@
 <div class="well">
 <?php echo form_open(true); ?>
 	<?php echo form_input($val, 'title', isset($content_page) ? $content_page->title : ''); ?>
-<?php if (Config::get('news.form.isEnabledWysiwygEditor')): ?>
-	<?php echo form_textarea($val, 'body', isset($content_page) ? $content_page->body : '', null, false, null, null, true); ?>
+<?php
+$format_options = $val->fieldset()->field('format')->get_options();
+?>
+<?php if (count($format_options) == 1): ?>
+	<?php echo Form::hidden('format', isset($content_page) ? $content_page->format : conf('page.form.formats.default', 'content')); ?>
+<?php else: ?>
+	<?php echo form_select($val, 'format', isset($content_page) ? $content_page->format : conf('page.form.formats.default', 'content'), 6); ?>
+<?php endif; ?>
+<?php if (\Content\Site_Util::check_editor_enabled()): ?>
+<?php
+$textarea_attr = array('style' => 'display:none;');
+if (\Content\Site_Util::check_editor_enabled('markdown')) $textarea_attr['data-provide'] = 'markdown';
+echo form_textarea($val, 'body', isset($content_page) ? $content_page->body : '', 12, true, null, null, $textarea_attr, true);
+?>
 <?php else: ?>
 	<?php echo form_textarea($val, 'body', isset($content_page) ? $content_page->body : ''); ?>
 <?php endif; ?>

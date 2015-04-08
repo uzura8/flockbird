@@ -82,7 +82,7 @@ class Controller_News extends Controller_Admin
 		$this->set_title_and_breadcrumbs($title, array('admin/news' => term('news.view', 'admin.view')), null, null, $header_info);
 		$this->template->subtitle = \View::forge('news/_parts/detail_subtitle', array('news' => $news));
 		$this->template->content = \View::forge('news/detail', array('news' => $news, 'images' => $images, 'files' => $files));
-		if (\Config::get('news.form.isEnabledWysiwygEditor')) $this->template->content->set_safe('html_body', $news->body);
+		if (\News\Site_Util::check_editor_enabled()) $this->template->content->set_safe('html_body', $news->body);
 	}
 
 	/**
@@ -129,11 +129,7 @@ class Controller_News extends Controller_Admin
 				if ($is_enabled_file)  $file_tmps  = \Site_FileTmp::get_file_tmps_and_check_filesize(null, null, 'file');
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-
-				$news->news_category_id = $post['news_category_id'];
-				$news->slug         = $post['slug'];
-				$news->title        = $post['title'];
-				$news->body         = $post['body'];
+				$news->set_values($post);
 				$news->users_id     = $this->u->id;
 				$news->token        = \Security::generate_token();
 				$news->is_published = $post['is_draft'] ? 0 : 1;
@@ -279,11 +275,7 @@ class Controller_News extends Controller_Admin
 
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-
-				$news->news_category_id = $post['news_category_id'];
-				$news->slug  = $post['slug'];
-				$news->title = $post['title'];
-				$news->body  = $post['body'];
+				$news->set_values($post);
 
 				$message = sprintf('%sを%sしました。', term('news.view'), term('form.edit'));
 				if ($is_published = (!$news->is_published && empty($post['is_draft'])))

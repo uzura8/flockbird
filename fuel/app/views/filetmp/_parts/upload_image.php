@@ -63,6 +63,7 @@ if (!empty($insert_target))
 {
 	$data = array(
 		'class' => 'js-insert_img',
+		'id' => 'img_insert_btn_'.$file->id,
 		'data-id' => $file->id,
 		'data-body' => $insert_target,
 		'data-file_name' => $file->name,

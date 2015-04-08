@@ -74,7 +74,7 @@ class Controller_Content_Page extends Controller_Admin
 		);
 		$this->template->subtitle = \View::forge('content/page/_parts/detail_subtitle', array('content_page' => $content_page));
 		$this->template->content = \View::forge('content/page/detail', array('content_page' => $content_page));
-		if (\Config::get('content.page.form.isEnabledWysiwygEditor')) $this->template->content->set_safe('html_body', $content_page->body);
+		if (\Content\Site_Util::check_editor_enabled()) $this->template->content->set_safe('html_body', $content_page->body);
 	}
 
 	/**
@@ -97,10 +97,7 @@ class Controller_Content_Page extends Controller_Admin
 			{
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-				$content_page->slug      = $post['slug'];
-				$content_page->title     = $post['title'];
-				$content_page->body      = $post['body'];
-				$content_page->is_secure = $post['is_secure'];
+				$content_page->set_values($post);
 				$content_page->admin_user_id = $this->u->id;
 				\DB::start_transaction();
 				$content_page->save();
@@ -131,10 +128,7 @@ class Controller_Content_Page extends Controller_Admin
 				'admin/content/page' => term('content.page', 'site.management'),
 			)
 		);
-		if (\Config::get('content.page.form.isEnabledWysiwygEditor'))
-		{
-			$this->template->post_header = \View::forge('_parts/form/summernote/header');
-		}
+		$this->template->post_header = \View::forge('content/page/_parts/form_header');
 		$this->template->post_footer = \View::forge('content/page/_parts/form_footer');
 		$this->template->content = \View::forge('content/page/_parts/form', array('val' => $val));
 	}
@@ -163,10 +157,7 @@ class Controller_Content_Page extends Controller_Admin
 
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
-				$content_page->slug      = $post['slug'];
-				$content_page->title     = $post['title'];
-				$content_page->body      = $post['body'];
-				$content_page->is_secure = $post['is_secure'];
+				$content_page->set_values($post);
 				\DB::start_transaction();
 				$content_page->save();
 				\DB::commit_transaction();
@@ -197,10 +188,7 @@ class Controller_Content_Page extends Controller_Admin
 				'admin/content/page' => term('content.page', 'site.management'),
 			)
 		);
-		if (\Config::get('content.page.form.isEnabledWysiwygEditor'))
-		{
-			$this->template->post_header = \View::forge('_parts/form/summernote/header');
-		}
+		$this->template->post_header = \View::forge('content/page/_parts/form_header');
 		$this->template->post_footer = \View::forge('content/page/_parts/form_footer');
 		$this->template->content = \View::forge('content/page/_parts/form', array(
 			'val' => $val,

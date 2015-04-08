@@ -497,4 +497,17 @@ class Model extends \Orm\Model
 
 		return $property;
 	}
+
+	public function set_values(array $values, $ignore_props = array())
+	{
+		if (!$values) return;
+
+		foreach ($values as $key => $value)
+		{
+			if (!isset($this->{$key})) continue;
+			if (in_array($key, $ignore_props)) continue;
+
+			$this->{$key} = $value;
+		}
+	}
 }

@@ -106,28 +106,20 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 	return render('_parts/form/file', $data);
 }
 
-function form_textarea(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $is_autogrow = true, $help = '', $optional_public_flag = array(), $use_wysiwyg_editor = false)
+function form_textarea(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $is_autogrow = true, $help = '', $option_public_flag = array(), $option_attr = array())
 {
+	if (!is_array($option_attr)) $option_attr = (array)$option_attr;
 	$field = $val->fieldset()->field($name);
-	$atter = array(
+	$attr = array(
 		'id'    => 'form_'.$name,
 		'rows'  => $field->get_attribute('rows'),
 		'class' => 'form-control',
 		'placeholder' => $field->get_attribute('placeholder'),
-	);
-	if ($is_autogrow) $atter['class'] .= ' autogrow';
-	if ($use_wysiwyg_editor)
-	{
-		//$atter['id'] = 'summernote';
-		$label_col_sm_size = 12;
-	}
+	) + $option_attr;
+	if ($is_autogrow) $attr['class'] .= ' autogrow';
 	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
-	}
-	elseif (!strlen($default_value) && $use_wysiwyg_editor)
-	{
-		$default_value = "<br>\n";
 	}
 
 	$data = array(
@@ -135,11 +127,11 @@ function form_textarea(Validation $val, $name, $default_value = null, $label_col
 		'name'  => $name,
 		'label' => $field->get_attribute('label'),
 		'default_value' => $default_value,
-		'atter' => $atter,
+		'attr' => $attr,
 		'is_required' => $field->get_attribute('required') == 'required',
 		'label_col_sm_size' => $label_col_sm_size,
 		'help' => $help,
-		'optional_public_flag' => $optional_public_flag,
+		'optional_public_flag' => $option_public_flag,
 	);
 
 	return render('_parts/form/textarea', $data);

@@ -1,3 +1,5 @@
+jQuery.fn.exists = function(){return Boolean(this.length > 0);}
+
 function sleep(sleep_time)
 {
 	var start_time = new Date().getTime();
@@ -29,13 +31,19 @@ function objectSort(object) {
 	return sorted;
 }
 
-function empty(data){
+function empty(data) {
 	if (data === null) return true;
 	if (data === undefined) return true;
 	if (data === false) return true;
 	if (data === '') return true;
 	if (data === 0) return true;
 	if (data === '0') return true;
-
 	return false;
-};
+}
+
+function focusLast(inputSelector) {
+	var body = $(inputSelector).val();
+	$(inputSelector).val('');
+	$(inputSelector).focus();
+	$(inputSelector).val(body);
+}

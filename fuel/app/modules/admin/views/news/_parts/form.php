@@ -2,8 +2,20 @@
 <?php echo form_open(true); ?>
 	<?php echo form_select($val, 'news_category_id', isset($news) ? $news->news_category_id : 0, 6); ?>
 	<?php echo form_input($val, 'title', isset($news) ? $news->title : ''); ?>
-<?php if (Config::get('news.form.isEnabledWysiwygEditor')): ?>
-	<?php echo form_textarea($val, 'body', isset($news) ? $news->body : '', null, false, null, null, true); ?>
+<?php
+$format_options = $val->fieldset()->field('format')->get_options();
+?>
+<?php if (count($format_options) == 1): ?>
+	<?php echo Form::hidden('format', isset($news) ? $news->format : conf('form.formats.default', 'news')); ?>
+<?php else: ?>
+	<?php echo form_select($val, 'format', isset($news) ? $news->format : conf('form.formats.default', 'news'), 6); ?>
+<?php endif; ?>
+<?php if (\News\Site_Util::check_editor_enabled()): ?>
+<?php
+$textarea_attr = array('style' => 'display:none;');
+if (\News\Site_Util::check_editor_enabled('markdown')) $textarea_attr['data-provide'] = 'markdown';
+echo form_textarea($val, 'body', isset($news) ? $news->body : '', 12, true, null, null, $textarea_attr, true);
+?>
 <?php else: ?>
 	<?php echo form_textarea($val, 'body', isset($news) ? $news->body : ''); ?>
 <?php endif; ?>
@@ -18,18 +30,25 @@
 		term('site.picture')
 	); ?>
 <?php 	else: ?>
-	<?php echo form_upload_files(
-		$images,
-		$images ? false : true,
-		false,
-		true,
-		'M',
-		array(),
-		'news',
-		term('site.picture'),
-		sprintf('admin/news/image/api/upload/%d.html', $news->id),
-		'.note-editable'
-	); ?>
+<?php
+$insert_target = null;
+if (conf('image.isInsertBody', 'news'))
+{
+	$insert_target = (isset($news) && $news->format == 1) ? '.note-editable' : '#form_body';
+}
+echo form_upload_files(
+	$images,
+	$images ? false : true,
+	false,
+	true,
+	'M',
+	array(),
+	'news',
+	term('site.picture'),
+	sprintf('admin/news/image/api/upload/%d.html', $news->id),
+	$insert_target
+);
+?>
 <?php 	endif; ?>
 <?php endif; ?>
 <?php if (conf('file.isEnabled', 'news')): ?>

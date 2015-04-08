@@ -34,6 +34,10 @@
   - version: 3.0.0
   - license: MIT
   - url: https://github.com/Eonasdan/bootstrap-datetimepicker
+* bootstrap-markdown
+  - version: 2.8.0
+  - license: MIT
+  - url: http://github.com/toopay/bootstrap-markdown
 * HTML5 Shiv
   - version: v3.7.0
   - license: MIT/GPL2 Licensed

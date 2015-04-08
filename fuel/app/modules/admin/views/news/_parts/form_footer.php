@@ -1,32 +1,17 @@
 <?php echo render('_parts/datetimepicker_footer', array('attr' => '#published_at_time')); ?>
 <?php if (Config::get('news.image.isEnabled') || Config::get('news.file.isEnabled')): ?>
-<?php echo render('filetmp/_parts/upload_footer'); ?>
+<?php 	echo render('filetmp/_parts/upload_footer'); ?>
 <?php endif; ?>
-<?php echo Asset::js('site/modules/admin/news/common/form.js');?>
-<?php if (Config::get('news.form.isEnabledWysiwygEditor')): ?>
-<?php echo render('_parts/form/summernote/footer'); ?>
-<?php echo render('_parts/form/summernote/moderator_setting'); ?>
+<?php if (\News\Site_Util::check_editor_enabled('html_editor')): ?>
+<?php 	echo render('_parts/form/summernote/footer'); ?>
+<?php 	echo render('_parts/form/summernote/moderator_setting'); ?>
+<?php endif; ?>
+<?php if (\News\Site_Util::check_editor_enabled('markdown')): ?>
+<?php 	echo render('_parts/form/markdown/footer', array('textarea_selector' => '#form_body')); ?>
 <?php endif; ?>
 <script>
-$(function(){
-	$(window).on('beforeunload', function() {
-		if (checkInput()) return '投稿が完了していません。このまま移動しますか？';
-	});
-	$("button[type=submit]").click(function() {
-		$(window).off('beforeunload');
-	});
-	$("#btn_delete").click(function() {
-		$(window).off('beforeunload');
-	});
-});
-function checkInput() {
-	if ($('#form_title').val().length > 0) return true;
-	if ($('.note-editable').size() > 0 && $('.note-editable').html().replace(/^<br>\s*/, '')) return true;
-	if ($('.image_tmp').size() > 0 && $('.image_tmp').length) return true;
-	if ($('.file_tmp').size() > 0 && $('.file_tmp').length) return true;
-	if ($('.link_uri').size() > 0 && $('.link_uri').length) return true;
-	if ($('.link_label').size() > 0 && $('.link_label').length) return true;
-	if ($('#form_published_at_time').val()) return true;
-	return false;
-}
+var isInsertImage = true;
 </script>
+<?php echo Asset::js('site/modules/admin/common/editor_form.js');?>
+<?php echo Asset::js('site/modules/admin/news/common/form.js');?>
+
