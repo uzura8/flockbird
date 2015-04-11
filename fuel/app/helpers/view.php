@@ -29,3 +29,17 @@ function convert_body($body, $options = array())
 
 	return $handler->convert($body);
 }
+
+function convert_body_by_format($body, $format = 0)
+{
+	switch ($format)
+	{
+		case 1:// raw(html_editor)
+			return $body;
+		case 2:
+			return Markdown::parse($body);// markdown
+	}
+
+	return nl2br(e($body));// text
+}
+

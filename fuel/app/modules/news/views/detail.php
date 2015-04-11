@@ -1,11 +1,5 @@
 <div class="article_body">
-<?php if ($news->format == 1): ?>
-<?php 	echo $html_body ?>
-<?php elseif ($news->format == 2): ?>
-<?php 	echo Markdown::parse($html_body); ?>
-<?php else: ?>
-<?php 	echo nl2br($news->body) ?>
-<?php endif; ?>
+<?php echo convert_body_by_format($html_body, $news->format); ?>
 </div>
 
 <?php if (!conf('image.isInsertBody', 'news')): ?>
