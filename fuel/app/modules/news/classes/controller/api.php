@@ -56,6 +56,7 @@ class Controller_Api extends \Controller_Rest
 			'news.news_category_id',
 			'news.title',
 			'news.body',
+			'news.format',
 			'news.published_at',
 			'news.slug',
 			array('news_category.name', 'news_category_name'),
@@ -66,27 +67,27 @@ class Controller_Api extends \Controller_Rest
 			->where('slug', $slug)
 			->and_where('is_published', 1);
 		$response = $query->execute()->current();
+		$response['body'] = convert_body_by_format($response['body'], $response['format']);
+		unset($response['format']);
 
 		$cols = array(
 			'news_image.name',
-			array('file.path', 'file_path'),
 			array('file.name', 'file_name'),
 			array('file.type', 'file_type'),
 		);
 		$query = \DB::select_array($cols)->from('news_image')
-			->join('file', 'LEFT')->on('file.id', '=', 'news_image.file_id')
+			->join('file', 'LEFT')->on('file.name', '=', 'news_image.file_name')
 			->where('news_id', $response['id']);
 		$response['images'] = self::add_file_options($query->execute()->as_array(), 'img');
 
 		$cols = array(
 			'news_file.name',
-			array('file.path', 'file_path'),
 			array('file.name', 'file_name'),
 			array('file.original_filename', 'file_original_filename'),
 			array('file.type', 'file_type'),
 		);
 		$query = \DB::select_array($cols)->from('news_file')
-			->join('file', 'LEFT')->on('file.id', '=', 'news_file.file_id')
+			->join('file', 'LEFT')->on('file.name', '=', 'news_file.file_name')
 			->where('news_id', $response['id']);
 		$response['files'] = self::add_file_options($query->execute()->as_array(), 'file');
 
@@ -109,11 +110,11 @@ class Controller_Api extends \Controller_Rest
 		$confs = conf('upload.types.'.$type);
 		foreach ($files as $key => $file)
 		{
-			$upload_uri = Site_Upload::get_uploaded_file_path($file['file_name'], 'raw', $type, false, true);
+			$upload_uri = \Site_Upload::get_uploaded_file_path($file['file_name'], 'raw', $type, false, true);
 			$files[$key]['file_url_raw'] = \Uri::create($upload_uri);
 			if ($type == 'img')
 			{
-				$upload_uri = Site_Upload::get_uploaded_file_path($file['file_name'], 'thumbnail', $type, false, true);
+				$upload_uri = \Site_Upload::get_uploaded_file_path($file['file_name'], 'thumbnail', $type, false, true);
 				$files[$key]['file_url_thumbnail'] = \Uri::create($upload_uri);
 			}
 

@@ -251,10 +251,10 @@ CREATE TABLE `contacts` (
 
 CREATE TABLE `file` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
-  `type` varchar(256) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'File name',
+  `type` varchar(256) NOT NULL DEFAULT '' COMMENT 'Type of this file',
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
-  `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
+  `original_filename` text COMMENT 'Original filename',
   `member_id` int(11) DEFAULT NULL,
   `exif` text NULL,
   `shot_at` datetime NULL,
@@ -263,7 +263,7 @@ CREATE TABLE `file` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
   KEY `member_id_idx` (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of files uploaded';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves informations of files uploaded';
 
 CREATE TABLE `file_tmp` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
