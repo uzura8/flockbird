@@ -165,6 +165,12 @@ class Site_FileMaker
 			return;
 		}
 
+		if ($this->size == 'thumbnail')
+		{
+			if (!empty($sizes['thumbnail'])) $this->size = $sizes['thumbnail'];
+			return;
+		}
+
 		if (!in_array($this->size, $sizes))
 		{
 			$this->size = $default_size;
