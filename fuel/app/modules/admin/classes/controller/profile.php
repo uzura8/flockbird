@@ -278,10 +278,7 @@ class Controller_Profile extends Controller_Admin
 			sprintf('%s: %s', term('profile', 'form.choices', 'site.list'), $profile->caption),
 			array('admin/profile' => term('profile', 'site.setting'))
 		);
-		$this->template->post_footer = \View::forge('_parts/load_asset_files', array('type' => 'js', 'files' => array(
-			'jquery-ui-1.10.3.custom.min.js',
-			'util/jquery-ui.js',
-		)));
+		$this->template->post_footer = \View::forge('_parts/sortable_footer');
 		$this->template->content = \View::forge('profile/show_options', array(
 			'profile' => $profile,
 			'val' => $val,

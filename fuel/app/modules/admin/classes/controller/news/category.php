@@ -27,10 +27,7 @@ class Controller_News_Category extends Controller_Admin
 			array('admin/news' => term('news.view', 'site.management'))
 		);
 		$this->template->subtitle = \View::forge('news/category/_parts/list_subtitle');
-		$this->template->post_footer = \View::forge('_parts/load_asset_files', array('type' => 'js', 'files' => array(
-			'jquery-ui-1.10.3.custom.min.js',
-			'util/jquery-ui.js',
-		)));
+		$this->template->post_footer = \View::forge('_parts/sortable_footer');
 		$this->template->content = \View::forge('news/category/list', array(
 			'news_categories' => $news_categories,
 			'val' => $val,
