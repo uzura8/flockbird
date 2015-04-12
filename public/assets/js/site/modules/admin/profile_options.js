@@ -1,6 +1,7 @@
 $('#btn_create').click(function(){
 	if (GL.execute_flg) return false;
 	execute_simple_post(this);
+	$('#input_label').focus();
 	return false;
 });
 
