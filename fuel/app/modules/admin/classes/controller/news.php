@@ -129,6 +129,7 @@ class Controller_News extends Controller_Admin
 				if ($is_enabled_file)  $file_tmps  = \Site_FileTmp::get_file_tmps_and_check_filesize(null, null, 'file');
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
+				if ($post['format'] == 2) $post['body'] = preg_replace('/^\&gt;/um', '>', $post['body']);
 				$news->set_values($post);
 				$news->users_id     = $this->u->id;
 				$news->token        = \Security::generate_token();
@@ -275,6 +276,7 @@ class Controller_News extends Controller_Admin
 
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
+				if ($post['format'] == 2) $post['body'] = preg_replace('/^\&gt;/um', '>', $post['body']);
 				$news->set_values($post);
 
 				$message = sprintf('%sを%sしました。', term('news.view'), term('form.edit'));

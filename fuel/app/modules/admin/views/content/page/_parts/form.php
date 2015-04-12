@@ -20,7 +20,7 @@ echo form_textarea($val, 'body', isset($content_page) ? $content_page->body : ''
 <?php endif; ?>
 	<?php echo form_input($val, 'slug', isset($content_page) ? $content_page->slug : '', 6); ?>
 	<?php echo form_radio($val, 'is_secure', isset($content_page) ? $content_page->is_secure : 0, 2, 'inline'); ?>
-	<?php echo form_button(empty($is_edit) ? 'form.do_create' : 'form.do_edit', 'submit', 'submit', array('class' => 'btn btn-default btn-warning')); ?>
+	<?php echo form_button(empty($is_edit) ? 'form.do_create' : 'form.do_edit', 'submit', 'submit', array('class' => 'btn btn-default btn-warning btn_submit')); ?>
 <?php if (!empty($is_edit)): ?>
 	<?php echo form_anchor_delete('admin/content/page/delete/'.$content_page->id); ?>
 <?php endif; ?>

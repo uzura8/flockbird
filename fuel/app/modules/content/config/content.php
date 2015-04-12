@@ -9,7 +9,7 @@ return array(
 					'1' => 'html_editor',// enabled to wysiwyg editor(summernote)
 					'2' => 'markdown',//    enabled to markdown editor
 				),
-				'default' => '2',
+				'default' => '1',
 			),
 		),
 	),

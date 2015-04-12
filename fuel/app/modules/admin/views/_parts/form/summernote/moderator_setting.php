@@ -8,6 +8,10 @@ $(document).ready(function() {
 			['view', ['fullscreen']]
 		],
 <?php endif; ?>
+		keyMap: {
+			pc: {'ENTER': ''},
+			mac: {'ENTER': ''}
+		},
 		lang: 'ja-JP',
 		height: 300,
 		minHeight: 150

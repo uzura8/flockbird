@@ -1,5 +1,3 @@
-var summernoteEditorDefaultValue = "<br>\n";
-
 $(function(){
 	$(window).on('beforeunload', function() {
 		if (checkInput()) return '投稿が完了していません。このまま移動しますか？';
@@ -12,6 +10,11 @@ $(function(){
 	});
 
 	showEditor($('#form_format').val());
+});
+
+$('.btn_submit').on('click', function(){
+	if ($('#form_format').val() == 1) return;
+	$('.note-editable').html($('#form_body').val());
 });
 
 $(document).on('change', '#form_format', function(){
@@ -34,11 +37,7 @@ function showEditor(selected_format) {
 function showMarkdownForm() {
 	var body = $('.note-editable').html();
 	if (!empty(body) && body.length) {
-		if (body == summernoteEditorDefaultValue || body == '<p><br></p>') {
-			$('#form_body').val('');
-		} else {
-			$('#form_body').val(decodeForMarkdown(body));
-		}
+		$('#form_body').val(decodeForMarkdown(body));
 	}
 	$('.note-editor').hide();
 	$('.md-header').show();
@@ -52,10 +51,6 @@ function showMarkdownForm() {
 
 function showSummernoteForm() {
 	var body = $('#form_body').val();
-	if (!body.length) {
-		$('#form_body').val(summernoteEditorDefaultValue);
-		body = summernoteEditorDefaultValue;
-	}
 	$('.note-editable').html(body);
 	$('.md-header').hide();
 	$('.md-preview').hide();

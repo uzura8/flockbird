@@ -97,6 +97,7 @@ class Controller_Content_Page extends Controller_Admin
 			{
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
+				if ($post['format'] == 2) $post['body'] = preg_replace('/^\&gt;/um', '>', $post['body']);
 				$content_page->set_values($post);
 				$content_page->admin_user_id = $this->u->id;
 				\DB::start_transaction();
@@ -157,6 +158,7 @@ class Controller_Content_Page extends Controller_Admin
 
 				if (!$val->run()) throw new \FuelException($val->show_errors());
 				$post = $val->validated();
+				if ($post['format'] == 2) $post['body'] = preg_replace('/^\&gt;/um', '>', $post['body']);
 				$content_page->set_values($post);
 				\DB::start_transaction();
 				$content_page->save();

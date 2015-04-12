@@ -34,7 +34,7 @@ function changeAttrForEitor(isSummernote) {
 
 function checkInput() {
 	if ($('#form_title').val().length > 0) return true;
-	if ($('.note-editable').size() > 0 && $('.note-editable').html().replace(/^<br>\s*/, '')) return true;
+	if ($('.note-editable').size() > 0 && $('.note-editable').html().replace(/^<br>\s*/, '').size() > 0) return true;
 	if ($('#form_body').val().length > 0) return true;
 	if ($('.image_tmp').size() > 0 && $('.image_tmp').length) return true;
 	if ($('.file_tmp').size() > 0 && $('.file_tmp').length) return true;

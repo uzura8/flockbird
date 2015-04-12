@@ -28,7 +28,7 @@ class Model_ContentPage extends \MyOrm\Model
 			'data_type' => 'text',
 			'label' => '本文',
 			'validation' => array('trim'),
-			'form' => array('type' => 'textarea', 'rows' => 10),
+			'form' => array('type' => 'textarea', 'rows' => 16),
 		),
 		'format' => array(
 			'data_type' => 'integer',
