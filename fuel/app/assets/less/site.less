@@ -3,10 +3,11 @@
 
 .navbar-brand {
 	position: relative;
-	padding: @parts-padding-md 0 @parts-padding-md 56px !important;
+	padding-left: 50px !important;
 
-	@media (min-width: @screen-md-min) {
+	@media (min-width: @screen-sm-min) {
 		& {
+			margin-left: 0 !important;
 			padding-right: @parts-padding-md !important;
 		}
 	}
@@ -14,7 +15,7 @@
 	img {
 		position: absolute;
 		top: @parts-margin-sm;
-		left: @parts-margin-md;
+		left: @parts-margin-sm;
 	}
 }
 
