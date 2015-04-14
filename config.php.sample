@@ -70,6 +70,7 @@ define('FBD_ADMIN_MAIL', 'admin@example.com');
 
 // Google 関連設定
 define('GOOGLE_ANALYTICS_TRACKING_CODE', '');
+define('GOOGLE_SITE_VERIFICATION', '');
 
 // AWS 関連設定
 define('FBD_AWS_ACCESS_KEY', '');
