@@ -16,14 +16,5 @@ class Controller_Base extends \Controller_Base
 	{
 		return Model_AdminUser::query()->where('id', $user_id)->get_one();
 	}
-
-	protected static function get_breadcrumbs($title_name = '', $middle_breadcrumbs = array())
-	{
-		$breadcrumbs = array('admin' => term('admin.view', 'page.top'));
-		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
-		$breadcrumbs[''] = $title_name;
-
-		return $breadcrumbs;
-	}
 }
 /* End of file base.php */

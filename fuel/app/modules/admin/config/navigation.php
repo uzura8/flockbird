@@ -10,15 +10,16 @@ $configs = array(
 				term('news.view', 'site.list') => 'admin/news/',
 				term('news.view', 'form.create') => conf('image.isInsertBody', 'news') ? array(
 					'href' => 'admin/news/create_instantly',
+					'method' => 'POST',
 					'attr' => array(
 						'class' => 'js-simplePost',
 						'data-msg' => term('news.view').'を'.term('form.create').'します。よろしいですか？',
 					),
 				) : 'admin/news/create',
-				term('news.category.view') => 'admin/news/category',
-				term('content.page', 'site.management') => 'admin/content/page',
-				term('site.image', 'site.management') => 'admin/content/image',
-				term('site.mail', 'site.template', 'site.management') => 'admin/content/template/mail',
+				term('news.category.view') => 'admin/news/category/',
+				term('content.page', 'site.management') => 'admin/content/page/',
+				term('site.image', 'site.management') => 'admin/content/image/',
+				term('site.mail', 'site.template', 'site.management') => 'admin/content/template/mail/',
 			),
 			term('site.view', 'site.management') => array(
 				term('profile', 'site.setting') => 'admin/profile/',

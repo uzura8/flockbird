@@ -70,6 +70,7 @@ return array(
 		'admin'  => true,
 		'moderator'  => array(
 			'admin/news/create' => array('GET', 'POST'),
+			'admin/news/create_instantly' => array('POST'),
 			'admin/news/delete' => array('POST', 'DELETE'),
 			'admin/news/edit' => array('GET', 'POST'),
 			'admin/news/publish' => array('POST'),
@@ -82,11 +83,14 @@ return array(
 			'admin/news/category/api/delete' => array('POST'),
 			'admin/news/category/api/update' => array('POST'),
 			'admin/news/category/image/delete' => array('POST'),
+			'admin/content/page/index' => array('GET'),
 			'admin/content/page/create' => array('GET', 'POST'),
 			'admin/content/page/delete' => array('POST', 'DELETE'),
 			'admin/content/page/edit' => array('GET', 'POST'),
 			'admin/content/image/upload' => array('GET', 'POST'),
 			'admin/content/image/delete' => array('POST'),
+			'admin/content/template/mail/index' => array('GET'),
+			'admin/content/template/mail/list' => array('GET'),
 			'admin/content/template/mail/edit' => array('GET', 'POST'),
 			'admin/content/template/mail/reset' => array('POST'),
 			'admin/content/image/api/delete' => array('POST'),
@@ -111,8 +115,6 @@ return array(
 			'admin/content/image/list' => array('GET'),
 			'admin/content/image/detail' => array('GET'),
 			'admin/content/image/api/list' => array('GET'),
-			'admin/content/template/mail/index' => array('GET'),
-			'admin/content/template/mail/list' => array('GET'),
 		),
 		/**
 		 * Examples

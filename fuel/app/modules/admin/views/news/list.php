@@ -22,19 +22,29 @@
 	<td class="fs10"><?php echo isset($news->news_category->label) ? $news->news_category->label : sprintf('<span class="text-danger">%s</span>', term('site.unset')); ?></td>
 	<td><?php echo Html::anchor('admin/news/'.$news->id, strim($news->title, Config::get('news.viewParams.admin.list.trim_width.title'))); ?></td>
 	<td class="small"><?php echo btn('form.preview', 'news/preview/'.$news->slug.'?token='.$news->token, '', false, 'xs'); ?></td>
-	<td class="small"><?php echo btn('form.edit', 'admin/news/edit/'.$news->id, '', false, 'xs'); ?></td>
+<?php 	if (check_acl($uri = 'admin/news/edit')): ?>
+	<td class="small"><?php echo btn('form.edit', $uri.$news->id, '', false, 'xs'); ?></td>
+<?php 	else: ?>
+	<td class="small"><?php echo symbol('noValue'); ?></td>
+<?php 	endif; ?>
+
+<?php 	if (check_acl('admin/news/publish')): ?>
 <?php $attr = array('data-destination' => Uri::string_with_query()); ?>
-<?php if ($news->is_published): ?>
+<?php 		if ($news->is_published): ?>
 	<td class="small"><?php echo btn('form.do_unpublish', '#', 'btn_publish', true, 'xs', null, $attr + array(
 		'data-uri' => 'admin/news/unpublish/'.$news->id,
 		'data-msg' => term('form.unpublish').'にしますか？',
 	)); ?></td>
-<?php else: ?>
+<?php 		else: ?>
 	<td class="small"><?php echo btn('form.do_publish', '#', 'btn_publish', true, 'xs', null, $attr + array(
 		'data-uri' => 'admin/news/publish/'.$news->id,
 		'data-msg' => term('form.publish').'しますか？',
 	)); ?></td>
-<?php endif; ?>
+<?php 		endif; ?>
+<?php 	else: ?>
+	<td class="small"><?php echo symbol('noValue'); ?></td>
+<?php 	endif; ?>
+
 	<td><?php echo label(term('news.status.'.$status), \News\Site_Util::get_status_label_type($status)); ?></td>
 	<td class="text-<?php if ($status == 'reserved'): ?>warning<?php elseif ($status == 'closed'): ?>muted<?php else: ?>normal<?php endif; ?>">
 		<?php if (isset_datatime($news->published_at)): ?><?php echo site_get_time($news->published_at, 'both', 'Y/m/d H:i'); ?><?php else: ?><?php echo symbol('noValue'); ?><?php endif; ?>

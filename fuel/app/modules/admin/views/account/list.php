@@ -13,10 +13,10 @@
 </tr>
 <?php foreach ($list as $id => $user): ?>
 <tr>
-<?php if (check_original_user($user->id, true) || !check_acl($uri = 'admin/account/delete', 'POST')): ?>
-	<td class="small"><?php echo symbol('noValue'); ?></td>
-<?php else: ?>
+<?php if (check_acl($uri = 'admin/account/delete', 'POST')): ?>
 	<td class="small"><?php echo btn('form.delete', '#', 'js-simplePost', false, 'xs', null, array('data-uri' => $uri.'/'.$user->id)); ?></td>
+<?php else: ?>
+	<td class="small"><?php echo symbol('noValue'); ?></td>
 <?php endif; ?>
 	<td class="small"><?php echo $user->id; ?></td>
 	<td><?php echo $user->username; ?></td>

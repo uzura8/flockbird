@@ -40,7 +40,7 @@ class Controller_Content_Page extends Controller_Admin
 			term('content.page', 'site.management'),
 			array('admin/content' => term('site.content', 'site.management'))
 		);
-		$this->template->subtitle = \View::forge('content/page/_parts/list_subtitle');
+		$this->template->subtitle = \View::forge('_parts/subtitle_edit', array('uri' => 'admin/content/page/create'));
 		$this->template->content = \View::forge('content/page/list', $data);
 	}
 

@@ -110,7 +110,7 @@ function btn_dropdown($type = null, $menus = array(), $btn_with_text = true, $bt
 	return $view->render();
 }
 
-function anchor($href, $text, $is_admin = false, $attr = array(), $is_absolute_ext_uri = false)
+function anchor($href, $text, $is_admin = false, $attr = array(), $is_absolute_ext_uri = false, $acl_method = 'GET')
 {
 	if (is_null($attr)) $attr = array();
 	if ($is_absolute_ext_uri || $is_ext_url = Site_Util::check_ext_uri($href, $is_admin))
@@ -121,7 +121,7 @@ function anchor($href, $text, $is_admin = false, $attr = array(), $is_absolute_e
 
 	if ($is_admin && !$is_ext_url)
 	{
-		if (Auth::check() && !Auth::has_access(Site_Util::get_acl_path($href).'.GET'))
+		if (Auth::check() && !Auth::has_access(Site_Util::get_acl_path($href).'.'.$acl_method))
 		{
 			$attr['class'] = empty($attr['class']) ? '' : $attr['class'].' ';
 			$attr['class'] .= 'disabled';
@@ -164,11 +164,13 @@ function navigation_link($label, $values, $is_admin = false)
 {
 	$href = $values;
 	$attr = array();
+	$acl_method = 'GET';
 	if (is_array($values))
 	{
 		$href = isset($values['href']) ? $values['href'] : '';
 		if (isset($values['attr'])) $attr = $values['attr'];
+		if (isset($values['method'])) $acl_method = $values['method'];
 	}
 
-	return $is_admin ? anchor($href, $label, true, $attr) : anchor_icon($href, $label, $attr);
+	return $is_admin ? anchor($href, $label, true, $attr, false, $acl_method) : anchor_icon($href, $label, $attr);
 }

@@ -29,7 +29,7 @@ class Controller_Base extends Controller_Hybrid
 		$this->check_remote_ip();
 		$this->auth_instance = Auth::forge($this->auth_driver);
 		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
-		$this->check_auth_and_response();
+		$this->check_auth_and_redirect();
 		$this->set_current_user();
 		self::setup_assets();
 	}
@@ -105,32 +105,6 @@ class Controller_Base extends Controller_Hybrid
 		if ($is_return_true_for_not_auth_action && $this->check_not_auth_action()) return true;
 
 		return \Auth::has_access(sprintf('%s.%s', \Site_Util::get_action_path(), \Input::method()));
-	}
-
-	protected function check_auth_and_response()
-	{
-		$status_code = null;
-		try
-		{
-			$this->check_auth_and_redirect();
-		}
-		catch(\HttpForbiddenException $e)
-		{
-			$status_code = 403;
-		}
-		catch(\ApiNotAuthorizedException $e)
-		{
-			$status_code = 401;
-		}
-		catch(\FuelException $e)
-		{
-			$status_code = 400;
-		}
-		if ($status_code)
-		{
-			$response = new Response(null, $status_code);
-			$response->send();
-		}
 	}
 
 	protected function set_current_user()
@@ -309,6 +283,33 @@ class Controller_Base extends Controller_Hybrid
 			static::get_breadcrumbs($title_name, $middle_breadcrumbs, $member_obj, $member_obj ? $this->check_is_mypage($member_obj->id) : false, $module);
 
 		View::set_global('common', $common);
+	}
+
+	protected static function get_breadcrumbs($title_name = '', $middle_breadcrumbs = array(), $member_obj = null, $is_mypage = false, $module = null)
+	{
+		$breadcrumbs = IS_ADMIN ? array('admin' => term('admin.view', 'page.top')) : array('/' => term('page.top'));
+		if ($member_obj)
+		{
+			if ($is_mypage)
+			{
+				$breadcrumbs['/member'] = term('page.myhome');
+				if ($module) $breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.term($module, 'site.list');
+			}
+			else
+			{
+				$name = $member_obj->name.'さんのページ';
+				$breadcrumbs['/member/'.$member_obj->id] = $name;
+				if ($module)
+				{
+					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
+					$breadcrumbs[$key] = term($module, 'site.list');
+				}
+			}
+		}
+		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
+		$breadcrumbs[''] = $title_name;
+
+		return $breadcrumbs;
 	}
 
 	public function common_get_list_params($defaults = array(), $limit_max = 0, $is_return_assoc = false)
