@@ -47,6 +47,7 @@ class Controller_Base extends Controller_Hybrid
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
 		$this->template->use_angularjs = false;
+		View::set_global('renderd_views', array());
 	}
 
 	protected function check_ssl_required_request_and_redirect()
