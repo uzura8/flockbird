@@ -4,9 +4,22 @@ $config = array(
 		'isEnabled' => true,
 		'legacyIECriteriaVersion' => 8,
 	),
-	'jqueryVersion' => array(
-		'latest' => '2.1.3',
-		'legacy' => '1.11.2',
+	'library' => array(
+		'jqueryVersion' => array(
+			'latest' => '2.1.3',
+			'legacy' => '1.11.2',
+		),
+		'angularJs' => array(
+			'isEnabled' => false,
+			'versions' => array(
+				'latest' => '1.3.15',
+				//'legacy' => '1.2.9',
+			),
+			//'legacyIECriteriaVersion' => 8,
+		),
+    //'PEAR_I18N_UnicodeNormalizer' => array(
+    //  'isEnabled' => false, // if set this true, you have to install PEAR/I18N_UnicodeNormalizer.
+    //),
 	),
 	'default' => array(
 		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
@@ -26,11 +39,6 @@ $config = array(
 				'file' => 10,
 			),
 		),
-	),
-	'library' => array(
-		//'PEAR_I18N_UnicodeNormalizer' => array(
-		//	'isEnabled' => false, // if set this true, you have to install PEAR/I18N_UnicodeNormalizer.
-		//),
 	),
 	'mail' => array(
 		'site' => array(

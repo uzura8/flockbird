@@ -1,15 +1,30 @@
+<?php echo Asset::js('handlebars-v1.3.0.js');?>
 <?php
-$jquery_version = conf('jqueryVersion.latest');
+$jquery_version = conf('library.jqueryVersion.latest');
 if (conf('legacyBrowserSupport.isEnabled') && \MyAgent\Agent::check_legacy_ie(conf('legacyBrowserSupport.legacyIECriteriaVersion')))
 {
-	$jquery_version = conf('jqueryVersion.legacy');
+	$jquery_version = conf('library.jqueryVersion.legacy');
 }
 ?>
-<?php echo Asset::js('handlebars-v1.3.0.js');?>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/<?php echo $jquery_version ; ?>/jquery.min.js"></script>
 <script>
 if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/jquery-'.$jquery_version.'.min.js'); ?>"><\/script>')
 </script>
+
+<?php if (conf('library.angularJs.isEnabled') && $use_angularjs): ?>
+<?php
+$angularjs_version = conf('library.angularJs.versions.latest');
+//if (conf('legacyBrowserSupport.isEnabled') && \MyAgent\Agent::check_legacy_ie(conf('legacyBrowserSupport.legacyIECriteriaVersion')))
+//{
+//	$jquery_version = conf('library.angularJs.versions.legacy');
+//}
+?>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/<?php echo $angularjs_version ; ?>/angular.min.js"></script>
+<script>
+if (typeof angular == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/angularjs/'.$angularjs_version.'/angular.min.js'); ?>"><\/script>')
+</script>
+<?php endif; ?>
+
 <?php
 Asset::js(array(
 	'bootstrap.js',

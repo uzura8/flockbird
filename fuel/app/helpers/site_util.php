@@ -30,21 +30,44 @@ function site_get_form_id($delimitter = '_')
 
 function site_htmltag_include_js_module()
 {
-	$assets_uri = sprintf('site/modules/%s/site.js', Site_Util::get_module_name());
-	$public_uri = 'assets/js/'.$assets_uri;
-	if (!file_exists(DOCROOT.'/'.$public_uri)) return '';
+	$returns = array();
+	if (!$module = Site_Util::get_module_name()) return '';
 
-	return Asset::js($assets_uri);
+	$assets_uri = sprintf('site/modules/%s/site.js', $module);
+	$public_uri = 'assets/js/'.$assets_uri;
+	if (file_exists(DOCROOT.'/'.$public_uri)) $returns[] = Asset::js($assets_uri);
+
+	$assets_uri = sprintf('modules/%s/site.js', $module);
+	$public_uri = 'assets/js/'.$assets_uri;
+	if (file_exists(DOCROOT.'/'.$public_uri)) $returns[] = Asset::js($assets_uri);
+
+	if (!$returns) return '';
+
+	return implode(PHP_EOL, $returns);
 }
 
 function site_htmltag_include_js_action()
 {
+	$returns = array();
 	$module = Site_Util::get_module_name();
-	$assets_uri = sprintf('site/%s%s_%s.js', $module ? sprintf('modules/%s/', $module) : '', Site_Util::get_controller_name(), Site_Util::get_action_name());
-	$public_uri = 'assets/js/'.$assets_uri;
-	if (!file_exists(DOCROOT.'/'.$public_uri)) return '';
+	$controller = Site_Util::get_controller_name();
+	$action = Site_Util::get_action_name();
 
-	return Asset::js($assets_uri);
+	$assets_uri = sprintf('site/%s%s_%s.js', $module ? sprintf('modules/%s/', $module) : '', $controller, $action);
+	$public_uri = 'assets/js/'.$assets_uri;
+	if (file_exists(DOCROOT.'/'.$public_uri)) $returns[] = Asset::js($assets_uri);
+
+	if ($module)
+	{
+		$assets_uri = sprintf('modules/%s/%s_%s.js', $module, $controller, $action);
+		$public_uri = 'assets/js/'.$assets_uri;
+
+		if (file_exists(DOCROOT.'/'.$public_uri)) $returns[] = Asset::js($assets_uri);
+	}
+
+	if (!$returns) return '';
+
+	return implode(PHP_EOL, $returns);
 }
 
 function site_title($title = '', $subtitle = '')

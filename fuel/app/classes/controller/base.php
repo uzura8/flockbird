@@ -46,6 +46,7 @@ class Controller_Base extends Controller_Hybrid
 		$this->set_title_and_breadcrumbs(FBD_SITE_NAME);
 		$this->template->header_keywords = '';
 		$this->template->header_description = '';
+		$this->template->use_angularjs = false;
 	}
 
 	protected function check_ssl_required_request_and_redirect()
