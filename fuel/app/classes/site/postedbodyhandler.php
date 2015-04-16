@@ -43,6 +43,7 @@ class Site_PostedBodyHandler
 
 	public function convert($body)
 	{
+		$body = e($body);
 		if ($this->options['nl2br']) $body = nl2br($body);
 		$body = $this->convert_url2link($body);
 		$body = $this->convert_mention2link($body);

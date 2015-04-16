@@ -104,7 +104,7 @@ class Controller_Site_Api extends Controller_Base_Site
 				foreach ($list as $key => $row)
 				{
 					$row['body'] = convert_body($row['body'], array(
-						'nl2br' => false,
+						'nl2br' => conf('view_params_default.comment.nl2br'),
 						'is_truncate' => false,
 						'mention2link' => true,
 					));

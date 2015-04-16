@@ -58,7 +58,7 @@ if (empty($is_hide_reply_link) && conf('mention.isEnabled', 'notice') && $commen
 }
 $content_view = View::forge('_parts/member_contents_box', $data);
 $content_view->set_safe('content', convert_body($comment->body, array(
-	'nl2br' => false,
+	'nl2br' => isset($nl2br) ? $nl2br : conf('view_params_default.comment.nl2br'),
 	'is_truncate' => empty($is_detail),
 	'truncate_width' => empty($is_detail) ? conf('view_params_default.list.comment.trim_width') : null,
 	'mention2link' => true,

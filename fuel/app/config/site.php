@@ -266,6 +266,9 @@ $config = array(
 		),
 	),
 	'view_params_default' => array(
+		'comment' => array(
+			'nl2br' => true,
+		),
 		'list' => array(
 			'limit' => 10,
 			'limit_max' => 12,
