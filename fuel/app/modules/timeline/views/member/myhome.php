@@ -24,4 +24,4 @@
 	</div>
 </div>
 
-<div id="article_list" data-type="ajax"></div>
+<div id="article_list" data-type="ajax" data-not_render_site_summary="1"></div>
