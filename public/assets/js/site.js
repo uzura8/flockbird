@@ -331,6 +331,7 @@ function checkIsRenderSiterSummary()
 
 	if (!get_config('is_render_site_summary_at_client_side')) return false;
 	if (!empty($('#main_container').data('not_render_site_summary'))) return false;
+	if (!empty($('#article_list').data('not_render_site_summary'))) return false;
 
 	divArticleElement = document.getElementById('article_list');
 	if (divArticleElement != null && divArticleElement.hasChildNodes()) return true;

@@ -1,5 +1,5 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
-<?php if (!IS_API): ?><div id="article_list"><?php endif; ?>
+<?php if (!IS_API): ?><div id="article_list" data-not_render_site_summary="1"><?php endif; ?>
 <?php if ($list): ?>
 <?php echo Form::hidden('liked_timeline_ids', json_encode($liked_timeline_ids), array('id' => 'liked_timeline_ids')); ?>
 <?php
