@@ -24,7 +24,7 @@ class Controller_Site_OpenGraph_Api extends Controller_Site_Api
 			if (!$url = \Input::get('url')) throw new \HttpBadRequestException;
 			if (!filter_var($url, FILTER_VALIDATE_URL)) throw new \ValidationFailedException('URLが正しくありません。');
 
-			$cache_conf = conf('post.url2link.displaySummary.cache');
+			$cache_conf = conf('view_params_default.post.url2link.displaySummary.cache');
 			$response = Site_OpenGraph::get_analized_data(
 				$url,
 				$cache_conf['isEnabled'],
