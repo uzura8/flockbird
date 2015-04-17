@@ -1,5 +1,5 @@
 <?php
-require_once APPPATH.'vendor'.DS.'opengraph'.DS.'OpenGraph.php';
+require_once FBD_BASEPATH.'fuel'.DS.'vendor'.DS.'uzura8'.DS.'opengraph'.DS.'OpenGraph.php';
 
 class Site_OpenGraph
 {
