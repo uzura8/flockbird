@@ -370,6 +370,7 @@ function reset_textarea()
 
 function getSinceId(listSelector, position)
 {
+	var dataAttr2listId = (arguments.length > 2) ? arguments[2] : 'id';
 	var insertPosition,
 		nextElement,
 		listMoreBoxObj,
@@ -381,7 +382,7 @@ function getSinceId(listSelector, position)
 	insertPosition = (position == 'prepend') ? 'first' : 'last';
 	nextElement = $(listSelector + ' > div:' + insertPosition);
 	if (!empty(nextElement) && nextElement.attr('id')) {
-		return parseInt($('#' + nextElement.attr('id')).data('id'));
+		return parseInt($('#' + nextElement.attr('id')).data(dataAttr2listId));
 	}
 
 	listMoreBoxObj = $(listSelector).find('.listMoreBox');

@@ -72,7 +72,7 @@ $(function() {
 			linkElement.remove();
 		}
 
-		var sinceId = getSinceId(listSelector, position);
+		var sinceId = getSinceId(listSelector, position, 'list_id');
 		if (sinceId) getData['since_id'] = sinceId;
 
 		postComment(
