@@ -116,6 +116,7 @@ $comment_list_attr = array(
 	'data-id' => $timeline->id,
 	'data-post_uri' => $comment_post_uri,
 	'data-get_uri' => $comment_get_uri,
+	'data-get_data' => array('image_size' => 'S'),
 	'data-input' => '#textarea_comment_'.$timeline->id,
 );
 ?>

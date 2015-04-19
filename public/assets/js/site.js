@@ -84,12 +84,17 @@ $(document).on('click','.js-ajax-postComment', function(){
 	var isRenderSiteSummary = $(this).data('render_site_summary') ? Boolean($(this).data('render_site_summary')) : get_config('is_render_site_summary_at_client_side');
 
 	var loadCallbacks = isRenderSiteSummary ? [renderSiteSummary] : [];
+	var listSelectorGetData = $(listSelector).data('get_data');
 
 	var position = isDesc ? 'prepend' : 'append';
 	var sinceId = getSinceId(listSelector, position);
 	if (sinceId) getData['since_id'] = sinceId;
 	if (isLatest) getData['latest'] = 1;
 	if (isDesc) getData['desc'] = 1;
+	
+	if (!empty(listSelectorGetData)) {
+		if (!empty(listSelectorGetData.image_size)) getData.image_size = listSelectorGetData.image_size;
+	}
 
 	postComment(
 		postUri,
