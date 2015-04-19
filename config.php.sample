@@ -23,6 +23,8 @@ $GLOBALS['_FBD_DSN']['production'] = array(
 			'username'   => 'root',
 			'password'   => '',
 		),
+		'charset' => 'utf8',// if use setting of utf8mb4, this line has to be commented out
+		//'charset' => 'utf8mb4',// if use this setting, mysql version has to be over 5.5.3 and set my.cnf innodb_large_prefix option
 		'connection_rate' => 0,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続). 0 を指定すると更新時のみ接続
 		//'readonly' => array(),// readonly は指定しない(connection_rate 設定が効かなくなる)
 	),

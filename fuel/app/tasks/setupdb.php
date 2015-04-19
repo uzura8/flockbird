@@ -9,10 +9,12 @@ class SetupDB
 {
 	private static $absolute_execute = false;
 	private static $database;
+	private static $charset;
 
 	public function __construct($args = null)
 	{
 		self::$absolute_execute = \Cli::option('absolute_execute', false);
+		self::$charset = \Config::get('db.default.charset') ?: 'utf8';
 	}
 
 	/**
@@ -158,7 +160,7 @@ class SetupDB
 
 	private static function exexute_install_db($database = null)
 	{
-		$setup_sql_file = FBD_BASEPATH.'data/sql/setup/setup.sql';
+		$setup_sql_file = sprintf('%sdata/sql/setup/setup%s.sql', FBD_BASEPATH, self::$charset == 'utf8mb4' ? '_utf8mb4' : '');
 		if (!\DBUtil::shell_exec_sql4file($setup_sql_file, $database)) return false;
 
 		if (!$modules = \Module::loaded()) return true;
