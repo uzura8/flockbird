@@ -148,8 +148,8 @@ CREATE TABLE `member_relation` (
 CREATE TABLE `album` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
-  `name` text NOT NULL,
-  `body` text NULL,
+  `name` text COLLATE utf8_unicode_ci NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NULL,
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `cover_album_image_id` int(11) DEFAULT NULL,
   `foreign_table` varchar(20) NULL,
@@ -167,7 +167,7 @@ CREATE TABLE `album_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_id` int(11) NOT NULL,
   `file_name` varchar(255) NOT NULL,
-  `name` text NULL,
+  `name` text COLLATE utf8_unicode_ci NULL,
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `comment_count` int(11) NOT NULL DEFAULT '0',
   `like_count` int(11) NOT NULL DEFAULT '0',
@@ -198,7 +198,7 @@ CREATE TABLE `album_image_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_image_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
-  `body` text NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NOT NULL,
   `like_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -267,10 +267,10 @@ CREATE TABLE `file` (
 
 CREATE TABLE `file_tmp` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'File name',
-  `type` varchar(256) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of this file',
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'File name',
+  `type` varchar(256) NOT NULL DEFAULT '' COMMENT 'Type of this file',
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
-  `original_filename` text COLLATE utf8_unicode_ci COMMENT 'Original filename',
+  `original_filename` text COMMENT 'Original filename',
   `member_id` int(11) NULL,
   `user_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: site member, 1:admin_user',
   `description` text DEFAULT NULL,
@@ -282,7 +282,7 @@ CREATE TABLE `file_tmp` (
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
   KEY `user_type_member_id_idx` (`user_type`,`member_id`),
   KEY `name_user_type_member_id_idx` (`name`,`user_type`,`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves informations of temporary files uploaded';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves informations of temporary files uploaded';
 
 
 CREATE TABLE `file_tmp_config` (
@@ -296,26 +296,26 @@ CREATE TABLE `file_tmp_config` (
   INDEX file_tmp_id_idx (file_tmp_id),
   UNIQUE KEY `file_tmp_id_name_UNIQUE_idx` (`file_tmp_id`, `name`),
   CONSTRAINT `file_tmp_config_file_tmp_id_file_tmp_id` FOREIGN KEY (`file_tmp_id`) REFERENCES `file_tmp` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of each temporary files';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves configurations of each temporary files';
 
 CREATE TABLE `file_bin` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'File path and name',
+  `name` varchar(64) NOT NULL COMMENT 'File path and name',
   `bin` longblob COMMENT 'Content of file',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves content of files';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves content of files';
 
 CREATE TABLE `file_bin_delete_queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT 'File path and name',
+  `name` varchar(64) NOT NULL COMMENT 'File path and name',
   `is_tmp` tinyint(2) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves content of files';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves content of files';
 
 
 CREATE TABLE `migration` (
@@ -330,8 +330,8 @@ INSERT INTO `migration` VALUES ('default','app',4);
 CREATE TABLE `note` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
-  `title` text NOT NULL,
-  `body` text NOT NULL,
+  `title` text COLLATE utf8_unicode_ci NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NOT NULL,
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `is_published` tinyint(2) NOT NULL DEFAULT '0',
   `published_at` datetime NULL,
@@ -365,7 +365,7 @@ CREATE TABLE `note_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `note_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
-  `body` text NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NOT NULL,
   `like_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -404,9 +404,9 @@ CREATE TABLE `note_album_image` (
 CREATE TABLE `news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `news_category_id` int(11) DEFAULT NULL COMMENT 'News category id',
-  `slug` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified news (ASCII)',
-  `title` text NOT NULL,
-  `body` text NULL,
+  `slug` varchar(64) NOT NULL DEFAULT '' COMMENT 'Identified news (ASCII)',
+  `title` text COLLATE utf8_unicode_ci NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NULL,
   `format` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0:text, 1:raw(html_editor), 2:markdown',
   `importance_level` tinyint(2) NOT NULL DEFAULT '0',
   `is_published` tinyint(2) NOT NULL DEFAULT '0',
@@ -465,8 +465,8 @@ CREATE TABLE `news_link` (
 
 CREATE TABLE `news_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified news category name (ASCII)',
-  `label` text NOT NULL,
+  `name` varchar(32) NOT NULL DEFAULT '' COMMENT 'Identified news category name (ASCII)',
+  `label` text COLLATE utf8_unicode_ci NOT NULL,
   `sort_order` int(11) DEFAULT NULL COMMENT 'Order to sort',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -529,7 +529,7 @@ CREATE TABLE `member_watch_content` (
 
 CREATE TABLE `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified profile name (ASCII)',
+  `name` varchar(32) NOT NULL DEFAULT '' COMMENT 'Identified profile name (ASCII)',
   `caption` text NOT NULL,
   `display_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: display at detail, 2:display at summary, 3:always',
   `information` text NULL,
@@ -541,11 +541,11 @@ CREATE TABLE `profile` (
   `is_disp_regist` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Shows when registeration',
   `is_disp_config` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Shows when edit',
   `is_disp_search` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Shows when searching',
-  `form_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Form type to input/select',
-  `value_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Type of input value',
-  `value_regexp` text COLLATE utf8_unicode_ci COMMENT 'Regular expression',
-  `value_min` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Minimum value',
-  `value_max` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Maximum value',
+  `form_type` varchar(32) NOT NULL DEFAULT '' COMMENT 'Form type to input/select',
+  `value_type` varchar(32) NOT NULL DEFAULT '' COMMENT 'Type of input value',
+  `value_regexp` text COMMENT 'Regular expression',
+  `value_min` varchar(32) DEFAULT NULL COMMENT 'Minimum value',
+  `value_max` varchar(32) DEFAULT NULL COMMENT 'Maximum value',
   `sort_order` int(11) DEFAULT NULL COMMENT 'Order to sort',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -571,7 +571,7 @@ CREATE TABLE `member_profile` (
   `member_id` int(11) NOT NULL COMMENT 'Member id',
   `profile_id` int(11) NOT NULL COMMENT 'Profile id',
   `profile_option_id` int(11) DEFAULT NULL COMMENT 'Profile option id',
-  `value` text NOT NULL COMMENT 'Text content for this profile item',
+  `value` text COLLATE utf8_unicode_ci NOT NULL COMMENT 'Text content for this profile item',
   `public_flag` tinyint(4) DEFAULT NULL COMMENT 'Public flag',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -591,7 +591,7 @@ CREATE TABLE `timeline` (
   `group_id` int(11) NULL,
   `page_id` int(11) NULL,
   `type` tinyint(2) NOT NULL DEFAULT '0',
-  `body` text NULL,
+  `body` text COLLATE utf8_unicode_ci NULL,
   `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
   `foreign_id` int(11) NULL COMMENT 'The id of reference table',
   `source` varchar(64) NULL COMMENT 'The source caption',
@@ -659,7 +659,7 @@ CREATE TABLE `timeline_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timeline_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
-  `body` text NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NOT NULL,
   `like_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -696,8 +696,8 @@ CREATE TABLE `member_follow_timeline` (
 
 CREATE TABLE `thread` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` text NOT NULL,
-  `body` text NOT NULL,
+  `title` text COLLATE utf8_unicode_ci NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NOT NULL,
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `member_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL DEFAULT '0',
@@ -725,7 +725,7 @@ CREATE TABLE `thread_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `thread_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
-  `body` text NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NOT NULL,
   `like_count` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -764,24 +764,24 @@ CREATE TABLE `thread_image` (
 
 CREATE TABLE `site_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Configuration name',
-  `value` text COLLATE utf8_unicode_ci COMMENT 'Configuration value',
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Configuration name',
+  `value` text COMMENT 'Configuration value',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of this site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves configurations of this site';
 
 
 CREATE TABLE `template` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Configuration name',
-  `format` varchar(25) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'format of template',
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Configuration name',
+  `format` varchar(25) NOT NULL DEFAULT '' COMMENT 'format of template',
   `title` varchar(255) NULL,
-  `body` text NULL COLLATE utf8_unicode_ci COMMENT 'Configuration value',
+  `body` text NULL COMMENT 'Configuration value',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Saves configurations of this site';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves configurations of this site';
 
 
 CREATE TABLE `site_image` (
@@ -798,9 +798,9 @@ CREATE TABLE `site_image` (
 
 CREATE TABLE `content_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `slug` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Identified news (ASCII)',
-  `title` text NOT NULL,
-  `body` text NULL,
+  `slug` varchar(64) NOT NULL DEFAULT '' COMMENT 'Identified news (ASCII)',
+  `title` text COLLATE utf8_unicode_ci NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NULL,
   `format` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0:text, 1:raw(html_editor), 2:markdown',
   `admin_user_id` int(11) NOT NULL,
   `is_secure` tinyint(2) NOT NULL DEFAULT '0',
