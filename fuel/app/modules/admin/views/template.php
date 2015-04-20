@@ -71,7 +71,7 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 
 </div><!--/.fluid-container-->
 
-<?php echo render('_parts/template/load_common_js'); ?>
+<?php echo render('_parts/template/load_common_js', array('use_angularjs' => $use_angularjs)); ?>
 <?php echo render('_parts/template/common_footer_script'); ?>
 <?php echo render('_parts/template/load_site_js'); ?>
 <?php if (isset($post_footer)): ?><?php echo $post_footer; ?><?php endif; ?>

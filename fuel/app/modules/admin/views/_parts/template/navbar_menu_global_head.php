@@ -36,7 +36,7 @@
 						</ul>
 						</li>
 <?php 	elseif (\Admin\Site_Util::check_exists_accessible_uri($value)): ?>
-					<li<?php if (check_current_uri($item_path)): ?> class="active"<?php endif; ?>><?php echo navigation_link($name, $value, true); ?></li>
+					<li<?php if (check_current_uri($value)): ?> class="active"<?php endif; ?>><?php echo navigation_link($name, $value, true); ?></li>
 <?php 	endif; ?>
 <?php		$i++; ?>
 <?php endforeach; ?>
