@@ -89,11 +89,32 @@ class SetupDB
 	/**
 	 * Usage (from command line):
 	 *
+	 * php oil r setupdb:install
+	 *
+	 * @return string
+	 */
+	public static function install($database = null)
+	{
+		try
+		{
+			$result = self::exexute_install_db($database);
+		}
+		catch(\FuelException $e)
+		{
+			return \Util_Task::output_message(sprintf('Create db error: %s', $e->getMessage()), false);
+		}
+
+		return \Util_Task::output_result_message($result, __FUNCTION__.' db', sprintf('Install %s.', self::$database));
+	}
+
+	/**
+	 * Usage (from command line):
+	 *
 	 * php oil r setupdb:drop
 	 *
 	 * @return string
 	 */
-	public static function drop($database)
+	public static function drop($database = null)
 	{
 		try
 		{
