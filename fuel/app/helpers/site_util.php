@@ -81,7 +81,7 @@ function site_title($title = '', $subtitle = '')
 	if (!$subtitle) $subtitle = $default_title;
 	if (!$title) $title = FBD_SITE_NAME;
 
-	return sprintf('%s [%s]', $title, $subtitle);
+	return sprintf('%s | %s', $title, $subtitle);
 }
 
 function site_header_keywords($keywords = '')
