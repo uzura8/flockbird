@@ -161,6 +161,7 @@
         "twbs/bootstrap": "3.*",
         "uzura8/fuel-less": "dev-2.0/master",
         "canton7/fuelphp-casset": "1.*",
+        "fabpot/goutte": "2.0.*",
         "uzura8/fuel-packages-opauth": "dev-master",
         "uzura8/opengraph": "master"
     },

@@ -6,12 +6,10 @@ require APPPATH.'config.inc.php';
 // Bootstrap the framework DO NOT edit this
 require COREPATH.'bootstrap.php';
 
-
 Autoloader::add_classes(array(
 	// Add classes you want to override here
 	// Example: 'View' => APPPATH.'classes/view.php',
 	'Controller' => APPPATH.'classes/controller.php',
-	//'DB' => APPPATH.'classes/db.php',
 	'Database_Query_Builder_Update' => APPPATH.'classes/database/query/builder/update.php',
 	'DBUtil' => APPPATH.'classes/dbutil.php',
 	'Uri' => APPPATH.'classes/uri.php',
@@ -24,10 +22,6 @@ Autoloader::add_classes(array(
 	'Fieldset' => APPPATH.'classes/fieldset.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 ));
-if (FBD_AWS_ACCESS_KEY && FBD_AWS_SECRET_KEY && FBD_AWS_S3_BUCKET)
-{
-	Autoloader::add_namespace('Aws', APPPATH.'vendor/aws/aws-sdk-php/src/Aws', true);
-}
 
 // Register the autoloader
 Autoloader::register();
@@ -74,3 +68,16 @@ if (in_array(FBD_ENVIRONMENT, array('DEVELOPMENT', 'TEST')))
 	Config::load('develop', 'develop');
 }
 Site_Config::regulate_configs_for_module_loaded();
+
+
+// Register the autoloader for library
+if (FBD_AWS_ACCESS_KEY && FBD_AWS_SECRET_KEY && FBD_AWS_S3_BUCKET)
+{
+	Autoloader::add_namespace('Aws', APPPATH.'vendor/aws/aws-sdk-php/src/Aws', true);
+}
+if (conf('library.goutte.isEnabled'))
+{
+	$goutte_path = FBD_BASEPATH.'fuel/vendor/fabpot/goutte/Goutte/';
+	Autoloader::add_namespace('Goutte', $goutte_path, true);
+	Autoloader::add_class('Client', $goutte_path.'Client.php');
+}
