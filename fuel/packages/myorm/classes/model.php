@@ -243,7 +243,7 @@ class Model extends \Orm\Model
 		return $obj->id;
 	}
 
-	public static function get_cols($col, $params)
+	public static function get_cols($col, $params = array())
 	{
 		$query = self::query()->select($col);
 		if ($params) $query->where($params);
