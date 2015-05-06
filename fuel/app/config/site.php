@@ -17,9 +17,12 @@ $config = array(
 			),
 			//'legacyIECriteriaVersion' => 8,
 		),
-    //'PEAR_I18N_UnicodeNormalizer' => array(
-    //  'isEnabled' => false, // if set this true, you have to install PEAR/I18N_UnicodeNormalizer.
-    //),
+		//'goutte' => array(
+		//	'isEnabled'  => true,
+		//),
+		//'PEAR_I18N_UnicodeNormalizer' => array(
+		//  'isEnabled' => false, // if set this true, you have to install PEAR/I18N_UnicodeNormalizer.
+		//),
 	),
 	'default' => array(
 		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
