@@ -23,7 +23,7 @@
 	<td><?php echo Html::anchor('admin/news/'.$news->id, strim($news->title, Config::get('news.viewParams.admin.list.trim_width.title'))); ?></td>
 	<td class="small"><?php echo btn('form.preview', 'news/preview/'.$news->slug.'?token='.$news->token, '', false, 'xs'); ?></td>
 <?php 	if (check_acl($uri = 'admin/news/edit')): ?>
-	<td class="small"><?php echo btn('form.edit', $uri.$news->id, '', false, 'xs'); ?></td>
+	<td class="small"><?php echo btn('form.edit', $uri.'/'.$news->id, '', false, 'xs'); ?></td>
 <?php 	else: ?>
 	<td class="small"><?php echo symbol('noValue'); ?></td>
 <?php 	endif; ?>
