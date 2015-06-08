@@ -156,6 +156,10 @@ class Controller_News extends Controller_Admin
 				{
 					$this->save_posted_links($posted_links, $news->id);
 				}
+				if (\Config::get('news.form.tags.isEnabled'))
+				{
+					\News\Model_NewsTag::save_tags($post['tags'], $news->id);
+				}
 
 				//// timeline 投稿
 				//if ($note->is_published && is_enabled('timeline'))
@@ -193,7 +197,12 @@ class Controller_News extends Controller_Admin
 		$this->set_title_and_breadcrumbs(term('news.view', 'form.create'), array('admin/news' => term('news.view', 'admin.view')));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
 		$this->template->post_footer = \View::forge('news/_parts/form_footer');
-		$this->template->content = \View::forge('news/_parts/form', array('val' => $val, 'images' => $images, 'files' => $files, 'posted_links' => $posted_links));
+		$this->template->content = \View::forge('news/_parts/form', array(
+			'val' => $val,
+			'images' => $images,
+			'files' => $files,
+			'posted_links' => $posted_links
+		));
 	}
 
 	/**
@@ -247,6 +256,8 @@ class Controller_News extends Controller_Admin
 		{
 			$saved_links = $this->get_saved_links($news->id);
 		}
+
+		$tags = \Config::get('news.form.tags.isEnabled') ? \News\Model_NewsTag::get_names4news_id($news->id) : array();
 
 		$image_tmps = array();
 		$file_tmps = array();
@@ -312,6 +323,10 @@ class Controller_News extends Controller_Admin
 					$this->save_posted_links($saved_links, $news->id, true);
 					$this->save_posted_links($posted_links, $news->id);
 				}
+				if (\Config::get('news.form.tags.isEnabled'))
+				{
+					\News\Model_NewsTag::save_tags($post['tags'], $news->id);
+				}
 
 				//// timeline 投稿
 				//if (is_enabled('timeline'))
@@ -366,6 +381,7 @@ class Controller_News extends Controller_Admin
 			'is_edit' => true,
 			'images' => $images,
 			'files' => $files,
+			'tags' => $tags,
 		));
 	}
 
@@ -507,6 +523,14 @@ class Controller_News extends Controller_Admin
 			$val->add('is_draft', term('form.draft'))
 					->add_rule('valid_string', 'numeric')
 					->add_rule('in_array', array(0,1));
+		}
+		if (\Config::get('news.form.tags.isEnabled'))
+		{
+			$options = \Model_Tag::get_assoc('name', 'name');
+			$val->add('tags', term('site.tag'))
+					->set_options($options)
+					->add_rule('array_trim')
+					->add_rule('array_max_length', 128);
 		}
 
 		return $val;

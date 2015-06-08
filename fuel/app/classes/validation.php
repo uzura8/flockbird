@@ -24,6 +24,25 @@ class Validation extends Fuel\Core\Validation
 	}
 
 	/**
+	 * Filter space char in array (within double byte space)
+	 *
+	 * @param   array
+	 * @return  array
+	 */
+	public static function _validation_array_trim($val)
+	{
+		if (Validation::_empty($val)) return $val;
+		
+		if ( ! is_array($val)) $val = array($val);
+		foreach ($val as $key => $value)
+		{
+			$val[$key] = static::_validation_trim($value);
+		}
+
+		return $val;
+	}
+
+	/**
 	 * Validate if there is no controll char
 	 *
 	 * @param   string
@@ -125,6 +144,46 @@ class Validation extends Fuel\Core\Validation
 		{
 			return array();
 		}
+	}
+
+	/**
+	 * Minimum string length in array
+	 *
+	 * @param   array strings
+	 * @param   int
+	 * @return  bool
+	 */
+	public static function _validation_array_min_length($val, $length)
+	{
+		if (Validation::_empty($val)) return true;
+		
+		if ( ! is_array($val)) $val = array($val);
+		foreach ($val as $value)
+		{
+			if (\Str::length($value) < $length) return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Maximum string length in array
+	 *
+	 * @param   array strings
+	 * @param   int
+	 * @return  bool
+	 */
+	public static function _validation_array_max_length($val, $length)
+	{
+		if (Validation::_empty($val)) return true;
+		
+		if ( ! is_array($val)) $val = array($val);
+		foreach ($val as $value)
+		{
+			if (\Str::length($value) > $length) return false;
+		}
+
+		return true;
 	}
 
 	/**

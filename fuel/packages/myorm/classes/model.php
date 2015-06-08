@@ -243,12 +243,22 @@ class Model extends \Orm\Model
 		return $obj->id;
 	}
 
-	public static function get_cols($col, $params = array())
+	public static function get_cols($col, $params = array(), $order_by = array())
 	{
 		$query = self::query()->select($col);
-		if ($params) $query->where($params);
+		if ($params) $query = static::set_where($query, $params);
+		if ($order_by) $query->order_by($order_by);
 
 		return \Util_Orm::conv_col2array($query->get(), $col);
+	}
+
+	public static function get_assoc($key_col, $value_col, $params = array(), $order_by = array())
+	{
+		$query = self::query()->select($key_col, $value_col);
+		if ($params) $query = static::set_where($query, $params);
+		if ($order_by) $query->order_by($order_by);
+
+		return \Util_Orm::conv_cols2assoc($query->get(), $key_col, $value_col);
 	}
 
 	public static function get_pager_list($params = array(), $page = 1, $is_return_array = false, \Orm\Query $query = null)
@@ -509,5 +519,52 @@ class Model extends \Orm\Model
 
 			$this->{$key} = $value;
 		}
+	}
+
+	protected static function set_where(\Orm\Query $query, $params = array())
+	{
+		if (!$params) return $query;
+
+		if (!is_array($params)) $params = (array)$params;
+		if (!\Arr::is_multi($params, true))
+		{
+			return static::set_where4not_multi($query, $params);
+		}
+
+		foreach ($params as $param)
+		{
+			$query = static::set_where4not_multi($query, $param);
+		}
+
+		return $query;
+	}
+
+	protected static function set_where4not_multi(\Orm\Query $query, $params = array())
+	{
+		if (!$params) return $query;
+
+		if (\Arr::is_multi($params, true)) throw new \InvalidArgumentException('Second parameter is invalid.');
+
+		if (\Arr::is_assoc($params))
+		{
+			$query->where($params);
+
+			return $query;
+		}
+
+		if (count($params) == 2)
+		{
+			$query->where($params[0], $params[1]);
+		}
+		elseif (count($params) == 3)
+		{
+			$query->where($params[0], $params[1], $params[2]);
+		}
+		else
+		{
+			throw new \InvalidArgumentException('Second parameter is invalid.');
+		}
+
+		return $query;
 	}
 }

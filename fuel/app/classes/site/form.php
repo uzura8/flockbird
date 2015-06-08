@@ -35,4 +35,9 @@ class Site_Form
 
 		return $options;
 	}
+
+	public static function get_field_id($name)
+	{
+		return sprintf('form_%s', str_replace('[]', '', $name));
+	}
 }

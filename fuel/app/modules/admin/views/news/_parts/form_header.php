@@ -8,4 +8,7 @@
 <?php if (\News\Site_Util::check_editor_enabled('markdown')): ?>
 <?php 	echo Asset::css('bootstrap-markdown.min.css'); ?>
 <?php endif; ?>
+<?php if (Config::get('news.form.tags.isEnabled')): ?>
+<?php echo Asset::css('select2.css', null, null, false, false, true); ?>
+<?php endif; ?>
 

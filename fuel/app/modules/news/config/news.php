@@ -25,6 +25,9 @@ return array(
 			),
 			'default' => '1',
 		),
+		'tags' => array(
+			'isEnabled' => true,
+		),
 	),
 	'viewParams' => array(
 		'site' => array(

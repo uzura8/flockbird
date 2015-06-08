@@ -31,7 +31,7 @@ function form_input(Validation $val, $name, $default_value = null, $col_sm_size 
 	$field = $val->fieldset()->field($name);
 	$input_atter = array(
 		'type'  => $field->get_attribute('type'),
-		'id'    => 'form_'.$name,
+		'id'    => Site_Form::get_field_id($name),
 		'class' => 'form-control',
 		'placeholder' => $field->get_attribute('placeholder'),
 	);
@@ -62,7 +62,7 @@ function form_input_datetime(Validation $val, $name, $default_value = null, $for
 	$field = $val->fieldset()->field($name);
 	$input_atter = array(
 		'type'  => $field->get_attribute('type'),
-		'id'    => 'form_'.$name,
+		'id'    => Site_Form::get_field_id($name),
 		'class' => 'form-control',
 		'placeholder' => $field->get_attribute('placeholder'),
 	);
@@ -91,7 +91,7 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 {
 	$input_atter = array(
 		'type'  => 'file',
-		'id'    => 'form_'.$name,
+		'id'    => Site_Form::get_field_id($name),
 		'class' => $input_class,
 	);
 	$data = array(
@@ -111,7 +111,7 @@ function form_textarea(Validation $val, $name, $default_value = null, $label_col
 	if (!is_array($option_attr)) $option_attr = (array)$option_attr;
 	$field = $val->fieldset()->field($name);
 	$attr = array(
-		'id'    => 'form_'.$name,
+		'id'    => Site_Form::get_field_id($name),
 		'rows'  => $field->get_attribute('rows'),
 		'class' => 'form-control',
 		'placeholder' => $field->get_attribute('placeholder'),
@@ -137,29 +137,33 @@ function form_textarea(Validation $val, $name, $default_value = null, $label_col
 	return render('_parts/form/textarea', $data);
 }
 
-function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
+function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $is_multiple = false, $is_merge_inputs2options = false, $help = '', $optional_public_flag = array())
 {
+	if (!$label_col_sm_size) $label_col_sm_size = 2;
 	$field = $val->fieldset()->field($name);
+	$isset_field = is_callable(array($field, 'get_attribute'));
 	$atter = array(
-		'id'    => 'form_'.$name,
+		'id'    => Site_Form::get_field_id($name),
 		'class' => 'form-control',
 	);
-	if (!is_null($field->get_attribute('value')))
+	if ($is_multiple) $atter['multiple'] = 'multiple';
+	if ($isset_field)
 	{
-		$default_value = $field->get_attribute('value');
+		if (!is_null($field->get_attribute('value'))) $default_value = $field->get_attribute('value');
 	}
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,
-		'label' => $field->get_attribute('label'),
-		'options' => $field->get_options(),
+		'label' => $isset_field ? $field->get_attribute('label') : '',
+		'options' => $isset_field ? $field->get_options() : array(),
 		'atter' => $atter,
 		'default_value' => $default_value,
-		'is_required'   => $field->get_attribute('required') == 'required',
+		'is_required'   => $isset_field ? $field->get_attribute('required') == 'required' : false,
 		'col_sm_size' => $col_sm_size,
 		'label_col_sm_size' => $label_col_sm_size,
 		'help' => $help,
 		'optional_public_flag' => $optional_public_flag,
+		'is_merge_inputs2options' => $is_merge_inputs2options,
 	);
 
 	return render('_parts/form/select', $data);
@@ -168,7 +172,7 @@ function form_select(Validation $val, $name, $default_value = '', $col_sm_size =
 function form_checkbox(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array(), $is_small_tag = false)
 {
 	$field = $val->fieldset()->field($name);
-	$atter = array('id' => 'form_'.$name);
+	$atter = array('id' => Site_Form::get_field_id($name));
 	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
@@ -196,9 +200,7 @@ function form_radio(Validation $val, $name, $default_value = null, $label_col_sm
 	if (!in_array($layout_type, array('block', 'inline', 'grid'))) throw new InvalidArgumentException('Fifth parameter is invalid.');
 
 	$field = $val->fieldset()->field($name);
-	$atter = array(
-		'id'    => 'form_'.$name,
-	);
+	$atter = array('id' => Site_Form::get_field_id($name));
 	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
@@ -294,7 +296,7 @@ function form_anchor_delete($post_uri, $anchor_label = null, $attr = null, $offs
 function form_public_flag(Validation $val, $default_value = null, $is_select = false, $label_col_sm_size = 2, $name = 'public_flag', $is_inline_options = false)
 {
 	$field = $val->fieldset()->field($name);
-	$atter = array('id' => 'form_'.$name);
+	$atter = array('id' => Site_Form::get_field_id($name));
 	if (is_null($default_value)) $default_value = $field->get_attribute('value', conf('public_flag.default'));
 	$label = $field->get_attribute('label', term('public_flag.label'));
 	$options = $field->get_options();
@@ -338,7 +340,7 @@ function form_date(Validation $val, $label, $name_month, $name_day, $label_col_s
 		$val_name = 'name_'.$name;
 		$fields[$name] = $val->fieldset()->field($$val_name);
 		$atters[$name] = array(
-			'id'    => 'form_'.$name,
+			'id' => Site_Form::get_field_id($name),
 			'class' => 'form-control',
 		);
 		if ($fields[$name]->get_attribute('required') == 'required') $atters[$name]['required'] = 'required';

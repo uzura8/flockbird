@@ -21,6 +21,12 @@ if (!$col_sm_size || $col_sm_size == 12 || $optional_public_flag)
 {
 	$error_sm_size = 12;
 }
+
+if (!empty($is_merge_inputs2options) && Input::post($name))
+{
+	$posted_options = \Util_Array::set_key_from_value(Input::post($name));
+	$options += $posted_options;
+}
 ?>
 <div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>" id="<?php echo $atter['id']; ?>_block">
 	<?php echo Form::label($label, $name, array('class' => $label_class)); ?>

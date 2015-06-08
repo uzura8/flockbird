@@ -102,6 +102,10 @@
   - version: 0.6.3
   - license: MIT
   - url: http://hackerwins.github.io/summernote/
+* select2
+  - version: 4.0.0
+  - license: MIT
+  - url: https://select2.github.io/
 * handlebars
   - version: v1.3.0
   - license: MIT

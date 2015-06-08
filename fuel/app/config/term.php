@@ -123,6 +123,7 @@ $config = array(
 		'template' => 'テンプレート',
 		'location' => '位置情報',
 		'failure' => '失敗',
+		'tag' => 'タグ',
 	),
 	'common' => array(
 		'info' => '情報',

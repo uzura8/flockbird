@@ -17,4 +17,6 @@ return array(
   'datetime_range'         => ':label の日時が正しくありません。',
   'datetime_is_past'       => ':label は過去の日時でなければなりません。',
   'datetime_is_future'      => ':label は未来の日時でなければなりません。',
+  'array_min_length'    => ':label 欄に :param:1 文字より少ない入力が含まれています。',
+  'array_max_length'    => ':label 欄に :param:1 文字を超えた入力が含まれています。',
 );

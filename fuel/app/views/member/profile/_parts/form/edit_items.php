@@ -25,7 +25,7 @@ if (conf('profile.birthday.birthyear.publicFlag.isEdit'))
 	$optional_public_flag = array('name' => 'member_public_flag[birthyear]', 'value' => $value);
 }
 ?>
-	<?php echo form_select($val, 'member_birthyear', 0, 7, $label_size, null, $optional_public_flag); ?>
+	<?php echo form_select($val, 'member_birthyear', 0, 7, $label_size, false, false, null, $optional_public_flag); ?>
 <?php endif; ?>
 
 <?php if ($val->fieldset()->field('member_birthday_month') && $val->fieldset()->field('member_birthday_month')): ?>
@@ -55,7 +55,7 @@ if ($profile->is_edit_public_flag)
 <?php elseif ($profile->form_type == 'textarea'): ?>
 	<?php echo form_textarea($val, $profile->name, '', $label_size, true, $profile->information, $optional_public_flag); ?>
 <?php elseif ($profile->form_type == 'select'): ?>
-	<?php echo form_select($val, $profile->name, 0, 7, $label_size, $profile->information, $optional_public_flag); ?>
+	<?php echo form_select($val, $profile->name, 0, 7, $label_size, false, false, $profile->information, $optional_public_flag); ?>
 <?php elseif ($profile->form_type == 'radio'): ?>
 	<?php echo form_radio($val, $profile->name, 0, $label_size, 'grid', $profile->information, $optional_public_flag); ?>
 <?php elseif ($profile->form_type == 'checkbox'): ?>

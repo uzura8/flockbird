@@ -118,6 +118,7 @@ $config = array(
 		'see_latest' => 'caret-up',
 		'forward' => 'forward',
 		'backward' => 'backward',
+		'tag' => 'tags',
 	),
 	'member' => array(
 		'view' => 'user',

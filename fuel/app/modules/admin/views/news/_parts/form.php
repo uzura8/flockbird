@@ -1,6 +1,7 @@
+<?php $col_sm_size = 6; ?>
 <div class="well">
 <?php echo form_open(true); ?>
-	<?php echo form_select($val, 'news_category_id', isset($news) ? $news->news_category_id : 0, 6); ?>
+	<?php echo form_select($val, 'news_category_id', isset($news) ? $news->news_category_id : 0, $col_sm_size); ?>
 	<?php echo form_input($val, 'title', isset($news) ? $news->title : ''); ?>
 <?php
 $format_options = $val->fieldset()->field('format')->get_options();
@@ -8,7 +9,7 @@ $format_options = $val->fieldset()->field('format')->get_options();
 <?php if (count($format_options) == 1): ?>
 	<?php echo Form::hidden('format', isset($news) ? $news->format : conf('form.formats.default', 'news')); ?>
 <?php else: ?>
-	<?php echo form_select($val, 'format', isset($news) ? $news->format : conf('form.formats.default', 'news'), 6); ?>
+	<?php echo form_select($val, 'format', isset($news) ? $news->format : conf('form.formats.default', 'news'), $col_sm_size); ?>
 <?php endif; ?>
 <?php if (\News\Site_Util::check_editor_enabled()): ?>
 <?php
@@ -71,8 +72,9 @@ echo form_upload_files(
 		</div>
 	</div>
 <?php endif; ?>
+	<?php echo form_select($val, 'tags', isset($tags) ? $tags : array(), 8, null, true, true); ?>
 	<?php echo form_input_datetime($val, 'published_at_time', isset($news) ? check_and_get_datatime($news->published_at, 'datetime_minutes') : ''); ?>
-	<?php echo form_input($val, 'slug', isset($news) ? $news->slug : \News\Site_Util::get_slug(), 6); ?>
+	<?php echo form_input($val, 'slug', isset($news) ? $news->slug : \News\Site_Util::get_slug(), $col_sm_size); ?>
 <?php if (empty($news->is_published)): ?>
 	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'id' => 'form_draft', 'class' => 'btn btn-default btn-primary btn_submit')); ?>
 <?php endif; ?>
