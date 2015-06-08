@@ -72,7 +72,9 @@ echo form_upload_files(
 		</div>
 	</div>
 <?php endif; ?>
+<?php if (\Config::get('news.form.tags.isEnabled')): ?>
 	<?php echo form_select($val, 'tags', isset($tags) ? $tags : array(), 8, null, true, true); ?>
+<?php endif; ?>
 	<?php echo form_input_datetime($val, 'published_at_time', isset($news) ? check_and_get_datatime($news->published_at, 'datetime_minutes') : ''); ?>
 	<?php echo form_input($val, 'slug', isset($news) ? $news->slug : \News\Site_Util::get_slug(), $col_sm_size); ?>
 <?php if (empty($news->is_published)): ?>
