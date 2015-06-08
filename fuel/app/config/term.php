@@ -124,6 +124,7 @@ $config = array(
 		'location' => '位置情報',
 		'failure' => '失敗',
 		'tag' => 'タグ',
+		'related' => '関連',
 	),
 	'common' => array(
 		'info' => '情報',
