@@ -169,4 +169,16 @@ class Model_News extends \MyOrm\Model
 
 		return $obj;
 	}
+
+	public static function get4slug($slug, $is_published = true)
+	{
+		$query = self::query()->where('slug', $slug);
+		if ($is_published)
+		{
+			$query->where('is_published', 1);
+			$query->where('published_at', '<', \Date::time()->format('mysql'));
+		}
+
+		return $query->get_one();
+	}
 }
