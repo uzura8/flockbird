@@ -158,7 +158,7 @@ class Model extends \Orm\Model
 			->get_one();
 	}
 
-	public static function get_list($params = array(), $limit = 0, $is_latest = false, $is_desc = false, $since_id = 0, $max_id = 0, $relateds = array(), $is_return_array = false, $is_return_all_count = false, $select_props = array(), $sort_prop = 'id')
+	public static function get_list($where_conds = array(), $limit = 0, $is_latest = false, $is_desc = false, $since_id = 0, $max_id = 0, $relateds = array(), $is_return_array = false, $is_return_all_count = false, $select_props = array(), $sort_prop = 'id')
 	{
 		$is_reverse = false;
 		if ($limit && $is_latest && !$is_desc)
@@ -168,8 +168,8 @@ class Model extends \Orm\Model
 		}
 
 		$query = self::query();
-		if (!is_array($params)) $params = (array)$params;
-		if ($params) $query->where($params);
+		if (!is_array($where_conds)) $where_conds = (array)$where_conds;
+		if ($where_conds) $query->where($where_conds);
 		$all_records_count = $is_return_all_count ? $query->count() : false;
 
 		$params = array();
