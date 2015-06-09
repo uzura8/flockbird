@@ -508,10 +508,11 @@ class Model extends \Orm\Model
 		return $property;
 	}
 
-	public function set_values(array $values, $ignore_props = array())
+	public function set_values(array $values, $ignore_props_additional = array())
 	{
 		if (!$values) return;
 
+		$ignore_props = array_unique(static::get_ignore_props2edit() + $ignore_props_additional);
 		foreach ($values as $key => $value)
 		{
 			if (!isset($this->{$key})) continue;
@@ -519,6 +520,28 @@ class Model extends \Orm\Model
 
 			$this->{$key} = $value;
 		}
+	}
+
+	protected static function get_ignore_props2edit()
+	{
+		$ignore_props = array();
+		foreach (static::$_properties as $prop => $attrs)
+		{
+			if (!is_array($attrs))
+			{
+				$ignore_props[] = $attrs;
+				continue;
+			}
+
+			if (isset($attrs['form']['type']) && $attrs['form']['type'] !== false)
+			{
+				continue;
+			}
+
+			$ignore_props[] = $prop;
+		}
+
+		return $ignore_props;
 	}
 
 	protected static function set_where(\Orm\Query $query, $params = array())
