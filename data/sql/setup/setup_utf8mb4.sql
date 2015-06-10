@@ -144,6 +144,14 @@ CREATE TABLE `member_relation` (
   CONSTRAINT `member_relationship_member_id_to_member_id` FOREIGN KEY (`member_id_to`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves ralationships of each members';
 
+CREATE TABLE `tag` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE_idx` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `album` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -474,6 +482,17 @@ CREATE TABLE `news_category` (
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
   KEY `sort_order_idx` (`sort_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves categories of news';
+
+CREATE TABLE `news_tag` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `news_id` int(11) NOT NULL default '0',
+  `tag_id` int(11) NOT NULL default '0',
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `news_id_tag_id_UNIQUE_idx` (`news_id`,`tag_id`),
+  CONSTRAINT `news_tag_tag_id_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `news_tag_news_id_news_id` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `notice` (
