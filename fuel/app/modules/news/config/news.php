@@ -29,7 +29,7 @@ return array(
 			'isEnabled' => true,
 		),
 		'isSecure' => array(
-			'isEnabled' => true,
+			'isEnabled' => false,
 		),
 	),
 	'viewParams' => array(
