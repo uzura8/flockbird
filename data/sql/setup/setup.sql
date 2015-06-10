@@ -419,6 +419,7 @@ CREATE TABLE `news` (
   `is_published` tinyint(2) NOT NULL DEFAULT '0',
   `published_at` datetime NULL,
   `users_id` int(11) NOT NULL,
+  `is_secure` tinyint(2) NOT NULL DEFAULT '0',
   `token` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -426,7 +427,7 @@ CREATE TABLE `news` (
   UNIQUE KEY `slug_UNIQUE_idx` (`slug`),
   KEY `created_at_idx` (`created_at`),
   KEY `published_at_idx` (`published_at`),
-  KEY `is_published_published_at_idx` (`is_published`,`published_at`)
+  KEY `is_published_is_secure_published_at_idx` (`is_published`,`is_secure`,`published_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `news_image` (

@@ -28,6 +28,9 @@ return array(
 		'tags' => array(
 			'isEnabled' => true,
 		),
+		'isSecure' => array(
+			'isEnabled' => true,
+		),
 	),
 	'viewParams' => array(
 		'site' => array(

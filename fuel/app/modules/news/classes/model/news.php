@@ -87,6 +87,11 @@ class Model_News extends \MyOrm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
+		'is_secure' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'form' => array('type' => false),
+		),
 		'token' => array(
 			'data_type' => 'varchar',
 			'form' => array('type' => false),
@@ -149,11 +154,21 @@ class Model_News extends \MyOrm\Model
 		//{
 		//	static::$_properties['body']['validation'][] = 'required';
 		//}
+
+		if (conf('form.isSecure.isEnabled', 'news'))
+		{
+			$is_secure_options = \Site_Form::get_form_options4config('term.isSecure.options');
+			static::$_properties['is_secure']['form']['type'] = 'radio';
+			static::$_properties['is_secure']['label'] = term('isSecure.label');
+			static::$_properties['is_secure']['form']['options'] = $is_secure_options;
+			static::$_properties['is_secure']['validation'] = array('required');
+			static::$_properties['is_secure']['validation']['in_array'][] = array_keys($is_secure_options);
+		}
 	}
 
 	public static function check_exists4slug($slug)
 	{
-		return (bool)self::get4slug($slug);
+		return (bool)self::get4slug($slug, false);
 	}
 
 	public static function create_instantly($user_id)

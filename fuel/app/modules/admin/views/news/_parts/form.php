@@ -76,6 +76,9 @@ echo form_upload_files(
 	<?php echo form_select($val, 'tags', isset($tags) ? $tags : array(), 8, null, true, true); ?>
 <?php endif; ?>
 	<?php echo form_input_datetime($val, 'published_at_time', isset($news) ? check_and_get_datatime($news->published_at, 'datetime_minutes') : ''); ?>
+<?php if (\Config::get('news.form.isSecure.isEnabled')): ?>
+	<?php echo form_radio($val, 'is_secure', isset($news) ? $news->is_secure : 0, 2, 'inline'); ?>
+<?php endif; ?>
 	<?php echo form_input($val, 'slug', isset($news) ? $news->slug : \News\Site_Util::get_slug(), $col_sm_size); ?>
 <?php if (empty($news->is_published)): ?>
 	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'id' => 'form_draft', 'class' => 'btn btn-default btn-primary btn_submit')); ?>
