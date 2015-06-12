@@ -1,12 +1,8 @@
 <?php
 namespace News;
 
-class Controller_Api extends \Controller_Site_Api
+class Controller_Api extends \Controller_Rest
 {
-	protected $check_not_auth_action = array(
-		'get_list',
-		'get_detail',
-	);
 
 	public function before()
 	{
@@ -14,116 +10,106 @@ class Controller_Api extends \Controller_Site_Api
 	}
 
 	/**
-	 * Get news list
+	 * News list
 	 * 
 	 * @access  public
 	 * @return  Response
-	 * @throws  Exception in Controller_Base::controller_common_api
-	 * @see  Controller_Base::controller_common_api
 	 */
 	public function get_list($category_name_string = null)
 	{
-		$this->controller_common_api(function() use($category_name_string)
+		$limit = (int)\Input::get('limit') ?: \Config::get('news.viewParams.site.list.limit_max', 100);
+		$cols = array(
+			'news.id',
+			'news.news_category_id',
+			'news.title',
+			'news.published_at',
+			'news.slug',
+			array('news_category.name', 'news_category_name'),
+			array('news_category.label', 'news_category_label'),
+		);
+		$query = \DB::select_array($cols)->from('news')
+			->join('news_category', 'LEFT')->on('news_category.id', '=', 'news.news_category_id')
+			->where('is_published', 1)
+			->and_where('published_at', '<', \DB::expr('NOW()'))
+			->order_by('published_at', 'desc')
+			->limit($limit);
+		if ($category_name_string)
 		{
-			$limit = (int)\Input::get('limit') ?: \Config::get('news.viewParams.site.list.limit_max', 100);
-			$cols = array(
-				'news.id',
-				'news.news_category_id',
-				'news.title',
-				'news.published_at',
-				'news.slug',
-				array('news_category.name', 'news_category_name'),
-				array('news_category.label', 'news_category_label'),
-			);
-			$query = \DB::select_array($cols)->from('news')
-				->join('news_category', 'LEFT')->on('news_category.id', '=', 'news.news_category_id')
-				->where('is_published', 1)
-				->and_where('published_at', '<', \DB::expr('NOW()'))
-				->order_by('published_at', 'desc')
-				->limit($limit);
-			if ($category_name_string)
-			{
-				$category_names = explode('-', $category_name_string);
-				$query = $query->and_where('news_category.name', 'in', $category_names);
-			}
-			$response = $query->execute();
+			$category_names = explode('-', $category_name_string);
+			$query = $query->and_where('news_category.name', 'in', $category_names);
+		}
+		$response = $query->execute();
 
-			$this->set_response_body_api($response);
-		});
+		return $this->response($response);
 	}
 
 	/**
-	 * Get news detail
+	 * News detail
 	 * 
 	 * @access  public
 	 * @return  Response
-	 * @throws  Exception in Controller_Base::controller_common_api
-	 * @see  Controller_Base::controller_common_api
 	 */
 	public function get_detail($slug = null)
 	{
-		$this->controller_common_api(function() use($slug)
+		$cols = array(
+			'news.id',
+			'news.news_category_id',
+			'news.title',
+			'news.body',
+			'news.format',
+			'news.published_at',
+			'news.slug',
+			array('news_category.name', 'news_category_name'),
+			array('news_category.label', 'news_category_label'),
+		);
+		$query = \DB::select_array($cols)->from('news')
+			->join('news_category', 'LEFT')->on('news_category.id', '=', 'news.news_category_id')
+			->where('slug', $slug)
+			->and_where('is_published', 1);
+		if (!$response = $query->execute()->current()) throw new \HttpNotFoundException;
+
+		$response['body'] = convert_body_by_format($response['body'], $response['format']);
+		unset($response['format']);
+
+		$cols = array(
+			'news_image.name',
+			array('file.name', 'file_name'),
+			array('file.type', 'file_type'),
+		);
+		$query = \DB::select_array($cols)->from('news_image')
+			->join('file', 'LEFT')->on('file.name', '=', 'news_image.file_name')
+			->where('news_id', $response['id']);
+		$response['images'] = self::add_file_options($query->execute()->as_array(), 'img');
+
+		$cols = array(
+			'news_file.name',
+			array('file.name', 'file_name'),
+			array('file.original_filename', 'file_original_filename'),
+			array('file.type', 'file_type'),
+		);
+		$query = \DB::select_array($cols)->from('news_file')
+			->join('file', 'LEFT')->on('file.name', '=', 'news_file.file_name')
+			->where('news_id', $response['id']);
+		$response['files'] = self::add_file_options($query->execute()->as_array(), 'file');
+
+		$cols = array(
+			'uri',
+			'label',
+		);
+		$query = \DB::select_array($cols)->from('news_link')
+			->where('news_id', $response['id']);
+		$response['links'] = $query->execute()->as_array();
+
+		if (\Config::get('news.form.tags.isEnabled'))
 		{
-			$cols = array(
-				'news.id',
-				'news.news_category_id',
-				'news.title',
-				'news.body',
-				'news.format',
-				'news.published_at',
-				'news.slug',
-				array('news_category.name', 'news_category_name'),
-				array('news_category.label', 'news_category_label'),
-			);
-			$query = \DB::select_array($cols)->from('news')
-				->join('news_category', 'LEFT')->on('news_category.id', '=', 'news.news_category_id')
-				->where('slug', $slug)
-				->and_where('is_published', 1);
-			if (!$response = $query->execute()->current()) throw new \HttpNotFoundException;
-
-			$response['body'] = convert_body_by_format($response['body'], $response['format']);
-			unset($response['format']);
-
-			$cols = array(
-				'news_image.name',
-				array('file.name', 'file_name'),
-				array('file.type', 'file_type'),
-			);
-			$query = \DB::select_array($cols)->from('news_image')
-				->join('file', 'LEFT')->on('file.name', '=', 'news_image.file_name')
+			$cols = array('tag.name');
+			$query = \DB::select_array($cols)->from('news_tag')
+				->join('tag', 'LEFT')->on('tag.id', '=', 'news_tag.tag_id')
 				->where('news_id', $response['id']);
-			$response['images'] = self::add_file_options($query->execute()->as_array(), 'img');
+			$response['tags'] = $query->execute()->as_array();
+		}
 
-			$cols = array(
-				'news_file.name',
-				array('file.name', 'file_name'),
-				array('file.original_filename', 'file_original_filename'),
-				array('file.type', 'file_type'),
-			);
-			$query = \DB::select_array($cols)->from('news_file')
-				->join('file', 'LEFT')->on('file.name', '=', 'news_file.file_name')
-				->where('news_id', $response['id']);
-			$response['files'] = self::add_file_options($query->execute()->as_array(), 'file');
-
-			$cols = array(
-				'uri',
-				'label',
-			);
-			$query = \DB::select_array($cols)->from('news_link')
-				->where('news_id', $response['id']);
-			$response['links'] = $query->execute()->as_array();
-
-			if (\Config::get('news.form.tags.isEnabled'))
-			{
-				$cols = array('tag.name');
-				$query = \DB::select_array($cols)->from('news_tag')
-					->join('tag', 'LEFT')->on('tag.id', '=', 'news_tag.tag_id')
-					->where('news_id', $response['id']);
-				$response['tags'] = $query->execute()->as_array();
-			}
-
-			$this->set_response_body_api($response);
-		});
+		return $this->response($response);
 	}
 
 	private static function add_file_options($files, $type)
