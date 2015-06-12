@@ -38,7 +38,7 @@ class Site_PostedBodyHandler
 		if (!is_array($options)) $options = (array)$options;
 		if ($options) $this->options = $options + $this->options;
 
-		$this->access_device_type = IS_SP ? 'sp' : 'pc';
+		$this->access_device_type = (defined('IS_SP') && IS_SP) ? 'sp' : 'pc';
 	}
 
 	public function convert($body)
