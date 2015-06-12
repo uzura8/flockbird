@@ -66,7 +66,8 @@ class Controller_Api extends \Controller_Rest
 			->join('news_category', 'LEFT')->on('news_category.id', '=', 'news.news_category_id')
 			->where('slug', $slug)
 			->and_where('is_published', 1);
-		$response = $query->execute()->current();
+		if (!$response = $query->execute()->current()) throw new \HttpNotFoundException;
+
 		$response['body'] = convert_body_by_format($response['body'], $response['format']);
 		unset($response['format']);
 
@@ -98,6 +99,15 @@ class Controller_Api extends \Controller_Rest
 		$query = \DB::select_array($cols)->from('news_link')
 			->where('news_id', $response['id']);
 		$response['links'] = $query->execute()->as_array();
+
+		if (\Config::get('news.form.tags.isEnabled'))
+		{
+			$cols = array('tag.name');
+			$query = \DB::select_array($cols)->from('news_tag')
+				->join('tag', 'LEFT')->on('tag.id', '=', 'news_tag.tag_id')
+				->where('news_id', $response['id']);
+			$response['tags'] = $query->execute()->as_array();
+		}
 
 		return $this->response($response);
 	}
