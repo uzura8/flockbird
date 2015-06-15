@@ -24,7 +24,7 @@ class Auth_Login_Driver extends \Auth\Auth_Login_Driver
 	 */
 	public static function get_salt($username, $fixed_salt)
 	{
-		$salt = $username.pack('H*', $fixed_salt);
+		$salt = $username.pack('H*', hash('sha256', $fixed_salt));
 
 		return $salt;
 	}
