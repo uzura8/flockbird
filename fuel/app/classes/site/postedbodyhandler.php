@@ -152,15 +152,15 @@ class Site_PostedBodyHandler
 	{
 		$is_truncated4line = false;
 		$is_truncated4count = false;
-		if (!$this->options['is_truncate'])
+		if ($this->options['is_truncate'])
 		{
 			if ($this->options['truncate_line'])
 			{
-				list($body, $is_truncated4line) = Util_string::truncate4line($body, $this->options['truncate_line'], '', $this->options['is_rtrim'], $this->options['encoding']);
+				list($body, $is_truncated4line) = Util_string::truncate4line($body, $this->options['truncate_line'], $this->options['trimmarker'], $this->options['is_rtrim'], $this->options['encoding']);
 			}
 			if ($this->options['truncate_width'])
 			{
-				list($body, $is_truncated4count) = Util_string::truncate($body, $this->options['truncate_width'], '', true);
+				list($body, $is_truncated4count) = Util_string::truncate($body, $this->options['truncate_width'], $this->options['trimmarker'], true);
 			}
 			$this->is_truncated = $is_truncated4line || $is_truncated4count;
 		}
