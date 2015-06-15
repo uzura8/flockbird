@@ -13,6 +13,8 @@ class Site_PostedBodyHandler
 		$this->options = array(
 			// truncate_options
 			'encoding'       => Config::get('encoding'),
+			'is_strip_tags'  => false,
+			'allowable_tags' => '',
 			'is_truncate'    => true,
 			'truncate_width' => conf('view_params_default.list.trim_width.body'),
 			'truncate_line'  => conf('view_params_default.list.truncate_lines.body'),
@@ -43,6 +45,13 @@ class Site_PostedBodyHandler
 
 	public function convert($body)
 	{
+		if ($this->options['is_strip_tags'])
+		{
+			$allowable_tags = $this->options['allowable_tags'] ?: '';
+			if (is_array($allowable_tags)) $allowable_tags = implode('', $allowable_tags);
+			$body = strip_tags($body, $allowable_tags);
+		}
+
 		$body = e($body);
 		if ($this->options['nl2br']) $body = nl2br($body);
 		$body = $this->convert_url2link($body);
