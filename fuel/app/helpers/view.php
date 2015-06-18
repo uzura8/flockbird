@@ -30,16 +30,29 @@ function convert_body($body, $options = array())
 	return $handler->convert($body);
 }
 
-function convert_body_by_format($body, $format = 0)
+function convert_body_by_format($body, $format = 0, $truncate_width = 0)
 {
 	switch ($format)
 	{
 		case 1:// raw(html_editor)
-			return $body;
+			break;
 		case 2:
-			return Markdown::parse($body);// markdown
+			$body = Markdown::parse($body);// markdown
+			break;
+		default:
+			$body = '';
+			break;
 	}
+	if (!$truncate_width) return $body;
 
-	return nl2br(e($body));// text
+	$handler = new Site_PostedBodyHandler(array(
+		'truncate_width' => $truncate_width,
+		'is_strip_tags' => true,
+		'nl2br' => false,
+		'url2link' => false,
+		'truncate_line' => 0,
+	));
+
+	return $handler->convert($body);
 }
 
