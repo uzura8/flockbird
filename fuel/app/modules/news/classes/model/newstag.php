@@ -80,6 +80,18 @@ class Model_NewsTag extends \MyOrm\Model
 		return $returns;
 	}
 
+	public static function get_news_ids4tags($tags)
+	{
+		if (!is_array($tags)) $tags = (array)$tags;
+		if (!$tag_ids = \Model_Tag::get_ids4names($tags)) return array();
+
+		$objs = self::query()
+			->where('tag_id', 'in', $tag_ids)
+			->get();
+
+		return \Util_Orm::conv_col2array($objs, 'news_id');
+	}
+
 	public static function save_tags($tag_names, $news_id)
 	{
 		$saved_ids = array();

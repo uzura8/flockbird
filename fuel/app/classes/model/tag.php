@@ -41,5 +41,10 @@ class Model_Tag extends \MyOrm\Model
 			->where('name', 'in', $names)
 			->get();
 	}
+
+	public static function get_ids4names($names)
+	{
+		return \Util_Orm::conv_col2array(self::get4names($names), 'id');
+	}
 }
 
