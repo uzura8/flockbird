@@ -11,7 +11,7 @@ define('FBD_ENVIRONMENT', 'PRODUCTION');
 
 // BASE_URL
 //define('FBD_DOMAIN', 'sns.example.com');
-//define('FBD_URI_PATH', '/');
+define('FBD_URI_PATH', '/');// set setting path, if not set on document root
 
 // DBサーバ接続設定
 $GLOBALS['_FBD_DSN']['production'] = array(

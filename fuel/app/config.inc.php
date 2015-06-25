@@ -59,7 +59,7 @@ if (FBD_PROFILING)
 }
 
 if (!defined('FBD_DOMAIN') && !empty($_SERVER['HTTP_HOST'])) define('FBD_DOMAIN', $_SERVER['HTTP_HOST']);
-if (!defined('FBD_URI_PATH')) define('FBD_URI_PATH', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
+if (!defined('FBD_URI_PATH') && !empty($_SERVER['FBD_URI_PATH'])) define('FBD_URI_PATH', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
 
 // define default configs.
 _set_default_configs();
