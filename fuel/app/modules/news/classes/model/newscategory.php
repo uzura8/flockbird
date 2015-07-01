@@ -52,11 +52,4 @@ class Model_NewsCategory extends \MyOrm\Model
 		static::$_properties['name']['name'] = term('news.category.name');
 		static::$_properties['label']['name'] = term('news.category.label');
 	}
-
-	public static function get_all($order_by = null)
-	{
-		if (empty($order_by)) $order_by = array('sort_order' => 'asc');
-
-		return self::query()->order_by($order_by)->get();
-	}
 }

@@ -46,10 +46,10 @@
 <?php 	endif; ?>
 
 	<td><?php echo label(term('news.status.'.$status), \News\Site_Util::get_status_label_type($status)); ?></td>
-	<td class="text-<?php if ($status == 'reserved'): ?>warning<?php elseif ($status == 'closed'): ?>muted<?php else: ?>normal<?php endif; ?>">
+	<td class="fs12 text-<?php if ($status == 'reserved'): ?>warning<?php elseif ($status == 'closed'): ?>muted<?php else: ?>normal<?php endif; ?>">
 		<?php if (isset_datatime($news->published_at)): ?><?php echo site_get_time($news->published_at, 'both', 'Y/m/d H:i'); ?><?php else: ?><?php echo symbol('noValue'); ?><?php endif; ?>
 	</td>
-	<td><?php echo site_get_time($news->updated_at, 'relative', 'Y/m/d H:i'); ?></td>
+	<td class="fs12"><?php echo site_get_time($news->updated_at, 'relative', 'Y/m/d H:i'); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

@@ -216,11 +216,15 @@ class Model extends \Orm\Model
 		return array($is_return_array ? $list_array : $list, $next_id, $all_records_count);
 	}
 
-	public static function get_all($order_by = null)
+	public static function get_all($order_by = null, $relateds = array())
 	{
-		if (empty($order_by)) $order_by = array('id' => 'asc');
+		if (!is_array($relateds)) $relateds = (array)$relateds;
 
-		return self::query()->order_by($order_by)->get();
+		if (empty($order_by)) $order_by = array('id' => 'asc');
+		$query = self::query()->order_by($order_by);
+		if ($relateds) $query->related($relateds);;
+
+		return $query->get();
 	}
 
 	public static function get4slug($slug)
@@ -506,6 +510,13 @@ class Model extends \Orm\Model
 		}
 
 		return $property;
+	}
+
+	public static function get_property_value($column_name, $key, $default = null)
+	{
+		$property = static::get_property($column_name);
+
+		return \Arr::get($property, $key, $default);
 	}
 
 	public function set_values(array $values, $ignore_props_additional = array())
