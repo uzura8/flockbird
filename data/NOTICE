@@ -99,7 +99,7 @@
   - version: 1.11.1+CommonJS
   - license: MIT
 * Summernote
-  - version: 0.6.3
+  - version: 0.6.9
   - license: MIT
   - url: http://hackerwins.github.io/summernote/
 * select2
