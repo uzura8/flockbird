@@ -22,6 +22,11 @@ class Model_File extends \MyOrm\Model
 			'data_type' => 'integer',
 			'validation' => array('valid_string' => array('numeric')),
 		),
+		'user_type' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'validation' => array('valid_string' => array('integer'), 'in_array' => array(array(0, 1))),
+		),
 		'exif' => array(
 			'data_type' => 'text',
 			'validation' => array('trim'),
@@ -79,7 +84,9 @@ class Model_File extends \MyOrm\Model
 	{
 		if (!$member_id) throw new InvalidArgumentException('First parameter is invalid.');
 
-		$result = DB::query('SELECT SUM(filesize) as sum FROM file WHERE member_id = :member_id')->param('member_id', $member_id)->execute();
+		$result = DB::query('SELECT SUM(filesize) as sum FROM file WHERE user_type = 0 AND member_id = :member_id')
+			->param('member_id', $member_id)
+			->execute();
 		if (!array_key_exists('sum', $result[0])) throw new FuelException('SQL result error.');
 
 		return (int)$result[0]['sum'];
@@ -118,7 +125,7 @@ class Model_File extends \MyOrm\Model
 		return $deleted_filesize;
 	}
 
-	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filename_prefix = '', $is_ignore_member_id = false, $upload_type = 'img')
+	public static function move_from_file_tmp(Model_FileTmp $file_tmp, $new_filename_prefix = '', $upload_type = 'img')
 	{
 		$file = static::forge();
 		$file->name = $file_tmp->name;
@@ -129,7 +136,8 @@ class Model_File extends \MyOrm\Model
 		$file->filesize = $file_tmp->filesize;
 		$file->original_filename = $file_tmp->original_filename;
 		$file->type = $file_tmp->type;
-		if (!$is_ignore_member_id) $file->member_id = $file_tmp->member_id;
+		$file->member_id = $file_tmp->member_id;
+		$file->user_type = $file_tmp->user_type;
 		if (!is_null($file_tmp->exif)) $file->exif = $file_tmp->exif;
 		if (!empty($file_tmp->shot_at)) $file->shot_at = $file_tmp->shot_at;
 		$file->save();

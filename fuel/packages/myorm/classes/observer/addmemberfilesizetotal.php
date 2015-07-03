@@ -19,6 +19,7 @@ class Observer_AddMemberFilesizeTotal extends \Orm\Observer
 
 	public function before_insert(\Orm\Model $obj)
 	{
+		if ($obj->user_type) return false;
 		if (!$obj->{$this->_key_from}) return false;
 
 		$member = \Model_Member::find('first', array('where' => array($this->_key_to => $obj->{$this->_key_from})));

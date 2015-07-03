@@ -263,13 +263,14 @@ CREATE TABLE `file` (
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
   `original_filename` text COMMENT 'Original filename',
   `member_id` int(11) DEFAULT NULL,
+  `user_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: site member, 1:admin_user',
   `exif` text NULL,
   `shot_at` datetime NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`),
-  KEY `member_id_idx` (`member_id`)
+  KEY `user_type_member_id_idx` (`user_type`,`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves informations of files uploaded';
 
 CREATE TABLE `file_tmp` (
