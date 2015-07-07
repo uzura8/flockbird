@@ -15,4 +15,4 @@ php oil r setupdb
 php oil r setupmodule
 php oil r setupfiles
 php oil r user:create sample@example.com password 初期メンバー
-php oil r admin::createuser admin password admin@example.icom 100
+php oil r admin::createuser admin password admin@example.com 100
