@@ -142,7 +142,7 @@ class Model_News extends \MyOrm\Model
 		if (\Config::get('news.category.isEnabled'))
 		{
 			static::$_properties['news_category_id']['label'] = term('news.category.simple');
-			$news_category_id_options = \Util_Orm::conv_cols2assoc(Model_NewsCategory::get_all(), 'id', 'label');
+			$news_category_id_options = \Util_Orm::conv_cols2assoc(Model_NewsCategory::get_all(array('sort_order' => 'asc')), 'id', 'label');
 			static::$_properties['news_category_id']['form']['options'] = $news_category_id_options;
 			static::$_properties['news_category_id']['validation']['in_array'][] = array_keys($news_category_id_options);
 		}
