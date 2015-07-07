@@ -20,7 +20,7 @@ class Controller_News_Category extends Controller_Admin
 	{		
 		$news_category = \News\Model_NewsCategory::forge();
 		$val = \Validation::forge()->add_model($news_category);
-		$news_categories = \News\Model_NewsCategory::get_all();
+		$news_categories = \News\Model_NewsCategory::get_all(array('sort_order' => 'asc'));
 
 		$this->set_title_and_breadcrumbs(
 			term('news.category.view', 'site.management'),
