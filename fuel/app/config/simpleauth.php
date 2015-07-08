@@ -43,6 +43,14 @@ return array(
 	'guest_login' => false,
 
 	/**
+	 * This will allow the same user to be logged in multiple times.
+	 *
+	 * Note that this is less secure, as session hijacking countermeasures have to
+	 * be disabled for this to work!
+	 */
+	'multiple_logins' => false,
+
+	/**
 	 * Groups as id => array(name => <string>, roles => <array>)
 	 */
 	'groups' => array(
