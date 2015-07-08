@@ -81,6 +81,11 @@ define('FBD_AWS_S3_BUCKET', '');
 define('FBD_AWS_S3_PATH', '');
 
 
+// 認証関連設定
+// 複数ログインを認めるか
+define('SITE_MULTIPLE_LOGINS', false);
+define('ADMIN_MULTIPLE_LOGINS', false);
+
 // Facebook 関連設定
 define('FBD_FACEBOOK_APP_ID', '');
 define('FBD_FACEBOOK_APP_SECRET', '');

@@ -48,7 +48,7 @@ return array(
 	 * Note that this is less secure, as session hijacking countermeasures have to
 	 * be disabled for this to work!
 	 */
-	'multiple_logins' => false,
+	'multiple_logins' => ADMIN_MULTIPLE_LOGINS,
 
 	/**
 	 * Groups as id => array(name => <string>, roles => <array>)
