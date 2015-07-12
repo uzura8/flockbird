@@ -1,5 +1,9 @@
 jQuery.fn.exists = function(){return Boolean(this.length > 0);}
 
+$(document).on('click', '.void', function(){
+	return false;
+});
+
 function sleep(sleep_time)
 {
 	var start_time = new Date().getTime();
