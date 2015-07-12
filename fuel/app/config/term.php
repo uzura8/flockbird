@@ -74,6 +74,7 @@ $config = array(
 		'invited' => '招待中',
 		'do_invite' => '招待する',
 		'invite_friend' => '友達を招待',
+		'get' => '取得',
 	),
 	'site' => array(
 		'view' => 'サイト',

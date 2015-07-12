@@ -268,6 +268,7 @@ $config = array(
 			),
 		),
 	),
+	'publicTmpDirRootPath' => FBD_UPLOAD_DIRNAME.'/tmp/',
 	'view_params_default' => array(
 		'comment' => array(
 			'nl2br' => true,
