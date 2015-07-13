@@ -6,7 +6,7 @@
 		<li data-target="#myCarousel" data-slide-to="2"></li>
 	</ol>
 	<div class="carousel-inner" role="listbox">
-<?php for ($i = 0; $i < 2; $i++): ?>
+<?php for ($i = 0; $i <= 2; $i++): ?>
 		<div class="item<?php if (!$i): ?> active<?php endif; ?>">
 			<?php echo Html::img(sprintf('assets/img/site/sample/%02d.jpg', $i + 1)); ?>
 			<div class="container">
