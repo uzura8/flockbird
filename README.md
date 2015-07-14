@@ -1,39 +1,77 @@
-#FuelPHP
+Flockbird
 
-* Version: 1.7.2
-* [Website](http://fuelphp.com/)
-* [Release Documentation](http://docs.fuelphp.com)
-* [Release API browser](http://api.fuelphp.com)
-* [Development branch Documentation](http://dev-docs.fuelphp.com)
-* [Development branch API browser](http://dev-api.fuelphp.com)
-* [Support Forum](http://fuelphp.com/forums) for comments, discussion and community support
+==============
+Flockbird とは
+==============
+* Flockbird は OSS の SNS エンジンです
+* Flockbird は Framework に FuelPHP1.X を使用しています
+* Licenseは MIT ライセンスです
 
-## Description
+=======
+動作環境
+=======
+* Apache(mod_rewrite を使用可能)
+* PHP5.4 以上
+* MySQL5.0 以上   
 
-FuelPHP is a fast, lightweight PHP 5.3 framework. In an age where frameworks are a dime a dozen, We believe that FuelPHP will stand out in the crowd.  It will do this by combining all the things you love about the great frameworks out there, while getting rid of the bad.
+================
+インストール方法
+================
 
-## More information
+###　1. 設定ファイルの設置と編集 (config.php) ###
 
-For more detailed information, see the [development wiki](https://github.com/fuelphp/fuelphp/wiki).
+~~~~
+$ cp config.php.sample config.php
+$ vi config.php
+~~~~
 
-##Development Team
 
-* Harro Verton - Project Manager, Developer ([http://wanwizard.eu/](http://wanwizard.eu/))
-* Frank de Jonge - Developer ([http://frenky.net/](http://frenky.net/))
-* Steve West - Developer
+#### 設置パス設定(optional)
 
-### Want to join?
+~~~~
+define('FBD_URI_PATH', '/');// set setting path, if not set on document root
+~~~~
+* DocumentRoot 以外に設置する場合、設置パスを指定する
+* git 管理ファイルが変更になるので、「2. セットアップスクリプトの実行」後、変更のコミットが必要
 
-The FuelPHP development team is always looking for new team members, who are willing
-to help lift the framework to the next level, and have the commitment to not only
-produce awesome code, but also great documentation, and support to our users.
 
-You can not apply for membership. Start by sending in pull-requests, work on outstanding
-feature requests or bugs, and become active in the #fuelphp IRC channel. If your skills
-are up to scratch, we will notice you, and will ask you to become a team member.
+#### DBサーバ接続設定
 
-### Alumni
+~~~~
+$GLOBALS['_FBD_DSN']['production'] = array(
+  'default' => array(
+    'connection'  => array(
+      'dsn'        => 'mysql:host=localhost;dbname=dbname',
+      'username'   => 'root',
+      'password'   => '',
+    ),
+    'profiling' => true,
+  ),
+  'charset' => 'utf8',
+);
+~~~~
+* MySQL で4バイト UTF8 を使用する場合は charset に utf8mb4 を指定する
 
-* Jelmer Schreuder - Developer ([http://jelmerschreuder.nl/](http://jelmerschreuder.nl/))
-* Phil Sturgeon - Developer ([http://philsturgeon.co.uk](http://philsturgeon.co.uk))
-* Dan Horrigan - Founder, Developer ([http://dhorrigan.com](http://dhorrigan.com))
+
+#### 暗号化キーを指定(ASCII文字列)
+~~~~
+define('FBD_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
+~~~~
+
+### 2. セットアップスクリプトの実行 ###
+~~~~
+$ sh bin/setup/setup.sh
+~~~~
+
+
+
+### オプション設定項目 ###
+
+#### アップロードファイルの保存場所をAWS S3 にする場合
+
+composer.json の require に以下の行をを追加。
+
+~~~~
+"aws/aws-sdk-php": "2.*"
+~~~~
+
