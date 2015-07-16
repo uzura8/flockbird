@@ -28,23 +28,13 @@ function form_close()
 
 function form_input(Validation $val, $name, $default_value = null, $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
 {
-	$field = $val->fieldset()->field($name);
-	$input_atter = array(
-		'type'  => $field->get_attribute('type'),
-		'id'    => Site_Form::get_field_id($name),
-		'class' => 'form-control',
-		'placeholder' => $field->get_attribute('placeholder'),
-	);
-	if (!is_null($field->get_attribute('value')))
-	{
-		$default_value = $field->get_attribute('value');
-	}
+	list($default_value, $label, $is_required, $input_atter) = Site_Form::get_fieid_attribute($val, $name, $default_value);
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,
-		'label' => $field->get_attribute('label'),
+		'label' => $label,
 		'default_value' => $default_value,
-		'is_required'   => $field->get_attribute('required') == 'required',
+		'is_required'   => $is_required,
 		'input_atter'   => $input_atter,
 		'col_sm_size'   => $col_sm_size,
 		'label_col_sm_size' => $label_col_sm_size,
@@ -58,25 +48,14 @@ function form_input(Validation $val, $name, $default_value = null, $col_sm_size 
 function form_input_datetime(Validation $val, $name, $default_value = null, $format = null, $col_sm_size = 6, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
 {
 	if (is_null($format)) $format = 'YYYY-MM-DD HH:mm';
-
-	$field = $val->fieldset()->field($name);
-	$input_atter = array(
-		'type'  => $field->get_attribute('type'),
-		'id'    => Site_Form::get_field_id($name),
-		'class' => 'form-control',
-		'placeholder' => $field->get_attribute('placeholder'),
-	);
-	if (!is_null($field->get_attribute('value')))
-	{
-		$default_value = $field->get_attribute('value');
-	}
+	list($default_value, $label, $is_required, $input_atter) = Site_Form::get_fieid_attribute($val, $name, $default_value);
 	$data = array(
 		'val'    => $val,
 		'name'   => $name,
 		'format' => $format,
-		'label'  => $field->get_attribute('label'),
+		'label'  => $label,
 		'default_value' => $default_value,
-		'is_required'   => $field->get_attribute('required') == 'required',
+		'is_required'   => $is_required,
 		'input_atter'   => $input_atter,
 		'col_sm_size'   => $col_sm_size,
 		'label_col_sm_size' => $label_col_sm_size,
@@ -108,27 +87,14 @@ function form_file($name, $label = null, $is_required = false, $input_class = 'i
 
 function form_textarea(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $is_autogrow = true, $help = '', $option_public_flag = array(), $option_attr = array())
 {
-	if (!is_array($option_attr)) $option_attr = (array)$option_attr;
-	$field = $val->fieldset()->field($name);
-	$attr = array(
-		'id'    => Site_Form::get_field_id($name),
-		'rows'  => $field->get_attribute('rows'),
-		'class' => 'form-control',
-		'placeholder' => $field->get_attribute('placeholder'),
-	) + $option_attr;
-	if ($is_autogrow) $attr['class'] .= ' autogrow';
-	if (!is_null($field->get_attribute('value')))
-	{
-		$default_value = $field->get_attribute('value');
-	}
-
+	list($default_value, $label, $is_required, $attr) = Site_Form::get_fieid_attribute($val, $name, $default_value, true, $option_attr);
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,
-		'label' => $field->get_attribute('label'),
+		'label' => $label,
 		'default_value' => $default_value,
 		'attr' => $attr,
-		'is_required' => $field->get_attribute('required') == 'required',
+		'is_required' => $is_required,
 		'label_col_sm_size' => $label_col_sm_size,
 		'help' => $help,
 		'optional_public_flag' => $option_public_flag,
