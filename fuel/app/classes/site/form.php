@@ -56,7 +56,10 @@ class Site_Form
 
 		if (is_callable(array($field, 'get_attribute')))
 		{
-			$default_value = $field->get_attribute('value');
+			if (is_null($default_value) && !is_null($field->get_attribute('value')))
+			{
+				$default_value = $field->get_attribute('value');
+			}
 			$is_required = $field->get_attribute('required') == 'required';
 			$label = $field->get_attribute('label');
 			$input_attr['placeholder'] = $field->get_attribute('placeholder');
