@@ -59,12 +59,12 @@ class Site_Form
 			$default_value = $field->get_attribute('value');
 			$is_required = $field->get_attribute('required') == 'required';
 			$label = $field->get_attribute('label');
-			$input_atter['placeholder'] = $field->get_attribute('placeholder');
-			$input_atter['type'] = $field->get_attribute('type');
+			$input_attr['placeholder'] = $field->get_attribute('placeholder');
+			$input_attr['type'] = $field->get_attribute('type');
 
 			if ($is_textarea && !is_null($field->get_attribute('rows')))
 			{
-				$input_atter['rows'] = $field->get_attribute('rows');
+				$input_attr['rows'] = $field->get_attribute('rows');
 			}
 		}
 
