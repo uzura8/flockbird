@@ -1,7 +1,4 @@
-<ul class="list-inline mt10">
-	<li><small><label><?php echo term('site.last', 'form.updated', 'site.datetime'); ?>:</label> <?php echo site_get_time($news->updated_at) ?></small></li>
-	<?php if (isset_datatime($news->published_at)): ?><li><small><label><?php echo term('form.publish', 'site.datetime'); ?>:</label> <?php echo site_get_time($news->published_at) ?></small></li><?php endif; ?>
-</ul>
+<?php echo render('news::_parts/news_subinfo', array('news' => $news)); ?>
 
 <?php
 $publish_action = $news->is_published ? 'unpublish' : 'publish';

@@ -16,6 +16,9 @@ return array(
 	'link' => array(
 		'isEnabled' => true,
 	),
+	'tags' => array(
+		'isEnabled' => true,
+	),
 	'form' => array(
 		'formats' => array(
 			'options' => array(
@@ -24,9 +27,6 @@ return array(
 				'2' => 'markdown',//    enabled to markdown editor
 			),
 			'default' => '1',
-		),
-		'tags' => array(
-			'isEnabled' => true,
 		),
 		'isSecure' => array(
 			'isEnabled' => false,
@@ -39,7 +39,7 @@ return array(
 				'limit_max' => 100,
 				'trim_width' => array(
 					'title' => 88,
-					'body'  => 500,
+					'body'  => 200,
 				),
 				'truncate_lines' => array(
 					'body'  => 5,

@@ -72,8 +72,10 @@ class Site_Util
 		return in_array($editor_type, array('html_editor', 'markdown'));
 	}
 
-	public static function convert_format_key2value(string $editor_type)
+	public static function convert_format_key2value($editor_type)
 	{
+		if ($editor_type == 'raw') $editor_type = 'html_editor';
+
 		$options = (array)conf('form.formats.options', 'news');
 		foreach ($options as $format_value => $format_type)
 		{

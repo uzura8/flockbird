@@ -100,7 +100,7 @@ class Controller_Api extends \Controller_Rest
 			->where('news_id', $response['id']);
 		$response['links'] = $query->execute()->as_array();
 
-		if (\Config::get('news.form.tags.isEnabled'))
+		if (\Config::get('news.tags.isEnabled'))
 		{
 			$cols = array('tag.name');
 			$query = \DB::select_array($cols)->from('news_tag')

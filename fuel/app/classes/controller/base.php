@@ -246,7 +246,7 @@ class Controller_Base extends Controller_Hybrid
 		return self::response($response_body, $status_code);
 	}
 
-	protected function set_response_body_api($data, $view_file = null)
+	protected function set_response_body_api($data, $view_file = null, $safe_datas = array())
 	{
 		if (!$view_file)
 		{
@@ -254,7 +254,16 @@ class Controller_Base extends Controller_Hybrid
 			return;
 		}
 
-		$html = \View::forge($view_file, $data)->render();
+		$view = View::forge($view_file, $data);
+		if ($safe_datas)
+		{
+			foreach ($safe_datas as $key => $safe_data)
+			{
+				$view->set_safe($key, $safe_data);
+			}
+		}
+		$html = $view->render();
+
 		if ($this->format == 'html')
 		{
 			$this->response_body = $html;

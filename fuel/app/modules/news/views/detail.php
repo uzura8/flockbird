@@ -7,7 +7,8 @@
 <?php endif; ?>
 <?php echo render('_parts/file_links', array('title' => term('site.file'), 'list' => $files, 'file_cate' => 'nw', 'split_criterion_id' => $news->id)); ?>
 <?php echo render('_parts/links', array('title' => term('site.link'), 'list' => $news->news_link)); ?>
-<?php if (Config::get('news.form.tags.isEnabled') && $tags): ?>
+
+<?php if (Config::get('news.tags.isEnabled') && $tags): ?>
 <?php echo render('_parts/tags', array('tags' => $tags)); ?>
 <?php endif; ?>
 

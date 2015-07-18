@@ -35,6 +35,7 @@ $config = array(
 			term('note') => 'note/',
 			term('album_image') => 'album/image/',
 			term('member.view') => 'member/list/',
+			term('news.view') => 'news/list/',
 			'About' => 'site/about',
 			//'Sitemap' => 'site/sitemap',
 			//'Contact' => 'site/contact',
@@ -49,6 +50,7 @@ $config = array(
 			'site.logout' => 'auth/logout/',
 		),
 		'global_footer' => array(
+			term('news.view') => 'news/list/',
 			'About' => 'site/about',
 			term('site.term') => 'site/term',
 			term('site.privacy_policy') => 'site/privacy_policy',

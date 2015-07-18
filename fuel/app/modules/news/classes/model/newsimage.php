@@ -76,9 +76,27 @@ class Model_NewsImage extends \MyOrm\Model
 		return self::$count_list[$news_id];
 	}
 
-	public static function get4news_id($news_id)
+	public static function get4news_id($news_id, $order_by = array())
 	{
-		return self::query()->where('news_id', $news_id)->get();
+		$query = static::get_query4news_id($news_id, $order_by);
+
+		return $query->get();
+	}
+
+	public static function get_one4news_id($news_id, $order_by = array())
+	{
+		if (!$order_by) $order_by = array('id' => 'desc');
+		$query = static::get_query4news_id($news_id, $order_by);
+
+		return $query->get_one();
+	}
+
+	protected static function get_query4news_id($news_id, $order_by = array())
+	{
+		$query = self::query()->where('news_id', $news_id);
+		if ($order_by) $query->order_by($order_by);
+
+		return $query;
 	}
 
 	public static function get_ids4news_id($news_id, $order_by = 'id')

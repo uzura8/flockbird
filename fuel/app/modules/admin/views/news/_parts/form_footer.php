@@ -9,7 +9,7 @@
 <?php if (\News\Site_Util::check_editor_enabled('markdown')): ?>
 <?php 	echo render('_parts/form/markdown/footer', array('textarea_selector' => '#form_body')); ?>
 <?php endif; ?>
-<?php if (Config::get('news.form.tags.isEnabled')): ?>
+<?php if (Config::get('news.tags.isEnabled')): ?>
 <?php echo Asset::js('select2/select2.js');?>
 <script>
 $("#form_tags").select2({

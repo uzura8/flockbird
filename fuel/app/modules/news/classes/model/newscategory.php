@@ -52,4 +52,9 @@ class Model_NewsCategory extends \MyOrm\Model
 		static::$_properties['name']['name'] = term('news.category.name');
 		static::$_properties['label']['name'] = term('news.category.label');
 	}
+
+	public static function get4name($name)
+	{
+		return self::query()->where('name', $name)->get_one();
+	}
 }

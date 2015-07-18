@@ -71,7 +71,7 @@ class Controller_News extends Controller_Admin
 
 		$images = \Config::get('news.image.isEnabled') ? \News\Model_NewsImage::get4news_id($id) : array();
 		$files  = \Config::get('news.file.isEnabled') ? \News\Model_NewsFile::get4news_id($id) : array();
-		$tags   = \Config::get('news.form.tags.isEnabled') ? \News\Model_NewsTag::get_names4news_id($id) : array();
+		$tags   = \Config::get('news.tags.isEnabled') ? \News\Model_NewsTag::get_names4news_id($id) : array();
 
 		$title = array('name' => $news->title);
 		$header_info = array();
@@ -157,7 +157,7 @@ class Controller_News extends Controller_Admin
 				{
 					$this->save_posted_links($posted_links, $news->id);
 				}
-				if (\Config::get('news.form.tags.isEnabled'))
+				if (\Config::get('news.tags.isEnabled'))
 				{
 					\News\Model_NewsTag::save_tags($post['tags'], $news->id);
 				}
@@ -258,7 +258,7 @@ class Controller_News extends Controller_Admin
 			$saved_links = $this->get_saved_links($news->id);
 		}
 
-		$tags = \Config::get('news.form.tags.isEnabled') ? \News\Model_NewsTag::get_names4news_id($news->id) : array();
+		$tags = \Config::get('news.tags.isEnabled') ? \News\Model_NewsTag::get_names4news_id($news->id) : array();
 
 		$image_tmps = array();
 		$file_tmps = array();
@@ -324,7 +324,7 @@ class Controller_News extends Controller_Admin
 					$this->save_posted_links($saved_links, $news->id, true);
 					$this->save_posted_links($posted_links, $news->id);
 				}
-				if (\Config::get('news.form.tags.isEnabled'))
+				if (\Config::get('news.tags.isEnabled'))
 				{
 					\News\Model_NewsTag::save_tags($post['tags'], $news->id);
 				}
@@ -525,7 +525,7 @@ class Controller_News extends Controller_Admin
 					->add_rule('valid_string', 'numeric')
 					->add_rule('in_array', array(0,1));
 		}
-		if (\Config::get('news.form.tags.isEnabled'))
+		if (\Config::get('news.tags.isEnabled'))
 		{
 			$options = \Model_Tag::get_assoc('name', 'name');
 			$val->add('tags', term('site.tag'))

@@ -545,4 +545,19 @@ class Site_Util
 
 		return $active_modules;
 	}
+
+	public static function validate_tags($tag_string)
+	{
+		$tags_validated = array();
+		$tags = explode(',', $tag_string);
+		foreach ($tags as $tag)
+		{
+			$tag = urldecode($tag);
+			if (strlen($tag) > 128) throw new \ValidationFailedException;
+
+			$tags_validated[] = $tag;
+		}
+
+		return $tags_validated;
+	}
 }
