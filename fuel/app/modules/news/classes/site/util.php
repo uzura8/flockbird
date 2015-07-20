@@ -84,4 +84,16 @@ class Site_Util
 
 		return false;
 	}
+
+	public static function get_category_uris($is_add_all_link_to_tail = false)
+	{
+		$categories = Model_NewsCategory::get_assoc('label', 'name', null, array('sort_order' => 'asc'));
+		foreach ($categories as $label => $name)
+		{
+			$categories[$label] = 'news/category/'.$name;
+		}
+		if ($is_add_all_link_to_tail) $categories[term('site.see_all')] = 'news';
+
+		return $categories;
+	}
 }

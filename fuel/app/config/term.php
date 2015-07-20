@@ -113,6 +113,7 @@ $config = array(
 		'link' => 'リンク',
 		'shot' => '撮影',
 		'see_more' => 'もっとみる',
+		'see_all' => 'すべてみる',
 		'see_latest' => '最新をみる',
 		'unread' => '未読',
 		'AlreadyRead' => '既読',

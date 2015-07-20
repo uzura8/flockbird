@@ -34,6 +34,12 @@ return array(
 	),
 	'viewParams' => array(
 		'site' => array(
+			'sideMenu' => array(
+				'categoryList' => array(
+					'isEnabled' => false,
+					'withAllLink' => true,
+				),
+			),
 			'list' => array(
 				'limit' => 5,
 				'limit_max' => 100,
