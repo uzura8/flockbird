@@ -243,6 +243,10 @@ class Controller_Auth extends Controller_Site
 		catch(\FuelException $e)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
+			if (conf('auth.oauth.log.isOutputErrorLog.provider_signup'))
+			{
+				\Util_Toolkit::log_error('OAuth provider_signup error: '. isset($e) ? $e->getMessage() : '');
+			}
 
 			return $this->login_failed();
 		}

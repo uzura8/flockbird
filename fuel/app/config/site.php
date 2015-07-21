@@ -32,6 +32,15 @@ $config = array(
 	'login_uri' => array(
 		'site' => 'auth/login',
 	),
+	'auth' => array(
+		'oauth' => array(
+			'log' => array(
+				'isOutputErrorLog' => array(
+					'provider_signup' => true,
+				),
+			),
+		),
+	),
 	'original_user_id' => array(
 		'site'  => 1,
 	),
