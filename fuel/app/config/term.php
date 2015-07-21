@@ -146,7 +146,7 @@ $config = array(
 			'label' => '性別',
 			'options' => array(
 				'male' => '男性',
-				'femail' => '女性',
+				'female' => '女性',
 			),
 		),
 		'birthyear' => '生年',
