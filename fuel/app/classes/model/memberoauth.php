@@ -74,4 +74,30 @@ class Model_MemberOauth extends \MyOrm\Model
 	public function create_member($input = array())
 	{
 	}
+
+	public static function get_one4uid_and_provider_id($uid, $provider_id)
+	{
+		if (!is_int($provider_id)) $provider_id = Model_OauthProvider::get_id($provider_id);
+		if (!$provider_id) throw new InvalidArgumentException('Second parameter is invalid.');
+
+		return self::query()
+			->where('uid', $uid)
+			->where('oauth_provider_id', $provider_id)
+			->get_one();
+	}
+
+	public static function get_token4member_id($member_id, $provider_id)
+	{
+		if (!is_int($provider_id)) $provider_id = Model_OauthProvider::get_id($provider_id);
+		if (!$provider_id) throw new InvalidArgumentException('Second parameter is invalid.');
+
+		$obj = self::query()
+			->where('member_id', $member_id)
+			->where('oauth_provider_id', $provider_id)
+			->get_one();
+
+		if (!$obj) return false;
+
+		return $obj->token;
+	}
 }
