@@ -36,7 +36,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 <?php endif; ?>
 
 <?php // Facebook feed ?>
-<?php if (conf('service.facebook.shareDialog.detail', 'note')): ?>
+<?php if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.detail', 'note')): ?>
 <?php
 $attr = array(
 	'class' => 'ml10',
