@@ -11,7 +11,7 @@
 <h3 id="comments">Comments</h3>
 <?php endif; ?>
 
-<div class="comment_info">
+<div class="comment_info mb5">
 <?php // comment_count_and_link
 echo render('_parts/comment/count_and_link_display', array(
 	'id' => $note->id,
@@ -34,6 +34,27 @@ $data_like_link = array(
 echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
 <?php endif; ?>
+
+<?php // Facebook feed ?>
+<?php if (conf('service.facebook.shareDialog.detail', 'note')): ?>
+<?php
+$attr = array(
+	'class' => 'ml10',
+	'data-uri' => '/note/'.$note->id,
+	'data-name' => $note->title,
+	'data-img_uri' => $note->title,
+	'data-caption' => strim($note->title, conf('view_params_default.list.trim_width.title')),
+);
+if ($images)
+{
+	$image = Util_Array::get_last($images);
+	$img_uri_info = img_uri($image->get_image(), 'thumbnail');
+	$attr['data-img_uri'] = $img_uri_info;
+}
+echo btn('service.facebook.do_share', '#', 'js-facebook_feed', true, 'xs', 'primary', $attr);
+?>
+<?php endif; ?>
+
 </div><!-- .comment_info -->
 
 <div id="comment_list">

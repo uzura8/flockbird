@@ -329,6 +329,39 @@ $(document).on('click', '.js-modal', function(){
 	return false;
 });
 
+$(document).on('click', '.js-facebook_feed', function(){
+	var uri = $(this).data('uri');
+	var name = $(this).data('name') ? $(this).data('name') : '';
+	var imgUri = $(this).data('img_uri') ? $(this).data('img_uri') : '';
+	var caption = $(this).data('caption') ? $(this).data('caption') : '';
+	var description = $(this).data('description') ? $(this).data('description') : get_config('site_description');
+	var msg = $(this).data('msg') ? $(this).data('msg') : 'Facebookに投稿しました。';
+	postFacebookFeed(uri, name, imgUri, caption, description, msg);
+	return false;
+});
+
+function postFacebookFeed(uri, name)
+{
+	var imgUri      = (arguments.length > 2) ? arguments[2] : '';
+	var caption     = (arguments.length > 3) ? arguments[3] : '';
+	var description = (arguments.length > 4) ? arguments[4] : '';
+	var msg         = (arguments.length > 5) ? arguments[5] : '';
+
+	FB.init({appId: get_config('app_id_facebook'), status: true, cookie: true});
+	var obj = {
+		method: 'feed',
+		link: get_url(uri)
+	};
+	if (name) obj.name = name;
+	if (caption) obj.caption = caption;
+	if (description) obj.caption = description;
+	if (imgUri) obj.picture = get_url(imgUri);
+	var callback = function () {
+		if (msg) showMessage(msg);
+	}
+	FB.ui(obj, callback);
+}
+
 function checkIsRenderSiterSummary()
 {
 	var divArticleElement,

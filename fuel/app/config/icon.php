@@ -152,6 +152,14 @@ $config = array(
 	//	),
 	//	'noValue' => '-',
 	//),
+	'service' => array(
+		'facebook' => array(
+			'do_share' => array(
+				'key' => 'facebook-square',
+				'prefix' => 'fa fa-',
+			),
+		),
+	),
 	'profile' => 'user',
 	//'guest'   => 'Guest',
 	//'follow'  => 'フォロー',

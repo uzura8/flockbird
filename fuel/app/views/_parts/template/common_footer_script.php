@@ -68,7 +68,9 @@ function get_config(key) {
 		'site_public_flag_default': <?php echo conf('public_flag.default'); ?>,
 		'is_render_site_summary_at_client_side': <?php echo is_render_site_summary_at_client_side() ? 1 : 0; ?>,
 		mediaBaseUrl: '<?php echo FBD_MEDIA_BASE_URL; ?>',
-		upload_dir_name: '<?php echo FBD_UPLOAD_DIRNAME; ?>'
+		upload_dir_name: '<?php echo FBD_UPLOAD_DIRNAME; ?>',
+		site_description: '<?php echo FBD_SITE_DESCRIPTION; ?>',
+		app_id_facebook: '<?php echo FBD_FACEBOOK_APP_ID; ?>'
 	};
 	return config[key];
 }

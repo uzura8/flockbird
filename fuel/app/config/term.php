@@ -168,6 +168,11 @@ $config = array(
 		),
 		'noValue' => '-',
 	),
+	'service' => array(
+		'facebook' => array(
+			'do_share' => 'シェアする',
+		),
+	),
 	'profile' => 'プロフィール',
 	'guest'   => 'Guest',
 	'follow'  => 'フォロー',
