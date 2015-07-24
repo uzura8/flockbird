@@ -147,7 +147,12 @@ class Controller_Note extends \Controller_Site
 
 				$message = sprintf('%sを%sしました。', term('note'), $is_published ? term('form.create_simple') : term('form.draft'));
 				\Session::set_flash('message', $message);
-				\Response::redirect('note/detail/'.$note->id);
+				$redirect_uri = 'note/detail/'.$note->id;
+				if ($is_published && FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.note.isEnabled') && conf('service.facebook.shareDialog.note.autoPopupAfterCreated'))
+				{
+					$redirect_uri .= '?created=1';
+				}
+				\Response::redirect($redirect_uri);
 			}
 			catch(\FuelException $e)
 			{

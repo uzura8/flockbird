@@ -346,6 +346,19 @@ $config = array(
 	'sort_order' => array(
 		'interval' => 10,
 	),
+	'service' => array(
+		'facebook' => array(
+			'shareDialog' => array(
+				'jsUrl' => '//connect.facebook.net/en_US/all.js',
+				'name' => array(
+					'trimWidth' => 200,
+				),
+				'caption' => array(
+					'trimWidth' => 200,
+				),
+			),
+		),
+	),
 	'map' => array(
 		'isEnabled' => true,
 		'paramsDefault' => array(

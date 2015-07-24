@@ -10,10 +10,12 @@ function view_convert_list($val)
 	return sprintf('<ul>%s</ul>', implode(PHP_EOL, $list));
 }
 
-function strim($string, $width = 0, $trimmarker = '...', $is_html = true)
+function strim($string, $width = 0, $trimmarker = null, $is_html = true, $is_remove_line_feed = false)
 {
 	if (!$width) return $string;
+	if (is_null($trimmarker)) $trimmarker = '...';
 
+	if ($is_remove_line_feed) $string = str_replace(array("\r", "\n"), '', $string);
 	$original_width = mb_strlen($string);
 
 	if ($is_html) $string = Site_Util::html_entity_decode($string);

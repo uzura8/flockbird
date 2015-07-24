@@ -10,4 +10,14 @@ return array(
 			),
 		),
 	),
+	'service' => array(
+		'facebook' => array(
+			'shareDialog' => array(
+				'note' => array(
+					'isEnabled' => true,
+					'autoPopupAfterCreated' => false,
+				),
+			),
+		),
+	),
 );

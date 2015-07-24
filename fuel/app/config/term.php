@@ -170,6 +170,7 @@ $config = array(
 	),
 	'service' => array(
 		'facebook' => array(
+			'view' => 'Facebook',
 			'do_share' => 'シェアする',
 		),
 	),

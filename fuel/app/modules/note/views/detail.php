@@ -7,9 +7,9 @@
 <?php endif; ?>
 
 <?php if ($note->is_published): ?>
-<?php if (Auth::check() || $comments): ?>
+<?php 	if (Auth::check() || $comments): ?>
 <h3 id="comments">Comments</h3>
-<?php endif; ?>
+<?php 	endif; ?>
 
 <div class="comment_info mb5">
 <?php // comment_count_and_link
@@ -20,7 +20,7 @@ echo render('_parts/comment/count_and_link_display', array(
 )); ?>
 
 <?php // like_count_and_link ?>
-<?php if (conf('like.isEnabled') && Auth::check()): ?>
+<?php 	if (conf('like.isEnabled') && Auth::check()): ?>
 <?php
 $data_like_link = array(
 	'id' => $note->id,
@@ -33,27 +33,17 @@ $data_like_link = array(
 );
 echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
-<?php endif; ?>
+<?php 	endif; ?>
 
 <?php // Facebook feed ?>
-<?php if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.detail', 'note')): ?>
-<?php
-$attr = array(
-	'class' => 'ml10',
-	'data-uri' => '/note/'.$note->id,
-	'data-name' => $note->title,
-	'data-img_uri' => $note->title,
-	'data-caption' => strim($note->title, conf('view_params_default.list.trim_width.title')),
-);
-if ($images)
-{
-	$image = Util_Array::get_last($images);
-	$img_uri_info = img_uri($image->get_image(), 'thumbnail');
-	$attr['data-img_uri'] = $img_uri_info;
-}
-echo btn('service.facebook.do_share', '#', 'js-facebook_feed', true, 'xs', 'primary', $attr);
-?>
-<?php endif; ?>
+<?php 	if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.note.isEnabled')): ?>
+<?php echo render('_parts/facebook/share_btn', array(
+	'images' => $images,
+	'link_uri' => 'note/'.$note->id,
+	'name' => $note->title,
+	'description' => $note->title,
+)); ?>
+<?php 	endif; ?>
 
 </div><!-- .comment_info -->
 
