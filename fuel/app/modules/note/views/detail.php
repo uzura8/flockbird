@@ -41,7 +41,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 	'images' => $images,
 	'link_uri' => 'note/'.$note->id,
 	'name' => $note->title,
-	'description' => $note->title,
+	'description' => $note->body,
 )); ?>
 <?php 	endif; ?>
 
