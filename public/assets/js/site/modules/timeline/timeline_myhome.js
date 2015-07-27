@@ -13,8 +13,11 @@ $(function() {
 			cols : ['id', 'name'],
 			no_relateds: 1
 		};
+		var member_id = get_uid();
+		if (!member_id) return false;
+
 		$.ajax({
-			url : get_url('album/api/member.json'),
+			url : get_url('album/api/member/' + member_id + '.json'),
 			type : 'GET',
 			dataType : 'json',
 			data : getData,
