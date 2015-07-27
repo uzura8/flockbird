@@ -33,7 +33,7 @@ $tags   = $is_tags_enabled ? \News\Model_NewsTag::get_names4news_id($id) : array
 <?php if ($image_col_size): ?>
 			<div class="col-<?php echo $col_class; ?>-<?php echo $image_col_size; ?> article-left">
 				<div class="imgBox">
-					<?php echo img($image->file_name, 'thumbnail', 'news/'.$news->slug, false, '', false, true, array('class' => 'thumbnail')); ?>
+					<?php echo img($image->file_name, 'thumbnail', 'news/detail/'.$news->slug, false, '', false, true, array('class' => 'thumbnail')); ?>
 				</div>
 			</div>
 <?php endif; ?>
