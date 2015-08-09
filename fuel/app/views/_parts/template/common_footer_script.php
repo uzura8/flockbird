@@ -39,6 +39,9 @@ function get_term(key) {
 <?php if (is_enabled('timeline')): ?>
 		'timeline': '<?php echo term('timeline'); ?>',
 <?php endif; ?>
+<?php if (is_enabled('thread')): ?>
+		'thread': '<?php echo term('thread'); ?>',
+<?php endif; ?>
 		'public_flag': '<?php echo term('public_flag.label'); ?>',
 		'comment': '<?php echo term('form.comment'); ?>',
 		'member': '<?php echo term('member.view'); ?>',

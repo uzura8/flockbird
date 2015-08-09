@@ -49,6 +49,7 @@ function getNoticeContentUriMiddlePath(foreign_table)
 	switch (foreign_table)
 	{
 		case 'timeline':
+		case 'thread':
 		case 'note':
 		case 'album':
 			return foreign_table;
@@ -81,6 +82,7 @@ function convertNoticeForeignTable(foreign_table)
 	switch (foreign_table)
 	{
 		case 'timeline':
+		case 'thread':
 		case 'note':
 		case 'album':
 		case 'album_image':

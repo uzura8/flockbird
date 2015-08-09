@@ -14,6 +14,7 @@ class Site_Util
 			'note',
 			'timeline_comment',
 			'timeline',
+			'thread',
 		);
 	}
 
