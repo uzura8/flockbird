@@ -338,6 +338,7 @@ class Site_Upload
 			'is_save_exif_to_db'    => false,
 			'exif_accept_tags'      => array(),
 			'exif_ignore_tags'      => array(),
+			'is_output_log_save_error' => conf('upload.isOutputLogSaveError', false),
 		);
 		if ($upload_type == 'img')
 		{

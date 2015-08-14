@@ -273,8 +273,12 @@ class MyUploadHandler extends UploadHandler
 			}
 			$file->id = $this->save_file($file, $exif);
 		}
-		catch(\FuelException $e)
+		catch(\Exception $e)
 		{
+			if ($this->options['is_output_log_save_error'])
+			{
+				\Util_Toolkit::log_error(sprintf('file save error: %s', $e->getMessage()));
+			}
 			$this->delete_file($filename_with_prefix, $this->options['storage_type']);
 			$file->error = 'ファイルの保存に失敗しました。';
 		}
@@ -303,7 +307,7 @@ class MyUploadHandler extends UploadHandler
 		$model_file->type = $file->type;
 		$model_file->original_filename = $file->original_name;
 		if ($this->options['member_id']) $model_file->member_id = $this->options['member_id'];
-		if ($this->options['is_tmp']) $model_file->user_type = $this->options['user_type'];
+		$model_file->user_type = $this->options['user_type'];
 		if ($exif)
 		{
 			$model_file->exif = serialize($exif);
