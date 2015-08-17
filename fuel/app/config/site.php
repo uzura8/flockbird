@@ -64,6 +64,11 @@ $config = array(
 			),
 		),
 	),
+	'navbar' => array(
+		'largeLogo' => array(
+			'isEnabled' => false,
+		),
+	),
 	'ssl_required' => array(
 		'modules' => array(
 			'admin',
