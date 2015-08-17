@@ -8,6 +8,11 @@ $config = array(
 				'title' => '',
 				'site_lead' => '',
 				'isDisplayRegisterBtn' => true,
+				'images' => array(
+					'assets/img/site/sample/01.jpg',
+					'assets/img/site/sample/02.jpg',
+					'assets/img/site/sample/03.jpg',
+				),
 			),
 			'timeline' => array(
 				'isEnabled' => true,
