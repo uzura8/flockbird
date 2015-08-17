@@ -66,7 +66,7 @@ $config = array(
 	),
 	'navbar' => array(
 		'largeLogo' => array(
-			'isEnabled' => true,
+			'isEnabled' => false,
 		),
 	),
 	'ssl_required' => array(
