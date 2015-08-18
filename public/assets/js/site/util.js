@@ -984,6 +984,8 @@ function scroll() {
 }
 
 function renderSiteSummary() {
+	if (!get_config('is_render_site_summary_at_client_side')) return false;
+
 	var template = Handlebars.compile($('#site_summary-template').html());
 	var getUrl = get_url('site/opengraph/api/analysis');
 	$('.site_summary_unrendered').each(function() {
