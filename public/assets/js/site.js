@@ -217,7 +217,6 @@ $(document).on('click', '.js-insert_img', function(){
 	var targetBodySelector = btn.getAttribute("data-body");
 	var isAddElement = (targetBodySelector == '.note-editable');
 	if (!targetBodySelector) return false;
-
 	var fileId = $(this).data('id') ? parseInt($(this).data('id')) : 0;
 	var size = fileId ? $('#select_size_' + fileId).val() : 'raw';
 	var imgNamePrefix = $(this).data('file_name_prefix') ? $(this).data('file_name_prefix') : '';
@@ -231,13 +230,15 @@ $(document).on('click', '.js-insert_img', function(){
 	var src = ' src="' + get_url(imgUri, true) + '"';
 	var alt = textAreaVal ? ' alt="' + textAreaVal + '"' : '';
 	var addValue = '<img' + src + alt + '>';
+	var result;
 	if (isAddElement) {
-		$(targetBodySelector).append(addValue);
+		result = insertHtmlAtCaret(addValue, targetBodySelector);
 	} else {
-		var currentValue = $(targetBodySelector).val();
-		$(targetBodySelector).val(currentValue + addValue)
+		result = insertTextAtCaret(targetBodySelector, addValue);
 	}
-	showMessage(get_term('add_picture') + 'しました。');
+	var message = get_term('add_picture');
+	message += result ? 'しました。' : '出来ませんでした。';
+	showMessage(message);
 	return false;
 });
 
