@@ -9,9 +9,9 @@
 		'profiles' => $profiles,
 		'member_profile_public_flags' => $member_profile_public_flags,
 	)); ?>
-	<?php echo form_input($val, 'password', '', 6, $label_size); ?>
+	<?php echo form_input($val, 'password', '', 7, $label_size); ?>
 <?php if (!$member_pre->password): ?>
-	<?php echo form_input($val, 'password_confirm', '', 6, $label_size); ?>
+	<?php echo form_input($val, 'password_confirm', '', 7, $label_size); ?>
 <?php endif; ?>
 	<?php echo Form::hidden('token', Input::param('token')); ?>
 	<?php echo form_text(

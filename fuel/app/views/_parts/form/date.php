@@ -20,15 +20,19 @@ $block_id = sprintf('%s_%s_block', $atters['month']['id'], $atters['day']['id'])
 	<?php echo Form::label($label, $label_name, array('class' => $label_class)); ?>
 	<div class="col-sm-<?php echo $input_col_sm_size; ?>">
 		<div class="row">
-			<div class="col-xs-3">
-				<?php echo Form::select($name_month, Input::post($name_month, $def_val_month), $options['month'], $atters['month']); ?>
-			</div>
-			<div class="col-xs-1 text-block" style="">/</div>
-			<div class="col-xs-3">
-				<?php echo Form::select($name_day, Input::post($name_day, $def_val_day), $options['day'], $atters['day']); ?>
+			<div class="col-sm-7">
+				<div class="row">
+					<div class="col-xs-5">
+						<?php echo Form::select($name_month, Input::post($name_month, $def_val_month), $options['month'], $atters['month']); ?>
+					</div>
+					<div class="col-xs-2 text-block" style="">/</div>
+					<div class="col-xs-5">
+						<?php echo Form::select($name_day, Input::post($name_day, $def_val_day), $options['day'], $atters['day']); ?>
+					</div>
+				</div>
 			</div>
 <?php if ($optional_public_flag): ?>
-			<div class="col-xs-<?php echo (7 - $label_col_sm_size); ?> pull-right">
+			<div class="col-xs-4 col-sm-offset-1 pull-right">
 				<?php echo field_public_flag($optional_public_flag['value'], 'select', array(), $optional_public_flag['name']); ?>
 			</div>
 <?php endif; ?>
