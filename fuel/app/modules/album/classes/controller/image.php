@@ -113,7 +113,7 @@ class Controller_Image extends \Controller_Site
 		$ids = Model_AlbumImage::get_col_array('id', $params);
 		list($data['before_id'], $data['after_id']) = \Util_Array::get_neighborings($id, $ids);
 
-		$title = Site_Util::get_album_image_page_title($album_image);
+		$title = Site_Util::get_album_image_display_name($album_image, term('album_image', 'site.detail'));
 		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->post_footer = \View::forge('image/_parts/detail_footer', array(
@@ -170,7 +170,7 @@ class Controller_Image extends \Controller_Site
 			}
 		}
 
-		$album_image_page_title = Site_Util::get_album_image_page_title($album_image);
+		$album_image_page_title = Site_Util::get_album_image_display_name($album_image, term('album_image', 'site.detail'));
 		$this->set_title_and_breadcrumbs(
 			sprintf('%sを%s', term('album_image'), term('form.do_edit')),
 			array('/album/'.$album_image->album_id => $album_image->album->name, '/album/image/'.$id => $album_image_page_title),

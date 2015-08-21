@@ -3,13 +3,9 @@ namespace Album;
 
 class Site_Util
 {
-	public static function get_album_image_display_name(Model_AlbumImage $album_image, $default = '')
+	public static function get_album_image_display_name(Model_AlbumImage $album_image, $default = '', $is_accept_hash_filename = false)
 	{
-		if (!empty($album_image->name))
-		{
-			return $album_image->name;
-		}
-
+		if (isset($album_image->name) && strlen($album_image->name)) return $album_image->name;
 		if (!\Config::get('album.isDisplayOriginalFileName')) return $default;
 
 		$file = \Model_File::get4name($album_image->file_name);
@@ -17,16 +13,6 @@ class Site_Util
 		{
 			return $file->original_filename;
 		}
-
-		return $default;
-	}
-
-	public static function get_album_image_page_title(Model_AlbumImage $album_image, $is_accept_hash_filename = false)
-	{
-		if ($album_image->name) return $album_image->name;
-
-		$file = \Model_File::get4name($album_image->file_name);
-		if ($file && strlen($file->original_filename)) return $file->original_filename;
 
 		if ($is_accept_hash_filename) return $album_image->file_name;
 
