@@ -43,10 +43,12 @@ if (conf('library.angularJs.isEnabled') && $use_angularjs) $body_attrs['ng-app']
 <?php echo render('_parts/template/global_alerts'); ?>
 
 <?php
-$title = isset($title) ? $title : null;
-$subtitle = isset($subtitle) ? $subtitle : null;
-$header_info = isset($header_info) ? $header_info : null;
-echo render('_parts/template/page_header', array('title' => $title, 'subtitle' => $subtitle, 'header_info' => $header_info));
+echo render('_parts/template/page_header', array(
+	'title' => isset($title) ? $title : null,
+	'subtitle' => isset($subtitle) ? $subtitle : null,
+	'header_info' => isset($header_info) ? $header_info : null,
+	'page_lead' => isset($page_lead) ? $page_lead : null,
+));
 ?>
 
 <?php
