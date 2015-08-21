@@ -39,7 +39,7 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 			$this->response_body['isFollow'] = (int)$status_after;
 			$this->response_body['html'] = $status_after ? sprintf('<span class="glyphicon glyphicon-ok"></span> %s', term('followed')) : term('do_follow');
 			$this->response_body['attr'] = $status_after ? array('class' => array('add' => 'btn-primary')) : array('class' => array('remove' => 'btn-primary'));
-			$this->response_body['message'] = sprintf('%s%sしました。', term('follow'), $status_after ? 'しました。' : 'を解除');
+			$this->response_body['message'] = sprintf('%s%s', term('follow'), $status_after ? 'しました。' : 'を解除しました。');
 
 			return $this->response_body;
 		});
