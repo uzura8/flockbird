@@ -135,6 +135,7 @@ $config = array(
 		'error' => 'エラー',
 		'friend' => '友達',
 		'message' => 'メッセージ',
+		'menu' => 'メニュー',
 	),
 	'member' => array(
 		'view' => 'メンバー',
