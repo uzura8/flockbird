@@ -1,4 +1,4 @@
-<div id="main_post_box" class="u-mb-xs">
+<div id="main_post_box">
 <?php echo render('_parts/comment/post', array(
 	'size' => 'M',
 	'button_attrs' => array('id' => 'btn_timeline', 'class' => 'btn btn-default btn_comment'),
