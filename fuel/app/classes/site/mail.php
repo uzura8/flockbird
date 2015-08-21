@@ -47,6 +47,8 @@ class Site_Mail
 		$this->options['common_variables']['site_description'] = FBD_SITE_DESCRIPTION;
 		$this->options['common_variables']['admin_name'] = FBD_ADMIN_NAME;
 		$this->options['common_variables']['admin_mail'] = FBD_ADMIN_MAIL;
+		$this->options['common_variables']['admin_company_name'] = FBD_ADMIN_COMPANY_NAME;
+		$this->options['common_variables']['admin_company_name_jp'] = FBD_ADMIN_COMPANY_NAME_JP;
 	}
 
 	protected function setup_config($config_key)

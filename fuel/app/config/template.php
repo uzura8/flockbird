@@ -9,6 +9,8 @@ $config = array(
 				'base_url' => 'サイトURL',
 				'admin_mail' => 'サイト管理者メールアドレス',
 				'admin_name' => 'サイト管理者名',
+				'admin_company_name' => 'サイト管理者会社名(英語)',
+				'admin_company_name_jp' => 'サイト管理者会社名(日本語)',
 			),
 			'signature' => array(
 				'view' =>'署名',
