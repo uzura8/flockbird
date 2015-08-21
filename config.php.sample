@@ -65,6 +65,11 @@ define('FBD_HEADER_KEYWORDS_DEFAULT', 'SNS,サンプル');
 //define('FBD_SITE_URL', '');
 
 
+// 運営会社名(英語) copy right に使用
+//define('FBD_ADMIN_COMPANY_NAME', '');
+// 運営会社名(日本語)
+//define('FBD_ADMIN_COMPANY_NAME_JP', '');
+
 // 運営者名 (お問い合わせフォームに表示)
 define('FBD_ADMIN_NAME', FBD_DOMAIN.' 運営事務局');
 

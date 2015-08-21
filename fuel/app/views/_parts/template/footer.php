@@ -8,8 +8,8 @@
 	</ul>
 <?php endif; ?>
 <?php if (FBD_COPYRIGHT): ?>
-	<p><?php echo FBD_COPYRIGHT; ?></p>
+	<small><?php echo FBD_COPYRIGHT; ?></small>
 <?php else: ?>
-	<p>Copyright : <?php echo date('Y'); ?> <?php echo FBD_SITE_NAME; ?></p>
+	<small>Copyright&copy; <?php echo date('Y'); ?> <?php echo Site_Util::get_copyright_name(); ?> All Rights Reserved.</small>
 <?php endif; ?>
 </footer>

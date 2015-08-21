@@ -560,4 +560,12 @@ class Site_Util
 
 		return $tags_validated;
 	}
+
+	public static function get_copyright_name()
+	{
+		if (FBD_ADMIN_COMPANY_NAME)    return FBD_ADMIN_COMPANY_NAME;
+		if (FBD_ADMIN_COMPANY_NAME_JP) return FBD_ADMIN_COMPANY_NAME_JP;
+
+		return FBD_SITE_NAME;
+	}
 }
