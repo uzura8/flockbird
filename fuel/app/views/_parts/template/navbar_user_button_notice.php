@@ -1,4 +1,4 @@
-<div class="btn-group notice">
+<div class="btn-group notice pull-right">
 <?php /*
 	<button class="btn btn-default navbar-inverse" type="button">
 		<?php echo icon('group', 'fa fa-', 'i', array('class' => 'icon')); ?>
