@@ -35,7 +35,7 @@ Handlebars.registerHelper('getNoticeInfo', function(foreign_table, type, members
 
 Handlebars.registerHelper('getImgUri', function(fileName, size) {
 	if (empty(fileName)) fileName = 'm';
-	return get_url(getImgUri(fileName, size));
+	return get_url(getImgUri(fileName, size), true, false);
 });
 
 Handlebars.registerHelper('getNoticeContentUrl', function(foreign_table, foreign_id, parent_table, parent_id) {

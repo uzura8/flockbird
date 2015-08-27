@@ -227,7 +227,7 @@ $(document).on('click', '.js-insert_img', function(){
 	if (!imgUri) return false;
 	var textAreaSelector = fileId ? '#image_description_' + fileId : '';
 	var textAreaVal = textAreaSelector ? $(textAreaSelector).val() : '';
-	var src = ' src="' + get_url(imgUri, true) + '"';
+	var src = ' src="' + get_url(imgUri, true, false) + '"';
 	var alt = textAreaVal ? ' alt="' + textAreaVal + '"' : '';
 	var addValue = '<img' + src + alt + '>';
 	var result;

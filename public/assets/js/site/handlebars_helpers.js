@@ -18,7 +18,7 @@ Handlebars.registerHelper('img_url', function(filename) {
 	var size = (arguments.length > 1) ? arguments[1] : '50x50xc';
 	var imgUri = getImgUri(filename, size, false)
 	if (!imgUri) imgUri = 'media/img/' + size + '/m/all/noimage.gif';
-	return get_url(imgUri);
+	return get_url(imgUri, true, false);
 });
 
 Handlebars.registerHelper('conv2objStr', function(key1, value1, key2, value2, key3, value3) {

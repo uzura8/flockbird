@@ -115,7 +115,7 @@ $('.carousel-control').click(function(event) {
 function getImageTag(imageUri, imageId) {
 	var isActive = (arguments.length > 2) ? Boolean(arguments[2]) : false;
 	var classValueAdditional = isActive ? ' active' : '';
-	var imageUrl = get_url(imageUri);
+	var imageUrl = get_url(imageUri, true, false);
 
 	return '<div class="item' + classValueAdditional + '"><img src="' + imageUrl + '" id="image_' + imageId + '"></div>';
 }
