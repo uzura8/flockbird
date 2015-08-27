@@ -51,8 +51,8 @@ $tags   = $is_tags_enabled ? \News\Model_NewsTag::get_names4news_id($id) : array
 $uri = sprintf('news/api4site/list.html?page=%d', $next_page);
 if (!empty($category_name)) $uri .= '&category='.$category_name;
 if (!empty($tag_string)) $uri .= '&tag='.$tag_string;
-echo Html::anchor($uri, '');
 ?>
+<a href="<?php echo Uri::base_path($uri); ?>"></a>
 </nav>
 <?php endif; ?>
 

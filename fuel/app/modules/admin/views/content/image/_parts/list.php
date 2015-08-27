@@ -43,8 +43,8 @@ echo btn_dropdown('form.edit', $menus, false, 'xs', null, true, array('class' =>
 <nav id="page-nav">
 <?php
 $uri = sprintf('admin/content/image/api/list.html?page=%d', $next_page);
-echo Html::anchor($uri, '');
 ?>
+<a href="<?php echo Uri::base_path($uri); ?>"></a>
 </nav>
 <?php endif; ?>
 

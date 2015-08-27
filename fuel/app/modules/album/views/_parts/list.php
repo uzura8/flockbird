@@ -90,8 +90,8 @@ echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_
 $uri = sprintf('album/api/list.html?page=%d', $next_page);
 if (!empty($member)) $uri .= '&member_id='.$member->id;
 if (!empty($is_member_page)) $uri .= '&is_member_page=1';
-echo Html::anchor($uri, '');
 ?>
+<a href="<?php echo Uri::base_path($uri); ?>"></a>
 </nav>
 <?php endif; ?>
 

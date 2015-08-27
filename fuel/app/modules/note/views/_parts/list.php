@@ -177,8 +177,8 @@ echo render('_parts/comment/list', $data);
 $uri = sprintf('note/api/list.html?page=%d', $next_page);
 if (!empty($member))   $uri .= '&member_id='.$member->id;
 if (!empty($is_draft)) $uri .= '&is_draft='.$is_draft;
-echo Html::anchor($uri, '');
 ?>
+<a href="<?php echo Uri::base_path($uri); ?>"></a>
 </nav>
 <?php endif; ?>
 

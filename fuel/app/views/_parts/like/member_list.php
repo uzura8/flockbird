@@ -22,8 +22,8 @@
 <nav id="page-nav">
 <?php
 $uri = sprintf('member/api/list.html?page=%d', $page + 1);
-echo Html::anchor($uri, '');
 ?>
+<a href="<?php echo Uri::base_path($uri); ?>"></a>
 </nav>
 
 <?php if (IS_API): ?></body></html><?php endif; ?>

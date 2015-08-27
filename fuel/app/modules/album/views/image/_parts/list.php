@@ -153,8 +153,8 @@ if (!empty($is_member_page))
 {
 	$uri .= '&is_member_page='.$is_member_page;
 }
-echo Html::anchor($uri, '');
 ?>
+<a href="<?php echo Uri::base_path($uri); ?>"></a>
 </nav>
 <?php endif; ?>
 
