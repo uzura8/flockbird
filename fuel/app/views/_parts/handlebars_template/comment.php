@@ -23,7 +23,7 @@
 <?php endif; ?>
 <?php if (conf('like.isEnabled')): ?>
 				<small class="ml10">
-					<a href="#" data-uri="{{{get_like_members_uri}}}" data-target="#modal_like_count_{{{comment_table}}}_{{{id}}}" id="link_like_count_{{{comment_table}}}_{{{id}}}" class="js-modal"><i class="glyphicon glyphicon-thumbs-up"></i> <span data-id="{{{id}}}" id="like_count_{{{comment_table}}}_{{{id}}}" class="like_count unset_like_count">{{{like_count}}}</span></a>
+					<a href="#" data-uri="{{{get_like_members_uri}}}" data-is_list="1" data-target="#modal_like_count_{{{comment_table}}}_{{{id}}}" id="link_like_count_{{{comment_table}}}_{{{id}}}" class="js-modal"><i class="glyphicon glyphicon-thumbs-up"></i> <span data-id="{{{id}}}" id="like_count_{{{comment_table}}}_{{{id}}}" class="like_count unset_like_count">{{{like_count}}}</span></a>
 				</small>
 				<div id="modal_like_count_{{{comment_table}}}_{{{id}}}" aria-hidden="true" role="dialog" tabindex="-1" class="modal fade">
 					<div class="modal-dialog modal-sm">

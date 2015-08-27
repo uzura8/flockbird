@@ -18,6 +18,7 @@ $notice_btn_attr = array(
 	'data-get_data' => array('limit' => Config::get('notice.modalArticles.limit')),
 	'data-target' => '#modal_notice_navbar',
 	'data-tmpl' => '#notices-template',
+	'data-is_list' => 1,
 	'id' => 'btn_notice_navbar',
 );
 if (!empty($notification_counts['notice'])) $notice_btn_attr['class'] .= ' notified';

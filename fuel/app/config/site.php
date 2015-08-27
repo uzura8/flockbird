@@ -33,6 +33,9 @@ $config = array(
 		'site' => 'auth/login',
 	),
 	'auth' => array(
+		'headerLoginForm' => array(
+			'type' => 'popover',// popover / modal / link
+		),
 		'oauth' => array(
 			'log' => array(
 				'isOutputErrorLog' => array(

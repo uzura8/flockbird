@@ -15,9 +15,39 @@
 				</ul>
 			</div>
 		</div>
+
 <?php 	else: ?>
-		<button href="#" type="button" id="insecure_user_menu" class="btn btn-default pull-right navbar-btn" data-content="<div id='insecure_user_popover'></div>" data-placement="bottom">
+
+<?php
+$button_attrs = array(
+	'type' => 'button',
+	'id' => 'insecure_user_menu',
+	'class' => 'btn btn-default pull-right navbar-btn',
+);
+?>
+<?php 	switch (conf('auth.headerLoginForm.type')): ?>
+<?php 		case 'popover': ?>
+<?php
+$button_attrs['data-content']   = "<div id='insecure_user_popover'></div>";
+$button_attrs['data-placement'] = 'bottom';
+?>
+<?php 		break; ?>
+<?php 		case 'modal': ?>
+<?php
+$button_attrs['class'] .= ' js-modal';
+$button_attrs['data-target'] = '#insecure_user_modal';
+?>
+<?php 		break; ?>
+<?php 		default: ?>
+<?php
+$button_attrs['class'] .= ' js-simpleLink';
+$button_attrs['href']   = 'auth/login';
+?>
+<?php 		break; ?>
+<?php 	endswitch; ?>
+		<button <?php echo Util_Array::conv_array2attr_string($button_attrs); ?>>
 			<i class="glyphicon glyphicon-user"></i><span class="hidden-xs-inline"> <?php echo site_get_screen_name($u); ?></span>
 			<span class="caret"></span>
 		</button>
-<?php 	endif; ?>
+
+<?php endif; ?>

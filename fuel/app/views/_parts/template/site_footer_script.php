@@ -12,17 +12,38 @@
 </script>
 <?php 	endif; ?>
 <?php else: ?>
-<?php $destination = Session::get_flash('destination') ?: urlencode(Uri::string_with_query()); ?>
-<script type="text/x-handlebars-template" id="popover_login-template">
-<?php echo render('auth/_parts/login', array('in_popover' => true, 'destination' => $destination)); ?>
+
+<?php
+$destination = Session::get_flash('destination') ?: urlencode(Uri::string_with_query());
+$login_form = render('auth/_parts/login', array('in_popover' => true, 'destination' => $destination));
+?>
+<?php 	switch (conf('auth.headerLoginForm.type')): ?>
+<?php 		case 'popover': ?>
+<script type="text/x-handlebars-template" id="login-template">
+<?php echo $login_form; ?>
 </script>
 <script>
-	var source   = $("#popover_login-template").html();
+	var source   = $("#login-template").html();
 	var template = Handlebars.compile(source);
 	var content = (template());
 	var inputs = new Array('#form_email', '#form_password');
 	loadPopover('#insecure_user_menu', '#insecure_user_popover', content, '', inputs);
 </script>
+<?php 		break; ?>
+
+<?php 		case 'modal': ?>
+<?php
+$modal_view = View::forge('_parts/modal', array(
+	'block_attrs' => array('id' => 'insecure_user_modal'),
+	'size' => 'sm',
+	'title' => term('site.login'),
+	'is_display_footer_close_btn' => true,
+));
+$modal_view->set_safe('body', $login_form);
+echo $modal_view->render();
+?>
+<?php 		break; ?>
+<?php 	endswitch; ?>
 <?php endif; ?>
 
 <?php if (is_render_site_summary_at_client_side()): ?>

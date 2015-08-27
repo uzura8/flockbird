@@ -308,11 +308,12 @@ $(document).on('click', '.js-modal', function(){
 	var target = $(this).data('target');
 	var getUri = $(this).data('uri');
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
+	var isList = $(this).data('is_list') ? Boolean($(this).data('is_list')) : false;
 	var templateSelector = $(this).data('tmpl') ? $(this).data('tmpl') : '';
 	var template = templateSelector ? Handlebars.compile($(templateSelector).html()) : null;
 
 	var option = {};
-	if (getUri) {
+	if (isList) {
 		loadList(
 			getUri,
 			target + ' .modal-body',
@@ -322,11 +323,12 @@ $(document).on('click', '.js-modal', function(){
 			'',
 			templateSelector
 		);
-		$(target).modal(option);
 	} else {
-		option['remote'] = get_url(getUri);
-		$(target).modal(option);
+		if (getUri) {
+			option['remote'] = get_url(getUri);
+		}
 	}
+	$(target).modal(option);
 	return false;
 });
 

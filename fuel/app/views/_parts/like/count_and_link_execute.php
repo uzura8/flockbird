@@ -8,6 +8,7 @@ $link_count_attr = array(
 	'id' => $class_name.'_'.$id,
 	'data-target' => '#'.$class_name_modal.'_'.$id,
 	'data-uri' => $get_member_uri,
+	'data-is_list' => 1,
 );
 $modal_block_attrs = array(
 	'id' => $class_name_modal.'_'.$id,
