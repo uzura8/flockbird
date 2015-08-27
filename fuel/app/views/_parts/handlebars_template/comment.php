@@ -14,10 +14,10 @@
 			</div>
 			<div class="sub_info">
 				<small><span data-livestamp="{{{created_at}}}"></span></small>
-<?php if (conf('mention.isEnabled', 'notice')): ?>
+<?php if (conf('mention.isEnabled', 'notice') && Auth::check()): ?>
 {{#if member}}
 				<small class="ml10">
-					<a href="#" data-parent_id="{{{../../parent.id}}}" data-input="#textarea_comment_{{{../../parent.id}}}" data-hide="#link_show_comment_form_{{{../../parent.id}}}" data-open="#commentPostBox_{{{../../parent.id}}}" data-text="@{{{member.name}}}" id="link_reply_{{{id}}}" class="js-insert_text"><i class="fa fa-reply"></i><span class="hidden-xs-inline"> 返信する</span></a>
+					<a href="#" data-parent_id="{{{../../parent.id}}}" data-input="#textarea_comment_{{{../../parent.id}}}" data-hide="#link_show_comment_form_{{{../../parent.id}}}" data-open="#commentPostBox_{{{../../parent.id}}}" data-text="@{{{member.name}}}" id="link_reply_{{{id}}}" class="js-insert_text"><i class="fa fa-reply"></i><span class="hidden-xs-inline"> <?php echo term('form.do_reply'); ?></span></a>
 				</small>
 {{/if}}
 <?php endif; ?>
