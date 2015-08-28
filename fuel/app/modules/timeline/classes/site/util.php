@@ -308,7 +308,7 @@ class Site_Util
 			case \Config::get('timeline.types.thread'):// thread 投稿
 				return \Site_Util::get_api_uri_get_liked_members('thread', $foreign_id);
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				return \Site_Util::get_api_uri_get_liked_members('album_image', $foreign_id);
+				return \Site_Util::get_api_uri_get_liked_members('album/image', $foreign_id);
 		}
 
 		return \Site_Util::get_api_uri_get_liked_members('timeline', $timeline_id);
