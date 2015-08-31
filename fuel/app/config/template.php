@@ -148,7 +148,7 @@ $config = array(
 );
 if (FBD_INTERNATIONALIZED_DOMAIN)
 {
-	Arr::set($config, 'mail.site.common_variables.idn_url', str_replace(FBD_DOMAIN, FBD_INTERNATIONALIZED_DOMAIN, FBD_BASE_URL));
+	Arr::set($config, 'mail.site.common_variables.idn_url', 'サイトURL(国際化ドメイン)');
 }
 $config = Site_Config::merge_module_configs($config, 'template');
 

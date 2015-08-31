@@ -49,6 +49,11 @@ class Site_Mail
 		$this->options['common_variables']['admin_mail'] = FBD_ADMIN_MAIL;
 		$this->options['common_variables']['admin_company_name'] = FBD_ADMIN_COMPANY_NAME;
 		$this->options['common_variables']['admin_company_name_jp'] = FBD_ADMIN_COMPANY_NAME_JP;
+		if (FBD_INTERNATIONALIZED_DOMAIN)
+		{
+			$this->options['common_variables']['idn_url'] = str_replace(FBD_DOMAIN, FBD_INTERNATIONALIZED_DOMAIN, FBD_BASE_URL);
+		}
+
 	}
 
 	protected function setup_config($config_key)
