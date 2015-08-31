@@ -14,5 +14,8 @@ if ($is_required)
 <?php if (!empty($val) && $val->error($name)): ?>
 		<span class="help-inline error_msg"><?php echo $val->error($name)->get_message(); ?></span>
 <?php endif; ?>
+<?php if (FBD_UPLOAD_MAX_FILESIZE): ?>
+		<p class="help-block"><?php echo Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE); ?> まで</p>
+<?php endif; ?>
 	</div>
 </div>

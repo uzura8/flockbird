@@ -44,6 +44,9 @@ echo render('filetmp/_parts/upload_images', $data);
 			<!-- The file input field used as target for the file upload widget -->
 			<input class="file_select" type="file" name="files[]" multiple id="file_select_<?php echo $upload_type; ?>"<?php if ($upload_type == 'img'): ?> accept="image/*"<?php endif; ?>>
 		</span>
+<?php if (empty($selects) && FBD_UPLOAD_MAX_FILESIZE): ?>
+		<span class="text-muted"><?php echo Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE); ?> まで</span>
+<?php endif; ?>
 <?php if (!empty($selects)): ?>
 	</div><!-- .form-group -->
 	<div class="form-group">
@@ -52,6 +55,9 @@ echo render('filetmp/_parts/upload_images', $data);
 $atters = array_merge(array('class' => 'form-control input-sm'), $selects['atters']);
 echo Form::select($selects['name'], $selects['value'], $selects['options'], $atters);
 ?>
+<?php if (FBD_UPLOAD_MAX_FILESIZE): ?>
+		<span class="text-muted"><?php echo Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE); ?> まで</span>
+<?php endif; ?>
 	</div><!-- .form-group -->
 </form>
 <?php endif; ?>
