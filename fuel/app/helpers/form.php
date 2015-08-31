@@ -66,13 +66,15 @@ function form_input_datetime(Validation $val, $name, $default_value = null, $for
 	return render('_parts/form/input_datetime', $data);
 }
 
-function form_file($name, $label = null, $is_required = false, $input_class = 'input-file', $default_value = null, $val_obj = null)
+function form_file($name, $label = null, $is_required = false, $input_class = 'input-file', $accept_type = null, $default_value = null, $val_obj = null)
 {
 	$input_atter = array(
 		'type'  => 'file',
 		'id'    => Site_Form::get_field_id($name),
 		'class' => $input_class,
 	);
+	if ($accept_type) $input_atter['accept'] = $accept_type;
+
 	$data = array(
 		'name'  => $name,
 		'label' => $label,

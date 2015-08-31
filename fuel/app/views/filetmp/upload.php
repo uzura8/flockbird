@@ -42,7 +42,7 @@ echo render('filetmp/_parts/upload_images', $data);
 			<i class="glyphicon glyphicon-plus"></i>
 			<span>Select files...</span>
 			<!-- The file input field used as target for the file upload widget -->
-			<input class="file_select" type="file" name="files[]" multiple id="file_select_<?php echo $upload_type; ?>">
+			<input class="file_select" type="file" name="files[]" multiple id="file_select_<?php echo $upload_type; ?>"<?php if ($upload_type == 'img'): ?> accept="image/*"<?php endif; ?>>
 		</span>
 <?php if (!empty($selects)): ?>
 	</div><!-- .form-group -->
