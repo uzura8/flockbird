@@ -48,6 +48,16 @@
 <?php endif; ?>
 <?php echo btn(term('site.picture', 'site.management'), 'album/edit_images/'.$album->id, null, true, null, null, null, 'th-list', null, null, false); ?>
 <?php endif; ?>
+
+<?php // Facebook feed ?>
+<?php 	if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.album.isEnabled')): ?>
+<?php echo render('_parts/facebook/share_btn', array(
+	'images' => $list,
+	'link_uri' => 'album/'.$album->id,
+	'name' => $album->name,
+	'description' => $album->body,
+)); ?>
+<?php 	endif; ?>
 </div>
 
 <?php echo render('image/_parts/list', array(

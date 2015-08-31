@@ -243,7 +243,12 @@ class Controller_Album extends \Controller_Site
 
 				$message = sprintf('%sを作成しました。', term('album'));
 				\Session::set_flash('message', $message);
-				\Response::redirect('album/detail/'.$album->id);
+				$redirect_uri = 'album/detail/'.$album->id;
+				if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.album.isEnabled') && conf('service.facebook.shareDialog.album.autoPopupAfterCreated'))
+				{
+					$redirect_uri .= '?created=1';
+				}
+				\Response::redirect($redirect_uri);
 			}
 			catch(\FuelException $e)
 			{

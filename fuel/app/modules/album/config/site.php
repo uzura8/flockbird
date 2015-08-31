@@ -47,4 +47,14 @@ return array(
 			),
 		),
 	),
+	'service' => array(
+		'facebook' => array(
+			'shareDialog' => array(
+				'album' => array(
+					'isEnabled' => true,
+					'autoPopupAfterCreated' => false,
+				),
+			),
+		),
+	),
 );
