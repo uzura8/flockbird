@@ -10,8 +10,11 @@
 define('FBD_ENVIRONMENT', 'PRODUCTION');
 
 // BASE_URL
-//define('FBD_DOMAIN', 'sns.example.com');
+//define('FBD_DOMAIN', 'sns.example.com');// if use Internationalized Domain, set Punycode here.
 define('FBD_URI_PATH', '/');// set setting path, if not set on document root
+
+// if use Internationalized Domain, set IDN here.
+//define('FBD_INTERNATIONALIZED_DOMAIN', '国際化ドメイン.JP');
 
 // DBサーバ接続設定
 $GLOBALS['_FBD_DSN']['production'] = array(
