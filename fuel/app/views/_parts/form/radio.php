@@ -66,7 +66,7 @@ if ($optional_public_flag) $col_sm_size = 8;
 			</div>
 
 <?php if ($optional_public_flag): ?>
-			<div class="col-xs-4 pull-right">
+			<div class="col-xs-12 col-sm-4 pull-right">
 				<?php echo field_public_flag($optional_public_flag['value'], 'select', array(), $optional_public_flag['name']); ?>
 			</div>
 <?php endif; ?>
