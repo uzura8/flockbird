@@ -154,18 +154,25 @@ class Controller_Member_Register extends Controller_Site
 	 */
 	public function action_signup()
 	{
-		if (!$form = Fieldset::instance('confirm_signup'))
+		$val = self::get_form_signup(Model_MemberAuth::forge());
+
+		if (\Input::method() == 'POST')
 		{
-			$form = $this->get_form_signup();
+			\Util_security::check_csrf();
+
+			try
+			{
+				if (!$val->run()) throw new \FuelException($val->show_errors());
+				$post = $val->validated();
+			}
+			catch(\FuelException $e)
+			{
+				\Session::set_flash('error', $e->getMessage());
+			}
 		}
 
-		if (Input::method() === 'POST')
-		{
-			$form->repopulate();
-		}
 		$this->set_title_and_breadcrumbs(term('site.signup'));
-		$this->template->content = View::forge('member/register/signup', array('form' => $form));
-		$this->template->content->set_safe('html_form', $form->build('member/register/confirm_signup'));// form の action に入る
+		$this->template->content = \View::forge('member/register/signup', array('val' => $val));
 	}
 
 	/**
@@ -179,7 +186,7 @@ class Controller_Member_Register extends Controller_Site
 		Util_security::check_method('POST');
 		Util_security::check_csrf();
 
-		if (!$form = Fieldset::instance('confirm_signup')) $form = $this->get_form_signup();
+		if (!$form = Fieldset::instance('confirm_signup')) $form = $this->get_form_signup_confirm();
 		$val = $form->validation();
 		$val->fieldset()->field('email')->delete_rule('unique');
 
@@ -240,7 +247,21 @@ class Controller_Member_Register extends Controller_Site
 		$this->action_signup();
 	}
 
-	public function get_form_signup()
+	private static function get_form_signup()
+	{
+		$member_auth = Model_MemberAuth::forge();
+		$val = Validation::forge();
+		$val->add_model($member_auth);
+
+		$val->fieldset()->field('email')->set_attribute('placeholder', 'sample@example.com');
+
+		$password_min_length_list = $member_auth::get_property_value('password', 'validation.min_length');
+		$val->fieldset()->field('password')->set_attribute('placeholder', sprintf('%d 文字以上', reset($password_min_length_list)));
+
+		return $val;
+	}
+
+	public function get_form_signup_confirm()
 	{
 		return Site_Util::get_form_instance('confirm_signup', Model_MemberAuth::forge(), true, null, 'submit');
 	}
