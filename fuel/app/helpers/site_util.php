@@ -362,6 +362,14 @@ function get_uid()
 	return (int)$member_id;
 }
 
+function check_uid($member_id)
+{
+	if (!Auth::check()) return false;
+	if (!$member_id) return false;
+
+	return $member_id == get_uid();
+}
+
 function check_original_user($user_id, $is_admin = false)
 {
 	return $user_id == conf(sprintf('original_user_id.%s', $is_admin ? 'admin' : 'site'));
