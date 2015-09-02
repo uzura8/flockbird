@@ -3,14 +3,28 @@
 $(function () {
 	'use strict';
 	// Change this to the location of your server-side upload handler:
+	var startCountFile = 0;
+	var endCountFile = 0;
 	$('#file_select_file').fileupload({
 		url: get_file_upload_post_uri('file'),
 		dataType: 'text',
 		formData: {},
 		start: function (e) {
+			$('#btn_timeline').attr('disabled', 'disabled');
+			$('#form_button').attr('disabled', 'disabled');
 			$('#progress_file .progress-bar').css('width', 0);
 		},
+		stop: function (e, data) {
+			startCountFile = 0;
+			endCountFile = 0;
+			$('#btn_timeline').removeAttr('disabled');
+			$('#form_button').removeAttr('disabled');
+		},
+		send: function (e, data) {
+			startCountFile++;
+		},
 		done: function (e, data) {
+			endCountFile++;
 			$('#files_file').append(data['result']).fadeIn('fast');
 		},
 		progressall: function (e, data) {
@@ -23,24 +37,35 @@ $(function () {
 	}).prop('disabled', !$.support.fileInput)
 		.parent().addClass($.support.fileInput ? undefined : 'disabled');
 
+	var startCountImg = 0;
+	var endCountImg = 0;
 	$('#file_select_img').fileupload({
 		url: $('#post_uri').val() ? get_url($('#post_uri').val()) : get_file_upload_post_uri('img'),
 		dataType: 'text',
+		recalculateProgress: true,
 		formData: {
 			thumbnail_size: $('#thumbnail_size').val(),
 			insert_target: $('#insert_target').val()
 		},
 		start: function (e) {
+			$('#btn_timeline').attr('disabled', 'disabled');
+			$('#form_button').attr('disabled', 'disabled');
 			$('#progress_img .progress-bar').css('width', 0);
 		},
-		done: function (e, data) {
+		stop: function (e, data) {
+			startCountImg = 0;
+			endCountImg = 0;
 			$('#btn_timeline').removeAttr('disabled');
 			$('#form_button').removeAttr('disabled');
+		},
+		send: function (e, data) {
+			startCountImg++;
+		},
+		done: function (e, data) {
+			endCountImg++;
 			$('#files_img').append(data['result']).fadeIn('fast');
 		},
 		progressall: function (e, data) {
-			$('#btn_timeline').attr('disabled', 'disabled');
-			$('#form_button').attr('disabled', 'disabled');
 			var progress = parseInt(data.loaded / data.total * 100, 10);
 			$('#progress_img .progress-bar').css(
 				'width',
