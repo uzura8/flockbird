@@ -56,7 +56,7 @@ class Site_Form
 
 		if (is_callable(array($field, 'get_attribute')))
 		{
-			if (is_null($default_value) && !is_null($field->get_attribute('value')))
+			if ((is_null($default_value) || (empty($default_value) && !strlen($default_value))) && !is_null($field->get_attribute('value')))
 			{
 				$default_value = $field->get_attribute('value');
 			}
