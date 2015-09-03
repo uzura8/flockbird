@@ -228,6 +228,7 @@ class Controller_Thread extends \Controller_Site
 	 */
 	public function action_delete($id = null)
 	{
+		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
 
 		try

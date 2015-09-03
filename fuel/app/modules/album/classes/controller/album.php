@@ -410,7 +410,8 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_delete($id = null)
 	{
-		\Util_security::check_csrf(\Input::get(\Config::get('security.csrf_token_key')));
+		\Util_security::check_method('POST');
+		\Util_security::check_csrf();
 		$album = Model_Album::check_authority($id, $this->u->id, 'member');
 		if (Site_Util::check_album_disabled_to_update($album->foreign_table, true))
 		{

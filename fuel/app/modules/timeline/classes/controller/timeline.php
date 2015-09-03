@@ -129,6 +129,7 @@ class Controller_Timeline extends \Controller_Site
 	{
 		try
 		{
+			\Util_security::check_method('POST');
 			\Util_security::check_csrf();
 			if (\Input::post('id')) $id = (int)\Input::post('id');
 

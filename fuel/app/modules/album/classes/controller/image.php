@@ -192,6 +192,7 @@ class Controller_Image extends \Controller_Site
 	 */
 	public function action_delete($id = null)
 	{
+		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
 		$album_image = Model_Albumimage::check_authority($id, $this->u->id);
 		$album_id = $album_image->album_id;
