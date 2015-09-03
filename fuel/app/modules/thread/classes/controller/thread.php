@@ -143,7 +143,7 @@ class Controller_Thread extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(term('thread').'を書く', null, $this->u, 'thread');
+		$this->set_title_and_breadcrumbs(term('thread').'を書く', array('thread' => term('thread', 'site.list')), null, 'thread');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'images' => $images));
@@ -208,7 +208,7 @@ class Controller_Thread extends \Controller_Site
 		}
 		$images = array_merge($images, $image_tmps);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('thread'), term('form.do_edit')), array('/thread/'.$id => $thread->title), $thread->member, 'thread');
+		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('thread'), term('form.do_edit')), array('/thread/'.$id => $thread->title), null, 'thread');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array(
