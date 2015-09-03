@@ -176,7 +176,7 @@ class Controller_Member_setting extends Controller_Member
 			DB::commit_transaction();
 
 			$mail = new Site_Mail('memberChangeEmailConfirm');
-			$mail->send($this->u->member_auth->email, array(
+			$mail->send($post['email'], array(
 				'to_name' => $this->u->name,
 				'register_url' => sprintf('%s?token=%s', Uri::Create('member/setting/change_email'), $token),
 			));
