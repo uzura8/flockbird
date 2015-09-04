@@ -11,14 +11,14 @@ $(function () {
 		formData: {},
 		start: function (e) {
 			$('#btn_timeline').attr('disabled', 'disabled');
-			$('#form_button').attr('disabled', 'disabled');
+			$('.submit_btn').attr('disabled', 'disabled');
 			$('#progress_file .progress-bar').css('width', 0);
 		},
 		stop: function (e, data) {
 			startCountFile = 0;
 			endCountFile = 0;
 			$('#btn_timeline').removeAttr('disabled');
-			$('#form_button').removeAttr('disabled');
+			$('.submit_btn').removeAttr('disabled');
 		},
 		send: function (e, data) {
 			startCountFile++;
@@ -49,14 +49,14 @@ $(function () {
 		},
 		start: function (e) {
 			$('#btn_timeline').attr('disabled', 'disabled');
-			$('#form_button').attr('disabled', 'disabled');
+			$('.submit_btn').attr('disabled', 'disabled');
 			$('#progress_img .progress-bar').css('width', 0);
 		},
 		stop: function (e, data) {
 			startCountImg = 0;
 			endCountImg = 0;
 			$('#btn_timeline').removeAttr('disabled');
-			$('#form_button').removeAttr('disabled');
+			$('.submit_btn').removeAttr('disabled');
 		},
 		send: function (e, data) {
 			startCountImg++;

@@ -12,7 +12,7 @@ $(function(){
 	showEditor($('#form_format').val());
 });
 
-$('.btn_submit').on('click', function(){
+$('.submit_btn').on('click', function(){
 	if ($('#form_format').val() == 1) return;
 	$('.note-editable').html($('#form_body').val());
 });

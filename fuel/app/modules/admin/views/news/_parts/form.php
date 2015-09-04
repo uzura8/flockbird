@@ -81,12 +81,12 @@ echo form_upload_files(
 <?php endif; ?>
 	<?php echo form_input($val, 'slug', isset($news) ? $news->slug : \News\Site_Util::get_slug(), $col_sm_size); ?>
 <?php if (empty($news->is_published)): ?>
-	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'id' => 'form_draft', 'class' => 'btn btn-default btn-primary btn_submit')); ?>
+	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'id' => 'form_draft', 'class' => 'btn btn-default btn-primary submit_btn')); ?>
 <?php endif; ?>
 <?php if (!empty($is_edit)): ?>
-	<?php echo form_button(empty($news->is_published) ? 'form.do_publish' : 'form.do_edit', 'submit', 'submit', array('class' => 'btn btn-default btn-warning btn_submit')); ?>
+	<?php echo form_button(empty($news->is_published) ? 'form.do_publish' : 'form.do_edit', 'submit', 'submit', array('class' => 'btn btn-default btn-warning submit_btn')); ?>
 <?php else: ?>
-	<?php echo form_button('form.do_publish', 'submit', 'submit', array('class' => 'btn btn-default btn-warning btn_submit')); ?>
+	<?php echo form_button('form.do_publish', 'submit', 'submit', array('class' => 'btn btn-default btn-warning submit_btn')); ?>
 <?php endif; ?>
 <?php if (!empty($is_edit)): ?>
 	<?php echo form_anchor_delete('admin/news/delete/'.$news->id); ?>

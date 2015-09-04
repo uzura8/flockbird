@@ -9,7 +9,7 @@
 	<?php echo form_input_datetime($val, 'published_at_time', isset($note) ? check_and_get_datatime($note->published_at, 'datetime_minutes') : ''); ?>
 	<?php echo form_public_flag($val, isset($note) ? $note->public_flag : null); ?>
 <?php if (empty($note->is_published)): ?>
-	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse')); ?>
+	<?php echo form_button('form.draft', 'submit', 'is_draft', array('value' => 1, 'class' => 'btn btn-default btn-inverse submit_btn')); ?>
 <?php endif; ?>
 <?php if (!empty($is_edit)): ?>
 	<?php echo form_button(empty($note->is_published) ? 'form.do_publish' : 'form.do_edit'); ?>

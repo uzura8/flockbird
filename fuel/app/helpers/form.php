@@ -200,6 +200,7 @@ function form_button($term_key = '', $type = 'submit', $name = '', $atter = arra
 		'id'    => 'form_'.$type,
 		'type'  => $type,
 	);
+	if ($type == 'submit') $atter_default['class'] .= ' submit_btn';
 	if (!is_array($atter)) $atter = (array)$atter;
 	$atter = array_merge($atter_default, $atter);
 
