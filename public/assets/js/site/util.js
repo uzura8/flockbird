@@ -45,7 +45,7 @@ function set_token()
 
 function redirect(uri)
 {
-	location.href = get_url(uri);
+	location.href = get_url(uri, false, false);
 }
 
 function getTerm(key)
@@ -871,7 +871,7 @@ function updateToggle(selfDomElement) {
 
 function execute_post(uri){
 	var post_data = (arguments.length > 1) ? arguments[1] : {};
-	var post_url = uri.match(/^https?:\/\//) ? uri : get_url(uri);
+	var post_url = uri.match(/^https?:\/\//) ? uri : get_url(uri, false, false);
 
 	post_data = set_token(post_data);
 	$('<form>', {action: post_url, method: 'post', id: 'tmp_form'}).appendTo(document.body);
