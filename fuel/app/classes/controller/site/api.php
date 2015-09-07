@@ -225,7 +225,7 @@ class Controller_Site_Api extends Controller_Base_Site
 				{
 					if ($add_menu = \Album\Site_Util::get_album_image_edit_menu($obj, $this->u->file_name)) $menus += $add_menu;
 				}
-				if (is_enabled('note') && $table == 'note')
+				if (is_enabled('note') && $table == 'note' && !$obj->is_published)
 				{
 					$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
 						'class' => 'js-simplePost',
