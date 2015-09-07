@@ -221,8 +221,8 @@ class Controller_Image extends \Controller_Site
 
 		if (Site_Util::check_album_disabled_to_update($album_image->album->foreign_table, true))
 		{
-			$val->fieldset()->delete('public_flag');
 			$val->fieldset()->field('public_flag')->delete_rule('required');
+			$val->fieldset()->delete('public_flag');
 		}
 		else
 		{
