@@ -213,6 +213,13 @@ function removeLoading(blockSelector)
 	removeLoadingBlock(loadingBlockId);
 }
 
+function displayLoading() {
+	var isEnd = (arguments.length > 0) ? Boolean(arguments[0]) : false;
+	$('#loading-view').remove();
+	if(isEnd) return;
+	$('<div id="loading-view" />').appendTo('body');
+}
+
 function addHistory(pushStateInfo, getData) {
 	if (!('pushState' in history)) return;
 	if (!pushStateInfo) return;

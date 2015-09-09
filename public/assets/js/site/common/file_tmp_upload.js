@@ -8,24 +8,31 @@ $(function () {
 	$('#file_select_file').fileupload({
 		url: get_file_upload_post_uri('file'),
 		dataType: 'text',
+		singleFileUploads: false,
+		recalculateProgress: true,
 		formData: {},
 		start: function (e) {
 			$('#btn_timeline').attr('disabled', 'disabled');
 			$('.submit_btn').attr('disabled', 'disabled');
 			$('#progress_file .progress-bar').css('width', 0);
+			displayLoading();
 		},
 		stop: function (e, data) {
 			startCountFile = 0;
 			endCountFile = 0;
-			$('#btn_timeline').removeAttr('disabled');
-			$('.submit_btn').removeAttr('disabled');
 		},
 		send: function (e, data) {
 			startCountFile++;
 		},
 		done: function (e, data) {
 			endCountFile++;
-			$('#files_file').append(data['result']).fadeIn('fast');
+			var addElement = $(data['result']);
+			$('#files_file').append(addElement).fadeIn('fast');
+			addElement.ready(function() {
+				$('#btn_timeline').removeAttr('disabled');
+				$('.submit_btn').removeAttr('disabled');
+				displayLoading(true);
+			});
 		},
 		progressall: function (e, data) {
 			var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -42,6 +49,7 @@ $(function () {
 	$('#file_select_img').fileupload({
 		url: $('#post_uri').val() ? get_url($('#post_uri').val()) : get_file_upload_post_uri('img'),
 		dataType: 'text',
+		singleFileUploads: false,
 		recalculateProgress: true,
 		formData: {
 			thumbnail_size: $('#thumbnail_size').val(),
@@ -51,19 +59,24 @@ $(function () {
 			$('#btn_timeline').attr('disabled', 'disabled');
 			$('.submit_btn').attr('disabled', 'disabled');
 			$('#progress_img .progress-bar').css('width', 0);
+			displayLoading();
 		},
 		stop: function (e, data) {
 			startCountImg = 0;
 			endCountImg = 0;
-			$('#btn_timeline').removeAttr('disabled');
-			$('.submit_btn').removeAttr('disabled');
 		},
 		send: function (e, data) {
 			startCountImg++;
 		},
 		done: function (e, data) {
 			endCountImg++;
-			$('#files_img').append(data['result']).fadeIn('fast');
+			var addElement = $(data['result']);
+			$('#files_img').append(addElement).fadeIn('fast');
+			addElement.ready(function() {
+				$('#btn_timeline').removeAttr('disabled');
+				$('.submit_btn').removeAttr('disabled');
+				displayLoading(true);
+			});
 		},
 		progressall: function (e, data) {
 			var progress = parseInt(data.loaded / data.total * 100, 10);
