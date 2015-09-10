@@ -44,8 +44,6 @@ desktop.ini
 /fuel/vendor
 /fuel/app/config/crypt.php
 
-/fuel/app/assets/less/bootstrap
-
 /config.php
 /public/modules/*
 /public/assets/*/modules/*
