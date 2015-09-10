@@ -4,14 +4,20 @@
 	z-index: 9999;
 	position: fixed;
 	top: 0;
+	right: 0;
+	bottom: 0;
 	left: 0;
 	background-color: #3C3C3C;
 	filter: alpha(opacity=60);
 	-moz-opacity: 0.60;
 	-khtml-opacity: 0.60;
 	opacity: 0.60;
-	background-image: url('@{document-root-path}assets/img/site/loading_m02.gif');
-	background-position: center center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
+
+	img {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		margin-top: -35px;
+		margin-left: -35px;
+	}
 }
