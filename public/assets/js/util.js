@@ -75,16 +75,7 @@ function insertHtmlAtCaret(html) {
 	if (window.getSelection) {
 		// IE9 and non-IE
 		sel = window.getSelection();
-
-		if (targetSelector) {
-			targetSelectorPrefix = targetSelector.slice(0, 1);
-			targetSelectorName = targetSelector.slice(1);
-			if (targetSelectorPrefix == '.') {
-				if (!$(sel.anchorNode).hasClass(targetSelectorName)) return false;
-			} else if (targetSelectorPrefix == '#') {
-				if (!$(sel.anchorNode).attr('id') != targetSelectorName) return false;
-			}
-		}
+		if (targetSelector && !checkCursorOnTarget(sel.anchorNode, targetSelector)) return false;
 
 		if (sel.getRangeAt && sel.rangeCount) {
 			range = sel.getRangeAt(0);
@@ -117,4 +108,18 @@ function insertHtmlAtCaret(html) {
 		return false;
 	}
 	return true;
+}
+
+function checkCursorOnTarget(selectedNode, targetSelector) {
+	if ($(selectedNode).closest(targetSelector).length) return true;
+
+	targetSelectorPrefix = targetSelector.slice(0, 1);
+	targetSelectorName = targetSelector.slice(1);
+	if (targetSelectorPrefix == '.') {
+		if ($(selectedNode).hasClass(targetSelectorName)) return true;
+	} else if (targetSelectorPrefix == '#') {
+		if ($(selectedNode).attr('id') == targetSelectorName) return true;
+	}
+
+	return false;
 }
