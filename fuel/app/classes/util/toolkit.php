@@ -163,9 +163,27 @@ class Util_Toolkit
 		return $output;
 	}
 
-	public static function log_error($message)
+	public static function log_error($message, $level = 'error')
 	{
-		\Log::error(
+		if (!FBD_OUTPUT_ERROR_LOG_LEVEL) return;
+		if (!in_array($level, array('error', 'warning', 'info', 'debug'))) throw new InvalidArgumentException('Second parameter is invalid.');
+		switch (FBD_OUTPUT_ERROR_LOG_LEVEL)
+		{
+			case 'error':
+				if (in_array($level, array('warning', 'info', 'debug'))) return;
+				break;
+			case 'warning':
+				if (in_array($level, array('info', 'debug'))) return;
+				break;
+			case 'info':
+				if ($level == 'debug') return;
+				break;
+			case 'debug':
+			default :
+				break;
+		}
+
+		\Log::$level(
 			$message.': '.
 			\Input::uri().' '.
 			\Input::ip().
