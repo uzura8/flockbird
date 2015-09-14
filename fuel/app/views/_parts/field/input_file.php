@@ -5,7 +5,7 @@ if (isset($type) && $type == 'img') $type = 'image';
 if ($type == 'image' && empty($accept_type)) $accept_type = 'image/*';
 
 $input_attr = array('id' => $input_id, 'class' => 'js-file_input hidden', 'data-type' => $type, 'data-input' => '#dummy_input_'.$input_id);
-if ($input_attr_additional) $input_attr += (array)$input_attr_additional;
+if (!empty($input_attr_additional)) $input_attr += (array)$input_attr_additional;
 if (!empty($accept_type)) $input_attr['accept'] = $accept_type;
 ?>
 <?php echo Form::file($name, $input_attr); ?>
