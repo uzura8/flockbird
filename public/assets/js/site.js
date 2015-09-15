@@ -6,6 +6,12 @@ $(function(){
 	}
 });
 
+$(document).on('change', '.js-file_input', function(){
+	var type = $(this).data('type') ? $(this).data('type') : 'image';
+	var inputSelector = $(this).data('input') ? $(this).data('input') : '#form_' + type;
+	$(inputSelector).val($(this).val());
+});
+
 $(document).on('click', '.js-like', function(){
 	if (GL.execute_flg) return false;
 	update_like_status(this);

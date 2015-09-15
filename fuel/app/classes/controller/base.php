@@ -239,6 +239,7 @@ class Controller_Base extends Controller_Hybrid
 		}
 		if ($status_code == 500)
 		{
+			if (!empty($e)) Util_Toolkit::log_error($e->getMessage());
 			if (\DB::in_transaction()) \DB::rollback_transaction();
 		}
 		$response_body = Site_Controller::supply_response_body($this->response_body, $status_code, $this->format);
