@@ -58,7 +58,15 @@ $(function () {
 			.test(window.navigator.userAgent),
 		previewMaxWidth: 192,
 		previewMaxHeight: 192,
-		previewCrop: true
+		previewCrop: true,
+    start: function (e) {
+      $('#btn_timeline').attr('disabled', 'disabled');
+      $('.submit_btn').attr('disabled', 'disabled');
+    },
+    stop: function (e, data) {
+      $('#btn_timeline').removeAttr('disabled');
+      $('.submit_btn').removeAttr('disabled');
+    }
 	}).on('fileuploadadd', function (e, data) {
 		$.each(data.files, function (index, file) {
 			var node = $();
