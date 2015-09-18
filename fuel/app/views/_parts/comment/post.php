@@ -27,7 +27,7 @@ $size = empty($size) ? 'S' : strtoupper($size);
 <?php if (!empty($with_uploader)): ?>
 <?php if (!isset($files)) $files = array(); ?>
 				<div class="upload hidden">
-				<?php echo form_upload_files($files, false, true, false, 'S', $uploader_selects); ?>
+				<?php echo form_upload_files($files, true, false, 'S', $uploader_selects); ?>
 				</div>
 <?php endif; ?>
 				<div class="clearfix">

@@ -22,7 +22,6 @@ $col = 'col-sm-'.(12 - $offset_size);
 <?php
 $data = array(
 	'files' => $files,
-	'hide_form' => $hide_form,
 	'thumbnail_size' => empty($thumbnail_size) ? 'M' : $thumbnail_size,
 	'selects' => $selects,
 	'model' => $model,

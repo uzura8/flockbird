@@ -1,9 +1,8 @@
 <?php
-if (!isset($hide_form)) $hide_form = false;
 if (!isset($upload_type)) $upload_type = 'img';
 ?>
 <!-- The container for the uploaded files -->
-<div id="upload_files_<?php echo $upload_type; ?>" class="<?php if ($hide_form): ?> hidden<?php endif; ?>">
+<div id="upload_files_<?php echo $upload_type; ?>">
 <div id="files_<?php echo $upload_type; ?>" class="files row">
 <?php if (!empty($files)): ?>
 <?php
@@ -40,9 +39,9 @@ echo render('filetmp/_parts/upload_images', $data);
 <?php endif; ?>
 
 		<label class="sr-only" for="files">Select files...</label>
-		<span class="btn btn-success btn-sm fileinput-button">
-			<i class="glyphicon glyphicon-plus"></i>
-			<span>Select files...</span>
+		<span class="btn btn-default fileinput-button">
+			<i class="glyphicon glyphicon-camera"></i>
+			<span class="hidden-xs">Select files...</span>
 			<!-- The file input field used as target for the file upload widget -->
 			<input class="file_select" type="file" name="files[]" multiple id="file_select_<?php echo $upload_type; ?>"<?php if ($upload_type == 'img'): ?> accept="image/*"<?php endif; ?>>
 		</span>
@@ -65,9 +64,6 @@ echo Form::select($selects['name'], $selects['value'], $selects['options'], $att
 <?php endif; ?>
 </div><!-- fileinput -->
 </div><!-- #upload_files -->
-<?php if ($hide_form): ?>
-<?php echo btn(($upload_type == 'file') ? 'form.add_file' : 'form.add_picture', null, 'btn_disp_file_select', true, null, null, array('data-type' => $upload_type, 'id' => 'btn_disp_file_select_'.$upload_type), null, 'button'); ?>
-<?php endif; ?>
 
 <!-- The blueimp Gallery widget -->
 <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
