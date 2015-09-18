@@ -1,92 +1,78 @@
 /*jslint unparam: true */
 /*global window, $ */
 $(function () {
-	'use strict';
+	//'use strict';
 	// Change this to the location of your server-side upload handler:
-	var startCountFile = 0;
-	var endCountFile = 0;
-	$('#file_select_file').fileupload({
-		url: get_file_upload_post_uri('file'),
-		dataType: 'text',
-		singleFileUploads: false,
-		recalculateProgress: true,
-		formData: {},
-		start: function (e) {
-			$('#btn_timeline').attr('disabled', 'disabled');
-			$('.submit_btn').attr('disabled', 'disabled');
-			$('#progress_file .progress-bar').css('width', 0);
-			displayLoading();
-		},
-		stop: function (e, data) {
-			startCountFile = 0;
-			endCountFile = 0;
-		},
-		send: function (e, data) {
-			startCountFile++;
-		},
-		done: function (e, data) {
-			endCountFile++;
-			var addElement = $(data['result']);
-			$('#files_file').append(addElement).fadeIn('fast');
-			addElement.ready(function() {
-				$('#btn_timeline').removeAttr('disabled');
-				$('.submit_btn').removeAttr('disabled');
-				displayLoading(true);
-			});
-		},
-		progressall: function (e, data) {
-			var progress = parseInt(data.loaded / data.total * 100, 10);
-			$('#progress_file .progress-bar').css(
-				'width',
-				progress + '%'
-			);
-		}
-	}).prop('disabled', !$.support.fileInput)
-		.parent().addClass($.support.fileInput ? undefined : 'disabled');
+//	var startCountFile = 0;
+//	var endCountFile = 0;
+//	$('#file_select_file').fileupload({
+//		url: get_file_upload_post_uri('file'),
+//		dataType: 'text',
+//		singleFileUploads: false,
+//		recalculateProgress: true,
+//		formData: {},
+//		start: function (e) {
+//			$('#btn_timeline').attr('disabled', 'disabled');
+//			$('.submit_btn').attr('disabled', 'disabled');
+//			$('#progress_file .progress-bar').css('width', 0);
+//			displayLoading();
+//		},
+//		stop: function (e, data) {
+//			startCountFile = 0;
+//			endCountFile = 0;
+//		},
+//		send: function (e, data) {
+//			startCountFile++;
+//		},
+//		done: function (e, data) {
+//			endCountFile++;
+//			var addElement = $(data['result']);
+//			$('#files_file').append(addElement).fadeIn('fast');
+//			addElement.ready(function() {
+//				$('#btn_timeline').removeAttr('disabled');
+//				$('.submit_btn').removeAttr('disabled');
+//				displayLoading(true);
+//			});
+//		},
+//		progressall: function (e, data) {
+//			var progress = parseInt(data.loaded / data.total * 100, 10);
+//			$('#progress_file .progress-bar').css(
+//				'width',
+//				progress + '%'
+//			);
+//		}
+//	}).prop('disabled', !$.support.fileInput)
+//		.parent().addClass($.support.fileInput ? undefined : 'disabled');
 
-	var startCountImg = 0;
-	var endCountImg = 0;
 	$('#file_select_img').fileupload({
 		url: $('#post_uri').val() ? get_url($('#post_uri').val()) : get_file_upload_post_uri('img'),
-		dataType: 'text',
-		singleFileUploads: false,
-		recalculateProgress: true,
-		formData: {
-			thumbnail_size: $('#thumbnail_size').val(),
-			insert_target: $('#insert_target').val()
-		},
-		start: function (e) {
-			$('#btn_timeline').attr('disabled', 'disabled');
-			$('.submit_btn').attr('disabled', 'disabled');
-			$('#progress_img .progress-bar').css('width', 0);
-			displayLoading();
-		},
-		stop: function (e, data) {
-			startCountImg = 0;
-			endCountImg = 0;
-		},
-		send: function (e, data) {
-			startCountImg++;
-		},
-		done: function (e, data) {
-			endCountImg++;
-			var addElement = $(data['result']);
-			$('#files_img').append(addElement).fadeIn('fast');
-			addElement.ready(function() {
-				$('#btn_timeline').removeAttr('disabled');
-				$('.submit_btn').removeAttr('disabled');
-				displayLoading(true);
-			});
-		},
-		progressall: function (e, data) {
-			var progress = parseInt(data.loaded / data.total * 100, 10);
-			$('#progress_img .progress-bar').css(
-				'width',
-				progress + '%'
-			);
-		}
-	}).prop('disabled', !$.support.fileInput)
-		.parent().addClass($.support.fileInput ? undefined : 'disabled');
+		dataType: 'json',
+		autoUpload: true,
+		filesContainer: '#files_img',
+		acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+		maxFileSize: get_config('upload_max_filesize'),
+		// Enable image resizing, except for Android and Opera,
+		// which actually support image resizing, but fail to
+		// send Blob objects via XHR requests:
+		disableImageResize: /Android(?!.*Chrome)|Opera/
+			.test(window.navigator.userAgent),
+		previewMaxWidth: 192,
+		previewMaxHeight: 192,
+		previewCrop: true
+	}).on('fileuploadadd', function (e, data) {
+		$.each(data.files, function (index, file) {
+			var node = $();
+			node.data(data)
+			node.appendTo(data.context);
+		});
+	}).on('fileuploadprocessalways', function (e, data) {
+			var index = data.index,
+				file = data.files[index],
+				node = $(data.context.children()[index]);
+			if (file.preview) {
+				node.prepend(file.preview);
+			}
+	});
 
 	$(document).on('click','.delete_file_tmp', function(){
 		var file_id   = $(this).data('id') ? parseInt($(this).data('id')) : 0;
@@ -146,7 +132,7 @@ function load_file_tmp(get_url, file_name, parent_attr) {
 }
 
 function get_file_upload_post_uri(type) {
-	var uri = (type == 'file') ? 'filetmp/api/upload/file.html' : 'filetmp/api/upload.html';
+	var uri = (type == 'file') ? 'filetmp/api/upload/file.json' : 'filetmp/api/upload.json';
 	if (check_is_admin()) uri = 'admin/' + uri;
 	return get_url(uri);
 }

@@ -73,6 +73,7 @@ function get_config(key) {
 		mediaBaseUrl: '<?php echo FBD_MEDIA_BASE_URL; ?>',
 		upload_dir_name: '<?php echo FBD_UPLOAD_DIRNAME; ?>',
 		site_description: '<?php echo FBD_SITE_DESCRIPTION; ?>',
+		upload_max_filesize: <?php echo FBD_UPLOAD_MAX_FILESIZE; ?>,
 		app_id_facebook: '<?php echo FBD_FACEBOOK_APP_ID; ?>'
 	};
 	return config[key];

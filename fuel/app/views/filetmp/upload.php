@@ -18,25 +18,27 @@ echo render('filetmp/_parts/upload_images', $data);
 ?>
 <?php endif; ?>
 </div><!-- #files -->
-<!-- The global progress bar -->
-<div id="progress_<?php echo $upload_type; ?>" class="progress">
-		<div class="progress-bar progress-bar-success"></div>
-</div>
+
 <!-- The fileinput-button span is used to style the file input field as button -->
 <div class="fileinput">
 <?php if (!empty($selects)): ?>
 <form class="form-inline">
 <?php endif; ?>
+
 	<?php echo Form::hidden('thumbnail_size', isset($thumbnail_size) ? $thumbnail_size : 'M', array('id' => 'thumbnail_size')); ?>
+
 <?php if (!empty($insert_target)): ?>
 	<?php echo Form::hidden('insert_target', $insert_target, array('id' => 'insert_target')); ?>
 <?php endif; ?>
+
 <?php if (!empty($post_uri)): ?>
 	<?php echo Form::hidden('post_uri', $post_uri, array('id' => 'post_uri')); ?>
 <?php endif; ?>
+
 <?php if (!empty($selects)): ?>
 	<div class="form-group">
 <?php endif; ?>
+
 		<label class="sr-only" for="files">Select files...</label>
 		<span class="btn btn-success btn-sm fileinput-button">
 			<i class="glyphicon glyphicon-plus"></i>
@@ -66,3 +68,15 @@ echo Form::select($selects['name'], $selects['value'], $selects['options'], $att
 <?php if ($hide_form): ?>
 <?php echo btn(($upload_type == 'file') ? 'form.add_file' : 'form.add_picture', null, 'btn_disp_file_select', true, null, null, array('data-type' => $upload_type, 'id' => 'btn_disp_file_select_'.$upload_type), null, 'button'); ?>
 <?php endif; ?>
+
+<!-- The blueimp Gallery widget -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+	<div class="slides"></div>
+	<h3 class="title"></h3>
+	<a class="prev">‹</a>
+	<a class="next">›</a>
+	<a class="close">×</a>
+	<a class="play-pause"></a>
+	<ol class="indicator"></ol>
+</div>
+

@@ -89,15 +89,14 @@
   - version: 9.11.2
   - license: MIT
   - url: https://github.com/blueimp/jQuery-File-Upload
-* jQuery File Upload Plugin PHP Class
-  - version: 7.0.1
+* blueimp Gallery JS
+  - version: JS 2.14.1
   - license: MIT
-* jQuery Iframe Transport Plugin
-  - version: 1.8.3
-  - license: MIT
+  - url:  https://github.com/blueimp/Gallery
 * jQuery UI Widget
-  - version: 1.11.1+CommonJS
+  - version: 1.11.4+CommonJS
   - license: MIT
+  - http://jqueryui.com
 * Summernote
   - version: 0.6.9
   - license: MIT

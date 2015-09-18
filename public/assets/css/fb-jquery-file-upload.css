@@ -1,0 +1,8 @@
+.preview {
+	max-width: 100%;
+	text-align: center;
+}
+.preview canvas {
+	width: 100%;
+	max-width: 192px;
+}
