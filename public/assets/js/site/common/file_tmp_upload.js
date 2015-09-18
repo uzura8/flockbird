@@ -99,10 +99,6 @@ $(function () {
 		return false;
 	});
 });
-$('.btn_disp_file_select').click(function() {
-	$('#btn_disp_file_select_' + $(this).data('type')).remove();
-	$('#upload_files_' + $(this).data('type')).removeClass('hidden');
-});
 
 function load_file_tmp(get_url, file_name, parent_attr) {
 	var parentDomElement = $(parent_attr);
