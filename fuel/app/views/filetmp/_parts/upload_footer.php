@@ -1,4 +1,4 @@
-<?php echo render('filetmp/_parts/tmpl'); ?>
+<?php echo render('filetmp/_parts/tmpl/image'); ?>
 <?php
 echo Asset::js('jquery-file-upload/vendor/jquery.ui.widget.js');
 echo Asset::js('jquery-file-upload/tmpl.min.js');// The Templates plugin is included to render the upload/download listings
