@@ -1,2 +1,2 @@
 <?php echo render('_parts/load_timelines'); ?>
-<?php echo render('filetmp/_parts/upload_footer'); ?>
+<?php echo render('filetmp/_parts/upload_footer', array('thumbnail_size' => 'S')); ?>
