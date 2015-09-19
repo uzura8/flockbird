@@ -18,6 +18,13 @@ echo render('filetmp/_parts/upload_images', $data);
 <?php endif; ?>
 </div><!-- #files -->
 
+<?php if ($upload_type == 'file'): ?>
+<!-- The global progress bar -->
+<div id="progress_<?php echo $upload_type; ?>" class="progress hidden">
+	<div class="progress-bar progress-bar-success"></div>
+</div>
+<?php endif; ?>
+
 <!-- The fileinput-button span is used to style the file input field as button -->
 <div class="fileinput">
 <?php if (!empty($selects)): ?>
@@ -37,13 +44,16 @@ echo render('filetmp/_parts/upload_images', $data);
 <?php if (!empty($selects)): ?>
 	<div class="form-group">
 <?php endif; ?>
-
 		<label class="sr-only" for="files">Select files...</label>
-		<span class="btn btn-default fileinput-button">
-			<i class="glyphicon glyphicon-camera"></i>
-			<span class="hidden-xs">Select files...</span>
-			<!-- The file input field used as target for the file upload widget -->
-			<input class="file_select" type="file" name="files[]" multiple id="file_select_<?php echo $upload_type; ?>"<?php if ($upload_type == 'img'): ?> accept="image/*"<?php endif; ?>>
+		<span class="btn <?php if (!empty($btn_size)): ?> btn-<?php echo $btn_size; ?><?php endif; ?>
+			btn-<?php if (!empty($btn_type)): ?><?php echo $btn_type; ?><?php else: ?>default<?php endif; ?>
+			fileinput-button">
+				<i class="glyphicon glyphicon-<?php if ($upload_type == 'file'): ?>file<?php else: ?>camera<?php endif; ?>"></i>
+				<span class="hidden-xs">Select <?php if ($upload_type == 'file'): ?>files<?php else: ?>images<?php endif; ?>...</span>
+				<!-- The file input field used as target for the file upload widget -->
+				<input class="file_select" type="file" name="files[]"
+					multiple id="file_select_<?php echo $upload_type; ?>"
+					<?php if ($upload_type == 'img'): ?> accept="image/*"<?php endif; ?>>
 		</span>
 <?php if (empty($selects) && FBD_UPLOAD_MAX_FILESIZE): ?>
 		<span class="text-muted"><?php echo Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE); ?> まで</span>
@@ -65,6 +75,7 @@ echo Form::select($selects['name'], $selects['value'], $selects['options'], $att
 </div><!-- fileinput -->
 </div><!-- #upload_files -->
 
+<?php if ($upload_type == 'img'): ?>
 <!-- The blueimp Gallery widget -->
 <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
 	<div class="slides"></div>
@@ -75,4 +86,5 @@ echo Form::select($selects['name'], $selects['value'], $selects['options'], $att
 	<a class="play-pause"></a>
 	<ol class="indicator"></ol>
 </div>
+<?php endif; ?>
 

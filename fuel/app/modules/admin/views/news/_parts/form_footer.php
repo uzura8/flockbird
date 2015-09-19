@@ -1,6 +1,14 @@
 <?php echo render('_parts/datetimepicker_footer', array('attr' => '#published_at_time')); ?>
 <?php if (Config::get('news.image.isEnabled') || Config::get('news.file.isEnabled')): ?>
-<?php 	echo render('filetmp/_parts/upload_footer'); ?>
+<?php
+$data = array();
+$insert_target = null;
+if (conf('image.isInsertBody', 'news'))
+{
+	$data['insert_target'] = (isset($news) && $news->format == 1) ? '.note-editable' : '#form_body';
+}
+?>
+<?php 	echo render('filetmp/_parts/upload_footer', $data); ?>
 <?php endif; ?>
 <?php if (\News\Site_Util::check_editor_enabled('html_editor')): ?>
 <?php 	echo render('_parts/form/summernote/footer'); ?>

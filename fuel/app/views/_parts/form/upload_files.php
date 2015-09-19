@@ -26,7 +26,9 @@ $data = array(
 	'selects' => $selects,
 	'model' => $model,
 	'upload_type' => $upload_type,
+	'btn_type' => empty($btn_type) ? 'default' : $btn_type,
 );
+if (!empty($btn_size)) $data['btn_size'] = $btn_size;
 if (!empty($post_uri)) $data['post_uri'] = $post_uri;
 if (!empty($insert_target)) $data['insert_target'] = $insert_target;
 echo render('filetmp/upload', $data);

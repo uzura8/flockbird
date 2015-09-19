@@ -1,7 +1,9 @@
-<?php echo render('filetmp/_parts/tmpl/image', array(
-	'thumbnail_size' => !empty($thumbnail_size) ? $thumbnail_size : 'M',
-)); ?>
 <?php
+$data = array();
+if (!empty($thumbnail_size)) $data['thumbnail_size'] = $thumbnail_size;
+if (!empty($insert_target)) $data['insert_target'] = $insert_target;
+echo render('filetmp/_parts/tmpl/image', $data);
+
 echo Asset::js('jquery-file-upload/vendor/jquery.ui.widget.js');
 echo Asset::js('jquery-file-upload/tmpl.min.js');// The Templates plugin is included to render the upload/download listings
 Asset::js(array(
@@ -23,6 +25,6 @@ echo Asset::render('js_upload', false, 'js');
 
 <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
 <!--[if (gte IE 8)&(lt IE 10)]>
-<?php //echo Asset::js('jquery-file-upload/cors/jquery.xdr-transport.js');?>
+<?php echo Asset::js('jquery-file-upload/cors/jquery.xdr-transport.js');?>
 <![endif]-->
 

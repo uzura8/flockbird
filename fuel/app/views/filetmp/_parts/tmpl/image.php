@@ -90,6 +90,21 @@ switch ($thumbnail_size)
 						class="form-control" placeholder="写真の説明" rows="2"></textarea>
 				</p>
 <?php endif; ?>
+<?php if (!empty($insert_target)): ?>
+				{% if (file.accept_sizes) { %}
+					<p><select class="form-control" id="select_size_{%=file.id%}">
+						{% for (var size_key in file.accept_sizes) { %}
+							<option value="{%=file.accept_sizes[size_key]%}">{%=file.accept_sizes[size_key]%}</option>
+						{% } %}
+					</select></p>
+					<button name="button" data-file_name_prefix="{%=file.name_prefix%}" data-file_name="{%=file.name%}"
+						data-body="<?php echo $insert_target; ?>"
+						data-id="{%=file.id%}" id="img_insert_btn_{%=file.id%}"
+						class="btn btn-default btn-sm js-insert_img">
+						<i class="glyphicon glyphicon-plus"></i> 写真を挿入
+					</button>
+				{% } %}
+<?php endif; ?>
 			</div><!-- caption -->
 			<input type="hidden"
 				name="image{%=file.is_tmp?'_tmp':''%}[{%=file.id%}]"

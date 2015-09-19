@@ -197,7 +197,7 @@ class Controller_News extends Controller_Admin
 
 		$this->set_title_and_breadcrumbs(term('news.view', 'form.create'), array('admin/news' => term('news.view', 'admin.view')));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
-		$this->template->post_footer = \View::forge('news/_parts/form_footer');
+		$this->template->post_footer = \View::forge('news/_parts/form_footer', array('news' => $news));
 		$this->template->content = \View::forge('news/_parts/form', array(
 			'val' => $val,
 			'images' => $images,
@@ -373,7 +373,7 @@ class Controller_News extends Controller_Admin
 
 		$this->set_title_and_breadcrumbs(term('form.edit'), array('admin/news' => term('news.view', 'admin.view'), 'admin/news/'.$news->id => $news->title));
 		$this->template->post_header = \View::forge('news/_parts/form_header');
-		$this->template->post_footer = \View::forge('news/_parts/form_footer');
+		$this->template->post_footer = \View::forge('news/_parts/form_footer', array('news' => $news));
 		$this->template->content = \View::forge('news/_parts/form', array(
 			'val' => $val,
 			'saved_links' => $saved_links,

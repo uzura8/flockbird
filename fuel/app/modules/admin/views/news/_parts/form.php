@@ -45,7 +45,7 @@ echo form_upload_files(
 	array(),
 	'news',
 	term('site.picture'),
-	!empty($news) ? sprintf('admin/news/image/api/upload/%d.html', $news->id) : null,
+	!empty($news) ? sprintf('admin/news/image/api/upload/%d.json', $news->id) : null,
 	$insert_target
 );
 ?>

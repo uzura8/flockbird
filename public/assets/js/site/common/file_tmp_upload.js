@@ -3,46 +3,48 @@
 $(function () {
 	//'use strict';
 	// Change this to the location of your server-side upload handler:
-//	var startCountFile = 0;
-//	var endCountFile = 0;
-//	$('#file_select_file').fileupload({
-//		url: get_file_upload_post_uri('file'),
-//		dataType: 'text',
-//		singleFileUploads: false,
-//		recalculateProgress: true,
-//		formData: {},
-//		start: function (e) {
-//			$('#btn_timeline').attr('disabled', 'disabled');
-//			$('.submit_btn').attr('disabled', 'disabled');
-//			$('#progress_file .progress-bar').css('width', 0);
-//			displayLoading();
-//		},
-//		stop: function (e, data) {
-//			startCountFile = 0;
-//			endCountFile = 0;
-//		},
-//		send: function (e, data) {
-//			startCountFile++;
-//		},
-//		done: function (e, data) {
-//			endCountFile++;
-//			var addElement = $(data['result']);
-//			$('#files_file').append(addElement).fadeIn('fast');
-//			addElement.ready(function() {
-//				$('#btn_timeline').removeAttr('disabled');
-//				$('.submit_btn').removeAttr('disabled');
-//				displayLoading(true);
-//			});
-//		},
-//		progressall: function (e, data) {
-//			var progress = parseInt(data.loaded / data.total * 100, 10);
-//			$('#progress_file .progress-bar').css(
-//				'width',
-//				progress + '%'
-//			);
-//		}
-//	}).prop('disabled', !$.support.fileInput)
-//		.parent().addClass($.support.fileInput ? undefined : 'disabled');
+	var startCountFile = 0;
+	var endCountFile = 0;
+	$('#file_select_file').fileupload({
+		url: get_file_upload_post_uri('file'),
+		dataType: 'text',
+		autoUpload: true,
+		singleFileUploads: false,
+		recalculateProgress: true,
+		formData: {},
+		start: function (e) {
+			$('#btn_timeline').attr('disabled', 'disabled');
+			$('.submit_btn').attr('disabled', 'disabled');
+			$('#progress_file').removeClass('hidden');
+			$('#progress_file .progress-bar').css('width', 0);
+			displayLoading();
+		},
+		stop: function (e, data) {
+			startCountFile = 0;
+			endCountFile = 0;
+		},
+		send: function (e, data) {
+			startCountFile++;
+		},
+		done: function (e, data) {
+			endCountFile++;
+			var addElement = $(data['result']);
+			$('#files_file').append(addElement).fadeIn('fast');
+			addElement.ready(function() {
+				$('#btn_timeline').removeAttr('disabled');
+				$('.submit_btn').removeAttr('disabled');
+				displayLoading(true);
+			});
+		},
+		progressall: function (e, data) {
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+			$('#progress_file .progress-bar').css(
+				'width',
+				progress + '%'
+			);
+		}
+	}).prop('disabled', !$.support.fileInput)
+		.parent().addClass($.support.fileInput ? undefined : 'disabled');
 
 	$('#file_select_img').fileupload({
 		url: $('#post_uri').val() ? get_url($('#post_uri').val()) : get_file_upload_post_uri('img'),
@@ -136,7 +138,7 @@ function load_file_tmp(get_url, file_name, parent_attr) {
 }
 
 function get_file_upload_post_uri(type) {
-	var uri = (type == 'file') ? 'filetmp/api/upload/file.json' : 'filetmp/api/upload.json';
+	var uri = (type == 'file') ? 'filetmp/api/upload/file.html' : 'filetmp/api/upload.json';
 	if (check_is_admin()) uri = 'admin/' + uri;
 	return get_url(uri);
 }
