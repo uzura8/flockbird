@@ -35,11 +35,18 @@ if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $mo
 <?php else: ?>
 	<div class="thumbnail">
 <?php if (!empty($file->thumbnail_uri)): ?>
-		<?php echo Html::img($file->thumbnail_uri, array('class' => 'thumbnail', 'alt' => $file->original_name)); ?>
+		<a href="<?php echo $file->url; ?>" title="<?php echo $file->original_name; ?>" download="<?php echo $file->name; ?>" data-gallery>
+			<?php echo Html::img($file->thumbnail_uri, array('class' => 'thumbnail', 'alt' => $file->original_name)); ?>
+		</a>
 <?php endif; ?>
 		<div class="caption clearfix">
 <?php if ($is_display_original_name): ?>
-			<h5><?php echo $file->original_name; ?></h5>
+			<h5><a href="<?php echo $file->url; ?>"
+				title="<?php echo $file->original_name; ?>"
+				download="<?php echo $file->name; ?>"
+				<?php if (!empty($file->thumbnail_uri)): ?> data-gallery<?php endif; ?>>
+					<?php echo $file->original_name; ?>
+			</a></h5>
 <?php endif; ?>
 			<p class="subinfo<?php if ($is_subinfo_pull_right): ?> pull-right<?php endif; ?>">
 				<?php echo Num::format_bytes($file->size); ?>
