@@ -88,6 +88,11 @@ class Controller_Member_setting extends Controller_Member
 			$is_transaction_rollback = true;
 			$error_message = sprintf('現在の%sが正しくありません。', term('site.password'));
 		}
+		catch(\Auth\SimpleUserUpdateException $e)
+		{
+			$is_transaction_rollback = true;
+			$error_message = term('site.password').'の変更に失敗しました。';
+		}
 		catch(Database_Exception $e)
 		{
 			$is_transaction_rollback = true;
@@ -268,7 +273,7 @@ class Controller_Member_setting extends Controller_Member
 				Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
 				$error_message = 'メール送信エラー';
 			}
-			catch(Auth\SimpleUserUpdateException $e)
+			catch(\Auth\SimpleUserUpdateException $e)
 			{
 				$is_transaction_rollback = true;
 				$error_message = term('site.email').'の変更に失敗しました。';
