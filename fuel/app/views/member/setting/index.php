@@ -1,7 +1,7 @@
 <?php $label_col_size = 4; ?>
 <div class="well form-horizontal">
 	<?php echo form_text(
-		$u->member_auth->email ?: sprintf('<span class="text-danger">%s</span>', term('unset')),
+		!empty($u->member_auth->email) ? $u->member_auth->email : sprintf('<span class="text-danger">%s</span>', term('site.unset')),
 		term('site.email'),
 		$label_col_size,
 		true,
@@ -9,7 +9,7 @@
 	); ?>
 
 	<?php echo form_text(
-		$u->member_auth->password ? sprintf('<span class="text-muted">%s</span>', term('site.set_already')) : sprintf('<span class="text-danger">%s</span>', term('unset')),
+		!empty($u->member_auth->password) ? sprintf('<span class="text-muted">%s</span>', term('site.set_already')) : sprintf('<span class="text-danger">%s</span>', term('site.unset')),
 		term('site.password'),
 		$label_col_size,
 		true,
