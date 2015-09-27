@@ -10,10 +10,16 @@ return array(
 	),
 	'articles' => array(
 		'images' => array(
-			'limit' => 3,
-			'limit_max' => 5,
+			'limit' => 9,
+			'limit_max' => 12,
 			'trim_width' => array(
 				'name' => 70,
+			),
+		),
+		'member' => array(
+			'list' => array(
+				'limit' => 20,
+				'limit_max' => 50,
 			),
 		),
 	),

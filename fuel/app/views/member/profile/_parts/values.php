@@ -13,7 +13,7 @@ if ($is_checkbox)
 }
 $is_checkbox_before = $is_checkbox;
 ?>
-				<div class="col-xs-4"><?php if ($is_view_label): ?><label><?php echo $member_profile->profile->caption; ?></label><?php endif; ?></div>
+				<div class="col-xs-4 u-alr"><?php if ($is_view_label): ?><label><?php echo $member_profile->profile->caption; ?></label><?php endif; ?></div>
 				<div class="col-xs-8"><?php echo $value; ?></div>
 			</div>
 <?php endforeach; ?>

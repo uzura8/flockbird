@@ -74,7 +74,7 @@ elseif ($page_type != 'detail')
 <?php else: ?>
 					<?php echo site_get_screen_name($member); ?>
 <?php endif; ?>
-<?php if (conf('memberRelation.follow.isEnabled') && Auth::check() && $member->id != $u->id): ?>
+<?php if (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && Auth::check() && $member->id != $u->id): ?>
 					<?php echo render('_parts/button_follow', array(
 						'member_id_from' => Auth::check() ? $u->id : 0,
 						'member_id_to' => $member->id,

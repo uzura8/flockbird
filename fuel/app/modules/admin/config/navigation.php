@@ -3,8 +3,9 @@
 $configs = array(
 	'admin' => array(
 		'secure_global_head' => array(
-			term('member.view', 'site.management') => array(
+			term('site.view', 'site.management') => array(
 				term('member.view', 'site.list') => 'admin/member/',
+				term('profile', 'site.setting') => 'admin/profile/',
 			),
 			term('site.content', 'site.management') => array(
 				term('news.view', 'site.list') => 'admin/news/',
@@ -20,9 +21,6 @@ $configs = array(
 				term('content.page', 'site.management') => 'admin/content/page/',
 				term('site.image', 'site.management') => 'admin/content/image/',
 				term('site.mail', 'site.template', 'site.management') => 'admin/content/template/mail/',
-			),
-			term('site.view', 'site.management') => array(
-				term('profile', 'site.setting') => 'admin/profile/',
 			),
 			term('admin.view', 'page.view', 'site.setting') => array(
 				term('admin.account.view', 'site.management') => 'admin/account/',
@@ -48,8 +46,8 @@ $configs = array(
 		'secure_side_admin' => array(
 			term('admin.view', 'page.view', 'page.top') => 'admin/',
 			term('member.view', 'site.management') => 'admin/member/',
-			term('site.content', 'site.management') => 'admin/news/',
 			term('profile', 'site.setting') => 'admin/profile/',
+			term('site.content', 'site.management') => 'admin/news/',
 			term('admin.view', 'page.view', 'site.setting') => 'admin/account/',
 			term('site.view') => FBD_SITE_URL ?: '/',
 		),

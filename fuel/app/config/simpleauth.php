@@ -125,6 +125,8 @@ return array(
 			'admin/content/image/list' => array('GET'),
 			'admin/content/image/detail' => array('GET'),
 			'admin/content/image/api/list' => array('GET'),
+			'admin/member/list' => array('GET'),
+			'admin/member/detail' => array('GET'),
 		),
 		/**
 		 * Examples
