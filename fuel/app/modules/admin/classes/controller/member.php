@@ -19,23 +19,7 @@ class Controller_Member extends Controller_Admin
 	public function action_index()
 	{		
 		$data = array();
-
-		$query = \Model_Member::query();
-		$config = array(
-			'uri_segment' => 'page',
-			'total_items' => $query->count(),
-			'per_page' => conf('articles.member.list.limit', 'admin'),
-			'num_links' => 4,
-			'show_first' => true,
-			'show_last' => true,
-		);
-		$pagination = \Pagination::forge('mypagination', $config);
-		$data['list'] = $query->related('member_auth')
-			->order_by('id', 'desc')
-			->rows_limit($pagination->per_page)
-			->rows_offset($pagination->offset)
-			->get();
-		$data['pagination'] = $pagination->render();
+		list($data['list'], $data['pagination']) = \Site_Model::get_pagenation_list('member');
 
 		$this->template->layout = 'wide';
 		$this->set_title_and_breadcrumbs(term('member.view', 'site.management'));

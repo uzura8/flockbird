@@ -16,11 +16,5 @@ return array(
 				'name' => 70,
 			),
 		),
-		'member' => array(
-			'list' => array(
-				'limit' => 20,
-				'limit_max' => 50,
-			),
-		),
 	),
 );

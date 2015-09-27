@@ -23,24 +23,7 @@ class Controller_News extends Controller_Admin
 
 		$data = array();
 		$data['is_draft'] = $is_draft;
-
-		$query = \News\Model_News::query();
-		$config = array(
-			'uri_segment' => 'page',
-			'total_items' => $query->count(),
-			'per_page' => \Config::get('news.viewParams.admin.list.limit'),
-			'num_links' => 4,
-			'show_first' => true,
-			'show_last' => true,
-		);
-		$pagination = \Pagination::forge('mypagination', $config);
-		$data['list'] = $query->related('news_category')
-			->order_by('created_at', 'desc')
-			->rows_limit($pagination->per_page)
-			->rows_offset($pagination->offset)
-			->get();
-		$data['pagination'] = $pagination->render();
-
+		list($data['list'], $data['pagination']) = \Site_Model::get_pagenation_list('news', array('related' => 'news_category'));
 		$this->template->layout = 'wide';
 		$this->set_title_and_breadcrumbs(term('news.view', 'site.management'));
 		$this->template->subtitle = \View::forge('news/_parts/list_subtitle');

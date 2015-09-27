@@ -292,6 +292,7 @@ $config = array(
 			'nl2br' => true,
 		),
 		'list' => array(
+			'limit_pager' => 20,
 			'limit' => 10,
 			'limit_max' => 12,
 			'trim_width' => array(

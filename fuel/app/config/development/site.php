@@ -48,6 +48,7 @@ return array(
 	),
 	'view_params_default' => array(
 		'list' => array(
+			'limit_pager' => 2,
 			'limit' => 2,
 			'limit_max' => 3,
 			'trim_width' => array(

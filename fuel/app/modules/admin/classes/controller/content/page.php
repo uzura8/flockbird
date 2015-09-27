@@ -19,23 +19,7 @@ class Controller_Content_Page extends Controller_Admin
 	public function action_index()
 	{		
 		$data = array();
-		$query = \Content\Model_ContentPage::query();
-		$config = array(
-			'uri_segment' => 'page',
-			'total_items' => $query->count(),
-			'per_page' => \Config::get('content.viewParams.admin.list.limit'),
-			'num_links' => 4,
-			'show_first' => true,
-			'show_last' => true,
-		);
-		$pagination = \Pagination::forge('mypagination', $config);
-		$data['list'] = $query
-			->order_by('id', 'desc')
-			->rows_limit($pagination->per_page)
-			->rows_offset($pagination->offset)
-			->get();
-		$data['pagination'] = $pagination->render();
-
+		list($data['list'], $data['pagination']) = \Site_Model::get_pagenation_list('content_page');
 		$this->set_title_and_breadcrumbs(
 			term('content.page', 'site.management'),
 			array('admin/content' => term('site.content', 'site.management'))

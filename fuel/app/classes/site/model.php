@@ -243,4 +243,26 @@ class Site_Model
 
 		return false;
 	}
+
+	public static function get_pagenation_list($table, $params = array(), $per_page = 0, $num_links = 4, $show_first_and_last = true, $name = 'mypagination')
+	{
+		if (!$per_page) $per_page = conf('view_params_default.list.limit_pager');
+		if (empty($params['order_by'])) $params['order_by'] = array('id' => 'DESC');
+
+		$model = static::get_model_name($table);
+		$query = $model::get_list_query($params);
+		$config = array(
+			'uri_segment' => 'page',
+			'total_items' => $query->count(),
+			'per_page' => $per_page,
+			'num_links' => $num_links,
+			'show_first' => $show_first_and_last,
+			'show_last' => $show_first_and_last,
+		);
+		$pagination = \Pagination::forge($name, $config);
+		$query->rows_limit($pagination->per_page)
+			->rows_offset($pagination->offset);
+
+		return array($query->get(), $pagination->render());
+	}
 }
