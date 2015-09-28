@@ -23,25 +23,15 @@
 	<td class="small"><?php echo symbol('noValue'); ?></td>
 <?php 	endif; ?>
 
-<?php /*
-<?php 	if (check_acl('admin/news/publish')): ?>
-<?php $attr = array('data-destination' => Uri::string_with_query()); ?>
-<?php 		if ($news->is_published): ?>
-	<td class="small"><?php echo btn('form.do_unpublish', '#', 'btn_publish', true, 'xs', null, $attr + array(
-		'data-uri' => 'admin/news/unpublish/'.$news->id,
-		'data-msg' => term('form.unpublish').'にしますか？',
+<?php 	if (check_acl($uri = 'admin/member/delete')): ?>
+	<td class="small"><?php echo btn('form.delete', '#', 'js-simplePost', false, 'xs', null, array(
+		'data-destination' => Uri::string_with_query(),
+		'data-uri' => $uri.'/'.$member->id,
+		'data-msg' => term('common.force', 'site.left').'します。よろしいですか？',
 	)); ?></td>
-<?php 		else: ?>
-	<td class="small"><?php echo btn('form.do_publish', '#', 'btn_publish', true, 'xs', null, $attr + array(
-		'data-uri' => 'admin/news/publish/'.$news->id,
-		'data-msg' => term('form.publish').'しますか？',
-	)); ?></td>
-<?php 		endif; ?>
 <?php 	else: ?>
 	<td class="small"><?php echo symbol('noValue'); ?></td>
 <?php 	endif; ?>
-*/ ?>
-	<td class="small"><?php echo symbol('noValue'); ?></td>
 
 	<td><?php echo Html::anchor('admin/member/'.$member->id, $member->name); ?></td>
 	<td><?php echo (isset($member->sex) && strlen($member->sex)) ?

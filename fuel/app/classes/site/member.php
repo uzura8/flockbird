@@ -128,11 +128,12 @@ class Site_Member
 
 	public static function remove(Model_Member $member)
 	{
-		$member_auth = Model_MemberAuth::query()->where('member_id', $member->id)->get_one();
-		$email = $member_auth->email;
-		$name = $member->name;
 		if (conf('member.leave.isRemoveOnBatch'))
 		{
+			$name = $member->name;
+			$member_auth = Model_MemberAuth::query()->where('member_id', $member->id)->get_one();
+			$email = $member_auth ? $member_auth->email : '';
+
 			DB::start_transaction();
 			$member_delete_queue = Model_MemberDeleteQueue::forge(array(
 				'member_id' => $member->id,
@@ -146,15 +147,22 @@ class Site_Member
 		}
 		else
 		{
-			static::delete($member->id, $name, $email);
+			static::delete($member->id);
 			$message = term('site.left').'が'.term('form.complete').'しました。';
 		}
 
 		return $message;
 	}
 
-	public static function delete($member_id, $name = '', $email = '')
+	public static function delete($member_id)
 	{
+		if (!$member = Model_Member::query()->related('member_auth')->where('id', $member_id)->get_one())
+		{
+			throw new FuelException('Member not exists.');
+		}
+		$name = $member->name;
+		$email = !empty($member->member_auth->email) ? $member->member_auth->email : '';
+
 		\Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
 		\Album\Site_NoOrmModel::delete_album4member_id($member_id);
 		\Note\Site_NoOrmModel::delete_note4member_id($member_id);
@@ -162,7 +170,7 @@ class Site_Member
 		static::delete_file_all4member_id($member_id, true);
 
 		DB::start_transaction();
-		if (!Auth::delete_user($member_id)) throw new FuelException('Delete user error. user_id:'.$member_id);
+		if (!$member->delete()) throw new FuelException('Delete user error. user_id:'.$member_id);
 		DB::commit_transaction();
 
 		if ($name && $email)

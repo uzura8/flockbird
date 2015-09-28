@@ -451,7 +451,7 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 		// make sure we have a user to delete
 		if (empty($member_id))
 		{
-			throw new \SimpleUserUpdateException('Cannot delete user with empty username', 9);
+			throw new \Auth\SimpleUserUpdateException('Cannot delete user with empty username', 9);
 		}
 
 		// get the user object

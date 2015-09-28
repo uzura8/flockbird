@@ -139,6 +139,7 @@ $config = array(
 		'friend' => '友達',
 		'message' => 'メッセージ',
 		'menu' => 'メニュー',
+		'force' => '強制',
 	),
 	'member' => array(
 		'view' => 'メンバー',

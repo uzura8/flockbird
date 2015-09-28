@@ -106,6 +106,7 @@ return array(
 			'admin/content/image/api/delete' => array('POST'),
 			'admin/filetmp/api/upload' => array('GET', 'POST', 'DELETE'),
 			'admin/account/index' => array('GET'),
+			'admin/member/delete' => array('POST', 'DELETE'),
 		),
 		'user' => array(
 			'admin/index' => array('GET'),
