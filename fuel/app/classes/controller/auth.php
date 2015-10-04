@@ -3,6 +3,7 @@ class Controller_Auth extends Controller_Site
 {
 	protected $check_not_auth_action = array(
 		'login',
+		'logout',
 		'callback',
 	);
 
