@@ -140,6 +140,7 @@ $config = array(
 		'message' => 'メッセージ',
 		'menu' => 'メニュー',
 		'force' => '強制',
+		'my' => '自分の',
 	),
 	'member' => array(
 		'view' => 'メンバー',

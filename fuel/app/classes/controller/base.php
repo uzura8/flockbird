@@ -31,6 +31,7 @@ class Controller_Base extends Controller_Hybrid
 		if (!defined('IS_AUTH')) define('IS_AUTH', $this->check_auth(false));
 		$this->check_auth_and_redirect();
 		$this->set_current_user();
+		$this->check_required_setting_and_redirect();
 		self::setup_assets();
 	}
 
@@ -118,6 +119,21 @@ class Controller_Base extends Controller_Hybrid
 		list($driver, $user_id) = $this->auth_instance->get_user_id();
 		$this->u = $this->get_current_user($user_id);
 		View::set_global('u', $this->u);
+	}
+
+	protected function check_required_setting_and_redirect()
+	{
+		if (IS_ADMIN) return;
+		if (IS_API)   return;
+		if (!IS_AUTH) return;
+		if (check_current_uri('auth/logout')) return;
+
+		if (conf('member.profile.forceRegisterRequired.isEnabled')
+			&& !check_current_uri($uri = 'member/profile/edit/regist')
+			&& !check_current_uris(conf('member.profile.forceRegisterRequired.ignoreUris')))
+		{
+			if (!Site_Member::check_saved_member_profile_required($this->u)) Response::redirect($uri);
+		}
 	}
 
 	protected function check_auth_and_redirect($is_check_not_auth_action = true)

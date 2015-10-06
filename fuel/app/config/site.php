@@ -42,6 +42,7 @@ $config = array(
 					'provider_signup' => true,
 				),
 			),
+			'saveTermsUnAgreement' => true,
 		),
 	),
 	'original_user_id' => array(
@@ -143,6 +144,12 @@ $config = array(
 			),
 		),
 		'profile' => array(
+			'forceRegisterRequired' => array(
+				'isEnabled' => true,
+				'ignoreUris' => array(
+					'site/term',
+				),
+			),
 			'display_type' => array(
 				'detail' => '0',
 				'summary' => '1',

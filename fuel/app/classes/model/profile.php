@@ -180,18 +180,28 @@ class Model_Profile extends \MyOrm\Model
 
 	public static function get4page_type($page_type)
 	{
-		if (!in_array($page_type, array('regist', 'config', 'search')))
+		if (!in_array($page_type, array('regist', 'config', 'search', 'regist-config')))
 		{
 			throw new InvalidArgumentException('First parameter is invalid.');
 		}
 
-		return self::query()->where('is_disp_'.$page_type, 1)->order_by('sort_order')->get();
+		$query = self::query()->order_by('sort_order');
+
+		if ($page_type = 'regist-config')
+		{
+			$query->where('is_disp_regist', 1);
+			$query->or_where('is_disp_config', 1);
+		}
+		else
+		{
+			$query->where('is_disp_'.$page_type, 1);
+		}
+
+		return $query->get();
 	}
 
 	public static function get_ids4display_type($display_type)
 	{
-		$result = \DB::select('id')->from('profile')->where('display_type', $display_type)->execute()->as_array();
-
-		return \Util_db::conv_col($result);
+		return self::get_cols('id', array('display_type' => $display_type), 'sort_order');
 	}
 }

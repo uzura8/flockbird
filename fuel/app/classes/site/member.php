@@ -206,4 +206,31 @@ class Site_Member
 
 		return $register_types;
 	}
+
+	public static function check_saved_member_profile_required(Model_Member $member, $disp_type = 'regist')
+	{
+		if (!in_array($disp_type, array('regist'))) throw new InvalidArgumentException('Second parameter is invalid.');
+
+		if (conf('profile.sex.isRequired') && empty($member->sex)) return false;
+		if (conf('profile.birthday.birthyear.isRequired') && empty($member->birthyear)) return false;
+		if (conf('profile.birthday.birthday.isRequired') && empty($member->birthday)) return false;
+
+		if (!$profiles = Model_Profile::get_assoc('id', 'is_required', array('is_required' => 1, 'is_disp_'.$disp_type => 1))) return true;
+		$profileds_for_check = $profiles;
+		if (!$member_profiles = Model_MemberProfile::get4member_id($member->id)) return false;
+		foreach ($member_profiles as $member_profile)
+		{
+			unset($profileds_for_check[$member_profile->profile_id]);
+
+			if (empty($profiles[$member_profile->profile_id])) continue;
+			if ($member_profile->profile_option_id) continue;
+			if ($member_profile->value) continue;
+			if (strlen($member_profile->value)) continue;
+
+			return false;
+		}
+		if ($profileds_for_check) return false;
+
+		return true;
+	}
 }
