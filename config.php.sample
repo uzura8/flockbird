@@ -73,7 +73,7 @@ define('FBD_HEADER_KEYWORDS_DEFAULT', 'SNS,サンプル');
 //define('FBD_ADMIN_COMPANY_NAME_JP', '');
 
 // 運営者名 (お問い合わせフォームに表示)
-define('FBD_ADMIN_NAME', FBD_DOMAIN.' 運営事務局');
+define('FBD_ADMIN_NAME', FBD_SITE_NAME.' 運営事務局');
 
 // 運営者メールアドレス (お問い合わせフォームに表示)
 define('FBD_ADMIN_MAIL', 'admin@example.com');
