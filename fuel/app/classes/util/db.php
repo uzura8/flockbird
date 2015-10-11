@@ -133,7 +133,17 @@ class Util_Db
 		if (!$username) throw new FuelException('Username is not set at configs.');
 
 		$command = sprintf('mysql -u%s', $username);
-		if (!empty($password)) $command .= sprintf(' -p%s', $password);
+		if (!empty($password))
+		{
+			if (defined('FBD_USE_ENV_VAL_MYSQL_PWD') && FBD_USE_ENV_VAL_MYSQL_PWD)
+			{
+				$command = sprintf('MYSQL_PWD=%s %s', $password, $command);
+			}
+			else
+			{
+				$command .= sprintf(' -p%s', $password);
+			}
+		}
 		if (!empty($hostname)) $command .= sprintf(' -h%s', $hostname);
 		if (!empty($port)) $command .= sprintf(' -P%s', $port);
 
