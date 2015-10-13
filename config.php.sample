@@ -32,6 +32,8 @@ $GLOBALS['_FBD_DSN']['production'] = array(
 		//'readonly' => array(),// readonly は指定しない(connection_rate 設定が効かなくなる)
 	),
 );
+// Use mysql environment variable MYSQL_PWD at executing sql from script.(Using mysql 5.6 or later, you have to set this true)
+//define('FBD_USE_ENV_VAL_MYSQL_PWD', false);
 
 // 暗号化キー(ASCII文字列)
 define('FBD_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
@@ -73,7 +75,7 @@ define('FBD_HEADER_KEYWORDS_DEFAULT', 'SNS,サンプル');
 //define('FBD_ADMIN_COMPANY_NAME_JP', '');
 
 // 運営者名 (お問い合わせフォームに表示)
-define('FBD_ADMIN_NAME', FBD_DOMAIN.' 運営事務局');
+define('FBD_ADMIN_NAME', FBD_SITE_NAME.' 運営事務局');
 
 // 運営者メールアドレス (お問い合わせフォームに表示)
 define('FBD_ADMIN_MAIL', 'admin@example.com');
