@@ -140,7 +140,9 @@ $config = array(
 		'setting' => array(
 			'email' => array(
 				'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
+				'codeLifetime' => '1 hour',// user for function.strtodate. if false, not check lifetime.
 				'hideUniqueCheck' => true,
+				'codeLength' => 6,// set under 24
 			),
 		),
 		'profile' => array(

@@ -305,10 +305,6 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 			{
 				throw new \SimpleUserUpdateException('Email address is not valid', 7);
 			}
-			if ( ! array_key_exists('password', $values))
-			{
-				throw new \SimpleUserUpdateException('Need posted password to change email address');
-			}
 
 			$matches = \Model_MemberAuth::query()
 				->where('email', '=', $email)

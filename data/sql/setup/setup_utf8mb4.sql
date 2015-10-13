@@ -52,6 +52,7 @@ CREATE TABLE `member_email_pre` (
   `member_id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL,
+  `code` varchar(24) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),

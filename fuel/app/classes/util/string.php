@@ -25,6 +25,21 @@ class Util_String
 		return sha1(uniqid(mt_rand(), true));
 	}
 
+	/**
+	 * @param int $digits 桁数
+	 * @return string
+	 */
+	public static function get_random_code($digits = 4)
+	{
+		$code = '';
+		for ($i = 0; $i < $digits; $i++)
+		{
+			$code .= mt_rand(0, 9);
+		}
+
+		return $code;
+	}
+
 	public static function get_exploded($string, $number = 0, $delimitter = '_')
 	{
 		$parts = explode($delimitter, $string);

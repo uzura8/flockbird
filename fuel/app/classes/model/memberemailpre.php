@@ -15,8 +15,19 @@ class Model_MemberEmailPre extends \MyOrm\Model
 	protected static $_properties = array(
 		'id',
 		'member_id' => array('form' => array('type' => false)),
-		'email',
-		'token',
+		'email' => array('form' => array('type' => false)),
+		'token' => array('form' => array('type' => false)),
+		'code' => array(
+			'data_type' => 'varchar',
+			'label' => '確認コード',
+			'validation' => array(
+				'trim',
+				'required',
+				'valid_string' => array('numeric'),
+				'exact_length' => array(6),
+			),
+			'form' => array('type' => 'text', 'class' => 'input-xlarge form-control', 'pattern' => '\d*'),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);
@@ -41,13 +52,8 @@ class Model_MemberEmailPre extends \MyOrm\Model
 		static::$_properties['email'] = Model_MemberAuth::property('email');
 		static::$_properties['token'] = Model_MemberPre::property('token');
 		static::$_properties['token']['form']['type'] = false;
-	}
-
-	public static function validate($factory)
-	{
-		$val = Validation::forge($factory);
-
-		return $val;
+		static::$_properties['code']['label'] = term('form.confirm', 'site.code');
+		static::$_properties['code']['form']['validation']['exact_length'] = array(conf('member.setting.email.codeLength'));
 	}
 
 	public static function get4member_id($member_id)
@@ -67,8 +73,9 @@ class Model_MemberEmailPre extends \MyOrm\Model
 		$obj->member_id = $member_id;
 		$obj->email     = $email;
 		$obj->token     = Security::generate_token();
+		$obj->code      = Util_String::get_random_code(static::$_properties['code']['form']['validation']['exact_length'][0]);
 		if (!$obj->save()) return false;
 
-		return $obj->token;
+		return $obj;
 	}
 }

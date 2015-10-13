@@ -74,18 +74,18 @@ $config = array(
 					'to_name' => 'メンバー名',
 				),
 			),
-			'memberChangeEmailConfirm' => array(
-				'view' =>'メールアドレス変更確認メール',
+			'memberRegisterEmailConfirm' => array(
+				'view' =>'メールアドレス登録確認メール',
 				'format' =>'twig',
-				'title' => 'メールアドレス変更確認',
+				'title' => 'メールアドレス登録確認',
 				'body' => array(
 					'default' => array(
-						'file' => 'mail/member_change_email_confirm',
+						'file' => 'mail/member_register_email_confirm',
 					),
 				),
 				'variables' => array(
 					'to_name' => 'メンバー名',
-					'register_url' => '登録用URL',
+					'confirmation_code' => '確認用コード',
 				),
 			),
 			'memberChangeEmail' => array(

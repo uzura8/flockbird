@@ -120,148 +120,125 @@ class Controller_Member_setting extends Controller_Member
 	 */
 	public function action_email()
 	{
-		if (!$form = Fieldset::instance('setting_email'))
-		{
-			$form = $this->form_setting_email();
-		}
+		$val = self::get_val_setting_email();
+		$is_registerd = !empty($this->u->member_auth->email);
 
-		if (Input::method() === 'POST')
-		{
-			$form->repopulate();
-		}
-		$this->set_title_and_breadcrumbs(term('site.email', 'form.update'), array('member/setting' => term('site.setting', 'form.update')), $this->u);
-		$this->template->content = View::forge('_parts/setting/email');
-		$this->template->content->set_safe('html_form', $form->build('member/setting/confirm_change_email'));// form の action に入る
-	}
-
-	/**
-	 * Confirm change email
-	 * 
-	 * @access  public
-	 * @return  Response
-	 */
-	public function action_confirm_change_email()
-	{
-		Util_security::check_method('POST');
-		Util_security::check_csrf();
-
-		$form = $this->form_setting_email();
-		$val  = $form->validation();
-
-		if (!$val->run())
-		{
-			Session::set_flash('error', $val->show_errors());
-			$this->action_email();
-			return;
-		}
-		$post = $val->validated();
-
-		$email = term('site.email');
-		$message = sprintf("新しい{$email}宛に確認用%sを送信しました。受信した{$email}内に記載された URL より{$email}の変更を完了してください。", term('site.mail'));
-		$redirect_uri = 'member/setting';
-		if (Model_MemberAuth::get4email($post['email']))
-		{
-			if (conf('member.setting.email.hideUniqueCheck'))
-			{
-				Session::set_flash('message', $message);
-				Response::redirect($redirect_uri);
-			}
-
-			Session::set_flash('error', sprintf('その%sは登録できません。', term('site.email')));
-			$this->action_email();
-			return;
-		}
-
-		$error_message = '';
-		$is_transaction_rollback = false;
-		try
-		{
-			DB::start_transaction();
-			$token = Model_MemberEmailPre::save_with_token($this->u->id, $post['email']);
-			DB::commit_transaction();
-
-			$mail = new Site_Mail('memberChangeEmailConfirm');
-			$mail->send($post['email'], array(
-				'to_name' => $this->u->name,
-				'register_url' => sprintf('%s?token=%s', Uri::Create('member/setting/change_email'), $token),
-			));
-
-			Session::set_flash('message', $message);
-			Response::redirect($redirect_uri);
-		}
-		catch(EmailValidationFailedException $e)
-		{
-			Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
-			$error_message = 'メール送信エラー';
-		}
-		catch(EmailSendingFailedException $e)
-		{
-			Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
-			$error_message = 'メール送信エラー';
-		}
-		catch(Database_Exception $e)
-		{
-			$is_transaction_rollback = true;
-			$error_message = Site_Controller::get_error_message($e, true);
-		}
-		catch(FuelException $e)
-		{
-			$is_transaction_rollback = true;
-			$error_message = $e->getMessage();
-		}
-		if ($error_message)
-		{
-			if ($is_transaction_rollback && DB::in_transaction()) DB::rollback_transaction();
-			Session::set_flash('error', $error_message);
-		}
-
-		$this->action_email();
-	}
-
-	/**
-	 * Execute change email.
-	 * 
-	 * @access  public
-	 * @return  Response
-	 */
-	public function action_change_email()
-	{
-		if (!$member_email_pre = $this->check_token_change_email())
-		{
-			throw new HttpNotFoundException('URLが無効です。');
-		}
-
-		$form = $this->form_change_email();
-		$val  = $form->validation();
-
-		if (Input::method() == 'POST')
+		if (\Input::method() == 'POST')
 		{
 			Util_security::check_csrf();
-			$auth = Auth::instance();
 
 			$error_message = '';
 			$is_transaction_rollback = false;
 			try
 			{
-				if (!$val->run()) throw new FuelException($val->show_errors());
-				if (!$auth->check_password()) throw new FuelException(term('site.password').'が正しくありません。');
+				if (!$val->run()) throw new ValidationFailedException($val->show_errors());
 				$post = $val->validated();
+				$this->check_email_registered($post['email']);
 
 				DB::start_transaction();
-				if (!$auth->update_user(array('email' => $member_email_pre->email, 'old_password' => $post['password'], 'password' => $post['password'])))
-				{
-					throw new FuelException('change email error.');
-				}
-				$member = Model_Member::check_authority($member_email_pre->member_id);
-				$email = $member_email_pre->email;
-				$member_email_pre->delete();// 仮登録情報の削除
+				$member_email_pre = Model_MemberEmailPre::save_with_token($this->u->id, $post['email']);
 				DB::commit_transaction();
 
-				$mail = new Site_Mail('memberChangeEmail');
-				$mail->send($email, array('to_name' => $member->name));
+				$mail = new Site_Mail('memberRegisterEmailConfirm');
+				$mail->send($post['email'], array(
+					'to_name' => $this->u->name,
+					'confirmation_code' => $member_email_pre->code,
+				));
 
-				Session::set_flash('message', term('site.email').'を変更しました。');
-				Response::redirect('member');
+				$term_mail = term('site.mail');
+				$message = sprintf("確認用{$term_mail}を送信しました。受信した{$term_mail}内に記載された%sを入力してください。", term('form.confirm', 'site.code'));
+				Session::set_flash('message', $message);
+				Response::redirect('member/setting/register_email');
+			}
+			catch(ValidationFailedException $e)
+			{
+				$error_message = $e->getMessage();
+			}
+			catch(EmailValidationFailedException $e)
+			{
+				Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
+				$error_message = 'メール送信エラー';
+			}
+			catch(EmailSendingFailedException $e)
+			{
+				Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
+				$error_message = 'メール送信エラー';
+			}
+			catch(Database_Exception $e)
+			{
+				$is_transaction_rollback = true;
+				$error_message = Site_Controller::get_error_message($e, true);
+			}
+			catch(FuelException $e)
+			{
+				$is_transaction_rollback = true;
+				$error_message = $e->getMessage();
+			}
+			if ($error_message)
+			{
+				if ($is_transaction_rollback && DB::in_transaction()) DB::rollback_transaction();
+				Session::set_flash('error', $error_message);
+			}
+		}
+
+		$this->set_title_and_breadcrumbs(
+			term('site.email', $is_registerd ? 'form.update' : 'site.registration'),
+			array('member/setting' => term('site.setting', 'form.update')),
+			$this->u
+		);
+		$this->template->content = View::forge('_parts/setting/email', array('val' => $val));
+	}
+
+	/**
+	 * Execute register email.
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_register_email()
+	{
+		if (!$member_email_pre = Model_MemberEmailPre::get4member_id($this->u->id))
+		{
+			throw new HttpNotFoundException;
+		}
+		$email = $member_email_pre->email;
+		$val = self::get_val_register_email();
+		$is_registerd = !empty($this->u->member_auth->email);
+		$action_name = term($is_registerd ? 'form.update' : 'form.registration');
+
+		if (Input::method() == 'POST')
+		{
+			Util_security::check_csrf();
+			$error_message = '';
+			$is_transaction_rollback = false;
+			try
+			{
+				if (!$val->run()) throw new ValidationFailedException($val->show_errors());
+				$post = $val->validated();
+				$this->check_email_registered($email);
+
+				if (!self::check_confirmation_code4register_email($member_email_pre, $post['code']))
+				{
+					$message = sprintf('%sが正しくないか、%sが過ぎてます。再度%sを%sしてください。',
+										term('form.confirm', 'site.code'), term('form.enabled', 'common.timelimit'), term('form.for_confirm', 'site.mail'), term('form.send'));
+					throw new ValidationFailedException($message);
+				}
+
+				DB::start_transaction();
+				if (!$this->auth_instance->update_user(array('email' => $email))) throw new FuelException('Change email error.');
+				$member_email_pre->delete();// 仮登録情報の削除
+				DB::commit_transaction();
+				$this->set_current_user();
+
+				$mail = new Site_Mail('memberRegisterEmailConfirm');
+				$mail->send($email, array('to_name' => $this->u->name));
+
+				Session::set_flash('message', sprintf('%sを%sしました。', term('site.email'), $action_name));
+				Response::redirect('member/setting');
+			}
+			catch(ValidationFailedException $e)
+			{
+				$error_message = $e->getMessage();
 			}
 			catch(EmailValidationFailedException $e)
 			{
@@ -286,7 +263,7 @@ class Controller_Member_setting extends Controller_Member
 			catch(FuelException $e)
 			{
 				$is_transaction_rollback = true;
-				if (!$error_message = $e->getMessage()) $error_message = term('site.email').'の変更に失敗しました。';
+				if (!$error_message = $e->getMessage()) $error_message = sprintf('%sの%sに失敗しました。', term('site.email'), $action_name);
 			}
 			if ($error_message)
 			{
@@ -296,13 +273,17 @@ class Controller_Member_setting extends Controller_Member
 		}
 
 		$this->set_title_and_breadcrumbs(
-			term('site.email', 'form.update', 'form.confirm'),
+			term('site.email', $is_registerd ? 'form.update' : 'site.registration', 'form.confirm'),
 			array('member/setting' => term('site.setting', 'form.update'),
-			'member/setting/email' => term('site.email', 'form.update')),
+			'member/setting/email' => term('site.email', $is_registerd ? 'form.update' : 'site.registration')),
 			$this->u
 		);
 
-		$this->template->content = View::forge('member/setting/change_email', array('val' => $val,'member_email_pre' => $member_email_pre));
+		$this->template->content = View::forge('member/setting/register_email', array(
+			'val' => $val,
+			'email' => $email,
+			'is_registerd' => $is_registerd,
+		));
 	}
 
 	public function form_setting_password()
@@ -318,29 +299,52 @@ class Controller_Member_setting extends Controller_Member
 		return Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => term('form.update')));
 	}
 
-	public function form_setting_email()
-	{
-		$add_fields = array(
-			'email' => Form_Util::get_model_field('member_auth', 'email', sprintf('新しい%s', term('site.email'))),
-			'email_confirm' => array(
-				'label' => sprintf('新しい%s(確認用)', term('site.email')),
-				'attributes' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
-				'rules' => array('required', array('match_field', 'email')),
-			),
-		);
 
-		return Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => term('form.update')));
+	private function get_val_setting_email()
+	{
+		$val = Validation::forge('setting_email');
+
+		$email_field = Form_Util::get_model_field('member_auth', 'email');
+		$val->add('email', $email_field['label'], $email_field['attributes'], $email_field['rules']);
+		$val->fieldset()->field('email')->delete_rule('unique');
+
+		$val->add('email_confirm', term('site.email', 'form._confirm'))
+				->add_rule('required')
+				->add_rule('match_field', 'email');
+
+		return $val;
 	}
 
-	public function form_change_email()
+	private function get_val_register_email()
 	{
-		$add_fields = array(
-			'password' => Form_Util::get_model_field('member_auth', 'password'),
-			'token' => Form_Util::get_model_field('member_pre', 'token'),
-		);
-		$add_fields['token']['attributes'] = array('type'=>'hidden', 'value' => Input::param('token'));
+		$val = Validation::forge('register_email');
+		$field = Form_Util::get_model_field('member_email_pre', 'code');
+		$val->add('code', $field['label'], $field['attributes'], $field['rules']);
+		$val->set_message('valid_string', term('form.confirm', 'site.code').'が正しくありません。');
+		$val->set_message('exact_length', term('form.confirm', 'site.code').'が正しくありません。');
 
-		return Site_Util::get_form_instance('change_email', null, true, $add_fields, array('value' => term('form.update')));
+		return $val;
+	}
+
+	private function check_email_registered($posted_email)
+	{
+		if (!empty($this->u->member_auth->email) && $this->u->member_auth->email == $posted_email)
+		{
+			throw new ValidationFailedException(sprintf('その%sは現在登録済みです。', term('site.email')));
+		}
+
+		$term_mail = term('site.mail');
+		if (Model_MemberAuth::get4email($posted_email))
+		{
+			if (conf('member.setting.email.hideUniqueCheck'))
+			{
+				$message = sprintf("確認用{$term_mail}を送信しました。受信した{$term_mail}内に記載された URL より%sの登録を完了してください。", term('site.email'));
+				Session::set_flash('message', $message);
+				Response::redirect('member/setting');
+			}
+
+			throw new ValidationFailedException(sprintf('その%sは登録できません。', term('site.email')));
+		}
 	}
 
 	private function change_password($old_password, $password)
@@ -352,12 +356,12 @@ class Controller_Member_setting extends Controller_Member
 		}
 	}
 
-	private function check_token_change_email()
+	private static function check_confirmation_code4register_email(Model_MemberEmailPre $member_email_pre, $code)
 	{
-		if (!$member_email_pre = Model_MemberEmailPre::get4token(Input::param('token'))) return false;
-		if (Site_Util::check_token_lifetime($member_email_pre->created_at, term('member.setting.email.token_lifetime'))) return false;
-		if ($member_email_pre->member_id != $this->u->id) return false;
+		if (!Site_Util::check_token_lifetime($member_email_pre->updated_at, conf('member.setting.email.codeLifetime'))) return false;
+		if (empty($member_email_pre->code)) return false;
+		if ($member_email_pre->code != $code) return false;
 
-		return $member_email_pre;
+		return true;
 	}
 }

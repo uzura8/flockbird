@@ -415,7 +415,7 @@ class Site_Util
 		if (is_null($lifetime)) $lifetime = conf('default.token_lifetime');
 		$lifetime_datetime = date('Y-m-d H:i:s', strtotime('-'.$lifetime));
 
-		return $target_datetime < $lifetime_datetime;
+		return $target_datetime > $lifetime_datetime;
 	}
 
 	public static function check_ext_uri($url, $is_admin = false)
