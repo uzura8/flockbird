@@ -270,7 +270,7 @@ class Controller_Member_Register extends Controller_Site
 	private function check_token()
 	{
 		if (!$member_pre = Model_MemberPre::get4token(Input::param('token'))) return false;
-		if (Site_Util::check_token_lifetime($member_pre->created_at, conf('member.register.token_lifetime'))) return false;
+		if (!Site_Util::check_token_lifetime($member_pre->updated_at, conf('member.register.token_lifetime'))) return false;
 
 		return $member_pre;
 	}

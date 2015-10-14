@@ -356,7 +356,7 @@ class Controller_Member_setting extends Controller_Member
 	private function check_token_change_email()
 	{
 		if (!$member_email_pre = Model_MemberEmailPre::get4token(Input::param('token'))) return false;
-		if (Site_Util::check_token_lifetime($member_email_pre->created_at, conf('member.setting.email.token_lifetime'))) return false;
+		if (!Site_Util::check_token_lifetime($member_email_pre->updated_at, conf('member.setting.email.token_lifetime'))) return false;
 		if ($member_email_pre->member_id != $this->u->id) return false;
 
 		return $member_email_pre;
