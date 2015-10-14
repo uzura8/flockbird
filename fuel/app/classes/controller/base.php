@@ -127,12 +127,22 @@ class Controller_Base extends Controller_Hybrid
 		if (IS_API)   return;
 		if (!IS_AUTH) return;
 		if (check_current_uri('auth/logout')) return;
+		if (Site_Util::check_error_response()) return;
 
-		if (conf('member.profile.forceRegisterRequired.isEnabled')
-			&& !check_current_uri($uri = 'member/profile/edit/regist')
-			&& !check_current_uris(conf('member.profile.forceRegisterRequired.ignoreUris')))
+		// Force register email.
+		if (conf('member.setting.email.forceRegister.isEnabled')
+			&& !check_current_uris(conf('member.setting.email.forceRegister.accessableUri'))
+			&& empty($this->u->member_auth->email))
 		{
-			if (!Site_Member::check_saved_member_profile_required($this->u)) Response::redirect($uri);
+			Response::redirect('member/setting/email/regist');
+		}
+
+		// Force register required profiles.
+		if (conf('member.profile.forceRegisterRequired.isEnabled')
+			&& !check_current_uris(conf('member.profile.forceRegisterRequired.accessableUri'))
+			&& !Site_Member::check_saved_member_profile_required($this->u))
+		{
+			Response::redirect('member/profile/edit/regist');
 		}
 	}
 

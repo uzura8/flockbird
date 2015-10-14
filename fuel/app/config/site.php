@@ -143,13 +143,23 @@ $config = array(
 				'codeLifetime' => '1 hour',// user for function.strtodate. if false, not check lifetime.
 				'hideUniqueCheck' => true,
 				'codeLength' => 6,// set under 24
+				'forceRegister' => array(
+					'isEnabled' => true,
+					'accessableUri' => array(
+						'member/setting/email/regist',
+						'member/setting/email/register/regist',
+					),
+				),
 			),
 		),
 		'profile' => array(
 			'forceRegisterRequired' => array(
 				'isEnabled' => true,
-				'ignoreUris' => array(
+				'accessableUri' => array(
+					'member/profile/edit/regist',
 					'site/term',
+					'member/setting/email/regist',
+					'member/setting/email/register/regist'
 				),
 			),
 			'display_type' => array(

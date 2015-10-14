@@ -446,8 +446,8 @@ function check_current_uris($uris, $is_internal_uri = false)
 	if (!is_array($uris)) $uris = (array)$uris;
 	foreach ($uris as $uri)
 	{
-		if (false === check_current_uri($uri, $is_internal_uri)) return false;
+		if (check_current_uri($uri, $is_internal_uri)) return true;
 	}
 
-	return true;
+	return false;
 }

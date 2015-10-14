@@ -91,6 +91,11 @@ class Site_Util
 		return array_unique($uri_reservede_words);
 	}
 
+	public static function check_error_response()
+	{
+		return preg_match('#^error/?#', Uri::string());
+	}
+
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())
 	{
 		$form = Fieldset::forge($name);

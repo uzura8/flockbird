@@ -15,11 +15,12 @@ class Controller_Member_Setting_Email extends Controller_Member
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_index()
+	public function action_index($mode = null)
 	{
-		$val = self::get_validation_email();
 		$is_registerd = !empty($this->u->member_auth->email);
+		$is_regist_mode = $mode == 'regist' && !$is_registerd;
 
+		$val = self::get_validation_email();
 		if (\Input::method() == 'POST')
 		{
 			Util_security::check_csrf();
@@ -44,8 +45,10 @@ class Controller_Member_Setting_Email extends Controller_Member
 
 				$term_mail = term('site.mail');
 				$message = sprintf("確認用{$term_mail}を送信しました。受信した{$term_mail}内に記載された%sを入力してください。", term('form.confirm', 'site.code'));
+				$uri = 'member/setting/email/register';
+				if ($is_regist_mode)  $uri .= '/regist';
 				Session::set_flash('message', $message);
-				Response::redirect('member/setting/email/register');
+				Response::redirect($uri);
 			}
 			catch(ValidationFailedException $e)
 			{
@@ -80,10 +83,10 @@ class Controller_Member_Setting_Email extends Controller_Member
 
 		$this->set_title_and_breadcrumbs(
 			term('site.email', $is_registerd ? 'form.update' : 'site.registration'),
-			array('member/setting' => term('site.setting', 'form.update')),
-			$this->u
+			$is_regist_mode ? array() : array('member/setting' => term('site.setting', 'form.update')),
+			$is_regist_mode ? null : $this->u
 		);
-		$this->template->content = View::forge('member/setting/email/index', array('val' => $val));
+		$this->template->content = View::forge('member/setting/email/index', array('val' => $val, 'is_regist_mode' => $is_regist_mode));
 	}
 
 	/**
@@ -92,17 +95,18 @@ class Controller_Member_Setting_Email extends Controller_Member
 	 * @access  public
 	 * @return  Response
 	 */
-	public function action_register()
+	public function action_register($mode = null)
 	{
 		if (!$member_email_pre = Model_MemberEmailPre::get4member_id($this->u->id))
 		{
 			throw new HttpNotFoundException;
 		}
 		$email = $member_email_pre->email;
-		$val = self::get_validation_code();
 		$is_registerd = !empty($this->u->member_auth->email);
-		$action_name = term($is_registerd ? 'form.update' : 'form.registration');
+		$is_regist_mode = $mode == 'regist' && !$is_registerd;
+		$action_name = term($is_registerd ? 'form.update' : 'site.registration');
 
+		$val = self::get_validation_code();
 		if (Input::method() == 'POST')
 		{
 			Util_security::check_csrf();
@@ -122,7 +126,7 @@ class Controller_Member_Setting_Email extends Controller_Member
 				}
 
 				DB::start_transaction();
-				if (!$this->auth_instance->update_user(array('email' => $email))) throw new FuelException('Change email error.');
+				if (!$this->auth_instance->update_user(array('email' => $email), $this->u->id)) throw new FuelException('Change email error.');
 				$member_email_pre->delete();// 仮登録情報の削除
 				DB::commit_transaction();
 				$this->set_current_user();
@@ -169,17 +173,18 @@ class Controller_Member_Setting_Email extends Controller_Member
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(
-			term('site.email', $is_registerd ? 'form.update' : 'site.registration', 'form.confirm'),
-			array('member/setting' => term('site.setting', 'form.update'),
-			'member/setting/email' => term('site.email', $is_registerd ? 'form.update' : 'site.registration')),
-			$this->u
-		);
-
+		$middle_breadcrumbs = $is_regist_mode ?
+			array('member/setting/email/regist' => term('site.email', 'site.registration')) :
+			array(
+				'member/setting' => term('site.setting', 'form.update'),
+				'member/setting/email' => term('site.email', 'form.update'),
+			);
+		$this->set_title_and_breadcrumbs( term('site.email', $action_name, 'form.confirm'), $middle_breadcrumbs, $is_regist_mode ? null : $this->u);
 		$this->template->content = View::forge('member/setting/email/register', array(
 			'val' => $val,
 			'email' => $email,
 			'is_registerd' => $is_registerd,
+			'is_regist_mode' => $is_regist_mode,
 		));
 	}
 

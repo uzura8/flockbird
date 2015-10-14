@@ -10,6 +10,7 @@ $btn_label = sprintf('%s用%sを%sする', term('form.confirm'), term('site.mail
 <?php echo form_close(); ?>
 </div><!-- well -->
 
-<?php if (!IS_ADMIN): ?>
+<?php if (empty($is_regist_mode)): ?>
 <?php echo render('member/setting/_parts/footer_navi'); ?>
 <?php endif; ?>
+

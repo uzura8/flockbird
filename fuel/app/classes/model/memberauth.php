@@ -18,7 +18,7 @@ class Model_MemberAuth extends \MyOrm\Model
 			'label' => 'パスワード',
 			'validation' => array(
 				'trim',
-				'required',
+//				'required',
 				'min_length' => array(6),
 				'max_length' => array(128),
 			),
