@@ -21,16 +21,16 @@ return array(
 	),
 	'member' => array(
 		'register' => array(
-			'token_lifetime' => '5 minute',// user for function.strtodate. if false, not check lifetime.
+			'token_lifetime' => '1 minute',// user for function.strtodate. if false, not check lifetime.
 		),
 		'recover' => array(
 			'password' => array(
-				'token_lifetime' => '5 minute',// user for function.strtodate. if false, not check lifetime.
+				'token_lifetime' => '1 minute',// user for function.strtodate. if false, not check lifetime.
 			),
 		),
 		'setting' => array(
 			'email' => array(
-				'token_lifetime' => '5 minute',// user for function.strtodate. if false, not check lifetime.
+				'token_lifetime' => '1 minute',// user for function.strtodate. if false, not check lifetime.
 				'codeLifetime' => '1 minute',// user for function.strtodate. if false, not check lifetime.
 			),
 		),

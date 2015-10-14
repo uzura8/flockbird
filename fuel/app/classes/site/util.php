@@ -413,14 +413,16 @@ class Site_Util
 		return $redirect_uri;
 	}
 
-	public static function check_token_lifetime($target_datetime, $lifetime = null)
+	public static function check_token_lifetime($point_datetime, $lifetime = null, $target_datetime = null)
 	{
 		if ($lifetime === false) return true;
 
 		if (is_null($lifetime)) $lifetime = conf('default.token_lifetime');
-		$lifetime_datetime = date('Y-m-d H:i:s', strtotime('-'.$lifetime));
+		$expire = strtotime($point_datetime.' +'.$lifetime);
 
-		return $target_datetime > $lifetime_datetime;
+		$target_time = $target_datetime ? strtotime($target_datetime) : time();
+
+		return $target_time < $expire;
 	}
 
 	public static function check_ext_uri($url, $is_admin = false)
