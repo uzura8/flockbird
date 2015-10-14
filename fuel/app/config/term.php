@@ -89,6 +89,7 @@ $config = array(
 		'logout' => 'ログアウト',
 		'register' => '登録する',
 		'registration' => '登録',
+		'unregisterd' => '未登録',
 		'leave' => '退会する',
 		'left' => '退会',
 		'setting' => '設定',

@@ -134,6 +134,7 @@ class Controller_Base extends Controller_Hybrid
 			&& !check_current_uris(conf('member.setting.email.forceRegister.accessableUri'))
 			&& empty($this->u->member_auth->email))
 		{
+			Session::set_flash('message', sprintf('%sが%sです。%sしてください。', term('site.email'), term('site.unregisterd'), term('site.registration')));
 			Response::redirect('member/setting/email/regist');
 		}
 
@@ -142,6 +143,7 @@ class Controller_Base extends Controller_Hybrid
 			&& !check_current_uris(conf('member.profile.forceRegisterRequired.accessableUri'))
 			&& !Site_Member::check_saved_member_profile_required($this->u))
 		{
+			Session::set_flash('message', sprintf('%sの%sがあります。%sしてください。', term('site.unregisterd'), term('profile'), term('site.registration')));
 			Response::redirect('member/profile/edit/regist');
 		}
 	}
