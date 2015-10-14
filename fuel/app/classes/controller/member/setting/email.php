@@ -19,6 +19,7 @@ class Controller_Member_Setting_Email extends Controller_Member
 	{
 		$is_registerd = !empty($this->u->member_auth->email);
 		$is_regist_mode = $mode == 'regist' && !$is_registerd;
+		Session::delete('dummy_register_email');
 
 		$val = self::get_validation_email();
 		if (\Input::method() == 'POST')
@@ -27,11 +28,14 @@ class Controller_Member_Setting_Email extends Controller_Member
 
 			$error_message = '';
 			$is_transaction_rollback = false;
+			$term_mail = term('site.mail');
+			$message = sprintf("確認用{$term_mail}を送信しました。受信した{$term_mail}内に記載された%sを入力してください。", term('form.confirm', 'site.code'));
+			$redirect_uri = sprintf('member/setting/email/register%s', $is_regist_mode ? '/regist' : '');
 			try
 			{
 				if (!$val->run()) throw new ValidationFailedException($val->show_errors());
 				$post = $val->validated();
-				$this->check_email_registered($post['email']);
+				$this->check_email_registered($post['email'], $redirect_uri, $message);
 
 				DB::start_transaction();
 				$member_email_pre = Model_MemberEmailPre::save_with_token($this->u->id, $post['email']);
@@ -43,12 +47,8 @@ class Controller_Member_Setting_Email extends Controller_Member
 					'confirmation_code' => $member_email_pre->code,
 				));
 
-				$term_mail = term('site.mail');
-				$message = sprintf("確認用{$term_mail}を送信しました。受信した{$term_mail}内に記載された%sを入力してください。", term('form.confirm', 'site.code'));
-				$uri = 'member/setting/email/register';
-				if ($is_regist_mode)  $uri .= '/regist';
 				Session::set_flash('message', $message);
-				Response::redirect($uri);
+				Response::redirect($redirect_uri);
 			}
 			catch(ValidationFailedException $e)
 			{
@@ -97,11 +97,12 @@ class Controller_Member_Setting_Email extends Controller_Member
 	 */
 	public function action_register($mode = null)
 	{
-		if (!$member_email_pre = Model_MemberEmailPre::get4member_id($this->u->id))
+		$member_email_pre = Model_MemberEmailPre::get4member_id($this->u->id);
+		if (!$member_email_pre && !Session::get('dummy_register_email'))
 		{
 			throw new HttpNotFoundException;
 		}
-		$email = $member_email_pre->email;
+		$email = !empty($member_email_pre->email) ? $member_email_pre->email : Session::get('dummy_register_email');
 		$is_registerd = !empty($this->u->member_auth->email);
 		$is_regist_mode = $mode == 'regist' && !$is_registerd;
 		$action_name = term($is_registerd ? 'form.update' : 'site.registration');
@@ -110,19 +111,20 @@ class Controller_Member_Setting_Email extends Controller_Member
 		if (Input::method() == 'POST')
 		{
 			Util_security::check_csrf();
+
 			$error_message = '';
 			$is_transaction_rollback = false;
 			try
 			{
 				if (!$val->run()) throw new ValidationFailedException($val->show_errors());
 				$post = $val->validated();
-				$this->check_email_registered($email);
 
+				$code_error_message = sprintf('%sが正しくないか、%sが過ぎてます。再度%sを%sしてください。',
+					term('form.confirm', 'site.code'), term('form.enabled', 'common.timelimit'), term('form.for_confirm', 'site.mail'), term('form.send'));
+				$this->check_email_registered($email, Uri::string(), $code_error_message, true);
 				if (!self::check_confirmation_code($member_email_pre, $post['code']))
 				{
-					$message = sprintf('%sが正しくないか、%sが過ぎてます。再度%sを%sしてください。',
-										term('form.confirm', 'site.code'), term('form.enabled', 'common.timelimit'), term('form.for_confirm', 'site.mail'), term('form.send'));
-					throw new ValidationFailedException($message);
+					throw new ValidationFailedException($code_error_message);
 				}
 
 				DB::start_transaction();
@@ -214,7 +216,7 @@ class Controller_Member_Setting_Email extends Controller_Member
 		return $val;
 	}
 
-	private function check_email_registered($posted_email)
+	private function check_email_registered($posted_email, $redirect_uri, $dummy_message = '', $is_error_message = false)
 	{
 		if (!empty($this->u->member_auth->email) && $this->u->member_auth->email == $posted_email)
 		{
@@ -226,9 +228,9 @@ class Controller_Member_Setting_Email extends Controller_Member
 		{
 			if (conf('member.setting.email.hideUniqueCheck'))
 			{
-				$message = sprintf("確認用{$term_mail}を送信しました。受信した{$term_mail}内に記載された URL より%sの登録を完了してください。", term('site.email'));
-				Session::set_flash('message', $message);
-				Response::redirect('member/setting');
+				Session::set('dummy_register_email', $posted_email);
+				Session::set_flash($is_error_message ? 'error' : 'message', $dummy_message);
+				Response::redirect($redirect_uri);
 			}
 
 			throw new ValidationFailedException(sprintf('その%sは登録できません。', term('site.email')));
