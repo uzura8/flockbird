@@ -170,4 +170,12 @@ class Model_Member extends \MyOrm\Model
 	{
 		return (bool)static::get_one_basic4id($id);
 	}
+
+	public function check_registered_oauth($check_unsaved_password = false)
+	{
+		if (!$this->register_type) return false;
+		if ($check_unsaved_password && !empty($this->member_auth->password)) return false;
+
+		return true;
+	}
 }

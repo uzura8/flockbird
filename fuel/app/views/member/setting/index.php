@@ -8,6 +8,7 @@
 		array('uri' => 'member/setting/email', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
 	); ?>
 
+<?php if (!$u->check_registered_oauth(true)): ?>
 	<?php echo form_text(
 		!empty($u->member_auth->password) ? sprintf('<span class="text-muted">%s</span>', term('site.set_already')) : sprintf('<span class="text-danger">%s</span>', term('site.unset')),
 		term('site.password'),
@@ -15,6 +16,7 @@
 		true,
 		array('uri' => 'member/setting/password', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
 	); ?>
+<?php endif; ?>
 
 <?php if (is_enabled('notice')): ?>
 	<?php echo form_text(
@@ -39,5 +41,9 @@
 </div>
 
 <div class="list-group">
-	<?php echo Html::anchor('member/leave', term('site.leave'), array('class' => 'list-group-item list-group-item-danger')); ?>
+	<?php echo Html::anchor(
+		$this->u->check_registered_oauth() ? 'member/leave/confirm' : 'member/leave',
+		term('site.leave'),
+		array('class' => 'list-group-item list-group-item-danger')
+	); ?>
 </div>

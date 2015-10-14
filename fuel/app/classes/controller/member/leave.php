@@ -40,24 +40,29 @@ class Controller_Member_Leave extends Controller_Site
 	{
 		$form = $this->form_leave();
 		$val  = $form->validation();
-		if (!$val->run())
-		{
-			Session::set_flash('error', $val->show_errors());
-			$this->action_index();
-			return;
-		}
 
-		$auth = Auth::instance();
-		if (!$auth->check_password())
+		$breadcrumbs_middle_path = array('member/setting' => term('site.setting', 'form.update'));
+		if (!$this->u->check_registered_oauth(true))
 		{
-			Session::set_flash('error', term('site.password').'が正しくありません');
-			$this->action_index();
-			return;
+			if (!$val->run())
+			{
+				Session::set_flash('error', $val->show_errors());
+				$this->action_index();
+				return;
+			}
+			if (!$this->auth_instance->check_password())
+			{
+				Session::set_flash('error', term('site.password').'が正しくありません');
+				$this->action_index();
+				return;
+			}
+
+			$breadcrumbs_middle_path['member/leave'] = term('site.left');
 		}
 
 		$this->set_title_and_breadcrumbs(
 			term('site.left', 'form.confirm'),
-			array('member/setting' => term('site.setting', 'form.update'), 'member/leave' => term('site.left')),
+			$breadcrumbs_middle_path,
 			$this->u
 		);
 		$this->template->content = View::forge('member/leave/confirm', array('input' => $val->validated()));
@@ -77,8 +82,7 @@ class Controller_Member_Leave extends Controller_Site
 			return;
 		}
 
-		//$auth = Auth::instance();
-		if (!$this->auth_instance->check_password())
+		if (!$this->u->check_registered_oauth(true))
 		{
 			Session::set_flash('error', term('site.password').'が正しくありません');
 			$this->action_index();
@@ -130,7 +134,11 @@ class Controller_Member_Leave extends Controller_Site
 
 	public function form_leave()
 	{
-		$add_fields = array('password' => Form_Util::get_model_field('member_auth', 'password'));
+		$add_fields = array();
+		if (!$this->u->check_registered_oauth(true))
+		{
+			$add_fields = array('password' => Form_Util::get_model_field('member_auth', 'password'));
+		}
 		$form = \Site_Util::get_form_instance('leave', null, true, $add_fields, array('value' => term('form.do_confirm')));
 
 		return $form;
