@@ -38,8 +38,7 @@ class Controller_Member_Profile extends Controller_Member
 	 */
 	public function action_edit($type = null)
 	{
-		$type = self::validate_type($type, $this->u->id);
-		$is_regist = $type == 'regist' && (bool)Model_MemberConfig::get_value($this->u->id, 'terms_un_agreement');
+		list($type, $is_regist) = self::validate_type($type, $this->u->id);
 		$form_member_profile = new Form_MemberProfile($type == 'regist' ? 'regist-config' : 'config', $this->u);
 		$form_member_profile->set_validation();
 		if (\Input::method() == 'POST')
@@ -82,10 +81,10 @@ class Controller_Member_Profile extends Controller_Member
 	{
 		if (!$type) $type = 'config';
 		if (!in_array($type, array('config', 'regist'))) throw new HttpNotFoundException;
-		if ($type == 'config') return $type;
 
-		if (Model_MemberConfig::get_one4member_id_and_name($member_id, 'terms_un_agreement')) return $type;
+		$terms_un_agreement = (bool)Model_MemberConfig::get_value($member_id, 'terms_un_agreement');
+		$is_regist = $type == 'regist' && $terms_un_agreement;
 
-		throw new HttpNotFoundException;
+		return array($type, $terms_un_agreement);
 	}
 }
