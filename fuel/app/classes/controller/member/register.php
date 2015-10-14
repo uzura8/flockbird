@@ -28,7 +28,8 @@ class Controller_Member_Register extends Controller_Site
 
 		if (!$member_pre = $this->check_token())
 		{
-			throw new HttpNotFoundException('URLが無効です。');
+			Session::set_flash('error', sprintf('URLが%sです。', term('form.disabled')));
+			throw new HttpNotFoundException;
 		}
 
 		$form_member_profile = new Form_MemberProfile('regist');
@@ -269,7 +270,7 @@ class Controller_Member_Register extends Controller_Site
 	private function check_token()
 	{
 		if (!$member_pre = Model_MemberPre::get4token(Input::param('token'))) return false;
-		if (Site_Util::check_token_lifetime($member_pre->created_at, term('member.register.token_lifetime'))) return false;
+		if (Site_Util::check_token_lifetime($member_pre->created_at, conf('member.register.token_lifetime'))) return false;
 
 		return $member_pre;
 	}

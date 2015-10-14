@@ -128,9 +128,10 @@ class Controller_Member_Recover extends Controller_Site
 		Auth::check() and Response::redirect('member');
 
 		$member_password_pre = Model_MemberPasswordPre::get4token(Input::param('token'));
-		if (!$member_password_pre || Site_Util::check_token_lifetime($member_password_pre->created_at, term('member.recover.password.token_lifetime')))
+		if (!$member_password_pre || Site_Util::check_token_lifetime($member_password_pre->created_at, conf('member.recover.password.token_lifetime')))
 		{
-			throw new HttpNotFoundException('URLが無効です。');
+			Session::set_flash('error', sprintf('URLが%sです。', term('form.disabled')));
+			throw new HttpNotFoundException;
 		}
 
 		$form = $this->form_reset_password();
