@@ -44,32 +44,25 @@ class Site_Form
 	public static function get_fieid_attribute(Validation $val, $name, $default_value = null, $is_textarea = false, $optional_attr = array())
 	{
 		$field = $val->fieldset()->field($name);
-
 		$label = '';
+		$input_attr = array();
 		$is_required = false;
-		$input_attr = array(
-			'id'    => Site_Form::get_field_id($name),
-			'class' => 'form-control',
-		);
-		if (!is_array($optional_attr)) $optional_attr = (array)$optional_attr;
-		if (!$optional_attr) $input_attr += $optional_attr;
 
 		if (is_callable(array($field, 'get_attribute')))
 		{
+			$input_attr = $field->get_attribute();
+			$input_attr = Arr::filter_keys($input_attr, array('validation', 'label'), true);
 			if ((is_null($default_value) || (empty($default_value) && !strlen($default_value))) && !is_null($field->get_attribute('value')))
 			{
 				$default_value = $field->get_attribute('value');
 			}
 			$is_required = $field->get_attribute('required') == 'required';
 			$label = $field->get_attribute('label');
-			$input_attr['placeholder'] = $field->get_attribute('placeholder');
-			$input_attr['type'] = $field->get_attribute('type');
-
-			if ($is_textarea && !is_null($field->get_attribute('rows')))
-			{
-				$input_attr['rows'] = $field->get_attribute('rows');
-			}
 		}
+		if (!is_array($optional_attr)) $optional_attr = (array)$optional_attr;
+		if ($optional_attr) $input_attr += $optional_attr;
+		if (empty($input_attr['id'])) $input_attr['id'] = Site_Form::get_field_id($name);
+		if (empty($input_attr['class'])) $input_attr['class'] = 'form-control';
 
 		return array($default_value, $label, $is_required, $input_attr);
 	}
