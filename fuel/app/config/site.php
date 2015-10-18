@@ -147,6 +147,7 @@ $config = array(
 					'isEnabled' => true,
 					'accessableUri' => array(
 						'member/setting/email/regist',
+						'member/setting/email/register_confirm/regist',
 						'member/setting/email/register/regist',
 					),
 				),
