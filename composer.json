@@ -50,7 +50,7 @@
         "canton7/fuelphp-casset": "1.*",
         "fabpot/goutte": "2.0.*",
         "uzura8/fuel-packages-opauth": "dev-master",
-        "uzura8/opengraph": "master"
+        "uzura8/opengraph": "dev-master"
     },
     "suggest": {
         "dwoo/dwoo" : "Allow Dwoo templating with the Parser package",
