@@ -207,6 +207,7 @@ class Controller_Member_Recover extends Controller_Site
 	public function form_resend_password()
 	{
 		$add_fields = array('email' => Form_Util::get_model_field('member_auth', 'email', null, 'unique'));
+		$add_fields['email']['attributes']['class'] .= ' input-xlarge';
 
 		return Site_Util::get_form_instance('resend_password', null, true, $add_fields, array('value' => term('form.submit')));
 	}
@@ -219,6 +220,8 @@ class Controller_Member_Recover extends Controller_Site
 			'token' => Form_Util::get_model_field('member_pre', 'token'),
 		);
 		$add_fields['token']['attributes'] = array('type'=>'hidden', 'value' => Input::param('token'));
+		$add_fields['password']['attributes']['class'] .= ' input-xlarge';
+		$add_fields['password_confirm']['attributes']['class'] .= ' input-xlarge';
 		$add_fields['password_confirm']['rules'][] = array('match_field', 'password');
 
 		return Site_Util::get_form_instance('reset_password', null, true, $add_fields, array('value' => '変更'));

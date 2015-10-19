@@ -313,7 +313,10 @@ class Controller_Member_setting extends Controller_Member
 			'password' => Form_Util::get_model_field('member_auth', 'password', sprintf('新しい%s', term('site.password'))),
 			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', sprintf('新しい%s(確認用)', term('site.password'))),
 		);
+		$add_fields['old_password']['attributes']['class'] .= ' input-xlarge';
+		$add_fields['password']['attributes']['class'] .= ' input-xlarge';
 		$add_fields['password']['rules'][] = array('unmatch_field', 'old_password');
+		$add_fields['password_confirm']['attributes']['class'] .= ' input-xlarge';
 		$add_fields['password_confirm']['rules'][] = array('match_field', 'password');
 
 		return Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => term('form.update')));
@@ -329,6 +332,7 @@ class Controller_Member_setting extends Controller_Member
 				'rules' => array('required', array('match_field', 'email')),
 			),
 		);
+		$add_fields['email']['attributes']['class'] .= ' input-xlarge';
 
 		return Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => term('form.update')));
 	}
@@ -339,6 +343,7 @@ class Controller_Member_setting extends Controller_Member
 			'password' => Form_Util::get_model_field('member_auth', 'password'),
 			'token' => Form_Util::get_model_field('member_pre', 'token'),
 		);
+		$add_fields['password']['attributes']['class'] .= ' input-xlarge';
 		$add_fields['token']['attributes'] = array('type'=>'hidden', 'value' => Input::param('token'));
 
 		return Site_Util::get_form_instance('change_email', null, true, $add_fields, array('value' => term('form.update')));

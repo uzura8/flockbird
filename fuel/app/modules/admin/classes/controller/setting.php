@@ -202,7 +202,10 @@ END;
 			'password' => \Form_Util::get_model_field('admin_user', 'password', sprintf('新しい%s', term('site.password'))),
 			'password_confirm' => \Form_Util::get_model_field('admin_user', 'password', sprintf('新しい%s(確認用)', term('site.password'))),
 		);
+		$add_fields['old_password']['attributes']['class'] .= ' input-xlarge';
+		$add_fields['password']['attributes']['class'] .= ' input-xlarge';
 		$add_fields['password']['rules'][] = array('unmatch_field', 'old_password');
+		$add_fields['password_confirm']['attributes']['class'] .= ' input-xlarge';
 		$add_fields['password_confirm']['rules'][] = array('match_field', 'password');
 
 		return \Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => term('form.do_update')));
@@ -218,6 +221,7 @@ END;
 				'rules' => array('required', array('match_field', 'email')),
 			),
 		);
+		$add_fields['email']['attributes']['class'] .= ' input-xlarge';
 
 		return \Site_Util::get_form_instance('setting_email', null, true, $add_fields, array('value' => term('form.do_update')));
 	}

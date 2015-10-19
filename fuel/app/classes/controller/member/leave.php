@@ -139,6 +139,7 @@ class Controller_Member_Leave extends Controller_Site
 		{
 			$add_fields = array('password' => Form_Util::get_model_field('member_auth', 'password'));
 		}
+		$add_fields['password']['attributes']['class'] .= ' input-xlarge';
 		$form = \Site_Util::get_form_instance('leave', null, true, $add_fields, array('value' => term('form.do_confirm')));
 
 		return $form;

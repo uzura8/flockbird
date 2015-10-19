@@ -27,7 +27,7 @@ class Model_AdminUser extends \MyOrm\Model
 				'min_length' => array(6),
 				'max_length' => array(128),
 			),
-			'form' => array('type' => 'password', 'class' => 'input-xlarge form-control'),
+			'form' => array('type' => 'password', 'class' => 'form-control'),
 		),
 		'group' => array(
 			'data_type' => 'integer',
@@ -45,7 +45,7 @@ class Model_AdminUser extends \MyOrm\Model
 				'valid_email',
 				'unique' => array('admin_user.email')
 			),
-			'form' => array('type' => 'email', 'class' => 'input-xlarge form-control'),
+			'form' => array('type' => 'email', 'class' => 'form-control'),
 		),
 		'last_login',
 		'login_hash',
