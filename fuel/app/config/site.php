@@ -144,7 +144,7 @@ $config = array(
 				'hideUniqueCheck' => true,
 				'codeLength' => 6,// set under 24
 				'forceRegister' => array(
-					'isEnabled' => true,
+					'isEnabled' => false,
 					'accessableUri' => array(
 						'member/setting/email/regist',
 						'member/setting/email/register_confirm/regist',
@@ -155,7 +155,7 @@ $config = array(
 		),
 		'profile' => array(
 			'forceRegisterRequired' => array(
-				'isEnabled' => true,
+				'isEnabled' => false,
 				'accessableUri' => array(
 					'member/profile/edit/regist',
 					'site/term',
