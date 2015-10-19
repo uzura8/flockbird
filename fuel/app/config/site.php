@@ -160,6 +160,7 @@ $config = array(
 					'member/profile/edit/regist',
 					'site/term',
 					'member/setting/email/regist',
+					'member/setting/email/register_confirm/regist',
 					'member/setting/email/register/regist'
 				),
 			),
