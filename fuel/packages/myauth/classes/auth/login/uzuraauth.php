@@ -157,6 +157,9 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 			// and rotate the session id, we've elevated rights
 			\Session::instance()->rotate();
 
+			// register so Auth::logout() can find us
+			\Auth\Auth::_register_verified($this);
+
 			return true;
 		}
 
@@ -586,7 +589,10 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 //	{
 //		if (is_null($user))
 //		{
-//			$groups = $this->get_groups();
+//			if ( ! is_array($groups = $this->get_groups()))
+//			{
+//				return false;
+//			}
 //			$user = reset($groups);
 //		}
 //		return parent::has_access($condition, $driver, $user);

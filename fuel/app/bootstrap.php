@@ -6,7 +6,7 @@ require APPPATH.'config.inc.php';
 // Bootstrap the framework DO NOT edit this
 require COREPATH.'bootstrap.php';
 
-Autoloader::add_classes(array(
+\Autoloader::add_classes(array(
 	// Add classes you want to override here
 	// Example: 'View' => APPPATH.'classes/view.php',
 	'Controller' => APPPATH.'classes/controller.php',
@@ -24,7 +24,7 @@ Autoloader::add_classes(array(
 ));
 
 // Register the autoloader
-Autoloader::register();
+\Autoloader::register();
 
 /**
  * Your environment.  Can be set to any of the following:
@@ -34,13 +34,13 @@ Autoloader::register();
  * Fuel::STAGING
  * Fuel::PRODUCTION
  */
-Fuel::$env = (isset($_SERVER['FUEL_ENV']) ? $_SERVER['FUEL_ENV'] : constant('Fuel::'.FBD_ENVIRONMENT));
+\Fuel::$env = (isset($_SERVER['FUEL_ENV']) ? $_SERVER['FUEL_ENV'] : \Fuel::DEVELOPMENT);
 
 // include helpers.
 Util_toolkit::include_php_files(APPPATH.'helpers');
 
 // Initialize the framework with the config file.
-Fuel::init('config.php');
+\Fuel::init('config.php');
 
 
 // Config load.
