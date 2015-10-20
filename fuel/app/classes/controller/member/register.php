@@ -95,7 +95,7 @@ class Controller_Member_Register extends Controller_Site
 
 				if ($auth->login($email, $password))
 				{
-					Session::set_flash('message', '登録が完了しました。');
+					Session::set_flash('message', sprintf('%sが%sしました。', term('site.registration'), term('form.complete')));
 					Response::redirect('member');
 				}
 				Session::set_flash('error', 'ログインに失敗しました');

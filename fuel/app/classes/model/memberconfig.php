@@ -109,4 +109,9 @@ class Model_MemberConfig extends \MyOrm\Model
 
 		return $obj;
 	}
+
+	public static function delete_value($member_id, $name)
+	{
+		return self::set_value($member_id, $name, null);
+	}
 }

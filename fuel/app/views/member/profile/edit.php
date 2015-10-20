@@ -8,6 +8,16 @@
 		'profiles' => $profiles,
 		'member_profile_public_flags' => $member_profile_public_flags,
 	)); ?>
-	<?php echo form_button('form.do_edit', 'submit', 'submit', array(), $label_size); ?>
+
+<?php if ($is_regist): ?>
+	<?php echo form_text(
+		anchor('site/term', '利用規約', false, array(), true).' をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
+		null,
+		$label_size,
+		true
+	); ?>
+<?php endif; ?>
+
+	<?php echo form_button($is_regist ? '同意して登録する' : 'form.do_edit', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

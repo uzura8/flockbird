@@ -13,10 +13,11 @@ class Form_MemberProfile
 
 	public function __construct($page_type, Model_Member $member_obj = null)
 	{
-		if (!in_array($page_type, array('regist', 'config'))) throw new InvalidArgumentException('First parameter is invalid.');
-		$this->page_type = $page_type;
-		$this->member_obj = $member_obj;
+		if (!in_array($page_type, array('regist', 'config', 'regist-config'))) throw new InvalidArgumentException('First parameter is invalid.');
 		$this->profiles = Model_Profile::get4page_type($page_type);
+		$this->page_type = $page_type == 'regist-config' ? 'regist' : $page_type;
+
+		$this->member_obj = $member_obj;
 		$this->set_member_profiles_profile_id_indexed();
 		$this->set_public_flags();
 	}

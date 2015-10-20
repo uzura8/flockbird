@@ -42,6 +42,7 @@ $config = array(
 					'provider_signup' => true,
 				),
 			),
+			'saveTermsUnAgreement' => true,
 		),
 	),
 	'original_user_id' => array(
@@ -139,10 +140,30 @@ $config = array(
 		'setting' => array(
 			'email' => array(
 				'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
+				'codeLifetime' => '1 hour',// user for function.strtodate. if false, not check lifetime.
 				'hideUniqueCheck' => true,
+				'codeLength' => 6,// set under 24
+				'forceRegister' => array(
+					'isEnabled' => false,
+					'accessableUri' => array(
+						'member/setting/email/regist',
+						'member/setting/email/register_confirm/regist',
+						'member/setting/email/register/regist',
+					),
+				),
 			),
 		),
 		'profile' => array(
+			'forceRegisterRequired' => array(
+				'isEnabled' => false,
+				'accessableUri' => array(
+					'member/profile/edit/regist',
+					'site/term',
+					'member/setting/email/regist',
+					'member/setting/email/register_confirm/regist',
+					'member/setting/email/register/regist'
+				),
+			),
 			'display_type' => array(
 				'detail' => '0',
 				'summary' => '1',

@@ -232,6 +232,10 @@ class Controller_Auth extends Controller_Site
 			{
 				Model_Memberauth::save_email($response['auth']['info']['email'], $member->id);
 			}
+			if (conf('auth.oauth.saveTermsUnAgreement'))
+			{
+				Model_MemberConfig::set_value($member->id, 'terms_un_agreement', 1);
+			}
 			// timeline 投稿
 			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, null, 'member_register', $member->id, $member->created_at);
 			\DB::commit_transaction();

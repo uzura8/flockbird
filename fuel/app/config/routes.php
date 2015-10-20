@@ -6,6 +6,7 @@ $routes = array(
 	'member/(\d+)'  => 'member/home/$1',
 	'member/profile/(\d+)'  => 'member/profile/index/$1',
 	'member/profile/image/(\d+)'  => 'member/profile/image/index/$1',
+	'^member/setting/email/(regist)'  => 'member/setting/email/index/$1',
 );
 
 return Site_Config::merge_module_configs($routes, 'routes');

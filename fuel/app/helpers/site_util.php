@@ -440,3 +440,14 @@ function check_current_uri($uri, $is_internal_uri = false)
 
 	return trim(Uri::string()) == trim($uri, '/');
 }
+
+function check_current_uris($uris, $is_internal_uri = false)
+{
+	if (!is_array($uris)) $uris = (array)$uris;
+	foreach ($uris as $uri)
+	{
+		if (check_current_uri($uri, $is_internal_uri)) return true;
+	}
+
+	return false;
+}

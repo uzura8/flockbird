@@ -291,10 +291,14 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 
 		// get the current user record
 		$current_member = self::get_member4id($member_id);
-		$current_member_auth = $current_member->member_auth;
+		if (!$current_member_auth = $current_member->member_auth)
+		{
+			$current_member_auth = \Model_MemberAuth::forge();
+			$current_member_auth->member_id = $member_id;
+		}
 
 		// and bail out if it doesn't exist
-		if (empty($current_member) || empty($current_member_auth))
+		if (empty($current_member))
 		{
 			throw new \SimpleUserUpdateException('Username not found', 4);
 		}
@@ -307,10 +311,6 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 			if ( ! $email)
 			{
 				throw new \SimpleUserUpdateException('Email address is not valid', 7);
-			}
-			if ( ! array_key_exists('password', $values))
-			{
-				throw new \SimpleUserUpdateException('Need posted password to change email address');
 			}
 
 			$matches = \Model_MemberAuth::query()
