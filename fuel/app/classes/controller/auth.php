@@ -12,6 +12,7 @@ class Controller_Auth extends Controller_Site
 
 	public function before()
 	{
+		if (!conf('auth.isEnabled')) throw new \HttpNotFoundException();
 		parent::before();
 
 		if(!isset($this->_config))

@@ -33,6 +33,7 @@ $config = array(
 		'site' => 'auth/login',
 	),
 	'auth' => array(
+		'isEnabled' => true,
 		'headerLoginForm' => array(
 			'type' => 'popover',// popover / modal / link
 		),
