@@ -24,7 +24,9 @@
 			</a>
 <?php 	endif; ?>
 <?php endif; ?>
+<?php if (conf('auth.isEnabled') || IS_ADMIN): ?>
 <?php echo render_module('_parts/template/navbar_user_button', isset($path) ? array('path' => $path) : array(), IS_ADMIN ? 'admin' : ''); ?>
+<?php endif; ?>
 		</div>
 		<div class="collapse navbar-collapse">
 <?php echo render_module('_parts/template/navbar_menu_global_head', isset($path) ? array('path' => $path) : array(), IS_ADMIN ? 'admin' : ''); ?>
