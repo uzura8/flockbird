@@ -330,7 +330,7 @@ class Model extends \Orm\Model
 		// where
 		if (!empty($params['where']))
 		{
-			if (\Arr::is_multi($params['where'], true))
+			if (\Arr::is_multi($params['where']))
 			{
 				foreach ($params['where'] as $key => $where)
 				{
