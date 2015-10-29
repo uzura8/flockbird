@@ -101,6 +101,11 @@ class Model extends \Orm\Model
 		return true;
 	}
 
+	public static function clear_cache()
+	{
+		static::$_cached_objects[get_called_class()] = [];
+	}
+
 	public static function get_table_name()
 	{
 		return static::$_table_name;
