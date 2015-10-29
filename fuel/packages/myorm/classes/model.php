@@ -560,7 +560,12 @@ class Model extends \Orm\Model
 		if (!$params) return $query;
 
 		if (!is_array($params)) $params = (array)$params;
-		if (!\Arr::is_multi($params, true))
+		if (!\Arr::is_multi($params))
+		{
+			return static::set_where4not_multi($query, $params);
+		}
+
+		if (count($params) == 3 && strToLower($params[2]) == 'in')
 		{
 			return static::set_where4not_multi($query, $params);
 		}
@@ -576,8 +581,6 @@ class Model extends \Orm\Model
 	protected static function set_where4not_multi(\Orm\Query $query, $params = array())
 	{
 		if (!$params) return $query;
-
-		if (\Arr::is_multi($params, true)) throw new \InvalidArgumentException('Second parameter is invalid.');
 
 		if (\Arr::is_assoc($params))
 		{
