@@ -22,5 +22,13 @@ return array(
 			'display_upload_form' => true,
 			'display_slide_image' => true,
 		),
+		'image' => array(
+			'detail' => array(
+				'displayGallery' => array(
+					'limitMax' => 3,
+					'checkLoopMax' => 3,
+				),
+			),
+		),
 	),
 );

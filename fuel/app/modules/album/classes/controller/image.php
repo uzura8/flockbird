@@ -100,25 +100,27 @@ class Controller_Image extends \Controller_Site
 				\Site_Model::get_liked_ids('album_image_comment', $this->u->id, $list) : array(),
 		);
 
-		// 前後の id の取得
-		$params = array(
-			'where' => \Site_Model::get_where_params4list(
-				0,
-				\Auth::check() ? $this->u->id : 0,
-				$this->check_is_mypage($album_image->album->member_id),
-				array(array('album_id', $album_image->album->id))
-			),
-			'order_by' => array('id' => 'desc'),
-		);
-		$ids = Model_AlbumImage::get_col_array('id', $params);
-		list($data['before_id'], $data['after_id']) = \Util_Array::get_neighborings($id, $ids);
+		// get before and after album_image.id
+		if (conf('display_setting.image.detail.displayNextPageButton', 'album'))
+		{
+			list($data['before_id'], $data['after_id']) = $this->get_before_after_ids($album_image->id);
+		}
+
+		$slide_file_names = array();
+		if (conf('display_setting.image.detail.displayGallery.isEnabled', 'album'))
+		{
+			if (conf('display_setting.image.detail.displayNextPageButton', 'album')) Model_AlbumImage::clear_cache();
+			$slide_file_names = $this->get_slide_file_names($album_image);
+		}
 
 		$title = Site_Util::get_album_image_display_name($album_image, term('album_image', 'site.detail'));
 		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
+		$this->template->post_header = \View::forge('image/_parts/detail_header');
 		$this->template->post_footer = \View::forge('image/_parts/detail_footer', array(
 			'album_image' => $album_image,
 			'locations' => $locations,
+			'slide_file_names' => $slide_file_names,
 		));
 		$this->template->content = \View::forge('image/detail', $data);
 	}
@@ -245,5 +247,50 @@ class Controller_Image extends \Controller_Site
 		}
 
 		return $val;
+	}
+
+	private function get_slide_file_names(Model_AlbumImage $album_image)
+	{
+		// get for slide images
+		$params = $this->get_query_params($album_image);
+		$params['limit'] = conf('display_setting.image.detail.displayGallery.limitMax', 'album');
+		$loopMax = conf('display_setting.image.detail.displayGallery.checkLoopMax', 'album');
+
+		$i = 0;
+		$file_names = array();
+		while (empty($file_names[$album_image->id]) && $i < $loopMax)
+		{
+			if (!empty($last_id))
+			{
+				if ($i >= 2) array_pop($params['where']);
+				$params['where'][] = array('id', '<', $last_id);
+			}
+			$file_names = Model_AlbumImage::get_assoc('id', 'file_name', $params['where'], $params['order_by'], $params['limit']);
+			$last_id = \Util_Array::get_last_key($file_names);
+			$i++;
+		}
+		if (!$file_names) return array();
+
+		return \Util_Array::sort_to_top(array_values($file_names), $album_image->file_name);
+	}
+
+	private function get_before_after_ids(Model_AlbumImage $album_image)
+	{
+		$ids = Model_AlbumImage::get_col_array('id', $this->get_query_params($album_image));
+
+		return \Util_Array::get_neighborings($album_image->id, $ids);
+	}
+
+	private function get_query_params(Model_AlbumImage $album_image)
+	{
+		return array(
+			'where' => \Site_Model::get_where_params4list(
+				0,
+				\Auth::check() ? $this->u->id : 0,
+				$this->check_is_mypage($album_image->album->member_id),
+				array(array('album_id', $album_image->album->id))
+			),
+			'order_by' => array('id' => 'desc'),
+		);
 	}
 }

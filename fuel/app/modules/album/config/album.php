@@ -34,6 +34,12 @@ return array(
 		'image' => array(
 			'detail' => array(
 				'displayMap' => true,
+				'displayNextPageButton' => false,
+				'displayGallery' => array(
+					'isEnabled' => true,
+					'limitMax' => 100,
+					'checkLoopMax' => 10,
+				),
 			),
 			'edit' => array(
 				'displayMap' => true,

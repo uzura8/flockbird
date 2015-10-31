@@ -1,7 +1,8 @@
 <?php
 $data = array('image_obj' => $album_image);
-if ($before_id) $data['before_uri'] = 'album/image/'.$before_id;
-if ($after_id) $data['after_uri'] = 'album/image/'.$after_id;
+if (!empty($before_id)) $data['before_uri'] = 'album/image/'.$before_id;
+if (!empty($after_id)) $data['after_uri'] = 'album/image/'.$after_id;
+if (conf('display_setting.image.detail.displayGallery.isEnabled', 'album')) $data['anchor_attr'] = array('id' => 'gallery_link');
 echo render('_parts/image/detail', $data);
 ?>
 <hr>

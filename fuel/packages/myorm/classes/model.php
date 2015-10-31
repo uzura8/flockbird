@@ -261,11 +261,12 @@ class Model extends \Orm\Model
 		return \Util_Orm::conv_col2array($query->get(), $col);
 	}
 
-	public static function get_assoc($key_col, $value_col, $params = array(), $order_by = array())
+	public static function get_assoc($key_col, $value_col, $params = array(), $order_by = array(), $limit = 0)
 	{
 		$query = self::query()->select($key_col, $value_col);
 		if ($params) $query = static::set_where($query, $params);
 		if ($order_by) $query->order_by($order_by);
+		if ($limit) $query->rows_limit($limit);
 
 		return \Util_Orm::conv_cols2assoc($query->get(), $key_col, $value_col);
 	}
@@ -570,7 +571,7 @@ class Model extends \Orm\Model
 			return static::set_where4not_multi($query, $params);
 		}
 
-		if (count($params) == 3 && strToLower($params[2]) == 'in')
+		if (count($params) == 3 && !is_array($params[0]) && in_array(strToLower($params[2]), array('in', '<', '>', '<=', '>=')))
 		{
 			return static::set_where4not_multi($query, $params);
 		}

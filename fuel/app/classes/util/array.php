@@ -140,6 +140,13 @@ class Util_Array
 		return array_shift($array);
 	}
 
+	public static function get_last_key(array $array)
+	{
+		$keys = array_keys($array);
+
+		return end($keys);
+	}
+
 	public static function get_last(array $array)
 	{
 		if (count($array) < 1) return false;
@@ -185,5 +192,30 @@ class Util_Array
 		foreach ($array as $value) $returns[$value] = $value;
 
 		return $returns;
+	}
+
+	public static function sort_to_top(array $list, $target, $is_check_target_included = false)
+	{
+		if (!$list) return $list;
+
+		$list_before = array();
+		$list_after = array();
+		$is_finded = false;
+		foreach ($list as $key => $value)
+		{
+			if (!$is_finded && $value == $target) $is_finded = true;
+			if ($is_finded)
+			{
+				$list_before[$key] = $value;
+			}
+			else
+			{
+				$list_after[$key] = $value;
+			}
+			unset($list[$key]);
+		}
+		if (!$is_finded && $is_check_target_included) return false;
+
+		return array_merge($list_before, $list_after);
 	}
 }

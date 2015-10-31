@@ -9,7 +9,7 @@ echo Asset::js('jquery-file-upload/tmpl.min.js');// The Templates plugin is incl
 Asset::js(array(
 	'jquery-file-upload/load-image.all.min.js',// The Load Image plugin is included for the preview images and image resizing functionality
 	'jquery-file-upload/canvas-to-blob.min.js',// The Canvas to Blob plugin is included for image resizing functionality
-	'jquery-file-upload/jquery.blueimp-gallery.min.js',// blueimp Gallery script
+	'blueimp-gallery/jquery.blueimp-gallery.min.js',// blueimp Gallery script
 	'jquery-file-upload/jquery.iframe-transport.js',// The Iframe Transport is required for browsers without support for XHR file uploads
 	'jquery-file-upload/jquery.fileupload.js',// The basic File Upload plugin
 	'jquery-file-upload/jquery.fileupload-process.js',// The File Upload processing plugin
