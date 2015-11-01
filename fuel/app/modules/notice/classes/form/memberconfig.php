@@ -48,6 +48,22 @@ class Form_MemberConfig extends \Form_MemberConfig
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
 
+		if (conf('noticeMail.isEnabled', 'notice'))
+		{
+			$name = self::get_name('noticeMailMode');
+			if ($value = self::get_value($member_id, $name, parent::get_default_value($name, 1)))
+			{
+				$member_auth = \Model_MemberAuth::get_one4member_id($member_id);
+				if (empty($member_auth->email)) $value = 0;
+			}
+			$label = term('notice', 'site.mail');
+			$options = self::get_options_recieve_mail();
+			$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
+					->add_rule('valid_string', 'numeric', 'required')
+					->add_rule('required')
+					->add_rule('in_array', array_keys($options));
+		}
+
 		return $val;
 	}
 
@@ -68,6 +84,18 @@ class Form_MemberConfig extends \Form_MemberConfig
 		$options = array(
 			'1' => $is_simple ? term('symbol.bool.true') : term('form.do_watch'),
 			'0' => $is_simple ? term('symbol.bool.false') : term('form.watch').'しない',
+		);
+
+		if (!is_null($value) && isset($options[$value])) return $options[$value];
+
+		return $options;
+	}
+
+	public static function get_options_recieve_mail($value = null, $is_simple = false)
+	{
+		$options = array(
+			'1' => $is_simple ? term('symbol.bool.true') : term('form.recieve_mail'),
+			'0' => $is_simple ? term('symbol.bool.false') : term('form.unrecieve_mail'),
 		);
 
 		if (!is_null($value) && isset($options[$value])) return $options[$value];

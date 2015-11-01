@@ -72,4 +72,9 @@ class Model_MemberAuth extends \MyOrm\Model
 	{
 		return self::query()->where('email', $email)->get_one();
 	}
+
+	public static function get_one4member_id($member_id)
+	{
+		return self::query()->where('member_id', $member_id)->get_one();
+	}
 }

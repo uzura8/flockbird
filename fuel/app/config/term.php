@@ -79,6 +79,8 @@ $config = array(
 		'do_invite' => '招待する',
 		'invite_friend' => '友達を招待',
 		'get' => '取得',
+		'recieve_mail' => '受信する',
+		'unrecieve_mail' => '受信しない',
 	),
 	'site' => array(
 		'view' => 'サイト',
