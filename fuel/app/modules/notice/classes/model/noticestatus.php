@@ -48,6 +48,35 @@ class Model_NoticeStatus extends \MyOrm\Model
 			'property' => 'sort_datetime',
 			'mysql_timestamp' => true,
 		),
+		// Add notice_mail_queue record at inserted
+		'MyOrm\Observer_InsertRelationialTable' => array(
+			'events'   => array('after_insert'),
+			'model_to' => '\Notice\Model_NoticeMailQueue',
+			'properties' => array(
+				'notice_status_id' => 'id',
+				'member_id',
+			),
+		),
+		// Delete relaton table record on updated
+		'MyOrm\Observer_DeleteRelationalTablesOnUpdated' => array(
+			'events' => array('after_update'),
+			'relations' => array(
+				'model_to' => '\Notice\Model_NoticeMailQueue',
+				'conditions' => array(
+					'notice_status_id' => array('id' => 'property'),
+				),
+				'check_changed' => array(
+					'check_properties' => array('is_read' => 1),
+				),
+				'check_changed' => array(
+					'check_properties' => array(
+						'is_read' => array(
+							'value' => 1,
+						),
+					),
+				),
+			),
+		),
 	);
 
 	public static function change_status2unread($member_id, $notice_id)
