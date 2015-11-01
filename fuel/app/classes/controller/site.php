@@ -53,9 +53,23 @@ class Controller_Site extends Controller_Base_Site
 			$data['timelines']['see_more_link'] = array('uri' => 'timeline');
 			//$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		}
+
+		if (Config::get('page.site.index.news.isEnabled') && is_enabled('news'))
+		{
+			list($limit, $page) = $this->common_get_pager_list_params(
+				\Config::get('page.site.index.news.list.limit'),
+				\Config::get('page.site.index.news.list.limit_max')
+			);
+			$data['news_list'] = \News\Site_Model::get_list($limit, $page, \Auth::check());
+			$data['news_list']['see_more_link'] = array('uri' => 'news');
+		}
+
 		if (Config::get('page.site.index.albumImage.isEnabled') && is_enabled('album'))
 		{
-			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('page.site.index.albumImage.list.limit'), \Config::get('page.site.index.albumImage.list.limit_max'));
+			list($limit, $page) = $this->common_get_pager_list_params(
+				\Config::get('page.site.index.albumImage.list.limit'),
+				\Config::get('page.site.index.albumImage.list.limit_max')
+			);
 			$data['album_images'] =\Album\ Model_AlbumImage::get_pager_list(array(
 				'related'  => array('album'),
 				'where'    => \Site_Model::get_where_params4list(0, \Auth::check() ? $this->u->id : 0),
@@ -71,5 +85,9 @@ class Controller_Site extends Controller_Base_Site
 		if (Config::get('page.site.index.slide.isEnabled')) $this->template->top_content = View::forge('site/_parts/slide');
 		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
 		$this->template->content = View::forge('site/index', $data);
+		if (!empty($data['news_list']['list']))
+		{
+			$this->template->content->set_safe('html_bodys', \News\Site_Model::convert_raw_bodys($data['news_list']['list']));
+		}
 	}
 }

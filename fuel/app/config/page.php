@@ -21,6 +21,13 @@ $config = array(
 					'limit_max' => 5,
 				),
 			),
+			'news' => array(
+				'isEnabled' => false,
+				'list' => array(
+					'limit' => 5,
+					'limit_max' => 10,
+				),
+			),
 			'albumImage' => array(
 				'isEnabled' => true,
 				'list' => array(

@@ -1,5 +1,5 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
-<?php if (!$list): ?>
+<?php if (empty($list)): ?>
 <?php 	if (!IS_API): ?>
 <?php echo term('news.view'); ?>がありません。
 <?php 	endif; ?>
@@ -38,14 +38,22 @@ $tags   = $is_tags_enabled ? \News\Model_NewsTag::get_names4news_id($id) : array
 			</div>
 <?php endif; ?>
 		</div>
-<?php echo render('_parts/news_subinfo', array('news' => $news, 'tags' => $tags, 'is_simple_view' => true)); ?>
+<?php echo render('news::_parts/news_subinfo', array('news' => $news, 'tags' => $tags, 'is_simple_view' => true)); ?>
 	</div>
 
 <?php endforeach; ?>
 </div>
 <?php endif; ?>
 
-<?php if ($next_page): ?>
+<?php if (!empty($see_more_link)): ?>
+<?php
+	$anchor_text_default = icon_label('site.see_more', 'both', false, null, 'fa fa-');
+	$href = Uri::create_url($see_more_link['uri']);
+	$anchor_text = !empty($see_more_link['text']) ? $see_more_link['text'] : $anchor_text_default;
+	$load_after_link_attr = array('class' => 'listMoreBox');
+	echo Html::anchor($href, $anchor_text, $load_after_link_attr);
+?>
+<?php elseif (!empty($next_page)): ?>
 <nav id="page-nav">
 <?php
 $uri = sprintf('news/api4site/list.html?page=%d', $next_page);
