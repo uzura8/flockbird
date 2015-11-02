@@ -38,7 +38,7 @@ class Model_Album extends \MyOrm\Model
 			'data_type' => 'text',
 			'label' => '説明',
 			'validation' => array('trim'),
-			'form' => array('type' => 'textarea', 'cols' => 60, 'rows' => 10, 'class' => 'input-xlarge'),
+			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
 		'public_flag' => array(
 			'data_type' => 'integer',
