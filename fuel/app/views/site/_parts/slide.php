@@ -3,7 +3,7 @@
 $slide_title = Config::get('page.site.index.slide.title') ?: FBD_SITE_NAME;
 $slide_lead = Config::get('page.site.index.slide.lead') ?: FBD_SITE_DESCRIPTION;
 ?>
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="<?php echo Config::get('page.site.index.slide.interval'); ?>">
+<div id="myCarousel" class="carousel carousel-flex slide" data-ride="carousel" data-interval="<?php echo Config::get('page.site.index.slide.interval'); ?>">
 	<!-- Indicators -->
 	<ol class="carousel-indicators hidden-xs">
 		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
