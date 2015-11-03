@@ -53,6 +53,7 @@ return array(
 				'album' => array(
 					'isEnabled' => true,
 					'autoPopupAfterCreated' => false,
+					'autoPopupAfterUploaded' => false,
 				),
 			),
 		),
