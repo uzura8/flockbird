@@ -19,7 +19,7 @@ class Model_AlbumImageLocation extends \MyOrm\Model
 		'id',
 		'album_image_id' => array(
 			'data_type' => 'integer',
-			'validation' => array('required', 'max_length' => array(11)),
+			'validation' => array('max_length' => array(11)),
 			'form' => array('type' => false),
 		),
 		'latitude' => array(
