@@ -332,8 +332,15 @@ function profile_value(Model_MemberProfile $member_profile)
 		case 'radio':
 			return $member_profile->profile_option->label;
 			break;
+		case 'input':
+			if ($member_profile->profile->value_type == 'url')
+			{
+				return anchor($member_profile->value, $member_profile->value);
+			}
+			return $member_profile->value;
+			break;
 		case 'textarea':
-			return nl2br($member_profile->value);
+			return convert_body($member_profile->value, array('is_truncate' => false));
 			break;
 	}
 
