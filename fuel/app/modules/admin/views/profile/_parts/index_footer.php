@@ -1,5 +1,4 @@
-<?php echo Asset::js('jquery-ui-1.10.3.custom.min.js');?>
-<?php echo Asset::js('util/jquery-ui.js');?>
+<?php echo render('_parts/sortable_footer'); ?>
 <script>
 $(function(){
 	jqui_sort('admin/profile/api/update/sort_order.json');
