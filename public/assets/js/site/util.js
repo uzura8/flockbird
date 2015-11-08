@@ -452,6 +452,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 					this();
 				});
 			}
+			if (!empty(response.shareFacebook.obj)) popupFacebookShareDialog(response.shareFacebook.obj);
 		},
 		error: function(response){
 			showMessage(getErrorMessage(response, postedArticleTerm + 'の投稿に失敗しました。'));
@@ -1085,5 +1086,20 @@ function simpleAjaxPost(postUri)
 			if (trigerSelector) $(trigerSelector).html(trigerSelectorHtml);
 			showMessage(getErrorMessage(response));
 		}
+	});
+}
+
+function popupFacebookShareDialog(obj)
+{
+	if (typeof FB === 'undefined') return false;
+
+	var facebookObj = arrayMerge({method: 'feed'}, obj);
+	function callback(response) {
+		if (response && response.post_id) {
+			showMessage('Facebook に投稿しました。');
+		}
+	}
+	apprise('Facebook に投稿しますか？', {'confirm':true}, function(r) {
+		if (r == true) FB.ui(facebookObj, callback);
 	});
 }

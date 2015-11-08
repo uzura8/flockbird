@@ -123,3 +123,8 @@ function checkCursorOnTarget(selectedNode, targetSelector) {
 
 	return false;
 }
+
+function arrayMerge(obj, objAdded) {
+	$.extend(true, obj, objAdded);
+	return obj;
+}

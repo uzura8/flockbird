@@ -382,10 +382,13 @@ $config = array(
 		'facebook' => array(
 			'shareDialog' => array(
 				'jsUrl' => '//connect.facebook.net/en_US/all.js',
-				'name' => array(
-					'trimWidth' => 200,
-				),
 				'caption' => array(
+					'trimWidth' => 100,
+				),
+				'name' => array(
+					'trimWidth' => 150,
+				),
+				'description' => array(
 					'trimWidth' => 200,
 				),
 			),

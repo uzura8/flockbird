@@ -338,6 +338,12 @@ $(document).on('click', '.js-modal', function(){
 	return false;
 });
 
+$(document).on('click', '.js-facebook_feed', function(){
+	var options = $(this).data('options');
+	popupFacebookShareDialog(options);
+	return false;
+});
+
 function checkIsRenderSiterSummary()
 {
 	var divArticleElement,
