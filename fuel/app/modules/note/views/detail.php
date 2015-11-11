@@ -7,11 +7,7 @@
 <?php endif; ?>
 
 <?php if ($note->is_published): ?>
-<?php 	if (Auth::check() || $comments): ?>
-<h3 id="comments">Comments</h3>
-<?php 	endif; ?>
-
-<div class="comment_info mb5">
+<div class="comment_info">
 <?php // comment_count_and_link
 echo render('_parts/comment/count_and_link_display', array(
 	'id' => $note->id,
@@ -28,7 +24,6 @@ $data_like_link = array(
 	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('note', $note->id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $note->like_count,
-	'left_margin' => true,
 	'is_liked' => $is_liked_self,
 );
 echo render('_parts/like/count_and_link_execute', $data_like_link);
@@ -44,6 +39,11 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 	'description' => $note->body,
 )); ?>
 <?php 	endif; ?>
+
+<!-- share button -->
+<?php if (conf('site.common.shareButton.isEnabled', 'page')): ?>
+<?php echo render('_parts/services/share', array('disableds' => array('facebook'))); ?>
+<?php endif; ?>
 
 </div><!-- .comment_info -->
 

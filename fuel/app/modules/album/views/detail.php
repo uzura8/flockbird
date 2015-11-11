@@ -58,6 +58,12 @@
 	'description' => $album->body,
 )); ?>
 <?php 	endif; ?>
+
+<!-- share button -->
+<?php if (conf('site.common.shareButton.isEnabled', 'page')): ?>
+<?php echo render('_parts/services/share', array('disableds' => array('facebook'))); ?>
+<?php endif; ?>
+
 </div>
 
 <?php echo render('image/_parts/list', array(

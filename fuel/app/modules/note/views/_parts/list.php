@@ -85,7 +85,6 @@ $data_reply_link = array(
 	'id' => $note->id,
 	'target_id' => $note->id,
 	'member_name' => $note->member->name,
-	'left_margin' => true,
 );
 echo render('notice::_parts/link_reply', $data_reply_link);
 ?>
@@ -100,12 +99,17 @@ $data_like_link = array(
 	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('note', $id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $note->like_count,
-	'left_margin' => true,
 	'is_liked' => isset($liked_note_ids) && in_array($id, $liked_note_ids),
 );
 echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
 <?php endif; ?>
+
+<!-- share button -->
+<?php if (conf('site.common.shareButton.isEnabled', 'page')): ?>
+<?php echo render('_parts/services/share', array('uri' => 'note/'.$id)); ?>
+<?php endif; ?>
+
 </div><!-- .comment_info -->
 
 <?php

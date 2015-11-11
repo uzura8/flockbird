@@ -161,6 +161,12 @@ $config = array(
 				'prefix' => 'fa fa-',
 			),
 		),
+		'twitter' => array(
+			'do_share' => array(
+				'key' => 'twitter-square',
+				'prefix' => 'fa fa-',
+			),
+		),
 	),
 	'profile' => 'user',
 	//'guest'   => 'Guest',

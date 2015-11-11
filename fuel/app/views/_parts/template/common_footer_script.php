@@ -63,6 +63,9 @@ function get_config(key) {
 <?php if (is_enabled_map()): ?>
 		'mapParams': <?php echo json_encode(conf('map.paramsDefault')); ?>,
 <?php endif; ?>
+<?php if (is_enabled_share('google')): ?>
+		'isEnabledShareGoogle': 1,
+<?php endif; ?>
 		'default_ajax_timeout': <?php echo conf('default.ajax_timeout'); ?>,
 		'default_list_limit': <?php echo conf('view_params_default.list.limit'); ?>,
 		'default_list_comment_limit_max': <?php echo conf('view_params_default.list.comment.limit_max'); ?>,

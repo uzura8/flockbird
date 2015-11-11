@@ -43,7 +43,6 @@ if (conf('like.isEnabled'))
 		'get_member_uri' => \Site_Util::get_api_uri_get_liked_members($like_api_uri_prefix, $comment->id),
 		'count_attr' => array('class' => 'unset_like_count'),
 		'count' => $comment->like_count,
-		'left_margin' => true,
 		'is_liked' => isset($liked_ids) ? in_array($comment->id, $liked_ids) : false,
 	);
 }
@@ -53,7 +52,6 @@ if (empty($is_hide_reply_link) && conf('mention.isEnabled', 'notice') && $commen
 		'id' => $comment->id,
 		'target_id' => $parent->id,
 		'member_name' => $comment->member->name,
-		'left_margin' => true,
 	);
 }
 $content_view = View::forge('_parts/member_contents_box', $data);

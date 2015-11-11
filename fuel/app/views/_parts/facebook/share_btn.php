@@ -13,7 +13,7 @@ if (!empty($images))
 }
 
 echo btn('service.facebook.do_share', '#', 'js-facebook_feed', true, 'xs', 'primary',
-			array('class' => 'ml10', 'data-options' => json_encode($feed_options)), null, null, null, false);
+			array('class' => 'mr10', 'data-options' => json_encode($feed_options)), null, null, null, false);
 ?>
-<div id="fb-root"></div>
+<span id="fb-root"></span>
 

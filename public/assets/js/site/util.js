@@ -452,7 +452,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 					this();
 				});
 			}
-			if (!empty(response.shareFacebook.obj)) popupFacebookShareDialog(response.shareFacebook.obj);
+			if (!empty(response.shareFacebook)) popupFacebookShareDialog(response.shareFacebook.obj);
 		},
 		error: function(response){
 			showMessage(getErrorMessage(response, postedArticleTerm + 'の投稿に失敗しました。'));

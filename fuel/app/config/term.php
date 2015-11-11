@@ -183,6 +183,14 @@ $config = array(
 			'view' => 'Facebook',
 			'do_share' => 'シェアする',
 		),
+		'twitter' => array(
+			'view' => 'Facebook',
+			'do_share' => 'tweetする',
+		),
+		'line' => array(
+			'view' => 'Facebook',
+			'do_share' => 'LINEで送る',
+		),
 	),
 	'profile' => 'プロフィール',
 	'guest'   => 'Guest',
