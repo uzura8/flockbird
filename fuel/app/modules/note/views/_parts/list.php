@@ -106,7 +106,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 <?php endif; ?>
 
 <!-- share button -->
-<?php if (conf('site.common.shareButton.isEnabled', 'page')): ?>
+<?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($note->public_flag)): ?>
 <?php echo render('_parts/services/share', array('uri' => 'note/'.$id)); ?>
 <?php endif; ?>
 
