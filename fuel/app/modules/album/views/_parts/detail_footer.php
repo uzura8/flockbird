@@ -7,6 +7,7 @@ $('.carousel').carousel({
 </script>
 <?php endif; ?>
 
-<?php if (FBD_FACEBOOK_APP_ID && !empty($is_mypage) && conf('service.facebook.shareDialog.album.isEnabled') && conf('service.facebook.shareDialog.album.autoPopupAfterCreated')): ?>
-<?php echo render('_parts/facebook/load_js_auto_popup'); ?>
+<?php if (FBD_FACEBOOK_APP_ID && !empty($is_mypage) && conf('service.facebook.shareDialog.album.isEnabled')): ?>
+<?php echo render('_parts/facebook/load_share_dialog_js', array('auto_popup' => conf('service.facebook.shareDialog.album.autoPopupAfterCreated'))); ?>
 <?php endif; ?>
+

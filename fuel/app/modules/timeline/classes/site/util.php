@@ -205,8 +205,11 @@ class Site_Util
 		return render('_parts/quote_article', array('title' => $title, 'body' => $body, 'read_more_uri' => $read_more_uri));
 	}
 
-	public static function get_detail_uri($timeline_id, $type, $foreign_table_obj)
+	public static function get_detail_uri($timeline_id, $type, $foreign_table_obj = null)
 	{
+		$default = 'timeline/'.$timeline_id;
+		if (!$foreign_table_obj) return $default;
+
 		switch ($type)
 		{
 			case \Config::get('timeline.types.note'):
@@ -220,7 +223,7 @@ class Site_Util
 				break;
 		}
 
-		return 'timeline/'.$timeline_id;
+		return $default;
 	}
 
 	public static function get_type_for_save_comment_to_foreign_table()

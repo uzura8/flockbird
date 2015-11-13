@@ -92,7 +92,6 @@ $data_reply_link = array(
 	'id' => $thread->id,
 	'target_id' => $thread->id,
 	'member_name' => $thread->member->name,
-	'left_margin' => true,
 );
 echo render('notice::_parts/link_reply', $data_reply_link);
 ?>
@@ -106,12 +105,17 @@ $data_like_link = array(
 	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('thread', $id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $thread->like_count,
-	'left_margin' => true,
 	'is_liked' => isset($liked_thread_ids) && in_array($id, $liked_thread_ids),
 );
 echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
 <?php endif; ?>
+
+<!-- share button -->
+<?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($thread->public_flag)): ?>
+<?php echo render('_parts/services/share', array('uri' => 'thread/'.$id)); ?>
+<?php endif; ?>
+
 </div><!-- .comment_info -->
 
 <?php

@@ -7,10 +7,6 @@ echo render('_parts/image/detail', $data);
 ?>
 <hr>
 
-<?php if (Auth::check() || $comments): ?>
-<h3 id="comments">Comments</h3>
-<?php endif; ?>
-
 <div class="comment_info">
 <?php // comment_count_and_link
 echo render('_parts/comment/count_and_link_display', array(
@@ -28,12 +24,17 @@ $data_like_link = array(
 	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('album/image', $album_image->id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $album_image->like_count,
-	'left_margin' => true,
 	'is_liked' => $is_liked_self,
 );
 echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
 <?php endif; ?>
+
+<!-- share button -->
+<?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($album_image->public_flag)): ?>
+<?php echo render('_parts/services/share'); ?>
+<?php endif; ?>
+
 </div><!-- .comment_info -->
 
 <div id="comment_list">

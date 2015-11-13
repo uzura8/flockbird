@@ -4,10 +4,6 @@
 
 <?php echo render('_parts/thumbnails', array('is_display_name' => true, 'images' => array('list' => $images, 'file_cate' => 't', 'size' => 'M', 'column_count' => 3))); ?>
 
-<?php if (Auth::check() || $comments): ?>
-<h3 id="comments">Comments</h3>
-<?php endif; ?>
-
 <div class="comment_info">
 <?php // comment_count_and_link
 echo render('_parts/comment/count_and_link_display', array(
@@ -25,12 +21,17 @@ $data_like_link = array(
 	'get_member_uri' => \Site_Util::get_api_uri_get_liked_members('thread', $thread->id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'count' => $thread->like_count,
-	'left_margin' => true,
 	'is_liked' => $is_liked_self,
 );
 echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
 <?php endif; ?>
+
+<!-- share button -->
+<?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($thread->public_flag)): ?>
+<?php echo render('_parts/services/share'); ?>
+<?php endif; ?>
+
 </div><!-- .comment_info -->
 
 <div id="comment_list">

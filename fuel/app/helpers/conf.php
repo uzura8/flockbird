@@ -48,3 +48,17 @@ function get_enabled_modules_str($target_modules, $delimitter = '|')
 	return implode($delimitter, $target_modules);
 }
 
+function is_enabled_share($service_name, $type = null)
+{
+	$configs = conf('site.common.shareButton', 'page');
+	if (!Arr::get($configs, 'isEnabled')) return false;
+	if (!in_array($service_name, array('twitter', 'facebook', 'line', 'google'))) return false;
+
+	if ($service_name == 'facebook')
+	{
+		if (!$type) return false;
+		return (bool)Arr::get($configs, sprintf('%s.%s.isEnabled', $service_name, $type));
+	}
+
+	return (bool)Arr::get($configs, sprintf('%s.isEnabled', $service_name));
+}

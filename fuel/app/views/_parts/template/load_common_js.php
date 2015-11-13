@@ -40,3 +40,10 @@ Asset::js(array(
 echo Asset::render('js_common', false, 'js');
 ?>
 
+<script>var gapi;</script>
+<?php if (is_enabled_share('google')): ?>
+<script src="//apis.google.com/js/platform.js" async defer>
+	{lang: "ja"}
+</script>
+<?php endif; ?>
+

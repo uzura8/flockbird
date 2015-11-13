@@ -284,7 +284,7 @@ function conv_data_atter($list = array(), $is_html = false)
 	return $output;
 }
 
-function check_public_flag($public_flag, $access_from)
+function check_public_flag($public_flag, $access_from = '')
 {
 	switch ($public_flag)
 	{
@@ -297,7 +297,7 @@ function check_public_flag($public_flag, $access_from)
 		case FBD_PUBLIC_FLAG_MEMBER:
 			if (in_array($access_from, array('self', 'friend', 'member'))) return true;
 			break;
-		default :
+		case FBD_PUBLIC_FLAG_ALL:
 			return true;
 			break;
 	}
@@ -332,8 +332,15 @@ function profile_value(Model_MemberProfile $member_profile)
 		case 'radio':
 			return $member_profile->profile_option->label;
 			break;
+		case 'input':
+			if ($member_profile->profile->value_type == 'url')
+			{
+				return anchor($member_profile->value, $member_profile->value);
+			}
+			return $member_profile->value;
+			break;
 		case 'textarea':
-			return nl2br($member_profile->value);
+			return convert_body($member_profile->value, array('is_truncate' => false));
 			break;
 	}
 

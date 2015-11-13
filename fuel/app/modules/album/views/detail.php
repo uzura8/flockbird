@@ -50,7 +50,7 @@
 <?php endif; ?>
 
 <?php // Facebook feed ?>
-<?php 	if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.album.isEnabled')): ?>
+<?php 	if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.album.isEnabled') && check_public_flag($album->public_flag)): ?>
 <?php echo render('_parts/facebook/share_btn', array(
 	'images' => $list,
 	'link_uri' => 'album/'.$album->id,
@@ -58,6 +58,12 @@
 	'description' => $album->body,
 )); ?>
 <?php 	endif; ?>
+
+<!-- share button -->
+<?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($album->public_flag)): ?>
+<?php echo render('_parts/services/share', array('disableds' => array('facebook'))); ?>
+<?php endif; ?>
+
 </div>
 
 <?php echo render('image/_parts/list', array(

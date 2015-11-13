@@ -1,6 +1,28 @@
 <?php
 $config = array(
 	'site' => array(
+		'common' => array(
+			'shareButton' => array(
+				'isEnabled' => false,
+				'twitter' => array(
+					'isEnabled' => true,
+				),
+				'facebook' => array(
+					'share' => array(
+						'isEnabled' => true,
+					),
+					//'like' => array(
+					//	'isEnabled' => true,
+					//),
+				),
+				'google' => array(
+					'isEnabled' => true,
+				),
+				'line' => array(
+					'isEnabled' => true,
+				),
+			),
+		),
 		'index' => array(
 			'slide' => array(
 				'isEnabled' => true,

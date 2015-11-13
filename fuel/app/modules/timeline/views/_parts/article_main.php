@@ -6,6 +6,8 @@ $images = \Timeline\Site_Util::get_timeline_images(
 	$access_from_member_relation,
   $is_detail
 );
+$foreign_table_obj = \Timeline\Site_Model::get_foreign_table_obj($timeline->type, $timeline->foreign_id);
+$detail_page_uri = \Timeline\Site_Util::get_detail_uri($timeline->id, $timeline->type, $foreign_table_obj);
 ?>
 
 <?php /* content */; ?>
@@ -13,7 +15,6 @@ $images = \Timeline\Site_Util::get_timeline_images(
 $optional_info = array();
 if (isset($images['count'])) $optional_info['count'] = $images['count'];
 if (isset($images['count_all'])) $optional_info['count_all'] = $images['count_all'];
-$foreign_table_obj = \Timeline\Site_Model::get_foreign_table_obj($timeline->type, $timeline->foreign_id);
 echo \Timeline\Site_Util::get_timeline_content(
 	$timeline->id,
 	$timeline->type,
@@ -97,13 +98,18 @@ $data_like_link = array(
 	'get_member_uri' => \Timeline\Site_Util::get_liked_member_api_uri4foreign_table($timeline->type, $timeline->id, $timeline->foreign_id),
 	'count_attr' => array('class' => 'unset_like_count'),
 	'link_display_absolute' => true,
-	'left_margin' => true,
 	'attr_prefix' => 'timeline_',
 );
 if ($is_detail) $data_like_link['count'] = \Timeline\Model_TimelineLike::get_count4timeline_id($timeline->id);
 echo render('_parts/like/count_and_link_execute', $data_like_link);
 ?>
 <?php endif; ?>
+
+<!-- share button -->
+<?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($timeline->public_flag)): ?>
+<?php echo render('_parts/services/share', array('uri' => $detail_page_uri)); ?>
+<?php endif; ?>
+
 </div><!-- comment_info -->
 
 <?php
@@ -183,7 +189,7 @@ $menus = array();
 $menu_detail_link = array('icon_term' => 'site.show_detail');
 if (!$is_detail)
 {
-	$menu_detail_link['href'] = \Timeline\Site_Util::get_detail_uri($timeline->id, $timeline->type, $foreign_table_obj);
+	$menu_detail_link['href'] = $detail_page_uri;
 	$menus[] = $menu_detail_link;
 }
 elseif (!is_enabled('notice'))

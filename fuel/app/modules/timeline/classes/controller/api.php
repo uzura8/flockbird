@@ -169,6 +169,22 @@ class Controller_Api extends \Controller_Site_Api
 				'id'      => $timeline->id,
 				'message' => term('timeline').'を'.term('form.post').'しました。',
 			);
+			if (conf('service.facebook.shareDialog.myhome.autoPopupAfterCreated'))
+			{
+				$link = \Uri::create(Site_Util::get_detail_uri($timeline->id, $timeline->type));
+				$data['shareFacebook'] = array(
+					'obj' => array(
+						'link' => $link,
+						'caption' => FBD_SITE_DESCRIPTION,
+						'name' => strim($timeline->body, conf('service.facebook.shareDialog.name.trimWidth')),
+					),
+				);
+				if ($album_image_ids && $album_image = \Album\Model_AlbumImage::find($album_image_ids[0]))
+				{
+					$data['shareFacebook']['obj']['picture'] = \Site_Util::get_media_uri(img_uri($album_image->file_name, 'thumbnail'), true);
+				}
+			}
+
 			$this->set_response_body_api($data);
 		});
 	}

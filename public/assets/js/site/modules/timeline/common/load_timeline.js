@@ -90,6 +90,11 @@ function postLoadTimeline() {
 	setCommentCount();
 	setLikeCount();
 	renderSiteSummary();
+	displayShareButton();
+}
+
+function displayShareButton() {
+	if (get_config('isEnabledShareGoogle') && !empty(gapi)) gapi.plusone.go('#article_list');
 }
 
 function loadTlComment(getUri, parentListSelector, id) {

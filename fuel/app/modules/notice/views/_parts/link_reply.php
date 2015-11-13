@@ -11,7 +11,5 @@ if (!isset($link_attr)) $link_attr = array();
 $link_attr = Util_Toolkit::convert_to_attr($link_attr, $link_attr_default);
 ?>
 <?php if ((Auth::check() || !empty($link_display_absolute)) && empty($link_hide_absolute)): ?>
-<small<?php if (!empty($left_margin)): ?> class="ml10"<?php endif; ?>>
-<?php echo anchor('#', icon_label('form.do_reply'), false, $link_attr); ?>
-</small>
+<small class="mr10"><?php echo anchor('#', icon_label('form.do_reply'), false, $link_attr); ?></small>
 <?php endif; ?>
