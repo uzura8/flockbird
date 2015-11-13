@@ -50,10 +50,14 @@ $config = array(
 		'site'  => 1,
 	),
 	'batch' => array(
-		'limit' => array(
-			'delete' => array(
-				'default' => 100,
-				'file' => 10,
+		'default' => array(
+			'limit' => array(
+				'model' => array(
+					'delete' => array(
+						'normal' => 100,
+						'file' => 10,
+					),
+				),
 			),
 		),
 	),

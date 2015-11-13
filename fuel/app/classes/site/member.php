@@ -182,7 +182,7 @@ class Site_Member
 
 	public static function delete_file_all4member_id($member_id, $is_tmp = false, $limit = 0)
 	{
-		if (!$limit) $limit = conf('batch.limit.delete.file', 10);
+		if (!$limit) $limit = conf('batch.default.limit.model.delete.file', 10);
 
 		$model = Site_Model::get_model_name($is_tmp ? 'file_tmp' : 'file');
 		$query = $model::query();

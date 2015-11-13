@@ -144,13 +144,31 @@ class Model extends \Orm\Model
 		return $obj;
 	}
 
-	public static function check_authority4unique_key($unique_key_prop, $value, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')
+	public static function get_one4pk($pk_value, $relateds = array(), $pk_name = 'id')
+	{
+		$query = self::query()->where($pk_name, $pk_value);
+		if ($relateds) $query->related($relateds);
+
+		return $query->get_one();
+	}
+
+	public static function get_one4unique_key($unique_key_value, $relateds = array(), $unique_key = 'id')
+	{
+		$query = self::query()->where($unique_key, $unique_key_value);
+		if ($relateds) $query->related($relateds);
+
+		return $query->get_one();
+	}
+
+	public static function get_one4id($id, $relateds = array())
+	{
+		return self::get_one4unique_key(intval($id), $relateds);
+	}
+
+	public static function check_authority4unique_key($unique_key_prop, $value, $target_member_id = 0, $relateds = array(), $member_id_prop = 'member_id')
 	{
 		if (!$value) throw new \HttpNotFoundException;
-
-		$query = self::query()->where($unique_key_prop, $value);
-		if ($related_tables) $query->related($related_tables);
-		if (!$obj = $query->get_one()) throw new \HttpNotFoundException;
+		if (!$obj = self::get_one4unique_key($value, $relateds, $unique_key_prop)) throw new \HttpNotFoundException;
 		if ($target_member_id && $obj->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
 
 		return $obj;
@@ -221,13 +239,16 @@ class Model extends \Orm\Model
 		return array($is_return_array ? $list_array : $list, $next_id, $all_records_count);
 	}
 
-	public static function get_all($order_by = null, $relateds = array())
+	public static function get_all($order_by = null, $relateds = array(), $limit = 0, $params = array(), $selects = array())
 	{
 		if (!is_array($relateds)) $relateds = (array)$relateds;
 
 		if (empty($order_by)) $order_by = array('id' => 'asc');
 		$query = self::query()->order_by($order_by);
-		if ($relateds) $query->related($relateds);;
+		if ($selects) $query->select($selects);
+		if ($relateds) $query->related($relateds);
+		if ($params) $query = static::set_where($query, $params);
+		if ($limit) $query->rows_limit($limit);
 
 		return $query->get();
 	}

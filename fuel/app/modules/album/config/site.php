@@ -52,7 +52,7 @@ return array(
 			'shareDialog' => array(
 				'album' => array(
 					'isEnabled' => true,
-					'autoPopupAfterCreated' => false,
+					'autoPopupAfterCreated' => true,
 				),
 			),
 		),

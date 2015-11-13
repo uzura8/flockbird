@@ -6,9 +6,14 @@ return array(
 		//'ajax_timeout' => 10000,
 	),
 	'batch' => array(
-		'limit' => array(
-			'delete' => array(
-				'default' => 10,
+		'default' => array(
+			'limit' => array(
+				'model' => array(
+					'delete' => array(
+						'normal' => 5,
+						'file' => 3,
+					),
+				),
 			),
 		),
 	),

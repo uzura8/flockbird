@@ -111,12 +111,14 @@ class Model_NoticeStatus extends \MyOrm\Model
 		return $obj;
 	}
 
-	public static function get4member_id_and_notice_id($member_id, $notice_id)
+	public static function get4member_id_and_notice_id($member_id, $notice_id, $relateds = array())
 	{
-		return self::query()
+		$query = self::query()
 			->where('member_id', $member_id)
-			->where('notice_id', $notice_id)
-			->get_one();
+			->where('notice_id', $notice_id);
+		if ($relateds) $query->related($relateds);
+
+		return $query->get_one();
 	}
 
 	public static function get_unread_count4member_id($member_id)

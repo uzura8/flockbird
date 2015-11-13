@@ -27,16 +27,7 @@ class Controller_Api extends \Controller_Site_Api
 			$list_array = array();
 			foreach ($data['list'] as $key => $obj)
 			{
-				$row = $obj->to_array();
-				$row['members_count'] = Model_NoticeMemberFrom::get_count4notice_id($row['notice_id'], $this->u->id);
-				$row['members'] = array();
-				$notice_member_froms = Model_NoticeMemberFrom::get4notice_id($row['notice_id'], \Config::get('notice.noticeMemberFrom.limit'), $this->u->id);
-				foreach ($notice_member_froms as $notice_member_from)
-				{
-					$row['members'][] = \Model_Member::get_one_basic4id($notice_member_from->member_id);
-				}
-				$row['is_read'] = (int)$row['is_read'];
-				$list_array[] = $row;
+				$list_array[] = Site_Model::convert_notice_status_to_array_for_view($obj, $this->u->id);
 			}
 			// json response
 			$data['list'] = $list_array;

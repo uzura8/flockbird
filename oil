@@ -58,6 +58,9 @@ if ( ! file_exists(COREPATH.'classes'.DIRECTORY_SEPARATOR.'autoloader.php'))
 require COREPATH.'classes'.DIRECTORY_SEPARATOR.'autoloader.php';
 class_alias('Fuel\\Core\\Autoloader', 'Autoloader');
 
+// set const is task
+define('IS_TASK', true);
+
 // Boot the app
 require APPPATH.'bootstrap.php';
 

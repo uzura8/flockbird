@@ -70,7 +70,11 @@ class Site_Config
 					if (!empty($items['body']['default']['file']))
 					{
 						$ext = (!empty($items['format'])) ? $items['format'] : 'php';
-						$body = file_get_contents(sprintf('%sviews/%s.%s', APPPATH, $items['body']['default']['file'], $ext));
+						if (($path = \Finder::search('views', $items['body']['default']['file'], '.'.$ext, false, false)) === false)
+						{
+							throw new \FuelException('The requested view could not be found: '.\Fuel::clean_path($file).'.'.$ext);
+						}
+						$body = file_get_contents($path);
 					}
 					elseif (!empty($items['body']['default']['value']))
 					{

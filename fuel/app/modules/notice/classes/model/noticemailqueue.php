@@ -30,7 +30,19 @@ class Model_NoticeMailQueue extends \MyOrm\Model
 			'validation' => array('required', 'valid_string' => array('numeric')),
 			'form' => array('type' => false),
 		),
+		'status' => array(
+			'data_type' => 'integer',
+			'default' => 0,
+			'validation' => array('max_length' => array(2)),
+			'form' => array('type' => false),
+		),
+		'result_message' => array(
+			'data_type' => 'text',
+			'validation' => array('trim'),
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
+		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
@@ -39,6 +51,10 @@ class Model_NoticeMailQueue extends \MyOrm\Model
 		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
+			'mysql_timestamp' => true,
+		),
+		'Orm\Observer_UpdatedAt' => array(
+			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
 	);
