@@ -1,75 +1,29 @@
 <?php
 
-abstract class Site_MailBatchSender
+abstract class Site_MailBatchSender extends Site_BatchHandler
 {
-	protected $options = array();
 	protected $status_flags = array();
-	protected $loop_count = 0;
 	protected $send_count = 0;
 	protected $mail_handler;
-	protected $each_queue;
-	protected $each_result = false;
-	protected $each_error_message = '';
 	protected $mail_data = array();
-	//protected $is_trunsuction_commit_turn = false;
 
-	public function __construct($mail_handler = null, $options = array())
+	public function __construct($options = array(), $mail_handler = null)
 	{
+		parent::__construct($options);
+		$this->options = $this->options + array(
+			'queues_limit' => conf('default.limit.sendMail', 'task'),
+		);
 		$this->status_flags = conf('default.statusFlags', 'task');
 		$this->mail_handler = $mail_handler;
-		$this->options = array(
-			'is_admin' => false,
-			'loop_max' => conf('default.loopMax', 'task'),
-			'sleep_time' => conf('default.sleepTime', 'task'),
-			//'debug_log_is_enabled' => conf('mail.log.develop.isEnabled'),
-			//'debug_log_file_path' => conf('mail.log.develop.file_path'),
-		);
-		$this->setup_options($options);
 	}
 
-	protected function setup_options($options)
+	protected function execute_each()
 	{
-		if ($options) $this->options = $options + $this->options;
-	}
-
-	public function execute()
-	{
-		while ($this->loop_count < $this->options['loop_max'])
-		{
-			if (!$queues = $this->get_queues()) break;
-
-			foreach ($queues as $key => $queue)
-			{
-				$this->each_queue = $queue;
-				unset($queue);
-				try
-				{
-					$this->reset_each_status();
-					$this->set_mail_data();
-					$this->send_mail();
-					\DB::start_transaction();
-					$this->update_status();
-					\DB::commit_transaction();
-				}
-				catch(\Exception $e)
-				{
-					if (\DB::in_transaction()) \DB::rollback_transaction();
-				}
-				unset($queues[$key]);
-			}
-			if (\DB::in_transaction()) \DB::commit_transaction();
-			sleep($this->options['sleep_time']);
-			$this->loop_count++;
-		}
-		unset($queues);
-
-		return $this->send_count;
-	}
-
-	protected function reset_each_status()
-	{
-		$this->each_result = null;
-		$this->each_error_message = '';
+		$this->set_mail_data();
+		$this->send_mail();
+		\DB::start_transaction();
+		$this->update_status();
+		\DB::commit_transaction();
 	}
 
 	protected function send_mail()
@@ -86,12 +40,10 @@ abstract class Site_MailBatchSender
 		}
 		catch(\EmailValidationFailedException $e)
 		{
-			//Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
 			$error_message .= '[EmailValidationFailedException] ';
 		}
 		catch(\EmailSendingFailedException $e)
 		{
-			//Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
 			$error_message .= '[EmailSendingFailedException] ';
 		}
 		catch(\Exception $e)
@@ -123,7 +75,11 @@ abstract class Site_MailBatchSender
 		$this->each_queue->save();
 	}
 
-	abstract protected function get_queues();
+	protected function get_result()
+	{
+		return $this->send_count;
+	}
+
 	abstract protected function set_mail_data();
 }
 

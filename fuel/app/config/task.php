@@ -8,14 +8,19 @@ $config = array(
 			'failed' => 2,
 			'skipped' => 3,
 		),
+		'runningFlag' => array(
+			'enabledPriod' => 60 * 60 * 1,// if runningFlag is on over enabledPriod, runningFlag forced to be off.
+		),
 		'loopMax' => 50,
 		'sleepTime' => 5,
 		'limit' => array(
+			'default' => 50,
+			'sendMail' => 20,
 			'model' => array(
+				'update' => 40,
 				'delete' => array(
-					'normal' => 50,
+					'normal' => 30,
 					'file' => 10,
-					'withSendMail' => 20,
 				),
 			),
 		),

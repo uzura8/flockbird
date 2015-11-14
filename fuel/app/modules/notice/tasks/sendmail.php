@@ -17,41 +17,45 @@ class SendMail
 	public static function run()
 	{
 		$task_name = 'noticeSendMail';
-		$message_prefix = \Util_String::camelcase2ceparated($task_name, true);
+		$task_name_formatted = \Util_String::camelcase2ceparated($task_name, true);
 		
-		$result = '';
-		$error_level = null;
-		$error_message = '';
+		$is_error = false;
+		$result   = null;
+		$message  = '';
 		try
 		{
 			\Site_Task::update_running_flag($task_name, true);
 
 			$mail_handler = new \Site_Mail('notice');
-			$bath_mail_handler = new \Notice\Site_MailBatchSender($mail_handler, array(
+			$bath_mail_handler = new \Notice\Site_MailBatchSender(array(
 				'loop_max' => conf('noticeSendMail.loopMax', 'task'),
-				'sleep_time' => conf('noticeSendMail.sleepTime', 'task'),
-			));
-			$result = $bath_mail_handler->execute();
+				'queues_limit' => conf('noticeSendMail.limit', 'task'),
+			), $mail_handler);
+			$send_count = $bath_mail_handler->execute();
+
+			$result = true;
+			$message = $send_count ? sprintf('%d mails sent', $send_count) : 'queues is empty';
+			\Site_Task::update_running_flag($task_name, false);
 		}
 		catch(\TaskAlreadyRunningException $e)
 		{
-			$error_leverl = 'warning';
+			$is_error = true;
+			$result = 'warning';
 		}
 		catch(\Exception $e)
 		{
 			if (\DB::in_transaction()) \DB::rollback_transaction();
-			$error_leverl = 'error';
+			$is_error = true;
+			$result = 'error';
+			\Site_Task::update_running_flag($task_name, false);
 		}
-		\Site_Task::update_running_flag($task_name, false);
-
-		if ($error_level)
+		if ($is_error)
 		{
-			if (!$error_message && !empty($e)) $error_message = $e->getMessage();
-			return \Util_Task::output_message(sprintf('%s %s: %s', $message_prefix, $error_level, $error_message), $error_leverl);
+			if (!$message && !empty($e)) $message = $e->getMessage();
 		}
 
-		return \Util_Task::output_result_message($result, $task_name, sprintf('%s is completed!.', $message_prefix));
+		return \Site_Task::output_result_message($result, $task_name_formatted, $message, true);
 	}
 }
 
-/* End of file tasks/filetmp.php */
+/* End of file tasks/sendmail.php */

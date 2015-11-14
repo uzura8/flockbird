@@ -63,6 +63,13 @@ define('FBD_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 $ sh bin/setup/setup.sh
 ~~~~
 
+### 3. cron 設定 ###
+* /etc/crontab に以下を記述します。
+
+~~~~
+# 5 分ごとに新着お知らせメールを配信する
+*/5 * * * * root /path_to_Flockbird/oil r notice::sendmail
+~~~~
 
 
 ### オプション設定項目 ###

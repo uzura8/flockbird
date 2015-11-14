@@ -3,15 +3,27 @@ namespace Notice;
 
 class Site_MailBatchSender extends \Site_MailBatchSender
 {
+	public function __construct($options = array(), $mail_handler = null)
+	{
+		parent::__construct($options, $mail_handler);
+		$this->task_name = __CLASS__;
+	}
+
 	protected function get_queues()
 	{
-		return \Notice\Model_NoticeMailQueue::get_all(
+		$queues = \Notice\Model_NoticeMailQueue::get_all(
 			array('id' => 'ASC',),
 			array('member'),
-			conf('noticeSendMail.limit.model.delete.withSendMail', 'task'),
-			array('status' => $this->status_flags['unexecuted']),
-			array('notice_status_id' => true, 'member_id' => true, 'status' => true)
+			$this->options['queues_limit'],
+			array('status' => $this->get_status_value('unexecuted')),
+			array('notice_status_id' => true, 'member_id' => true, 'status' => true),
+			$this->max_count ? false : true
 		);
+		if ($this->max_count) return $queues;
+
+		$this->set_max_count($queues[1]);
+
+		return $queues[0];
 	}
 
 	protected function set_mail_data()
@@ -26,13 +38,6 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 
 	protected function get_mail_body(Model_NoticeStatus $notice_status, $target_member_id)
 	{
-		$data = $this->get_template_data_for_mail_body($notice_status, $target_member_id);
-
-		return render('notice::mail/_parts/notice', $data);
-	}
-
-	protected function get_template_data_for_mail_body(Model_NoticeStatus $notice_status, $target_member_id)
-	{
 		$data = Site_Model::convert_notice_status_to_array_for_view($notice_status, $target_member_id);
 		$data['foreign_table'] = $notice_status->notice->foreign_table;
 		$data['type']          = $notice_status->notice->type;
@@ -40,7 +45,7 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 		$data['parent_table']  = $notice_status->notice->parent_table;
 		$data['parent_id']     = $notice_status->notice->parent_id;
 
-		return $data;
+		return render('notice::mail/_parts/notice', $data);
 	}
 
 	protected function check_valid_queue()

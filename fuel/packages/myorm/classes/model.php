@@ -239,8 +239,9 @@ class Model extends \Orm\Model
 		return array($is_return_array ? $list_array : $list, $next_id, $all_records_count);
 	}
 
-	public static function get_all($order_by = null, $relateds = array(), $limit = 0, $params = array(), $selects = array())
+	public static function get_all($order_by = null, $relateds = array(), $limit = 0, $params = array(), $selects = array(), $return_with_all_count = false)
 	{
+		$all_count = 0;
 		if (!is_array($relateds)) $relateds = (array)$relateds;
 
 		if (empty($order_by)) $order_by = array('id' => 'asc');
@@ -248,7 +249,10 @@ class Model extends \Orm\Model
 		if ($selects) $query->select($selects);
 		if ($relateds) $query->related($relateds);
 		if ($params) $query = static::set_where($query, $params);
+		if ($return_with_all_count) $all_count = $query->count();
 		if ($limit) $query->rows_limit($limit);
+
+		if ($return_with_all_count) return array($query->get(), $all_count);
 
 		return $query->get();
 	}
