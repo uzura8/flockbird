@@ -6,7 +6,6 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 	public function __construct($options = array(), $mail_handler = null)
 	{
 		parent::__construct($options, $mail_handler);
-		$this->task_name = __CLASS__;
 	}
 
 	protected function get_queues()

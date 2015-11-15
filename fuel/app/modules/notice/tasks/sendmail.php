@@ -17,27 +17,28 @@ class SendMail
 	public static function run()
 	{
 		$task_name = 'noticeSendMail';
-		$task_name_formatted = \Util_String::camelcase2ceparated($task_name, true);
-		
 		$is_error = false;
 		$result   = null;
 		$message  = '';
+
+		$mail_handler = new \Site_Mail('notice');
+		$batch_mail_handler = new \Notice\Site_MailBatchSender(array(
+			'task_name' => $task_name,
+			'loop_max' => conf($task_name.'.loopMax', 'task'),
+			'queues_limit' => conf($task_name.'.limit', 'task'),
+		), $mail_handler);
 		try
 		{
-			\Site_Task::update_running_flag($task_name, true);
-
-			$mail_handler = new \Site_Mail('notice');
-			$bath_mail_handler = new \Notice\Site_MailBatchSender(array(
-				'loop_max' => conf('noticeSendMail.loopMax', 'task'),
-				'queues_limit' => conf('noticeSendMail.limit', 'task'),
-			), $mail_handler);
-			$send_count = $bath_mail_handler->execute();
-
+			$send_count = $batch_mail_handler->execute();
 			$result = true;
 			$message = $send_count ? sprintf('%d mails sent', $send_count) : 'queues is empty';
-			\Site_Task::update_running_flag($task_name, false);
 		}
-		catch(\TaskAlreadyRunningException $e)
+		catch(\Site_BatchInvalidOptionException $e)
+		{
+			$is_error = true;
+			$result = 'error';
+		}
+		catch(\Site_BatchAlreadyRunningException $e)
 		{
 			$is_error = true;
 			$result = 'warning';
@@ -47,12 +48,13 @@ class SendMail
 			if (\DB::in_transaction()) \DB::rollback_transaction();
 			$is_error = true;
 			$result = 'error';
-			\Site_Task::update_running_flag($task_name, false);
+			$batch_mail_handler->update_running_flag_off();
 		}
 		if ($is_error)
 		{
 			if (!$message && !empty($e)) $message = $e->getMessage();
 		}
+		$task_name_formatted = \Util_String::camelcase2ceparated($task_name);
 
 		return \Site_Task::output_result_message($result, $task_name_formatted, $message, true);
 	}

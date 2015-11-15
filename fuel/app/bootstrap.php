@@ -92,8 +92,3 @@ if (conf('library.goutte.isEnabled'))
 	Autoloader::add_class('Client', $goutte_path.'Client.php');
 }
 
-// common process of task
-if (IS_TASK)
-{
-	class TaskAlreadyRunningException extends FuelException {}
-}
