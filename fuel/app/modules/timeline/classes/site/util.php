@@ -142,14 +142,14 @@ class Site_Util
 		return null;
 	}
 
-	public static function get_timeline_ogp_title($type)
+	public static function get_timeline_ogp_title($type, $body = '')
 	{
 		switch ($type)
 		{
 			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
 			case \Config::get('timeline.types.album_image_timeline'):
 			case \Config::get('timeline.types.member_name'):
-				return term('timeline', 'form.post').' | '.FBD_SITE_NAME;
+				return sprintf('%s | %s', $body ?: term('timeline', 'form.post'), FBD_SITE_NAME);
 
 			case \Config::get('timeline.types.member_register'):// SNS への参加
 				return FBD_SITE_NAME.' に参加しました。';
@@ -171,7 +171,7 @@ class Site_Util
 				return term('album_image').'を投稿しました。'.' | '.FBD_SITE_NAME;
 		}
 
-		return term('timeline', 'form.post').' | '.FBD_SITE_NAME;
+		return sprintf('%s | %s', $body ?: term('timeline', 'form.post'), FBD_SITE_NAME);
 	}
 
 	public static function get_normal_timeline_body($body, $type, $timeline_id, $image_count = 0, $is_detail = false)

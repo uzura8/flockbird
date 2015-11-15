@@ -319,6 +319,11 @@ $config = array(
 				'body'  => 200,
 			),
 		),
+		'share' => array(
+			'trimWidth' => array(
+				'link' => 80,
+			),
+		),
 		'list' => array(
 			'limit_pager' => 20,
 			'limit' => 10,

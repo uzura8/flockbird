@@ -61,7 +61,7 @@
 
 <!-- share button -->
 <?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($album->public_flag)): ?>
-<?php echo render('_parts/services/share', array('disableds' => array('facebook'))); ?>
+<?php echo render('_parts/services/share', array('disableds' => array('facebook'), 'text' => $album->name)); ?>
 <?php endif; ?>
 
 </div>

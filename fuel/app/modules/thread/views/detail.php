@@ -29,7 +29,7 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 
 <!-- share button -->
 <?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($thread->public_flag)): ?>
-<?php echo render('_parts/services/share'); ?>
+<?php echo render('_parts/services/share', array('text' => $thread->name)); ?>
 <?php endif; ?>
 
 </div><!-- .comment_info -->
