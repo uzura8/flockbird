@@ -107,7 +107,10 @@ class Controller_Timeline extends \Controller_Site
 
 		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('timeline', $this->u->id, array($timeline)) : array();
-		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true);
+		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true, array(
+			'title' => Site_Util::get_timeline_ogp_title($timeline->type),
+			'description' => $timeline->body ?: '',
+		));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/article', array(
 			'timeline_id' => $timeline->id,

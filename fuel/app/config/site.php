@@ -313,6 +313,12 @@ $config = array(
 		'comment' => array(
 			'nl2br' => true,
 		),
+		'ogp' => array(
+			'trimWidth' => array(
+				'title' => 80,
+				'body'  => 200,
+			),
+		),
 		'list' => array(
 			'limit_pager' => 20,
 			'limit' => 10,

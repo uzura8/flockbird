@@ -101,14 +101,15 @@ class Site_Util
 		throw new \InvalidArgumentException('first parameter is invalid.');;
 	}
 
-	public static function get_timeline_content($timeline_id, $type, $body = null, $foreign_table_obj = null, array $optional_info = null, $is_detail = false)
+	public static function get_timeline_content($timeline_id, $type, $body = null, $foreign_table_obj = null, array $optional_info = null, $is_detail = false, $is_strip_tags = false)
 	{
 		switch ($type)
 		{
 			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
 			case \Config::get('timeline.types.album_image_timeline'):
 			case \Config::get('timeline.types.member_name'):
-				return self::get_normal_timeline_body($body, $type, $timeline_id, isset($optional_info['count']) ? $optional_info['count'] : 0, $is_detail);
+				$return_body = self::get_normal_timeline_body($body, $type, $timeline_id, isset($optional_info['count']) ? $optional_info['count'] : 0, $is_detail);
+				return $is_strip_tags ? \Security::strip_tags($return_body) : $return_body;
 
 			case \Config::get('timeline.types.member_register'):// SNS への参加
 				return FBD_SITE_NAME.' に参加しました。';
@@ -127,17 +128,50 @@ class Site_Util
 				return term('album').'を作成しました。';
 
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
-				return $foreign_table_obj ? render('timeline::_parts/body_for_add_album_image', array(
+				$return_body = $foreign_table_obj ? render('timeline::_parts/body_for_add_album_image', array(
 					'album_id' => $foreign_table_obj->id,
 					'name' => $foreign_table_obj->name,
 					'count' => isset($optional_info['count']) ? $optional_info['count'] : 0,
 				)) : null;
+				return $is_strip_tags ? \Security::strip_tags($return_body) : $return_body;
 
 			//case \Config::get('timeline.types.member_name'):// ニックネーム変更
 			//	break;
 		}
 
 		return null;
+	}
+
+	public static function get_timeline_ogp_title($type)
+	{
+		switch ($type)
+		{
+			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
+			case \Config::get('timeline.types.album_image_timeline'):
+			case \Config::get('timeline.types.member_name'):
+				return term('timeline', 'form.post').'|'.FBD_SITE_NAME;
+
+			case \Config::get('timeline.types.member_register'):// SNS への参加
+				return FBD_SITE_NAME.' に参加しました。';
+
+			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
+			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
+				return term('profile', 'site.picture').'を設定しました。'.'|'.FBD_SITE_NAME;
+
+			case \Config::get('timeline.types.note'):// note 投稿
+				return term('note').'を投稿しました。'.'|'.FBD_SITE_NAME;
+
+			case \Config::get('timeline.types.thread'):// thread 投稿
+				return term('thread').'を投稿しました。'.'|'.FBD_SITE_NAME;
+
+			case \Config::get('timeline.types.album'):// album 作成
+				return term('album').'を作成しました。'.'|'.FBD_SITE_NAME;
+
+			case \Config::get('timeline.types.album_image'):// album_image 投稿
+				return term('album_image').'を投稿しました。'.'|'.FBD_SITE_NAME;
+		}
+
+		return term('timeline', 'form.post').'|'.FBD_SITE_NAME;
 	}
 
 	public static function get_normal_timeline_body($body, $type, $timeline_id, $image_count = 0, $is_detail = false)

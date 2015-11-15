@@ -105,7 +105,10 @@ class Controller_Album extends \Controller_Site
 		$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list']) : array();
 
-		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album');
+		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album', null, false, false, array(
+			'title' => $album->name,
+			'description' => $album->body,
+		));
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));
 		$this->template->post_footer = \View::forge('_parts/detail_footer');
 		$this->template->post_footer = \View::forge('_parts/detail_footer', array('is_mypage' => check_uid($album->member_id)));
