@@ -38,6 +38,7 @@ $config = array(
 			'type' => 'popover',// popover / modal / link
 		),
 		'oauth' => array(
+			'forceSetRememberMe' => false,
 			'log' => array(
 				'isOutputErrorLog' => array(
 					'provider_signup' => true,

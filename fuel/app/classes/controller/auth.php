@@ -184,6 +184,7 @@ class Controller_Auth extends Controller_Site
 		// 登録済みの場合はログイン
 		$member_oauth = $query->get_one();
 		$this->force_login($member_oauth->member_id);
+		if (conf('auth.oauth.forceSetRememberMe')) Auth::remember_me();
 
 		return $this->login_succeeded();
 	}
@@ -257,6 +258,7 @@ class Controller_Auth extends Controller_Site
 			return $this->login_failed();
 		}
 		$this->force_login($member->id);
+		if (conf('auth.oauth.forceSetRememberMe')) Auth::remember_me();
 
 		return $this->login_succeeded();
 	}
