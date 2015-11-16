@@ -107,7 +107,10 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 
 <!-- share button -->
 <?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($timeline->public_flag)): ?>
-<?php echo render('_parts/services/share', array('uri' => $detail_page_uri)); ?>
+<?php echo render('_parts/services/share', array(
+	'uri' => $detail_page_uri,
+	'text' => \Timeline\Site_Util::get_timeline_ogp_title($timeline->type, $timeline->body),
+)); ?>
 <?php endif; ?>
 
 </div><!-- comment_info -->

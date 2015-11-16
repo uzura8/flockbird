@@ -1,6 +1,6 @@
 <?php echo Html::doctype('html5'); ?>
 <html lang="ja">
-<head>
+<head<?php if (is_enabled_share('facebook', 'share')): ?> prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#"<?php endif; ?>>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width<?php if (IS_SP): ?>, initial-scale=1.0, maximum-scale=1.0, user-scalable=no<?php endif; ?>">

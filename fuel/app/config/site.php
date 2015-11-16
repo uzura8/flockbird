@@ -38,6 +38,7 @@ $config = array(
 			'type' => 'popover',// popover / modal / link
 		),
 		'oauth' => array(
+			'forceSetRememberMe' => false,
 			'log' => array(
 				'isOutputErrorLog' => array(
 					'provider_signup' => true,
@@ -316,6 +317,17 @@ $config = array(
 	'view_params_default' => array(
 		'comment' => array(
 			'nl2br' => true,
+		),
+		'ogp' => array(
+			'trimWidth' => array(
+				'title' => 80,
+				'body'  => 200,
+			),
+		),
+		'share' => array(
+			'trimWidth' => array(
+				'link' => 80,
+			),
 		),
 		'list' => array(
 			'limit_pager' => 20,

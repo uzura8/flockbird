@@ -303,9 +303,12 @@ class Controller_Base extends Controller_Hybrid
 		}
 	}
 
-	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false)
+	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false, $ogp_data = array())
 	{
-		$common = array('title' =>  FBD_SITE_DESCRIPTION.' '.FBD_SITE_NAME);
+		$common = array(
+			'title' =>  FBD_SITE_NAME,
+			'description' =>  FBD_SITE_DESCRIPTION,
+		);
 		$title_name = '';
 		$this->template->title = '';
 
@@ -321,6 +324,9 @@ class Controller_Base extends Controller_Hybrid
 
 		$this->template->breadcrumbs = $is_no_breadcrumbs ? array() :
 			static::get_breadcrumbs($title_name, $middle_breadcrumbs, $member_obj, $member_obj ? $this->check_is_mypage($member_obj->id) : false, $module);
+
+		if (!empty($ogp_data['title'])) $common['title'] = $ogp_data['title'];
+		if (!empty($ogp_data['description'])) $common['description'] = $ogp_data['description'];
 
 		View::set_global('common', $common);
 	}

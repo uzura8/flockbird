@@ -114,7 +114,11 @@ class Controller_Image extends \Controller_Site
 		}
 
 		$title = Site_Util::get_album_image_display_name($album_image, term('album_image', 'site.detail'));
-		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album');
+		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album',
+			null, false, false, array(
+				'title' => $album_image->album->name,
+				'description' => $album_image->name ?: '',
+			));
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->post_header = \View::forge('image/_parts/detail_header');
 		$this->template->post_footer = \View::forge('image/_parts/detail_footer', array(
