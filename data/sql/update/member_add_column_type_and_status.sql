@@ -1,0 +1,2 @@
+ALTER TABLE `member` ADD COLUMN `group` int(3) NOT NULL DEFAULT 1;
+ALTER TABLE `member` ADD COLUMN `status` tinyint(2) NOT NULL DEFAULT 0;

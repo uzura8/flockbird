@@ -1,6 +1,8 @@
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
+  `group` int(3) NOT NULL DEFAULT 1,
+  `status` tinyint(2) NOT NULL DEFAULT 0,
   `file_name` varchar(255) DEFAULT NULL,
   `filesize_total` int(11) NOT NULL DEFAULT 0 COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',

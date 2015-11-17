@@ -45,6 +45,7 @@ Util_toolkit::include_php_files(APPPATH.'helpers');
 // Config load.
 Config::load('site', 'site');
 Config::load('term', 'term');
+Config::load('member', 'member');
 Config::load('template', 'template');
 Config::load('less', 'less');
 if (IS_TASK)

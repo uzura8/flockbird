@@ -21,11 +21,11 @@ class User
 	 *
 	 * @return string
 	 */
-	public static function create($email, $password, $name)
+	public static function create($email, $password, $name, $group = 1)
 	{
 		try
 		{
-			if (!\Auth::create_user($email, $password, $name))
+			if (!\Auth::create_user($email, $password, $name, $group))
 			{
 				throw new \FuelException('Failed to create user.');
 			}
