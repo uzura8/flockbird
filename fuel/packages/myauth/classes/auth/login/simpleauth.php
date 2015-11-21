@@ -217,4 +217,19 @@ class Auth_Login_Simpleauth extends \Auth\Auth_Login_Simpleauth
 			->from(\Config::get('simpleauth.table_name'))
 			->execute(\Config::get('simpleauth.db_connection'))->current();
 	}
+
+	/**
+	 * Get the user's screen name
+	 *
+	 * @return  string
+	 */
+	public function get_screen_name()
+	{
+		if (empty($this->user))
+		{
+			return term('guest');
+		}
+
+		return $this->user['username'];
+	}
 }

@@ -576,7 +576,7 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 	{
 		if (empty($this->member))
 		{
-			return false;
+			return term('guest');
 		}
 
 		return $this->member->name;
