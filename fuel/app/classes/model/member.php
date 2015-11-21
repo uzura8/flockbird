@@ -196,7 +196,7 @@ class Model_Member extends \MyOrm\Model
 
 	public function check_acl($group_key, $is_throw_exception = true)
 	{
-		$is_accessible = ($this->grop == \Site_Member::get_group_value($group_key));
+		$is_accessible = ($this->group == \Site_Member::get_group_value($group_key));
 		if ($is_throw_exception && !$is_accessible) throw new \HttpForbiddenException;
 
 		return $is_accessible;
