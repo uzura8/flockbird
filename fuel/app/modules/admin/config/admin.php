@@ -20,10 +20,10 @@ return array(
 	'member' => array(
 		'group' => array(
 			'display' => array(
-				'isEnabled' => true,
+				'isEnabled' => false,
 			),
 			'edit' => array(
-				'isEnabled' => true,
+				'isEnabled' => false,
 				'roles' => array(
 					'admin' => true,
 					'moderator' => array('user', 'specified_user'),
