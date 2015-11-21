@@ -46,7 +46,7 @@ elseif ($page_type != 'detail')
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
 <?php if (!empty($with_edit_btn) && $is_mypage): ?>
-	<?php echo btn('form.edit', 'member/profile/edit', 'btnEdit', true, 'xs'); ?>
+	<?php echo btn('form.edit', 'member/profile/edit', 'btnEdit', true, 'sm'); ?>
 <?php endif; ?>
 	<div class="row">
 		<div class="col-<?php echo $col_class; ?>-<?php echo $image_col_size; ?>">
