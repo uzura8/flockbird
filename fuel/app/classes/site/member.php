@@ -234,10 +234,9 @@ class Site_Member
 		return true;
 	}
 
-	public static function get_groups($admin_user_role = null)
+	public static function get_groups()
 	{
-		$groups_all = conf('group.options', 'member');
-		if (!$admin_user_role) return $groups_all;
+		return conf('group.options', 'member');
 	}
 
 	public static function get_group_keys()
