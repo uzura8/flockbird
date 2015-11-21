@@ -2,12 +2,12 @@
 <?php foreach ($menus as $menu): ?>
 <?php
 $li_class = !empty($is_ajax_loaded) ? ' class="ajax_loaded"' : '';
+$attr = isset($menu['attr']) ? $menu['attr'] : array();
+$label = isset($menu['label']) ? $menu['label'] : '';
 ?>
 <?php if (empty($menu['tag']) || $menu['tag'] == 'a' || $menu['tag'] == 'anchor'): ?>
 <?php
 $href  = isset($menu['href']) ? $menu['href'] : '#';
-$attr = isset($menu['attr']) ? $menu['attr'] : array();
-$label = isset($menu['label']) ? $menu['label'] : '';
 ?>
 <?php 	if (isset($menu['icon_term'])): ?>
 <?php 		if (empty($attr['data-msg']) && $msg = Site_Util::get_confirm_msg(str_replace('form.', '', $menu['icon_term']))) $attr['data-msg'] = $msg; ?>

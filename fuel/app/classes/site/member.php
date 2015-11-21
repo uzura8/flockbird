@@ -233,4 +233,42 @@ class Site_Member
 
 		return true;
 	}
+
+	public static function get_groups($admin_user_role = null)
+	{
+		$groups_all = conf('group.options', 'member');
+		if (!$admin_user_role) return $groups_all;
+	}
+
+	public static function get_group_keys()
+	{
+		return array_keys(static::get_groups());
+	}
+
+	public static function get_group_key($group_value)
+	{
+		if (!$groups = conf('group.options', 'member')) return false;
+
+		return array_search($group_value, $groups);
+	}
+
+	public static function get_group_value($group_key)
+	{
+		if (!$groups = conf('group.options', 'member')) return false;
+		if (empty($groups[$group_key])) return false;
+
+		return $groups[$group_key];
+	}
+
+	public static function get_group_label($group_value)
+	{
+		if (false === ($group_key = static::get_group_key($group_value))) return symbol('noValue');
+
+		return static::get_group_label4key($group_key);
+	}
+
+	public static function get_group_label4key($group_key)
+	{
+		return term('member.group.options.'.$group_key);
+	}
 }

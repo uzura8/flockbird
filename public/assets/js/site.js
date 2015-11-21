@@ -19,8 +19,9 @@ $(document).on('click', '.js-like', function(){
 });
 
 $(document).on('click', '.js-simplePost', function(){
+	var postData = $(this).data('post_data') ? $(this).data('post_data') : '';
 	close_dropdown_menu(this);
-	post_submit(this);
+	post_submit(this, postData);
 	return false;
 });
 
@@ -254,7 +255,7 @@ $(document).on('click', '.js-dropdown_content_menu', function(){
 	var memberId = $(this).data('member_id') ? parseInt($(this).data('member_id')) : 0;
 	var targetBlock = $(this).data('menu') ? $($(this).data('menu')) : $(this).next('ul');
 
-	if (!get_uid()) return false;
+	if (is_site() && !get_uid()) return false;
 
 	var selfObj = $(this);
 	$.ajax({

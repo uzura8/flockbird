@@ -17,4 +17,19 @@ return array(
 			),
 		),
 	),
+	'member' => array(
+		'group' => array(
+			'display' => array(
+				'isEnabled' => true,
+			),
+			'edit' => array(
+				'isEnabled' => true,
+				'roles' => array(
+					'admin' => true,
+					'moderator' => array('user', 'specified_user'),
+					'user' => array(),
+				),
+			),
+		),
+	),
 );

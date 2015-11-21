@@ -119,8 +119,8 @@ class Model_Member extends \MyOrm\Model
 			if (is_callable($method)) static::$_properties['name']['validation']['not_in_array'][] = call_user_func($method);
 		}
 
-		static::$_properties['group']['validation']['in_array'][] = conf('group', 'member');
-		static::$_properties['status']['validation']['in_array'][] = conf('status', 'member');
+		static::$_properties['group']['validation']['in_array'][] = conf('group.options', 'member');
+		static::$_properties['status']['validation']['in_array'][] = conf('status.options', 'member');
 		static::$_properties['register_type']['validation']['in_array'][] = Site_Member::get_accept_member_register_types();
 
 		$sex_options = Site_Form::get_form_options4config('term.member.sex.options');
@@ -187,5 +187,10 @@ class Model_Member extends \MyOrm\Model
 		if ($check_unsaved_password && !empty($this->member_auth->password)) return false;
 
 		return true;
+	}
+
+	public function display_group()
+	{
+		return \Site_Member::get_group_label($this->group);
 	}
 }

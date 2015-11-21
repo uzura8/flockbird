@@ -13,6 +13,7 @@ function getBaseUrl() {
 function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
 function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
 function is_sp() {return <?php echo (IS_SP)? 'true' : 'false'; ?>;}
+function is_site() {return <?php echo (IS_ADMIN)? 'false' : 'true'; ?>;}
 function get_term(key) {
 	var terms = {
 <?php if (conf('memberRelation.follow.isEnabled')): ?>
