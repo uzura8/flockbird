@@ -79,6 +79,8 @@ $config = array(
 		'do_invite' => '招待する',
 		'invite_friend' => '友達を招待',
 		'get' => '取得',
+		'recieve_mail' => '受信する',
+		'unrecieve_mail' => '受信しない',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -165,6 +167,17 @@ $config = array(
 		'age' => '年齢',
 		'generation' => '年代',
 		'registration' => '新規登録',
+		'group' => array(
+			'view' => 'グループ',
+			'options' => array(
+				'admin' => '管理メンバー',
+				//'moderator' => '編集権限メンバー',
+				'specified_user' => '特別メンバー',
+				//'paid_user' => '課金メンバー',
+				'user' => '一般メンバー',
+				//'guest' => 'ゲストメンバー',
+			),
+		),
 	),
 	'page' => array(
 		'view' => '画面',

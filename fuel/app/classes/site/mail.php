@@ -74,11 +74,13 @@ class Site_Mail
 
 	public function send($to_email = null, $data = array())
 	{
-		if ($to_email)
+		if (!$to_email && !empty($data['to_email']))
 		{
-			$this->options['to_email'] = $to_email;
+			$to_email = $data['to_email'];
 		}
-		$data['to_email'] = $this->options['to_email'];
+		if (!$to_email) throw new EmailValidationFailedException('To address not set.');
+		if (empty($data['to_email'])) $data['to_email'] = $to_email;
+		$this->options['to_email'] = $to_email;
 
 		if (!$this->options['to_name'] && !empty($data['to_name']))
 		{

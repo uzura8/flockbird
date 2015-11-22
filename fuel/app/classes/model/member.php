@@ -26,6 +26,14 @@ class Model_Member extends \MyOrm\Model
 			),
 			'form' => array('type' => 'text'),
 		),
+		'group' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
+		'status' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => false),
+		),
 		'login_hash' => array(
 			'validation' => array('valid_string' => array('alpha_numeric'), 'max_length' => array(255)),
 			'form' => array('type' => false),
@@ -94,7 +102,7 @@ class Model_Member extends \MyOrm\Model
 	);
 
 	protected static $_to_array_exclude = array(
-		'login_hash', 'register_type', 'filesize_total', 'last_login', 'previous_login', 'created_at', 'updated_at'
+		'type', 'login_hash', 'register_type', 'filesize_total', 'last_login', 'previous_login', 'created_at', 'updated_at'
 	);
 	protected static $basic_props = array('id', 'name', 'file');
 	protected static $image_prefix = 'm';
@@ -111,6 +119,8 @@ class Model_Member extends \MyOrm\Model
 			if (is_callable($method)) static::$_properties['name']['validation']['not_in_array'][] = call_user_func($method);
 		}
 
+		static::$_properties['group']['validation']['in_array'][] = conf('group.options', 'member');
+		static::$_properties['status']['validation']['in_array'][] = conf('status.options', 'member');
 		static::$_properties['register_type']['validation']['in_array'][] = Site_Member::get_accept_member_register_types();
 
 		$sex_options = Site_Form::get_form_options4config('term.member.sex.options');
@@ -177,5 +187,18 @@ class Model_Member extends \MyOrm\Model
 		if ($check_unsaved_password && !empty($this->member_auth->password)) return false;
 
 		return true;
+	}
+
+	public function display_group()
+	{
+		return \Site_Member::get_group_label($this->group);
+	}
+
+	public function check_acl($group_key, $is_throw_exception = true)
+	{
+		$is_accessible = ($this->group == \Site_Member::get_group_value($group_key));
+		if ($is_throw_exception && !$is_accessible) throw new \HttpForbiddenException;
+
+		return $is_accessible;
 	}
 }

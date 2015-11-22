@@ -182,7 +182,7 @@ class Site_Member
 
 	public static function delete_file_all4member_id($member_id, $is_tmp = false, $limit = 0)
 	{
-		if (!$limit) $limit = conf('batch.limit.delete.file', 10);
+		if (!$limit) $limit = conf('batch.default.limit.model.delete.file', 10);
 
 		$model = Site_Model::get_model_name($is_tmp ? 'file_tmp' : 'file');
 		$query = $model::query();
@@ -232,6 +232,43 @@ class Site_Member
 		if ($profileds_for_check) return false;
 
 		return true;
+	}
+
+	public static function get_groups()
+	{
+		return conf('group.options', 'member');
+	}
+
+	public static function get_group_keys()
+	{
+		return array_keys(static::get_groups());
+	}
+
+	public static function get_group_key($group_value)
+	{
+		if (!$groups = conf('group.options', 'member')) return false;
+
+		return array_search($group_value, $groups);
+	}
+
+	public static function get_group_value($group_key)
+	{
+		if (!$groups = conf('group.options', 'member')) return false;
+		if (empty($groups[$group_key])) return false;
+
+		return $groups[$group_key];
+	}
+
+	public static function get_group_label($group_value)
+	{
+		if (false === ($group_key = static::get_group_key($group_value))) return symbol('noValue');
+
+		return static::get_group_label4key($group_key);
+	}
+
+	public static function get_group_label4key($group_key)
+	{
+		return term('member.group.options.'.$group_key);
 	}
 
 	public static function get_screen_name_additional_info($member_id = null)

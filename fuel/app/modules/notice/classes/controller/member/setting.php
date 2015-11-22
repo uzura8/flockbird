@@ -26,14 +26,19 @@ class Controller_Member_Setting extends \Controller_Site
 
 			try
 			{
-				if (!$val->run()) throw new \FuelException($val->show_errors());
+				if (!$val->run()) throw new \ValidationFailedException($val->show_errors());
 				$post = $val->validated();
+				self::validate_notice_mail_mode($this->u, $post);
 				\DB::start_transaction();
 				\Form_MemberConfig::save($this->u->id, $val, $post);
 				\DB::commit_transaction();
 
 				\Session::set_flash('message', $page_name.'を変更しました。');
 				\Response::redirect('member/setting');
+			}
+			catch(\ValidationFailedException $e)
+			{
+				\Session::set_flash('error', $e->getMessage());
 			}
 			catch(\FuelException $e)
 			{
@@ -47,5 +52,17 @@ class Controller_Member_Setting extends \Controller_Site
 			'label_size' => 5,
 			'form_params' => array('common' => array('radio' => array('layout_type' => 'grid'))),
 		));
+	}
+
+	private static function validate_notice_mail_mode(\Model_Member $member, $post_values)
+	{
+		if (!conf('noticeMail.isEnabled', 'notice')) return;
+		if (!empty($member->member_auth->email)) return;
+
+		if (!empty($post_values['notice_noticeMailMode']))
+		{
+			throw new \ValidationFailedException(sprintf('%sを%sには、%sを%sしてください。',
+				term('notice', 'site.mail'), term('form.recieve_mail'), term('site.email'), term('site.registration')));
+		}
 	}
 }

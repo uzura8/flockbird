@@ -310,4 +310,12 @@ class Util_String
 	{
 		return (substr($str, -1) == $delimitter) ? $str : $str.$delimitter;
 	}
+
+	public static function camelcase2ceparated($str, $is_ucwords = true)
+	{
+		$str = str_replace('_', ' ', Inflector::underscore($str));
+		if ($is_ucwords) $str = ucwords($str);
+
+		return $str;
+	}
 }

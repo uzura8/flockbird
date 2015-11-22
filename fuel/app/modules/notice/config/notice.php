@@ -10,6 +10,9 @@ return array(
 			'prefix'  => 'notice_unread_count_',
 		),
 	),
+	'noticeMail' => array(
+		'isEnabled'  => true,
+	),
 	'articles' => array(
 		'limit' => 10,
 		'limit_max' => 12,

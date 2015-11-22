@@ -153,6 +153,12 @@ class Util_Orm
 				foreach ($conditions as $condition => $value)
 				{
 					if (!$obj->is_changed($property)) continue;
+					if ($condition == 'value')
+					{
+						if ($obj->{$property} != $value) continue;
+
+						return true;
+					}
 					if ($condition == 'ignore_property')
 					{
 						if ($obj->is_changed($value)) continue;

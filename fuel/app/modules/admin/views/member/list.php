@@ -8,6 +8,9 @@
 	<th class="small"><?php echo term('site.id'); ?></th>
 	<th class="small"><?php echo term('site.detail'); ?></th>
 	<th class="small"><?php echo term('form.delete'); ?></th>
+<?php if (conf('member.group.display.isEnabled', 'admin')): ?>
+	<th class="u-sm"><?php echo term('member.group.view'); ?></th>
+<?php endif; ?>
 	<th><?php echo term('member.name'); ?></th>
 	<th><?php echo term('member.sex.label'); ?></th>
 	<th class="datetime"><?php echo term('site.registration', 'site.datetime'); ?></th>
@@ -32,6 +35,31 @@
 <?php 	else: ?>
 	<td class="small"><?php echo symbol('noValue'); ?></td>
 <?php 	endif; ?>
+
+<?php // group edit ?>
+<?php 	if (conf('member.group.display.isEnabled', 'admin')): ?>
+<?php 		if (conf('member.group.edit.isEnabled', 'admin')
+						&& check_acl('admin/member/group/edit', 'POST')
+						&& \Admin\Site_AdminUser::check_editable_member_group(\Auth::get_groups(), \Site_Member::get_group_key($member->group))): ?>
+<?php
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdow_group_'.$member->id,
+	'class' => array('dropdown', 'boxBtn'),
+);
+$dropdown_btn_attr = array(
+	'class' => 'js-dropdown_content_menu',
+	'data-uri' => sprintf('admin/member/group/api/menu/%d.html', $member->id),
+	'data-menu' => '#menu_'.$member->id,
+	'data-loaded' => 0,
+	'data-get_data' => json_encode(array('page' => Pagination::instance('mypagination')->current_page)),
+);
+?>
+	<td class="u-sm"><?php echo btn_dropdown($member->display_group(), array(), true, 'xs', null, true, $dropdown_btn_group_attr, $dropdown_btn_attr, true); ?></td>
+<?php 		else: ?>
+	<td class="u-sm"><?php echo $member->display_group(); ?></td>
+<?php 		endif; ?>
+<?php 	endif; ?>
+<?php // group edit ?>
 
 	<td><?php echo Html::anchor('admin/member/'.$member->id, $member->name); ?></td>
 	<td><?php echo (isset($member->sex) && strlen($member->sex)) ?

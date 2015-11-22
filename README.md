@@ -26,6 +26,14 @@ $ vi config.php
 ~~~~
 
 
+#### ドメイン設定(optional)
+
+~~~~
+define('FBD_DOMAIN', 'sns.example.com');// if use Internationalized Domain, set Punycode here.
+~~~~
+* task でメール配信する場合、ドメイン設定が必要になります
+
+
 #### 設置パス設定(optional)
 
 ~~~~
@@ -63,6 +71,13 @@ define('FBD_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 $ sh bin/setup/setup.sh
 ~~~~
 
+### 3. cron 設定 ###
+* /etc/crontab に以下を記述します。
+
+~~~~
+# 5 分ごとに新着お知らせメールを配信する
+*/5 * * * * root php /path_to_Flockbird/oil r notice::sendmail > /dev/null
+~~~~
 
 
 ### オプション設定項目 ###

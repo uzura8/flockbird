@@ -42,15 +42,23 @@ Util_toolkit::include_php_files(APPPATH.'helpers');
 // Initialize the framework with the config file.
 \Fuel::init('config.php');
 
-
 // Config load.
 Config::load('site', 'site');
 Config::load('term', 'term');
-Config::load('icon', 'icon');
-Config::load('page', 'page');
+Config::load('member', 'member');
 Config::load('template', 'template');
-Config::load('exif', 'exif');
 Config::load('less', 'less');
+if (IS_TASK)
+{
+	Config::load('task', 'task');
+}
+else
+{
+	Config::load('icon', 'icon');
+	Config::load('page', 'page');
+	Config::load('exif', 'exif');
+}
+
 // Config of each module load.
 $modules = Site_Util::get_active_modules();
 foreach ($modules as $module => $path)
@@ -61,7 +69,10 @@ foreach ($modules as $module => $path)
 	}
 }
 // Config of navigation load.
-Config::load('navigation', 'navigation');
+if (!IS_TASK)
+{
+	Config::load('navigation', 'navigation');
+}
 
 if (in_array(FBD_ENVIRONMENT, array('DEVELOPMENT', 'TEST')))
 {
@@ -81,3 +92,4 @@ if (conf('library.goutte.isEnabled'))
 	Autoloader::add_namespace('Goutte', $goutte_path, true);
 	Autoloader::add_class('Client', $goutte_path.'Client.php');
 }
+

@@ -10,7 +10,7 @@ class Util_Task
 		}
 		else
 		{
-			$message = sprintf('%s %s.', ucwords($task_name), static::get_result_message($result));
+			$message = sprintf('%s %s.', $task_name, static::get_result_message($result));
 		}
 
 		return static::output_message($message, $result);

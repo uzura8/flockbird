@@ -163,31 +163,45 @@ class Util_Toolkit
 		return $output;
 	}
 
-	public static function log_error($message, $level = 'error')
+	public static function log_error($message, $level = 'error', $is_task = false, $is_force_output = false)
 	{
-		if (!FBD_OUTPUT_ERROR_LOG_LEVEL) return;
-		if (!in_array($level, array('error', 'warning', 'info', 'debug'))) throw new InvalidArgumentException('Second parameter is invalid.');
-		switch (FBD_OUTPUT_ERROR_LOG_LEVEL)
+		if (!in_array($level, array('error', 'warning', 'info', 'debug')))
 		{
-			case 'error':
-				if (in_array($level, array('warning', 'info', 'debug'))) return;
-				break;
-			case 'warning':
-				if (in_array($level, array('info', 'debug'))) return;
-				break;
-			case 'info':
-				if ($level == 'debug') return;
-				break;
-			case 'debug':
-			default :
-				break;
+			if ($is_task) return;
+
+			throw new InvalidArgumentException('Second parameter is invalid.');
+		}
+		if (!$is_force_output)
+		{
+			if (!FBD_OUTPUT_ERROR_LOG_LEVEL) return;
+			switch (FBD_OUTPUT_ERROR_LOG_LEVEL)
+			{
+				case 'error':
+					if (in_array($level, array('warning', 'info', 'debug'))) return;
+					break;
+				case 'warning':
+					if (in_array($level, array('info', 'debug'))) return;
+					break;
+				case 'info':
+					if ($level == 'debug') return;
+					break;
+				case 'debug':
+				default :
+					break;
+			}
 		}
 
-		\Log::$level(
-			$message.': '.
-			\Input::uri().' '.
-			\Input::ip().
-			' "'.\Input::user_agent().'"'
-		);
+		$prefix = '';
+		$suffix = '';
+		if ($is_task)
+		{
+			$prefix = 'TASK: ';
+		}
+		else
+		{
+			$suffix = sprintf(': %s %s "%s"', \Input::uri(), \Input::ip(), \Input::user_agent());
+		}
+
+		\Log::$level($prefix.$message.$suffix);
 	}
 }

@@ -107,6 +107,8 @@ return array(
 			'admin/filetmp/api/upload' => array('GET', 'POST', 'DELETE'),
 			'admin/account/index' => array('GET'),
 			'admin/member/delete' => array('POST', 'DELETE'),
+			'admin/member/group/edit' => array('POST'),
+			'admin/member/group/api/menu' => array('GET'),
 		),
 		'user' => array(
 			'admin/index' => array('GET'),
@@ -126,6 +128,7 @@ return array(
 			'admin/content/image/list' => array('GET'),
 			'admin/content/image/detail' => array('GET'),
 			'admin/content/image/api/list' => array('GET'),
+			'admin/member/index' => array('GET'),
 			'admin/member/list' => array('GET'),
 			'admin/member/detail' => array('GET'),
 		),

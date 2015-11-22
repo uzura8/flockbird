@@ -39,4 +39,19 @@ class Site_Model
 
 		return \Util_Orm::conv_col2array($members, 'id');
 	}
+
+	public static function convert_notice_status_to_array_for_view(Model_NoticeStatus $notice_status, $member_id)
+	{
+		$row = $notice_status->to_array();
+		$row['members_count'] = Model_NoticeMemberFrom::get_count4notice_id($row['notice_id'], $member_id);
+		$row['members'] = array();
+		$notice_member_froms = Model_NoticeMemberFrom::get4notice_id($row['notice_id'], conf('noticeMemberFrom.limit', 'notice'), $member_id);
+		foreach ($notice_member_froms as $notice_member_from)
+		{
+			$row['members'][] = \Model_Member::get_one_basic4id($notice_member_from->member_id);
+		}
+		$row['is_read'] = (int)$row['is_read'];
+
+		return $row;
+	}
 }

@@ -1,4 +1,4 @@
-<?php
+	<?php
 class Model_MemberConfig extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_config';
@@ -72,10 +72,12 @@ class Model_MemberConfig extends \MyOrm\Model
 			->get();
 	}
 
-	public static function get_value($member_id, $name)
+	public static function get_value($member_id, $name, $is_return_default_value = false)
 	{
-		$obj = self::get_one4member_id_and_name($member_id, $name);
-		if (!$obj) return null;
+		if (!$obj = self::get_one4member_id_and_name($member_id, $name))
+		{
+			return  $is_return_default_value ? \Form_MemberConfig::get_default_value($name) : null;
+		}
 
 		return $obj->value;
 	}

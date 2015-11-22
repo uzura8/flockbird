@@ -1,6 +1,8 @@
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
+  `group` int(3) NOT NULL DEFAULT 1,
+  `status` tinyint(2) NOT NULL DEFAULT 0,
   `file_name` varchar(255) DEFAULT NULL,
   `filesize_total` int(11) NOT NULL DEFAULT 0 COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
@@ -537,6 +539,20 @@ CREATE TABLE `notice_member_from` (
   CONSTRAINT `notice_member_from_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `notice_mail_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `notice_status_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0:unexecuted, 1:successed and Greater than these are errors',
+  `result_message` text NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `notice_status_id_idx` (`notice_status_id`),
+  KEY `member_id_idx` (`member_id`),
+  CONSTRAINT `notice_mail_queue_notice_status_id` FOREIGN KEY (`notice_status_id`) REFERENCES `notice_status` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `member_watch_content` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
@@ -874,6 +890,8 @@ CREATE TABLE `site_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Configuration name',
   `value` text COMMENT 'Configuration value',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves configurations of this site';
