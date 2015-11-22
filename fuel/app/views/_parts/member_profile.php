@@ -50,7 +50,7 @@ elseif ($page_type != 'detail')
 <?php endif; ?>
 	<div class="row">
 		<div class="col-<?php echo $col_class; ?>-<?php echo $image_col_size; ?>">
-			<div class="imgBox"><?php echo img($member->get_image(), $image_size, $profile_page_uri, $is_link2raw_file, member_name($member), true, true); ?></div>
+			<div class="imgBox"><?php echo member_image($member, $image_size, $profile_page_uri, $is_link2raw_file); ?></div>
 <?php if (!empty($with_link2profile_image)): ?>
 			<div class="btnBox">
 				<?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera'); ?>

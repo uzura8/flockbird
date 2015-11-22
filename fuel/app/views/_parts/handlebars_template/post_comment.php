@@ -1,9 +1,7 @@
 <script type="text/x-handlebars-template" id="comment_form-template">
 <div class="commentPostBox" id="commentPostBox_{{{this.id}}}">
 	<div class="member_contents row">
-		<div class="col-xs-1">
-			<?php echo img($u->get_image(), $size, 'member/'.$u->id, false, member_name($u), true, true); ?>
-		</div>
+		<div class="col-xs-1"><?php echo member_image($u, $size); ?></div>
 		<div class="col-xs-11">
 			<div class="main">
 				<b class="fullname"><?php echo member_name($u, true, true); ?></b>

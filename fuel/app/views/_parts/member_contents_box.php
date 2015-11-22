@@ -3,7 +3,7 @@ $size = empty($size) ? 'M' : strtoupper($size);
 //$img_size = conf('upload.types.img.types.m.sizes.'.$size);
 ?>
 <div class="row member_contents">
-	<div class="col-xs-1"><?php echo img($member ? $member->get_image() : 'm', $size, $member ? 'member/'.$member->id : '', false, member_name($member), true, true); ?></div>
+	<div class="col-xs-1"><?php echo member_image($member, $size); ?></div>
 	<div class="col-xs-11">
 		<div class="main">
 			<b class="fullname"><?php echo member_name($member, true, true); ?></b>

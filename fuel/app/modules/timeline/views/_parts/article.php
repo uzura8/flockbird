@@ -28,7 +28,7 @@ $member = Model_Member::check_authority($member_id);
 <?php endif; ?>
 <div <?php echo Util_Array::conv_array2attr_string($attr); ?>>
 	<div class="row member_contents">
-		<div class="col-xs-1"><?php echo img($member->get_image(), 'M', $member ? 'member/'.$member->id : '', false, member_name($member), true, true); ?></div>
+		<div class="col-xs-1"><?php echo member_image($member); ?></div>
 		<div class="col-xs-11">
 			<div class="member_info">
 				<b class="fullname"><?php echo member_name($member, true, true); ?></b>

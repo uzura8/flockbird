@@ -142,6 +142,28 @@ function member_name($member, $link_to = false, $with_additional_info = false)
 	return $name.' '.$additional_info;
 }
 
+function member_image($member, $size = 'M', $link_to = 'member', $is_link2raw_file = false, $is_responsive = true)
+{
+	$link_uri = '';
+	if ($member)
+	{
+		if ($link_to == 'member')
+		{
+			$link_uri = 'member/'.$member->id;
+		}
+		elseif ($link_to == 'profile')
+		{
+			$link_uri = 'member/profile/'.$member->id;
+		}
+		elseif ($link_to)
+		{
+			$link_uri = $link_to;
+		}
+	}
+
+	return img($member ? $member->get_image() : 'm', $size, $link_uri, $is_link2raw_file, member_name($member), true, $is_responsive);
+}
+
 function term()
 {
 	$keys = func_get_args();

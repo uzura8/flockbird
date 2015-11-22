@@ -19,7 +19,7 @@ $size = empty($size) ? 'S' : strtoupper($size);
 ?>
 <div<?php if ($parts_attrs_string): ?> <?php echo $parts_attrs_string; ?><?php endif; ?>>
 	<div class="row member_contents">
-		<div class="col-xs-1"><?php echo img($u->get_image(), $size, 'member/'.$u->id, false, member_name($u), true, true); ?></div>
+		<div class="col-xs-1"><?php echo member_image($u, $size); ?></div>
 		<div class="col-xs-11">
 			<div class="main">
 				<b class="fullname"><?php echo member_name($u, true, true); ?></b>
