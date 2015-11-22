@@ -4,7 +4,7 @@
 		<div class="col-xs-1"><?php echo member_image($u, $size); ?></div>
 		<div class="col-xs-11">
 			<div class="main">
-				<b class="fullname"><?php echo member_name($u, true, true); ?></b>
+				<b class="fullname"><?php echo member_name($u, true); ?></b>
 				<div class="input">
 					<textarea name="body" id="textarea_comment_{{{this.id}}}" class="form-control autogrow" rows="1"></textarea>
 				</div>
