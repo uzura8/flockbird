@@ -50,7 +50,7 @@ elseif ($page_type != 'detail')
 <?php endif; ?>
 	<div class="row">
 		<div class="col-<?php echo $col_class; ?>-<?php echo $image_col_size; ?>">
-			<div class="imgBox"><?php echo img($member->get_image(), $image_size, $profile_page_uri, $is_link2raw_file, site_get_screen_name($member), true, true); ?></div>
+			<div class="imgBox"><?php echo member_image($member, $image_size, $profile_page_uri, $is_link2raw_file); ?></div>
 <?php if (!empty($with_link2profile_image)): ?>
 			<div class="btnBox">
 				<?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera'); ?>
@@ -69,11 +69,7 @@ elseif ($page_type != 'detail')
 		</div>
 		<div class="col-<?php echo $col_class; ?>-<?php echo 12 - $image_col_size; ?>">
 				<<?php echo $member_name_tag; ?>>
-<?php if ($display_type != 'detail'): ?>
-					<?php echo Html::anchor($profile_page_uri, site_get_screen_name($member)); ?>
-<?php else: ?>
-					<?php echo site_get_screen_name($member); ?>
-<?php endif; ?>
+					<?php echo member_name($member, $display_type != 'detail' ? $profile_page_uri : '', true); ?>
 <?php if (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && Auth::check() && $member->id != $u->id): ?>
 					<?php echo render('_parts/button_follow', array(
 						'member_id_from' => Auth::check() ? $u->id : 0,

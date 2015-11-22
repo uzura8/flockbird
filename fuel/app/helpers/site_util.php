@@ -100,14 +100,68 @@ function site_header_keywords($keywords = '')
 	return $keywords.','.FBD_HEADER_KEYWORDS_DEFAULT;
 }
 
-function site_get_screen_name($u, $default_value = null)
+/**
+ * Return member name for view
+ * 
+ * @param   Mixed   $member                Model_Member object or null
+ * @param   Mixed   $link_to               false not to link / 'member' or true to link to member page / 'profile' to link to profile page
+ * @param   Boolean $with_additional_info  Add result of Site_Member::get_screen_name_additional_info
+ * @return  String
+ * @access  public
+ */
+function member_name($member, $link_to = false, $with_additional_info = false)
 {
-	if (!$u) return is_null($default_value) ? term('guest') : $default_value;
+	if (empty($member)) return term('member.left');
 
-	if (!empty($u->name)) return $u->name;
-	if (!empty($u->username)) return $u->username;
+	if (!empty($member->name))
+	{
+		$name = $member->name;
+	}
+	else
+	{
+		$name = 'ID:'.$member->id;
+	}
 
-	return 'ID:'.$u->id;
+	// for link
+	if ($link_to === true || $link_to == 'member')
+	{
+		$name = Html::anchor('member/'.$member->id, $name);
+	}
+	elseif ($link_to == 'profile')
+	{
+		$name = Html::anchor('member/profile/'.$member->id, $name);
+	}
+	elseif ($link_to)
+	{
+		$name = Html::anchor($link_to, $name);
+	}
+
+	if (!$with_additional_info) return $name;
+	if (!$additional_info = Site_Member::get_screen_name_additional_info($member->id)) return $name;
+
+	return $name.' '.$additional_info;
+}
+
+function member_image($member, $size = 'M', $link_to = 'member', $is_link2raw_file = false, $is_responsive = true)
+{
+	$link_uri = '';
+	if ($member)
+	{
+		if ($link_to == 'member')
+		{
+			$link_uri = 'member/'.$member->id;
+		}
+		elseif ($link_to == 'profile')
+		{
+			$link_uri = 'member/profile/'.$member->id;
+		}
+		elseif ($link_to)
+		{
+			$link_uri = $link_to;
+		}
+	}
+
+	return img($member ? $member->get_image() : 'm', $size, $link_uri, $is_link2raw_file, member_name($member), true, $is_responsive);
 }
 
 function term()

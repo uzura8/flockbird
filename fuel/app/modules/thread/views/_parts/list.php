@@ -91,7 +91,7 @@ echo render('_parts/comment/count_and_link_display', array(
 $data_reply_link = array(
 	'id' => $thread->id,
 	'target_id' => $thread->id,
-	'member_name' => $thread->member->name,
+	'member_name' => member_name($thread->member),
 );
 echo render('notice::_parts/link_reply', $data_reply_link);
 ?>

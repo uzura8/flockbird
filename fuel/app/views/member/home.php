@@ -9,6 +9,6 @@
 )); ?>
 
 <?php if (is_enabled('timeline') && !empty($timeline)): ?>
-<h3><?php echo sprintf('%sさんの%s', $member->name, term('timeline')); ?></h3>
+<h3><?php echo sprintf('%sさんの%s', member_name($member), term('timeline')); ?></h3>
 <?php echo render('timeline::_parts/list', $timeline); ?>
 <?php endif; ?>

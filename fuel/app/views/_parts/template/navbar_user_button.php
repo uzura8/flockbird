@@ -2,7 +2,7 @@
 		<div class="navbar-btn pull-right">
 			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<?php echo img($u->get_image(), 'SS', '', false, '', true); ?><span class="hidden-xs-inline"> <?php echo site_get_screen_name($u); ?></span>
+					<?php echo member_image($u, 'SS', '', false, false); ?><span class="hidden-xs-inline"> <?php echo Auth::get_screen_name(); ?></span>
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
@@ -46,7 +46,7 @@ $button_attrs['href']   = 'auth/login';
 <?php 		break; ?>
 <?php 	endswitch; ?>
 		<button <?php echo Util_Array::conv_array2attr_string($button_attrs); ?>>
-			<i class="glyphicon glyphicon-user"></i><span class="hidden-xs-inline"> <?php echo site_get_screen_name($u); ?></span>
+			<i class="glyphicon glyphicon-user"></i><span class="hidden-xs-inline"> <?php echo Auth::get_screen_name(); ?></span>
 			<span class="caret"></span>
 		</button>
 

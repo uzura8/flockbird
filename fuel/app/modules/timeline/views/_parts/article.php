@@ -28,10 +28,10 @@ $member = Model_Member::check_authority($member_id);
 <?php endif; ?>
 <div <?php echo Util_Array::conv_array2attr_string($attr); ?>>
 	<div class="row member_contents">
-		<div class="col-xs-1"><?php echo img($member->get_image(), 'M', $member ? 'member/'.$member->id : '', false, site_get_screen_name($member), true, true); ?></div>
+		<div class="col-xs-1"><?php echo member_image($member); ?></div>
 		<div class="col-xs-11">
 			<div class="member_info">
-				<b class="fullname"><?php echo empty($member) ? term('member.left') : Html::anchor('member/'.$member->id, $member->name); ?></b>
+				<b class="fullname"><?php echo member_name($member, true, true); ?></b>
 			</div>
 			<div class="main">
 				<?php echo \Timeline\Site_Util::get_article_main_view($timeline_id, $access_from_member_relation, $is_detail); ?>

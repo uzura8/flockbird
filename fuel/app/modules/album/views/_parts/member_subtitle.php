@@ -3,7 +3,7 @@
 <?php echo btn(term('album', 'form.create'), 'album/create', 'mr', true, null, null, null, 'plus', null, null, false); ?>
 <?php endif; ?>
 <?php
-$name = $is_mypage ? '自分' : $member->name.'さん';
+$name = $is_mypage ? '自分' :  member_name($member).'さん';
 $controller = Site_Util::get_controller_name();
 if ($controller == 'album')
 {

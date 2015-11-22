@@ -1,7 +1,7 @@
 <?php if (Auth::check()): ?>
 			<div class="pull-right navbar-btn btn-group">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
+					<i class="icon-user"></i> <?php echo Auth::get_screen_name(); ?>
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
@@ -13,7 +13,7 @@
 <?php else: ?>
 			<div class="pull-right navbar-btn btn-group">
 				<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <?php echo site_get_screen_name($u); ?>
+					<i class="icon-user"></i> <?php echo Auth::get_screen_name(); ?>
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">

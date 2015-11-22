@@ -270,4 +270,9 @@ class Site_Member
 	{
 		return term('member.group.options.'.$group_key);
 	}
+
+	public static function get_screen_name_additional_info($member_id = null)
+	{
+		return '';
+	}
 }
