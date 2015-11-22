@@ -233,4 +233,9 @@ class Site_Member
 
 		return true;
 	}
+
+	public static function get_screen_name_additional_info($member_id = null)
+	{
+		return '';
+	}
 }

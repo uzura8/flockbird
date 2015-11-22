@@ -2,6 +2,11 @@ Handlebars.registerHelper('site_url', function(uri) {
 	return get_url(Handlebars.Utils.escapeExpression(uri));
 });
 
+Handlebars.registerHelper('member_screen_name', function(member_name) {
+	if (member_name) return member_name;
+	return get_term('member_left');
+});
+
 Handlebars.registerHelper('member_link', function(object) {
 	object.member_id = Handlebars.Utils.escapeExpression(object.id);
 	object.member_name = Handlebars.Utils.escapeExpression(object.name);

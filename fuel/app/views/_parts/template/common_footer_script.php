@@ -45,6 +45,7 @@ function get_term(key) {
 		'public_flag': '<?php echo term('public_flag.label'); ?>',
 		'comment': '<?php echo term('form.comment'); ?>',
 		'member': '<?php echo term('member.view'); ?>',
+		'member_left': '<?php echo term('member.left'); ?>',
 		'left_member': '<?php echo term('member.left'); ?>',
 		'show_detail': '<?php echo term('site.show_detail'); ?>',
 		'login': '<?php echo term('site.login'); ?>',
