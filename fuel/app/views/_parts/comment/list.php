@@ -51,7 +51,7 @@ if (empty($is_hide_reply_link) && conf('mention.isEnabled', 'notice') && $commen
 	$data['reply_link'] = array(
 		'id' => $comment->id,
 		'target_id' => $parent->id,
-		'member_name' => $comment->member->name,
+		'member_name' => member_name($comment->member),
 	);
 }
 $content_view = View::forge('_parts/member_contents_box', $data);

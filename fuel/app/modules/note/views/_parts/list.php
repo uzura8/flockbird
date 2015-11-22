@@ -84,7 +84,7 @@ echo render('_parts/comment/count_and_link_display', array(
 $data_reply_link = array(
 	'id' => $note->id,
 	'target_id' => $note->id,
-	'member_name' => $note->member->name,
+	'member_name' =>  member_name($note),
 );
 echo render('notice::_parts/link_reply', $data_reply_link);
 ?>
