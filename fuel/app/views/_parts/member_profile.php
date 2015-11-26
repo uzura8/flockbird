@@ -43,6 +43,9 @@ elseif ($page_type != 'detail')
 	$profile_page_uri = 'member/'.$member->id;
 	$is_link2raw_file = false;
 }
+
+$is_display_follow_btn  = (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && !$is_mypage);
+$is_display_message_btn = (is_enabled('message') && !empty($with_message_btn) && !$is_mypage);
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
 <?php if (!empty($with_edit_btn) && $is_mypage): ?>
@@ -70,13 +73,20 @@ elseif ($page_type != 'detail')
 		<div class="col-<?php echo $col_class; ?>-<?php echo 12 - $image_col_size; ?>">
 				<<?php echo $member_name_tag; ?>>
 					<?php echo member_name($member, $display_type != 'detail' ? $profile_page_uri : '', true); ?>
-<?php if (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && Auth::check() && $member->id != $u->id): ?>
-					<?php echo render('_parts/button_follow', array(
-						'member_id_from' => Auth::check() ? $u->id : 0,
-						'member_id_to' => $member->id,
-						'size' => $button_follow_size,
-						'attrs' => array('class' => array('ml10'))
-					)); ?>
+<?php if ($is_display_message_btn || $is_display_follow_btn): ?>
+					<div class="btn-group ml10" role="group" aria-label="action for member">
+<?php 	if ($is_display_follow_btn): ?>
+						<?php echo render('_parts/button_follow', array(
+							'member_id_from' => Auth::check() ? $u->id : 0,
+							'member_id_to' => $member->id,
+							'size' => $button_follow_size,
+							'attrs' => array('class' => array(''))
+						)); ?>
+<?php 	endif; ?>
+<?php 	if ($is_display_message_btn): ?>
+						<?php echo btn('message.form.send', 'message/member/'.$member->id, null, true, $button_follow_size, null, null, null, 'button'); ?>
+<?php 	endif; ?>
+				</div>
 <?php endif; ?>
 				</<?php echo $member_name_tag; ?>>
 <?php if (!$is_simple_list

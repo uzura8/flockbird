@@ -83,6 +83,11 @@ function btn($term_key, $href = '#', $class_name = '', $with_text = true, $btn_s
 	if ($tag == 'button')
 	{
 		if (!$form_name) $form_name = 'button';
+		if ($href && $href != '#')
+		{
+			$attr['class'] .= ' js-simpleLink';
+			$attr['data-uri'] = $href;
+		}
 		return Form::button($form_name, $label, $attr);
 	}
 
