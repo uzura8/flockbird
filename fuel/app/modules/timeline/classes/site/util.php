@@ -518,18 +518,17 @@ class Site_Util
 		$id = 0;
 		switch (static::get_key4type($timeline->type))
 		{
-			case 'normal':
-			case 'album_image_timeline':
-				$table = 'timeline';
-				$id = $timeline->id;
-				break;
-
 			case 'note':
 			case 'album':
 			case 'thread':
 			case 'album_image_profile':
 				$table = $timeline->foreign_table;
 				$id = $timeline->foreign_id;
+				break;
+
+			default :
+				$table = 'timeline';
+				$id = $timeline->id;
 				break;
 		}
 		if (!$table || !$id) return '';
