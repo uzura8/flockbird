@@ -64,6 +64,7 @@ desktop.ini
 !/fuel/app/modules/notice
 !/fuel/app/modules/thread
 !/fuel/app/modules/timeline
+!/fuel/app/modules/group
 !/fuel/app/modules/message
 
 # for develop

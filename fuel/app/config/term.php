@@ -147,6 +147,7 @@ $config = array(
 		'force' => '強制',
 		'my' => '自分の',
 		'timelimit' => '期限',
+		'_name' => '名',
 	),
 	'member' => array(
 		'view' => 'メンバー',
