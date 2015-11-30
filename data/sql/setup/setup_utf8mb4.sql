@@ -548,9 +548,10 @@ CREATE TABLE `notice_mail_queue` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `notice_status_id_idx` (`notice_status_id`),
+  KEY `notice_status_id_id_idx` (`notice_status_id`,`id`),
   KEY `member_id_idx` (`member_id`),
-  CONSTRAINT `notice_mail_queue_notice_status_id` FOREIGN KEY (`notice_status_id`) REFERENCES `notice_status` (`id`) ON DELETE CASCADE
+  CONSTRAINT `notice_mail_queue_notice_status_id` FOREIGN KEY (`notice_status_id`) REFERENCES `notice_status` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `notice_mail_queue_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `member_watch_content` (
