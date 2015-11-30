@@ -11,6 +11,32 @@ class Controller_Api extends \Controller_Site_Api
 	}
 
 	/**
+	 * Get message list
+	 * 
+	 * @access  public
+	 * @return  Response (json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
+	 */
+	public function get_list()
+	{
+		$this->controller_common_api(function()
+		{
+			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('message.articles.limit'), \Config::get('message.articles.limit_max'));
+			$data = Model_MessageRecievedSummary::get_pager_list4member_id($this->u->id, $limit, $page);
+			$list_array = array();
+			foreach ($data['list'] as $key => $obj)
+			{
+				$list_array[] = Site_Model::convert_message_recieved_summary_to_array_for_view($obj, $this->u->id);
+			}
+			// json response
+			$data['list'] = $list_array;
+			$data['is_detail'] = (bool)\Input::get('is_detail', 0);
+			$this->set_response_body_api($data);
+		});
+	}
+
+	/**
 	 * Get talk list
 	 * 
 	 * @access  public

@@ -128,3 +128,8 @@ function arrayMerge(obj, objAdded) {
 	$.extend(true, obj, objAdded);
 	return obj;
 }
+
+function strimwidth(str, width) {
+	if (!width || str.length <= width) return str;
+	return str.substr(0, width) + '...';
+}

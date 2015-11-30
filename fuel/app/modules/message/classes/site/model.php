@@ -100,4 +100,20 @@ class Site_Model
 
 		return $related_model_obj;
 	}
+
+	public static function convert_message_recieved_summary_to_array_for_view(Model_MessageRecievedSummary $recieved_summary, $member_id)
+	{
+		$row = $recieved_summary->to_array();
+		$row['type_key'] = Site_Util::get_key4type($recieved_summary->type);
+		$row['member_from'] = \Model_Member::get_one_basic4id($recieved_summary->message->member_id);
+		$row['is_read'] = (int)$row['is_read'];
+		$row['detail_page_uri'] = Site_Util::get_detail_page_uri(
+			$recieved_summary->type,
+			$recieved_summary->type_related_id,
+			$recieved_summary->last_message_id,
+			$recieved_summary->message->member_id
+		);
+
+		return $row;
+	}
 }

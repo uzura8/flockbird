@@ -86,10 +86,24 @@ class Site_Util
 		return $data;
 	}
 
-
 	public static function get_no_data_talks()
 	{
 		return term('message.talks.view').'がありません。';
+	}
+
+	public static function get_detail_page_uri($type, $related_id, $message_id, $member_id_from)
+	{
+		switch ($type_key = Site_Util::get_key4type($type))
+		{
+			case 'member':
+				return 'message/member/'.$member_id_from;
+				break;
+			case 'group':
+				return 'message/group/'.$related_id;
+				break;
+		}
+
+		return 'message/'.$message_id;
 	}
 }
 

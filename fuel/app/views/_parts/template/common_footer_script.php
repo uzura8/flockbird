@@ -43,6 +43,9 @@ function get_term(key) {
 <?php if (is_enabled('thread')): ?>
 		'thread': '<?php echo term('thread'); ?>',
 <?php endif; ?>
+<?php if (is_enabled('message')): ?>
+		'message': '<?php echo term('message.view'); ?>',
+<?php endif; ?>
 		'public_flag': '<?php echo term('public_flag.label'); ?>',
 		'comment': '<?php echo term('form.comment'); ?>',
 		'member': '<?php echo term('member.view'); ?>',

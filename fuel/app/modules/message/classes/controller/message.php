@@ -11,6 +11,30 @@ class Controller_Message extends \Controller_Site
 	}
 
 	/**
+	 * Message index
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_index()
+	{
+		$this->action_list();
+	}
+
+	/**
+	 * Message list
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_list()
+	{
+		$data = array();
+		$this->set_title_and_breadcrumbs(term('message.view'), null, $this->u);
+		$this->template->content = \View::forge('_parts/list_block', $data);
+	}
+
+	/**
 	 * Message member
 	 * 
 	 * @access  public
