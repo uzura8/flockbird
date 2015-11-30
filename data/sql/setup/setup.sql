@@ -895,15 +895,15 @@ CREATE TABLE `message_recieved` (
 CREATE TABLE `message_recieved_summary` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `member_id` int(11) NOT NULL COMMENT 'Recieved member id',
-  `message_type` tinyint(2) NOT NULL DEFAULT '1' COMMENT '1:one to one relation message, 2:group massage, 8:info message from admin, 9:info message from system',
-  `message_type_related_id` int(11) NOT NULL COMMENT 'The id of reference table. Set id based on type value',
+  `type` tinyint(2) NOT NULL DEFAULT '1' COMMENT '1:one to one relation message, 2:group massage, 8:info message from admin, 9:info message from system',
+  `type_related_id` int(11) NOT NULL COMMENT 'The id of reference table. Set id based on type value',
   `last_message_id` int(11) NOT NULL COMMENT 'Last message id for each message type',
   `is_read` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:unread, 1:already read',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `last_sent_at` datetime NOT NULL COMMENT 'Last message sent time for each message type',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `member_id_message_type_message_type_related_id_UNIQUE_idx` (`member_id`,`message_type`,`message_type_related_id`),
+  UNIQUE KEY `member_id_type_type_related_id_UNIQUE_idx` (`member_id`,`type`,`type_related_id`),
   KEY `member_id_last_sent_at_idx` (`member_id`,`last_sent_at`),
   CONSTRAINT `message_recieved_summary_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Use for recieved message list integrated member_relation_unit and group';
