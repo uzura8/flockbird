@@ -36,6 +36,10 @@ $data = array(
 	'is_output_raw_content' => true,
 );
 if (!empty($image_size)) $data['size'] = $image_size;
+if ($message_sent->message->member_id == get_uid())
+{
+	$data['unread_flag'] = $unread_message_ids && in_array($message_sent->message_id, $unread_message_ids);
+}
 //if (empty($is_hide_reply_link) && conf('mention.isEnabled', 'notice') && $message_sent->message->member)
 //{
 //	$data['reply_link'] = array(
@@ -53,6 +57,8 @@ $content_view->set_safe('content', convert_body($message_sent->message->body, ar
 )));
 echo $content_view->render();
 ?>
+<div>
+</div>
 <?php
 $is_display_delete_btn = false;
 if (!empty($absolute_display_delete_btn))

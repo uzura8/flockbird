@@ -64,10 +64,9 @@ class Site_Util
 		return array_keys(\Config::get('message.types'));
 	}
 
-	public static function get_talks4view($self_member_id = 0, $type_key = null, $related_id = 0, $params = array())
+	public static function get_talks4view($type_key = null, $related_id = 0, $params = array(), $self_member_id = 0, $member_ids = array(), $is_update_is_read_flag = false)
 	{
 		list($list, $next_id) = Site_Model::get_talks(
-			$self_member_id,
 			$type_key,
 			$related_id,
 			$params['max_id'],
@@ -81,6 +80,7 @@ class Site_Util
 			'next_id' => $next_id,
 			'since_id' => $params['since_id'] ?: 0,
 			'is_display_load_before_link' => $params['max_id'] ? true : false,
+			'unread_message_ids' => Site_Model::get_unread_message_ids($type_key, $list, $self_member_id, $member_ids),
 		);
 
 		return $data;

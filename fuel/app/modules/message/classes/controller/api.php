@@ -51,17 +51,18 @@ class Controller_Api extends \Controller_Site_Api
 		$this->api_accept_formats = 'html';
 		$this->controller_common_api(function() use($type_key, $id)
 		{
-			list($type_key, $type, $related_id, $members, $group) = $this->validate_talks_params($type_key, $id);
+			list($type_key, $type, $related_id, $member_ids, $group) = $this->validate_talks_params($type_key, $id);
 
 			$data = Site_Util::get_talks4view(
-				get_uid(),
 				$type_key,
 				$related_id,
 				$this->common_get_list_params(array(
 					'desc'   => 0,
 					'latest' => 1,
 					'limit'  => conf('articles.limit', 'message'),
-				), conf('articles.limit_max', 'message'), true)
+				), conf('articles.limit_max', 'message'), true),
+				get_uid(),
+				$member_ids
 			);
 			if ($group) $data['group'] = $group;
 			//$data['is_display_load_before_link'] = (bool)\Input::get('before_link', false);
@@ -113,22 +114,23 @@ class Controller_Api extends \Controller_Site_Api
 
 		$related_id = $request_id;
 		$group = null;
-		$members = array();
+		$member_ids = array();
 		switch ($type_key)
 		{
 			case 'member':
 				if ($request_id == $this->u->id) throw new \HttpNotFoundException;
 				\Model_Member::check_authority($request_id);
 				$related_id = \Model_MemberRelationUnit::get_id4member_ids(array($request_id, $this->u->id));
+				$member_ids = array($request_id, $this->u->id);
 				break;
 			case 'group':
 				$group = \Group\Model_Group::check_authority($related_id);
-				$members = \Group\Model_GroupMember::get4id($related_id);
-				if (!\Util_Orm::check_included($related_id, 'member_id', $group_members)) throw new HttpForbiddenException;
+				if (!$member_ids = \Group\Model_GroupMember::get_member_ids4group_id($related_id)) throw new \HttpNotFoundException;
+				if (!in_array($this->u->id, $member_ids)) throw new \HttpForbiddenException;
 				break;
 		}
 
-		return array($type_key, $type, $related_id, $members, $group);
+		return array($type_key, $type, $related_id, $member_ids, $group);
 	}
 
 	/**

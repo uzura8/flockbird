@@ -3,7 +3,7 @@ namespace Message;
 
 class Site_Model
 {
-	public static function get_talks($self_member_id = 0, $type_key = null, $related_id = 0, $max_id = 0, $limit = 0, $is_latest = true, $is_desc = false, $since_id = 0)
+	public static function get_talks($type_key = null, $related_id = 0, $max_id = 0, $limit = 0, $is_latest = true, $is_desc = false, $since_id = 0)
 	{
 		if (!$limit) $limit = (int)\Config::get('message.articles.limit');
 		if ($limit > \Config::get('message.articles.limit_max')) $limit = \Config::get('message.articles.limit_max');
@@ -115,5 +115,15 @@ class Site_Model
 		);
 
 		return $row;
+	}
+
+	public static function get_unread_message_ids($type_key, $message_sent_objs, $self_member_id, $member_ids)
+	{
+		if (empty($message_sent_objs)) return array();
+		if (!$message_ids = \Util_Orm::conv_col2array($message_sent_objs, 'message_id')) return array();
+		if (!$member_ids = \Util_Array::unset_item($self_member_id, $member_ids)) return array();
+		if ($type_key == 'member' && count($member_ids) > 1) throw new InvalidArgumentException('Forth parameter is invalid.');
+
+		return Model_MessageRecieved::get_unread_message_ids4member_ids($member_ids, $message_ids);
 	}
 }
