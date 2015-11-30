@@ -63,4 +63,21 @@ class Model_GroupMember extends \MyOrm\Model
 	{
 		static::$_properties['role_type']['validation']['in_array'][] = array_values(\Config::get('group.member.types'));
 	}
+
+	public static function get_member_ids4group_id($group_id)
+	{
+		return (array)self::get_cols('member_id', array('group_id' => $group_id), 'id');
+	}
+
+	public static function get_members($group_id)
+	{
+		$members = array();
+		if (!$objs = self::get_all('id', array('member'), 0, array('group_id' => $group_id))) return $members;
+		foreach ($objs as $obj)
+		{
+			$members[$obj->member_id] = $obj->member;
+		}
+
+		return $members;
+	}
 }

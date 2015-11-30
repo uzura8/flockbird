@@ -174,7 +174,7 @@ class Model extends \Orm\Model
 		return $obj;
 	}
 
-	public static function get_row4unique_key(array $conditions)
+	public static function get_one4conditions(array $conditions)
 	{
 		return self::query()
 			->where($conditions)
@@ -264,7 +264,7 @@ class Model extends \Orm\Model
 
 	public static function change_registered_status4unique_key(array $params)
 	{
-		if ($obj = self::get_row4unique_key($params))
+		if ($obj = self::get_one4conditions($params))
 		{
 			$obj->delete();
 		}

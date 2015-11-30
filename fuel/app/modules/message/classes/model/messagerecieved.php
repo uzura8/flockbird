@@ -3,7 +3,7 @@ namespace Message;
 
 class Model_MessageRecieved extends \MyOrm\Model
 {
-	protected static $_table_name = 'message_recieve';
+	protected static $_table_name = 'message_recieved';
 
 	protected static $_belongs_to = array(
 		'member' => array(
@@ -62,7 +62,45 @@ class Model_MessageRecieved extends \MyOrm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
+		// Add mail_queue record at inserted
+		'MyOrm\Observer_InsertRelationialTable' => array(
+			'events'   => array('after_insert'),
+			'model_to' => '\Message\Model_MessageRecievedMailQueue',
+			'properties' => array(
+				'message_recieved_id' => 'id',
+				'member_id',
+			),
+		),
+		// Delete relaton table record on updated
+		'MyOrm\Observer_DeleteRelationalTablesOnUpdated' => array(
+			'events' => array('after_update'),
+			'relations' => array(
+				'model_to' => '\Message\Model_MessageRecievedMailQueue',
+				'conditions' => array(
+					'message_recieved_id' => array('id' => 'property'),
+				),
+				'check_changed' => array(
+					'check_properties' => array(
+						'is_read' => array(
+							'value' => 1,
+						),
+					),
+				),
+			),
+		),
 	);
 
 	protected static $_to_array_exclude = array();
+
+	public static function save_at_sent($member_id, $message_id, $datetime = null)
+	{
+		// save message_recieved
+		$obj = Model_MessageRecieved::forge();
+		$obj->member_id = $member_id;
+		$obj->message_id = $message_id;
+		if ($datetime) $obj->created_at = $datetime;
+		$obj->save();
+
+		return $obj;
+	}
 }

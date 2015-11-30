@@ -216,6 +216,32 @@ class Validation extends Fuel\Core\Validation
 		return $this->_empty($val) || $this->input($field) !== $val;
 	}
 
+	/**
+	 * Check larger than specific other submitted field value
+	 * (must be both strings, check is type sensitive)
+	 *
+	 * @param   string
+	 * @param   string
+	 * @return  bool
+	 */
+	public function _validation_numelic_more_than_field($val, $field)
+	{
+		return $this->_empty($val) || !is_numeric($val) || $this->input($field) < $val;
+	}
+
+	/**
+	 * Check smaller than specific other submitted field value
+	 * (must be both strings, check is type sensitive)
+	 *
+	 * @param   string
+	 * @param   string
+	 * @return  bool
+	 */
+	public function _validation_numelic_less_than_field($val, $field)
+	{
+		return $this->_empty($val) || !is_numeric($val) || $this->input($field) > $val;
+	}
+
 	public function _validation_datetime_except_second($val, $delimiter = '-')
 	{
 		if (empty($val)) return true;// if $val is empty, uncheck;

@@ -5,6 +5,9 @@ return array(
 		'form' => array(
 			'send' => 'メッセージを送る',
 		),
+		'talks' => array(
+			'view' => '送受信履歴',
+		),
 	),
 );
 

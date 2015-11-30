@@ -221,4 +221,16 @@ class Util_Orm
 
 		return $query;
 	}
+
+	public static function check_included($check_value, $property, $objs)
+	{
+		if (!$objs) return false;
+
+		foreach ($objs as $obj)
+		{
+			if ($obj->{$property} == $check_value) return true;
+		}
+
+		return false;
+	}
 }

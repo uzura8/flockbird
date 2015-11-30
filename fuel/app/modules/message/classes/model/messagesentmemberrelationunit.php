@@ -1,21 +1,23 @@
 <?php
 namespace Message;
 
-class Model_MessageGroupSent extends \MyOrm\Model
+class Model_MessageSentMemberRelationUnit extends \MyOrm\Model
 {
-	protected static $_table_name = 'message_group_sent';
+	protected static $_table_name = 'message_sent_member_relation_unit';
 
 	protected static $_belongs_to = array(
-		'message' => array(
-			'key_from' => 'message_id',
-			'model_to' => '\Message\Model_Message',
+		'member_relation_unit' => array(
+			'key_from' => 'member_relation_unit_id',
+			'model_to' => 'Model_MemberRelationUnit',
 			'key_to' => 'id',
 			'cascade_save' => false,
 			'cascade_delete' => false,
 		),
-		'message_group' => array(
-			'key_from' => 'message_group_id',
-			'model_to' => '\Message\Model_MessageGroup',
+	);
+	protected static $_has_one = array(
+		'message' => array(
+			'key_from' => 'message_id',
+			'model_to' => '\Message\Model_Message',
 			'key_to' => 'id',
 			'cascade_save' => false,
 			'cascade_delete' => false,
@@ -24,7 +26,7 @@ class Model_MessageGroupSent extends \MyOrm\Model
 
 	protected static $_properties = array(
 		'id',
-		'message_group_id' => array(
+		'member_relation_unit_id' => array(
 			'data_type' => 'integer',
 			'form' => array('type' => false),
 		),
@@ -33,7 +35,6 @@ class Model_MessageGroupSent extends \MyOrm\Model
 			'form' => array('type' => false),
 		),
 		'created_at' => array('form' => array('type' => false)),
-		'updated_at' => array('form' => array('type' => false)),
 	);
 
 	protected static $_observers = array(
@@ -42,10 +43,6 @@ class Model_MessageGroupSent extends \MyOrm\Model
 		),
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
-			'mysql_timestamp' => true,
-		),
-		'Orm\Observer_UpdatedAt' => array(
-			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
 	);

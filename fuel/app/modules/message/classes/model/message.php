@@ -76,9 +76,17 @@ class Model_Message extends \MyOrm\Model
 			'events' => array('before_save'),
 			'mysql_timestamp' => true,
 		),
-		'MyOrm\Observer_DatetimeRelatedFlag' => array(
-			'events' => array('before_update'),
+		'MyOrm\Observer_SortDatetime' => array(
+			'events' => array('before_save'),
 			'mysql_timestamp' => true,
+			'property' => 'sent_at',
+			'check_changed' => array(
+				'check_properties' => array(
+					'is_sent' => array(
+						'value' => 1,
+					),
+				),
+			),
 		),
 	);
 
@@ -86,7 +94,32 @@ class Model_Message extends \MyOrm\Model
 
 	public static function _init()
 	{
-		static::$_properties['type']['validation']['in_array'][] = array_values(\Config::get('message.types'));
+		static::$_properties['type']['validation']['in_array'][] = Site_Util::get_types(true);
 		//static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_message_foreign_tables();
+	}
+
+	public function send_message($member_id, $type, $related_id, $body, $is_draft = false)
+	{
+		if (!$target_member_ids = Site_Model::get_member_ids_joined_related_model($type, $related_id, $member_id))
+		{
+			throw new InvalidArgumentException('Third parameter is invalid.');
+		}
+
+		// save message
+		$this->member_id = $member_id;
+		$this->body = $body;
+		$this->type = Site_Util::get_type4key($type);
+		$this->is_sent = $is_draft ? 0 : 1;
+		$this->save();
+
+		$related_model_obj = Site_Model::save_related_model($this->id, $type, $related_id, $this->sent_at);
+
+		foreach ($target_member_ids as $member_id)
+		{
+			// save message_recieved
+			$message_recieved = Model_MessageRecieved::save_at_sent($member_id, $this->id, $this->sent_at);
+			// save message_recieved_summary
+			$message_recieved_summary = Model_MessageRecievedSummary::save_at_sent($member_id, $this->id, $type, $related_id, $this->sent_at);
+		}
 	}
 }

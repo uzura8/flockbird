@@ -85,8 +85,8 @@ function getErrorMessage(responseObj)
 	var statusCode = responseObj.status;
 	var messages = !empty(responseObj.responseJSON) ? responseObj.responseJSON.error_messages : '';
 
-	if (!empty(messages.absolute)) return messages.absolute;
-	if (!empty(messages[statusCode])) return messages[statusCode];
+	if (!empty(messages) && messages.absolute) return messages.absolute;
+	if (!empty(messages) && messages.statusCode) return messages.statusCode;
 
 	switch (statusCode)
 	{
@@ -395,7 +395,7 @@ function getSinceId(listSelector, position)
 	listMoreBoxObj = $(listSelector).find('.listMoreBox');
 	if (!empty(listMoreBoxObj)) {
 		listMoreBoxGetData = $(listMoreBoxObj).data('get_data');
-		if (listMoreBoxGetData.max_id) return parseInt(listMoreBoxGetData.max_id);
+		if (!empty(listMoreBoxGetData) && listMoreBoxGetData.max_id) return parseInt(listMoreBoxGetData.max_id);
 	}
 	return 0;
 }

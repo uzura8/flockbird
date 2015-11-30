@@ -1,19 +1,19 @@
 <?php
 return array(
 	'articles' => array(
-		'limit' => 10,
-		'limit_max' => 12,
+		'nl2br' => true,
+		'limit' => 20,
+		'limit_max' => 30,
 		'trim_width' => array(
-			//'title' => 88,
+			//'subject' => 88,
 			'body'  => 500,
-			'title_in_body' => 50,
 		),
 		'truncate_lines' => array(
 			'body'  => 10,
 		),
 	),
 	'types' => array(
-		'normal' => 1,
+		'member' => 1,
 		'group' => 2,
 		'site_info' => 8,
 		'system_info' => 9,
