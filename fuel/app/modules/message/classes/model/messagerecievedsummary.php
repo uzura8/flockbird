@@ -117,5 +117,18 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 
 		return static::get_pager_list($params, $page);
 	}
+
+	public static function update_is_read4member_ids($member_id_to, $member_id_from)
+	{
+		$related_id = \Model_MemberRelationUnit::get_id4member_ids(array($member_id_to, $member_id_from));
+		$obj = self::get_one4conditions(array(
+			'member_id' => $member_id_to,
+			'type' => Site_Util::get_type4key('member'),
+			'type_related_id' => $related_id,
+		));
+		$obj->is_read = 1;
+
+		return $obj->save();
+	}
 }
 

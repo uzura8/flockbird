@@ -68,6 +68,11 @@ class Controller_Api extends \Controller_Site_Api
 			//$data['is_display_load_before_link'] = (bool)\Input::get('before_link', false);
 			$data['get_uri'] = sprintf('message/api/talks/%s/%d.html', $type_key, $id);
 
+			if ($message_ids = \Util_Orm::conv_col2array($data['list'], 'message_id'))
+			{
+				Model_MessageRecieved::update_is_read4member_ids_and_message_ids($this->u->id, $message_ids);
+			}
+
 			$this->set_response_body_api($data, 'talks/_parts/list');
 		});
 	}

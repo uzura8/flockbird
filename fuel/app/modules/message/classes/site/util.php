@@ -64,7 +64,7 @@ class Site_Util
 		return array_keys(\Config::get('message.types'));
 	}
 
-	public static function get_talks4view($type_key = null, $related_id = 0, $params = array(), $self_member_id = 0, $member_ids = array(), $is_update_is_read_flag = false)
+	public static function get_talks4view($type_key = null, $related_id = 0, $params = array(), $self_member_id = 0, $member_ids = array(), $update_read_status = false)
 	{
 		list($list, $next_id) = Site_Model::get_talks(
 			$type_key,

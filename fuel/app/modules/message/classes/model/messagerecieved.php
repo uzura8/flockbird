@@ -106,13 +106,33 @@ class Model_MessageRecieved extends \MyOrm\Model
 
 	public static function get_unread_message_ids4member_ids($member_ids, $message_ids)
 	{
-		if (!$message_ids) return array();
-		$member_id_cond = (count($member_ids) > 1) ? array('member_id', array_shift($member_ids)) : array('member_id', 'in', $member_ids);
+		if (!$unread_conds = self::get_unread_condition($member_ids, $message_ids)) return false;
 
-		return self::get_cols('message_id', array(
+		return self::get_cols('message_id', $unread_conds);
+	}
+
+	public static function update_is_read4member_ids_and_message_ids($member_ids, $message_ids)
+	{
+		if (!$unread_conds = self::get_unread_condition($member_ids, $message_ids)) return false;
+		if (!$objs = self::get_all(null, null, null, $unread_conds)) return false;
+
+		foreach ($objs as $id => $obj)
+		{
+			$obj->is_read = 1;
+			$obj->save();
+		}
+	}
+
+	protected static function get_unread_condition($member_ids, $message_ids)
+	{
+		$member_ids = (array)$member_ids;
+		if (!$member_ids || !$message_ids) return false;
+		$member_id_cond = (count($member_ids) == 1) ? array('member_id', array_shift($member_ids)) : array('member_id', 'in', $member_ids);
+
+		return array(
 			$member_id_cond,
 			array('message_id', 'in', $message_ids),
 			array('is_read', 0),
-		));
+		);
 	}
 }
