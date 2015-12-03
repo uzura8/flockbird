@@ -103,11 +103,17 @@ class Controller_Base_Site extends Controller_Base
 
 	protected function set_notification_count()
 	{
-		if (is_enabled('notice') && Auth::check())
-		{
-			$this->notification_counts['notice'] = \Notice\Site_Util::get_unread_count($this->u->id);
-		}
+		$this->set_notification_count4type('notice');
+		$this->set_notification_count4type('message');
 		View::set_global('notification_counts', $this->notification_counts);
+	}
+
+	protected function set_notification_count4type($type)
+	{
+		if (!Auth::check()) return;
+		if (!is_enabled($type)) return;
+
+		$this->notification_counts[$type] = \Site_Notification::get_unread_count($type, $this->u->id);
 	}
 
 	protected function change_notice_status2read($member_id, $foreign_table, $foreign_id, $type_key = null)

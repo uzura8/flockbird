@@ -58,7 +58,7 @@ class Site_Util
 	public static function update_notice_status2unread($member_id_to, $notice_id)
 	{
 		$is_changed_status = \Notice\Model_NoticeStatus::change_status2unread($member_id_to, $notice_id);
-		if (\Config::get('notice.cache.unreadCount.isEnabled') && $is_changed_status) \Notice\Site_Util::delete_unread_count_cache($member_id_to);
+		if (\Site_Notification::check_is_enabled_cahce('notice') && $is_changed_status) \Site_Notification::delete_unread_count_cache($member_id_to);
 
 		return $is_changed_status;
 	}
@@ -106,7 +106,7 @@ class Site_Util
 			if (Model_NoticeStatus::change_status2read($member_id, $notice->id)) $reduce_num++;
 		}
 
-		self::delete_unread_count_cache($member_id);
+		\Site_Notification::delete_unread_count_cache('notice', $member_id);
 
 		return $reduce_num;
 	}
@@ -123,48 +123,6 @@ class Site_Util
 		}
 
 		return $types;
-	}
-
-	public static function get_unread_count($member_id)
-	{
-		if (!\Config::get('notice.cache.unreadCount.isEnabled'))
-		{
-			return Model_NoticeStatus::get_unread_count4member_id($member_id);
-		}
-
-		return self::get_unread_count_cache($member_id, true);
-	}
-
-	public static function get_unread_count_cache_key($member_id)
-	{
-		return \Config::get('notice.cache.unreadCount.prefix').$member_id;
-	}
-
-	public static function get_unread_count_cache($member_id, $is_make_cache = false)
-	{
-		$cache_key = self::get_unread_count_cache_key($member_id);
-		$cache_expir = \Config::get('notice.cache.unreadCount.expir');
-		try
-		{
-			$unread_count = \Cache::get($cache_key, $cache_expir);
-		}
-		catch (\CacheNotFoundException $e)
-		{
-			$unread_count = null;
-			if ($is_make_cache)
-			{
-				$unread_count = Model_NoticeStatus::get_unread_count4member_id($member_id);
-				\Cache::set($cache_key, $unread_count, $cache_expir);
-			}
-		}
-
-		return $unread_count;
-	}
-
-	public static function delete_unread_count_cache($member_id)
-	{
-		$cache_key = self::get_unread_count_cache_key($member_id);
-		\Cache::delete($cache_key);
 	}
 
 	public static function get_match_pattern2mention()

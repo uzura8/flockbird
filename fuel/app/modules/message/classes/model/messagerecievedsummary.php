@@ -130,5 +130,13 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 
 		return $obj->save();
 	}
+
+	public static function get_unread_count4member_id($member_id)
+	{
+		return self::query()
+			->where('member_id', $member_id)
+			->where('is_read', 0)
+			->count();
+	}
 }
 

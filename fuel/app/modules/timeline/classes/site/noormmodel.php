@@ -41,7 +41,7 @@ class Site_NoOrmModel
 		// delete caches
 		if ($delete_target_notice_cache_member_ids)
 		{
-			foreach ($delete_target_notice_cache_member_ids as $member_id) \Notice\Site_Util::delete_unread_count_cache($member_id);
+			foreach ($delete_target_notice_cache_member_ids as $member_id) \Site_Notification::delete_unread_count_cache('notice', $member_id);
 		}
 		Site_Util::delete_cache($timeline_id);
 	}

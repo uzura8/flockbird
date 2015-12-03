@@ -18,4 +18,7 @@ return array(
 		'site_info' => 8,
 		'system_info' => 9,
 	),
+	'modalArticles' => array(
+		'limit' => 5,
+	),
 );

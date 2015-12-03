@@ -11,4 +11,7 @@ return array(
 			'body'  => 3,
 		),
 	),
+	'modalArticles' => array(
+		'limit' => 3,
+	),
 );
