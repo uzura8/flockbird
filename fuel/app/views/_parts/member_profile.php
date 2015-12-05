@@ -40,7 +40,7 @@ if (!empty($link_uri))
 }
 elseif ($page_type != 'detail')
 {
-	$profile_page_uri = 'member/'.$member->id;
+	$profile_page_uri = $member ? 'member/'.$member->id : '';
 	$is_link2raw_file = false;
 }
 
@@ -78,7 +78,7 @@ $is_display_message_btn = (is_enabled('message') && !empty($with_message_btn) &&
 <?php 	if ($is_display_follow_btn): ?>
 						<?php echo render('_parts/button_follow', array(
 							'member_id_from' => Auth::check() ? $u->id : 0,
-							'member_id_to' => $member->id,
+							'member_id_to' => $member ? $member->id : null,
 							'size' => $button_follow_size,
 							'attrs' => array('class' => array(''))
 						)); ?>
