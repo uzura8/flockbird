@@ -14,6 +14,7 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_UpdateRelationalTables' => __DIR__.'/classes/observer/updaterelationaltables.php',
 	'MyOrm\\Observer_DeleteRelationalTablesOnUpdated' => __DIR__.'/classes/observer/deleterelationaltablesonupdated.php',
 	'MyOrm\\Observer_DeleteRelationalTables' => __DIR__.'/classes/observer/deleterelationaltables.php',
+	'MyOrm\\Observer_ExecuteOnUpdate' => __DIR__.'/classes/observer/executeonupdate.php',
 	'MyOrm\\Observer_ExecuteToRelations' => __DIR__.'/classes/observer/executetorelations.php',
 	'MyOrm\\Observer_CountUpToRelations' => __DIR__.'/classes/observer/countuptorelations.php',
 	'MyOrm\\Observer_CountDownToRelations' => __DIR__.'/classes/observer/countdowntorelations.php',

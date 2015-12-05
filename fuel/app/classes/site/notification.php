@@ -6,11 +6,11 @@ class Site_Notification
 
 	public static function get_unread_count($type, $member_id)
 	{
-		if (!static::check_enabled_type($type)) throw new InvalidArgumentException('First parameter is invalid.');
+		if (!static::check_enabled_type($type)) throw new InvalidArgumentException(__METHOD__.':First parameter is invalid.');
 
 		if (!static::check_is_enabled_cahce($type))
 		{
-			return Model_NoticeStatus::get_unread_count4member_id($type, $member_id);
+			return static::get_unread_count4member_id($type, $member_id);
 		}
 
 		return static::get_unread_count_cache($type, $member_id, true);
@@ -21,9 +21,14 @@ class Site_Notification
 		return in_array($type, static::$enable_types);
 	}
 
+	public static function get_enabled_types()
+	{
+		return static::$enable_types;
+	}
+
 	public static function check_is_enabled_cahce($type, $is_check_module_enabled = false)
 	{
-		if (!static::check_enabled_type($type)) throw new InvalidArgumentException('First parameter is invalid.');
+		if (!static::check_enabled_type($type)) throw new InvalidArgumentException(__METHOD__.':First parameter is invalid.');
 		if ($is_check_module_enabled && !is_enabled($type)) return false;
 
 		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.isEnabled', $type), 'page', false);
@@ -31,7 +36,7 @@ class Site_Notification
 
 	public static function get_cahce_expire($type = 'common')
 	{
-		if (!static::check_enabled_type($type)) throw new InvalidArgumentException('First parameter is invalid.');
+		if (!static::check_enabled_type($type)) throw new InvalidArgumentException(__METHOD__.':First parameter is invalid.');
 
 		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.expire', $type), 'page');
 	}
@@ -48,7 +53,7 @@ class Site_Notification
 
 	public static function get_unread_count_cache($type, $member_id, $is_make_cache = false)
 	{
-		if (!static::check_enabled_type($type)) throw new InvalidArgumentException('First parameter is invalid.');
+		if (!static::check_enabled_type($type)) throw new InvalidArgumentException(__METHOD__.':First parameter is invalid.');
 
 		$cache_key = static::get_unread_count_cache_key($type, $member_id);
 		$cache_expir = static::get_unread_count_cache_expire();
@@ -92,7 +97,7 @@ class Site_Notification
 
 	public static function delete_unread_count_cache($type, $member_id)
 	{
-		if (!static::check_enabled_type($type)) throw new InvalidArgumentException('First parameter is invalid.');
+		if (!static::check_enabled_type($type)) throw new InvalidArgumentException(__METHOD__.':First parameter is invalid.');
 
 		$cache_key = static::get_unread_count_cache_key($type, $member_id);
 		\Cache::delete($cache_key);

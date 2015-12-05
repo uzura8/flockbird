@@ -101,10 +101,16 @@ class Controller_Base_Site extends Controller_Base
 		throw new \HttpForbiddenException;
 	}
 
-	protected function set_notification_count()
+	protected function set_notification_count($target_types = array('notice', 'message'))
 	{
-		$this->set_notification_count4type('notice');
-		$this->set_notification_count4type('message');
+		$accept_types = \Site_Notification::get_enabled_types();
+		if (!$target_types) $target_types = $accept_types;
+		if (!is_array($target_types)) $target_types = (array)$target_types;
+		foreach ($target_types as $target_type)
+		{
+			if (!in_array($target_type, $accept_types)) continue;
+			$this->set_notification_count4type($target_type);
+		}
 		View::set_global('notification_counts', $this->notification_counts);
 	}
 
@@ -120,7 +126,15 @@ class Controller_Base_Site extends Controller_Base
 	{
 		if ($read_count = \Notice\Site_Util::change_status2read($member_id, $foreign_table, $foreign_id, $type_key))
 		{
-			$this->set_notification_count();
+			$this->set_notification_count('notice');
+		}
+	}
+
+	protected function change_message_status2read($member_id_to)
+	{
+		if (\Message\Model_MessageRecievedSummary::update_is_read4member_ids($this->u->id, $member_id_to))
+		{
+			$this->set_notification_count('message');
 		}
 	}
 }

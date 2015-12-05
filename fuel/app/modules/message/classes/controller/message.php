@@ -47,7 +47,8 @@ class Controller_Message extends \Controller_Site
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($member_id);
 		if ($is_mypage) throw new \HttpNotFoundException;
 
-		Model_MessageRecievedSummary::update_is_read4member_ids($this->u->id, $member_id);
+		// 既読処理
+		$this->change_message_status2read($member_id);
 
 		$this->template->post_footer = \View::forge('_parts/load_message');
 		$this->set_title_and_breadcrumbs(sprintf('%s との%s', $member->name, term('message.view')), array('message' => term('message.view')));

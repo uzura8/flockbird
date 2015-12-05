@@ -73,6 +73,22 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 	public static function _init()
 	{
 		static::$_properties['type']['validation']['in_array'][] = Site_Util::get_types(true);
+
+		// notification cache を削除
+		if (\Site_Notification::check_is_enabled_cahce('message'))
+		{
+			static::$_observers['MyOrm\Observer_ExecuteOnUpdate'] = array(
+				'events' => array('after_update'),
+				'check_properties' => array('is_read'),
+				'execute_func' => array(
+					'method' => '\Site_Notification::delete_unread_count_cache',
+					'params' => array(
+						'message' => 'value',
+						'member_id' => 'property',
+					),
+				),
+			);
+		}
 	}
 
 	public static function get_one4member_id_and_type_and_related_id($member_id, $type, $type_related_id)
@@ -100,6 +116,7 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 		}
 
 		$obj->last_message_id = $message_id;
+		$obj->is_read = 0;
 		if ($datetime) $obj->last_sent_at = $datetime;
 		$obj->save();
 
@@ -121,11 +138,13 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 	public static function update_is_read4member_ids($member_id_to, $member_id_from)
 	{
 		$related_id = \Model_MemberRelationUnit::get_id4member_ids(array($member_id_to, $member_id_from));
-		$obj = self::get_one4conditions(array(
+		if (!$obj = self::get_one4conditions(array(
 			'member_id' => $member_id_to,
 			'type' => Site_Util::get_type4key('member'),
 			'type_related_id' => $related_id,
-		));
+			'is_read' => 0,
+		))) return false;
+
 		$obj->is_read = 1;
 
 		return $obj->save();

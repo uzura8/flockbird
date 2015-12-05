@@ -58,7 +58,10 @@ class Site_Util
 	public static function update_notice_status2unread($member_id_to, $notice_id)
 	{
 		$is_changed_status = \Notice\Model_NoticeStatus::change_status2unread($member_id_to, $notice_id);
-		if (\Site_Notification::check_is_enabled_cahce('notice') && $is_changed_status) \Site_Notification::delete_unread_count_cache($member_id_to);
+		if (\Site_Notification::check_is_enabled_cahce('notice') && $is_changed_status)
+		{
+			\Site_Notification::delete_unread_count_cache('notice', $member_id_to);
+		}
 
 		return $is_changed_status;
 	}
