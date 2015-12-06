@@ -142,36 +142,38 @@ class Site_Util
 		return null;
 	}
 
-	public static function get_timeline_ogp_title($type, $body = '')
+	public static function get_timeline_ogp_contents($type, $body = '')
 	{
 		switch ($type)
 		{
-			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
-			case \Config::get('timeline.types.album_image_timeline'):
-			case \Config::get('timeline.types.member_name'):
-				return sprintf('%s | %s', $body ?: term('timeline', 'form.post'), FBD_SITE_NAME);
-
 			case \Config::get('timeline.types.member_register'):// SNS への参加
-				return FBD_SITE_NAME.' に参加しました。';
+				$title = FBD_SITE_NAME.' に参加しました。';
 
 			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				return term('profile', 'site.picture').'を設定しました。'.' | '.FBD_SITE_NAME;
+				$title = term('profile', 'site.picture').'を設定しました。';
 
 			case \Config::get('timeline.types.note'):// note 投稿
-				return term('note').'を投稿しました。'.' | '.FBD_SITE_NAME;
+				$title = term('note').'を投稿しました。';
 
 			case \Config::get('timeline.types.thread'):// thread 投稿
-				return term('thread').'を投稿しました。'.' | '.FBD_SITE_NAME;
+				$title = term('thread').'を投稿しました。';
 
 			case \Config::get('timeline.types.album'):// album 作成
-				return term('album').'を作成しました。'.' | '.FBD_SITE_NAME;
+				$title = term('album').'を作成しました。';
 
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
-				return term('album_image').'を投稿しました。'.' | '.FBD_SITE_NAME;
-		}
+				$title = term('album_image').'を投稿しました。';
 
-		return sprintf('%s | %s', $body ?: term('timeline', 'form.post'), FBD_SITE_NAME);
+			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
+			case \Config::get('timeline.types.album_image_timeline'):
+			case \Config::get('timeline.types.member_name'):
+			default :
+				$title = $body ?: sprintf('%sに%sしました。', term('timeline'), term('form.post'));
+		}
+		$description = FBD_SITE_NAME;
+
+		return array($title, $description);
 	}
 
 	public static function get_normal_timeline_body($body, $type, $timeline_id, $image_count = 0, $is_detail = false)
