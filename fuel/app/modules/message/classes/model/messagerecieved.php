@@ -12,9 +12,7 @@ class Model_MessageRecieved extends \MyOrm\Model
 			'key_to' => 'id',
 			'cascade_save' => false,
 			'cascade_delete' => false,
-		)
-	);
-	protected static $_has_one = array(
+		),
 		'message' => array(
 			'key_from' => 'message_id',
 			'model_to' => '\Message\Model_Message',

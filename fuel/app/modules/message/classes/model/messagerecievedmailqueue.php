@@ -11,8 +11,6 @@ class Model_MessageRecievedMailQueue extends \MyOrm\Model
 			'model_to' => '\Message\Model_MessageRecieved',
 			'key_to' => 'id',
 		),
-	);
-	protected static $_has_one = array(
 		'member' => array(
 			'key_from' => 'member_id',
 			'model_to' => 'Model_Member',
