@@ -142,7 +142,7 @@ class Site_Util
 		return null;
 	}
 
-	public static function get_timeline_ogp_contents($type, $body = '')
+	public static function get_timeline_ogp_contents($type, $body = '', $is_return_title_only = false)
 	{
 		switch ($type)
 		{
@@ -171,9 +171,9 @@ class Site_Util
 			default :
 				$title = $body ?: sprintf('%sに%sしました。', term('timeline'), term('form.post'));
 		}
-		$description = FBD_SITE_NAME;
+		if ($is_return_title_only) return $title;
 
-		return array($title, $description);
+		return array($title, FBD_SITE_NAME);
 	}
 
 	public static function get_normal_timeline_body($body, $type, $timeline_id, $image_count = 0, $is_detail = false)
