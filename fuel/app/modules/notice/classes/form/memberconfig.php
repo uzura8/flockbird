@@ -48,15 +48,32 @@ class Form_MemberConfig extends \Form_MemberConfig
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
 
+		$member_auth = null;
 		if (conf('noticeMail.isEnabled', 'notice'))
 		{
 			$name = self::get_name('noticeMailMode');
 			if ($value = self::get_value($member_id, $name, parent::get_default_value($name, 1)))
 			{
-				$member_auth = \Model_MemberAuth::get_one4member_id($member_id);
+				if (!$member_auth) $member_auth = \Model_MemberAuth::get_one4member_id($member_id);
 				if (empty($member_auth->email)) $value = 0;
 			}
 			$label = term('notice', 'site.mail');
+			$options = self::get_options_recieve_mail();
+			$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
+					->add_rule('valid_string', 'numeric', 'required')
+					->add_rule('required')
+					->add_rule('in_array', array_keys($options));
+		}
+
+		if (conf('noticeMail.isEnabled', 'message'))
+		{
+			$name = self::get_name('messageMailMode');
+			if ($value = self::get_value($member_id, $name, parent::get_default_value($name, 1)))
+			{
+				if (!$member_auth) $member_auth = \Model_MemberAuth::get_one4member_id($member_id);
+				if (empty($member_auth->email)) $value = 0;
+			}
+			$label = term('common.newArrival', 'message.view', 'notice', 'site.mail');
 			$options = self::get_options_recieve_mail();
 			$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
 					->add_rule('valid_string', 'numeric', 'required')

@@ -14,4 +14,10 @@ return array(
 	'modalArticles' => array(
 		'limit' => 3,
 	),
+	'noticeMail' => array(
+		'trimWidth' => array(
+			'subject'  => 5,
+			'body'  => 10,
+		),
+	),
 );

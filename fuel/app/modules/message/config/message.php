@@ -21,4 +21,11 @@ return array(
 	'modalArticles' => array(
 		'limit' => 5,
 	),
+	'noticeMail' => array(
+		'isEnabled'  => true,
+		'trimWidth' => array(
+			'subject'  => 100,
+			'body'  => 300,
+		),
+	),
 );

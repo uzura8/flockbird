@@ -77,6 +77,7 @@ $ sh bin/setup/setup.sh
 ~~~~
 # 5 分ごとに新着お知らせメールを配信する
 */5 * * * * root php /path_to_Flockbird/oil r notice::sendmail > /dev/null
+*/5 * * * * root php /path_to_Flockbird/oil r message::sendmail > /dev/null
 ~~~~
 
 

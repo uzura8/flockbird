@@ -6,11 +6,13 @@ class Model_MessageRecievedMailQueue extends \MyOrm\Model
 	protected static $_table_name = 'message_recieved_mail_queue';
 
 	protected static $_belongs_to = array(
-		'notice_status' => array(
+		'message_recieved' => array(
 			'key_from' => 'message_recieved_id',
 			'model_to' => '\Message\Model_MessageRecieved',
 			'key_to' => 'id',
 		),
+	);
+	protected static $_has_one = array(
 		'member' => array(
 			'key_from' => 'member_id',
 			'model_to' => 'Model_Member',

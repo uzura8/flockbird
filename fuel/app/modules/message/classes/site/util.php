@@ -54,7 +54,7 @@ class Site_Util
 
 	public static function get_types($is_value_only = false)
 	{
-		$types = array_values(\Config::get('message.types'));
+		$types = \Config::get('message.types');
 
 		return $is_value_only ? array_values($types) : $types;
 	}
@@ -62,6 +62,13 @@ class Site_Util
 	public static function get_type_keys()
 	{
 		return array_keys(\Config::get('message.types'));
+	}
+
+	public static function get_type_label($type)
+	{
+		$type_key = static::get_key4type($type);
+
+		return term('message.types.'.$type_key);
 	}
 
 	public static function get_talks4view($type_key = null, $related_id = 0, $params = array(), $self_member_id = 0, $member_ids = array(), $update_read_status = false)

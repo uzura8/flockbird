@@ -81,6 +81,7 @@ $config = array(
 		'get' => '取得',
 		'recieve_mail' => '受信する',
 		'unrecieve_mail' => '受信しない',
+		'recieved' => '受信',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -148,6 +149,7 @@ $config = array(
 		'my' => '自分の',
 		'timelimit' => '期限',
 		'_name' => '名',
+		'newArrival' => '新着',
 	),
 	'member' => array(
 		'view' => 'メンバー',
