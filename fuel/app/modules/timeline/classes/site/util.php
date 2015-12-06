@@ -173,7 +173,7 @@ class Site_Util
 		}
 		if ($is_return_title_only) return $title;
 
-		return array($title, FBD_SITE_NAME);
+		return array($title, FBD_SITE_DESCRIPTION);
 	}
 
 	public static function get_normal_timeline_body($body, $type, $timeline_id, $image_count = 0, $is_detail = false)
