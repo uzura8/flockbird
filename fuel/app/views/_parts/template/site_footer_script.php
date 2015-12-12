@@ -11,6 +11,19 @@
 <?php echo render('notice::_parts/handlebars_template/list'); ?>
 </script>
 <?php 	endif; ?>
+
+<?php 	if (is_enabled('message')): ?>
+<?php echo Asset::js('site/modules/message/common/util.js');?>
+<?php echo render('_parts/modal', array(
+	'block_attrs' => array('id' => 'modal_message_navbar'),
+	'size' => 'sm',
+	'title' => term('message.view'),
+	'is_display_footer_close_btn' => true,
+)); ?>
+<script type="text/x-handlebars-template" id="messages-template">
+<?php echo render('message::_parts/handlebars_template/list'); ?>
+</script>
+<?php 	endif; ?>
 <?php else: ?>
 
 <?php

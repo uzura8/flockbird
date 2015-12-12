@@ -5,4 +5,5 @@
 	'access_from' => $access_from,
 	'with_link2profile_image' => true,
 	'with_edit_btn' => true,
+	'with_message_btn' => true,
 )); ?>

@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS `message_recieved_mail_queue`;
+DROP TABLE IF EXISTS `message_recieved_summary`;
+DROP TABLE IF EXISTS `message_recieved`;
+DROP TABLE IF EXISTS `message_sent_member_relation_unit`;
+DROP TABLE IF EXISTS `message_sent_group`;
+DROP TABLE IF EXISTS `message`;
+DROP TABLE IF EXISTS `group_member`;
+DROP TABLE IF EXISTS `group`;
+DROP TABLE IF EXISTS `member_relation_unit`;

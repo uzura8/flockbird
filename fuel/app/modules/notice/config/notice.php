@@ -3,13 +3,6 @@ return array(
 	'mention' => array(
 		'isEnabled'  => true,
 	),
-	'cache' => array(
-		'unreadCount' => array(
-			'isEnabled'  => true,
-			'expir' => 60 * 30,// 30 min
-			'prefix'  => 'notice_unread_count_',
-		),
-	),
 	'noticeMail' => array(
 		'isEnabled'  => true,
 	),

@@ -109,6 +109,10 @@ return array(
 			'admin/member/delete' => array('POST', 'DELETE'),
 			'admin/member/group/edit' => array('POST'),
 			'admin/member/group/api/menu' => array('GET'),
+			'admin/message/create' => array('GET', 'POST'),
+			'admin/message/edit' => array('GET', 'POST'),
+			'admin/message/delete' => array('GET', 'POST'),
+			'admin/message/send' => array('GET', 'POST'),
 		),
 		'user' => array(
 			'admin/index' => array('GET'),
@@ -131,6 +135,9 @@ return array(
 			'admin/member/index' => array('GET'),
 			'admin/member/list' => array('GET'),
 			'admin/member/detail' => array('GET'),
+			'admin/message/index' => array('GET'),
+			'admin/message/list' => array('GET'),
+			'admin/message/detail' => array('GET'),
 		),
 		/**
 		 * Examples

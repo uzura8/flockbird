@@ -40,3 +40,7 @@ Handlebars.registerHelper('conv2objStr', function(key1, value1, key2, value2, ke
 Handlebars.registerHelper('getTerm', function(key) {
 	return get_term(key);
 });
+
+Handlebars.registerHelper('strimwidth', function(str, width) {
+	return strimwidth(str, width)
+});

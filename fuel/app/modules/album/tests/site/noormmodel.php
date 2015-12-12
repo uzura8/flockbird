@@ -20,7 +20,7 @@ class Test_Site_NoOrmModel extends \TestCase
 	public static function setUpBeforeClass()
 	{
 		self::$is_check_timeline_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
-		self::$is_check_notice_cache = (is_enabled('notice') && \Config::get('notice.cache.unreadCount.isEnabled'));
+		self::$is_check_notice_cache = \Site_Notification::check_is_enabled_cahce('notice', true);
 
 		self::$member = \Model_Member::check_authority(self::$member_id);
 		self::$album_image = \Album\Site_Test::setup_album_image(self::$member_id, null, 1);
@@ -119,7 +119,7 @@ class Test_Site_NoOrmModel extends \TestCase
 			{
 				foreach ($notice_statuses as $notice_statuse)
 				{
-					$this->assertEmpty(\Notice\Site_Util::get_unread_count_cache($notice_statuse->member_id));
+					$this->assertEmpty(\Site_Notification::get_unread_count('notice', $notice_statuse->member_id));
 				}
 			}
 		}

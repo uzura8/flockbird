@@ -23,7 +23,7 @@ class Test_Model_TimelineComment extends \TestCase
 	public static function setUpBeforeClass()
 	{
 		self::$is_check_view_cache = (is_enabled('timeline') && \Config::get('timeline.articles.cache.is_use'));
-		self::$is_check_notice_cache = (is_enabled('notice') && \Config::get('notice.cache.unreadCount.isEnabled'));
+		self::$is_check_notice_cache = \Site_Notification::check_is_enabled_cahce('notice', true);
 		self::set_timeline();
 	}
 
@@ -159,7 +159,7 @@ class Test_Model_TimelineComment extends \TestCase
 		$notice_count_all_before = \Notice\Model_Notice::get_count();
 
 		// set cache
-		$notice_count_before = \Notice\Site_Util::get_unread_count($member_id_to);
+		$notice_count_before = \Site_Notification::get_unread_count('notice', $member_id_to);
 		if (self::$is_check_notice_cache) $this->assertFalse(self::check_no_cache($member_id_to));// cache が生成されていることを確認
 
 		// timeline_comment save
@@ -178,7 +178,7 @@ class Test_Model_TimelineComment extends \TestCase
 		}
 
 		// notice count に取得
-		$notice_count = \Notice\Site_Util::get_unread_count($member_id_to);
+		$notice_count = \Site_Notification::get_unread_count('notice', $member_id_to);
 		if (self::$is_check_notice_cache) $this->assertFalse(self::check_no_cache($member_id_to));// cache が生成されていることを確認
 
 		// execute test
@@ -255,7 +255,7 @@ class Test_Model_TimelineComment extends \TestCase
 		$notice_counts_before = array();
 		foreach ($mention_member_ids as $mention_member_id)
 		{
-			$notice_counts_before[$mention_member_id] = \Notice\Site_Util::get_unread_count($mention_member_id);
+			$notice_counts_before[$mention_member_id] = \Site_Notification::get_unread_count('notice', $mention_member_id);
 		}
 
 		// timeline_comment save
@@ -282,7 +282,7 @@ class Test_Model_TimelineComment extends \TestCase
 		foreach ($mention_member_ids as $mention_member_id)
 		{
 			// notice count 取得
-			$notice_count = \Notice\Site_Util::get_unread_count($mention_member_id);
+			$notice_count = \Site_Notification::get_unread_count('notice', $mention_member_id);
 			if (self::$is_check_notice_cache) $this->assertFalse(self::check_no_cache($mention_member_id));// cache が生成されていることを確認
 			// execute test
 			$this->assertEquals($notice_counts_before[$mention_member_id] + $countup_nums_exp[$mention_member_id], $notice_count);// count up を確認
@@ -363,13 +363,13 @@ class Test_Model_TimelineComment extends \TestCase
 
 
 		// set cache
-		$notice_count_before = \Notice\Site_Util::get_unread_count($member_id_from);
+		$notice_count_before = \Site_Notification::get_unread_count('notice', $member_id_from);
 
 		// timeline_comment save
 		$timeline_comment_added = self::save_comment($member_id_add_comment);
 
 		// notice count を取得
-		$notice_count = \Notice\Site_Util::get_unread_count($member_id_from);
+		$notice_count = \Site_Notification::get_unread_count('notice', $member_id_from);
 
 		// execute test
 		$countup_num = $is_countup_exp ? 1 : 0;
@@ -531,6 +531,6 @@ class Test_Model_TimelineComment extends \TestCase
 
 	private static function check_no_cache($member_id)
 	{
-		return is_null(\Site_Develop::get_cache(\Notice\Site_Util::get_unread_count_cache_key($member_id), \Config::get('notice.cache.unreadCount.expir')));
+		return is_null(\Site_Develop::get_cache(\Site_Notification::get_unread_count_cache_key('notice', $member_id), \Site_Notification::get_cahce_expire()));
 	}
 }

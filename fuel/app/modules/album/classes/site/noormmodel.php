@@ -30,7 +30,7 @@ class Site_NoOrmModel
 		}
 		if (is_enabled('timeline') && $with_delete_timeline)
 		{
-			$delete_target_timeline_ids = \timeline\site_noormmodel::delete_timeline_multiple4foreign_data('album', $album_id);
+			$delete_target_timeline_ids = \Timeline\Site_NoOrmModel::delete_timeline_multiple4foreign_data('album', $album_id);
 		}
 		if (!\DB::delete('album')->where('id', $album_id)->execute())
 		{
@@ -42,7 +42,7 @@ class Site_NoOrmModel
 		// delete caches
 		if ($delete_target_notice_cache_member_ids)
 		{
-			foreach ($delete_target_notice_cache_member_ids as $member_id) \Notice\Site_Util::delete_unread_count_cache($member_id);
+			foreach ($delete_target_notice_cache_member_ids as $member_id) \Site_Notification::delete_unread_count_cache('notice', $member_id);
 		}
 		if ($delete_target_timeline_ids)
 		{
@@ -100,7 +100,7 @@ class Site_NoOrmModel
 		// delete caches
 		if ($delete_target_notice_cache_member_ids)
 		{
-			foreach ($delete_target_notice_cache_member_ids as $member_id) \Notice\Site_Util::delete_unread_count_cache($member_id);
+			foreach ($delete_target_notice_cache_member_ids as $member_id) \Site_Notification::delete_unread_count_cache('notice', $member_id);
 		}
 		if ($delete_target_timeline_ids)
 		{

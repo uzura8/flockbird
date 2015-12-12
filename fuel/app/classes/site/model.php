@@ -8,7 +8,8 @@ class Site_Model
 
 	public static function get_namespace4table($table)
 	{
-		if (preg_match('/^(note|album|timeline|thread|news|notice|admin|content)/', $table, $matches))
+		$active_modules = array_keys(Site_Util::get_active_modules());
+		if (preg_match('/^('.implode('|', $active_modules).')/', $table, $matches))
 		{
 			return ucfirst($matches[1]);
 		}

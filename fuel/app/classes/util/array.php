@@ -218,4 +218,16 @@ class Util_Array
 
 		return array_merge($list_before, $list_after);
 	}
+
+	public static function sort_pairs_num(array $nums, $is_forbidden_same_value = false)
+	{
+		if (!$nums || count($nums) != 2) throw new InvalidArgumentException('First parameter is invalid.');
+		$nums = \Util_Array::cast_values($nums, 'int');
+		sort($nums, SORT_NUMERIC);
+		list($num_lower, $num_upper) = $nums;
+		if ($is_forbidden_same_value && $num_lower == $num_upper) throw new InvalidArgumentException('Numbers are same value.');
+
+		return array($num_lower, $num_upper);
+	}
 }
+

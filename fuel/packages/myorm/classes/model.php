@@ -174,7 +174,7 @@ class Model extends \Orm\Model
 		return $obj;
 	}
 
-	public static function get_row4unique_key(array $conditions)
+	public static function get_one4conditions(array $conditions)
 	{
 		return self::query()
 			->where($conditions)
@@ -264,7 +264,7 @@ class Model extends \Orm\Model
 
 	public static function change_registered_status4unique_key(array $params)
 	{
-		if ($obj = self::get_row4unique_key($params))
+		if ($obj = self::get_one4conditions($params))
 		{
 			$obj->delete();
 		}
@@ -361,32 +361,7 @@ class Model extends \Orm\Model
 		// where
 		if (!empty($params['where']))
 		{
-			if (\Arr::is_multi($params['where']))
-			{
-				foreach ($params['where'] as $key => $where)
-				{
-					if ($key === 'and' || $key === 'or')
-					{
-						$method_open  = $key.'_where_open';
-						$method_close = $key.'_where_close';
-						$query->$method_open();
-						foreach ($where as $key_child => $where_child)
-						{
-							$query = self::add_where($query, $where_child, $key_child);
-						}
-						$query = $query->$method_close();
-					}
-					else
-					{
-						$query = self::add_where($query, $where);
-					}
-				}
-			}
-			else
-			{
-				$where = $params['where'];
-				$query = self::add_where($query, $where);
-			}
+			$query = self::set_where($query, $params['where']);
 		}
 		// order by
 		if (!empty($params['order_by']))
@@ -509,7 +484,7 @@ class Model extends \Orm\Model
 		if (!$props) throw new \FuelException('basic_props not set.');
 
 		static::$basic_list_cache[$id] = array();
-		if ($obj = static::find($id))
+		if ($obj = static::get_one4id($id))
 		{
 			static::$basic_list_cache[$id] = array();
 			foreach ($props as $prop)
@@ -521,8 +496,10 @@ class Model extends \Orm\Model
 		return static::$basic_list_cache[$id];
 	}
 
-	public static function get_basic4ids($ids, $basic_props = array())
+	public static function get_basic4ids($ids, $basic_props = array(), $is_clear_cache = false)
 	{
+		if ($is_clear_cache) static::clear_cache();
+
 		$objs = array();
 		foreach ($ids as $id)
 		{
@@ -596,14 +573,29 @@ class Model extends \Orm\Model
 			return static::set_where4not_multi($query, $params);
 		}
 
-		if (count($params) == 3 && !is_array($params[0]) && in_array(strToLower($params[2]), array('in', '<', '>', '<=', '>=')))
+		if (count($params) == 3 && !is_array($params[0]) && !is_array($params[1]) && in_array(strtolower($params[1]), array('in', '<', '>', '<=', '>=')))
 		{
 			return static::set_where4not_multi($query, $params);
 		}
 
-		foreach ($params as $param)
+		$method = 'where';
+		foreach ($params as $key => $param)
 		{
-			$query = static::set_where4not_multi($query, $param);
+			if ($key === 'and' || $key === 'or')
+			{
+				$method_open  = $key.'_where_open';
+				$method_close = $key.'_where_close';
+				$query->$method_open();
+				foreach ($where as $key_child => $where_child)
+				{
+					$query = self::add_where($query, $where_child, $key_child);
+				}
+				$query = $query->$method_close();
+			}
+			else
+			{
+				$query = static::set_where4not_multi($query, $param);
+			}
 		}
 
 		return $query;

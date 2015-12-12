@@ -60,7 +60,7 @@ class Model_Notice extends \MyOrm\Model
 		static::$_properties['parent_id'] = \Util_Orm::get_relational_numeric_key_prop(false);
 
 		// unread cache を削除
-		if (\Config::get('notice.cache.unreadCount.isEnabled'))
+		if (\Site_Notification::check_is_enabled_cahce('notice'))
 		{
 			static::$_observers['MyOrm\Observer_DeleteUnreadNoticeCountCache'] = array(
 				'events' => array('before_delete'),
