@@ -102,7 +102,7 @@ class Controller_Message extends Controller_Admin
 				if (!strlen($post['body'])) throw new \ValidationFailedException(term('message.form.body').'が入力されていません。');
 
 				$member_id_from = conf('adminMail.memberIdFrom', 'message');
-				$type_key = $target_type == 'member' ? 'site_info' : $type_key;
+				$type_key = $target_type == 'member' ? 'site_info' : $target_type;
 				$type = \Message\Site_Util::get_type4key($type_key);
 				\DB::start_transaction();
 				$message->save_with_relations($member_id_from, $type, $target_id, $post['body'], $post['subject'], $post['is_draft'], array(
