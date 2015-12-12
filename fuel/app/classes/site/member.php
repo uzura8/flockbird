@@ -163,9 +163,9 @@ class Site_Member
 		$name = $member->name;
 		$email = !empty($member->member_auth->email) ? $member->member_auth->email : '';
 
-		\Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
-		\Album\Site_NoOrmModel::delete_album4member_id($member_id);
-		\Note\Site_NoOrmModel::delete_note4member_id($member_id);
+		if (is_enabled('timeline')) \Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
+		if (is_enabled('album')) \Album\Site_NoOrmModel::delete_album4member_id($member_id);
+		if (is_enabled('note')) \Note\Site_NoOrmModel::delete_note4member_id($member_id);
 		static::delete_file_all4member_id($member_id);
 		static::delete_file_all4member_id($member_id, true);
 
