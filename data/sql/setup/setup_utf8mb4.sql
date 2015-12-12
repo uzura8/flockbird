@@ -143,9 +143,9 @@ CREATE TABLE `member_relation` (
   UNIQUE KEY `member_id_from_to_UNIQUE_idx` (`member_id_from`,`member_id_to`),
   KEY `member_id_to_idx` (`member_id_to`),
   KEY `member_id_from_idx` (`member_id_from`),
-  CONSTRAINT `member_relationship_member_id_from_member_id` FOREIGN KEY (`member_id_from`) REFERENCES `member` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `member_relationship_member_id_to_member_id` FOREIGN KEY (`member_id_to`) REFERENCES `member` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves ralationships of each members';
+  CONSTRAINT `member_relation_member_id_from_member_id` FOREIGN KEY (`member_id_from`) REFERENCES `member` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_relation_member_id_to_member_id` FOREIGN KEY (`member_id_to`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves ralations of each members';
 
 CREATE TABLE `tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',

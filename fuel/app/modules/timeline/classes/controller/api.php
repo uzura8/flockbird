@@ -175,8 +175,8 @@ class Controller_Api extends \Controller_Site_Api
 				$data['shareFacebook'] = array(
 					'obj' => array(
 						'link' => $link,
-						'caption' => FBD_SITE_DESCRIPTION,
-						'name' => strim($timeline->body, conf('service.facebook.shareDialog.name.trimWidth')),
+						//'caption' => FBD_SITE_DESCRIPTION,
+						//'name' => strim($timeline->body, conf('service.facebook.shareDialog.name.trimWidth')),
 					),
 				);
 				if ($album_image_ids && $album_image = \Album\Model_AlbumImage::find($album_image_ids[0]))

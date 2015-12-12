@@ -5,7 +5,7 @@
 	<div class="clearfix">
 		<div>{{getNoticeInfo notice.foreign_table notice.type members members_count}}</div>
 		<small>
-			<span data-livestamp="{{{sort_datetime}}}"></span>
+			<span data-livestamp="{{sort_datetime}}"></span>
 			<span class="ml10">{{# if is_read}}<?php echo term('site.AlreadyRead'); ?>{{else}}<?php echo term('site.unread'); ?>{{/if}}</span>
 		</small>
 	</div>
