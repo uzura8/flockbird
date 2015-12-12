@@ -53,7 +53,7 @@ class Controller_Message extends Controller_Admin
 	public function action_detail($id = null)
 	{
 		$message = \Message\Model_Message::check_authority($id);
-		$target_member_ids = \Message\Site_Util::check_type($message->type, array('site_info_all', 'system_info')) ?
+		$target_member_ids = \Message\Site_Util::check_type($message->type, 'site_info_all') ?
 			array() : \Message\Site_Model::get_send_target_member_ids($message->id, $message->type, null, $message->member_id);
 		$target_members = $target_member_ids ? \Model_Member::get_basic4ids($target_member_ids, null, true) : array();
 
@@ -102,7 +102,8 @@ class Controller_Message extends Controller_Admin
 				if (!strlen($post['body'])) throw new \ValidationFailedException(term('message.form.body').'が入力されていません。');
 
 				$member_id_from = conf('adminMail.memberIdFrom', 'message');
-				$type = \Message\Site_Util::get_type4key($target_type);
+				$type_key = $target_type == 'member' ? 'site_info' : $type_key;
+				$type = \Message\Site_Util::get_type4key($type_key);
 				\DB::start_transaction();
 				$message->save_with_relations($member_id_from, $type, $target_id, $post['body'], $post['subject'], $post['is_draft'], array(
 					'admin_user_id' => $this->u->id,
