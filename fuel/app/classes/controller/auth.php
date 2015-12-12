@@ -214,6 +214,7 @@ class Controller_Auth extends Controller_Site
 			$member = Model_Member::forge();
 			$member->name = str_replace(' ', '', $input['service_name']);
 			$member->group = conf('group.options.user', 'member');
+			$member->status = conf('status.options.normal', 'member');
 			list($member->sex, $member->sex_public_flag) = Site_Oauth::get_sex($response, $provider);
 			list($member->birthyear, $member->birthyear_public_flag) = Site_Oauth::get_birthyear($response, $provider);
 			list($member->birthday, $member->birthday_public_flag) = Site_Oauth::get_birthday($response, $provider);
