@@ -7,7 +7,7 @@ return array(
 		'site_info' => 8,
 		'system_info' => 9,
 	),
-	'adminMail' => array(
+	'adminMessage' => array(
 		'memberIdFrom' => 1,
 	),
 	'noticeMail' => array(

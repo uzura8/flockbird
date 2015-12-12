@@ -101,7 +101,7 @@ class Controller_Message extends Controller_Admin
 				$post = $val->validated();
 				if (!strlen($post['body'])) throw new \ValidationFailedException(term('message.form.body').'が入力されていません。');
 
-				$member_id_from = conf('adminMail.memberIdFrom', 'message');
+				$member_id_from = conf('adminMessage.memberIdFrom', 'message');
 				$type_key = $target_type == 'member' ? 'site_info' : $target_type;
 				$type = \Message\Site_Util::get_type4key($type_key);
 				\DB::start_transaction();

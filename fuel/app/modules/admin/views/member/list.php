@@ -65,7 +65,7 @@ $dropdown_btn_attr = array(
 <?php // group edit ?>
 
 <?php if (is_enabled('message')): ?>
-<?php 	if (check_acl($uri = 'admin/message/create')): ?>
+<?php 	if (check_acl($uri = 'admin/message/create') && $member->id != conf('adminMessage.memberIdFrom', 'message')): ?>
 	<td class="small"><?php echo btn('message.view', 'admin/message/create/member/'.$member->id, null, false, 'xs', null, array(
 	)); ?></td>
 <?php 	else: ?>
