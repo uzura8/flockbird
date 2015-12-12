@@ -138,17 +138,11 @@ class Controller_Base_Site extends Controller_Base
 				$is_updated = \Message\Model_MessageRecievedSummary::update_is_read4member_ids($this->u->id, $other_member_id);
 				break;
 			case 'site_info':
-				if (!$message_sent_admin = \Message\Model_MessageSentAdmin::get_one4message_id_and_member_id($message_id, $this->u->id))
-				{
-					throw new \HttpForbiddenException;
-				}
-				$is_updated = \Message\Model_MessageRecievedSummary::update_is_read4unique_key($this->u->id, $type, $message_sent_admin->id);
-				break;
 			case 'site_info_all':
+			case 'system_info':
 				$is_updated = \Message\Model_MessageRecievedSummary::update_is_read4unique_key($this->u->id, $type, $message_id);
 				break;
 			case 'group':
-			case 'system_info':
 			default :
 				break;
 		}
