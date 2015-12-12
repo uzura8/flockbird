@@ -312,10 +312,10 @@ class Controller_Base extends Controller_Hybrid
 		$title_name = '';
 		$this->template->title = '';
 
-		if ($title) list($title_name, $title_label) = Site_Controller::get_title_parts($title);
+		if ($title) list($title_name, $title_label, $subtitle) = Site_Controller::get_title_parts($title);
 		if (!$is_no_title && $title_name)
 		{
-			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
+			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label, 'subtitle' => $subtitle));
 			$common['title'] = $title_name;
 		}
 

@@ -130,11 +130,29 @@ class Controller_Base_Site extends Controller_Base
 		}
 	}
 
-	protected function change_message_status2read($member_id_to)
+	protected function change_message_status2read($type, $other_member_id, $message_id = 0)
 	{
-		if (\Message\Model_MessageRecievedSummary::update_is_read4member_ids($this->u->id, $member_id_to))
+		switch (\Message\Site_Util::get_key4type($type))
 		{
-			$this->set_notification_count('message');
+			case 'member':
+				$is_updated = \Message\Model_MessageRecievedSummary::update_is_read4member_ids($this->u->id, $other_member_id);
+				break;
+			case 'site_info':
+				if (!$message_sent_admin = \Message\Model_MessageSentAdmin::get_one4message_id_and_member_id($message_id, $this->u->id))
+				{
+					throw new \HttpForbiddenException;
+				}
+				$is_updated = \Message\Model_MessageRecievedSummary::update_is_read4unique_key($this->u->id, $type, $message_sent_admin->id);
+				break;
+			case 'site_info_all':
+				$is_updated = \Message\Model_MessageRecievedSummary::update_is_read4unique_key($this->u->id, $type, $message_id);
+				break;
+			case 'group':
+			case 'system_info':
+			default :
+				break;
 		}
+
+		if ($is_updated) $this->set_notification_count('message');
 	}
 }

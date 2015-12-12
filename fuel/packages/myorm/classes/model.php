@@ -361,32 +361,7 @@ class Model extends \Orm\Model
 		// where
 		if (!empty($params['where']))
 		{
-			if (\Arr::is_multi($params['where']))
-			{
-				foreach ($params['where'] as $key => $where)
-				{
-					if ($key === 'and' || $key === 'or')
-					{
-						$method_open  = $key.'_where_open';
-						$method_close = $key.'_where_close';
-						$query->$method_open();
-						foreach ($where as $key_child => $where_child)
-						{
-							$query = self::add_where($query, $where_child, $key_child);
-						}
-						$query = $query->$method_close();
-					}
-					else
-					{
-						$query = self::add_where($query, $where);
-					}
-				}
-			}
-			else
-			{
-				$where = $params['where'];
-				$query = self::add_where($query, $where);
-			}
+			$query = self::set_where($query, $params['where']);
 		}
 		// order by
 		if (!empty($params['order_by']))
@@ -596,14 +571,29 @@ class Model extends \Orm\Model
 			return static::set_where4not_multi($query, $params);
 		}
 
-		if (count($params) == 3 && !is_array($params[0]) && in_array(strToLower($params[2]), array('in', '<', '>', '<=', '>=')))
+		if (count($params) == 3 && !is_array($params[0]) && !is_array($params[1]) && in_array(strtolower($params[1]), array('in', '<', '>', '<=', '>=')))
 		{
 			return static::set_where4not_multi($query, $params);
 		}
 
-		foreach ($params as $param)
+		$method = 'where';
+		foreach ($params as $key => $param)
 		{
-			$query = static::set_where4not_multi($query, $param);
+			if ($key === 'and' || $key === 'or')
+			{
+				$method_open  = $key.'_where_open';
+				$method_close = $key.'_where_close';
+				$query->$method_open();
+				foreach ($where as $key_child => $where_child)
+				{
+					$query = self::add_where($query, $where_child, $key_child);
+				}
+				$query = $query->$method_close();
+			}
+			else
+			{
+				$query = static::set_where4not_multi($query, $param);
+			}
 		}
 
 		return $query;

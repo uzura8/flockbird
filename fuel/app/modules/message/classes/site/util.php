@@ -47,16 +47,33 @@ class Site_Util
 		throw new \InvalidArgumentException('Parameter is invalid.');
 	}
 
-	public static function check_type($target_type, $type_key)
+	public static function check_type($target_type, $accept_type_keys)
 	{
-		return $target_type == self::get_type4key($type_key);
+		if (!is_array($accept_type_keys)) $accept_type_keys = (array)$accept_type_keys;
+
+		return in_array(self::get_key4type($target_type), $accept_type_keys);
 	}
 
-	public static function get_types($is_value_only = false)
+	public static function get_types($is_value_only = false, $is_admin_only = false)
 	{
 		$types = \Config::get('message.types');
+		if ($is_admin_only)
+		{
+			$types = array(
+				'site_info_all' => static::get_type4key('site_info_all'),
+				'site_info' => static::get_type4key('site_info'),
+				'system_info' => static::get_type4key('system_info'),
+			);
+		}
 
 		return $is_value_only ? array_values($types) : $types;
+	}
+
+	public static function check_admin_type($target_type)
+	{
+		$admin_types = static::get_types(true, true);
+
+		return in_array(static::get_type4key($target_type), $admin_types);
 	}
 
 	public static function get_type_keys()
@@ -64,11 +81,11 @@ class Site_Util
 		return array_keys(\Config::get('message.types'));
 	}
 
-	public static function get_type_label($type)
+	public static function get_type_label($type, $is_simple = false)
 	{
 		$type_key = static::get_key4type($type);
 
-		return term('message.types.'.$type_key);
+		return term(sprintf('message.types.%s.%s', $is_simple ? 'labelSimple' : 'label', $type_key));
 	}
 
 	public static function get_talks4view($type_key = null, $related_id = 0, $params = array(), $self_member_id = 0, $member_ids = array(), $update_read_status = false)

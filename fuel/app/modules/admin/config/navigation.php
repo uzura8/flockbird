@@ -6,6 +6,7 @@ $configs = array(
 			term('site.view', 'site.management') => array(
 				term('member.view', 'site.list') => 'admin/member/',
 				term('profile', 'site.setting') => 'admin/profile/',
+				term('message.view', 'site.list') => 'admin/message/',
 			),
 			term('site.content', 'site.management') => array(
 				term('news.view', 'site.list') => 'admin/news/',
@@ -47,6 +48,7 @@ $configs = array(
 			term('admin.view', 'page.view', 'page.top') => 'admin/',
 			term('member.view', 'site.management') => 'admin/member/',
 			term('profile', 'site.setting') => 'admin/profile/',
+			term('message.view', 'site.list') => 'admin/message/',
 			term('site.content', 'site.management') => 'admin/news/',
 			term('admin.view', 'page.view', 'site.setting') => 'admin/account/',
 			term('site.view') => FBD_SITE_URL ?: '/',

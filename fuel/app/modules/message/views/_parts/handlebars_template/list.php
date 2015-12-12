@@ -3,7 +3,7 @@
 <a href="{{site_url detail_page_uri}}" class="simpleList-item{{# unless is_read}} simpleList-item-warning{{/unless}}">
 	<img class="pull-left-img profile_image" alt="{{member_from.name}}" src="{{getImgUri member_from.file '50x50xc'}}">
 	<div class="clearfix">
-		<h5>{{getMessageInfo member_from.name type}}</h5>
+		{{{getMessageInfo member_from.name type message.subject}}}
 		<p>{{strimwidth message.body 50}}</p>
 		<small>
 			<span data-livestamp="{{{last_sent_at}}}"></span>

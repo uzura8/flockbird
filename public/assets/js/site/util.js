@@ -898,7 +898,7 @@ function post_submit(selfDomElement) {
 			destination = $(selfDomElement).data('destination'),
 			postUri;
 	if (href && href == '#') href = '';
-	if (!href && !uri) return false;
+	if (empty(href) && empty(uri)) return false;
 	postUri = href ? href : get_url(uri);
 	if (destination) postData['destination'] = destination;
 	if (confirmMsg) {

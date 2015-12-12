@@ -849,6 +849,7 @@ CREATE TABLE `message` (
   `updated_at` datetime NOT NULL,
   `sent_at` datetime NULL,
   PRIMARY KEY (`id`),
+  KEY `type` (`type`),
   KEY `member_id_sent_at_idx` (`member_id`,`sent_at`),
   KEY `member_id_updated_at_idx` (`member_id`,`updated_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Use for message master';
@@ -873,9 +874,22 @@ CREATE TABLE `message_sent_group` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `message_id_group_id_UNIQUE_idx` (`message_id`,`group_id`),
   KEY `group_id_id_idx` (`group_id`,`id`),
-  CONSTRAINT `message_recieved_group_group_id_group_id` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `message_recieved_group_message_id_message_id` FOREIGN KEY (`message_id`) REFERENCES `message` (`id`) ON DELETE CASCADE
+  CONSTRAINT `message_group_group_group_id_group_id` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `message_group_group_message_id_message_id` FOREIGN KEY (`message_id`) REFERENCES `message` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Use for sent message list for groups';
+
+CREATE TABLE `message_sent_admin` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
+  `message_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `admin_user_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `message_id_member_id_UNIQUE_idx` (`message_id`,`member_id`),
+  KEY `member_id_idx` (`member_id`),
+  CONSTRAINT `message_sent_admin_message_id_message_id` FOREIGN KEY (`message_id`) REFERENCES `message` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `message_sent_admin_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Use for sent message list from admin_user';
 
 CREATE TABLE `message_recieved` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',

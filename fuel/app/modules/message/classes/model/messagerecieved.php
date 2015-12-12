@@ -124,12 +124,12 @@ class Model_MessageRecieved extends \MyOrm\Model
 	protected static function get_unread_condition($member_ids, $message_ids)
 	{
 		$member_ids = (array)$member_ids;
+		$message_ids = (array)$message_ids;
 		if (!$member_ids || !$message_ids) return false;
-		$member_id_cond = (count($member_ids) == 1) ? array('member_id', array_shift($member_ids)) : array('member_id', 'in', $member_ids);
 
 		return array(
-			$member_id_cond,
-			array('message_id', 'in', $message_ids),
+			\Util_Orm::get_where_cond_depended_on_param_count('member_id', $member_ids),
+			\Util_Orm::get_where_cond_depended_on_param_count('message_id', $message_ids),
 			array('is_read', 0),
 		);
 	}

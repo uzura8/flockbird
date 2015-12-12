@@ -15,7 +15,7 @@ $message_btn_attr = array(
 	'class' => 'btn btn-default navbar-inverse js-modal',
 	'type' => 'button',
 	'data-uri' => 'message/api/list.json',
-	'data-get_data' => array('limit' => Config::get('message.modalArticles.limit')),
+	'data-get_data' => array('limit' => view_params('limit', 'message', 'mordal')),
 	'data-target' => '#modal_message_navbar',
 	'data-tmpl' => '#messages-template',
 	'data-is_list' => 1,

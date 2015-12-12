@@ -45,6 +45,11 @@ function get_term(key) {
 <?php endif; ?>
 <?php if (is_enabled('message')): ?>
 		'message': '<?php echo term('message.view'); ?>',
+		'messageTypeMember': '<?php echo term('message.types.label.member'); ?>',
+		'messageTypeGroup': '<?php echo term('message.types.label.group'); ?>',
+		'messageTypeSiteInfo': '<?php echo term('message.types.label.site_info'); ?>',
+		'messageTypeSiteInfoAll': '<?php echo term('message.types.label.site_info_all'); ?>',
+		'messageTypeSystemInfo': '<?php echo term('message.types.label.system_info'); ?>',
 <?php endif; ?>
 		'public_flag': '<?php echo term('public_flag.label'); ?>',
 		'comment': '<?php echo term('form.comment'); ?>',

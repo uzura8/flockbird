@@ -77,6 +77,16 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 		// notification cache を削除
 		if (\Site_Notification::check_is_enabled_cahce('message'))
 		{
+			static::$_observers['MyOrm\Observer_ExecuteOnCreate'] = array(
+				'events' => array('after_insert'),
+				'execute_func' => array(
+					'method' => '\Site_Notification::delete_unread_count_cache',
+					'params' => array(
+						'message' => 'value',
+						'member_id' => 'property',
+					),
+				),
+			);
 			static::$_observers['MyOrm\Observer_ExecuteOnUpdate'] = array(
 				'events' => array('after_update'),
 				'check_properties' => array('is_read'),
@@ -100,7 +110,7 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 		));
 	}
 
-	public static function save_at_sent($member_id, $message_id, $type, $type_related_id = 0, $datetime = null)
+	public static function save_at_sent($member_id, $message_id, $type, $type_related_id, $datetime = null)
 	{
 		if ($obj = self::get_one4member_id_and_type_and_related_id($member_id, $type, $type_related_id))
 		{
@@ -135,13 +145,34 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 		return static::get_pager_list($params, $page);
 	}
 
-	public static function update_is_read4member_ids($member_id_to, $member_id_from)
+	public static function update_is_read4member_ids_old($member_id_to, $member_id_from)
 	{
 		$related_id = \Model_MemberRelationUnit::get_id4member_ids(array($member_id_to, $member_id_from));
 		if (!$obj = self::get_one4conditions(array(
 			'member_id' => $member_id_to,
 			'type' => Site_Util::get_type4key('member'),
 			'type_related_id' => $related_id,
+			'is_read' => 0,
+		))) return false;
+
+		$obj->is_read = 1;
+
+		return $obj->save();
+	}
+
+	public static function update_is_read4member_ids($self_member_id, $partner_member_id)
+	{
+		$type_related_id = \Model_MemberRelationUnit::get_id4member_ids(array($self_member_id, $partner_member_id));
+
+		return self::update_is_read4unique_key($self_member_id, 'member', $type_related_id);
+	}
+
+	public static function update_is_read4unique_key($member_id, $type, $type_related_id)
+	{
+		if (!$obj = self::get_one4conditions(array(
+			'member_id' => $member_id,
+			'type' => Site_Util::get_type4key($type),
+			'type_related_id' => $type_related_id,
 			'is_read' => 0,
 		))) return false;
 

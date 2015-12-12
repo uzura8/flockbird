@@ -48,4 +48,12 @@ class Model_MessageSentMemberRelationUnit extends \MyOrm\Model
 	);
 
 	protected static $_to_array_exclude = array();
+
+	public static function get_one4message_id($message_id, $relateds = array())
+	{
+		$query = self::query()->where('message_id', $message_id);
+		if ($relateds) $query->related($relateds);
+
+		return $query->get_one();
+	}
 }

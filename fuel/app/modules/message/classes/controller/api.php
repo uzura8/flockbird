@@ -22,7 +22,7 @@ class Controller_Api extends \Controller_Site_Api
 	{
 		$this->controller_common_api(function()
 		{
-			list($limit, $page) = $this->common_get_pager_list_params(\Config::get('message.articles.limit'), \Config::get('message.articles.limit_max'));
+			list($limit, $page) = $this->common_get_pager_list_params(view_params('limit', 'message'), view_params('limitMax', 'message'));
 			$data = Model_MessageRecievedSummary::get_pager_list4member_id($this->u->id, $limit, $page);
 			$list_array = array();
 			foreach ($data['list'] as $key => $obj)
@@ -59,8 +59,8 @@ class Controller_Api extends \Controller_Site_Api
 				$this->common_get_list_params(array(
 					'desc'   => 0,
 					'latest' => 1,
-					'limit'  => conf('articles.limit', 'message'),
-				), conf('articles.limit_max', 'message'), true),
+					'limit'  => view_params('limit', 'message'),
+				), view_params('limitMax', 'message'), true),
 				get_uid(),
 				$member_ids
 			);
@@ -100,7 +100,7 @@ class Controller_Api extends \Controller_Site_Api
 			$post = $val->validated();
 			if (!strlen($post['body'])) throw new \ValidationFailedException('Data is empty.');
 
-			$message->send_message($this->u->id, $type, $related_id, $post['body']);
+			$message->save_with_relations($this->u->id, $type, $related_id, $post['body']);
 
 			$data = array(
 				'id'      => $message->id,
@@ -137,33 +137,5 @@ class Controller_Api extends \Controller_Site_Api
 
 		return array($type_key, $type, $related_id, $member_ids, $group);
 	}
-
-	/**
-	 * Get edit menu
-	 * 
-	 * @access  public
-	 * @param   int  $id
-	 * @return  Response (html)
-	 * @throws  Exception in Controller_Base::controller_common_api
-	 * @see  Controller_Site_Api::api_get_menu_common
-	 */
-	//public function get_menu($id = null)
-	//{
-	//	$this->api_get_menu_common('message', $id, true, 'messageBox_');
-	//}
-
-	/**
-	 * Delete message
-	 * 
-	 * @access  public
-	 * @param   int  $id  target id
-	 * @return  Response(json)
-	 * @throws  Exception in Controller_Base::controller_common_api
-	 * @see  Controller_Base::controller_common_api
-	 */
-	//public function post_delete($id = null)
-	//{
-	//	$this->api_delete_common('message', $id);
-	//}
 }
 

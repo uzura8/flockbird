@@ -50,7 +50,7 @@ if ($message_sent->message->member_id == get_uid())
 //}
 $content_view = View::forge('_parts/member_contents_box', $data);
 $content_view->set_safe('content', convert_body($message_sent->message->body, array(
-	'nl2br' => isset($nl2br) ? $nl2br : conf('articles.nl2br', 'message'),
+	'nl2br' => isset($nl2br) ? $nl2br : view_params('nl2br', 'message'),
 	'is_truncate' => false,
 	//'truncate_width' => empty($is_detail) ? conf('view_params_default.list.comment.trim_width') : null,
 	'mention2link' => false,

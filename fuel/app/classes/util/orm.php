@@ -233,4 +233,11 @@ class Util_Orm
 
 		return false;
 	}
+
+	public static function get_where_cond_depended_on_param_count($prop, $params)
+	{
+		if (!is_array($params)) $params = (array)$params;
+
+		return (count($params) == 1) ? array($prop, array_shift($params)) : array($prop, 'in', $params);
+	}
 }

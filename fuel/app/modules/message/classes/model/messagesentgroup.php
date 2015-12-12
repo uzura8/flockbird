@@ -13,8 +13,6 @@ class Model_MessageSentGroup extends \MyOrm\Model
 			'cascade_save' => false,
 			'cascade_delete' => false,
 		),
-	);
-	protected static $_has_one = array(
 		'message' => array(
 			'key_from' => 'message_id',
 			'model_to' => '\Message\Model_Message',
@@ -48,4 +46,12 @@ class Model_MessageSentGroup extends \MyOrm\Model
 	);
 
 	protected static $_to_array_exclude = array();
+
+	public static function get_one4message_id($message_id, $relateds = array())
+	{
+		$query = self::query()->where('message_id', $message_id);
+		if ($relateds) $query->related($relateds);
+
+		return $query->get_one();
+	}
 }

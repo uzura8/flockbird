@@ -133,3 +133,8 @@ function strimwidth(str, width) {
 	if (!width || str.length <= width) return str;
 	return str.substr(0, width) + '...';
 }
+
+var escapeHtml = function(val) {
+	return $('<div />').text(val).html();
+};
+
