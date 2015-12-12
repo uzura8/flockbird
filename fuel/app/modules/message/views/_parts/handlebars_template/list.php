@@ -6,7 +6,7 @@
 		{{{getMessageInfo member_from.name type message.subject}}}
 		<p>{{strimwidth message.body 50}}</p>
 		<small>
-			<span data-livestamp="{{{last_sent_at}}}"></span>
+			<span data-livestamp="{{last_sent_at}}"></span>
 			<span class="ml10">{{# if is_read}}<?php echo term('site.AlreadyRead'); ?>{{else}}<?php echo term('site.unread'); ?>{{/if}}</span>
 		</small>
 	</div>
