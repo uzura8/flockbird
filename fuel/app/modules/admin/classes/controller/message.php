@@ -55,18 +55,26 @@ class Controller_Message extends Controller_Admin
 		$message = \Message\Model_Message::check_authority($id);
 		$target_member_ids = \Message\Site_Util::check_type($message->type, array('site_info_all', 'system_info')) ?
 			array() : \Message\Site_Model::get_send_target_member_ids($message->id, $message->type, null, $message->member_id);
-		$target_members = $target_member_ids ? \Model_Member::get_basic4ids($target_member_ids) : array();
+		$target_members = $target_member_ids ? \Model_Member::get_basic4ids($target_member_ids, null, true) : array();
 
-		$subject = array('name' => $message->subject);
+		$title = array('name' => $message->subject);
 		$header_info = array();
 		if (!$message->is_sent)
 		{
 			$header_info = array('body' => sprintf('この%sはまだ%sされていません。', term('message.view'), term('form.send')));
 			$this->template->subtitle = \View::forge('message/_parts/detail_subtitle', array('message' => $message));
 		}
-		$this->set_title_and_breadcrumbs($subject, array('admin/message' => term('message.view', 'admin.view')), null, null, $header_info);
-		$this->template->subtitle = \View::forge('message::_parts/detail_subtitle', array('message' => $message, 'target_members' => $target_members));
-		$this->template->content = \View::forge('message::detail', array('message' => $message, 'target_members' => $target_members));
+		elseif (\Message\Site_Util::check_admin_type($message->type))
+		{
+			$title['subtitle'] = \Message\Site_Util::get_type_label($message->type);
+		}
+		$this->set_title_and_breadcrumbs($title, array('admin/message' => term('message.view', 'admin.view')), null, null, $header_info);
+		$this->template->subtitle = \View::forge('message/_parts/detail_subtitle', array('message' => $message));
+		$this->template->content = \View::forge('message/detail', array(
+			'message' => $message,
+			'type' => $message->type,
+			'target_members' => $target_members,
+		));
 	}
 
 	/**
@@ -77,8 +85,8 @@ class Controller_Message extends Controller_Admin
 	 */
 	public function action_create($target_type, $target_id = null)
 	{
-		if (!in_array($target_type, array('member'))) throw new \HttpNotFoundException;
-		if ($target_type == 'member') $member = \Model_Member::check_authority($target_id);
+		if (!\Message\Site_Util::check_type($target_type, array('site_info_all', 'member'))) throw new \HttpNotFoundException;
+		$member = ($target_type == 'member') ? \Model_Member::check_authority($target_id) : null;
 
 		$message = \Message\Model_Message::forge();
 		$val = self::get_validation_object($message);
@@ -94,7 +102,7 @@ class Controller_Message extends Controller_Admin
 				if (!strlen($post['body'])) throw new \ValidationFailedException(term('message.form.body').'が入力されていません。');
 
 				$member_id_from = conf('adminMail.memberIdFrom', 'message');
-				$type = \Message\Site_Util::get_type4key('site_info');
+				$type = \Message\Site_Util::get_type4key($target_type);
 				\DB::start_transaction();
 				$message->save_with_relations($member_id_from, $type, $target_id, $post['body'], $post['subject'], $post['is_draft'], array(
 					'admin_user_id' => $this->u->id,
@@ -138,15 +146,16 @@ class Controller_Message extends Controller_Admin
 	public function action_edit($id = null)
 	{
 		$message = \Message\Model_Message::check_authority($id);
-
 		$type_key = \Message\Site_Util::get_key4type($message->type);
-		if (!in_array($type_key, array('site_info', 'site_info_all'))) throw new \HttpNotFoundException;
-		if (!$message_sent_admins = \Message\Model_MessageSentAdmin::get4message_id($id, array('member')))
+		if (!\Message\Site_Util::check_type($type_key, array('site_info', 'site_info_all'))) throw new \HttpNotFoundException;
+
+		$message_sent_admins = \Message\Model_MessageSentAdmin::get4message_id($id, array('member'));
+		if (\Message\Site_Util::check_type($type_key, 'site_info') && !$message_sent_admins)
 		{
 			throw new \HttpNotFoundException;
 		}
-		$val = self::get_validation_object($message);
 
+		$val = self::get_validation_object($message);
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
@@ -184,7 +193,7 @@ class Controller_Message extends Controller_Admin
 			}
 		}
 
-		$message_sent_admin = array_shift($message_sent_admins);
+		$message_sent_admin = $message_sent_admins ? array_shift($message_sent_admins) : null;
 		$this->set_title_and_breadcrumbs(term('form.edit'), array(
 			'admin/message' => term('message.view','admin.view'),
 			'admin/message/'.$message->id => $message->subject
@@ -194,7 +203,7 @@ class Controller_Message extends Controller_Admin
 			'val' => $val,
 			'message' => $message,
 			'target_type' => $type_key == 'site_info_all' ? 'all' : 'member',
-			'member' => $message_sent_admin->member,
+			'member' => $message_sent_admin ? $message_sent_admin->member : null,
 		));
 	}
 

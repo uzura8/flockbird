@@ -100,7 +100,6 @@ class Model_Message extends \MyOrm\Model
 		//static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_message_foreign_tables();
 	}
 
-
 	public function save_with_relations($member_id_from, $type, $related_ids, $body, $subject = '', $is_draft = false, $related_optional_props = array())
 	{
 		// save message

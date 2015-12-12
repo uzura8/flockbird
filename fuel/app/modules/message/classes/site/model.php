@@ -167,6 +167,8 @@ class Site_Model
 				break;
 			case 'site_info':
 				$member_ids = \Message\Model_MessageSentAdmin::get_member_ids4message_id($message_id);
+			case 'site_info_all':
+				$member_ids = \Model_Member::get_col_array('id');
 				break;
 		}
 		if ($exclude_member_id) $member_ids = \Util_Array::unset_item($exclude_member_id, $member_ids);

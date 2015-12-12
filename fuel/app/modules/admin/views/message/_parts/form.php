@@ -6,6 +6,8 @@
 <?php 	elseif ($target_type == 'member' && $member): ?>
 	<?php echo form_text(member_name($member), '宛先'); ?>
 	<?php echo Form::hidden('target_member_id', $member->id); ?>
+<?php 	else: ?>
+	<?php echo form_text(term('member.view', 'member.all'), '宛先'); ?>
 <?php 	endif; ?>
 	<?php echo form_input($val, 'subject', isset($message) ? $message->subject : ''); ?>
 	<?php echo form_textarea($val, 'body', isset($message) ? $message->body : ''); ?>

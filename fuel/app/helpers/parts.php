@@ -45,12 +45,12 @@ function icon_label($icon_term, $type = 'both', $is_hidden_xs = true, $absolute_
 	return $icon.$label;
 }
 
-function btn($term_key, $href = '#', $class_name = '', $with_text = true, $btn_size = '', $btn_type = null, $attr = array(), $absolute_icon_key = null, $tag = null, $form_name = null, $is_hidden_xs = true, $with_caret = false)
+function btn($term_key, $href = '#', $class_name = '', $with_text = true, $btn_size = '', $btn_type = null, $attr = array(), $absolute_icon_key = null, $tag = null, $form_name = null, $is_hidden_xs = true, $with_caret = false, $absolute_label = null)
 {
 	if (!$tag) $tag = 'a';
 	if (!in_array($tag, array('a', 'button'))) throw new \InvalidArgumentException('Parameter tag is invalid.');
 
-	$label = icon_label($term_key, $with_text ? 'both' : 'icon', $is_hidden_xs, $absolute_icon_key);
+	$label = $absolute_label ?: icon_label($term_key, $with_text ? 'both' : 'icon', $is_hidden_xs, $absolute_icon_key);
 	if ($with_caret) $label .= ' <span class="caret"></span>';
 
 	switch ($term_key)

@@ -1,7 +1,7 @@
-<?php echo btn('form.create', 'note/create', 'edit'); ?>
 <?php
-$uri = 'admin/message/create';
+$uri = 'admin/message/create/site_info_all';
 $method = 'GET';
-if (check_acl($uri, $method)) echo btn('form.create', $uri, 'edit');
+$label = sprintf('%s %sに%s', icon('form.send'), term('member.view', 'member.all'), term('form.do_send'));
+if (check_acl($uri, $method)) echo btn('form.send', $uri, 'edit', true, null, 'warning', null, null, null, null, false, false, $label);
 ?>
 

@@ -484,7 +484,7 @@ class Model extends \Orm\Model
 		if (!$props) throw new \FuelException('basic_props not set.');
 
 		static::$basic_list_cache[$id] = array();
-		if ($obj = static::find($id))
+		if ($obj = static::get_one4id($id))
 		{
 			static::$basic_list_cache[$id] = array();
 			foreach ($props as $prop)
@@ -496,8 +496,10 @@ class Model extends \Orm\Model
 		return static::$basic_list_cache[$id];
 	}
 
-	public static function get_basic4ids($ids, $basic_props = array())
+	public static function get_basic4ids($ids, $basic_props = array(), $is_clear_cache = false)
 	{
+		if ($is_clear_cache) static::clear_cache();
+
 		$objs = array();
 		foreach ($ids as $id)
 		{
