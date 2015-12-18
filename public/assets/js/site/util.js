@@ -879,7 +879,7 @@ function updateToggle(selfDomElement) {
 
 function execute_post(uri){
 	var post_data = (arguments.length > 1) ? arguments[1] : {};
-	var post_url = uri.match(/^https?:\/\//) ? uri : get_url(uri, false, false);
+	var post_url = uri.match(/^https?:\/\//) ? uri : get_url(uri, false, false, true);
 
 	post_data = set_token(post_data);
 	$('<form>', {action: post_url, method: 'post', id: 'tmp_form'}).appendTo(document.body);
