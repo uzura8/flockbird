@@ -32,6 +32,8 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 
 		$this->mail_data['to_name']  = $member->name;
 		$this->mail_data['to_email'] = $member->member_auth->email;
+		$this->mail_data['subject']  = $message_recieved->message->subject;
+		$this->mail_data['body']     = $message_recieved->message->body;
 		$this->mail_data['content']  = $this->get_mail_body($message_recieved, $member->id);
 	}
 
