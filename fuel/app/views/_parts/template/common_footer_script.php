@@ -7,7 +7,7 @@ function getBasePath() {return '<?php echo Uri::base_path(); ?>';}
 function getCurrentPath() {return '<?php echo Uri::string(); ?>';}
 function getBaseUrl() {
 	var is_current_protocol = (arguments.length > 0) ? arguments[0] : false;
-	if (is_current_protocol) return '<?php echo Uri::base(true, true); ?>';
+	if (is_current_protocol) return '<?php echo Uri::base(true); ?>';
 	return '<?php echo Uri::base(); ?>';
 }
 function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
