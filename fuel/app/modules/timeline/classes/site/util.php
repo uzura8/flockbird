@@ -42,6 +42,15 @@ class Site_Util
 		return $target_type == self::get_type4key($type_key);
 	}
 
+	public static function check_type_enabled($type_key)
+	{
+		if (!$disabled_types = conf('disabledTypes', 'timeline')) return true;
+
+		if (is_numeric($type_key)) $type_key = static::get_key4type($type_key);
+
+		return ! in_array($type_key, $disabled_types);
+	}
+
 	public static function get_timeline_save_values($type_key = null)
 	{
 		$type = self::get_type4key($type_key);

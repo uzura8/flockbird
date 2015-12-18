@@ -54,6 +54,8 @@ return array(
 		'member_name' => 9,
 		'thread' => 10,
 	),
+	'disabledTypes' => array(
+	),
 	'periode_to_update' => array(
 		'album' => '1 day',
 		'album_image' => '1 day',
