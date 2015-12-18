@@ -166,6 +166,7 @@ class Site_Member
 		if (is_enabled('timeline')) \Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
 		if (is_enabled('album')) \Album\Site_NoOrmModel::delete_album4member_id($member_id);
 		if (is_enabled('note')) \Note\Site_NoOrmModel::delete_note4member_id($member_id);
+		if (is_enabled('message')) \Message\Site_NoOrmModel::delete_message_recieved4member_id($member_id);
 		static::delete_file_all4member_id($member_id);
 		static::delete_file_all4member_id($member_id, true);
 
