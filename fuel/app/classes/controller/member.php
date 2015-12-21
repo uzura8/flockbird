@@ -54,7 +54,13 @@ class Controller_Member extends Controller_Site
 			$data['timeline']['member'] = $member;
 			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		}
-		$this->set_title_and_breadcrumbs($member->name.' さんのページ');
+		$this->set_title_and_breadcrumbs($member->name.' さんのページ',
+			array('member/list' => term('member.view', 'site.list')),
+			null, null, array(), false, false, array(
+				'title' => $member->name.' さんのページ',
+				'image' => Site_Util::get_image_uri4file_name($member->get_image(), 'P_L', 'profile'),
+			)
+		);
 		$this->template->content = \View::forge('member/home', $data);
 	}
 

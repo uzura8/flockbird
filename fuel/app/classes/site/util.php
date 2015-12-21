@@ -575,4 +575,26 @@ class Site_Util
 
 		return FBD_SITE_NAME;
 	}
+
+	public static function get_image_uri4image_list($images, $file_cate, $size = 'L')
+	{
+		if (empty($images)) return '';
+
+		$image = is_array($images) ? array_shift($images) : $images;
+		$file_name = $file_cate == 'ai' ? $image->file_name : $image->name;
+		$file_size = img_size($file_cate, $size);
+
+		return Site_Upload::get_uploaded_file_path($file_name, $file_size, 'img', false, true);
+	}
+
+	public static function get_image_uri4file_name($file_name, $size = 'L', $additional_table = '')
+	{
+		if (!$file_name) return '';
+		if (strlen($file_name) < 4) return '';
+
+		$file_cate = Site_Upload::get_file_cate_from_filename($file_name);
+		$file_size = img_size($file_cate, $size, $additional_table);
+
+		return Site_Upload::get_uploaded_file_path($file_name, $file_size, 'img', false, true);
+	}
 }

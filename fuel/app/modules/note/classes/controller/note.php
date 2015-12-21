@@ -102,6 +102,7 @@ class Controller_Note extends \Controller_Site
 		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info, false, false, array(
 			'title' => $note->title,
 			'description' => $note->body,
+			'image' => \Site_Util::get_image_uri4image_list($images, 'ai'),
 		));
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
 		$this->template->post_footer = \View::forge('_parts/detail_footer', array('is_mypage' => check_uid($note->member_id)));

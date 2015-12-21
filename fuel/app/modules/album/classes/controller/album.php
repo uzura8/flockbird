@@ -108,6 +108,7 @@ class Controller_Album extends \Controller_Site
 		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album', null, false, false, array(
 			'title' => $album->name,
 			'description' => $album->body,
+			'image' => \Site_Util::get_image_uri4image_list($data['list'], 'ai'),
 		));
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));
 		$this->template->post_footer = \View::forge('_parts/detail_footer');

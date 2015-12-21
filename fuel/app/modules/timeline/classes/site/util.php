@@ -185,6 +185,21 @@ class Site_Util
 		return array($title, FBD_SITE_DESCRIPTION);
 	}
 
+	public static function get_timeline_ogp_image_uri($type, $foreign_id, $timeline_id = null)
+	{
+		$images = static::get_timeline_images(
+			$type,
+			$foreign_id,
+			$timeline_id
+		);
+		if (empty($images['list'])) return '';
+
+		$file_cate = !empty($images['file_cate']) ? $images['file_cate'] : 'ai';
+		$file_size = !empty($images['size']) ? $images['size'] : 'raw';
+
+		return \Site_Util::get_image_uri4image_list($images['list'], $file_cate, $images['size']);
+	}
+
 	public static function get_normal_timeline_body($body, $type, $timeline_id, $image_count = 0, $is_detail = false)
 	{
 		if (!strlen($body) && $type == \Config::get('timeline.types.album_image_timeline'))
