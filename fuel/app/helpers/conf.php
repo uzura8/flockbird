@@ -62,3 +62,10 @@ function is_enabled_share($service_name, $type = null)
 
 	return (bool)Arr::get($configs, sprintf('%s.isEnabled', $service_name));
 }
+
+function view_params($key, $content, $page_type = null, $default = null, $is_admin = false)
+{
+	if (!$page_type) $page_type = 'list';
+
+	return conf(sprintf('%s.viewParams.%s.%s.%s', $is_admin ? 'admin' : 'site', $content, $page_type, $key), 'page', $default);
+}

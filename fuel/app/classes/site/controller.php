@@ -7,14 +7,16 @@ class Site_Controller
 		{
 			$title_name  = !empty($title['name'])  ? $title['name'] : '';
 			$title_label = !empty($title['label']) ? $title['label'] : array();
+			$subtitle    = !empty($title['subtitle']) ? $title['subtitle'] : '';
 		}
 		else
 		{
 			$title_name  = $title;
 			$title_label = array();
+			$subtitle    = '';
 		}
 
-		return array($title_name, $title_label);
+		return array($title_name, $title_label, $subtitle);
 	}
 
 	public static function get_api_response_body_default()

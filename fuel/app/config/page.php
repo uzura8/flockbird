@@ -23,6 +23,18 @@ $config = array(
 				),
 			),
 		),
+		'navbar' => array(
+			'notification' => array(
+				'cache' => array(
+					'common' => array(
+						'unreadCount' => array(
+							'expir' => 60 * 30,// 30 min
+							'prefix'  => 'notice_unread_count_',
+						),
+					),
+				),
+			),
+		),
 		'index' => array(
 			'slide' => array(
 				'isEnabled' => true,

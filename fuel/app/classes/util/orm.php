@@ -221,4 +221,23 @@ class Util_Orm
 
 		return $query;
 	}
+
+	public static function check_included($check_value, $property, $objs)
+	{
+		if (!$objs) return false;
+
+		foreach ($objs as $obj)
+		{
+			if ($obj->{$property} == $check_value) return true;
+		}
+
+		return false;
+	}
+
+	public static function get_where_cond_depended_on_param_count($prop, $params)
+	{
+		if (!is_array($params)) $params = (array)$params;
+
+		return (count($params) == 1) ? array($prop, array_shift($params)) : array($prop, 'in', $params);
+	}
 }

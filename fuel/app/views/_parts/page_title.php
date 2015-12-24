@@ -4,6 +4,11 @@ if (isset($label) && empty($label['attr'])) $label['attr'] = 'label-default';
 ?>
 <h1 class="h2<?php if (!empty($label)): ?> has_label<?php endif; ?>">
 	<?php echo $name; ?>
+
+<?php if (!empty($subtitle)): ?>
+<small><?php echo $subtitle; ?></small>
+<?php endif; ?>
+
 <?php if (!empty($label)): ?>
  <?php echo label($label['name'],
 	!empty($label['type'])  ? $label['type']  : 'default',

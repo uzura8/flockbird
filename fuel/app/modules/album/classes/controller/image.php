@@ -117,7 +117,7 @@ class Controller_Image extends \Controller_Site
 		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album',
 			null, false, false, array(
 				'title' => $album_image->album->name,
-				'description' => $album_image->name ?: '',
+				'description' => $album_image->name ?: FBD_SITE_NAME,
 			));
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->post_header = \View::forge('image/_parts/detail_header');

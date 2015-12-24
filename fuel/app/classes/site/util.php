@@ -1,6 +1,8 @@
 <?php
 class Site_Util
 {
+	protected static $active_modules = array();
+
 	public static function get_module_name()
 	{
 		return (isset(Request::main()->route->module))? Request::main()->route->module : '';
@@ -542,15 +544,16 @@ class Site_Util
 
 	public static function get_active_modules()
 	{
-		$active_modules = array();
+		if (static::$active_modules) return static::$active_modules;
+
 		$modules = Module::loaded();
 		foreach ($modules as $module => $module_path)
 		{
 			if (!conf($module.'.isEnabled')) continue;
-			$active_modules[$module] = $module_path;
+			static::$active_modules[$module] = $module_path;
 		}
 
-		return $active_modules;
+		return static::$active_modules;
 	}
 
 	public static function validate_tags($tag_string)

@@ -63,6 +63,7 @@ class Site_Form
 		if ($optional_attr) $input_attr += $optional_attr;
 		if (empty($input_attr['id'])) $input_attr['id'] = Site_Form::get_field_id($name);
 		if (empty($input_attr['class'])) $input_attr['class'] = 'form-control';
+		if ($is_textarea) $input_attr['class'] .= ' autogrow';
 
 		return array($default_value, $label, $is_required, $input_attr);
 	}

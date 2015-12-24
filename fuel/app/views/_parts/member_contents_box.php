@@ -39,11 +39,19 @@ if (isset($content) && strlen($content))
 <?php echo render('_parts/thumbnails', array('images' => $images)); ?>
 <?php endif; ?>
 		</div>
-<?php if ($date || isset($public_flag, $model, $id)): ?>
+
+<?php if ($date || isset($read_status, $public_flag, $model, $id)): ?>
 		<div class="sub_info">
 <?php if ($date): ?>
 			<small><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>
 <?php endif; ?>
+
+<?php if (isset($unread_flag)): ?>
+			<small class="<?php echo sprintf('text-%s', $unread_flag ? 'danger' : 'muted'); ?>">
+				<?php echo term(sprintf('site.%s', $unread_flag ? 'unread' : 'AlreadyRead')); ?>
+			</small>
+<?php endif; ?>
+
 <?php
 // reply link
 if (!empty($reply_link))

@@ -146,7 +146,7 @@ class Test_Model_NoteLike extends \TestCase
 		$notice_count_all_before = \Notice\Model_Notice::get_count();
 
 		// set cache
-		$notice_count_before = \Notice\Site_Util::get_unread_count($member_id_to);
+		$notice_count_before = \Site_Notification::get_unread_count('notice', $member_id_to);
 		if (self::$is_check_notice_cache) $this->assertFalse(self::check_no_cache($member_id_to));// cache が生成されていることを確認
 
 		// like save
@@ -168,7 +168,7 @@ class Test_Model_NoteLike extends \TestCase
 		}
 
 		// notice count に取得
-		$notice_count = \Notice\Site_Util::get_unread_count($member_id_to);
+		$notice_count = \Site_Notification::get_unread_count('notice', $member_id_to);
 		if (self::$is_check_notice_cache) $this->assertFalse(self::check_no_cache($member_id_to));// cache が生成されていることを確認
 
 		// execute test
@@ -268,13 +268,13 @@ class Test_Model_NoteLike extends \TestCase
 
 
 		// set cache
-		$notice_count_before = \Notice\Site_Util::get_unread_count($member_id_from);
+		$notice_count_before = \Site_Notification::get_unread_count('notice', $member_id_from);
 
 		// note_comment save
 		$note_comment_added = self::save_comment($member_id_add_comment);
 
 		// notice count を取得
-		$notice_count = \Notice\Site_Util::get_unread_count($member_id_from);
+		$notice_count = \Site_Notification::get_unread_count('notice', $member_id_from);
 
 		// execute test
 		$this->assertEquals($notice_count_before + $notice_countup_num_exp, $notice_count);// count up を確認

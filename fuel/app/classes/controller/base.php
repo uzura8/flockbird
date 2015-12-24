@@ -267,7 +267,7 @@ class Controller_Base extends Controller_Hybrid
 		}
 		if ($status_code == 500)
 		{
-			if (!empty($e)) Util_Toolkit::log_error($e->getMessage());
+			if (!empty($e)) Util_Toolkit::log_error(is_prod_env() ? $e->getMessage() : $e->__toString());
 			if (\DB::in_transaction()) \DB::rollback_transaction();
 		}
 		$response_body = Site_Controller::supply_response_body($this->response_body, $status_code, $this->format);
@@ -312,10 +312,10 @@ class Controller_Base extends Controller_Hybrid
 		$title_name = '';
 		$this->template->title = '';
 
-		if ($title) list($title_name, $title_label) = Site_Controller::get_title_parts($title);
+		if ($title) list($title_name, $title_label, $subtitle) = Site_Controller::get_title_parts($title);
 		if (!$is_no_title && $title_name)
 		{
-			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label));
+			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label, 'subtitle' => $subtitle));
 			$common['title'] = $title_name;
 		}
 

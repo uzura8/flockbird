@@ -7,7 +7,7 @@ function getBasePath() {return '<?php echo Uri::base_path(); ?>';}
 function getCurrentPath() {return '<?php echo Uri::string(); ?>';}
 function getBaseUrl() {
 	var is_current_protocol = (arguments.length > 0) ? arguments[0] : false;
-	if (is_current_protocol) return '<?php echo Uri::base(true, true); ?>';
+	if (is_current_protocol) return '<?php echo Uri::base(true); ?>';
 	return '<?php echo Uri::base(); ?>';
 }
 function get_token_key() {return '<?php echo Config::get('security.csrf_token_key'); ?>';}
@@ -42,6 +42,14 @@ function get_term(key) {
 <?php endif; ?>
 <?php if (is_enabled('thread')): ?>
 		'thread': '<?php echo term('thread'); ?>',
+<?php endif; ?>
+<?php if (is_enabled('message')): ?>
+		'message': '<?php echo term('message.view'); ?>',
+		'messageTypeMember': '<?php echo term('message.types.label.member'); ?>',
+		'messageTypeGroup': '<?php echo term('message.types.label.group'); ?>',
+		'messageTypeSiteInfo': '<?php echo term('message.types.label.site_info'); ?>',
+		'messageTypeSiteInfoAll': '<?php echo term('message.types.label.site_info_all'); ?>',
+		'messageTypeSystemInfo': '<?php echo term('message.types.label.system_info'); ?>',
 <?php endif; ?>
 		'public_flag': '<?php echo term('public_flag.label'); ?>',
 		'comment': '<?php echo term('form.comment'); ?>',

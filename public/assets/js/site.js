@@ -19,7 +19,7 @@ $(document).on('click', '.js-like', function(){
 });
 
 $(document).on('click', '.js-simplePost', function(){
-	var postData = $(this).data('post_data') ? $(this).data('post_data') : '';
+	var postData = $(this).data('post_data') ? $(this).data('post_data') : {};
 	close_dropdown_menu(this);
 	post_submit(this, postData);
 	return false;

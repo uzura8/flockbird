@@ -27,6 +27,16 @@ class Observer_SortDatetime extends \Orm\Observer
 
 	public function before_update(\Orm\Model $obj)
 	{
+		$this->main($obj);
+	}
+
+	public function before_save(\Orm\Model $obj)
+	{
+		$this->main($obj);
+	}
+
+	protected function main(\Orm\Model $obj)
+	{
 		if (\Util_Orm::check_is_updated($obj, $this->_check_properties, $this->_ignore_properties))
 		{
 			if (!empty($obj->{$this->_property_from}))

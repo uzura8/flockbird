@@ -11,6 +11,9 @@
 <?php if (conf('member.group.display.isEnabled', 'admin')): ?>
 	<th class="u-sm"><?php echo term('member.group.view'); ?></th>
 <?php endif; ?>
+<?php if (is_enabled('message')): ?>
+	<th class="u-sm fs12"><?php echo term('message.view'); ?></th>
+<?php endif; ?>
 	<th><?php echo term('member.name'); ?></th>
 	<th><?php echo term('member.sex.label'); ?></th>
 	<th class="datetime"><?php echo term('site.registration', 'site.datetime'); ?></th>
@@ -60,6 +63,15 @@ $dropdown_btn_attr = array(
 <?php 		endif; ?>
 <?php 	endif; ?>
 <?php // group edit ?>
+
+<?php if (is_enabled('message')): ?>
+<?php 	if (check_acl($uri = 'admin/message/create') && $member->id != conf('adminMessage.memberIdFrom', 'message')): ?>
+	<td class="small"><?php echo btn('message.view', 'admin/message/create/member/'.$member->id, null, false, 'xs', null, array(
+	)); ?></td>
+<?php 	else: ?>
+	<td class="small"><?php echo symbol('noValue'); ?></td>
+<?php 	endif; ?>
+<?php endif; ?>
 
 	<td><?php echo Html::anchor('admin/member/'.$member->id, $member->name); ?></td>
 	<td><?php echo (isset($member->sex) && strlen($member->sex)) ?

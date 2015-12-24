@@ -6,6 +6,7 @@
 	'display_type' => !empty($display_type) ? $display_type : 'summary',
 	'link_uri' => $is_mypage ? 'member/profile' : 'member/profile/'.$member->id,
 	'is_hide_fallow_btn' => isset($is_hide_fallow_btn) ? $is_hide_fallow_btn : false,
+	'with_message_btn' => true,
 )); ?>
 
 <?php if (is_enabled('timeline') && !empty($timeline)): ?>

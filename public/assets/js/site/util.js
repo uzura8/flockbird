@@ -85,8 +85,8 @@ function getErrorMessage(responseObj)
 	var statusCode = responseObj.status;
 	var messages = !empty(responseObj.responseJSON) ? responseObj.responseJSON.error_messages : '';
 
-	if (!empty(messages.absolute)) return messages.absolute;
-	if (!empty(messages[statusCode])) return messages[statusCode];
+	if (!empty(messages) && messages.absolute) return messages.absolute;
+	if (!empty(messages) && messages.statusCode) return messages.statusCode;
 
 	switch (statusCode)
 	{
@@ -395,7 +395,7 @@ function getSinceId(listSelector, position)
 	listMoreBoxObj = $(listSelector).find('.listMoreBox');
 	if (!empty(listMoreBoxObj)) {
 		listMoreBoxGetData = $(listMoreBoxObj).data('get_data');
-		if (listMoreBoxGetData.max_id) return parseInt(listMoreBoxGetData.max_id);
+		if (!empty(listMoreBoxGetData) && listMoreBoxGetData.max_id) return parseInt(listMoreBoxGetData.max_id);
 	}
 	return 0;
 }
@@ -879,7 +879,7 @@ function updateToggle(selfDomElement) {
 
 function execute_post(uri){
 	var post_data = (arguments.length > 1) ? arguments[1] : {};
-	var post_url = uri.match(/^https?:\/\//) ? uri : get_url(uri, false, false);
+	var post_url = uri.match(/^https?:\/\//) ? uri : get_url(uri, false, false, true);
 
 	post_data = set_token(post_data);
 	$('<form>', {action: post_url, method: 'post', id: 'tmp_form'}).appendTo(document.body);
@@ -898,7 +898,7 @@ function post_submit(selfDomElement) {
 			destination = $(selfDomElement).data('destination'),
 			postUri;
 	if (href && href == '#') href = '';
-	if (!href && !uri) return false;
+	if (empty(href) && empty(uri)) return false;
 	postUri = href ? href : get_url(uri);
 	if (destination) postData['destination'] = destination;
 	if (confirmMsg) {

@@ -157,6 +157,8 @@ class Site_Model
 
 	public static function save_timeline($member_id, $public_flag = null, $type_key = null, $foreign_id = null, $save_datetime = null, $body = null, Model_Timeline $timeline = null, $child_foreign_ids = array())
 	{
+		if (!Site_Util::check_type_enabled($type_key)) return;
+
 		list($type, $foreign_table, $child_foreign_table) = Site_Util::get_timeline_save_values($type_key);
 		if (!$timeline) $timeline = Site_Util::get_timeline_object($type_key, $foreign_id);
 		$is_new = empty($timeline->id);
