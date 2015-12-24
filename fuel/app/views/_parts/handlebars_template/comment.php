@@ -18,7 +18,7 @@
 {{else}}
 				<b class="fullname">{{member_screen_name member.name}}</b>
 {{/if}}
-				<div>{{body}}</div>
+				<div>{{{body}}}</div>
 			</div>
 			<div class="sub_info">
 				<small><span data-livestamp="{{created_at}}"></span></small>
