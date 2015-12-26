@@ -327,6 +327,7 @@ class Controller_Base extends Controller_Hybrid
 
 		if (!empty($ogp_data['title'])) $common['title'] = $ogp_data['title'];
 		if (!empty($ogp_data['description'])) $common['description'] = $ogp_data['description'];
+		if (!empty($ogp_data['image'])) $common['image'] = $ogp_data['image'];
 
 		View::set_global('common', $common);
 	}

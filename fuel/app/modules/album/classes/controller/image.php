@@ -118,6 +118,7 @@ class Controller_Image extends \Controller_Site
 			null, false, false, array(
 				'title' => $album_image->album->name,
 				'description' => $album_image->name ?: FBD_SITE_NAME,
+				'image' => \Site_Util::get_image_uri4image_list($album_image, 'ai'),
 			));
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->post_header = \View::forge('image/_parts/detail_header');

@@ -111,6 +111,11 @@ class Controller_Timeline extends \Controller_Site
 		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true, array(
 			'title' => $ogp_title,
 			'description' => $ogp_description,
+			'image' => Site_Util::get_timeline_ogp_image_uri(
+				$timeline->type,
+				$timeline->foreign_id,
+				$timeline->id
+			),
 		));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/article', array(
