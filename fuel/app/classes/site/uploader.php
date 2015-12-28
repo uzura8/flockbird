@@ -162,8 +162,7 @@ class Site_Uploader
 			throw new FuelException('File already exists.');
 		}
 
-		$this->file->file_path = $this->options['upload_dir'].$this->file->name;
-		//$this->file->filepath = $this->options['filepath'];
+		$this->file->file_path = $this->options['upload_dir'].str_replace($this->options['filename_prefix'], '', $this->file->name);
 	}
 
 	private function validate()
