@@ -182,20 +182,6 @@ class Site_Util
 		return $form;
 	}
 
-	public static function merge_module_configs($config, $config_name)
-	{
-		$modules = Module::loaded();
-		foreach ($modules as $module => $path)
-		{
-			Config::load($module.'::'.$config_name, $module.'_'.$config_name);
-			if (!$module_config = Config::get($module.'_'.$config_name)) continue;
-
-			$config = array_merge_recursive($config, $module_config);
-		}
-
-		return $config;
-	}
-
 	public static function merge_db_configs($configs, $table)
 	{
 		$class = 'Model_'.Inflector::camelize($table);
