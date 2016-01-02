@@ -34,19 +34,19 @@ class Site_Notification
 		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.isEnabled', $type), 'page', false);
 	}
 
-	public static function get_cahce_expire($type = 'common')
+	public static function get_cahce_expire($type = 'notice')
 	{
 		if (!static::check_enabled_type($type)) throw new InvalidArgumentException(__METHOD__.':First parameter is invalid.');
 
 		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.expire', $type), 'page');
 	}
 
-	protected static function get_unread_count_cache_expire($type = 'common')
+	public static function get_unread_count_cache_expire($type = 'common')
 	{
 		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.expire', $type), 'page');
 	}
 
-	protected static function get_unread_count_cache_key($type, $member_id)
+	public static function get_unread_count_cache_key($type, $member_id)
 	{
 		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.prefix', $type), 'page').$member_id;
 	}
