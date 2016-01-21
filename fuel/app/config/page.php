@@ -25,7 +25,7 @@ $config = array(
 		),
 		'index' => array(
 			'slide' => array(
-				'isEnabled' => true,
+				'isEnabled' => false,
 				'interval' => 30000,
 				'title' => '',
 				'site_lead' => '',

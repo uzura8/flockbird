@@ -6,9 +6,11 @@
 @font-family-jp:       "Meiryo UI", Meiryo;
 @font-family-base:     @font-family-sans-serif, @font-family-jp;
 
+@navbar-margin-bottom: 0;
+
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-	padding-top: @navbar-height + @parts-margin-lg;
+	padding-top: @navbar-height;
 	padding-bottom: @parts-padding-md;
 	min-width: @window-min-width;
 }
