@@ -183,6 +183,7 @@ class Site_Upload
 	public static function conv_size_str_to_array($size_string)
 	{
 		$items = explode('x', $size_string);
+		if (!$items || count($items) < 2) return false;
 
 		$sizes = array();
 		$sizes['width']  = !empty($items[0]) ? (int)$items[0] : 0;
@@ -219,7 +220,7 @@ class Site_Upload
 		$max = self::conv_size_str_to_array($max_size);
 		if ($sizes->width <= $max['width'] && $sizes->height <= $max['height']) return $size;
 
-		Util_file::resize($file, $file, $max['width'], $max['width']);
+		Util_file::resize($file, $file, $max['width'], $max['height']);
 
 		return filesize($file);
 	}
@@ -550,5 +551,19 @@ class Site_Upload
 		}
 
 		return File::get_size($path);
+	}
+
+	public static function get_file_path4file_name($file_name, $size = 'raw')
+	{
+		$file_name_infos = explode('_', $file_name);
+		$config = array(
+			'file_cate' => $file_name_infos[0],
+			'split_num' => $file_name_infos[1],
+			'file_name' => $file_name_infos[2],
+			'size'      => $size,
+		);
+		$file = new \Site_FileMaker($config);
+
+		return $file->get_file_path();
 	}
 }

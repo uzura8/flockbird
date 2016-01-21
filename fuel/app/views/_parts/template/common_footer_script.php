@@ -1,3 +1,4 @@
+<?php $img_max_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.accepted_max_size.default')); ?>
 <script>
 var GL = {};
 GL.execute_flg = false;
@@ -87,6 +88,10 @@ function get_config(key) {
 		upload_dir_name: '<?php echo FBD_UPLOAD_DIRNAME; ?>',
 		site_description: '<?php echo FBD_SITE_DESCRIPTION; ?>',
 		upload_max_filesize: <?php echo FBD_UPLOAD_MAX_FILESIZE; ?>,
+<?php if (!empty($img_max_sizes)): ?>
+		imageMaxWidth: <?php echo $img_max_sizes['width']; ?>,
+		imageMaxHeight: <?php echo $img_max_sizes['height']; ?>,
+<?php endif; ?>
 		app_id_facebook: '<?php echo FBD_FACEBOOK_APP_ID; ?>'
 	};
 	return config[key];

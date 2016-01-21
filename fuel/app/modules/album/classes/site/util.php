@@ -118,4 +118,73 @@ class Site_Util
 
 		return $menus;
 	}
+
+	public static function get_top_slide_image_uris()
+	{
+		$cache_key = conf('site.index.slide.recentAlbumImage.cache.key', 'page');
+		$cache_expir = conf('site.index.slide.recentAlbumImage.cache.expir', 'page');
+		try
+		{
+			$image_uris =  \Cache::get($cache_key, $cache_expir);
+		}
+		catch (\CacheNotFoundException $e)
+		{
+			$image_uris =  static::get_top_slide_image_uris_raw();
+			\Cache::set($cache_key, $image_uris, $cache_expir);
+		}
+
+		return $image_uris;
+	}
+
+	public static function get_top_slide_image_uris_raw()
+	{
+		$configs = conf('site.index.slide.recentAlbumImage', 'page');
+		$size_string = conf('upload.types.img.types.ai.sizes.'.$configs['sizeKey']);
+		$limit_width = false;
+		if ($sizes_for_resize = \Site_Upload::conv_size_str_to_array($size_string))
+		{
+			$limit_width = $sizes_for_resize['width'];
+		}
+
+		$limit = $configs['displayCount'] + $configs['displayCountAdditional'];
+		$data = Site_Model::get_album_images($limit);
+		if (empty($data['list'])) return $uris_default;
+
+		$uris = array();
+		$i = 0;
+		foreach ($data['list'] as $album_image)
+		{
+			if ($i >= $configs['displayCount']) break;
+			if (!static::check_album_imgage4top_page_slide($album_image, $limit_width)) continue;
+
+			$uris[] = img_uri($album_image->file_name, $configs['sizeKey']);
+			$i++;
+		}
+		$rest_count = $configs['displayCount'] - $i;
+		if ($rest_count > 0)
+		{
+			$uris_default = conf('site.index.slide.images', 'page');
+			if ($rest_count > count($uris_default)) $rest_count = count($uris_default);
+			for ($i = 0; $i < $rest_count; $i++)
+			{
+				$uris[] = $uris_default[$i];
+			}
+		}
+
+		return $uris;
+	}
+
+	protected static function check_album_imgage4top_page_slide(Model_AlbumImage $album_image, $limit_width = null)
+	{
+		if (!empty($album_image->album->foreign_table) && $album_image->album->foreign_table == 'member') return false;
+
+		if ($limit_width)
+		{
+			if (!$file_path = \Site_Upload::get_file_path4file_name($album_image->file_name)) return false;
+			$raw_size_obj = \Image::sizes($file_path);
+			if ($raw_size_obj->width < $limit_width) return false;
+		}
+
+		return true;
+	}
 }

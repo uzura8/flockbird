@@ -82,7 +82,19 @@ class Controller_Site extends Controller_Base_Site
 			//$this->template->post_footer = \View::forge('image/_parts/list_footer');
 		}
 		$this->template->post_footer = \View::forge('site/_parts/index_footer');
-		if (Config::get('page.site.index.slide.isEnabled')) $this->template->top_content = View::forge('site/_parts/slide');
+
+		if (conf('site.index.slide.isEnabled', 'page'))
+		{
+			if (conf('site.index.slide.recentAlbumImage.isEnabled', 'page'))
+			{
+				$images = \Album\Site_Util::get_top_slide_image_uris();
+			}
+			else
+			{
+				$images = Config::get('page.site.index.slide.images');
+			}
+			$this->template->top_content = View::forge('site/_parts/slide', array('image_uris' => $images));
+		}
 		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
 		$this->template->content = View::forge('site/index', $data);
 		if (!empty($data['news_list']['list']))
