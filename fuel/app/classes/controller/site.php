@@ -93,7 +93,7 @@ class Controller_Site extends Controller_Base_Site
 			{
 				$images = Config::get('page.site.index.slide.images');
 			}
-			$this->template->top_content = View::forge('site/_parts/slide', array('image_uris' => $images));
+			$this->template->post_header_content = View::forge('site/_parts/slide', array('image_uris' => $images));
 		}
 		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
 		$this->template->content = View::forge('site/index', $data);

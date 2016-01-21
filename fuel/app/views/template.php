@@ -26,6 +26,12 @@ if (conf('library.angularJs.isEnabled') && $use_angularjs) $body_attrs['ng-app']
 
 <?php echo render('_parts/template/navbar'); ?>
 
+<?php if (isset($post_header_content)): ?>
+	<div id="post_header">
+<?php echo $post_header_content; ?>
+	</div><!-- #post_header -->
+<?php endif; ?>
+
 <div class="container" id="main_container"<?php if (!empty($main_container_attrs)): ?> <?php echo Util_Array::conv_array2attr_string($main_container_attrs); ?><?php endif; ?>>
 <?php if (isset($top_content)): ?>
 	<div id="top_content">

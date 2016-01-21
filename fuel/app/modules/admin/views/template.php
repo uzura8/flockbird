@@ -20,7 +20,7 @@
 
 <?php echo render('_parts/template/navbar'); ?>
 
-<div class="container">
+<div id="main_container" class="container">
 	<div class="row row-offcanvas row-offcanvas-right">
 		<div class="col-sm-<?php if ($layout == 'wide'): ?>12<?php else: ?>9<?php endif; ?>">
 
