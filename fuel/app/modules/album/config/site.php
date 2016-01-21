@@ -15,6 +15,7 @@ return array(
 							'N_M' => '400x300xc',
 							'L' => '600x600',
 							'thumbnail' => '320x320xc',
+							'topslide' => '1600x720xc',
 						),
 						'sizes_tmp' => array(
 							'S' => '80x80',

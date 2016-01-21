@@ -191,17 +191,17 @@ class Site_FileMaker
 		return true;
 	}
 
-	public function get_data()
+	public function get_file_path()
 	{
 		if ($this->is_nofile)
 		{
-			return ($this->type == 'img') ? $this->get_noimage() : false;
+			return ($this->type == 'img') ? $this->get_noimage_file_path() : false;
 		}
 
 		$original_file_path = Site_Upload::get_uploaded_file_path($this->filename, 'raw', $this->type, $this->is_tmp);
 		if ($this->type == 'file' || $this->size == 'raw')
 		{
-			return file_get_contents($original_file_path);
+			return $original_file_path;
 		}
 
 		//$target_file_path = Site_Upload::get_uploaded_file_path($this->filename, $this->size, $this->type, $this->is_tmp);
@@ -212,7 +212,12 @@ class Site_FileMaker
 			$this->make_image($original_file_path, $target_file_dir, $this->file_name);
 		}
 
-		return file_get_contents($target_file_path);
+		return $target_file_path;
+	}
+
+	public function get_data()
+	{
+		return file_get_contents($this->get_file_path());
 	}
 
 	private function make_image($original_file_path, $target_file_dir, $target_filename)
@@ -225,11 +230,6 @@ class Site_FileMaker
 	public function get_extension()
 	{
 		return $this->extension;
-	}
-
-	public function get_noimage()
-	{
-		return file_get_contents($this->get_noimage_file_path());
 	}
 
 	private function get_noimage_file_path()

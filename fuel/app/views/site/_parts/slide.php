@@ -1,17 +1,18 @@
-<?php if ($images = Config::get('page.site.index.slide.images')): ?>
+<?php if (!empty($image_uris)): ?>
 <?php
 $slide_title = Config::get('page.site.index.slide.title') ?: FBD_SITE_NAME;
 $slide_lead = Config::get('page.site.index.slide.lead') ?: FBD_SITE_DESCRIPTION;
+$count = count($image_uris);
 ?>
 <div id="myCarousel" class="carousel carousel-flex slide" data-ride="carousel" data-interval="<?php echo Config::get('page.site.index.slide.interval'); ?>">
 	<!-- Indicators -->
 	<ol class="carousel-indicators hidden-xs">
-		<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-		<li data-target="#myCarousel" data-slide-to="1"></li>
-		<li data-target="#myCarousel" data-slide-to="2"></li>
+<?php 	for ($i = 0; $i < $count; $i++): ?>
+		<li data-target="#myCarousel" data-slide-to="<?php echo $i; ?>"<?php if (!$i): ?> class="active"<?php endif; ?>></li>
+<?php 	endfor; ?>
 	</ol>
 	<div class="carousel-inner" role="listbox">
-<?php foreach ($images as $key => $image): ?>
+<?php foreach ($image_uris as $key => $image): ?>
 		<div class="item<?php if (!$key): ?> active<?php endif; ?>">
 			<?php echo Html::img($image); ?>
 			<div class="container">

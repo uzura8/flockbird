@@ -53,6 +53,8 @@ $(function () {
 		filesContainer: '#files_img',
 		acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 		maxFileSize: get_config('upload_max_filesize'),
+		imageMaxWidth: get_config('imageMaxWidth'),
+		imageMaxHeight: get_config('imageMaxHeight'),
 		// Enable image resizing, except for Android and Opera,
 		// which actually support image resizing, but fail to
 		// send Blob objects via XHR requests:

@@ -204,7 +204,7 @@ $config = array(
 		'types' => array(
 			'img' => array(
 				'accepted_max_size' => array(
-					'default' => '1200x1200',
+					'default' => '1800x1800',
 				),
 				'thumbnailsDeleteType' => 'sameTime',// sameTime: raw ファイル削除時に同時に削除 / bach:あとで bach でまとめて削除(未実装)
 				'root_path' => array(
