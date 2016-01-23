@@ -193,19 +193,10 @@ class Controller_Album extends \Controller_Site
 	{
 		$album = Model_Album::check_authority($id, null, 'member');
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
-
-		$data = Model_AlbumImage::get_pager_list(array(
-			'related'  => array('album'),
-			'where'    => \Site_Model::get_where_params4list(
-				0,
-				\Auth::check() ? $this->u->id : 0,
-				$this->check_is_mypage($album->member_id),
-				array(array('album_id', $id))
-			),
-			'order_by' => array('id' => 'desc'),
-		));
-		$data['album'] = $album;
-		$data['disabled_to_update'] = $disabled_to_update;
+		$data = array(
+			'content_id' => $id,
+			'body' => $album->body,
+		);
 
 		$this->set_title_and_breadcrumbs(
 			sprintf('%sの%s', $album->name, term('album_image')),
@@ -214,8 +205,8 @@ class Controller_Album extends \Controller_Site
 			'album'
 		);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));
-		$this->template->post_footer = \View::forge('_parts/slide_footer', array('id' => $id));
-		$this->template->content = \View::forge('slide', $data);
+		$this->template->post_footer = \View::forge('_parts/slide_footer', array('is_desc' => true));
+		$this->template->content = \View::forge('_parts/slide', $data);
 	}
 
 	/**

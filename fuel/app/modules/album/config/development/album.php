@@ -2,7 +2,7 @@
 return array(
 	'articles' => array(
 		'limit' => 3,
-		'limit_max' => 5,
+		'limit_max' => 15,
 		'trim_width' => array(
 			'name' => 20,
 			'body'  => 50,
@@ -21,6 +21,9 @@ return array(
 		'detail' => array(
 			'display_upload_form' => true,
 			'display_slide_image' => true,
+		),
+		'slide' => array(
+			'limit' => 10,
 		),
 		'image' => array(
 			'detail' => array(

@@ -1,23 +1,3 @@
-function getIdFromUrl()
-{
-	var isParseInt = (arguments.length > 0) ? arguments[0] : true;
-
-	var id = url('-1');
-	if (isParseInt) id = parseInt(id);
-
-	return id;
-}
-
-function get_id_num(id_string)
-{
-	if (typeof id_string === "undefined") return false;
-
-	var matches = id_string.match(/^[a-z0-9_]+_(\d+)$/i);
-	if (matches) return matches[1];
-
-	return false;
-}
-
 function get_url(uri)
 {
 	var isMediaUri = (arguments.length > 1) ? arguments[1] : false;

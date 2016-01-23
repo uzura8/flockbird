@@ -30,6 +30,8 @@ class Controller_Image_api extends \Controller_Site_Api
 			$album_id       = (int)\Input::get('album_id') ?: (int)$parent_id;
 			$member_id      = (int)\Input::get('member_id', 0);
 			$is_member_page = (int)\Input::get('is_member_page', 0);
+			$start_album_image_id = (int)\Input::get('start_id', 0);
+			$is_asc         = (bool)\Input::get('asc', 0);
 			$album          = $album_id ? Model_Album::check_authority($album_id, null, 'member') : null;
 			list($is_mypage, $member) = $member_id ? $this->check_auth_and_is_mypage($member_id, true) : array(null, false);
 			if ($album && $member)
@@ -38,10 +40,10 @@ class Controller_Image_api extends \Controller_Site_Api
 				$is_mypage = false;
 			}
 			if (!$is_mypage && $album) $is_mypage = $this->check_is_mypage($album->member_id);
-			list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+			list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 			$params = array();
-			if ($album) $params['where'] = array('album_id', $album_id);
-			$data = Site_Model::get_album_images($limit, $page, get_uid(), $member, $is_mypage, $params, $this->format != 'html');
+			if ($album) $params['where'] = array(array('album_id', $album_id));
+			$data = Site_Model::get_album_images($limit, $page, get_uid(), $member, $is_mypage, $params, $this->format != 'html', $is_asc);
 			$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list']) : array();
 
@@ -53,15 +55,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			}
 			else
 			{
-				$album_props = array();
-				$list_array = array();
-				foreach ($data['list'] as $key => $row)
-				{
-					$row['album']  = Model_Album::get_one_basic4id($row['album_id']);
-					$row['member'] = \Model_Member::get_one_basic4id($row['album']['member_id']);
-					$list_array[] = $row;
-				}
-				$data['list'] = $list_array;
+				$data['list'] = Site_Model::set_optional_data2album_image_list($data['list'], $start_album_image_id);
 			}
 
 			$this->set_response_body_api($data, $this->format == 'html' ? 'image/_parts/list' : null);
@@ -107,6 +101,30 @@ class Controller_Image_api extends \Controller_Site_Api
 			}
 
 			$this->set_response_body_api($data, $this->format == 'html' ? 'image/_parts/list' : null);
+		});
+	}
+
+	/**
+	 * Get slide
+	 * 
+	 * @access  public
+	 * @param   int  $album_image_id
+	 * @return  Response (html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
+	 */
+	public function get_slide($album_image_id = null)
+	{
+		$this->api_accept_formats = array('html');
+		$this->controller_common_api(function() use($album_image_id)
+		{
+			$album_image = Model_AlbumImage::check_authority($album_image_id);
+			$data = array(
+				'content_id' => $album_image->album_id,
+				'start_id'   => $album_image->id,
+				'is_modal'   => true,
+			);
+			$this->set_response_body_api($data, '_parts/slide');
 		});
 	}
 
