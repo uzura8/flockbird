@@ -7,7 +7,7 @@ return array(
 	),
 	'articles' => array(
 		'limit' => 9,
-		'limit_max' => 12,
+		'limit_max' => 100,
 		'trim_width' => array(
 			'name' => 70,
 			'body'  => 500,
@@ -30,6 +30,9 @@ return array(
 		),
 		'edit_images' => array(
 			'displayMap' => true,
+		),
+		'slide' => array(
+			'limit' => 100,
 		),
 		'image' => array(
 			'detail' => array(

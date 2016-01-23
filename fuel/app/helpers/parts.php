@@ -77,7 +77,17 @@ function btn($term_key, $href = '#', $class_name = '', $with_text = true, $btn_s
 	$class_items[] = 'btn-'.$btn_type;
 	if ($class_name) $class_items[] = $class_name;
 	if ($btn_size) $class_items[] = 'btn-'.$btn_size;
-	if (isset($attr['class'])) $class_items[] = $attr['class'];
+	if (isset($attr['class']))
+	{
+		if (is_array($attr['class']))
+		{
+			$class_items += $attr['class'];
+		}
+		else
+		{
+			$class_items[] = $attr['class'];
+		}
+	}
 	$attr['class'] = implode(' ', $class_items);
 
 	if ($tag == 'button')
