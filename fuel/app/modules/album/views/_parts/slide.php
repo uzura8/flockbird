@@ -35,8 +35,7 @@ if (!empty($start_id)) $block_attrs['data-start_id'] = $start_id;
 		<div id="link2detail"></div>
 	</div>
 	<div class="col-md-4">
-		<div id="album_image_comment"></div>
-		<h4 id="comments">Comments</h4>
+		<div id="comment_info"></div>
 		<div id="comment_list"></div>
 	</div>
 </div>

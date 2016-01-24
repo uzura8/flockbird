@@ -2,8 +2,6 @@ $('.carousel').carousel({
 	interval: false
 });
 
-var templatePostComment = Handlebars.compile($('#comment_form-template').html());
-
 var images = {}; // 画像ファイル名格納用配列
 var image_ids = []; // 画像id格納用配列
 var slideNumber = 0;
@@ -59,11 +57,17 @@ $.get(get_url(getUri), getData, function(json){
 	// 画像のDOMの追加
 	$('#myCarousel > .carousel-inner').html(html);
 	setLink2DetailPage(image_ids[slideNumber]);
-	displayComment(image_ids[slideNumber], templatePostComment);
+	displayCommentAndOptionalInfo(image_ids[slideNumber]);
 },'json');
 
+// slide 切替時に写真のトップへ移動
 $("#myCarousel").on('slide.bs.carousel', function () {
 	$("#modal_album_slide").animate({scrollTop:15});
+});
+
+// modal 多重起動時対応
+$(document).on('hidden.bs.modal', '.modal', function () {
+	$('.modal:visible').length && $(document.body).addClass('modal-open');
 });
 
 var next = function() {
@@ -78,7 +82,7 @@ var next = function() {
 		nextSlideNumber = 0;
 	}
 
-	displayComment(image_ids[slideNumber], templatePostComment);
+	displayCommentAndOptionalInfo(image_ids[slideNumber]);
 	if (!$('#image_' + image_ids[nextSlideNumber]).exists()) {
 		$('#myCarousel > .carousel-inner').append(getImageTag(images[image_ids[nextSlideNumber]], image_ids[nextSlideNumber]));
 	}
@@ -97,7 +101,7 @@ var prev = function() {
 		prevSlideNumber = slideNumber_max;
 	}
 
-	displayComment(image_ids[slideNumber], templatePostComment);
+	displayCommentAndOptionalInfo(image_ids[slideNumber]);
 	if (!$('#image_' + image_ids[prevSlideNumber]).exists()) {
 		$('#myCarousel > .carousel-inner').prepend(getImageTag(images[image_ids[prevSlideNumber]], image_ids[prevSlideNumber]));
 	}
@@ -136,21 +140,34 @@ var setLink2DetailPage = function(imageId) {
 	$('#link2detail').html('<a href="' + get_url('album/image/' + imageId) + '" class="btn btn-default"><i class="glyphicon glyphicon-picture"></i> 詳細</a>');
 }
 
-var displayComment = function(image_id, template) {
-	var getUri = 'album/image/comment/api/list/' + image_id + '.json';
+var displayCommentAndOptionalInfo = function(image_id) {
+	// display optional_info
+	var templateLikeLink = Handlebars.compile($('#link_count_and_execute-template').html());
+	var templateLikeModal = Handlebars.compile($('#like_member_modal-template').html());
+	var getUriOptionalInfo = 'album/image/api/optional_info/' + image_id + '.json';
+	$.get(get_url(getUriOptionalInfo), {}, function(result) {
+		$('#comment_info').html(templateLikeLink(result)).fadeIn('fast');
+		$('#like_member_modal').html(templateLikeModal(result));
+	},'json');
+
+	// display comment
+	var templatePostComment = Handlebars.compile($('#comment_form-template').html());
+	var getUriComments = 'album/image/comment/api/list/' + image_id + '.json';
 	var listSelector = '#comment_list';
 	$('.commentPostBox').remove();
-	loadList(getUri, listSelector, '', 'replace', {}, null, '#comment-template');
+	loadList(getUriComments, listSelector, '', 'replace', {}, null, '#comment-template', '#comment_count_' + image_id);
 
 	var uid = get_uid();
 	if (uid) {
 		var val = {
 			'id' : image_id,
+			'counterSelector' : '#comment_count_' + image_id,
 			'listSelector' : listSelector,
-			'getUri' : getUri,
+			'getUri' : getUriComments,
 			'postUri' : 'album/image/comment/api/create/' + image_id + '.json'
 		};
-		$(listSelector).after(template(val));
+		$(listSelector).after(templatePostComment(val));
 		$('#textarea_comment_' + image_id).autogrow();
 	}
 }
+
