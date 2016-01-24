@@ -54,7 +54,6 @@ echo $modal_view->render();
 
 <?php if (is_enabled('album')): ?>
 <?php echo render('_parts/handlebars_template/link_count_and_execute'); ?>
-<?php echo render('album::_parts/slide_footer', array('is_desc' => true)); ?>
 <?php
 $modal_view = View::forge('_parts/modal', array(
 	'block_attrs' => array('id' => 'modal_album_slide'),

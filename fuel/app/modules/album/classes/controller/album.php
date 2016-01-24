@@ -205,6 +205,7 @@ class Controller_Album extends \Controller_Site
 			'album'
 		);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));
+		$this->template->post_footer = \View::forge('_parts/slide_footer', array('is_desc' => true));
 		$this->template->content = \View::forge('_parts/slide', $data);
 	}
 

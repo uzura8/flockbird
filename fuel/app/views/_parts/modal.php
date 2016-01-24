@@ -24,14 +24,16 @@ if (!isset($is_display_footer_close_btn)) $is_display_footer_close_btn = false;
 			</div>
 <?php endif; ?>
 			<div class="modal-body"><?php if (!empty($body)): ?><?php echo $body; ?><?php endif; ?></div>
+<?php if ($is_display_footer_close_btn || !empty($footer_btn_params)): ?>
 			<div class="modal-footer">
-<?php if ($is_display_footer_close_btn): ?>
+<?php 	if ($is_display_footer_close_btn): ?>
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-<?php endif; ?>
-<?php if (!empty($footer_btn_params)): ?>
+<?php 	endif; ?>
+<?php 	if (!empty($footer_btn_params)): ?>
 				<?php echo call_user_func_array('btn', $footer_btn_params); ?>
-<?php endif; ?>
+<?php 	endif; ?>
 			</div>
+<?php endif; ?>
 		</div>
 	</div>
 </div>

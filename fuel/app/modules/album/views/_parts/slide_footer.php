@@ -1,4 +1,7 @@
+<?php if (empty($is_modal)): ?>
 <?php echo render('_parts/comment/handlebars_template'); ?>
+<?php endif; ?>
+
 <script>
 function getConfigSlide(key) {
 	var config = {
@@ -10,7 +13,7 @@ function getConfigSlide(key) {
 }
 </script>
 
-<?php if (Auth::check()): ?>
+<?php if (empty($is_modal) && Auth::check()): ?>
 <?php echo render('_parts/handlebars_template/post_comment', array('size' => empty($size) ? 'S' : strtoupper($size))); ?>
 <?php endif; ?>
 
