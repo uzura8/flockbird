@@ -5,7 +5,7 @@
 </small>
 <!-- Modal -->
 <small>
-	<a href="#" data-is_list="1" data-uri="{{like.get_uri}}" data-target="#modal_like_count_{{id}}"
+	<a href="#" data-is_list="1" data-uri="{{like.get_uri}}" data-target="#modal_like_member"
 		id="link_like_count_{{id}}" class="js-modal link_like_count">
 			<i class="glyphicon glyphicon-thumbs-up"></i>
 			<span data-id="{{id}}" id="like_count_{{id}}" class="like_count unset_like_count">{{like.count}}</span>

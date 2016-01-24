@@ -6,7 +6,7 @@ $class_name = $attr_prefix.'link_like_count';
 $link_count_attr = array(
 	'class' => 'js-modal '.$class_name,
 	'id' => $class_name.'_'.$id,
-	'data-target' => '#'.$class_name_modal.'_'.$id,
+	'data-target' => '#modal_like_member',
 	'data-uri' => $get_member_uri,
 	'data-is_list' => 1,
 );
@@ -27,13 +27,6 @@ $count_attr = Util_Toolkit::convert_to_attr($count_attr, $count_attr_default);
 <small>
 <?php echo anchor('#', icon('form.like').' '.html_tag('span', $count_attr, isset($count) ? $count : ''), false, $link_count_attr); ?>
 </small>
-<?php echo render('_parts/modal', array(
-	'block_attrs' => $modal_block_attrs,
-	'is_display_header_close_btn' => true,
-	'is_display_footer_close_btn' => true,
-	'title' => sprintf('%sした%s', term('form.like'), term('member.view')),
-	'size' => 'sm',
-)); ?>
 
 <?php // execute like
 $class_name = $attr_prefix.'link_like';

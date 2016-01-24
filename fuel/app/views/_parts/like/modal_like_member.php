@@ -1,5 +1,4 @@
-<script type="text/x-handlebars-template" id="like_member_modal-template">
-<div class="modal fade modal_liked_member" tabindex="-1" role="dialog" aria-hidden="true" id="modal_like_count_{{id}}">
+<div class="modal fade modal_liked_member" tabindex="-1" role="dialog" aria-hidden="true" id="modal_like_member">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -13,5 +12,4 @@
 		</div>
 	</div>
 </div>
-</script>
 

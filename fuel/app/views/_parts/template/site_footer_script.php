@@ -64,3 +64,8 @@ echo $modal_view->render();
 <?php echo render('_parts/handlebars_template/site_summary'); ?>
 </script>
 <?php endif; ?>
+
+<?php if (conf('like.isEnabled')): ?>
+<?php echo render('_parts/like/modal_like_member'); ?>
+<?php endif; ?>
+

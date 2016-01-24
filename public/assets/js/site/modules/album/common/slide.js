@@ -143,11 +143,9 @@ var setLink2DetailPage = function(imageId) {
 var displayCommentAndOptionalInfo = function(image_id) {
 	// display optional_info
 	var templateLikeLink = Handlebars.compile($('#link_count_and_execute-template').html());
-	var templateLikeModal = Handlebars.compile($('#like_member_modal-template').html());
 	var getUriOptionalInfo = 'album/image/api/optional_info/' + image_id + '.json';
 	$.get(get_url(getUriOptionalInfo), {}, function(result) {
 		$('#comment_info').html(templateLikeLink(result)).fadeIn('fast');
-		$('#like_member_modal').html(templateLikeModal(result));
 	},'json');
 
 	// display comment
