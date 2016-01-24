@@ -6,6 +6,7 @@ class Controller_Image_api extends \Controller_Site_Api
 	protected $check_not_auth_action = array(
 		'get_list',
 		'get_member',
+		'get_optional_info',
 	);
 
 	public function before()
@@ -125,6 +126,37 @@ class Controller_Image_api extends \Controller_Site_Api
 				'is_modal'   => true,
 			);
 			$this->set_response_body_api($data, '_parts/slide');
+		});
+	}
+
+	/**
+	 * Get optional_info
+	 * 
+	 * @access  public
+	 * @param   int  $album_image_id
+	 * @return  Response (json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
+	 */
+	public function get_optional_info($album_image_id = null)
+	{
+		$this->controller_common_api(function() use($album_image_id)
+		{
+			$album_image = Model_AlbumImage::check_authority($album_image_id);
+			$is_executed = \Auth::check() ? Model_AlbumImageLike::check_liked($album_image_id, $this->u->id) : false;
+			$data = array(
+				'id' => $album_image_id,
+				'comment' => array(
+					'count' => $album_image->comment_count,
+				),
+				'like' => array(
+					'count' => $album_image->like_count,
+					'get_uri' => sprintf('album/image/like/api/member/%d.html', $album_image_id),
+					'post_uri' => sprintf('album/image/like/api/update/%d.json', $album_image_id),
+					'is_executed' => (int)$is_executed,
+				),
+			);
+			$this->set_response_body_api($data);
 		});
 	}
 
