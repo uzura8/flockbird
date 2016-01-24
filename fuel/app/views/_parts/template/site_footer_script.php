@@ -79,5 +79,10 @@ echo $modal_view->render();
 
 <?php if (conf('like.isEnabled')): ?>
 <?php echo render('_parts/like/modal_like_member'); ?>
+<script>
+$('#modal_like_member').on('hidden.bs.modal', function (e) {
+  $('#modal_like_member .modal-body').html('');
+})
+</script>
 <?php endif; ?>
 

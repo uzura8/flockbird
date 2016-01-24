@@ -28,7 +28,7 @@ return array(
 		'image' => array(
 			'detail' => array(
 				'displayGallery' => array(
-					'limitMax' => 3,
+					'limitMax' => 10,
 					'checkLoopMax' => 3,
 				),
 			),

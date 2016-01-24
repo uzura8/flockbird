@@ -78,6 +78,19 @@ if (!is_sp()) {
 	},'.js-hide-btn');
 }
 
+if (!is_sp()) {
+	$(document).on({
+		mouseenter:function() {
+			if (check_editable_content(this)) $('.hidden_btn', this).fadeIn('fast');
+		},
+		mouseleave:function() {
+			var $targetObj = $('.hidden_btn', this);
+			if (check_editable_content(this)) $targetObj.hide();
+			$targetObj.removeClass('open');
+		}
+	},'.js-hide-btn-simple');
+}
+
 $(document).on('click','.js-ajax-postComment', function(){
 	var postUri = $(this).data('post_uri') ? $(this).data('post_uri') : '';
 	var textareaSelector = $(this).data('textarea') ? $(this).data('textarea') : '';

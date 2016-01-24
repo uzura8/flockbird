@@ -1,4 +1,4 @@
-<div class="modal fade modal_liked_member" tabindex="-1" role="dialog" aria-hidden="true" id="modal_like_member">
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modal_like_member">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">
