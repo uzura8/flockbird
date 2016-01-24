@@ -6,6 +6,7 @@ class Controller_Image_api extends \Controller_Site_Api
 	protected $check_not_auth_action = array(
 		'get_list',
 		'get_member',
+		'get_slide',
 		'get_optional_info',
 	);
 
