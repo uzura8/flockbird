@@ -31,7 +31,16 @@ else
 }
 if (!empty($images['size'])) $size = $images['size'];
 
-echo img($file_name, $size, $link_uri, $is_link2raw_file, $image_name ?: '', false, false, array('class' => 'thumbnail'));
+$attrs = array('class' => 'thumbnail');
+if (!empty($is_modal_link))
+{
+	$attrs['class'] .= ' js-modal btn_modal_slide';
+	$attrs['data-is_list'] = 1;
+	$attrs['data-uri'] = sprintf('album/image/api/slide/%d.html', $image->id);
+	$attrs['data-target'] = '#modal_album_slide';
+}
+
+echo img($file_name, $size, $link_uri, $is_link2raw_file, $image_name ?: '', false, false, $attrs);
 ?>
 <?php if (!empty($is_display_name) && $image_name): ?>
 		<small><?php echo $image_name; ?></small>
