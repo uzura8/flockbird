@@ -155,7 +155,6 @@ var displayCommentAndOptionalInfo = function(image_id) {
 	},'json');
 
 	// display comment
-	var templatePostComment = Handlebars.compile($('#comment_form-template').html());
 	var getUriComments = 'album/image/comment/api/list/' + image_id + '.json';
 	var listSelector = '#comment_list';
 	$('.commentPostBox').remove();
@@ -163,6 +162,7 @@ var displayCommentAndOptionalInfo = function(image_id) {
 
 	var uid = get_uid();
 	if (uid) {
+		var templatePostComment = Handlebars.compile($('#comment_form-template').html());
 		var val = {
 			'id' : image_id,
 			'counterSelector' : '#comment_count_' + image_id,
