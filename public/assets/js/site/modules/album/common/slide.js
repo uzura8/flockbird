@@ -70,6 +70,11 @@ $(document).on('hidden.bs.modal', '.modal', function () {
 	$('.modal:visible').length && $(document.body).addClass('modal-open');
 });
 
+// 次回起動時に備えて画像を消しておく
+$('#modal_album_slide').on('hidden.bs.modal', function (e) {
+  $('#myCarousel > .carousel-inner').html('');
+})
+
 var next = function() {
 	// 次のスライドへ移動
 	slideNumber++;
@@ -137,7 +142,7 @@ var getImageTag = function(imageUri, imageId) {
 }
 
 var setLink2DetailPage = function(imageId) {
-	$('#link2detail').html('<a href="' + get_url('album/image/' + imageId) + '" class="btn btn-default"><i class="glyphicon glyphicon-picture"></i> 詳細</a>');
+	$('#link2detail').html('<a href="' + get_url('album/image/' + imageId) + '" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-picture"></i> 詳細</a>');
 }
 
 var displayCommentAndOptionalInfo = function(image_id) {
@@ -145,6 +150,7 @@ var displayCommentAndOptionalInfo = function(image_id) {
 	var templateLikeLink = Handlebars.compile($('#link_count_and_execute-template').html());
 	var getUriOptionalInfo = 'album/image/api/optional_info/' + image_id + '.json';
 	$.get(get_url(getUriOptionalInfo), {}, function(result) {
+		result['id_prefix'] = 'slide_modal_';
 		$('#comment_info').html(templateLikeLink(result)).fadeIn('fast');
 	},'json');
 

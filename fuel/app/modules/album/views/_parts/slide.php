@@ -32,7 +32,7 @@ if (!empty($start_id)) $block_attrs['data-start_id'] = $start_id;
 			</a>
 		</div>
 		<div id="slideNumber"></div>
-		<div id="link2detail"></div>
+		<div id="link2detail" class="mtb5"></div>
 	</div>
 	<div class="col-md-4">
 		<div id="comment_info"></div>

@@ -8,14 +8,14 @@
 	<a href="#" data-is_list="1" data-uri="{{like.get_uri}}" data-target="#modal_like_member"
 		id="link_like_count_{{id}}" class="js-modal link_like_count">
 			<i class="glyphicon glyphicon-thumbs-up"></i>
-			<span data-id="{{id}}" id="like_count_{{id}}" class="like_count unset_like_count">{{like.count}}</span>
+			<span data-id="{{id}}" id="{{#if id_prefix}}{{id_prefix}}{{/if}}like_count_{{id}}" class="like_count unset_like_count">{{like.count}}</span>
 	</a>
 </small>
 
 <!-- share button -->
 <?php if (get_uid()): ?>
 <small class="mr10">
-	<a href="#" data-count="#like_count_{{id}}" data-uri="{{like.post_uri}}" data-id="{{id}}" id="link_like_{{id}}"
+	<a href="#" data-count="#{{#if id_prefix}}{{id_prefix}}{{/if}}like_count_{{id}}" data-uri="{{like.post_uri}}" data-id="{{id}}" id="link_like_{{id}}"
 		class="js-like link_like mr3">{{#if like.is_executed}}<?php echo term('form.undo_like'); ?>{{else}}<?php echo term('form.do_like'); ?>{{/if}}</a>
 </small>
 <?php endif; ?>
