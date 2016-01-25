@@ -1,5 +1,5 @@
 <?php if (empty($is_modal)): ?>
-<?php echo render('_parts/comment/handlebars_template'); ?>
+<?php echo render('_parts/comment/load_template'); ?>
 <?php endif; ?>
 
 <script>
@@ -12,10 +12,6 @@ function getConfigSlide(key) {
 	return config[key];
 }
 </script>
-
-<?php if (empty($is_modal) && Auth::check()): ?>
-<?php echo render('_parts/handlebars_template/post_comment', array('size' => empty($size) ? 'S' : strtoupper($size))); ?>
-<?php endif; ?>
 
 <?php echo Asset::js('site/modules/album/common/slide.js');?>
 

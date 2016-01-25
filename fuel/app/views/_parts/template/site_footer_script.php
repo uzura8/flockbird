@@ -52,7 +52,7 @@ echo $modal_view->render();
 </script>
 <?php endif; ?>
 
-<?php if (is_enabled('album')): ?>
+<?php if (is_enabled('album') && conf('site.common.thumbnailModalLink.isEnabled', 'page')): ?>
 <?php echo render('_parts/handlebars_template/link_count_and_execute'); ?>
 <?php
 $modal_view = View::forge('_parts/modal', array(
