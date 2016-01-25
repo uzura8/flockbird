@@ -41,12 +41,13 @@ if (!empty($start_id)) $block_attrs['data-start_id'] = $start_id;
 </div>
 
 <?php if (!empty($is_modal)): ?>
-<div class="modal-footer">
-	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<hr>
+<div class="clearfix">
+	<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
 </div>
 <?php endif; ?>
 
 <?php if (!empty($is_modal)): ?>
-<?php echo render('_parts/slide_footer'); ?>
+<?php echo render('_parts/slide_footer', array('is_desc' => true, 'is_modal' => true)); ?>
 <?php endif; ?>
 

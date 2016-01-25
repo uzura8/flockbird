@@ -53,7 +53,10 @@ echo btn_dropdown('noterm.dropdown', $menus, false, 'xs', null, true, $dropdown_
 			)); ?>
 		</div>
 <?php if (Module::loaded('album') && $images = \Note\Model_NoteAlbumImage::get_album_image4note_id($id, 4, array('id' => 'desc'))): ?>
-<?php echo render('_parts/thumbnails', array('images' => array('list' => $images, 'additional_table' => 'note', 'size' => 'N_M', 'column_count' => 4))); ?>
+<?php echo render('_parts/thumbnails', array(
+	'images' => array('list' => $images, 'additional_table' => 'note', 'size' => 'N_M', 'column_count' => 4),
+	'is_modal_link' => conf('site.common.thumbnailModalLink.isEnabled', 'page'),
+)); ?>
 <?php endif; ?>
 
 <?php if ($note->is_published): ?>

@@ -157,7 +157,7 @@ var displayCommentAndOptionalInfo = function(image_id) {
 	// display comment
 	var getUriComments = 'album/image/comment/api/list/' + image_id + '.json';
 	var listSelector = '#comment_list';
-	$('.commentPostBox').remove();
+	$('#img_comment_box .commentPostBox').remove();
 	loadList(getUriComments, listSelector, '', 'replace', {}, null, '#comment-template', '#comment_count_' + image_id);
 
 	var uid = get_uid();

@@ -2,6 +2,9 @@
 $config = array(
 	'site' => array(
 		'common' => array(
+			'thumbnailModalLink' => array(
+				'isEnabled' => true,
+			),
 			'shareButton' => array(
 				'isEnabled' => false,
 				'twitter' => array(
