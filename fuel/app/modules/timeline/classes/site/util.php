@@ -185,7 +185,7 @@ class Site_Util
 		return array($title, FBD_SITE_DESCRIPTION);
 	}
 
-	public static function get_timeline_ogp_image_uri($type, $foreign_id, $timeline_id = null)
+	public static function get_timeline_ogp_image_uri($type, $foreign_id, $timeline_id = null, $is_raw_size = false)
 	{
 		$images = static::get_timeline_images(
 			$type,
@@ -195,9 +195,9 @@ class Site_Util
 		if (empty($images['list'])) return '';
 
 		$file_cate = !empty($images['file_cate']) ? $images['file_cate'] : 'ai';
-		$file_size = !empty($images['size']) ? $images['size'] : 'raw';
+		$file_size = ($is_raw_size || empty($images['size'])) ? 'raw' : $images['size'];
 
-		return \Site_Util::get_image_uri4image_list($images['list'], $file_cate, $images['size']);
+		return \Site_Util::get_image_uri4image_list($images['list'], $file_cate, $file_size);
 	}
 
 	public static function get_normal_timeline_body($body, $type, $timeline_id, $image_count = 0, $is_detail = false)

@@ -73,10 +73,12 @@ class Controller_Thread extends \Controller_Site
 
 		$title = array('name' => $thread->title);
 		$header_info = array();
-		$this->set_title_and_breadcrumbs($title, array('thread' => term('thread', 'site.list')), null, 'thread', $header_info, false, false, array(
+		$ogp_infos = array(
 			'title' => $thread->title,
 			'description' => $thread->body,
-		));
+		);
+		if ($images) $ogp_infos['image'] = \Site_Util::get_image_uri4image_list($images, 't', 'raw');
+		$this->set_title_and_breadcrumbs($title, array('thread' => term('thread', 'site.list')), null, 'thread', $header_info, false, false, $ogp_infos);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('thread' => $thread));
 		$this->template->post_footer = \View::forge('_parts/comment/handlebars_template');
 

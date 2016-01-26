@@ -99,11 +99,12 @@ class Controller_Note extends \Controller_Site
 			$title['label'] = array('name' => term('form.draft'));
 			$header_info = array('body' => sprintf('この%sはまだ公開されていません。',  term('note')));
 		}
-		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info, false, false, array(
+		$ogp_infos = array(
 			'title' => $note->title,
 			'description' => $note->body,
-			'image' => \Site_Util::get_image_uri4image_list($images, 'ai'),
-		));
+		);
+		if ($images) $ogp_infos['image'] = \Site_Util::get_image_uri4image_list($images, 'ai', 'raw');
+		$this->set_title_and_breadcrumbs($title, null, $note->member, 'note', $header_info, false, false, $ogp_infos);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('note' => $note));
 		$this->template->post_footer = \View::forge('_parts/detail_footer', array('is_mypage' => check_uid($note->member_id)));
 		$data = array(

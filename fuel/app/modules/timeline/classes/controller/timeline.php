@@ -114,7 +114,8 @@ class Controller_Timeline extends \Controller_Site
 			'image' => Site_Util::get_timeline_ogp_image_uri(
 				$timeline->type,
 				$timeline->foreign_id,
-				$timeline->id
+				$timeline->id,
+				true
 			),
 		));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');

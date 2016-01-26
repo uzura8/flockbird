@@ -40,7 +40,7 @@ $config = array(
 		),
 		'index' => array(
 			'slide' => array(
-				'isEnabled' => false,
+				'isEnabled' => true,
 				'interval' => 30000,
 				'title' => '',
 				'site_lead' => '',
