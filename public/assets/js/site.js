@@ -332,6 +332,11 @@ $(document).on('click', '.js-modal', function(){
 	var templateSelector = $(this).data('tmpl') ? $(this).data('tmpl') : '';
 	var template = templateSelector ? Handlebars.compile($(templateSelector).html()) : null;
 
+	if (target == '#modal_album_slide')
+	{
+		GL.currentScrollY = $(window).scrollTop();
+	}
+
 	var option = {};
 	if (isList) {
 		loadList(

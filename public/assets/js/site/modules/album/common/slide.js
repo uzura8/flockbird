@@ -70,9 +70,23 @@ $(document).on('hidden.bs.modal', '.modal', function () {
 	$('.modal:visible').length && $(document.body).addClass('modal-open');
 });
 
-// 次回起動時に備えて画像を消しておく
+// modal 起動時に背景を動かなくする
+$('#modal_album_slide').on('shown.bs.modal', function (e) {
+	$('.modal-open').css({
+		position: 'fixed',
+		width: '100%',
+	});
+});
+
 $('#modal_album_slide').on('hidden.bs.modal', function (e) {
+	// modal close時に背景の縦位置を元に戻す
+	$('html, body').attr( { style: '' } );
+	if (!empty(GL.currentScrollY)) $('html, body').prop({scrollTop: GL.currentScrollY});
+
+	// 次回起動時に備えて modal 内コンテンツを消しておく
   $('#myCarousel > .carousel-inner').html('');
+  $('#comment_list').html('');
+	$('#img_comment_box .commentPostBox').remove();
 })
 
 var next = function() {
