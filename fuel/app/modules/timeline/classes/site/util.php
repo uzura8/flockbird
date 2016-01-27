@@ -785,4 +785,26 @@ class Site_Util
 
 		return $data;
 	}
+
+	public static function check_image_to_display_slide_modal($timeline_type)
+	{
+		if (!conf('site.common.thumbnailModalLink.isEnabled', 'page')) return false;
+
+		return static::check_timeline_with_album_image4type($timeline_type);
+	}
+
+	public static function check_timeline_with_album_image4type($target_type)
+	{
+		$timeline_types_with_album_images = array(
+			'normal',
+			'note',
+			'album',
+			'album_image',
+			'album_image_profile',
+			'album_image_timeline',
+		);
+
+		return in_array(static::get_key4type($target_type), $timeline_types_with_album_images);
+	}
 }
+
