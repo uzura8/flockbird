@@ -20,14 +20,14 @@ if (!empty($start_id)) $block_attrs['data-start_id'] = $start_id;
 <div <?php echo Util_Array::conv_array2attr_string($block_attrs); ?>>
 	<div class="col-md-8">
 		<a name="slidetop" id="slidetop"></a>
-		<div id="myCarousel" class="carousel carousel-flex slide" data-ride="carousel">
+		<div id="album_slide_arousel" class="carousel carousel-flex slide" data-ride="carousel">
 			<!-- Wrapper for slides -->
 			<div class="carousel-inner"></div>
 			<!-- Controls -->
-			<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+			<a class="left carousel-control" href="#album_slide_arousel" data-slide="prev">
 				<span class="glyphicon glyphicon-chevron-left"></span>
 			</a>
-			<a class="right carousel-control" href="#myCarousel" data-slide="next">
+			<a class="right carousel-control" href="#album_slide_arousel" data-slide="next">
 				<span class="glyphicon glyphicon-chevron-right"></span>
 			</a>
 		</div>

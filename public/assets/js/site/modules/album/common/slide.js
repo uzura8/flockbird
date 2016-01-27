@@ -55,13 +55,13 @@ $.get(get_url(getUri), getData, function(json){
 	}
 
 	// 画像のDOMの追加
-	$('#myCarousel > .carousel-inner').html(html);
+	$('#album_slide_arousel > .carousel-inner').html(html);
 	setLink2DetailPage(image_ids[slideNumber]);
 	displayCommentAndOptionalInfo(image_ids[slideNumber]);
 },'json');
 
 // slide 切替時に写真のトップへ移動
-$("#myCarousel").on('slide.bs.carousel', function () {
+$("#album_slide_arousel").on('slide.bs.carousel', function () {
 	$("#modal_album_slide").animate({scrollTop:15});
 });
 
@@ -84,7 +84,7 @@ $('#modal_album_slide').on('hidden.bs.modal', function (e) {
 	if (!empty(GL.currentScrollY)) $('html, body').prop({scrollTop: GL.currentScrollY});
 
 	// 次回起動時に備えて modal 内コンテンツを消しておく
-  $('#myCarousel > .carousel-inner').html('');
+  $('#album_slide_arousel > .carousel-inner').html('');
   $('#comment_list').html('');
 	$('#img_comment_box .commentPostBox').remove();
 })
@@ -103,9 +103,9 @@ var next = function() {
 
 	displayCommentAndOptionalInfo(image_ids[slideNumber]);
 	if (!$('#image_' + image_ids[nextSlideNumber]).exists()) {
-		$('#myCarousel > .carousel-inner').append(getImageTag(images[image_ids[nextSlideNumber]], image_ids[nextSlideNumber]));
+		$('#album_slide_arousel > .carousel-inner').append(getImageTag(images[image_ids[nextSlideNumber]], image_ids[nextSlideNumber]));
 	}
-	$('#myCarousel').carousel('next');
+	$('#album_slide_arousel').carousel('next');
 }
 
 var prev = function() {
@@ -122,9 +122,9 @@ var prev = function() {
 
 	displayCommentAndOptionalInfo(image_ids[slideNumber]);
 	if (!$('#image_' + image_ids[prevSlideNumber]).exists()) {
-		$('#myCarousel > .carousel-inner').prepend(getImageTag(images[image_ids[prevSlideNumber]], image_ids[prevSlideNumber]));
+		$('#album_slide_arousel > .carousel-inner').prepend(getImageTag(images[image_ids[prevSlideNumber]], image_ids[prevSlideNumber]));
 	}
-	$('#myCarousel').carousel('prev');
+	$('#album_slide_arousel').carousel('prev');
 }
 
 var slide = function(type) {
