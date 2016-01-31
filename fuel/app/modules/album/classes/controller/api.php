@@ -29,7 +29,7 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			$member_id = (int)\Input::get('member_id', 0);
 			list($is_mypage, $member) = $member_id ? $this->check_auth_and_is_mypage($member_id, true) : array(null, false);
-			list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+			list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 			$data = Site_Model::get_albums($limit, $page, \Auth::check() ? $this->u->id : 0, $member, $is_mypage);
 			$this->set_response_body_api($data, '_parts/list');
 		});
@@ -50,7 +50,7 @@ class Controller_Api extends \Controller_Site_Api
 		$this->controller_common_api(function() use($member_id)
 		{
 			list($is_mypage, $member) = $member_id ? $this->check_auth_and_is_mypage($member_id, true) : array(null, false);
-			list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+			list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 
 			$params = array();
 			if ($select = (array)\Input::get('cols')) $params['select'] = $select;

@@ -36,7 +36,7 @@ class Controller_Album extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+		list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 		$data = Site_Model::get_albums($limit, $page, \Auth::check() ? $this->u->id : 0);
 
 		$this->set_title_and_breadcrumbs(term('site.latest', 'album', 'site.list'));
@@ -55,7 +55,7 @@ class Controller_Album extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
-		list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+		list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 		$data = Site_Model::get_albums($limit, $page, \Auth::check() ? $this->u->id : 0, $member, $is_mypage);
 
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('album', 'site.list')), null, $member);
@@ -81,7 +81,7 @@ class Controller_Album extends \Controller_Site
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album', $id);
 
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
-		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('album.articles.limit'), \Config::get('album.articles.limit_max'));
+		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('articles.limit'), \Config::get('articles.limit_max'));
 		$data = Model_AlbumImage::get_pager_list(array(
 			'related'  => array('album'),
 			'where'    => \Site_Model::get_where_params4list(

@@ -80,7 +80,7 @@ class Controller_Image_api extends \Controller_Site_Api
 		{
 			$member_id = \Input::get('member_id', 0) ?: $member_id;
 			list($is_mypage, $member) = $member_id ? $this->check_auth_and_is_mypage($member_id, true) : array(null, false);
-			list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+			list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 			$data = Site_Model::get_album_images($limit, $page, get_uid(), $member, $is_mypage, null, $this->format != 'html');
 			$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 				\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list']) : array();
