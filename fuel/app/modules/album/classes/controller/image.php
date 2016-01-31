@@ -28,7 +28,7 @@ class Controller_Image extends \Controller_Site
 	 */
 	public function action_list()
 	{
-		list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+		list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 		$data = Site_Model::get_album_images($limit, $page, \Auth::check() ? $this->u->id : 0);
 
 		$this->set_title_and_breadcrumbs(term('album_image', 'site.list'), array('album' => term('album', 'site.list')));
@@ -47,7 +47,7 @@ class Controller_Image extends \Controller_Site
 	{
 		$member_id = (int)$member_id;
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
-		list($limit, $page) = $this->common_get_pager_list_params(conf('album.articles.limit', 'album'), conf('album.articles.limit_max', 'album'));
+		list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 
 		$data = Site_Model::get_album_images($limit, $page, \Auth::check() ? $this->u->id : 0, $member, $is_mypage, array('related' => array('album')));
 		$data['member'] = $member;
