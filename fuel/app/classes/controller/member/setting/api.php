@@ -126,7 +126,7 @@ class Controller_Member_Setting_Api extends Controller_Site_Api
 				$data['without_parent_box'] = true;
 				$data['is_use_in_form'] = true;
 				$data['parent_box_additional_class'] = 'pull-right';
-				$data['post_uri'] = 'member/api/update_config/timeline_public_flag.html';
+				$data['post_uri'] = 'member/setting/api/config/timeline_public_flag.html';
 				unset($data[$name]);
 
 				return View::forge('_parts/public_flag_selecter', $data)->render();
