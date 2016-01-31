@@ -44,7 +44,7 @@ elseif ($page_type != 'detail')
 	$is_link2raw_file = false;
 }
 
-$is_display_follow_btn  = (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && !$is_mypage);
+$is_display_follow_btn  = (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && Auth::check() && !$is_mypage);
 $is_display_message_btn = (is_enabled('message') && !empty($with_message_btn) && !$is_mypage);
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
