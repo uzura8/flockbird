@@ -495,20 +495,19 @@ function is_enabled_map($action = null, $module = null)
 	return conf('map.isEnabled') && conf('display_setting.'.$action_key.'.displayMap', $module, false);
 }
 
-function check_current_uri($uri, $is_internal_uri = false)
+function check_current_uris($check_uris, $is_internal_uri = false)
 {
-	if ($is_internal_uri) return trim(Site_Util::get_action_path()) == trim($uri, '/');
-
-	return trim(Uri::string()) == trim($uri, '/');
+	return in_array(current_uri($is_internal_uri), Util_Array::trim_values($check_uris, '/'));
 }
 
-function check_current_uris($uris, $is_internal_uri = false)
+function check_current_uri($check_uri, $is_internal_uri = false)
 {
-	if (!is_array($uris)) $uris = (array)$uris;
-	foreach ($uris as $uri)
-	{
-		if (check_current_uri($uri, $is_internal_uri)) return true;
-	}
+	return current_uri($is_internal_uri) == trim($check_uri, '/');
+}
 
-	return false;
+function current_uri($is_internal_uri = false)
+{
+	if ($is_internal_uri) return trim(Site_Util::get_action_path(), '/');
+
+	return trim(Uri::string(), '/');
 }

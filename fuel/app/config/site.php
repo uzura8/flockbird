@@ -431,9 +431,22 @@ $config = array(
 	),
 	// site_config default
 	'base' => array(
+		'isUserInvite' => 1,
 		'isClosed' => 0,
 		'isDisplayTopPageWithoutAuth' => 1,
-		'isUserInvite' => 1,
+		'accessAcceptedUrisOnClosed' => array(
+			'member/register/signup',
+			'auth/login',
+			'auth/logout',
+			'auth/callback',
+			'member/register',
+			'member/register/index',
+			'member/register/signup',
+			'member/register/confirm_signup',
+			'member/recover/resend_password',
+			'member/recover/send_reset_password_mail',
+			'member/recover/reset_password',
+		),
 	),
 	'profile' => array(
 		'name' => array(

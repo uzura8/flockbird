@@ -73,6 +73,28 @@ class Util_Array
 		return $return;
 	}
 
+	public static function trim_values(array $values, $character_mask = null)
+	{
+		return static::exec_func4array($values, 'trim', $character_mask);
+	}
+
+	public static function exec_func4array(array $values, $func, $option_args = array(), $is_check_empty = false)
+	{
+		if (!is_callable($func)) throw new InvalidArgumentException('Second parameter is invalid.');
+		if (!is_array($option_args)) $option_args = (array)$option_args;
+
+		$returns = array();
+		foreach ($values as $value)
+		{
+			if ($is_check_empty && empty($value)) return false;
+
+			array_unshift($option_args, $value);
+			$returns[] = call_user_func_array($func, $option_args);
+		}
+
+		return $returns;
+	}
+
 	public static function convert_for_callback(array $array)
 	{
 		$return = array();
