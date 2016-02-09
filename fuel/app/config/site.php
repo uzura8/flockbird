@@ -438,20 +438,29 @@ $config = array(
 	// site_config default
 	'base' => array(
 		'isUserInvite' => 1,
-		'isClosed' => 0,
 		'isDisplayTopPageWithoutAuth' => 1,
-		'accessAcceptedUrisOnClosed' => array(
-			'member/register/signup',
-			'auth/login',
-			'auth/logout',
-			'auth/callback',
-			'member/register',
-			'member/register/index',
-			'member/register/signup',
-			'member/register/confirm_signup',
-			'member/recover/resend_password',
-			'member/recover/send_reset_password_mail',
-			'member/recover/reset_password',
+		'closedSite' => array(
+			'isEnabled' => 1,
+			'accessAccepted' => array(
+				'actions' => array(
+					'content/page/detail',
+					'news/news/list',
+					'news/news/detail',
+				),
+				'uris' => array(
+					'member/register/signup',
+					'auth/login',
+					'auth/logout',
+					'auth/callback',
+					'member/register',
+					'member/register/index',
+					'member/register/signup',
+					'member/register/confirm_signup',
+					'member/recover/resend_password',
+					'member/recover/send_reset_password_mail',
+					'member/recover/reset_password',
+				),
+			),
 		),
 	),
 	'profile' => array(
@@ -507,7 +516,7 @@ catch(Database_Exception $e)
 }
 
 // Change public_flag setting on closed
-if (Arr::get($config, 'base.isClosed', 0))
+if (Arr::get($config, 'base.closedSite.isEnabled', 0))
 {
 	Arr::set($config, 'public_flag.enabled', array(FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_MEMBER));
 	Arr::set($config, 'public_flag.default', FBD_PUBLIC_FLAG_MEMBER);
