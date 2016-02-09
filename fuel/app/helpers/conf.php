@@ -62,3 +62,9 @@ function is_enabled_share($service_name, $type = null)
 
 	return (bool)Arr::get($configs, sprintf('%s.isEnabled', $service_name));
 }
+
+function is_enabled_public_flag($public_flag_key)
+{
+	return in_array(Site_Util::get_public_flag_value4key($public_flag_key), conf('public_flag.enabled'));
+}
+

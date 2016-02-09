@@ -267,11 +267,12 @@ class Site_Util
 	public static function get_public_flags($type = 'default')
 	{
 		if (!in_array($type, array('default', 'public'))) throw new InvalidArgumentException('First parameter is invalid.');
+
 		$public_flags = array();
-		if (defined('FBD_PUBLIC_FLAG_PRIVATE') && $type != 'public') $public_flags[] = FBD_PUBLIC_FLAG_PRIVATE;
-		if (defined('FBD_PUBLIC_FLAG_ALL'))     $public_flags[] = FBD_PUBLIC_FLAG_ALL;
-		if (defined('FBD_PUBLIC_FLAG_MEMBER'))  $public_flags[] = FBD_PUBLIC_FLAG_MEMBER;
-		//if (defined('FBD_PUBLIC_FLAG_FRIEND'))  $public_flags[] = FBD_PUBLIC_FLAG_FRIEND;
+		if (is_enabled_public_flag('private') && $type != 'public') $public_flags[] = FBD_PUBLIC_FLAG_PRIVATE;
+		if (is_enabled_public_flag('all')) $public_flags[] = FBD_PUBLIC_FLAG_ALL;
+		if (is_enabled_public_flag('member')) $public_flags[] = FBD_PUBLIC_FLAG_MEMBER;
+		if (is_enabled_public_flag('friend')) $public_flags[] = FBD_PUBLIC_FLAG_FRIEND;
 
 		return $public_flags;
 	}
@@ -582,5 +583,21 @@ class Site_Util
 		$file_size = img_size($file_cate, $size, $additional_table);
 
 		return Site_Upload::get_uploaded_file_path($file_name, $file_size, 'img', false, true);
+	}
+
+	public static function get_public_flag_value4key($public_flag_key)
+	{
+		if (!in_array($public_flag_key, array('private', 'all', 'member', 'friend'))) throw new InvalidArgumentException('Parameter is invalid.');
+		switch ($public_flag_key)
+		{
+			case 'private':
+				return FBD_PUBLIC_FLAG_PRIVATE;
+			case 'all':
+				return FBD_PUBLIC_FLAG_ALL;
+			case 'member':
+				return FBD_PUBLIC_FLAG_MEMBER;
+			case 'friend':
+				return FBD_PUBLIC_FLAG_FRIEND;
+		}
 	}
 }
