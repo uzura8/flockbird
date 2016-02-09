@@ -440,7 +440,7 @@ $config = array(
 		'isUserInvite' => 1,
 		'isDisplayTopPageWithoutAuth' => 1,
 		'closedSite' => array(
-			'isEnabled' => 1,
+			'isEnabled' => 0,
 			'accessAccepted' => array(
 				'actions' => array(
 					'content/page/detail',
