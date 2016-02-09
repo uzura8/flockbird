@@ -147,7 +147,7 @@ class Form_MemberProfile
 		if (!is_enabled('timeline')) return;
 		if (!in_array('name', $is_changeed)) return;
 		$body = sprintf('%sを %s に変更しました。', term('member.name'), $this->member_obj->name);
-		\Timeline\Site_Model::save_timeline($this->member_obj->id, FBD_PUBLIC_FLAG_ALL, 'member_name', $this->member_obj->id, $this->member_obj->updated_at, $body);
+		\Timeline\Site_Model::save_timeline($this->member_obj->id, conf('public_flag.maxRange'), 'member_name', $this->member_obj->id, $this->member_obj->updated_at, $body);
 	}
 
 	private function save_member_profile()

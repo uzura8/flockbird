@@ -5,7 +5,7 @@ class Site_Test
 {
 	public static function setup_album_image($member_id, $album_image_values = null, $create_count = 1, $album_id = null)
 	{
-		$public_flag = isset($album_image_values['public_flag']) ? $album_image_values['public_flag'] : FBD_PUBLIC_FLAG_ALL;
+		$public_flag = isset($album_image_values['public_flag']) ? $album_image_values['public_flag'] : conf('public_flag.default');
 		if (!$album_id)
 		{
 			$album_values = array(
@@ -20,7 +20,7 @@ class Site_Test
 		{
 			$album_image_values = array(
 				'name' => 'test',
-				'public_flag' => FBD_PUBLIC_FLAG_ALL,
+				'public_flag' => conf('public_flag.default'),
 			);
 		}
 		for ($i = 0; $i < $create_count; $i++)

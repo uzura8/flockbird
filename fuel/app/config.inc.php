@@ -80,7 +80,7 @@ define('FBD_BASE_URL', sprintf('%s://%s%s%s', $protocol, $prefix, FBD_DOMAIN, FB
 define('FBD_PUBLIC_FLAG_PRIVATE', 0);
 define('FBD_PUBLIC_FLAG_ALL',     1);
 define('FBD_PUBLIC_FLAG_MEMBER',  2);
-//define('FBD_PUBLIC_FLAG_FRIEND',  3);
+define('FBD_PUBLIC_FLAG_FRIEND',  3);
 
 
 function _set_default_configs()

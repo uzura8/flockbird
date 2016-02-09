@@ -420,7 +420,13 @@ $config = array(
 		),
 	),
 	'public_flag' => array(
+		'enabled' => array(
+			FBD_PUBLIC_FLAG_PRIVATE,
+			FBD_PUBLIC_FLAG_ALL,
+			FBD_PUBLIC_FLAG_MEMBER,
+		),
 		'default' => FBD_PUBLIC_FLAG_ALL,
+		'maxRange' => FBD_PUBLIC_FLAG_ALL,
 		'colorTypes' => array(
 			FBD_PUBLIC_FLAG_PRIVATE => 'danger',
 			FBD_PUBLIC_FLAG_ALL => 'info',
@@ -504,5 +510,13 @@ catch(Database_Exception $e)
 	// Task DbSetter 実行時にDBが存在しない場合があるので、スルーする
 }
 
+// Change public_flag setting on closed
+if (Arr::get($config, 'base.isClosed', 0))
+{
+	Arr::set($config, 'public_flag.enabled', array(FBD_PUBLIC_FLAG_PRIVATE, FBD_PUBLIC_FLAG_MEMBER));
+	Arr::set($config, 'public_flag.default', FBD_PUBLIC_FLAG_MEMBER);
+	Arr::set($config, 'public_flag.maxRange', FBD_PUBLIC_FLAG_MEMBER);
+	Arr::set($config, 'member_config_default.timeline_public_flag', FBD_PUBLIC_FLAG_MEMBER);
+}
 
 return $config;

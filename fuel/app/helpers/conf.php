@@ -69,3 +69,9 @@ function view_params($key, $content, $page_type = null, $default = null, $is_adm
 
 	return conf(sprintf('%s.viewParams.%s.%s.%s', $is_admin ? 'admin' : 'site', $content, $page_type, $key), 'page', $default);
 }
+
+function is_enabled_public_flag($public_flag_key)
+{
+	return in_array(Site_Util::get_public_flag_value4key($public_flag_key), conf('public_flag.enabled'));
+}
+
