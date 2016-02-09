@@ -178,10 +178,12 @@ class Controller_Base extends Controller_Hybrid
 			return true;
 		}
 
-		if (conf('base.isClosed'))
+		if (conf('base.closedSite.isEnabled'))
 		{
 			if (check_current_uri($this->get_login_page_uri())) return true;
-			return in_array(current_uri(true), conf('base.accessAcceptedUrisOnClosed'));
+			if (in_array(site_get_current_page_id('/'), conf('base.closedSite.accessAccepted.actions'))) return true;
+
+			return in_array(current_uri(true), conf('base.closedSite.accessAccepted.uris'));
 		}
 
 		return in_array(Site_Util::get_action_name(IS_API), $this->check_not_auth_action);
