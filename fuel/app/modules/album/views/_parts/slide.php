@@ -1,7 +1,10 @@
-<?php if (!empty($is_modal) && !empty($title)): ?>
+<?php if (!empty($is_modal)): ?>
+<?php 	if (!empty($title)): ?>
 <div class="modal-header">
 	<h4 class="modal-title"><?php echo $title; ?></h4>
 </div>
+<?php 	endif; ?>
+	<a href="#" class="btn_modal_close_top btn-xs" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i></a>
 <?php endif; ?>
 
 <?php if (!empty($body)): ?>
