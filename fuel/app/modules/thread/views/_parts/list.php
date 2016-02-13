@@ -95,6 +95,7 @@ $data_reply_link = array(
 );
 echo render('notice::_parts/link_reply', $data_reply_link);
 ?>
+<?php endif; ?>
 
 <?php // like_count_and_link ?>
 <?php if (conf('like.isEnabled')): ?>
@@ -175,7 +176,6 @@ echo render('_parts/comment/list', $data);
 )); ?>
 <?php endif; ?>
 
-<?php endif; ?>
 	</div>
 <?php endforeach; ?>
 </div>
