@@ -88,8 +88,9 @@ class Util_Array
 		{
 			if ($is_check_empty && empty($value)) return false;
 
-			array_unshift($option_args, $value);
-			$returns[] = call_user_func_array($func, $option_args);
+			$args = $option_args;
+			array_unshift($args, $value);
+			$returns[] = call_user_func_array($func, $args);
 		}
 
 		return $returns;
