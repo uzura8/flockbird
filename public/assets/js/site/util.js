@@ -239,6 +239,7 @@ function loadList(getUri) {
 	var templateSelector   = (arguments.length > 6) ? arguments[6] : '';
 	var counterSelector    = (arguments.length > 7) ? arguments[7] : '';
 	var callbackFuncs      = (arguments.length > 8) ? arguments[8] : null;
+	var isRemoveTrigger    = (arguments.length > 9) ? Boolean(arguments[9]) : true;
 	var trigerHtml         = trigerSelector ? $(trigerSelector).html() : '';
 	var html;
 
@@ -255,7 +256,7 @@ function loadList(getUri) {
 		},
 		complete: function(xhr, textStatus) {
 			GL.execute_flg = false;
-			removeLoading(parentListSelector, trigerSelector, 'list_loading_image');
+			removeLoading(parentListSelector, trigerSelector, 'list_loading_image', null, isRemoveTrigger ? null : trigerHtml);
 		},
 		success: function(result) {
 			if (template) {
@@ -265,7 +266,7 @@ function loadList(getUri) {
 			} else  {
 				html = result;
 			}
-			if (trigerSelector) {
+			if (isRemoveTrigger) {
 				var trigarObj = $(trigerSelector);
 				if (position == 'prepend') {
 					trigarObj.before(html).fadeIn('fast');

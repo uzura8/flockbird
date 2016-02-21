@@ -6,6 +6,13 @@ $(function(){
 	}
 });
 
+$(document).on('keyup', '.js-keyup', function(event){
+	var targetBtn = $(this).data('btn') ? $(this).data('btn') : '';
+	if (targetBtn.length && event.keyCode == 13) {
+		$(targetBtn).click();
+	}
+});
+
 $(document).on('change', '.js-file_input', function(){
 	var type = $(this).data('type') ? $(this).data('type') : 'image';
 	var inputSelector = $(this).data('input') ? $(this).data('input') : '#form_' + type;
@@ -147,9 +154,17 @@ $(document).on('click','.js-ajax-loadList', function(){
 	var historyKey = $(this).data('history_key') ? $(this).data('history_key') : '';
 	var templateSelector = $(this).data('template') ? $(this).data('template') : '';
 	var counterSelecor = $(this).data('counter') ? $(this).data('counter') : '';
+	var inputs = $(this).data('inputs') ? $(this).data('inputs') : {};
+	var triggerType = $(this).data('type') ? $(this).data('type') : 'list';// params: list / button
 
 	if (GL.execute_flg) return false;
 	if (!getUri) return false;
+
+	if (inputs.length) {
+		$.each(inputs, function(i, val) {
+			getData[val] = $.trim($('[name=' + val + ']').val());
+		});
+	}
 
 	var pushStateInfo = {};
 	if (historyKey) {
@@ -169,7 +184,9 @@ $(document).on('click','.js-ajax-loadList', function(){
 		getData,
 		pushStateInfo,
 		templateSelector,
-		counterSelecor
+		counterSelecor,
+		null,
+		(triggerType == 'list') ? true : false
 	);
 
 	return false;

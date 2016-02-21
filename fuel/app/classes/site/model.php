@@ -266,4 +266,33 @@ class Site_Model
 
 		return array($query->get(), $pagination->render());
 	}
+
+	public static function get_search_word_conds($search_word_string, $prop, $is_forward_match_only = false, $is_return_validated_search_word_string = false)
+	{
+		if (!$search_word_string = trim(preg_replace('/[\s　]+/u', ' ', $search_word_string)))
+		{
+			return $is_return_validated_search_word_string ? array('', array()) : array();
+		}
+		if (!$search_words = explode(' ', $search_word_string))
+		{
+			return $is_return_validated_search_word_string ? array('', array()) : array();
+		}
+
+		$return = array();
+		foreach ($search_words as $search_word)
+		{
+			$return[] = array($prop, 'like', static::get_like_search_str($search_word, $is_forward_match_only));
+		}
+		if ($is_return_validated_search_word_string) return array($return, $search_word_string);
+
+		return $return;
+	}
+
+	public static function get_like_search_str($search_word, $is_forward_match_only = false)
+	{
+		$like_search_str = '%'.$search_word;
+		if ($is_forward_match_only) return $like_search_str;
+
+		return $like_search_str.'%';
+	}
 }

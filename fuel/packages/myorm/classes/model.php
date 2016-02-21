@@ -190,9 +190,8 @@ class Model extends \Orm\Model
 			$is_reverse = true;
 		}
 
-		$query = self::query();
-		if (!is_array($where_conds)) $where_conds = (array)$where_conds;
-		if ($where_conds) $query->where($where_conds);
+		if ($where_conds && !is_array($where_conds)) $where_conds = (array)$where_conds;
+		$query = static::get_list_query($where_conds ? array('where' => $where_conds) : array());
 		$all_records_count = $is_return_all_count ? $query->count() : false;
 
 		$params = array();

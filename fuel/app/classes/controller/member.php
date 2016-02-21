@@ -81,16 +81,16 @@ class Controller_Member extends Controller_Site
 		);
 		list($limit, $is_latest, $is_desc, $since_id, $max_id)
 			= $this->common_get_list_params($default_params, conf('member.view_params.list.limit_max'));
-		list($list, $next_id) = Model_Member::get_list(null, $limit, $is_latest, $is_desc, $since_id, $max_id);
+		list($wheres, $search_word_str) = Site_Model::get_search_word_conds(\Input::get('q'), 'name', false, true);
+		list($list, $next_id) = Model_Member::get_list($wheres, $limit, $is_latest, $is_desc, $since_id, $max_id);
 
 		$this->template->main_container_attrs = array('data-not_render_site_summary' => 1);
-		$this->template->content = \View::forge('_parts/member_list', array(
+		$this->template->content = \View::forge('member/list', array(
 			'list' => $list,
 			'next_id' => $next_id,
 			'since_id' => $since_id,
-			'get_uri' => 'member/api/list.json',
-			'history_key' => 'max_id',
-			'is_display_load_before_link' => $max_id ? true : false,
+			'max_id' => $max_id,
+			'search_word' => $search_word_str,
 		));
 		$this->template->post_footer = \View::forge('_parts/load_item');
 	}
