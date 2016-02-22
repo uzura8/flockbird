@@ -203,7 +203,6 @@ function displayLoading() {
 function addHistory(pushStateInfo, getData) {
 	if (!('pushState' in history)) return;
 	if (!pushStateInfo) return;
-
 	var HistoryUrl = '';
 	if (pushStateInfo.url && pushStateInfo.url != '#') {
 		HistoryUrl = pushStateInfo.url;
@@ -216,9 +215,10 @@ function addHistory(pushStateInfo, getData) {
 	}
 	if (pushStateInfo.keys) {
 		var query = '';
-		$.each(pushStateInfo.keys, function(key, val) {
+		if ($.type(pushStateInfo.keys) == 'string') pushStateInfo.keys = JSON.parse(pushStateInfo.keys);
+		$.each(pushStateInfo.keys, function(index, val) {
 			if (!getData[val]) return;
-			if (query.lendth) query += '&';
+			if (index > 0) query += '&';
 			query += val + '=' + getData[val];
 		});
 		if (query.length) {

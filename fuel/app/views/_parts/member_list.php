@@ -20,7 +20,7 @@ if ($next_id || $is_display_load_before_link)
 		'data-uri' => $get_uri,
 		'data-list' => '#article_list',
 	);
-	if (!empty($history_key)) $load_link_attr_default['data-history_key'] = $history_key;
+	if (!empty($history_keys)) $load_link_attr_default['data-history_keys'] = json_encode($history_keys);
 }
 if ($is_display_load_before_link)
 {

@@ -9,6 +9,7 @@
 		'id' => 'btn_search_member',
 		'data-list' => '#article_list',
 		'data-uri' => 'member/api/list.json',
+		'data-history_keys' => json_encode(array('q', 'max_id')),
 	),
 )); ?>
 
@@ -19,7 +20,7 @@ echo render('_parts/member_list', array(
 	'next_id' => $next_id,
 	'since_id' => $since_id,
 	'get_uri' => 'member/api/list.json',
-	'history_key' => 'max_id',
+	'history_keys' => json_encode(array('q', 'max_id')),
 	'is_display_load_before_link' => $max_id ? true : false,
 ));
 ?>

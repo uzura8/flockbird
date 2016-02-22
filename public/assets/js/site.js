@@ -151,7 +151,7 @@ $(document).on('click','.js-ajax-loadList', function(){
 	var listSelector = $(this).data('list') ? $(this).data('list') : '';
 	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
 	var position = $(this).data('position') ? $(this).data('position') : 'replace';// params: replace / append / prepend
-	var historyKey = $(this).data('history_key') ? $(this).data('history_key') : '';
+	var historyKeys = $(this).data('history_keys') ? $(this).data('history_keys') : {};
 	var templateSelector = $(this).data('template') ? $(this).data('template') : '';
 	var counterSelecor = $(this).data('counter') ? $(this).data('counter') : '';
 	var inputs = $(this).data('inputs') ? $(this).data('inputs') : {};
@@ -167,12 +167,12 @@ $(document).on('click','.js-ajax-loadList', function(){
 	}
 
 	var pushStateInfo = {};
-	if (historyKey) {
+	if (historyKeys) {
 		var trigerObj = $(this);
 		if (trigerObj && trigerObj.attr('href') && trigerObj.attr('href') != '#') {
 			pushStateInfo['url'] = trigerObj.attr('href');
 		} else {
-			pushStateInfo['keys'] = [historyKey];
+			pushStateInfo.keys = $.isArray(historyKeys) ? historyKeys : [historyKeys];
 		}
 	}
 

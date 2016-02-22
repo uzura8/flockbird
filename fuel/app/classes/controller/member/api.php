@@ -35,7 +35,7 @@ class Controller_Member_Api extends Controller_Site_Api
 				'next_id' => $next_id,
 				'since_id' => $since_id,
 				'get_uri' => 'member/api/list.json',
-				'history_key' => 'max_id',
+				'history_keys' => array('q', 'max_id'),
 				'get_data_list' => array('q' => $search_word_str),
 			), '_parts/member_list');
 		});
