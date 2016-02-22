@@ -572,7 +572,9 @@ class Model extends \Orm\Model
 			return static::set_where4not_multi($query, $params);
 		}
 
-		if (count($params) == 3 && !is_array($params[0]) && !is_array($params[1]) && in_array(strtolower($params[1]), array('in', '<', '>', '<=', '>=')))
+		if (count($params) == 3
+			&& !is_array($params[0]) && !is_array($params[1])
+			&& in_array(strtolower($params[1]), array('in', '<', '>', '<=', '>=', 'like', 'collate utf8_unicode_ci like')))
 		{
 			return static::set_where4not_multi($query, $params);
 		}

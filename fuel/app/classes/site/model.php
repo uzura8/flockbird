@@ -267,7 +267,7 @@ class Site_Model
 		return array($query->get(), $pagination->render());
 	}
 
-	public static function get_search_word_conds($search_word_string, $prop, $is_forward_match_only = false, $is_return_validated_search_word_string = false)
+	public static function get_search_word_conds($search_word_string, $prop, $is_forward_match_only = false, $is_strict_search = true, $is_return_validated_search_word_string = false)
 	{
 		if (!$search_word_string = trim(preg_replace('/[\s　]+/u', ' ', $search_word_string)))
 		{
@@ -281,7 +281,8 @@ class Site_Model
 		$return = array();
 		foreach ($search_words as $search_word)
 		{
-			$return[] = array($prop, 'like', static::get_like_search_str($search_word, $is_forward_match_only));
+			$like_operator = $is_strict_search ? 'like' : 'collate utf8_unicode_ci like';
+			$return[] = array($prop, $like_operator, static::get_like_search_str($search_word, $is_forward_match_only));
 		}
 		if ($is_return_validated_search_word_string) return array($return, $search_word_string);
 

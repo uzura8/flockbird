@@ -81,7 +81,7 @@ class Controller_Member extends Controller_Site
 		);
 		list($limit, $is_latest, $is_desc, $since_id, $max_id)
 			= $this->common_get_list_params($default_params, conf('member.view_params.list.limit_max'));
-		list($wheres, $search_word_str) = Site_Model::get_search_word_conds(\Input::get('q'), 'name', false, true);
+		list($wheres, $search_word_str) = Site_Model::get_search_word_conds(\Input::get('q'), 'name', false, false, true);
 		list($list, $next_id) = Model_Member::get_list($wheres, $limit, $is_latest, $is_desc, $since_id, $max_id);
 
 		$this->template->main_container_attrs = array('data-not_render_site_summary' => 1);
