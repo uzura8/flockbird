@@ -2,7 +2,7 @@
 if (!isset($list_id)) $list_id = 'article_list';
 if (!isset($is_simple_list)) $is_simple_list = false;
 ?>
-<?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
+<?php if (empty($is_base_page)): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
 <?php if (!empty($no_data_message)): ?>
 <?php echo $no_data_message; ?>
@@ -31,7 +31,7 @@ if ($is_display_load_before_link)
 }
 ?>
 
-<?php if (!IS_API): ?><div id="<?php echo $list_id; ?>"><?php endif; ?>
+<?php if (!empty($is_base_page)): ?><div id="<?php echo $list_id; ?>"><?php endif; ?>
 <?php foreach ($list as $id => $obj): ?>
 	<div class="article" id="article_<?php echo $id; ?>">
 <?php echo render('_parts/member_profile', array(
@@ -53,12 +53,12 @@ if ($next_id)
 	$get_data_list['max_id'] = $next_id;
 	if (!empty($since_id)) $get_data_list['since_id'] = $since_id;
 	$load_after_link_attr = array('data-get_data' => json_encode($get_data_list));
-	$href = IS_API ? '#' : Uri::create_url(Uri::string(), array('max_id' => $next_id));
+	$href = empty($is_base_page) ? '#' : Uri::create_url(Uri::string(), array('max_id' => $next_id));
 	echo Html::anchor($href, icon_label('site.see_more', 'both', false, null, 'fa fa-'), array_merge($load_after_link_attr, $load_link_attr_default));
 }
 ?>
 
-<?php if (!IS_API): ?></div><?php endif; ?>
+<?php if (!empty($is_base_page)): ?></div><?php endif; ?>
 <?php endif; ?>
 
-<?php if (IS_API): ?></body></html><?php endif; ?>
+<?php if (empty($is_base_page)): ?></body></html><?php endif; ?>

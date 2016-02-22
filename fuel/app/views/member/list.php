@@ -14,6 +14,7 @@
 
 <?php
 echo render('_parts/member_list', array(
+	'is_base_page' => true,
 	'list' => $list,
 	'next_id' => $next_id,
 	'since_id' => $since_id,
