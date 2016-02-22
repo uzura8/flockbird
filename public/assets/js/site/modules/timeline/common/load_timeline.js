@@ -35,7 +35,7 @@ $(function() {
 
 	$(document).on('click','.js-ajax-Load_timeline', function(){
 		var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
-		loadTimeline(getData, this, true);
+		loadTimeline(getData, this, true, true);
 		return false;
 	});
 })
@@ -52,9 +52,10 @@ function showLinkCommentBlocks() {
 }
 
 function loadTimeline() {
-	var getData        = (arguments.length > 0) ? arguments[0] : {};
-	var trigerSelector = (arguments.length > 1) ? arguments[1] : '';
-	var isAddHisttory  = (arguments.length > 2) ? Boolean(arguments[2]) : false;
+	var getData         = (arguments.length > 0) ? arguments[0] : {};
+	var trigerSelector  = (arguments.length > 1) ? arguments[1] : '';
+	var isAddHisttory   = (arguments.length > 2) ? Boolean(arguments[2]) : false;
+	var isRemoveTrigger = (arguments.length > 3) ? Boolean(arguments[3]) : false;
 
 	var getUri             = 'timeline/api/list.html';
 	var parentListSelector = '#article_list';
@@ -78,7 +79,8 @@ function loadTimeline() {
 		pushStateInfo,
 		null,
 		null,
-		[postLoadTimeline]
+		[postLoadTimeline],
+		isRemoveTrigger
 	);
 }
 

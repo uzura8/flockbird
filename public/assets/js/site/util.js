@@ -239,7 +239,7 @@ function loadList(getUri) {
 	var templateSelector   = (arguments.length > 6) ? arguments[6] : '';
 	var counterSelector    = (arguments.length > 7) ? arguments[7] : '';
 	var callbackFuncs      = (arguments.length > 8) ? arguments[8] : null;
-	var isRemoveTrigger    = (arguments.length > 9) ? Boolean(arguments[9]) : true;
+	var isRemoveTrigger    = (arguments.length > 9) ? Boolean(arguments[9]) : false;
 	var trigerHtml         = trigerSelector ? $(trigerSelector).html() : '';
 	var html;
 
