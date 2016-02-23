@@ -37,6 +37,9 @@ $config = array(
 					),
 				),
 			),
+			'request' => array(
+				'isEnabled' => false,
+			),
 		),
 		'index' => array(
 			'slide' => array(

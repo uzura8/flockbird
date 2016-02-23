@@ -1,14 +1,26 @@
 <div class="btn-group notice pull-right">
-<?php /*
-	<button class="btn btn-default navbar-inverse" type="button">
-		<?php echo icon('group', 'fa fa-', 'i', array('class' => 'icon')); ?>
-		<span class="badge">99</span>
+<?php if (conf('site.navbar.request.isEnabled', 'page')): ?>
+<?php
+$request_btn_attr = array(
+	'class' => 'btn btn-default navbar-inverse js-modal',
+	'type' => 'button',
+	'data-uri' => 'request/api/list.json',
+	'data-get_data' => array('limit' => view_params('limit', 'request', 'mordal')),
+	'data-target' => '#modal_request_navbar',
+	'data-tmpl' => '#requests-template',
+	'data-is_list' => 1,
+	'id' => 'btn_request_navbar',
+);
+if (!empty($notification_counts['request'])) $request_btn_attr['class'] .= ' notified';
+?>
+	<button <?php echo Util_Array::conv_array2attr_string($request_btn_attr); ?>>
+		<?php echo icon('user-plus', 'fa fa-', 'i', array('class' => 'icon')); ?>
+<?php 	if (!empty($notification_counts['request'])): ?>
+		<span class="badge"><?php echo $notification_counts['request']; ?></span>
+<?php 	endif; ?>
 	</button>
-	<button class="btn btn-default navbar-inverse" type="button">
-		<?php echo icon('comments', 'fa fa-', 'i', array('class' => 'icon')); ?>
-		<span class="badge">99</span>
-	</button>
-*/ ?>
+<?php endif; ?>
+
 <?php if (is_enabled('message')): ?>
 <?php
 $message_btn_attr = array(

@@ -76,6 +76,14 @@ $config = array(
 		'invite' => 'envelope',
 		'do_invite' => 'envelope',
 		'invite_friend' => 'envelope',
+		'request' => array(
+			'key' => 'user-plus',
+			'prefix' => 'fa fa-',
+		),
+		'do_request' => array(
+			'key' => 'user-plus',
+			'prefix' => 'fa fa-',
+		),
 	),
 	'site' => array(
 		//'view' => 'サイト',
