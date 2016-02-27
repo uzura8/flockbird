@@ -14,6 +14,7 @@ class Site_Util
 			'note',
 			'timeline_comment',
 			'timeline',
+			'thread_comment',
 			'thread',
 		);
 	}
@@ -25,6 +26,7 @@ class Site_Util
 			'album',
 			'album_image',
 			'timeline',
+			'thread',
 		);
 	}
 
