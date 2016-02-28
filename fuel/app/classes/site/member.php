@@ -23,7 +23,7 @@ class Site_Member
 
 			$options = Site_Upload::get_uploader_options($member->id);
 			$uploadhandler = new Site_Uploader($options);
-			$file = $uploadhandler->save();
+			$file = $uploadhandler->save($file_path);
 			if (!empty($file->error)) throw new FuelException($file->error);
 
 			$member->file_name = $file->name;
