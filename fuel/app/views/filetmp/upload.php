@@ -1,5 +1,6 @@
 <?php
 if (!isset($upload_type)) $upload_type = 'img';
+if (!isset($is_single_file_upload)) $is_single_file_upload = false;
 ?>
 <!-- The container for the uploaded files -->
 <div id="upload_files_<?php echo $upload_type; ?>">
@@ -52,7 +53,7 @@ echo render('filetmp/_parts/upload_images', $data);
 				<span class="hidden-xs">Select <?php if ($upload_type == 'file'): ?>files<?php else: ?>images<?php endif; ?>...</span>
 				<!-- The file input field used as target for the file upload widget -->
 				<input class="file_select" type="file" name="files[]"
-					multiple id="file_select_<?php echo $upload_type; ?>"
+					<?php if (!$is_single_file_upload): ?>multiple <?php endif; ?>id="file_select_<?php echo $upload_type; ?>"
 					<?php if ($upload_type == 'img'): ?> accept="image/*"<?php endif; ?>>
 		</span>
 <?php if (empty($selects) && FBD_UPLOAD_MAX_FILESIZE): ?>

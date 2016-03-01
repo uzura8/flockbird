@@ -1,5 +1,6 @@
 <?php
 if (empty($upload_type)) $upload_type = 'img';
+if (!isset($is_single_file_upload)) $is_single_file_upload = false;
 if ($label)
 {
 	$label_class = 'col-sm-'.$offset_size;
@@ -27,6 +28,7 @@ $data = array(
 	'model' => $model,
 	'upload_type' => $upload_type,
 	'btn_type' => empty($btn_type) ? 'default' : $btn_type,
+	'is_single_file_upload' => $is_single_file_upload,
 );
 if (!empty($btn_size)) $data['btn_size'] = $btn_size;
 if (!empty($post_uri)) $data['post_uri'] = $post_uri;
