@@ -120,7 +120,7 @@ class Controller_Thread extends \Controller_Site
 				$post = $val->validated();
 
 				\DB::start_transaction();
-				$is_changed = $thread->save_with_relations($this->u->id, $post, $image_tmps);
+				$is_changed = $thread->save_with_relations($this->u->id, $post);
 				list($moved_images, $thread_image_ids) = \Site_FileTmp::save_images($image_tmps, $thread->id, 'thread_id', 'thread_image');
 				\DB::commit_transaction();
 
