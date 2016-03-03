@@ -494,7 +494,7 @@ class Controller_Base extends Controller_Hybrid
 	{
 		$this->controller_common_api(function() use($upload_type) {
 			$id = (int)Input::post('id');
-			$file_tmp = Model_FileTmp::check_authority($id, $this->u->id, null, 'member_id', IS_ADMIN ? 1 : 0);
+			$file_tmp = Model_FileTmp::check_authority($id, $this->u->id, null, 'member_id', null, IS_ADMIN ? 1 : 0);
 
 			$options = Site_Upload::get_upload_handler_options($this->u->id, IS_ADMIN, true, null, 0, true, $upload_type);
 			$uploadhandler = new MyUploadHandler($options, false);
@@ -516,14 +516,14 @@ class Controller_Base extends Controller_Hybrid
 	 * @param   string  $content_name  Delete target content name for message
 	 * @return  Response(json)  
 	 */
-	protected function api_delete_common($table, $id = null, $method = null, $content_name = '')
+	protected function api_delete_common($table, $id = null, $method = null, $content_name = '', $parent_table = null)
 	{
-		$this->controller_common_api(function() use($table, $id, $method, $content_name)
+		$this->controller_common_api(function() use($table, $id, $method, $content_name, $parent_table)
 		{
 			if (!$method) $method = 'delete';
 			$id = intval(\Input::post('id') ?: $id);
 			$model = Site_Model::get_model_name($table);
-			$obj = $model::check_authority($id, IS_ADMIN ? 0 : $this->u->id);
+			$obj = $model::check_authority($id, IS_ADMIN ? 0 : $this->u->id, $parent_table, 'member_id', $parent_table);
 
 			if (is_enabled('album') && $table == 'album')
 			{

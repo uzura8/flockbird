@@ -98,7 +98,7 @@ $(function () {
 		var model = $(this).data('model') ? $(this).data('model') : 'album';
 		var parentSelector = '#' + upload_type + '_' + file_id;
 
-		if (model.length > 0 && model != 'album' && model != 'news') model = 'album';
+		if (model.length > 0 && model != 'album' && model != 'thread' && model != 'news') model = 'album';
 
 		var delete_uri = '';
 		if (check_is_admin()) delete_uri += 'admin/';

@@ -216,7 +216,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		}
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id')
+	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id', $parent_table_with_member_id = null)
 	{
 		if (is_null($related_tables)) $related_tables = array('album');
 
