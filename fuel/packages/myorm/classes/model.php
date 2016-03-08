@@ -130,7 +130,7 @@ class Model extends \Orm\Model
 		return static::$image_prefix;
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id')
+	public static function check_authority($id, $target_member_id = 0, $related_tables = array(), $member_id_prop = 'member_id', $parent_table_with_member_id = null)
 	{
 		$id = (int)$id;
 		if (!$id) throw new \HttpNotFoundException;
@@ -139,7 +139,21 @@ class Model extends \Orm\Model
 		if ($related_tables && !is_array($related_tables)) $related_tables = (array)$related_tables;
 		if ($related_tables) $params['related'] = $related_tables;
 		if (!$obj = self::find($id, $params)) throw new \HttpNotFoundException;
-		if ($target_member_id && $obj->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
+		if ($target_member_id)
+		{
+			if ($parent_table_with_member_id)
+			{
+				if (!$related_tables || !in_array($parent_table_with_member_id, $related_tables))
+				{
+					throw new \InvalidArgumentException('Parameter parent_table_with_member_id is invalid.');
+				}
+				if ($obj->{$parent_table_with_member_id}->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
+			}
+			else
+			{
+				if ($obj->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
+			}
+		}
 
 		return $obj;
 	}

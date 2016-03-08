@@ -309,9 +309,10 @@ function delete_item(uri)
 	var itemTerm = (arguments.length > 3) ? arguments[3] : '';
 	var confirmMsg = (arguments.length > 4 && arguments[4].length) ? arguments[4] : '削除します。よろしいですか?';
 	var counterSelector = (arguments.length > 5) ? arguments[5] : '';
+	var callbackFunc = (arguments.length > 6) ? arguments[6] : null;
 
 	apprise(confirmMsg, {'confirm':true}, function(r) {
-		if (r == true) deleteExecuteAjax(uri, deleteTargetSelector, id, true, itemTerm, counterSelector);
+		if (r == true) deleteExecuteAjax(uri, deleteTargetSelector, id, true, itemTerm, counterSelector, callbackFunc);
 	});
 }
 
@@ -321,6 +322,7 @@ function deleteExecuteAjax(postUri, deleteTargetSelector)
 	var is_display_message_success = (arguments.length > 3) ? arguments[3] : true;
 	var itemTerm = (arguments.length > 4) ? arguments[4] : '';
 	var counterSelector = (arguments.length > 5) ? arguments[5] : '';
+	var callbackFunc = (arguments.length > 6) ? arguments[6] : null;
 	var msgPrefix = (itemTerm.length > 0) ? itemTerm + 'を' : '';
 	var postData = {_method: 'DELETE'};
 	if (id) postData['id'] = id;
@@ -335,6 +337,7 @@ function deleteExecuteAjax(postUri, deleteTargetSelector)
 			$(deleteTargetSelector).fadeOut();
 			$(deleteTargetSelector).remove();
 			updateCounter(counterSelector, -1);
+			if (callbackFunc && typeof callbackFunc == 'function') callbackFunc();
 			if (is_display_message_success) {
 				var message = !empty(response.message) ? response.message : msgPrefix + '削除しました。';
 				showMessage(message);

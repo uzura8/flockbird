@@ -78,7 +78,7 @@ class Model_FileTmp extends \MyOrm\Model
 		}
 	}
 
-	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id', $user_type = 0)
+	public static function check_authority($id, $target_member_id = 0, $related_tables = null, $member_id_prop = 'member_id', $parent_table_with_member_id = null, $user_type = 0)
 	{
 		$id = (int)$id;
 		if (!$id) throw new \HttpNotFoundException;
@@ -88,7 +88,18 @@ class Model_FileTmp extends \MyOrm\Model
 
 		if ($target_member_id)
 		{
-			if ($obj->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
+			if ($parent_table_with_member_id)
+			{
+				if (!$related_tables || !in_array($parent_table_with_member_id, $related_tables))
+				{
+					throw new \InvalidArgumentException('Parameter parent_table_with_member_id is invalid.');
+				}
+				if ($obj->{$parent_table_with_member_id}->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
+			}
+			else
+			{
+				if ($obj->{$member_id_prop} != $target_member_id) throw new \HttpForbiddenException;
+			}
 			if ($obj->user_type != $user_type) throw new \HttpForbiddenException;
 		}
 

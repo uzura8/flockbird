@@ -79,6 +79,9 @@ $(function () {
 			node.data(data)
 			node.appendTo(data.context);
 		});
+		if (!$(this).prop('multiple')) {
+			$('.fileinput').addClass('hidden');
+		}
 	}).on('fileuploadprocessalways', function (e, data) {
 			var index = data.index,
 				file = data.files[index],
@@ -95,7 +98,7 @@ $(function () {
 		var model = $(this).data('model') ? $(this).data('model') : 'album';
 		var parentSelector = '#' + upload_type + '_' + file_id;
 
-		if (model.length > 0 && model != 'album' && model != 'news') model = 'album';
+		if (model.length > 0 && model != 'album' && model != 'thread' && model != 'news') model = 'album';
 
 		var delete_uri = '';
 		if (check_is_admin()) delete_uri += 'admin/';
@@ -109,7 +112,9 @@ $(function () {
 		}
 		delete_uri += '.json';
 
-		delete_item(delete_uri, parentSelector, file_id);
+		delete_item(delete_uri, parentSelector, file_id, '', '', '', $('#file_select_img').prop('multiple') ? null : function (){
+			$('.fileinput').removeClass('hidden');
+		});
 		return false;
 	});
 });

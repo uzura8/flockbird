@@ -2,15 +2,15 @@
 
 class Site_FileTmp
 {
-	public static function get_file_tmps_and_check_filesize($member_id = null, $filesize_total = null, $type = 'img')
+	public static function get_file_tmps_and_check_filesize($member_id = null, $filesize_total = null, $type = 'img', $is_single_file_upload = false)
 	{
-		$file_tmps = self::get_file_tmps_uploaded($member_id, false, $type);
+		$file_tmps = self::get_file_tmps_uploaded($member_id, false, $type, true, false, $is_single_file_upload);
 		if ($member_id) self::check_uploaded_under_accepted_filesize($file_tmps, $filesize_total, Site_Upload::get_accepted_filesize($member_id));
 
 		return $file_tmps;
 	}
 
-	public static function get_file_tmps_uploaded($member_id = null, $check_selected = false, $type = 'img', $check_file_exists = true, $is_delete_not_exists_file = false)
+	public static function get_file_tmps_uploaded($member_id = null, $check_selected = false, $type = 'img', $check_file_exists = true, $is_delete_not_exists_file = false, $is_single_file_upload = false)
 	{
 		$file_tmps = array();
 		$post_key = ($type == 'img') ? 'image_tmp' : 'file_tmp';
@@ -21,6 +21,10 @@ class Site_FileTmp
 			return array();
 		}
 
+		if ($is_single_file_upload && count($file_tmps_posted) > 1)
+		{
+			throw new HttpInvalidInputException('Disable to upload multi files.');
+		}
 		if (!$file_tmp_ids = Util_Array::cast_values(array_keys($file_tmps_posted), 'int', true))
 		{
 			throw new HttpInvalidInputException('Invalid input data.');
