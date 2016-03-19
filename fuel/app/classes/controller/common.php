@@ -1,5 +1,6 @@
 <?php
 class ApiNotAuthorizedException extends \FuelException {}
+class ValidationFailedException extends \FuelException {}
 
 class Controller_Common extends Controller_Hybrid
 {
