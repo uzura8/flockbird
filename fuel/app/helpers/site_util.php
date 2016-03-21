@@ -223,8 +223,11 @@ function img($filename = '', $size_key = '', $link_uri = '', $is_link2raw_file =
 	list($uri_path, $filename, $file_cate, $size) = img_uri($filename, $size_key, $is_profile, true);
 
 	if (!isset($img_attr['class'])) $img_attr['class'] = '';
-	if ($is_responsive) $img_attr['class'] = 'img-responsive';
-
+	if ($is_responsive)
+	{
+		if (!empty($img_attr['class'])) $img_attr['class'] .= ' ';
+		$img_attr['class'] .= 'img-responsive';
+	}
 	if ($is_profile)
 	{
 		if (!empty($img_attr['class'])) $img_attr['class'] .= ' ';
