@@ -50,6 +50,7 @@ if (empty($is_hide_reply_link) && conf('mention.isEnabled', 'notice') && $commen
 {
 	$data['reply_link'] = array(
 		'id' => $comment->id,
+		'class' => 'ml5',
 		'target_id' => $parent->id,
 		'member_name' => member_name($comment->member),
 	);

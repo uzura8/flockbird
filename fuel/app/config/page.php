@@ -6,7 +6,7 @@ $config = array(
 				'isEnabled' => true,
 			),
 			'shareButton' => array(
-				'isEnabled' => false,
+				'isEnabled' => true,
 				'twitter' => array(
 					'isEnabled' => true,
 				),
