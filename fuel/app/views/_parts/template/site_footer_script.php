@@ -1,12 +1,19 @@
 <?php if (Auth::check()): ?>
 <?php 	if (is_enabled('notice')): ?>
 <?php echo Asset::js('site/modules/notice/common/util.js');?>
-<?php echo render('_parts/modal', array(
+<?php
+$view = View::forge('_parts/modal', array(
 	'block_attrs' => array('id' => 'modal_notice_navbar'),
 	'size' => 'sm',
 	'title' => term('notice'),
 	'is_display_footer_close_btn' => true,
-)); ?>
+));
+$view->set_safe('header_subinfo', html_tag('small', array(), sprintf('%s ・ %s',
+	anchor('#', term('common.all', 'form.do_read'), false, array('class' => 'js-notice-read')),
+	anchor('member/setting/notice', term('site.setting'))
+)));
+echo $view->render();
+?>
 <script type="text/x-handlebars-template" id="notices-template">
 <?php echo render('notice::_parts/handlebars_template/list'); ?>
 </script>

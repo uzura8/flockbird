@@ -79,6 +79,7 @@ $config = array(
 		'do_invite' => '招待する',
 		'invite_friend' => '友達を招待',
 		'get' => '取得',
+		'do_read' => '既読にする',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -145,6 +146,7 @@ $config = array(
 		'force' => '強制',
 		'my' => '自分の',
 		'timelimit' => '期限',
+		'all' => 'すべて',
 	),
 	'member' => array(
 		'view' => 'メンバー',

@@ -59,27 +59,28 @@ class Model_NoticeStatus extends \MyOrm\Model
 				'notice_id' => $notice_id,
 				'is_read' => 0,
 			));
-
-			return (bool)$obj->save();
 		}
 		elseif ($obj->is_read)
 		{
 			$obj->is_read = 0;
-
-			return (bool)$obj->save();
 		}
 
-		return false;
+		return (bool)$obj->save();
 	}
 
 	public static function change_status2read($member_id, $notice_id)
 	{
 		if (!$obj = self::get4member_id_and_notice_id($member_id, $notice_id)) return;
 
-		$obj->is_read = 1;
-		$obj->save();
+		$obj->update_status(1);
 
 		return $obj;
+	}
+
+	public function update_status($is_read)
+	{
+		$this->is_read = $is_read;
+		return (bool)$this->save();
 	}
 
 	public static function get4member_id_and_notice_id($member_id, $notice_id)
@@ -88,6 +89,14 @@ class Model_NoticeStatus extends \MyOrm\Model
 			->where('member_id', $member_id)
 			->where('notice_id', $notice_id)
 			->get_one();
+	}
+
+	public static function get4member_id($member_id, $is_read = null)
+	{
+		$query = self::query()->where('member_id', $member_id);
+		if (!is_null($is_read)) $query->where('is_read', (bool)$is_read);
+
+		return $query->get();
 	}
 
 	public static function get_unread_count4member_id($member_id)
