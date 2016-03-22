@@ -14,6 +14,7 @@ class Site_Util
 			'note',
 			'timeline_comment',
 			'timeline',
+			'thread_comment',
 			'thread',
 		);
 	}
@@ -25,6 +26,7 @@ class Site_Util
 			'album',
 			'album_image',
 			'timeline',
+			'thread',
 		);
 	}
 
@@ -112,6 +114,20 @@ class Site_Util
 		\Site_Notification::delete_unread_count_cache('notice', $member_id);
 
 		return $reduce_num;
+	}
+
+	public static function change_all_status2read4member_id($member_id)
+	{
+		$changed_count = 0;
+		if (!$notice_statuses = Model_NoticeStatus::get4member_id($member_id, false)) return $changed_count;
+
+		foreach ($notice_statuses as $notice_status)
+		{
+			if ($notice_status->update_status(true)) $changed_count++;
+		}
+		self::delete_unread_count_cache($member_id);
+
+		return $changed_count;
 	}
 
 	protected static function convert_type_keys2types($type_keys = null)

@@ -50,7 +50,7 @@ if ($foreign_table_obj || $timeline->type == \Config::get('timeline.types.album_
 
 <?php /* time & public_flag */; ?>
 		<div class="sub_info">
-			<small><?php echo site_get_time($timeline->created_at) ?></small>
+			<small class="mr10"><?php echo site_get_time($timeline->created_at) ?></small>
 <?php
 $public_flag_info = \Timeline\Site_Util::get_public_flag_info($timeline);
 $data = array(

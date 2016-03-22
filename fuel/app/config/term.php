@@ -84,6 +84,7 @@ $config = array(
 		'recieve_mail' => '受信する',
 		'unrecieve_mail' => '受信しない',
 		'recieved' => '受信',
+		'do_read' => '既読にする',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -154,6 +155,7 @@ $config = array(
 		'newArrival' => '新着',
 		'status' => '状態',
 		'kind' => '種類',
+		'all' => 'すべて',
 	),
 	'member' => array(
 		'view' => 'メンバー',
