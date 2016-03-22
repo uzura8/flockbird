@@ -1,4 +1,4 @@
-$(document).on('click', '.js-notice-read', function(){
+$(document).on('click', '.js-notice-read_all', function(){
 	if (!get_uid()) return false;
 	var postUri = 'notice/api/read_all';
 	var $selfObj = $(this);
