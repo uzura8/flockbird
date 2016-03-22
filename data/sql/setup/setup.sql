@@ -3,7 +3,7 @@ CREATE TABLE `member` (
   `name` varchar(20) NOT NULL DEFAULT '',
   `group` int(3) NOT NULL DEFAULT 1,
   `status` tinyint(2) NOT NULL DEFAULT 0,
-  `file_name` varchar(255) DEFAULT NULL,
+  `file_name` varchar(128) DEFAULT NULL,
   `filesize_total` int(11) NOT NULL DEFAULT 0 COMMENT 'Total file size',
   `register_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: normal, 1:facebook, 2:twitter, 3:google',
   `sex` varchar(16) DEFAULT NULL,
@@ -176,7 +176,7 @@ CREATE TABLE `album` (
 CREATE TABLE `album_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `album_id` int(11) NOT NULL,
-  `file_name` varchar(255) NOT NULL,
+  `file_name` varchar(128) NOT NULL,
   `name` text COLLATE utf8_unicode_ci NULL,
   `public_flag` tinyint(2) NOT NULL DEFAULT '0',
   `comment_count` int(11) NOT NULL DEFAULT '0',
@@ -437,7 +437,7 @@ CREATE TABLE `news` (
 CREATE TABLE `news_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
-  `file_name` varchar(255) NOT NULL,
+  `file_name` varchar(128) NOT NULL,
   `name` text NULL,
   `shot_at` datetime NOT NULL,
   `created_at` datetime NOT NULL,
@@ -452,7 +452,7 @@ CREATE TABLE `news_image` (
 CREATE TABLE `news_file` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
-  `file_name` varchar(255) NOT NULL,
+  `file_name` varchar(128) NOT NULL,
   `name` text NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -787,7 +787,7 @@ CREATE TABLE `thread_comment_like` (
 CREATE TABLE `thread_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `thread_id` int(11) NOT NULL,
-  `file_name` varchar(255) NOT NULL,
+  `file_name` varchar(128) NOT NULL,
   `name` text NULL,
   `shot_at` datetime NOT NULL,
   `created_at` datetime NOT NULL,
@@ -967,7 +967,7 @@ CREATE TABLE `template` (
 CREATE TABLE `site_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `admin_user_id` int(11) NOT NULL,
-  `file_name` varchar(255) NOT NULL,
+  `file_name` varchar(128) NOT NULL,
   `name` text NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,

@@ -29,6 +29,7 @@ function get_term(key) {
 		'watch': '<?php echo term('form.watch'); ?>',
 		'do_watch': '<?php echo term('form.do_watch'); ?>',
 		'do_unwatch': '<?php echo term('form.do_unwatch'); ?>',
+		'already_read': '<?php echo term('site.AlreadyRead'); ?>',
 <?php endif; ?>
 <?php if (is_enabled('note')): ?>
 		'note': '<?php echo term('note'); ?>',

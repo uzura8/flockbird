@@ -21,7 +21,7 @@
 				<div>{{{body}}}</div>
 			</div>
 			<div class="sub_info">
-				<small><span data-livestamp="{{created_at}}"></span></small>
+				<small class="ml10"><span data-livestamp="{{created_at}}"></span></small>
 <?php if (conf('mention.isEnabled', 'notice') && Auth::check()): ?>
 {{#if member}}
 				<small class="ml10">

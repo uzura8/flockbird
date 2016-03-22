@@ -88,6 +88,7 @@ $config = array(
 		'do_request' => '申請する',
 		'confirm' => '承認',
 		'do_confirm' => '承認する',
+		'do_read' => '既読にする',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -158,6 +159,7 @@ $config = array(
 		'newArrival' => '新着',
 		'status' => '状態',
 		'kind' => '種類',
+		'all' => 'すべて',
 	),
 	'member' => array(
 		'view' => 'メンバー',

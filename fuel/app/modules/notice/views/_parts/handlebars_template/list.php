@@ -1,12 +1,12 @@
 {{#if list}}
 {{#each list}}
-<a href="{{getNoticeContentUrl notice.foreign_table notice.foreign_id notice.parent_table notice.parent_id}}" class="simpleList-item{{# unless is_read}} simpleList-item-warning{{/unless}}">
+<a href="{{getNoticeContentUrl notice.foreign_table notice.foreign_id notice.parent_table notice.parent_id}}" class="notice_list simpleList-item{{# unless is_read}} simpleList-item-warning{{/unless}}">
 	<img class="pull-left-img profile_image" alt="{{members.0.name}}" src="{{getImgUri members.0.file '50x50xc'}}">
 	<div class="clearfix">
 		<div>{{getNoticeInfo notice.foreign_table notice.type members members_count}}</div>
 		<small>
 			<span data-livestamp="{{sort_datetime}}"></span>
-			<span class="ml10">{{# if is_read}}<?php echo term('site.AlreadyRead'); ?>{{else}}<?php echo term('site.unread'); ?>{{/if}}</span>
+			<span class="ml10 notice_read_state">{{# if is_read}}<?php echo term('site.AlreadyRead'); ?>{{else}}<?php echo term('site.unread'); ?>{{/if}}</span>
 		</small>
 	</div>
 </a>
