@@ -8,10 +8,7 @@ $view = View::forge('_parts/modal', array(
 	'title' => term('notice'),
 	'is_display_footer_close_btn' => true,
 ));
-$view->set_safe('header_subinfo', html_tag('small', array(), sprintf('%s ・ %s',
-	anchor('#', term('common.all', 'form.do_read'), false, array('class' => 'js-notice-read')),
-	anchor('member/setting/notice', term('site.setting'))
-)));
+$view->set_safe('header_subinfo', render('_parts/link_read_all', array('tag' => 'small')));
 echo $view->render();
 ?>
 <script type="text/x-handlebars-template" id="notices-template">

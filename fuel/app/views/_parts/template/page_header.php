@@ -1,5 +1,5 @@
 <?php if (!empty($title) || !empty($subtitle) || !empty($page_lead)): ?>
-			<div class="page-header">
+			<div class="page-header clearfix">
 <?php 	if (isset($header_info)): ?>
 				<?php echo $header_info; ?>
 <?php 	endif; ?>
