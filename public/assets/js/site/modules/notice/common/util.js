@@ -25,7 +25,7 @@ $(document).on('click', '.js-notice-read_all', function(){
 			}
 		},
 		error: function(result){
-			showErrorMessage(result, '変更にに失敗しました。');
+			showErrorMessage(result, '変更に失敗しました。');
 		}
 	});
 	return false;
