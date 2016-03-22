@@ -1,3 +1,43 @@
+$(document).on('click', '.js-notice-read', function(){
+	if (!get_uid()) return false;
+	var postUri = 'notice/api/read_all';
+	var $selfObj = $(this);
+	$.ajax({
+		url : get_url(postUri),
+		type : 'POST',
+		dataType : 'json',
+		data : set_token(),
+		timeout: get_config('default_ajax_timeout'),
+		beforeSend: function(xhr, settings) {
+			GL.execute_flg = true;
+			$selfObj.attr('disabled', true);
+			//$selfObj.html(get_loading_image_tag());
+		},
+		complete: function(xhr, textStatus) {
+			GL.execute_flg = false;
+			$selfObj.attr('disabled', false);
+		},
+		success: function(result){
+			if (result.updated_count > 0) {
+				var messageDefault = get_term('already_read') + 'にしました。';
+				showMessage(result.message, messageDefault);
+				changeViewToRead();
+			}
+		},
+		error: function(result){
+			showErrorMessage(result, '変更にに失敗しました。');
+		}
+	});
+	return false;
+});
+
+function changeViewToRead() {
+	var changedReadState = get_term('already_read');
+	$('#badge_notice').remove();
+	$('.notice_list').removeClass('simpleList-item-warning');
+	$('.notice_read_state').html(changedReadState);
+}
+
 function loadNotice() {
 	var getData        = (arguments.length > 0) ? arguments[0] : {};
 	var trigerSelector = (arguments.length > 1) ? arguments[1] : '';

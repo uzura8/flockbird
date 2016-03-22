@@ -60,7 +60,7 @@ if (!empty($notification_counts['notice'])) $notice_btn_attr['class'] .= ' notif
 	<button <?php echo Util_Array::conv_array2attr_string($notice_btn_attr); ?>>
 		<?php echo icon('info-circle', 'fa fa-', 'i', array('class' => 'icon')); ?>
 <?php 	if (!empty($notification_counts['notice'])): ?>
-		<span class="badge"><?php echo $notification_counts['notice']; ?></span>
+		<span class="badge" id="badge_notice"><?php echo $notification_counts['notice']; ?></span>
 <?php 	endif; ?>
 	</button>
 <?php endif; ?>

@@ -13,13 +13,16 @@ if (!isset($is_display_footer_close_btn)) $is_display_footer_close_btn = false;
 <div <?php echo Util_Array::conv_array2attr_string($block_attrs); ?>>
 	<div class="modal-dialog<?php if (!empty($size)): ?> modal-<?php echo $size; ?><?php endif; ?>">
 		<div class="modal-content">
-<?php if (!empty($is_display_header_close_btn) || !empty($title)): ?>
-			<div class="modal-header">
+<?php if (!empty($is_display_header_close_btn) || !empty($title) || !empty($header_subinfo)): ?>
+			<div class="modal-header clearfix">
 <?php if (!empty($is_display_header_close_btn)): ?>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 <?php endif; ?>
 <?php if (!empty($title)): ?>
 				<h4 class="modal-title"><?php echo $title; ?></h4>
+<?php endif; ?>
+<?php if (!empty($header_subinfo)): ?>
+				<div class="subinfo pull-right"><?php echo $header_subinfo; ?></div>
 <?php endif; ?>
 			</div>
 <?php endif; ?>

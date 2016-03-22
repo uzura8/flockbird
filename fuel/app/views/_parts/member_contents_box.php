@@ -43,7 +43,7 @@ if (isset($content) && strlen($content))
 <?php if ($date || isset($read_status, $public_flag, $model, $id)): ?>
 		<div class="sub_info">
 <?php if ($date): ?>
-			<small><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>
+			<small class="mr10"><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>
 <?php endif; ?>
 
 <?php if (isset($unread_flag)): ?>
