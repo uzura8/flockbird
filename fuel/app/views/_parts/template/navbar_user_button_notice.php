@@ -38,7 +38,7 @@ if (!empty($notification_counts['message'])) $message_btn_attr['class'] .= ' not
 	<button <?php echo Util_Array::conv_array2attr_string($message_btn_attr); ?>>
 		<?php echo icon('envelope', 'fa fa-', 'i', array('class' => 'icon')); ?>
 <?php 	if (!empty($notification_counts['message'])): ?>
-		<span class="badge"><?php echo $notification_counts['message']; ?></span>
+		<span class="badge" id="badge_message"><?php echo $notification_counts['message']; ?></span>
 <?php 	endif; ?>
 	</button>
 <?php endif; ?>

@@ -110,6 +110,32 @@ class Controller_Api extends \Controller_Site_Api
 		});
 	}
 
+	/**
+	 * Update status already read all
+	 * 
+	 * @access  public
+	 * @return  Response (json)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
+	 */
+	public function post_read_all()
+	{
+		$this->controller_common_api(function()
+		{
+			if (!is_enabled('notice')) throw new \HttpNotFoundException();
+
+			\DB::start_transaction();
+			$updated_count = \Message\Site_Util::change_all_status2read4member_id($this->u->id);
+			\DB::commit_transaction();
+
+			$data = array(
+				'result' => (bool)$updated_count,
+				'updated_count' => $updated_count,
+			);
+			$this->set_response_body_api($data);
+		});
+	}
+
 	protected function validate_talks_params($type_key = null, $request_id = null)
 	{
 		if (!$request_id = intval($request_id ?: \Input::get('id'))) throw new HttpNotFoundException;

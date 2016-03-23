@@ -138,3 +138,8 @@ var escapeHtml = function(val) {
 	return $('<div />').text(val).html();
 };
 
+var inArray = function(needle, haystack) {
+	if (!(haystack instanceof Array)) haystack = [haystack];
+	return !($.inArray(needle, haystack) == -1);
+};
+

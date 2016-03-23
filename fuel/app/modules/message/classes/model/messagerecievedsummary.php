@@ -176,9 +176,21 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 			'is_read' => 0,
 		))) return false;
 
-		$obj->is_read = 1;
+		return $obj->update_status(true);
+	}
 
-		return $obj->save();
+	public function update_status($is_read)
+	{
+		$this->is_read = $is_read;
+		return (bool)$this->save();
+	}
+
+	public static function get4member_id($member_id, $is_read = null)
+	{
+		$query = self::query()->where('member_id', $member_id);
+		if (!is_null($is_read)) $query->where('is_read', (bool)$is_read);
+
+		return $query->get();
 	}
 
 	public static function get_unread_count4member_id($member_id)

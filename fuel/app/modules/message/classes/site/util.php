@@ -129,5 +129,34 @@ class Site_Util
 
 		return 'message/'.$message_id;
 	}
+
+	public static function change_all_status2read4member_id($member_id)
+	{
+		$changed_count = static::change_all_status2read4member_id_each('message_recieved', $member_id);
+		$changed_count_summary = static::change_all_status2read4member_id_each('message_recieved_summary', $member_id);
+		if (!$changed_count) $changed_count = $changed_count_summary;
+		if ($changed_count) \Site_Notification::delete_unread_count_cache('message', $member_id);
+
+		return $changed_count;
+	}
+
+	public static function change_all_status2read4member_id_each($table, $member_id)
+	{
+		if (!in_array($table, array('message_recieved', 'message_recieved_summary')))
+		{
+			throw new InvalidArgumentException('First parameter is invalid.');
+		}
+		$model = \Site_Model::get_model_name($table);
+
+		$changed_count = 0;
+		if (!$objs = $model::get4member_id($member_id, false)) return $changed_count;
+
+		foreach ($objs as $obj)
+		{
+			if ($obj->update_status(true)) $changed_count++;
+		}
+
+		return $changed_count;
+	}
 }
 

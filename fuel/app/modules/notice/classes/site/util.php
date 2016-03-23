@@ -125,7 +125,7 @@ class Site_Util
 		{
 			if ($notice_status->update_status(true)) $changed_count++;
 		}
-		self::delete_unread_count_cache($member_id);
+		\Site_Notification::delete_unread_count_cache('notice', $member_id);
 
 		return $changed_count;
 	}

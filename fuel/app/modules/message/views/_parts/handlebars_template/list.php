@@ -1,13 +1,13 @@
 {{#if list}}
 {{#each list}}
-<a href="{{site_url detail_page_uri}}" class="simpleList-item{{# unless is_read}} simpleList-item-warning{{/unless}}">
+<a href="{{site_url detail_page_uri}}" class="message_list simpleList-item{{# unless is_read}} simpleList-item-warning{{/unless}}">
 	<img class="pull-left-img profile_image" alt="{{member_from.name}}" src="{{getImgUri member_from.file '50x50xc'}}">
 	<div class="clearfix">
 		{{{getMessageInfo member_from.name type message.subject}}}
 		<p>{{strimwidth message.body 50}}</p>
 		<small>
 			<span data-livestamp="{{last_sent_at}}"></span>
-			<span class="ml10">{{# if is_read}}<?php echo term('site.AlreadyRead'); ?>{{else}}<?php echo term('site.unread'); ?>{{/if}}</span>
+			<span class="ml10 message_read_state">{{# if is_read}}<?php echo term('site.AlreadyRead'); ?>{{else}}<?php echo term('site.unread'); ?>{{/if}}</span>
 		</small>
 	</div>
 </a>
