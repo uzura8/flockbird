@@ -116,9 +116,22 @@ class Model_MessageRecieved extends \MyOrm\Model
 
 		foreach ($objs as $id => $obj)
 		{
-			$obj->is_read = 1;
-			$obj->save();
+			$obj->update_status(true);
 		}
+	}
+
+	public function update_status($is_read)
+	{
+		$this->is_read = $is_read;
+		return (bool)$this->save();
+	}
+
+	public static function get4member_id($member_id, $is_read = null)
+	{
+		$query = self::query()->where('member_id', $member_id);
+		if (!is_null($is_read)) $query->where('is_read', (bool)$is_read);
+
+		return $query->get();
 	}
 
 	protected static function get_unread_condition($member_ids, $message_ids)

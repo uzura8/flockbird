@@ -1,6 +1,10 @@
 $(document).on('click', '.js-notice-read_all', function(){
+	var type = !empty($(this).data('type')) ? $(this).data('type') : 'notice';
+
+	if (!inArray(type, ['notice', 'message'])) return false;
 	if (!get_uid()) return false;
-	var postUri = 'notice/api/read_all';
+
+	var postUri = type + '/api/read_all';
 	var $selfObj = $(this);
 	$.ajax({
 		url : get_url(postUri),
@@ -21,7 +25,7 @@ $(document).on('click', '.js-notice-read_all', function(){
 			if (result.updated_count > 0) {
 				var messageDefault = get_term('already_read') + 'にしました。';
 				showMessage(result.message, messageDefault);
-				changeViewToRead();
+				changeViewToRead(type);
 			}
 		},
 		error: function(result){
@@ -31,11 +35,11 @@ $(document).on('click', '.js-notice-read_all', function(){
 	return false;
 });
 
-function changeViewToRead() {
+function changeViewToRead(type) {
 	var changedReadState = get_term('already_read');
-	$('#badge_notice').remove();
-	$('.notice_list').removeClass('simpleList-item-warning');
-	$('.notice_read_state').html(changedReadState);
+	$('#badge_' + type).remove();
+	$('.' + type + '_list').removeClass('simpleList-item-warning');
+	$('.' + type + '_read_state').html(changedReadState);
 }
 
 function loadNotice() {

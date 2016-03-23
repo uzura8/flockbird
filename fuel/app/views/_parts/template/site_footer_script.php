@@ -18,12 +18,23 @@ echo $view->render();
 
 <?php 	if (is_enabled('message')): ?>
 <?php echo Asset::js('site/modules/message/common/util.js');?>
-<?php echo render('_parts/modal', array(
-	'block_attrs' => array('id' => 'modal_message_navbar'),
-	'size' => 'sm',
-	'title' => term('message.view'),
-	'is_display_footer_close_btn' => true,
-)); ?>
+<?php
+$view = View::forge('_parts/modal', array(
+'block_attrs' => array('id' => 'modal_message_navbar'),
+'size' => 'sm',
+'title' => term('message.view'),
+'is_display_footer_close_btn' => true,
+));
+if (is_enabled('notice'))
+{
+$view->set_safe('header_subinfo', render('notice::_parts/link_read_all', array(
+	'tag' => 'small',
+	'is_message' => true,
+)));
+}
+echo $view->render();
+?>
+
 <script type="text/x-handlebars-template" id="messages-template">
 <?php echo render('message::_parts/handlebars_template/list'); ?>
 </script>
