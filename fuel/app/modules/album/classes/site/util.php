@@ -121,15 +121,18 @@ class Site_Util
 
 	public static function get_top_slide_image_uris()
 	{
-		$cache_key = conf('site.index.slide.recentAlbumImage.cache.key', 'page');
-		$cache_expir = conf('site.index.slide.recentAlbumImage.cache.expir', 'page');
+		$cache_conf = conf('site.index.slide.recentAlbumImage.cache', 'page');
+		if (!$cache_conf['isEnabled']) return static::get_top_slide_image_uris_raw();
+
+		$cache_key   = $cache_conf['key'];
+		$cache_expir = $cache_conf['expir'];
 		try
 		{
-			$image_uris =  \Cache::get($cache_key, $cache_expir);
+			$image_uris = \Cache::get($cache_key, $cache_expir);
 		}
 		catch (\CacheNotFoundException $e)
 		{
-			$image_uris =  static::get_top_slide_image_uris_raw();
+			$image_uris = static::get_top_slide_image_uris_raw();
 			\Cache::set($cache_key, $image_uris, $cache_expir);
 		}
 

@@ -39,7 +39,7 @@ function getTerms(keys)
 
 	var terms = '';
 	$.each(keys, function(i, key) {
-		if (term.length && delimitter) terms += delimitter;
+		if (terms.length && delimitter) terms += delimitter;
 		terms += getTerm(key);
 	});
 	return terms;
