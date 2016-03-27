@@ -21,6 +21,7 @@ require COREPATH.'bootstrap.php';
 	'Asset_Instance' => APPPATH.'classes/asset/instance.php',
 	'Fieldset' => APPPATH.'classes/fieldset.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
+	'Inflector' => APPPATH.'classes/inflector.php',
 ));
 
 // Register the autoloader

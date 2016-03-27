@@ -112,6 +112,9 @@ $config = array(
 		'follow' => array(
 			'isEnabled'  => 1,
 		),
+		'accessBlock' => array(
+			'isEnabled'  => 1,
+		),
 	),
 	'member' => array(
 		'name' => array(

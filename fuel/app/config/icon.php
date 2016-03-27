@@ -189,6 +189,10 @@ $config = array(
 	),
 	//'friend' => 'フレンド',
 	//'remember_me'  => '次回から自動的にログイン',
+	'accessBlock'  => 'ban-circle',
+	'do_accessBlock' => 'ban-circle',
+	'undo_accessBlock' => 'ok-circle',
+	'accessBlocked'  => 'ban-circle',
 	'public_flag' => array(
 		'label' => '公開範囲',
 		'options' => array(

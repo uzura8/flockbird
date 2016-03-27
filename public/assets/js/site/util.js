@@ -844,10 +844,10 @@ function updateToggle(selfDomElement) {
 			if (!empty(response.is_replace)) {
 				$(selfDomElement).replaceWith(response.html);
 			} else {
-				if (!empty(response.attr)) {
-					if (response.attr.class.add) {
+				if (!empty(response.attr) && !empty(response.attr.class)) {
+					if (!empty(response.attr.class.add)) {
 						$(selfDomElement).addClass(response.attr.class.add);
-					} else if (response.attr.class.remove) {
+					} else if (!empty(response.attr.class.remove)) {
 						$(selfDomElement).removeClass(response.attr.class.remove);
 					}
 				}

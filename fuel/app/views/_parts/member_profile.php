@@ -45,7 +45,9 @@ elseif ($page_type != 'detail')
 }
 
 $is_display_follow_btn  = (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && Auth::check() && !$is_mypage && $member->id != get_uid());
+$is_display_access_block_btn = (conf('memberRelation.accessBlock.isEnabled') && $page_type == 'detail' && !$is_mypage);
 $is_display_message_btn = (is_enabled('message') && !empty($with_message_btn) && !$is_mypage);
+$is_display_member_edit_btn = $is_display_access_block_btn;
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
 <?php if (!empty($with_edit_btn) && $is_mypage): ?>
@@ -73,11 +75,12 @@ $is_display_message_btn = (is_enabled('message') && !empty($with_message_btn) &&
 		<div class="col-<?php echo $col_class; ?>-<?php echo 12 - $image_col_size; ?>">
 				<<?php echo $member_name_tag; ?>>
 					<?php echo member_name($member, $display_type != 'detail' ? $profile_page_uri : '', true); ?>
-<?php if ($is_display_message_btn || $is_display_follow_btn): ?>
+
+<?php if ($is_display_message_btn || $is_display_follow_btn || $is_display_member_edit_btn): ?>
 					<div class="btn-group ml10" role="group" aria-label="action for member">
 <?php 	if ($is_display_follow_btn): ?>
 						<?php echo render('_parts/button_follow', array(
-							'member_id_from' => Auth::check() ? $u->id : 0,
+							'member_id_from' => get_uid(),
 							'member_id_to' => $member ? $member->id : null,
 							'size' => $button_follow_size,
 							'attrs' => array('class' => array(''))
@@ -86,8 +89,30 @@ $is_display_message_btn = (is_enabled('message') && !empty($with_message_btn) &&
 <?php 	if ($is_display_message_btn): ?>
 						<?php echo btn('message.form.send', 'message/member/'.$member->id, null, true, $button_follow_size, null, null, null, 'button'); ?>
 <?php 	endif; ?>
+
+<?php 	if ($is_display_member_edit_btn): ?>
+<?php
+$dropdown_btn_group_attr = array(
+	'id' => 'btn_dropdown_member_'.$member->id,
+	'class' => array('dropdown'),
+);
+$menus = array(
+	array(
+		'icon_term' => Model_MemberRelation::check_relation('access_block', get_uid(), $member->id) ? 'undo_accessBlock' : 'do_accessBlock',
+		'attr' => array(
+			'class' => 'js-update_toggle',
+			'id' => 'btn_access_block_'.$member->id,
+			'data-uri' => sprintf('member/relation/api/update/%d/access_block.json', $member->id),
+		),
+	),
+);
+echo btn_dropdown('noterm.dropdown', $menus, false, $button_follow_size, null, true, $dropdown_btn_group_attr, null, false);
+?>
+<?php 	endif; ?>
+
 				</div>
 <?php endif; ?>
+
 				</<?php echo $member_name_tag; ?>>
 <?php if (!$is_simple_list
 				&& check_display_type(conf('profile.sex.displayType'), $display_type)
