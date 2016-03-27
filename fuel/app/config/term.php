@@ -86,8 +86,8 @@ $config = array(
 		'recieved' => '受信',
 		'request' => '申請',
 		'do_request' => '申請する',
-		'confirm' => '承認',
-		'do_confirm' => '承認する',
+		'acceptance' => '承認',
+		'do_accept' => '承認する',
 		'do_read' => '既読にする',
 	),
 	'site' => array(
