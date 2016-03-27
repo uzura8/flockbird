@@ -38,6 +38,16 @@
 	); ?>
 <?php endif; ?>
 
+<?php if (conf('memberRelation.accessBlock.isEnabled')): ?>
+	<?php echo form_text(
+		sprintf('<span class="text-muted">%sを%s・%sします</span>', term('accessBlocked', 'member.view'), term('form.confirm'), term('site.registration', 'form.delete')),
+		term('accessBlock', 'member.view', 'site.setting'),
+		$label_col_size,
+		true,
+		array('uri' => 'member/relation/list/access_block', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+	); ?>
+<?php endif; ?>
+
 </div>
 
 <div class="list-group">

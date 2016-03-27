@@ -10,14 +10,14 @@ switch ($page_type)
 {
 	case 'lerge_list':
 		$member_name_tag = 'h4';
-		$button_follow_size = 'xs';
+		$edit_button_size = 'xs';
 		$col_class = 'xs';
 		$image_col_size = 3;
 		$image_size = 'ML';
 		break;
 	case 'list':
 		$member_name_tag = 'h5';
-		$button_follow_size = 'xs';
+		$edit_button_size = 'xs';
 		$col_class = 'xs';
 		$image_col_size = 2;
 		$image_size = 'M';
@@ -25,7 +25,7 @@ switch ($page_type)
 	case 'detail':
 	default :
 		$member_name_tag = 'h3';
-		$button_follow_size = 'sm';
+		$edit_button_size = 'sm';
 		$col_class = 'sm';
 		$image_col_size = 4;
 		$image_size = 'L';
@@ -45,9 +45,9 @@ elseif ($page_type != 'detail')
 }
 
 $is_display_follow_btn  = (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && Auth::check() && !$is_mypage && $member->id != get_uid());
-$is_display_access_block_btn = (conf('memberRelation.accessBlock.isEnabled') && $page_type == 'detail' && !$is_mypage);
+$is_display_access_block_btn = (!empty($is_display_access_block_btn) && conf('memberRelation.accessBlock.isEnabled') && !$is_mypage);
 $is_display_message_btn = (is_enabled('message') && !empty($with_message_btn) && !$is_mypage);
-$is_display_member_edit_btn = $is_display_access_block_btn;
+$is_display_member_edit_btn = (empty($is_display_access_block_btn) && conf('memberRelation.accessBlock.isEnabled') && $page_type == 'detail' && !$is_mypage);
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
 <?php if (!empty($with_edit_btn) && $is_mypage): ?>
@@ -76,18 +76,33 @@ $is_display_member_edit_btn = $is_display_access_block_btn;
 				<<?php echo $member_name_tag; ?>>
 					<?php echo member_name($member, $display_type != 'detail' ? $profile_page_uri : '', true); ?>
 
-<?php if ($is_display_message_btn || $is_display_follow_btn || $is_display_member_edit_btn): ?>
+<?php if ($is_display_message_btn || $is_display_follow_btn || $is_display_access_block_btn || $is_display_member_edit_btn): ?>
 					<div class="btn-group ml10" role="group" aria-label="action for member">
+
 <?php 	if ($is_display_follow_btn): ?>
-						<?php echo render('_parts/button_follow', array(
+						<?php echo render('_parts/btn_update_member_relation', array(
+							'relation_type' => 'follow',
+							'size' => $edit_button_size,
 							'member_id_from' => get_uid(),
 							'member_id_to' => $member ? $member->id : null,
-							'size' => $button_follow_size,
+							'size' => $edit_button_size,
 							'attrs' => array('class' => array(''))
 						)); ?>
 <?php 	endif; ?>
+
+<?php 	if ($is_display_access_block_btn): ?>
+						<?php echo render('_parts/btn_update_member_relation', array(
+							'relation_type' => 'access_block',
+							'size' => $edit_button_size,
+							'member_id_from' => get_uid(),
+							'member_id_to' => $member ? $member->id : null,
+							'size' => $edit_button_size,
+							'attrs' => array('class' => array(''))
+						)); ?>
+<?php 	endif; ?>
+
 <?php 	if ($is_display_message_btn): ?>
-						<?php echo btn('message.form.send', 'message/member/'.$member->id, null, true, $button_follow_size, null, null, null, 'button'); ?>
+						<?php echo btn('message.form.send', 'message/member/'.$member->id, null, true, $edit_button_size, null, null, null, 'button'); ?>
 <?php 	endif; ?>
 
 <?php 	if ($is_display_member_edit_btn): ?>
@@ -106,7 +121,7 @@ $menus = array(
 		),
 	),
 );
-echo btn_dropdown('noterm.dropdown', $menus, false, $button_follow_size, null, true, $dropdown_btn_group_attr, null, false);
+echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, true, $dropdown_btn_group_attr, null, false);
 ?>
 <?php 	endif; ?>
 

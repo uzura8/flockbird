@@ -41,7 +41,9 @@ if ($is_display_load_before_link)
 	'is_list' => true,
 	'page_type' => 'list',
 	'display_type' => 'summary',
-	'is_simple_list' => $is_simple_list,
+	'is_simple_list' => !empty($is_simple_list),
+	'is_hide_fallow_btn' => !empty($is_hide_fallow_btn),
+	'is_display_access_block_btn' => !empty($is_display_access_block_btn),
 )); ?>
 	</div>
 <?php endforeach; ?>

@@ -4,6 +4,13 @@ class Model_MemberRelation extends \MyOrm\Model
 {
 	protected static $_table_name = 'member_relation';
 	protected static $_has_one = array(
+		'member_from' => array(
+			'key_from' => 'member_id_from',
+			'model_to' => 'Model_Member',
+			'key_to' => 'id',
+			'cascade_save' => false,
+			'cascade_delete' => true,
+		),
 		'member' => array(
 			'key_from' => 'member_id_to',
 			'model_to' => 'Model_Member',
@@ -11,13 +18,6 @@ class Model_MemberRelation extends \MyOrm\Model
 			'cascade_save' => false,
 			'cascade_delete' => true,
 		),
-		'member' => array(
-			'key_from' => 'member_id_from',
-			'model_to' => 'Model_Member',
-			'key_to' => 'id',
-			'cascade_save' => false,
-			'cascade_delete' => true,
-		)
 	);
 
 	protected static $_properties = array(
