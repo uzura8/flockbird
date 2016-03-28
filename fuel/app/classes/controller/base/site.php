@@ -54,10 +54,13 @@ class Controller_Base_Site extends Controller_Base
 			$member = Model_Member::check_authority($member_id);
 			if (Auth::check())
 			{
-				$access_from = 'member';
-				if (Model_MemberRelation::check_relation('friend', $this->u->id, $member_id))
+				if (Site_Member_Relation::check_member_relation($member_id, $this->u->id, 'access_block'))
 				{
-					$access_from = 'friend';
+					throw new HttpAccessBlockedException;
+				}
+				if (!$access_from = Site_Member_Relation::check_member_relation($this->u->id, $member_id, 'friend'))
+				{
+					$access_from = 'member';
 				}
 			}
 		}
@@ -82,6 +85,13 @@ class Controller_Base_Site extends Controller_Base
 
 	protected function check_browse_authority($public_flag, $author_member_id = 0)
 	{
+		// check access blocked
+		if (Site_Member_Relation::check_member_relation($author_member_id, $this->u->id, 'access_block'))
+		{
+			throw new HttpAccessBlockedException;
+		}
+
+		// check access authority
 		switch ($public_flag)
 		{
 			case FBD_PUBLIC_FLAG_ALL:

@@ -20,7 +20,7 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 		$this->api_accept_formats = array('json', 'html');
 		$this->controller_common_api(function() use ($type)
 		{
-			if (!in_array($type, array('follow', 'access_block'))) throw new HttpNotFoundException;
+			if (!Site_Member_Relation::check_enabled_relation_type($type)) throw new HttpNotFoundException;
 
 			$default_params = array(
 				'latest' => 1,
@@ -57,7 +57,7 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 	{
 		$this->controller_common_api(function() use($member_id_to, $relation_type) {
 			$this->response_body['errors']['message_default'] = sprintf('%sに%sしました。', term('form.update'), term('site.failure'));
-			if (!Site_Member_Relation::check_relation_type($relation_type)) throw new HttpNotFoundException();
+			if (!Site_Member_Relation::check_enabled_relation_type($relation_type)) throw new HttpNotFoundException;
 
 			if (!is_null(Input::post('id'))) $member_id_to = (int)Input::post('id');
 			$member = Model_Member::check_authority($member_id_to);

@@ -2,10 +2,35 @@
 
 class Site_Member_Relation
 {
-	public static function check_relation_type($relation_type)
+	public static function get_relation_types()
+	{
+		return array(
+			'access_block',
+			//'friend',
+			'follow',
+		);
+	}
+
+	public static function check_member_relation($member_id_from, $member_id_to, $accepted_types = array())
+	{
+		if (!is_array($accepted_types)) $accepted_types = (array)$accepted_types;
+		$relation_types = $accepted_types ?: self::get_relation_types();
+		foreach ($relation_types as $relation_type)
+		{
+			if (Model_MemberRelation::check_relation($relation_type, $member_id_from, $member_id_to))
+			{
+				return $relation_type;
+			}
+		}
+
+		return false;
+	}
+
+	public static function check_enabled_relation_type($relation_type)
 	{
 		if (!$relation_type) return false;
-		if (!in_array($relation_type, array('follow', 'access_block'))) return false;
+		$relation_types = self::get_relation_types();
+		if (!in_array($relation_type, $relation_types)) return false;
 		if (!conf(sprintf('memberRelation.%s.isEnabled', Inflector::camelize($relation_type, true)))) return false;
 
 		return true;

@@ -17,7 +17,7 @@ class Controller_Member_Relation extends Controller_Site
 	 */
 	public function action_list($type = null)
 	{
-		if (!in_array($type, array('follow', 'access_block'))) throw new HttpNotFoundException;
+		if (!Site_Member_Relation::check_enabled_relation_type($type)) throw new HttpNotFoundException;
 
 		$relation_type_camelized_lower = Inflector::camelize($type, true);
 		$this->set_title_and_breadcrumbs(term($relation_type_camelized_lower.'ed', 'member.view', 'site.list'), array(

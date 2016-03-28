@@ -88,6 +88,10 @@ class Controller_Common extends Controller_Hybrid
 		{
 			$status_code = 403;
 		}
+		catch(\HttpAccessBlockedException $e)
+		{
+			$status_code = 403;
+		}
 		catch(\HttpMethodNotAllowed $e)
 		{
 			$status_code = 405;

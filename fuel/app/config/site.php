@@ -113,7 +113,7 @@ $config = array(
 			'isEnabled'  => 1,
 		),
 		'accessBlock' => array(
-			'isEnabled'  => 1,
+			'isEnabled'  => 0,
 		),
 	),
 	'member' => array(

@@ -97,4 +97,14 @@ class Controller_Error extends Controller_Site
 		$this->template->content = View::forge('error/invalid');
 		$this->response_status = 400;
 	}
+
+	/**
+	 * Error page for access blocked
+	 */
+	public function action_accessblocked()
+	{
+		$this->set_title_and_breadcrumbs('このコンテンツは現在ご利用いただけません', null, null, null, null, true);
+		$this->template->content = View::forge('error/accessblocked');
+		$this->response_status = 403;
+	}
 }
