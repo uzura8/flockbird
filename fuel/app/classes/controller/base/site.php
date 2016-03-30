@@ -86,7 +86,7 @@ class Controller_Base_Site extends Controller_Base
 	protected function check_browse_authority($public_flag, $author_member_id = 0)
 	{
 		// check access blocked
-		if (Site_Member_Relation::check_member_relation($author_member_id, $this->u->id, 'access_block'))
+		if (Auth::check() && Site_Member_Relation::check_member_relation($author_member_id, $this->u->id, 'access_block'))
 		{
 			throw new HttpAccessBlockedException;
 		}
