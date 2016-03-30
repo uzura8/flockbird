@@ -67,4 +67,12 @@ class Site_Form
 
 		return array($default_value, $label, $is_required, $input_attr);
 	}
+
+	public static function get_label(Validation $val, $name)
+	{
+		$field = $val->fieldset()->field($name);
+		if (!is_callable(array($field, 'get_attribute'))) throw new InvalidArgumentException('First parameter is invalid.');
+
+		return $field->get_attribute('label');
+	}
 }

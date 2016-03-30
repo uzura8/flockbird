@@ -26,6 +26,7 @@ $config = array(
 			'profile' => 'member/profile/',
 			'form.invite_friend' => 'member/invite/',
 			'site.setting' => 'member/setting/',
+			'contact.view' => 'contact',
 			'site.logout' => 'auth/logout/',
 		),
 		'global_side' => array(
@@ -47,6 +48,7 @@ $config = array(
 			term('note') => 'note/member/',
 			term('album') => 'album/member/',
 			'site.setting' => 'member/setting/',
+			'contact.view' => 'contact',
 			'site.logout' => 'auth/logout/',
 		),
 		'global_footer' => array(
@@ -54,7 +56,6 @@ $config = array(
 			'About' => 'site/about',
 			term('site.term') => 'site/term',
 			term('site.privacy_policy') => 'site/privacy_policy',
-			//'Contact' => 'site/contact',
 		),
 	),
 );

@@ -58,6 +58,7 @@ desktop.ini
 !/fuel/app/modules/admin
 !/fuel/app/modules/album
 !/fuel/app/modules/content
+!/fuel/app/modules/contact
 !/fuel/app/modules/news
 !/fuel/app/modules/note
 !/fuel/app/modules/notice

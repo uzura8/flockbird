@@ -26,8 +26,8 @@ if ($optional_link)
 <?php if (!empty($label)): ?>
 	<?php echo Form::label($label, null, array('class' => $label_class)); ?>
 <?php endif; ?>
-	<div class="form-text <?php echo $col; ?><?php if ($offset): ?> <?php echo $offset; ?><?php endif; ?>">
-		<?php echo $value; ?>
+	<div class="form-text wrap <?php echo $col; ?><?php if ($offset): ?> <?php echo $offset; ?><?php endif; ?>">
+		<?php echo !empty($is_nl2br) ? nl2br($value) : $value; ?>
 <?php if ($optional_link): ?>
 		<?php echo Html::anchor($optional_link['uri'], !empty($optional_link_text) ? $optional_link_text : $optional_link['text'], $optional_link_attr); ?>
 <?php endif; ?>

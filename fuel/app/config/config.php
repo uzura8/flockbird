@@ -290,7 +290,20 @@ return array(
 		 *
 		 * A path must be set in module_paths for this to work.
 		 */
-		'modules'  => array_merge(array('notice', 'timeline', 'note', 'album', 'group', 'message', 'content', 'news', 'thread', 'admin', 'api'), $GLOBALS['_FBD_ADDITIONAL_MODULES']),
+		'modules'  => array_merge(array(
+			'notice',
+			'timeline',
+			'note',
+			'album',
+			'group',
+			'message',
+			'content',
+			'contact',
+			'news',
+			'thread',
+			'admin',
+			'api'
+		), $GLOBALS['_FBD_ADDITIONAL_MODULES']),
 
 		/**
 		 * Classes to autoload & initialize even when not used

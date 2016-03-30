@@ -335,13 +335,14 @@ function form_date(Validation $val, $label, $name_month, $name_day, $label_col_s
 	return render('_parts/form/date', $data);
 }
 
-function form_text($value, $label, $offset_size = 2, $is_safe_value = false, $optional_link = array())
+function form_text($value, $label, $offset_size = 2, $is_safe_value = false, $optional_link = array(), $is_nl2br = false)
 {
 	$data = array(
 		'value' => $value,
 		'label' => $label,
 		'offset_size' => $offset_size,
 		'optional_link' => $optional_link,
+		'is_nl2br' => $is_nl2br,
 	);
 	$view = View::forge('_parts/form/text', $data);
 	if ($is_safe_value) $view->set_safe('value', $value);
