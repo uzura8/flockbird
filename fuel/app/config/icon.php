@@ -131,7 +131,7 @@ $config = array(
 		'tag' => 'tags',
 	),
 	'member' => array(
-		'view' => 'user',
+		//'view' => 'user',
 		//'left' => '退会メンバー',
 		//'name' => 'ニックネーム',
 		//'email' => 'メールアドレス',
