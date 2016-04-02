@@ -15,6 +15,7 @@ class Controller_Base_Site extends Controller_Base
 			$this->set_notification_count();
 			$this->set_current_member_config();
 		}
+		if (!IS_ADMIN && !Auth::check()) $this->set_login_validation();
 	}
 
 	protected function get_current_user()
@@ -26,6 +27,17 @@ class Controller_Base_Site extends Controller_Base
 	{
 		$this->member_config = Site_Member::get_member_config_with_default_value($this->u->id);
 		View::set_global('member_config', $this->member_config);
+	}
+
+	protected function set_login_validation()
+	{
+		Fieldset::reset();
+		$this->login_val = Validation::forge('site_login');
+		$options = array('1' => '次回から自動的にログイン');
+		$this->login_val->add('rememberme', '', array('type' => 'checkbox', 'options' => $options))->add_rule('checkbox_val', $options);
+		$this->login_val->add_model(Model_MemberAuth::forge());
+		$this->login_val->fieldset()->field('email')->delete_rule('unique');
+		View::set_global('login_val', $this->login_val);
 	}
 
 	protected function check_auth_and_is_mypage($member_id = 0, $is_api = false)

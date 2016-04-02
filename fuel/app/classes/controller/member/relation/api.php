@@ -2,7 +2,9 @@
 
 class Controller_Member_Relation_Api extends Controller_Site_Api
 {
-	protected $check_not_auth_action = array();
+	protected $check_not_auth_action = array(
+		'get_list',
+	);
 
 	public function before()
 	{
@@ -10,17 +12,33 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 	}
 
 	/**
-	 * Api list
+	 * Get member_relation list by type and member
 	 * 
 	 * @access  public
-	 * @return  Response (html)
+	 * @param   string $typeember_id
+	 * @param   int    $member_id
+	 * @return  Response (json|html)
+	 * @throws  Exception in Controller_Base::controller_common_api
+	 * @see  Controller_Base::controller_common_api
 	 */
-	public function get_list($type = null)
+	public function get_list($type = null, $member_id = null)
 	{
 		$this->api_accept_formats = array('json', 'html');
-		$this->controller_common_api(function() use ($type)
+		$this->controller_common_api(function() use ($type, $member_id)
 		{
+			$type = Inflector::singularize($type);
 			if (!Site_Member_Relation::check_enabled_relation_type($type)) throw new HttpNotFoundException;
+			$relation_type = $type == 'follower' ? 'follow' : $type;
+
+			if (!$member_id && Auth::check())
+			{
+				$member = $this->u;
+			}
+			else
+			{
+				$member = Model_Member::check_authority($member_id);
+			}
+			if ($type == 'access_block' && $member->id != get_uid()) throw new HttpNotFoundException;
 
 			$default_params = array(
 				'latest' => 1,
@@ -29,19 +47,22 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 			);
 			list($limit, $is_latest, $is_desc, $since_id, $max_id)
 				= $this->common_get_list_params($default_params, conf('member.view_params.list.limit_max'));
+
+			$member_id_prop = $type == 'follower' ? 'member_id_to' : 'member_id_from';
 			list($list, $next_id) = Model_MemberRelation::get_list(array(
-				'member_id_from' => $this->u->id,
-				'is_'.$type => 1,
+				$member_id_prop => $member->id,
+				'is_'.$relation_type => 1,
 			), $limit, $is_latest, $is_desc, $since_id, $max_id, 'member');
+
 			$this->set_response_body_api(array(
 				'is_simple_list' => true,
-				'is_hide_fallow_btn' => true,
-				'is_display_access_block_btn' => true,
+				'is_hide_fallow_btn' => $type == 'access_block',
+				'is_display_access_block_btn' => $type == 'access_block',
 				'list' => $list,
-				'related_member_table_name' => 'member',
+				'member_relation_name' => $type == 'follower' ? 'member_from' : 'member',
 				'next_id' => $next_id,
 				'since_id' => $since_id,
-				'get_uri' => sprintf('member/relation/api/list/%s.json', $type),
+				'get_uri' => sprintf('member/relation/api/list/%s/%d.json', $type, $member->id),
 				'history_keys' => array('q', 'max_id'),
 			), '_parts/member_list');
 		});

@@ -122,4 +122,22 @@ class Model_MemberRelation extends \MyOrm\Model
 
 		return \Util_db::conv_col($result);
 	}
+
+	public static function get_count4member_id($member_id, $relation_type = null, $member_id_prop = 'member_id_from')
+	{
+		if (!in_array($member_id_prop, array('member_id_from', 'member_id_to')))
+		{
+			throw new InvalidArgumentException('Third parameter is invalid.');
+		}
+		if (substr($relation_type, 0, 3) != 'is_') $relation_type = 'is_'.$relation_type;
+		if ($relation_type && !in_array($relation_type, array('is_follow', 'is_friend', 'is_access_block')))
+		{
+			throw new InvalidArgumentException('Second parameter is invalid.');
+		}
+
+		return self::get_count(array(
+			array($member_id_prop, $member_id),
+			array($relation_type, 1),
+		));
+	}
 }

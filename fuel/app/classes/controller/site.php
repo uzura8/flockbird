@@ -16,18 +16,6 @@ class Controller_Site extends Controller_Base_Site
 	public function before()
 	{
 		parent::before();
-		if (!Auth::check()) $this->set_login_validation();
-	}
-
-	protected function set_login_validation()
-	{
-		Fieldset::reset();
-		$this->login_val = Validation::forge('site_login');
-		$options = array('1' => '次回から自動的にログイン');
-		$this->login_val->add('rememberme', '', array('type' => 'checkbox', 'options' => $options))->add_rule('checkbox_val', $options);
-		$this->login_val->add_model(Model_MemberAuth::forge());
-		$this->login_val->fieldset()->field('email')->delete_rule('unique');
-		View::set_global('login_val', $this->login_val);
 	}
 
 	/**

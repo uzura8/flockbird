@@ -35,7 +35,7 @@ if ($is_display_load_before_link)
 <?php foreach ($list as $id => $obj): ?>
 	<div class="article" id="article_<?php echo $id; ?>">
 <?php echo render('_parts/member_profile', array(
-	'member' => !empty($related_member_table_name) ? $obj->{$related_member_table_name} : $obj,
+	'member' => !empty($member_relation_name) ? $obj->{$member_relation_name} : $obj,
 	'next_id' => $next_id,
 	'access_from' => Auth::check() ? 'member' : 'guest',
 	'is_list' => true,

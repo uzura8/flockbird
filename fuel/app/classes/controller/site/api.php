@@ -177,7 +177,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			if ($this->format == 'html')
 			{
 				$data += array(
-					'related_member_table_name' => 'member',
+					'member_relation_name' => 'member',
 					'is_simple_list' => true,
 					'list_id' => 'liked_member_list_'.$parent_id,
 					'get_uri' => Site_Util::get_api_uri_get_liked_members(Site_Model::convert_table2controller_path($parent_table), $parent_id),

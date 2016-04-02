@@ -30,6 +30,7 @@ class Site_Member_Relation
 	{
 		if (!$relation_type) return false;
 		$relation_types = self::get_relation_types();
+		if ($relation_type == 'follower' && in_array('follow', $relation_types)) $relation_type = 'follow';
 		if (!in_array($relation_type, $relation_types)) return false;
 		if (!conf(sprintf('memberRelation.%s.isEnabled', Inflector::camelize($relation_type, true)))) return false;
 
