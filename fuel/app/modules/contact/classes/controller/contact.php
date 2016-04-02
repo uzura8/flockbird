@@ -84,12 +84,22 @@ class Controller_Contact extends \Controller_Site
 		{
 			if (!$this->member_email) throw new \FuelException('Email not rgistered');
 
+			// Send to member
 			$mail = new \Site_Mail('contactToMember');
 			$mail->send($this->member_email, array(
 				'to_name' => $this->u->name,
 				'body' => $post['body'],
 				'category' => isset($post['category']) ? $post['category'] : '',
 			));
+			// Send to admin
+			$mail = new \Site_Mail('contactToMember', array(
+				'reply_to' => array($this->member_email => $this->u->name),
+			));
+			$mail->send(FBD_ADMIN_MAIL, array(
+				'to_name' => $this->u->name,
+				'body' => $post['body'],
+				'category' => isset($post['category']) ? $post['category'] : '',
+			), true);
 			\Session::set_flash('message', sprintf('%sを%sしました。', term('contact.view', 'site.mail'), term('form.send')));
 			\Response::redirect('member');
 		}

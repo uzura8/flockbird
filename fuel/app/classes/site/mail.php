@@ -19,6 +19,7 @@ class Site_Mail
 			'to_email'   => '',
 			'subject'    => '',
 			'body'    => '',
+			'reply_to'    => '',
 			'common_variavles' => array(),
 			'is_use_normalizer' => conf('library.PEAR_I18N_UnicodeNormalizer.isEnabled', null, false),
 			'debug_log_is_enabled' => conf('mail.log.develop.isEnabled'),
@@ -72,17 +73,26 @@ class Site_Mail
 		$this->parser = Util_Parser::get_twig_string_parser();
 	}
 
-	public function send($to_email = null, $data = array())
+	public function send($to_email = null, $data = array(), $is_to_admin = false)
 	{
 		if (!$to_email && !empty($data['to_email']))
 		{
 			$to_email = $data['to_email'];
 		}
 		if (!$to_email) throw new EmailValidationFailedException('To address not set.');
-		if (empty($data['to_email'])) $data['to_email'] = $to_email;
-		$this->options['to_email'] = $to_email;
 
-		if (!$this->options['to_name'] && !empty($data['to_name']))
+		if (empty($data['to_email'])) $data['to_email'] = $to_email;
+		if ($this->options['to_email'])
+		{
+			if (!is_array($this->options['to_email'])) $this->options['to_email'] = (array)$this->options['to_email'];
+			$this->options['to_email'][] = $to_email;
+		}
+		else
+		{
+			$this->options['to_email'] = $to_email;
+		}
+
+		if (!$is_to_admin && !$this->options['to_name'] && !empty($data['to_name']))
 		{
 			$this->options['to_name'] = $data['to_name'];
 		}
@@ -140,6 +150,7 @@ class Site_Mail
 		$email = Email::forge();
 		$email->from($this->options['from_email'], !empty($this->options['from_name']) ? $this->options['from_name'] : null);
 		$email->to($this->options['to_email'], !empty($this->options['to_name']) ? $this->options['to_name'] : null);
+		if (!empty($this->options['reply_to'])) $email->reply_to($this->options['reply_to']);
 		$email->subject($this->options['subject']);
 		$email->body($this->options['body']);
 
@@ -151,9 +162,13 @@ class Site_Mail
 	{
 		if (!$this->options['debug_log_is_enabled']) return;
 
-		$output_keys = array('from_email', 'from_name', 'to_email', 'to_name', 'subject', 'body');
+		$output_keys = array('from_email', 'from_name', 'reply_to', 'to_email', 'to_name', 'subject', 'body');
+		//if ($this->options['reply_to']) $output_keys['reply_to'] = $this->options['reply_to'];
 		$outputs = array('', '', '-------------', 'date' => \Date::time()->format('mysql'));
-		foreach ($output_keys as $key) $outputs[$key] = $this->options[$key];
+		foreach ($output_keys as $key)
+		{
+			$outputs[$key] = is_array($this->options[$key]) ? serialize($this->options[$key]) : $this->options[$key];
+		}
 
 		return file_put_contents($this->options['debug_log_file_path'], Util_Array::conv_arrays2key_value_str($outputs), FILE_APPEND);
 	}
