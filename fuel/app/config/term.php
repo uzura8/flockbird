@@ -202,6 +202,7 @@ $config = array(
 	),
 	'page' => array(
 		'view' => '画面',
+		'kana' => 'ページ',
 		'top' => 'Top',
 		'myhome'  => 'Home',
 		'mypage'  => 'マイページ',
