@@ -23,6 +23,17 @@ class Controller_Member extends Controller_Site
 	}
 
 	/**
+	 * Mmeber mypage
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_mypage()
+	{
+		$this->action_home($this->u->id);
+	}
+
+	/**
 	 * Mmeber home
 	 * 
 	 * @access  public

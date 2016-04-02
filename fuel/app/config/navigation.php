@@ -23,7 +23,7 @@ $config = array(
 		),
 		'secure_user_dropdown' => array(
 			'page.myhome' => 'member/',
-			'profile' => 'member/profile/',
+			'page.mypage' => 'member/mypage/',
 			'form.invite_friend' => 'member/invite/',
 			'site.setting' => 'member/setting/',
 			'contact.view' => 'contact',
@@ -41,7 +41,7 @@ $config = array(
 		),
 		'secure_side' => array(
 			'page.myhome' => 'member/',
-			'profile' => 'member/profile/',
+			'page.mypage' => 'member/mypage/',
 			'timeline' => 'timeline/member/',
 			'note' => 'note/member/',
 			'album' => 'album/member/',

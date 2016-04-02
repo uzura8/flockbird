@@ -131,29 +131,17 @@ $config = array(
 		'tag' => 'tags',
 	),
 	'member' => array(
-		//'view' => 'user',
-		//'left' => '退会メンバー',
-		//'name' => 'ニックネーム',
-		//'email' => 'メールアドレス',
-		//'password' => 'パスワード',
-		//'sex' => array(
-		//	'label' => '性別',
-		//	'options' => array(
-		//		'male' => '男性',
-		//		'femail' => '女性',
-		//	),
-		//),
-		//'birthyear' => '生年',
-		//'birthday' => '誕生日',
-		//'birthyear_birthday' => '生年月日',
-		//'age' => '年齢',
-		//'generation' => '年代',
+		'profile' => array(
+			'view' => 'user',
+			'edit' => 'pencil',
+		),
 		'registration' => 'plus',
 	),
 	'page' => array(
 		//'view' => '画面',
 		//'top' => 'Top',
 		'myhome'  => 'home',
+		'mypage'  => 'user',
 	),
 	//'symbol' => array(
 	//	'bool' => array(

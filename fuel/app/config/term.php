@@ -184,6 +184,10 @@ $config = array(
 		'age' => '年齢',
 		'generation' => '年代',
 		'registration' => '新規登録',
+		'profile' => array(
+			'view' => 'プロフィール',
+			'edit' => 'プロフィールを編集',
+		),
 		'group' => array(
 			'view' => 'グループ',
 			'options' => array(
@@ -200,6 +204,7 @@ $config = array(
 		'view' => '画面',
 		'top' => 'Top',
 		'myhome'  => 'Home',
+		'mypage'  => 'マイページ',
 	),
 	'symbol' => array(
 		'bool' => array(
