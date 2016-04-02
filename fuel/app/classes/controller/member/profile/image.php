@@ -21,7 +21,10 @@ class Controller_Member_Profile_Image extends Controller_Member
 	{
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($member_id);
 		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
-		$this->set_title_and_breadcrumbs(term('profile', 'site.picture', 'site.setting'), array('/member/profile/' => term('profile')), $member);
+		$title = term('profile', 'site.picture', $is_mypage ? 'site.setting' : '');
+		$this->set_title_and_breadcrumbs($title, array(
+			'/member/'.$member_id => sprintf('%sさんの%s', $member->name, term('site.page.kana')),
+		), $member);
 
 		$images = array();
 		if (is_enabled('album') && conf('upload.types.img.types.m.save_as_album_image'))
