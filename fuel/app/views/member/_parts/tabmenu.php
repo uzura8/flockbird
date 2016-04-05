@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs nav-justified">
 <?php if (is_enabled('timeline')): ?>
 	<?php echo html_tag('li', array(
-		'class' => check_current_uri('member/'.$member->id) ? 'active' : '',
+		'class' => check_current_uris(array('member/'.$member->id, 'member/me')) ? 'active' : '',
 	), navigation_link('timeline', 'member/'.$member->id)); ?>
 <?php endif; ?>
 	<?php echo html_tag('li', array(

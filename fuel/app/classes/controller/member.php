@@ -41,6 +41,7 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_home($id = null)
 	{
+		if (Auth::check() && (!$id || $id == 'me')) $id = $this->u->id;
 		$id = (int)$id;
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($id);
 
