@@ -66,9 +66,6 @@ class Model_NoticeStatus extends \MyOrm\Model
 					'notice_status_id' => array('id' => 'property'),
 				),
 				'check_changed' => array(
-					'check_properties' => array('is_read' => 1),
-				),
-				'check_changed' => array(
 					'check_properties' => array(
 						'is_read' => array(
 							'value' => 1,

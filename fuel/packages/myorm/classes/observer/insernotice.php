@@ -6,11 +6,18 @@ class Observer_InsertNotice extends \Orm\Observer
 	protected $_relations;
 	protected $_update_properties;
 	protected $_executed_params;
+	protected $_check_properties;
+	protected $_ignore_properties;
 
 	public function __construct($class)
 	{
 		$props = $class::observers(get_class($this));
 		$this->_update_properties = $props['update_properties'];
+		if (!empty($props['check_changed']))
+		{
+			$this->_check_properties = isset($props['check_changed']['check_properties']) ? $props['check_changed']['check_properties'] : array();
+			$this->_ignore_properties = isset($props['check_changed']['ignore_properties']) ? $props['check_changed']['ignore_properties'] : array();
+		}
 	}
 
 	public function after_insert(\Orm\Model $obj)
@@ -19,8 +26,20 @@ class Observer_InsertNotice extends \Orm\Observer
 		$this->execute($obj);
 	}
 
+	public function after_save(\Orm\Model $obj)
+	{
+		if (!$this->check_properties()) return;
+		$this->execute($obj);
+	}
+
 	private function execute($obj)
 	{
+		if (($this->_check_properties || $this->_ignore_properties)
+			&& !\Util_Orm::check_is_updated($obj, $this->_check_properties, $this->_ignore_properties, false))
+		{
+			return;
+		}
+
 		list($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key) = self::get_variables($obj);
 		if (self::check_already_executed($foreign_table, $foreign_id, $member_id_to, $member_id_from, $type_key)) return;
 
@@ -103,6 +122,7 @@ class Observer_InsertNotice extends \Orm\Observer
 
 	private function check_is_target_already_executed($foreign_table, $type_key)
 	{
+		if ($foreign_table == 'member_relation') return true;
 		if ($foreign_table == 'album' && $type_key == 'child_data') return true;
 
 		return false;

@@ -58,7 +58,7 @@ class Observer_DeleteRelationalTablesOnUpdated extends \Orm\Observer
 
 	private function execute($obj)
 	{
-		$models = \Site_Model::get4relation($this->_model_to, $this->_conditions, $obj);
+		if (!$models = \Site_Model::get4relation($this->_model_to, $this->_conditions, $obj)) return;
 		foreach ($models as $model)
 		{
 			$model->delete();

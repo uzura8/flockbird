@@ -12,23 +12,41 @@ class Form_MemberConfig extends \Form_MemberConfig
 	{
 		$val = \Validation::forge('member_config_notice');
 
-		$name = self::get_name('comment');
-		$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
-		$label = sprintf('自分の%sに%sされた時', term('form.post'), term('form.comment'));
-		$options = self::get_options_recieve();
-		$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
-				->add_rule('valid_string', 'numeric', 'required')
-				->add_rule('required')
-				->add_rule('in_array', array_keys($options));
+		if (Site_Util::check_enabled_notice_type('comment'))
+		{
+			$name = self::get_name('comment');
+			$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
+			$label = sprintf('自分の%sに%sされた時', term('form.post'), term('form.comment'));
+			$options = self::get_options_recieve();
+			$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
+					->add_rule('valid_string', 'numeric', 'required')
+					->add_rule('required')
+					->add_rule('in_array', array_keys($options));
+		}
 
-		$name = self::get_name('like');
-		$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
-		$label = sprintf('自分の%sに%sされた時', term('form.post'), term('form.like'));
-		$options = self::get_options_recieve();
-		$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
-				->add_rule('valid_string', 'numeric', 'required')
-				->add_rule('required')
-				->add_rule('in_array', array_keys($options));
+		if (Site_Util::check_enabled_notice_type('like'))
+		{
+			$name = self::get_name('like');
+			$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
+			$label = sprintf('自分の%sに%sされた時', term('form.post'), term('form.like'));
+			$options = self::get_options_recieve();
+			$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
+					->add_rule('valid_string', 'numeric', 'required')
+					->add_rule('required')
+					->add_rule('in_array', array_keys($options));
+		}
+
+		if (Site_Util::check_enabled_notice_type('follow'))
+		{
+			$name = self::get_name('follow');
+			$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
+			$label = sprintf('自分が%sされた時', term('follow'));
+			$options = self::get_options_recieve();
+			$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
+					->add_rule('valid_string', 'numeric', 'required')
+					->add_rule('required')
+					->add_rule('in_array', array_keys($options));
+		}
 
 		$name = Site_Util::get_member_config_name_for_watch_content('comment');
 		$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
@@ -65,7 +83,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 					->add_rule('in_array', array_keys($options));
 		}
 
-		if (conf('noticeMail.isEnabled', 'message'))
+		if (is_enabled('message') && conf('noticeMail.isEnabled', 'message'))
 		{
 			$name = self::get_name('messageMailMode');
 			if ($value = self::get_value($member_id, $name, parent::get_default_value($name, 1)))

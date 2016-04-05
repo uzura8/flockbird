@@ -62,6 +62,49 @@ class Model_MemberRelation extends \MyOrm\Model
 		),
 	);
 
+	public static function _init()
+	{
+		if (is_enabled('notice') && \Notice\Site_Util::check_enabled_notice_type('follow'))
+		{
+			$type_key = 'follow';
+			$type = \Notice\Site_Util::get_notice_type($type_key);
+			static::$_observers['MyOrm\Observer_InsertNotice'] = array(
+				'events'   => array('after_save'),
+				'update_properties' => array(
+					'foreign_table' => array('member_relation' => 'value'),
+					'foreign_id' => array('id' => 'property'),
+					'type_key' => array($type_key => 'value'),
+					'member_id_from' => array('member_id_from' => 'property'),
+					'member_id_to' => array('member_id_to' => 'property'),
+				),
+				'check_changed' => array(
+					'check_properties' => array(
+						'is_'.$type_key => array(
+							'value' => true,
+						),
+					),
+				),
+			);
+			static::$_observers['MyOrm\Observer_DeleteNotice'] = array(
+				'events' => array('before_delete', 'after_update'),
+				'conditions' => array(
+					'foreign_table' => array('member_relation' => 'value'),
+					'foreign_id' => array('id' => 'property'),
+					'type' => array($type => 'value'),
+				),
+				'check_changed' => array(
+					'check_properties' => array(
+						'is_'.$type_key => array(
+							'value' => false,
+						),
+					),
+				),
+				'member_id_prop' => 'member_id_from',
+				'foreign_table_member_id_prop' => 'member_id_from',
+			);
+		}
+	}
+
 	protected static $relations_friend_pre = array();
 	protected static $relations_friend = array();
 	protected static $relations_follow = array();

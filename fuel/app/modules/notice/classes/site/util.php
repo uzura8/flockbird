@@ -16,6 +16,7 @@ class Site_Util
 			'timeline',
 			'thread_comment',
 			'thread',
+			'member_relation',
 		);
 	}
 
@@ -27,12 +28,22 @@ class Site_Util
 			'album_image',
 			'timeline',
 			'thread',
+			'member',
 		);
+	}
+
+	public static function check_enabled_notice_type($type_key)
+	{
+		$types = \Config::get('notice.types');
+
+		return !empty($types[$type_key]);
 	}
 
 	public static function get_notice_type($type_key)
 	{
 		$types = \Config::get('notice.types');
+		if (is_numeric($type_key) && in_array($type_key, $types)) return $type_key;
+
 		if (empty($types[$type_key])) throw new \InvalidArgumentException('Parameter is invalid.');
 
 		return $types[$type_key];
@@ -77,6 +88,8 @@ class Site_Util
 
 	public static function check_is_watch_target_content4type_key($member_id, $type_key)
 	{
+		if (!in_array($type_key, array('comment', 'lke'))) return false;
+
 		return (bool)\Site_Member::get_config($member_id, self::get_member_config_name_for_watch_content($type_key));
 	}
 
@@ -99,19 +112,22 @@ class Site_Util
 	{
 		$reduce_num = 0;
 
-		$notices = Model_Notice::get4foreign_data($foreign_table, $foreign_id, self::convert_type_keys2types($type_keys));
-		foreach ($notices as $notice)
+		if ($notices = Model_Notice::get4foreign_data($foreign_table, $foreign_id, self::convert_type_keys2types($type_keys)))
 		{
-			if (Model_NoticeStatus::change_status2read($member_id, $notice->id)) $reduce_num++;
+			foreach ($notices as $notice)
+			{
+				if (Model_NoticeStatus::change_status2read($member_id, $notice->id)) $reduce_num++;
+			}
+		}
+		if ($notices = Model_Notice::get4parent_data($foreign_table, $foreign_id))
+		{
+			foreach ($notices as $notice)
+			{
+				if (Model_NoticeStatus::change_status2read($member_id, $notice->id)) $reduce_num++;
+			}
 		}
 
-		$notices = Model_Notice::get4parent_data($foreign_table, $foreign_id);
-		foreach ($notices as $notice)
-		{
-			if (Model_NoticeStatus::change_status2read($member_id, $notice->id)) $reduce_num++;
-		}
-
-		\Site_Notification::delete_unread_count_cache('notice', $member_id);
+		if ($reduce_num) \Site_Notification::delete_unread_count_cache('notice', $member_id);
 
 		return $reduce_num;
 	}

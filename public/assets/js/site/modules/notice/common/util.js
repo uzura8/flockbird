@@ -96,6 +96,7 @@ function getNoticeContentUriMiddlePath(foreign_table)
 		case 'thread':
 		case 'note':
 		case 'album':
+		case 'member':
 			return foreign_table;
 		case 'album_image':
 			return 'album/image';
@@ -111,6 +112,8 @@ function convertNoticeAction(foreign_table, type)
 			return 'あなた宛に' + convertNoticeForeignTable(foreign_table) + 'を投稿しました。';
 		case '7':
 			return 'あなた宛に' + convertNoticeForeignTable(foreign_table) + get_term('comment') + 'を投稿しました。';
+		case '8':
+			return 'あなたを' + get_term('follow') + 'しました。';
 	}
 	return convertNoticeForeignTable(foreign_table) + 'に' + convertNoticeType(foreign_table, type) + 'しました。';
 }

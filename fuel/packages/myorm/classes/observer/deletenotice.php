@@ -4,15 +4,35 @@ namespace MyOrm;
 class Observer_DeleteNotice extends \Orm\Observer
 {
 	protected $_conditions;
+	protected $_check_properties;
+	protected $_ignore_properties;
+	protected $_member_id_prop;
+	protected $_foreign_table_member_id_prop;
 
 	public function __construct($class)
 	{
 		$props = $class::observers(get_class($this));
 		$this->_conditions = $props['conditions'];
+		if (!empty($props['check_changed']))
+		{
+			$this->_check_properties = isset($props['check_changed']['check_properties']) ? $props['check_changed']['check_properties'] : array();
+			$this->_ignore_properties = isset($props['check_changed']['ignore_properties']) ? $props['check_changed']['ignore_properties'] : array();
+		}
+		$this->_member_id_prop = !empty($props['member_id_prop']) ? $props['member_id_prop'] : 'member_id';
+		$this->_foreign_table_member_id_prop = !empty($props['foreign_table_member_id_prop']) ? $props['foreign_table_member_id_prop'] : 'member_id';
 	}
 
 	public function before_delete(\Orm\Model $obj)
 	{
+		$this->execute($obj);
+	}
+
+	public function after_update(\Orm\Model $obj)
+	{
+		if (!\Util_Orm::check_is_updated($obj, $this->_check_properties, $this->_ignore_properties, false))
+		{
+			return;
+		}
 		$this->execute($obj);
 	}
 
@@ -37,9 +57,9 @@ class Observer_DeleteNotice extends \Orm\Observer
 			else
 			{
 				// delete notice_member_from
-				if (self::delete_notice_member_from($notice->id, $obj->member_id))
+				if (self::delete_notice_member_from($notice->id, $obj->{$this->_member_id_prop}))
 				{
-					$parent_content_member_id = \Site_Model::get_value4table_and_id($notice->foreign_table, $notice->foreign_id, 'member_id');
+					$parent_content_member_id = \Site_Model::get_value4table_and_id($notice->foreign_table, $notice->foreign_id, $this->_foreign_table_member_id_prop);
 					if (!\Notice\Model_NoticeMemberFrom::get_count4notice_id($notice->id, $parent_content_member_id))
 					{
 						$notice->delete();
@@ -49,7 +69,7 @@ class Observer_DeleteNotice extends \Orm\Observer
 		}
 
 		// 親記事削除時
-		if (empty($this->_conditions['type']))
+		if (empty($this->_conditions['type']) || $this->_conditions['type'] == \Notice\Site_Util::get_notice_type('follow'))
 		{
 			$foreign_table = \Util_Array::get_first_key($this->_conditions['foreign_table']);
 			$foreign_id = $obj->id;

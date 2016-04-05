@@ -79,18 +79,28 @@ class Model_Notice extends \MyOrm\Model
 				'type' => $type,
 				'body' => Site_Util::get_notice_body($foreign_table, $type),
 			));
-			if (!in_array($foreign_table, Site_Util::get_accept_parent_tables()) && $parent_table = \Site_Model::get_parent_table($foreign_table))
+
+			list($parent_table, $parent_id_prop) = self::get_parent_info_for_save($foreign_table);
+			if ($parent_table && $parent_id_prop)
 			{
 				$obj->parent_table = $parent_table;
 				$foreign_obj_name = \Site_Model::get_model_name($foreign_table);
 				$foreign_obj = $foreign_obj_name::find($foreign_id);
-				$parent_id_prop = $parent_table.'_id';
 				$obj->parent_id = $foreign_obj->{$parent_id_prop};
 			}
 			$obj->save();
 		}
 
 		return $obj;
+	}
+
+	protected static function get_parent_info_for_save($foreign_table)
+	{
+		if (in_array($foreign_table, Site_Util::get_accept_parent_tables())) return array(null, null);
+		if ($foreign_table == 'member_relation') return array('member', 'member_id_from');
+		if ($parent_table = \Site_Model::get_parent_table($foreign_table)) return array($parent_table, $parent_table.'_id');
+
+		return array(null, null);
 	}
 
 	public static function get_last4foreign_data($foreign_table, $foreign_id, $type, $since_datetime = null)

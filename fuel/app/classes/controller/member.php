@@ -43,6 +43,13 @@ class Controller_Member extends Controller_Site
 	{
 		$id = (int)$id;
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($id);
+
+		// 既読処理
+		if (\Auth::check() && $id != $this->u->id && \Notice\Site_Util::check_enabled_notice_type('follow'))
+		{
+			$this->change_notice_status2read($this->u->id, 'member', $id);
+		}
+
 		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
 		$data = array(
 			'member' => $member,

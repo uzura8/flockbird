@@ -126,20 +126,20 @@ class Util_Orm
 		return array($values[0][$property], $values[1][$property]);
 	}
 
-	public static function check_is_updated(\Orm\Model $obj, $check_properties = array(), $ignore_properties = array())
+	public static function check_is_updated(\Orm\Model $obj, $check_properties = array(), $ignore_properties = array(), $check_is_changed = true)
 	{
 		if (empty($check_properties) && empty($ignore_properties))
 		{
 			return true;
 		}
 
-		if (\Util_Orm::check_properties_updated($obj, $check_properties)) return true;
+		if (\Util_Orm::check_properties_updated($obj, $check_properties, $check_is_changed)) return true;
 		if (\Util_Orm::check_properties_updated_without_ignores($obj, $ignore_properties)) return true;
 
 		return false;
 	}
 
-	public static function check_properties_updated(\Orm\Model $obj, $check_properties)
+	public static function check_properties_updated(\Orm\Model $obj, $check_properties, $check_is_changed)
 	{
 		if (empty($check_properties)) return false;
 
@@ -152,7 +152,7 @@ class Util_Orm
 				$property = $key;
 				foreach ($conditions as $condition => $value)
 				{
-					if (!$obj->is_changed($property)) continue;
+					if ($check_is_changed && !$obj->is_changed($property)) continue;
 					if ($condition == 'value')
 					{
 						if ($obj->{$property} != $value) continue;

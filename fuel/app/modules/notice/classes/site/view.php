@@ -19,9 +19,12 @@ class Site_View
 			case 'thread':
 			case 'note':
 			case 'album':
+			case 'member':
 				return $foreign_table;
 			case 'album_image':
 				return 'album/image';
+			case 'member_relation':
+				return 'member';
 		}
 		return '';
 	}
@@ -55,6 +58,8 @@ class Site_View
 				return sprintf('あなた宛に%sを投稿しました。', static::convert_notice_foreign_table($foreign_table));
 			case '7':
 				return sprintf('あなた宛に%s%sを投稿しました。', static::convert_notice_foreign_table($foreign_table), term('form.comment'));
+			case '8':
+				return sprintf('あなたを%sしました。', term('follow'));
 		}
 		return sprintf('%sに%sしました。', static::convert_notice_foreign_table($foreign_table), static::convert_notice_type($foreign_table, $type));
 	}

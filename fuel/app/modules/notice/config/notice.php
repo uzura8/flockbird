@@ -24,6 +24,7 @@ return array(
 		'child_data' => 5,
 		'parent_mention' => 6,
 		'comment_mention' => 7,
+		'follow' => 8,
 	),
 	'periode_to_update' => array(
 		'default' => '6 hours',
