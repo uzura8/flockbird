@@ -73,24 +73,29 @@ class Site_Mail
 		$this->parser = Util_Parser::get_twig_string_parser();
 	}
 
+	public function reset_options($target_option_items = array())
+	{
+		if (!$target_option_items)
+		{
+			$target_option_items = array(
+				'to_name',
+				'to_email',
+				'subject',
+				'body',
+				'reply_to',
+			);
+		}
+		foreach ($target_option_items as $item)
+		{
+			$this->options[$item] = '';
+		}
+	}
+
 	public function send($to_email = null, $data = array(), $is_to_admin = false)
 	{
-		if (!$to_email && !empty($data['to_email']))
-		{
-			$to_email = $data['to_email'];
-		}
-		if (!$to_email) throw new EmailValidationFailedException('To address not set.');
-
+		if (!$to_email && !empty($data['to_email'])) $to_email = $data['to_email'];
 		if (empty($data['to_email'])) $data['to_email'] = $to_email;
-		if ($this->options['to_email'])
-		{
-			if (!is_array($this->options['to_email'])) $this->options['to_email'] = (array)$this->options['to_email'];
-			$this->options['to_email'][] = $to_email;
-		}
-		else
-		{
-			$this->options['to_email'] = $to_email;
-		}
+		$this->set_to_email($to_email);
 
 		if (!$is_to_admin && !$this->options['to_name'] && !empty($data['to_name']))
 		{
@@ -102,6 +107,37 @@ class Site_Mail
 		$this->set_body($data);
 		$this->validate();
 		$this->sendmail();
+	}
+
+	protected function set_to_email($to_email = null, $data = array())
+	{
+		if (!$to_email && empty($this->options['to_email']))
+		{
+			throw new EmailValidationFailedException('To address not set.');
+		}
+
+		if (empty($this->options['to_email']))
+		{
+			$this->options['to_email'] = $to_email;
+			return;
+		}
+
+		if (is_array($this->options['to_email']))
+		{
+			$targets = array_values($this->options['to_email']);
+			if (in_array($to_email, $targets)) return;
+
+			$targets = array_keys($this->options['to_email']);
+			if (in_array($to_email, $targets)) return;
+
+			$this->options['to_email'][] = $to_email;
+			return;
+		}
+
+		if ($to_email == $this->options['to_email']) return;
+
+		$this->options['to_email'] = (array)$this->options['to_email'];
+		$this->options['to_email'][] = $to_email;
 	}
 
 	protected function set_subject($data = array())
@@ -138,10 +174,27 @@ class Site_Mail
 		$check_items = array('from_email', 'from_name', 'to_email', 'to_name', 'subject');
 		foreach ($check_items as $item)
 		{
-			if (isset($this->options[$item]) && preg_match('/[\r\n]/u', $this->options[$item]) === 1)
+			if (!isset($this->options[$item])) continue;
+
+			if (!is_array($this->options[$item]))
 			{
-				throw new EmailValidationFailedException('One or more email headers did not pass validation: '.$item);
+				self::check_is_single_line($this->options[$item], $item);
+				continue;
 			}
+
+			foreach ($this->options[$item] as $key => $value)
+			{
+				self::check_is_single_line($key, $item);
+				self::check_is_single_line($value, $item);
+			}
+		}
+	}
+
+	protected static function check_is_single_line($value, $item)
+	{
+		if (preg_match('/[\r\n]/u', $value) === 1)
+		{
+			throw new EmailValidationFailedException('One or more email headers did not pass validation: '.$item);
 		}
 	}
 

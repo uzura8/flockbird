@@ -33,6 +33,7 @@ abstract class Site_MailBatchSender extends Site_BatchHandler
 		$error_message = 'send mail error: ';
 		try
 		{
+			$this->mail_handler->reset_options();
 			$this->mail_handler->send(null, $this->mail_data);
 			$this->send_count++;
 			$this->each_result = $this->get_status_value('successed');
@@ -50,7 +51,11 @@ abstract class Site_MailBatchSender extends Site_BatchHandler
 		{
 			$error_message .= '[Exception] ';
 		}
-		if (isset($e)) $error_message .= $e->getMessage();
+		if (isset($e))
+		{
+			$error_message .= $e->getMessage();
+			Util_Toolkit::log_error(is_prod_env() ? $e->getMessage() : $e->__toString());
+		}
 		$this->each_result = $this->get_status_value('failed');
 		$this->each_error_message = $error_message;
 	}

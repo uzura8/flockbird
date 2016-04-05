@@ -48,6 +48,7 @@ abstract class Site_BatchHandler
 				catch(\Exception $e)
 				{
 					if (\DB::in_transaction()) \DB::rollback_transaction();
+					if (!empty($e)) Util_Toolkit::log_error(is_prod_env() ? $e->getMessage() : $e->__toString());
 				}
 				unset($queues[$key]);
 			}
