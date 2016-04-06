@@ -7,6 +7,9 @@ return array(
 		'site_info' => 8,
 		'system_info' => 9,
 	),
+	'uploadImages' => array(
+		'isEnabled'  => true,
+	),
 	'adminMessage' => array(
 		'memberIdFrom' => 1,
 	),

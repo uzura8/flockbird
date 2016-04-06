@@ -50,7 +50,7 @@ echo render('filetmp/_parts/upload_images', $data);
 			btn-<?php if (!empty($btn_type)): ?><?php echo $btn_type; ?><?php else: ?>default<?php endif; ?>
 			fileinput-button">
 				<i class="glyphicon glyphicon-<?php if ($upload_type == 'file'): ?>file<?php else: ?>camera<?php endif; ?>"></i>
-				<span class="hidden-xs">Select <?php if ($upload_type == 'file'): ?>files<?php else: ?>images<?php endif; ?>...</span>
+				<span>Select <?php if ($upload_type == 'file'): ?>files<?php else: ?>images<?php endif; ?>...</span>
 				<!-- The file input field used as target for the file upload widget -->
 				<input class="file_select" type="file" name="files[]"
 					<?php if (!$is_single_file_upload): ?>multiple <?php endif; ?>id="file_select_<?php echo $upload_type; ?>"

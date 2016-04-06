@@ -93,14 +93,39 @@ class Controller_Api extends \Controller_Site_Api
 		{
 			list($type_key, $type, $related_id, $group, $group_members) = $this->validate_talks_params($type_key, $id);
 			$this->response_body['errors']['message_default'] = term('message.view').'の'.term('form.post').'に失敗しました。';
+			$image_tmps = array();
+			$moved_images = array();
+
 			$message = Model_Message::forge();
 			$val = \Validation::forge();
 			$val->add_model($message);
 			if (!$val->run()) throw new \ValidationFailedException($val->show_errors());
 			$post = $val->validated();
-			if (!strlen($post['body'])) throw new \ValidationFailedException('Data is empty.');
+			$image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
+			if (!strlen($post['body']) && !$file_tmps)
+			{
+				throw new \ValidationFailedException('Data is empty.');
+			}
 
-			$message->save_with_relations($this->u->id, $type, $related_id, $post['body']);
+			try
+			{
+				\DB::start_transaction();
+				$message->save_with_relations($this->u->id, $type, $related_id, $post['body']);
+				if ($image_tmps)
+				{
+					list($moved_images, $message_image_ids) = \Site_FileTmp::save_images($image_tmps, $message->id, 'message_id', 'message_image');
+				}
+				\DB::commit_transaction();
+
+				// thumbnail 作成 & tmp_file thumbnail 削除
+				\Site_FileTmp::make_and_remove_thumbnails($moved_images);
+			}
+			catch(\Exception $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				if ($moved_images) \Site_FileTmp::move_files_to_tmp_dir($moved_images);
+				throw $e;
+			}
 
 			$data = array(
 				'id'      => $message->id,

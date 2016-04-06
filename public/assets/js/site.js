@@ -213,6 +213,18 @@ $(document).on('click', '.js-display_parts', function(){
 	return false;
 });
 
+$(document).on('click', '.js-switch_display', function(){
+	var showSelector = $(this).data('show') ? $(this).data('show') : '';
+	var hideSelector = $(this).data('hide') ? $(this).data('hide') : '';
+	var focusSelector = $(this).data('focus') ? $(this).data('focus') : '';
+
+	$(showSelector).removeClass('hidden');
+	$hideTarget = (hideSelector) ? $(hideSelector) : $(this);
+	$hideTarget.addClass('hidden');
+	if (focusSelector) $(focusSelector).focus();
+	return false;
+});
+
 $(document).on('click', '.js-insert_text', function(){
 	var inputSelector = $(this).data('input') ? $(this).data('input') : '',
 			openSelector  = $(this).data('open')  ? $(this).data('open') : '',

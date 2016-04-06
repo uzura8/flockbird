@@ -40,6 +40,17 @@ if ($message_sent->message->member_id == get_uid())
 {
 	$data['unread_flag'] = $unread_message_ids && in_array($message_sent->message_id, $unread_message_ids);
 }
+// message_image
+if (conf('uploadImages.isEnabled', 'message') && $image_list = \Message\Model_MessageImage::get4message_id($message_sent->message_id))
+{
+	$images = array(
+		'list' => $image_list,
+		'file_cate' => 'ms',
+		'size' => 'M',
+		'column_count' => 3,
+	);
+	$data['images'] = $images;
+}
 //if (empty($is_hide_reply_link) && conf('mention.isEnabled', 'notice') && $message_sent->message->member)
 //{
 //	$data['reply_link'] = array(

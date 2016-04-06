@@ -27,10 +27,11 @@ $(function() {
 
 		var body = $.trim($('#textarea_comment').val());// for legacy IE.
 		var postData = $(this).data('post_data') ? $(this).data('post_data') : {};
-		//$('input[name^="image_tmp"]').each(function(){
-		//	postData[this.name] = this.value;
-		//});
+		$('input[name^="image_tmp"]').each(function(){
+			postData[this.name] = this.value;
+		});
 		if (body.length == 0 && Object.keys(postData).length == 0) return;
+		postData[this.name] = this.value;
 
 		var position = 'append';
 		var getData = {
@@ -69,10 +70,10 @@ $(function() {
 })
 
 function resetInputs() {
-	//$('.upload').addClass('hidden');
-	//$('.display_upload_form').removeClass('hidden');
-	//$('#files_img').html('');
-	//$('#progress_img .progress-bar').css('width', 0);
+	$('.upload').addClass('hidden');
+	$('.display_upload_form').removeClass('hidden');
+	$('#files_img').html('');
+	$('#progress_img .progress-bar').css('width', 0);
 	//scroll(is_sp() ? '#main_post_box' : 0, 'swing');
 }
 

@@ -5,6 +5,6 @@
 	'size' => 'M',
 	'button_attrs' => array('id' => 'btn_message', 'class' => 'btn btn-default btn_comment'),
 	'textarea_attrs' => array('class' => 'form-control autogrow input_message'),
-	//'with_uploader' => true,
+	'with_uploader' => conf('uploadImages.isEnabled', 'message'),
 )); ?>
 </div>

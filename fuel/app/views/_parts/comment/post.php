@@ -25,16 +25,22 @@ $size = empty($size) ? 'S' : strtoupper($size);
 				<b class="fullname"><?php echo member_name($u, true); ?></b>
 				<div class="input"><?php echo Form::textarea('body', null, $textarea_attrs); ?></div>
 <?php if (!empty($with_uploader)): ?>
-<?php if (!isset($files)) $files = array(); ?>
-				<div class="upload hidden">
+<?php
+if (!isset($files)) $files = array();
+if (!isset($uploader_selects)) $uploader_selects = array();
+?>
+				<div class="upload hidden" id="upload_form_block">
 					<?php echo form_upload_files($files, true, false, 'S', $uploader_selects, 'album', null, null, null, null, 'img', 'success', 'sm'); ?>
 				</div>
 <?php endif; ?>
 				<div class="clearfix">
 <?php if (!empty($with_uploader)): ?>
-					<?php echo btn('form.add_picture', null, 'display_upload_form', true, 'ms', null, array('class' => 'pull-left'), null, 'button', 'display_fileinput-button'); ?>
+					<?php echo btn('form.add_picture', null, 'display_upload_form', true, 'ms', null, array(
+						'class' => 'pull-left js-switch_display',
+						'data-show' => '#upload_form_block',
+					), null, 'button', 'display_fileinput-button'); ?>
 <?php endif; ?>
-					<?php echo btn('form.submit', '#', 'btn_comment', true, null, null, $button_attrs, null, 'button', 'btn_comment'); ?>
+					<?php echo btn('form.submit', '#', 'btn_comment', true, null, null, $button_attrs, null, 'button', 'btn_comment', false); ?>
 <?php if (!empty($with_public_flag_selector)): ?>
 <?php
 if (!isset($public_flag)) $public_flag = conf('public_flag.default');

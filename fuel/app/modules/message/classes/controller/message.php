@@ -50,6 +50,7 @@ class Controller_Message extends \Controller_Site
 		// 既読処理
 		$this->change_message_status2read('member', $member_id);
 
+		$this->template->post_header = \View::forge('_parts/member_header');
 		$this->template->post_footer = \View::forge('_parts/load_message');
 		$this->set_title_and_breadcrumbs(sprintf('%s との%s', $member->name, term('message.view')), array('message' => term('message.view')));
 		$this->template->content = \View::forge('member', array('type' => 'member', 'related_id' => $member_id));
