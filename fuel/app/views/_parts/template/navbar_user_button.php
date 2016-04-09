@@ -2,7 +2,7 @@
 		<div class="navbar-btn pull-right">
 			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<?php echo member_image($u, 'SS', '', false, false); ?><span class="hidden-xs-inline"> <?php echo Auth::get_screen_name(); ?></span>
+					<?php echo member_image($u, 'SS', '', false, false); ?><span class="hidden-xs-inline"> <?php echo strim(Auth::get_screen_name(), 25, null, false); ?></span>
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
