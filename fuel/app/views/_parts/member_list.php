@@ -39,7 +39,7 @@ if ($is_display_load_before_link)
 	'next_id' => $next_id,
 	'access_from' => Auth::check() ? 'member' : 'guest',
 	'is_list' => true,
-	'page_type' => 'list',
+	'page_type' => 'lerge_list',
 	'display_type' => 'summary',
 	'is_simple_list' => !empty($is_simple_list),
 	'is_hide_fallow_btn' => !empty($is_hide_fallow_btn),
