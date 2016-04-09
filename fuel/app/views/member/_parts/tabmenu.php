@@ -1,4 +1,4 @@
-<ul class="nav nav-tabs nav-justified">
+<ul class="nav nav-tabs nav-justified mb10">
 <?php if (is_enabled('timeline')): ?>
 	<?php echo html_tag('li', array(
 		'class' => check_current_uris(array('member/'.$member->id, 'member/me')) ? 'active' : '',
