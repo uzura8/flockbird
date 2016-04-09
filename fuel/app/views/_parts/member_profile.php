@@ -11,23 +11,23 @@ switch ($page_type)
 	case 'lerge_list':
 		$member_name_tag = 'h4';
 		$edit_button_size = 'xs';
-		$col_class = 'xs';
-		$image_col_size = 3;
+		$col_class_left  = 'col-xs-3';
+		$col_class_right = 'col-xs-9';
 		$image_size = 'ML';
 		break;
 	case 'list':
 		$member_name_tag = 'h5';
 		$edit_button_size = 'xs';
-		$col_class = 'xs';
-		$image_col_size = 2;
+		$col_class_left  = 'col-xs-3 col-sm-2';
+		$col_class_right = 'col-xs-9 col-sm-10';
 		$image_size = 'M';
 		break;
 	case 'detail':
 	default :
 		$member_name_tag = 'h3';
 		$edit_button_size = 'sm';
-		$col_class = 'sm';
-		$image_col_size = 4;
+		$col_class_left  = 'col-sm-4';
+		$col_class_right = 'col-sm-8';
 		$image_size = 'L';
 		break;
 }
@@ -54,11 +54,11 @@ $is_display_member_edit_btn = (empty($is_display_access_block_btn) && conf('memb
 	<?php echo btn('form.edit', 'member/profile/edit', 'btnEdit', true, 'sm'); ?>
 <?php endif; ?>
 	<div class="row">
-		<div class="col-<?php echo $col_class; ?>-<?php echo $image_col_size; ?>">
+		<div class="article-left <?php echo $col_class_left; ?>">
 			<div class="imgBox"><?php echo member_image($member, $image_size, $profile_page_uri, $is_link2raw_file); ?></div>
 <?php if (!empty($with_link2profile_image)): ?>
 			<div class="btnBox">
-				<?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera'); ?>
+				<?php echo btn(term('profile', 'site.picture'), sprintf('member/profile/image%s', $is_mypage ? '' : '/'.$member->id), null, true, 'sm', null, null, 'camera', null, null, false); ?>
 			</div>
 <?php endif; ?>
 <?php if ($is_mypage && $with_image_upload_form): ?>
@@ -72,7 +72,7 @@ $is_display_member_edit_btn = (empty($is_display_access_block_btn) && conf('memb
 			</div>
 <?php endif; ?>
 		</div>
-		<div class="col-<?php echo $col_class; ?>-<?php echo 12 - $image_col_size; ?>">
+		<div class="article-right <?php echo $col_class_right; ?>">
 				<<?php echo $member_name_tag; ?>>
 					<?php echo member_name($member, $display_type != 'detail' ? $profile_page_uri : '', true); ?>
 
