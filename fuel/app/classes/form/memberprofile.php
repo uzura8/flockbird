@@ -261,7 +261,7 @@ class Form_MemberProfile
 		$properties = Form_Util::get_model_field('member', 'birthyear');
 		$attrs = $properties['attributes'];
 		$attrs['value'] = isset($this->member_obj->birthyear) ? $this->member_obj->birthyear : date('Y');
-		if (self::conf('birthdate', 'birthyear.isRequired')) $properties['rules'][] = 'required';
+		if (self::conf('birthday', 'birthyear.isRequired')) $properties['rules'][] = 'required';
 		$this->validation->add(
 			'member_birthyear',
 			$properties['label'],
@@ -270,13 +270,14 @@ class Form_MemberProfile
 		);
 
 		list($month, $day) = (!empty($this->member_obj->birthdate)) ? Util_Date::sprit_date_str($this->member_obj->birthdate) : array(1, 1);
-		if (self::conf('birthdate', 'birthdate.isRequired')) $rules[] = 'required';
+		$is_required = self::conf('birthday', 'birthdate.isRequired');
 
 		$options = Form_Util::get_int_options(1, 12);
 		$rules = array(
 			array('valid_string', 'numeric'),
 			array('in_array', array_keys($options)),
 		);
+		if ($is_required) $rules[] = 'required';
 		$this->validation->add(
 			'member_birthdate_month',
 			'誕生日(月)',
@@ -289,6 +290,7 @@ class Form_MemberProfile
 			array('valid_string', 'numeric'),
 			array('in_array', array_keys($options)),
 		);
+		if ($is_required) $rules[] = 'required';
 		$this->validation->add(
 			'member_birthdate_day',
 			'誕生日(日)',

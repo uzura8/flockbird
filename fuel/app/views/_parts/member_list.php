@@ -33,9 +33,14 @@ if ($is_display_load_before_link)
 
 <?php if (!empty($is_base_page)): ?><div id="<?php echo $list_id; ?>"><?php endif; ?>
 <?php foreach ($list as $id => $obj): ?>
+<?php
+$member_obj = !empty($member_relation_name) ? $obj->{$member_relation_name} : $obj;
+$member_profiles = empty($is_simple_list) ? Model_MemberProfile::get4member_id($member_obj->id, true) : array();
+?>
 	<div class="article" id="article_<?php echo $id; ?>">
 <?php echo render('_parts/member_profile', array(
-	'member' => !empty($member_relation_name) ? $obj->{$member_relation_name} : $obj,
+	'member' => $member_obj,
+	'member_profiles' => $member_profiles,
 	'next_id' => $next_id,
 	'access_from' => Auth::check() ? 'member' : 'guest',
 	'is_list' => true,

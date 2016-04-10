@@ -152,7 +152,6 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 			</div>
 <?php endif; ?>
 <?php if (!$is_simple_list
-				&& !empty($member_profiles)
 				&& $member->birthdate
 				&& check_display_type(conf('profile.birthday.birthdate.displayType'), $display_type)
 				&& check_public_flag($member->birthdate_public_flag, $access_from)): ?>
@@ -161,6 +160,7 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 				<div class="col-xs-8"><?php echo Util_Date::conv_date_format($member->birthdate, '%d月%d日'); ?></div>
 			</div>
 <?php endif; ?>
+
 <?php if (!empty($member_profiles)): ?>
 			<?php echo render('member/profile/_parts/values', array('member' => $member, 'member_profiles' => $member_profiles, 'access_from' => $access_from, 'display_type' => $display_type)); ?>
 <?php endif; ?>
