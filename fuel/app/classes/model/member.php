@@ -68,12 +68,12 @@ class Model_Member extends \MyOrm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => 'radio'),
 		),
-		'birthday' => array(
+		'birthdate' => array(
 			'data_type' => 'varchar',
 			'validation' => array('date_string'),
 			'form' => array('type' => false),
 		),
-		'birthday_public_flag' => array(
+		'birthdate_public_flag' => array(
 			'data_type' => 'integer',
 			'form' => array('type' => 'radio'),
 		),
@@ -142,11 +142,11 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['birthyear_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthyear_public_flag']['validation']['in_array'][] = $options_public_flag;
 
-		static::$_properties['birthday']['label'] = term('member.birthday');
+		static::$_properties['birthdate']['label'] = term('member.birthdate');
 
-		static::$_properties['birthday_public_flag']['label'] = sprintf('%sの%s', term('member.birthday'), term('public_flag.label'));
-		static::$_properties['birthday_public_flag']['form'] = Site_Form::get_public_flag_configs();
-		static::$_properties['birthday_public_flag']['validation']['in_array'][] = $options_public_flag;
+		static::$_properties['birthdate_public_flag']['label'] = sprintf('%sの%s', term('member.birthdate'), term('public_flag.label'));
+		static::$_properties['birthdate_public_flag']['form'] = Site_Form::get_public_flag_configs();
+		static::$_properties['birthdate_public_flag']['validation']['in_array'][] = $options_public_flag;
 
 		static::$_properties['invite_member_id'] = Util_Orm::get_relational_numeric_key_prop(false);
 	}

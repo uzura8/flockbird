@@ -217,7 +217,7 @@ class Controller_Auth extends Controller_Site
 			$member->status = conf('status.options.normal', 'member');
 			list($member->sex, $member->sex_public_flag) = Site_Oauth::get_sex($response, $provider);
 			list($member->birthyear, $member->birthyear_public_flag) = Site_Oauth::get_birthyear($response, $provider);
-			list($member->birthday, $member->birthday_public_flag) = Site_Oauth::get_birthday($response, $provider);
+			list($member->birthdate, $member->birthdate_public_flag) = Site_Oauth::get_birthdate($response, $provider);
 			$member->filesize_total = 0;
 			$member->register_type = $provider_id;
 			if ($member->save() === false) throw new \FuelException('Member save failed.');

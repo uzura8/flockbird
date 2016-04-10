@@ -158,7 +158,7 @@ class Form_SiteConfig_Profile extends Form_SiteConfig
 				->add_rule('valid_string', 'numeric')
 				->add_rule('in_array', \Site_Util::get_public_flags());
 
-		$name_prefix = 'birthday_birthday';
+		$name_prefix = 'birthday_birthdate';
 		$name = self::get_name($name_prefix, 'displayType');
 		$value = self::get_values($name, 0);
 		$options_display_type = \Site_Profile::get_display_type_options();

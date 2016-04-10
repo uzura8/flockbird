@@ -61,7 +61,7 @@
 	<th rowspan="2"><?php echo term('form.update'); ?></th>
 	<th rowspan="2"><?php echo term('form.search'); ?></th>
 	<th colspan="5"><?php echo term('member.birthyear'); ?></th>
-	<th colspan="4"><?php echo term('member.birthday'); ?></th>
+	<th colspan="4"><?php echo term('member.birthdate'); ?></th>
 <?php if (conf('member.profile.birthday.use_generation_view')): ?>
 	<th colspan="4"><?php echo term('member.generation'); ?></th>
 <?php endif; ?>
@@ -93,7 +93,7 @@
 	<td><?php echo symbol_bool(conf($prefix.'isRequired')); ?></td>
 	<td><?php echo symbol_bool(conf($prefix.'publicFlag.isEdit')); ?></td>
 	<td><?php echo Site_Form::get_public_flag_options(conf($prefix.'publicFlag.default')); ?></td>
-<?php $prefix = 'profile.birthday.birthday.'; ?>
+<?php $prefix = 'profile.birthday.birthdate.'; ?>
 	<td><?php echo Site_Profile::get_display_type_options(conf($prefix.'displayType'), true); ?></td>
 	<td><?php echo symbol_bool(conf($prefix.'isRequired')); ?></td>
 	<td><?php echo symbol_bool(conf($prefix.'publicFlag.isEdit')); ?></td>

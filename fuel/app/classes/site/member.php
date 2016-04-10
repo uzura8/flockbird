@@ -214,7 +214,7 @@ class Site_Member
 
 		if (conf('profile.sex.isRequired') && empty($member->sex)) return false;
 		if (conf('profile.birthday.birthyear.isRequired') && empty($member->birthyear)) return false;
-		if (conf('profile.birthday.birthday.isRequired') && empty($member->birthday)) return false;
+		if (conf('profile.birthday.birthdate.isRequired') && empty($member->birthdate)) return false;
 
 		if (!$profiles = Model_Profile::get_assoc('id', 'is_required', array('is_required' => 1, 'is_disp_'.$disp_type => 1))) return true;
 		$profileds_for_check = $profiles;

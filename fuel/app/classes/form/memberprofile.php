@@ -133,12 +133,15 @@ class Form_MemberProfile
 		if ($this->set_member_obj_value('birthyear'))  $is_changeed[] = 'birthyear';
 		if ($this->set_member_obj_public_flag('birthyear')) $is_changeed[] = 'birthyear_public_flag';
 
-		if ($this->check_is_set_field('member_birthday_month') && $this->check_is_set_field('member_birthday_day'))
+		if ($this->check_is_set_field('member_birthdate_month') && $this->check_is_set_field('member_birthdate_day'))
 		{
-			$this->member_obj->birthday = Util_Date::combine_date_str($this->validated_values['member_birthday_month'], $this->validated_values['member_birthday_day']);
-			if ($this->member_obj->is_changed('birthday')) $is_changeed[] = 'birthday';
+			$this->member_obj->birthdate = Util_Date::combine_date_str(
+				$this->validated_values['member_birthdate_month'],
+				$this->validated_values['member_birthdate_day']
+			);
+			if ($this->member_obj->is_changed('birthdate')) $is_changeed[] = 'birthdate';
 		}
-		if ($this->set_member_obj_public_flag('birthday', false)) $is_changeed[] = 'birthday_public_flag';
+		if ($this->set_member_obj_public_flag('birthdate', false)) $is_changeed[] = 'birthdate_public_flag';
 
 		if (!$is_changeed) return;
 		$this->member_obj->save();
@@ -258,7 +261,7 @@ class Form_MemberProfile
 		$properties = Form_Util::get_model_field('member', 'birthyear');
 		$attrs = $properties['attributes'];
 		$attrs['value'] = isset($this->member_obj->birthyear) ? $this->member_obj->birthyear : date('Y');
-		if (self::conf('birthday', 'birthyear.isRequired')) $properties['rules'][] = 'required';
+		if (self::conf('birthdate', 'birthyear.isRequired')) $properties['rules'][] = 'required';
 		$this->validation->add(
 			'member_birthyear',
 			$properties['label'],
@@ -266,8 +269,8 @@ class Form_MemberProfile
 			$properties['rules']
 		);
 
-		list($month, $day) = (!empty($this->member_obj->birthday)) ? Util_Date::sprit_date_str($this->member_obj->birthday) : array(1, 1);
-		if (self::conf('birthday', 'birthday.isRequired')) $rules[] = 'required';
+		list($month, $day) = (!empty($this->member_obj->birthdate)) ? Util_Date::sprit_date_str($this->member_obj->birthdate) : array(1, 1);
+		if (self::conf('birthdate', 'birthdate.isRequired')) $rules[] = 'required';
 
 		$options = Form_Util::get_int_options(1, 12);
 		$rules = array(
@@ -275,7 +278,7 @@ class Form_MemberProfile
 			array('in_array', array_keys($options)),
 		);
 		$this->validation->add(
-			'member_birthday_month',
+			'member_birthdate_month',
 			'誕生日(月)',
 			array('type' => 'select', 'options' => $options, 'value' => $month),
 			$rules
@@ -287,7 +290,7 @@ class Form_MemberProfile
 			array('in_array', array_keys($options)),
 		);
 		$this->validation->add(
-			'member_birthday_day',
+			'member_birthdate_day',
 			'誕生日(日)',
 			array('type' => 'select', 'options' => $options, 'value' => $month),
 			$rules
@@ -433,25 +436,29 @@ class Form_MemberProfile
 	public function validate_birthday()
 	{
 		if (!$this->check_is_enabled_member_field('birthyear')) return;
-		if (!$this->check_is_enabled_member_field('birthday')) return;
+		if (!$this->check_is_enabled_member_field('birthdate')) return;
 		if (!$this->validated_values['member_birthyear']) return;
-		if (!$this->validated_values['member_birthday_month']) return;
-		if (!$this->validated_values['member_birthday_day']) return;
+		if (!$this->validated_values['member_birthdate_month']) return;
+		if (!$this->validated_values['member_birthdate_day']) return;
 
-		if (!checkdate($this->validated_values['member_birthday_month'], $this->validated_values['member_birthday_day'], $this->validated_values['member_birthyear']))
+		if (!checkdate(
+			$this->validated_values['member_birthdate_month'],
+			$this->validated_values['member_birthdate_day'],
+			$this->validated_values['member_birthyear']
+		))
 		{
-			throw new \FuelException(term('member.birthyear_birthday').'の日付が正しくありません。');
+			throw new \FuelException(term('member.birthday').'の日付が正しくありません。');
 		}
 
 		$birthday_datatime = sprintf(
 			'%04d-%02d-%02d 00:00:00',
 			$this->validated_values['member_birthyear'],
-			$this->validated_values['member_birthday_month'],
-			$this->validated_values['member_birthday_day']
+			$this->validated_values['member_birthdate_month'],
+			$this->validated_values['member_birthdate_day']
 		);
 		if (!Validation::_validation_datetime_is_past($birthday_datatime))
 		{
-			throw new \FuelException(term('member.birthyear_birthday').'に未来の日付は登録できません。');
+			throw new \FuelException(term('member.birthday').'に未来の日付は登録できません。');
 		}
 	}
 
@@ -493,7 +500,7 @@ class Form_MemberProfile
 	{
 		$this->set_member_public_flag('sex');
 		$this->set_member_public_flag('birthyear');
-		$this->set_member_public_flag('birthday');
+		$this->set_member_public_flag('birthdate');
 		$this->set_member_profile_public_flag();
 	}
 
@@ -540,7 +547,7 @@ class Form_MemberProfile
 	private static function check_is_birthday_item($name)
 	{
 		if ($name == 'birthyear') return true;
-		if ($name == 'birthday')  return true;
+		if ($name == 'birthdate')  return true;
 
 		return false;
 	}

@@ -28,17 +28,17 @@ if (conf('profile.birthday.birthyear.publicFlag.isEdit'))
 	<?php echo form_select($val, 'member_birthyear', 0, 7, $label_size, false, false, null, $optional_public_flag); ?>
 <?php endif; ?>
 
-<?php if ($val->fieldset()->field('member_birthday_month') && $val->fieldset()->field('member_birthday_month')): ?>
+<?php if ($val->fieldset()->field('member_birthdate_month') && $val->fieldset()->field('member_birthdate_month')): ?>
 <?php
 $optional_public_flag = array();
-if (conf('profile.birthday.birthday.publicFlag.isEdit'))
+if (conf('profile.birthday.birthdate.publicFlag.isEdit'))
 {
-	$value = conf('profile.birthday.birthday.publicFlag.default', null, conf('public_flag.default'));
-	if (isset($member_public_flags['birthday'])) $value = $member_public_flags['birthday'];
-	$optional_public_flag = array('name' => 'member_public_flag[birthday]', 'value' => $value);
+	$value = conf('profile.birthday.birthdate.publicFlag.default', null, conf('public_flag.default'));
+	if (isset($member_public_flags['birthdate'])) $value = $member_public_flags['birthdate'];
+	$optional_public_flag = array('name' => 'member_public_flag[birthdate]', 'value' => $value);
 }
 ?>
-	<?php echo form_date($val, term('member.birthday'), 'member_birthday_month', 'member_birthday_day', $label_size, null, $optional_public_flag); ?>
+	<?php echo form_date($val, term('member.birthdate'), 'member_birthdate_month', 'member_birthdate_day', $label_size, null, $optional_public_flag); ?>
 <?php endif; ?>
 
 <?php foreach ($profiles as $profile): ?>

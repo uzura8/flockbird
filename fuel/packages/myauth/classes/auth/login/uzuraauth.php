@@ -255,7 +255,7 @@ class Auth_Login_Uzuraauth extends Auth_Login_Driver
 			$member->filesize_total = 0;
 			$member->sex_public_flag = 0;
 			$member->birthyear_public_flag = 0;
-			$member->birthday_public_flag = 0;
+			$member->birthdate_public_flag = 0;
 			$member->invite_member_id = 0;
 			$result = $member->save();
 

@@ -29,11 +29,11 @@ class Site_Oauth
 		return array($birthyear, $birthyear_public_flag);
 	}
 
-	public static function get_birthday($response, $provider)
+	public static function get_birthdate($response, $provider)
 	{
-		$birthday = null;
-		$birthday_public_flag = FBD_PUBLIC_FLAG_PRIVATE;
+		$birthdate = null;
+		$birthdate_public_flag = FBD_PUBLIC_FLAG_PRIVATE;
 
-		return array($birthday, $birthday_public_flag);
+		return array($birthdate, $birthdate_public_flag);
 	}
 }

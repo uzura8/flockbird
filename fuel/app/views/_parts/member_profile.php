@@ -147,18 +147,18 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 					<?php if (conf('profile.birthday.birthyear.viewType')): ?><?php echo term('member.age'); ?><?php else: ?><?php echo term('member.birthyear'); ?><?php endif; ?>
 				</label></div>
 				<div class="col-xs-8">
-					<?php if (conf('profile.birthday.birthyear.viewType')): ?><?php echo Util_Date::calc_age($member->birthyear, check_public_flag($member->birthday_public_flag, $access_from) ? $member->birthday : null); ?>歳<?php else: ?><?php echo $member->birthyear; ?>年<?php endif; ?>
+					<?php if (conf('profile.birthday.birthyear.viewType')): ?><?php echo Util_Date::calc_age($member->birthyear, check_public_flag($member->birthdate_public_flag, $access_from) ? $member->birthdate : null); ?>歳<?php else: ?><?php echo $member->birthyear; ?>年<?php endif; ?>
 				</div>
 			</div>
 <?php endif; ?>
 <?php if (!$is_simple_list
 				&& !empty($member_profiles)
-				&& $member->birthday
-				&& check_display_type(conf('profile.birthday.birthday.displayType'), $display_type)
-				&& check_public_flag($member->birthday_public_flag, $access_from)): ?>
+				&& $member->birthdate
+				&& check_display_type(conf('profile.birthday.birthdate.displayType'), $display_type)
+				&& check_public_flag($member->birthdate_public_flag, $access_from)): ?>
 			<div class="row">
-				<div class="col-xs-4 u-alr"><label><?php echo term('member.birthday'); ?></label></div>
-				<div class="col-xs-8"><?php echo Util_Date::conv_date_format($member->birthday, '%d月%d日'); ?></div>
+				<div class="col-xs-4 u-alr"><label><?php echo term('member.birthdate'); ?></label></div>
+				<div class="col-xs-8"><?php echo Util_Date::conv_date_format($member->birthdate, '%d月%d日'); ?></div>
 			</div>
 <?php endif; ?>
 <?php if (!empty($member_profiles)): ?>

@@ -10,8 +10,8 @@ CREATE TABLE `member` (
   `sex_public_flag` tinyint(2) NOT NULL DEFAULT 0,
   `birthyear` int(4) DEFAULT NULL,
   `birthyear_public_flag` tinyint(2) NOT NULL DEFAULT 0,
-  `birthday` varchar(5) DEFAULT NULL,
-  `birthday_public_flag` tinyint(2) NOT NULL DEFAULT 0,
+  `birthdate` varchar(5) DEFAULT NULL,
+  `birthdate_public_flag` tinyint(2) NOT NULL DEFAULT 0,
   `login_hash` varchar(255) DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
   `previous_login` datetime DEFAULT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE `member` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `birthday_id` (`birthday`,`id`),
+  KEY `birthdate_id` (`birthdate`,`id`),
   UNIQUE KEY `name_UNIQUE_idx` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

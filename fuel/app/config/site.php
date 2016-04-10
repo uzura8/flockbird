@@ -501,7 +501,7 @@ $config = array(
 					'default' => 1,
 				),
 			),
-			'birthday' => array(
+			'birthdate' => array(
 				'displayType' => 0,
 				'isRequired' => 0,
 				'publicFlag' => array(
