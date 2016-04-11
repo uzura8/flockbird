@@ -112,7 +112,7 @@ class Model_MessageRecieved extends \MyOrm\Model
 	public static function update_is_read4member_ids_and_message_ids($member_ids, $message_ids)
 	{
 		if (!$unread_conds = self::get_unread_condition($member_ids, $message_ids)) return false;
-		if (!$objs = self::get_all(null, null, null, $unread_conds)) return false;
+		if (!$objs = self::get_all(null, $unread_conds)) return false;
 
 		foreach ($objs as $id => $obj)
 		{

@@ -340,6 +340,25 @@ class Site_Util
 		return false;
 	}
 
+	public static function get_public_flag_min_range($public_flags)
+	{
+		if (!is_array($public_flags)) return $public_flags;
+
+		foreach ($public_flags as $public_flag)
+		{
+			if (!isset($public_flag_min))
+			{
+				$public_flag_min = $public_flag;
+				continue;
+			}
+			if (self::check_is_expanded_public_flag_range($public_flag_min, $public_flag)) continue;
+
+			$public_flag_min = $public_flag;
+		}
+
+		return $public_flag_min;
+	}
+
 	public static function check_is_reduced_public_flag_range($original_public_flag, $changed_public_flag)
 	{
 		if ($original_public_flag == $changed_public_flag) return false;

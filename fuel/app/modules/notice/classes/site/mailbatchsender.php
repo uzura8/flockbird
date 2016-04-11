@@ -11,10 +11,11 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 	protected function get_queues()
 	{
 		$queues = \Notice\Model_NoticeMailQueue::get_all(
-			array('id' => 'ASC',),
 			array('member'),
-			$this->options['queues_limit'],
 			array('status' => $this->get_status_value('unexecuted')),
+			array('id' => 'ASC',),
+			$this->options['queues_limit'],
+			0,
 			array('notice_status_id' => true, 'member_id' => true, 'status' => true),
 			$this->max_count ? false : true
 		);

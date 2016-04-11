@@ -16,4 +16,9 @@ return array(
 			'normal' => 0,
 		),
 	),
+	'profile' => array(
+		'useCacheTable' => array(
+			'isEnabled' => true,
+		),
+	),
 );

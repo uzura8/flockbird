@@ -72,7 +72,8 @@ class Model_GroupMember extends \MyOrm\Model
 	public static function get_members($group_id)
 	{
 		$members = array();
-		if (!$objs = self::get_all('id', array('member'), 0, array('group_id' => $group_id))) return $members;
+		if (!$objs = self::get_all(array('member'), array('group_id' => $group_id), 'id')) return $members;
+
 		foreach ($objs as $obj)
 		{
 			$members[$obj->member_id] = $obj->member;
