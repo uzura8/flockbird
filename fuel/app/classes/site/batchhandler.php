@@ -32,6 +32,7 @@ abstract class Site_BatchHandler
 		$this->check_required_options();
 		$this->update_running_flag(true);
 		$this->output_start_message();
+		$this->execute_pre();
 		while ($this->loop_count < $this->options['loop_max'])
 		{
 			if (!$queues = $this->get_queues()) break;
@@ -58,6 +59,7 @@ abstract class Site_BatchHandler
 			\Cli::wait($this->options['sleep_time'], true);
 		}
 		unset($queues);
+		$this->execute_post();
 		$this->output_end_message();
 		$this->update_running_flag(false);
 
@@ -72,6 +74,8 @@ abstract class Site_BatchHandler
 	abstract protected function get_queues();
 	abstract protected function execute_each();
 	abstract protected function get_result();
+	abstract protected function execute_pre();
+	abstract protected function execute_post();
 
 	protected static function get_required_options()
 	{

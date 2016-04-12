@@ -19,6 +19,12 @@ class Site_SetupMemberProfileCache extends Site_BatchHandler
 		$this->status_flags = conf('default.statusFlags', 'task');
 	}
 
+	protected function execute_pre()
+	{
+		if (!$profiles = \Model_Profile::get_all()) return;
+		self::reset_profile_colmuns($profiles);
+	}
+
 	protected function get_queues()
 	{
 		$queues = \Model_Member::get_all(
@@ -71,10 +77,13 @@ class Site_SetupMemberProfileCache extends Site_BatchHandler
 	protected function set_cache_values($member, $member_profiles)
 	{
 		$this->set_cache_values_member($member);
-		$this->set_cache_values_member_profiles($member_profiles);
+		foreach ($member_profiles as $member_profile)
+		{
+			$this->set_cache_values_member_profile($member_profile);
+		}
 	}
 
-	protected function set_cache_values_member($member)
+	protected function set_cache_values_member(Model_Member $member)
 	{
 		$cols = $this->get_member_table_columns();
 		foreach ($cols as $name)
@@ -123,8 +132,24 @@ class Site_SetupMemberProfileCache extends Site_BatchHandler
 		}
 	}
 
-	protected function set_cache_values_member_profiles($member_profiles)
+	protected function set_cache_values_member_profile(Model_MemberProfile $member_profile)
 	{
+		switch ($member_profile->profile->form_type)
+		{
+			case 'select':
+			case 'radio':
+				$value = $member_profile->profile_option_id;
+				break;
+			case 'input':
+			case 'textarea':
+				$value = $member_profile->value;
+				break;
+			default :
+				return;
+		}
+		$col_name = $member_profile->profile->name;
+		$this->cache_values[$col_name] = $value;
+		$this->cache_values[$col_name.'_public_flag'] = $member_profile->public_flag;
 	}
 
 	protected function save_cache_values()
@@ -177,6 +202,69 @@ class Site_SetupMemberProfileCache extends Site_BatchHandler
 		return array_keys($columns);
 	}
 
+	protected static function reset_profile_colmuns($profiles)
+	{
+		$exist_columns = \DB::list_columns('member_profile_cache');
+		$add_columns = array();
+		foreach ($profiles as $id => $profile)
+		{
+			$columns_name_public_flag = $profile->name.'_public_flag';
+			if (isset($exist_columns[$profile->name]))
+			{
+				// TODO: 存在していても変更のあるカラムはskipしない
+				unset($exist_columns[$profile->name], $exist_columns[$columns_name_public_flag]);
+				continue;
+			}
+
+			// 複数選択項目は対象外
+			if ($profile->form_type == 'checkbox') continue;
+
+			$add_columns[$profile->name] = self::get_field_setting4profile($profile);
+			$add_columns[$columns_name_public_flag] = self::get_public_flag_field_setting();
+		}
+		\DBUtil::add_fields('member_profile_cache', $add_columns);
+
+		// removed not exists columns
+		$default_columns = array_merge(self::get_member_table_columns(), array(
+			'member_id',
+			'birthday',
+			'birthday_public_flag',
+			'updated_at',
+		));
+		foreach ($default_columns as $column)
+		{
+			unset($exist_columns[$column]);
+		}
+		\DBUtil::drop_fields('member_profile_cache', array_keys($exist_columns));
+	}
+
+	protected static function get_field_setting4profile(\Model_Profile $profile)
+	{
+		$null = true;
+		switch ($profile->form_type)
+		{
+			case 'select':
+			case 'radio':
+				$type = 'int';
+				$constraint = 3;// 仮に3桁とする
+				return array('constraint' => $constraint, 'type' => $type, 'null' => $null);
+			case 'input':
+			case 'textarea':
+				if ($profile->value_max)
+				{
+					$type = 'varchar';
+					$constraint = $profile->value_max;
+					return array('constraint' => $constraint, 'type' => $type, 'null' => $null);
+				}
+				return array('type' => 'text', 'null' => $null);
+		}
+	}
+
+	protected static function get_public_flag_field_setting()
+	{
+		return array('constraint' => 2, 'type' => 'int', 'null' => false, 'default' => 0);
+	}
+
 	protected function get_status_value($key)
 	{
 		if (!isset($this->status_flags[$key])) throw new InvalidArgumentException('Parameter is invalid.');
@@ -202,6 +290,6 @@ class Site_SetupMemberProfileCache extends Site_BatchHandler
 		return $this->save_count;
 	}
 
-	//abstract protected function set_mail_data();
+	protected function execute_post() {}
 }
 

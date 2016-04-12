@@ -86,5 +86,8 @@ abstract class Site_MailBatchSender extends Site_BatchHandler
 	}
 
 	abstract protected function set_mail_data();
+
+	protected function execute_pre() {}
+	protected function execute_post() {}
 }
 
