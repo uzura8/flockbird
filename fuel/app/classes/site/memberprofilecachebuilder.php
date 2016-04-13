@@ -28,7 +28,7 @@ class Site_MemberProfileCacheBuilder
 		$this->configure_before_save($member_id);
 
 		$this->set_save_values_for_member();
-		if (!$this->values = $this->get_save_values()) return 0;
+		if (!$this->save_values) return 0;
 
 		return $this->current_obj ? self::update($this->member->id, $this->save_values) : self::create($this->save_values);
 	}
@@ -42,7 +42,7 @@ class Site_MemberProfileCacheBuilder
 		{
 			$this->set_save_values_for_member_profile($member_profile);
 		}
-		if (!$this->values = $this->get_save_values()) return 0;
+		if (!$this->save_values) return 0;
 
 		return $this->current_obj ? self::update($this->member->id, $this->save_values) : self::create($this->save_values);
 	}
@@ -183,7 +183,7 @@ class Site_MemberProfileCacheBuilder
 				->execute();
 	}
 
-	public static function reset_profile_colmuns()
+	public static function reset_profile_fields()
 	{
 		if (!$profiles = \Model_Profile::get_all()) return;
 
@@ -191,21 +191,47 @@ class Site_MemberProfileCacheBuilder
 		$add_columns = array();
 		foreach ($profiles as $id => $profile)
 		{
-			$columns_name_public_flag = $profile->name.'_public_flag';
-			if (isset($exist_columns[$profile->name]))
-			{
-				// TODO: 存在していても変更のあるカラムはskipしない
-				unset($exist_columns[$profile->name], $exist_columns[$columns_name_public_flag]);
-				continue;
-			}
-
+			if (isset($exist_columns[$profile->name])) continue;
 			// 複数選択項目は対象外
 			if ($profile->form_type == 'checkbox') continue;
 
+			$columns_name_public_flag = $profile->name.'_public_flag';
 			$add_columns[$profile->name] = self::get_field_setting4profile($profile);
 			$add_columns[$columns_name_public_flag] = self::get_public_flag_field_setting();
 		}
 		\DBUtil::add_fields('member_profile_cache', $add_columns);
+
+		self::drop_not_exists_fields4profile($profiles);
+	}
+
+	protected static function drop_not_exists_fields4profile($profiles = array())
+	{
+		if (!$profiles) $profiles = \Model_Profile::get_all();
+		if (!$profiles) return;
+		if (!$not_exists_fields = self::get_not_exists_fields4profile($profiles)) return;
+
+		\DBUtil::drop_fields('member_profile_cache', $not_exists_fields);
+	}
+
+	protected static function get_not_exists_fields4profile($profiles = array())
+	{
+		if (!$profiles) $profiles = \Model_Profile::get_all();
+		if (!$profiles) return;
+
+		$exist_columns = \DB::list_columns('member_profile_cache');
+		foreach ($profiles as $id => $profile)
+		{
+			if (isset($exist_columns[$profile->name]))
+			{
+				unset($exist_columns[$profile->name]);
+			}
+
+			$name_public_flag = $profile->name.'_public_flag';
+			if (isset($exist_columns[$name_public_flag]))
+			{
+				unset($exist_columns[$name_public_flag]);
+			}
+		}
 
 		// removed not exists columns
 		$default_columns = array_merge(self::get_member_table_columns_for_save(), array(
@@ -218,7 +244,42 @@ class Site_MemberProfileCacheBuilder
 		{
 			unset($exist_columns[$column]);
 		}
-		\DBUtil::drop_fields('member_profile_cache', array_keys($exist_columns));
+
+		return array_keys($exist_columns);
+	}
+
+	public static function drop_profile_field($profile_field_name)
+	{
+		$name_public_flag = $profile_field_name.'_public_flag';
+		if (!\DBUtil::field_exists('member_profile_cache', array($profile_field_name, $name_public_flag))) return;
+
+		\DBUtil::drop_fields('member_profile_cache', $profile_field_name);
+		\DBUtil::drop_fields('member_profile_cache', $name_public_flag);
+	}
+
+	public static function modify_profile_field(\Model_Profile $profile)
+	{
+		if ($profile->form_type == 'checkbox')
+		{
+			self::drop_not_exists_fields4profile($profiles);
+			return;
+		}
+
+		$name = $profile->name;
+		$name_public_flag = $name.'_public_flag';
+		$fields = array(
+			$name => self::get_field_setting4profile($profile),
+			$name_public_flag => self::get_public_flag_field_setting(),
+		);
+		if (\DBUtil::field_exists('member_profile_cache', array($name)))
+		{
+			\DBUtil::modify_fields('member_profile_cache', $fields);
+		}
+		else
+		{
+			\DBUtil::add_fields('member_profile_cache', $fields);
+			self::drop_not_exists_fields4profile($profiles);
+		}
 	}
 
 	protected static function get_member_table_columns_for_save()

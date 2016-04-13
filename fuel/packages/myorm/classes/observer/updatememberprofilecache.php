@@ -24,5 +24,5 @@ class Observer_UpdateMemberProfileCache extends \Orm\Observer
 		$record_builder->$method($member_id);
 	}
 }
-// End of file updatememberprofilecacheformember.php
+// End of file updatememberprofilecache.php
 

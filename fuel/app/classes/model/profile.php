@@ -169,6 +169,14 @@ class Model_Profile extends \MyOrm\Model
 			}
 			self::set_properties_options($option_key, $method);
 		}
+
+		if (conf('profile.useCacheTable.isEnabled', 'member'))
+		{
+			// update 時に紐づく member_profile_cache を更新する
+			static::$_observers['MyOrm\Observer_UpdateProfile'] = array(
+				'events' => array('before_update', 'before_delete'),
+			);
+		}
 	}
 
 	private static function set_properties_options($property, $get_options_method)

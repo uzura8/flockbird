@@ -21,7 +21,7 @@ class Site_SetupMemberProfileCache extends Site_BatchHandler
 
 	protected function execute_pre()
 	{
-		\Site_MemberProfileCacheBuilder::reset_profile_colmuns();
+		\Site_MemberProfileCacheBuilder::reset_profile_fields();
 	}
 
 	protected function get_queues()

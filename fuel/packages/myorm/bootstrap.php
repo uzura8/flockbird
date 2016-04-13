@@ -25,6 +25,7 @@ Autoloader::add_classes(array(
 	'MyOrm\\Observer_SubtractMemberFilesizeTotal' => __DIR__.'/classes/observer/subtractmemberfilesizetotal.php',
 	'MyOrm\\Observer_DeleteMember' => __DIR__.'/classes/observer/deletemember.php',
 	'MyOrm\\Observer_UpdateMemberProfileCache' => __DIR__.'/classes/observer/updatememberprofilecache.php',
+	'MyOrm\\Observer_UpdateProfile' => __DIR__.'/classes/observer/updateprofile.php',
 	'MyOrm\\Observer_DeleteAlbum' => __DIR__.'/classes/observer/deletealbum.php',
 	'MyOrm\\Observer_DeleteAlbumImage' => __DIR__.'/classes/observer/deletealbumimage.php',
 	'MyOrm\\Observer_SaveAlbumImageLocation' => __DIR__.'/classes/observer/savealbumimagelocation.php',
