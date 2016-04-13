@@ -149,6 +149,14 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['birthdate_public_flag']['validation']['in_array'][] = $options_public_flag;
 
 		static::$_properties['invite_member_id'] = Util_Orm::get_relational_numeric_key_prop(false);
+
+		if (conf('profile.useCacheTable.isEnabled', 'member'))
+		{
+			// update 時に紐づく member_profile_cache を更新する
+			static::$_observers['MyOrm\Observer_UpdateMemberProfileCache'] = array(
+				'events' => array('after_update'),
+			);
+		}
 	}
 
 	public static function get_one4name($name)

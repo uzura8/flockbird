@@ -57,6 +57,14 @@ class Model_MemberProfile extends \MyOrm\Model
 		static::$_properties['profile_id'] = Util_Orm::get_relational_numeric_key_prop();
 		static::$_properties['profile_option_id'] = Util_Orm::get_relational_numeric_key_prop(false);
 		static::$_properties['public_flag']['validation']['in_array'][] = Site_Util::get_public_flags();
+
+		if (conf('profile.useCacheTable.isEnabled', 'member'))
+		{
+			// update 時に紐づく member_profile_cache を更新する
+			static::$_observers['MyOrm\Observer_UpdateMemberProfileCache'] = array(
+				'events' => array('after_update'),
+			);
+		}
 	}
 
 	public static function get4member_id($member_id, $with_relations = false, $profile_display_type_str = null)

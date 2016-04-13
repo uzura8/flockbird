@@ -17,19 +17,49 @@ class Site_MemberProfileCacheBuilder
 
 	public function save($member_id = null)
 	{
-		if ($member_id) $this->member = Model_Member::get_one4id($member_id);
-		if (!$this->member) throw new \FuelException('Memeber object not set.');
+		$this->configure_before_save($member_id);
 		if (!$values = $this->get_save_values()) return 0;
 
 		return $this->current_obj ? self::update($this->member->id, $values) : self::create($values);
 	}
 
+	public function save_for_member($member_id = null)
+	{
+		$this->configure_before_save($member_id);
+
+		$this->set_save_values_for_member();
+		if (!$this->values = $this->get_save_values()) return 0;
+
+		return $this->current_obj ? self::update($this->member->id, $this->save_values) : self::create($this->save_values);
+	}
+
+	public function save_for_member_profile($member_id = null)
+	{
+		$this->configure_before_save($member_id);
+
+		$member_profiles = \Model_MemberProfile::get4member_id($this->member->id, true);
+		foreach ($member_profiles as $member_profile)
+		{
+			$this->set_save_values_for_member_profile($member_profile);
+		}
+		if (!$this->values = $this->get_save_values()) return 0;
+
+		return $this->current_obj ? self::update($this->member->id, $this->save_values) : self::create($this->save_values);
+	}
+
+	protected function configure_before_save($member_id = null)
+	{
+		if ($member_id) $this->member = Model_Member::get_one4id($member_id);
+		if (!$this->member) throw new \FuelException('Memeber object not set.');
+		$this->current_obj = self::get_obj4member_id($this->member->id);
+	}
+
 	protected function get_save_values()
 	{
 		$this->save_values = array();
-		$this->current_obj = self::get_obj4member_id($this->member->id);
 
 		$this->set_save_values_for_member();
+
 		$member_profiles = \Model_MemberProfile::get4member_id($this->member->id, true);
 		foreach ($member_profiles as $member_profile)
 		{
