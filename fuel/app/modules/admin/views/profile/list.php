@@ -142,7 +142,7 @@
 <tr class="jqui-sortable-item" id="<?php echo $profile->id; ?>">
 	<td><i class="glyphicon glyphicon-sort jqui-sortable-handle"></i></td>
 	<td><?php echo btn('form.edit', 'admin/profile/edit/'.$profile->id, '', false, 'xs'); ?></td>
-	<td><?php echo btn('form.delete', '#', 'js-simplePost', false, 'xs', 'default', array('data-id' => $profile->id)); ?></td>
+	<td><?php echo btn('form.delete', '#', 'js-simplePost', false, 'xs', 'default', array('data-uri' => 'admin/profile/delete/'.$profile->id)); ?></td>
 	<td><?php echo $profile->id; ?></td>
 	<td><?php echo $profile->caption; ?></td>
 	<td><?php echo $profile->name; ?></td>
