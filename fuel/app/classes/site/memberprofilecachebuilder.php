@@ -248,6 +248,33 @@ class Site_MemberProfileCacheBuilder
 		return array_keys($exist_columns);
 	}
 
+	public static function add_profile_field(\Model_Profile $profile)
+	{
+		if ($profile->form_type == 'checkbox') return;
+
+		\DBUtil::add_fields('member_profile_cache', self::get_save_fields($profile));
+	}
+
+	public static function modify_profile_field(\Model_Profile $profile)
+	{
+		if ($profile->form_type == 'checkbox')
+		{
+			self::drop_profile_field($profile->name);
+			return;
+		}
+
+		$fields = self::get_save_fields($profile);
+		if (\DBUtil::field_exists('member_profile_cache', array($profile->name)))
+		{
+			\DBUtil::modify_fields('member_profile_cache', $fields);
+		}
+		else
+		{
+			\DBUtil::add_fields('member_profile_cache', $fields);
+			self::drop_not_exists_fields4profile();
+		}
+	}
+
 	public static function drop_profile_field($profile_field_name)
 	{
 		$name_public_flag = $profile_field_name.'_public_flag';
@@ -257,29 +284,16 @@ class Site_MemberProfileCacheBuilder
 		\DBUtil::drop_fields('member_profile_cache', $name_public_flag);
 	}
 
-	public static function modify_profile_field(\Model_Profile $profile)
+	protected static function get_save_fields(\Model_Profile $profile)
 	{
-		if ($profile->form_type == 'checkbox')
-		{
-			self::drop_not_exists_fields4profile($profiles);
-			return;
-		}
-
 		$name = $profile->name;
 		$name_public_flag = $name.'_public_flag';
 		$fields = array(
 			$name => self::get_field_setting4profile($profile),
 			$name_public_flag => self::get_public_flag_field_setting(),
 		);
-		if (\DBUtil::field_exists('member_profile_cache', array($name)))
-		{
-			\DBUtil::modify_fields('member_profile_cache', $fields);
-		}
-		else
-		{
-			\DBUtil::add_fields('member_profile_cache', $fields);
-			self::drop_not_exists_fields4profile($profiles);
-		}
+
+		return $fields;
 	}
 
 	protected static function get_member_table_columns_for_save()

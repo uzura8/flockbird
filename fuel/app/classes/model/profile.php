@@ -174,7 +174,7 @@ class Model_Profile extends \MyOrm\Model
 		{
 			// update 時に紐づく member_profile_cache を更新する
 			static::$_observers['MyOrm\Observer_UpdateProfile'] = array(
-				'events' => array('before_update', 'before_delete'),
+				'events' => array('after_insert', 'before_update', 'before_delete'),
 			);
 		}
 	}
