@@ -569,7 +569,7 @@ CREATE TABLE `profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
   `name` varchar(32) NOT NULL DEFAULT '' COMMENT 'Identified profile name (ASCII)',
   `caption` text NOT NULL,
-  `display_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: display at detail, 2:display at summary, 3:always',
+  `display_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: display at detail, 1:display at summary, 2:always',
   `information` text NULL,
   `placeholder` text NULL,
   `is_required` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'This is a required',

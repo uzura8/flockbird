@@ -21,11 +21,16 @@ class SetupMemberProfileCache
 		$result   = null;
 		$message  = '';
 
-		$batch_handler = new \Site_SetupMemberProfileCache(array(
-			'task_name' => $task_name,
-		));
 		try
 		{
+			if (!conf('profile.useCacheTable.isEnabled', 'member'))
+			{
+				throw new \FuelException('Not use member_profile_cache table');
+			}
+
+			$batch_handler = new \Site_SetupMemberProfileCache(array(
+				'task_name' => $task_name,
+			));
 			$save_count = $batch_handler->execute();
 			$result = true;
 			$message = $save_count ? sprintf('member_profile_cache %d saved', $save_count) : 'queues is empty';

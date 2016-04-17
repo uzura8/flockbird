@@ -473,13 +473,13 @@ $config = array(
 	'profile' => array(
 		'name' => array(
 			'isDispConfig' => 1,
-			'isDispSearch' => 0,
+			'isDispSearch' => 1,
 		),
 		'sex' => array(
 			'isEnable' => 1,
 			'isDispRegist' => 1,
 			'isDispConfig' => 1,
-			'isDispSearch' => 0,
+			'isDispSearch' => 1,
 			'displayType' => 0,
 			'isRequired' => 0,
 			'publicFlag' => array(
