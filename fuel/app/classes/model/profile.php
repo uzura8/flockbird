@@ -195,7 +195,7 @@ class Model_Profile extends \MyOrm\Model
 
 		$query = self::query()->order_by('sort_order');
 
-		if ($page_type = 'regist-config')
+		if ($page_type == 'regist-config')
 		{
 			$query->where('is_disp_regist', 1);
 			$query->or_where('is_disp_config', 1);
