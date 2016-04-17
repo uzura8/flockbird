@@ -154,7 +154,7 @@ class Model_Member extends \MyOrm\Model
 		{
 			// update 時に紐づく member_profile_cache を更新する
 			static::$_observers['MyOrm\Observer_UpdateMemberProfileCache'] = array(
-				'events' => array('after_update'),
+				'events' => array('after_save'),
 			);
 		}
 	}
