@@ -36,7 +36,7 @@
 	'public_flag_view_icon_only' => true,
 	'public_flag_disabled_to_update' => \Album\Site_Util::check_album_disabled_to_update($album_image->album->foreign_table),
 	'model'       => 'album_image',
-	'date'        => array('datetime' => $album_image->album->created_at)
+	'date'        => array('datetime' => $album_image->created_at)
 )); ?>
 <?php endif; ?>
 <?php endif; ?>
