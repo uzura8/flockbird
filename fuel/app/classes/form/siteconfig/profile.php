@@ -118,7 +118,7 @@ class Form_SiteConfig_Profile extends Form_SiteConfig
 
 		$name = self::get_name($name_prefix, 'isDispSearch');
 		$value = self::get_values($name, 1);
-		$val->add($name, 'メンバー検索', array('type' => 'radio', 'options' => $options_is_disp, 'value' => $value))
+		$val->add($name, 'メンバー検索', array('type' => 'radio', 'options' => array('0' => '表示しない'), 'value' => $value))
 				->add_rule('valid_string', 'numeric', 'required')
 				->add_rule('in_array', array_keys($options_is_disp));
 
