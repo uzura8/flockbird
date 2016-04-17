@@ -28,11 +28,14 @@ if ($optional_public_flag) $col_sm_size = 8;
 <?php if ($options): ?>
 <?php $i = 0; ?>
 <?php foreach ($options as $value => $label): ?>
-<?php $atter['id'] = sprintf('form_%s_%s', $name, $value); ?>
+<?php
+$atter['id'] = sprintf('form_%s_%s', $name, $value);
+if (!isset($input_value) || is_null($input_value)) $input_value = Input::post($name, $default_value);
+?>
 <?php if ($layout_type == 'block'): ?>
 				<div class="radio">
 					<label>
-						<?php echo Form::radio($name,$value, Input::post($name, $default_value) == $value, $atter); ?>
+						<?php echo Form::radio($name, $value, Input::post($name, $default_value) == $value, $atter); ?>
 						<?php echo $label; ?>
 					</label>
 				</div>
@@ -43,7 +46,7 @@ if ($optional_public_flag) $col_sm_size = 8;
 					<div class="col-sm-4">
 						<div class="radio">
 							<label>
-								<?php echo Form::radio($name,$value, Input::post($name, $default_value) == $value, $atter); ?>
+								<?php echo Form::radio($name,$value, $input_value == $value, $atter); ?>
 								<?php echo $label; ?>
 							</label>
 						</div>

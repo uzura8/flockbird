@@ -92,7 +92,7 @@ class Site_Model
 		return array($related_table, $related_prop);
 	}
 
-	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_mypage = false, $where = array(), $member_id_colmn = null)
+	public static function get_where_params4list($target_member_id = 0, $self_member_id = 0, $is_mypage = false, $where = array(), $member_id_colmn = null, $public_flag_colmn = 'public_flag')
 	{
 		if ($target_member_id) $where[] = array($member_id_colmn ?: 'member_id', $target_member_id);
 
@@ -100,12 +100,12 @@ class Site_Model
 		{
 			if (($target_member_id && $target_member_id != $self_member_id) || !$is_mypage)
 			{
-				$where[] = array('public_flag', 'IN', array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER));
+				$where[] = array($public_flag_colmn, 'IN', array(FBD_PUBLIC_FLAG_ALL, FBD_PUBLIC_FLAG_MEMBER));
 			}
 		}
 		else
 		{
-			$where[] = array('public_flag', FBD_PUBLIC_FLAG_ALL);
+			$where[] = array($public_flag_colmn, FBD_PUBLIC_FLAG_ALL);
 		}
 
 		return $where;
@@ -269,7 +269,7 @@ class Site_Model
 
 	public static function get_search_word_conds($search_word_string, $prop, $is_forward_match_only = false, $is_strict_search = true, $is_return_validated_search_word_string = false)
 	{
-		if (!$search_word_string = trim(preg_replace('/[\s　]+/u', ' ', $search_word_string)))
+		if (!$search_word_string = Util_String::validate_search_word($search_word_string))
 		{
 			return $is_return_validated_search_word_string ? array('', array()) : array();
 		}

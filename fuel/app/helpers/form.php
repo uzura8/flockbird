@@ -1,16 +1,20 @@
 <?php
 
-function form_open($exists_required_fields = false, $is_upload = false, $atter = array(), $hidden = array(), $form_title = '')
+function form_open($exists_required_fields = false, $is_upload = false, $atter = array(), $hidden = array(), $form_title = '', $is_get_method = false)
 {
+	if(!is_array($atter)) $atter = (array)$atter;
+	if(!is_array($hidden)) $hidden = (array)$hidden;
+
+	if (!empty($atter['method']) && $atter['method'] == 'get') $is_get_method = true;
 	$atter_default = array(
 		'class'  => 'form-stacked form-horizontal',
-		'method' => 'post',
+		'method' => $is_get_method ? 'get' : 'post',
 		'id'     => site_get_form_id(),
 	);
 	$atter = array_merge($atter_default, $atter);
 	if ($is_upload) $atter['enctype'] = 'multipart/form-data';
 
-	$hidden_default = array(Config::get('security.csrf_token_key') => Util_security::get_csrf());
+	$hidden_default = $is_get_method ? array() : array(Config::get('security.csrf_token_key') => Util_security::get_csrf());
 	$hidden = array_merge($hidden_default, $hidden);
 
 	return render('_parts/form/open', array(
@@ -26,7 +30,7 @@ function form_close()
 	return render('_parts/form/close');
 }
 
-function form_input(Validation $val, $name, $default_value = null, $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
+function form_input(Validation $val, $name, $default_value = null, $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array(), $input_value = null)
 {
 	list($default_value, $label, $is_required, $input_atter) = Site_Form::get_fieid_attribute($val, $name, $default_value);
 	$data = array(
@@ -40,6 +44,7 @@ function form_input(Validation $val, $name, $default_value = null, $col_sm_size 
 		'label_col_sm_size' => $label_col_sm_size,
 		'help' => $help,
 		'optional_public_flag' => $optional_public_flag,
+		'input_value' => $input_value,
 	);
 
 	return render('_parts/form/input', $data);
@@ -98,7 +103,7 @@ function form_textarea(Validation $val, $name, $default_value = null, $label_col
 	return render('_parts/form/textarea', $data);
 }
 
-function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $is_multiple = false, $is_merge_inputs2options = false, $help = '', $optional_public_flag = array())
+function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $is_multiple = false, $is_merge_inputs2options = false, $help = '', $optional_public_flag = array(), $input_value = null)
 {
 	if (!$label_col_sm_size) $label_col_sm_size = 2;
 	$field = $val->fieldset()->field($name);
@@ -125,12 +130,13 @@ function form_select(Validation $val, $name, $default_value = '', $col_sm_size =
 		'help' => $help,
 		'optional_public_flag' => $optional_public_flag,
 		'is_merge_inputs2options' => $is_merge_inputs2options,
+		'input_value' => $input_value,
 	);
 
 	return render('_parts/form/select', $data);
 }
 
-function form_checkbox(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array(), $is_small_tag = false)
+function form_checkbox(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array(), $is_small_tag = false, $input_values = null)
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array('id' => Site_Form::get_field_id($name));
@@ -151,12 +157,13 @@ function form_checkbox(Validation $val, $name, $default_value = null, $label_col
 		'help' => $help,
 		'optional_public_flag' => $optional_public_flag,
 		'is_small_tag' => $is_small_tag,
+		'input_values' => $input_values,
 	);
 
 	return render('_parts/form/checkbox', $data);
 }
 
-function form_radio(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array())
+function form_radio(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array(), $input_value = null)
 {
 	if (!in_array($layout_type, array('block', 'inline', 'grid'))) throw new InvalidArgumentException('Fifth parameter is invalid.');
 
@@ -178,12 +185,13 @@ function form_radio(Validation $val, $name, $default_value = null, $label_col_sm
 		'layout_type' => $layout_type,
 		'help' => $help,
 		'optional_public_flag' => $optional_public_flag,
+		'input_value' => $input_value,
 	);
 
 	return render('_parts/form/radio', $data);
 }
 
-function form_button($term_key = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2, $label = null, $absolute_icon_key = null)
+function form_button($term_key = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2, $label = null, $absolute_icon_key = null, $is_noname = false)
 {
 	if (!$term_key) $term_key = 'form.do_submit';
 	$button_label = icon_label($term_key, 'both', false, $absolute_icon_key);
@@ -197,7 +205,7 @@ function form_button($term_key = '', $type = 'submit', $name = '', $atter = arra
 	if (!is_array($atter)) $atter = (array)$atter;
 	$atter = array_merge($atter_default, $atter);
 
-	if (!strlen($name)) $name = $type;
+	if (!$is_noname && !strlen($name)) $name = $type;
 
 	$data = array(
 		'name'  => $name,

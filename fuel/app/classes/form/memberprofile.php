@@ -13,7 +13,7 @@ class Form_MemberProfile
 
 	public function __construct($page_type, Model_Member $member_obj = null)
 	{
-		if (!in_array($page_type, array('regist', 'config', 'regist-config'))) throw new InvalidArgumentException('First parameter is invalid.');
+		if (!in_array($page_type, array('regist', 'config', 'regist-config', 'search'))) throw new InvalidArgumentException('First parameter is invalid.');
 		$this->profiles = Model_Profile::get4page_type($page_type);
 		$this->page_type = $page_type == 'regist-config' ? 'regist' : $page_type;
 
@@ -190,6 +190,12 @@ class Form_MemberProfile
 			else
 			{
 				$member_profile = $this->member_profiles_profile_id_indexed[$profile->id];
+				if (in_array($profile->form_type, array('radio', 'select')) && !$profile_option_id = $this->validated_values[$profile->name])
+				{
+					if (!is_null($member_profile)) $member_profile->delete();
+					continue;
+				}
+
 				if (is_null($member_profile)) $member_profile = Model_MemberProfile::forge();
 				$member_profile->member_id = $this->member_obj->id;
 				$member_profile->profile_id = $profile->id;
@@ -204,7 +210,6 @@ class Form_MemberProfile
 
 				if (in_array($profile->form_type, array('radio', 'select')))
 				{
-					$profile_option_id = $this->validated_values[$profile->name];
 					$member_profile->profile_option_id = $profile_option_id;
 					$member_profile->value = $profile_options[$profile_option_id]->label;
 				}
@@ -223,7 +228,7 @@ class Form_MemberProfile
 		$this->validation->set_message($rule, $message);
 	}
 
-	private function check_is_enabled_member_field($name)
+	public function check_is_enabled_member_field($name)
 	{
 		if (self::check_is_birthday_item($name)) $name = 'birthday';
 
@@ -240,10 +245,19 @@ class Form_MemberProfile
 		$properties = Form_Util::get_model_field('member', $name);
 		$attrs = $properties['attributes'];
 		$attrs['value'] = $this->member_obj ? $this->member_obj->$name : '';
-
-		if (self::conf($name, 'isRequired'))
+		if ($this->page_type == 'search')
 		{
-			$properties['rules'][] = 'required';
+			if ($name == 'name') $properties['rules'] = array();
+			if ($name == 'sex') $attrs['options'] = self::add_novalue_option($attrs['options']);
+			if (isset($attrs['required'])) unset($attrs['required']);
+			if (!empty($properties['rules']))
+			{
+				$properties['rules'] = self::remove_rules_for_search($properties['rules']);
+			}
+		}
+		else
+		{
+			if (self::conf($name, 'isRequired')) $properties['rules'][] = 'required';
 		}
 
 		$this->validation->add(
@@ -261,7 +275,7 @@ class Form_MemberProfile
 		$properties = Form_Util::get_model_field('member', 'birthyear');
 		$attrs = $properties['attributes'];
 		$attrs['value'] = isset($this->member_obj->birthyear) ? $this->member_obj->birthyear : date('Y');
-		if (self::conf('birthday', 'birthyear.isRequired')) $properties['rules'][] = 'required';
+		if ($this->page_type != 'search' && self::conf('birthday', 'birthyear.isRequired')) $properties['rules'][] = 'required';
 		$this->validation->add(
 			'member_birthyear',
 			$properties['label'],
@@ -270,7 +284,7 @@ class Form_MemberProfile
 		);
 
 		list($month, $day) = (!empty($this->member_obj->birthdate)) ? Util_Date::sprit_date_str($this->member_obj->birthdate) : array(1, 1);
-		$is_required = self::conf('birthday', 'birthdate.isRequired');
+		$is_required = $this->page_type != 'search' && self::conf('birthday', 'birthdate.isRequired');
 
 		$options = Form_Util::get_int_options(1, 12);
 		$rules = array(
@@ -299,6 +313,77 @@ class Form_MemberProfile
 		);
 	}
 
+	protected function validate_for_search_text($input_name)
+	{
+		return Util_String::validate_search_word(Input::get($input_name));
+	}
+
+	protected function validate_for_search_select($input_name)
+	{
+		$value = Input::get($input_name);
+		if (is_null($value)) return $value;
+
+		$options = $this->validation->fieldset()->field($input_name)->get_options();
+		if (!isset($options[$value])) $value = null;
+
+		return $value;
+	}
+
+	protected function validate_for_search_select_multiple($input_name)
+	{
+		if (!$values = Input::get($input_name)) return array();
+		if (!$options = $this->validation->fieldset()->field($input_name)->get_options()) return;
+		$options = array_keys($options);
+		foreach ($values as $key => $value)
+		{
+			if (!in_array($value, $options)) unset($values[$key]);
+		}
+
+		return $values;
+	}
+
+	public function validate_for_search()
+	{
+		$validateds = array();
+
+		$name = 'name';
+		if ($this->check_is_enabled_member_field($name))
+		{
+			$input_name = 'member_'.$name;
+			$validateds[$input_name] = $this->validate_for_search_text($input_name);
+		}
+
+		$name = 'sex';
+		if ($this->check_is_enabled_member_field($name))
+		{
+			$input_name = 'member_'.$name;
+			$validateds[$input_name] = $this->validate_for_search_select($input_name);
+		}
+
+		foreach ($this->profiles as $profile)
+		{
+			$input_name = $profile->name;
+			switch ($profile->form_type)
+			{
+				case 'input':
+				case 'textarea':
+					$validateds[$input_name] = $this->validate_for_search_text($input_name);
+					break;
+
+				case 'select':
+				case 'radio':
+					$validateds[$input_name] = $this->validate_for_search_select($input_name);
+					break;
+
+				case 'checkbox':
+					$validateds[$input_name] = $this->validate_for_search_select_multiple($input_name);
+					break;
+			}
+		}
+
+		return $validateds;
+	}
+
 	public function set_validation($add_fields = array(), $fieldset = 'default')
 	{
 		$this->validation = \Validation::forge($fieldset);
@@ -313,12 +398,17 @@ class Form_MemberProfile
 		{
 			$member_profile = $this->member_profiles_profile_id_indexed[$profile->id];
 			$rules = array();
-			if ($profile->is_required) $rules[] = 'required';
+			if ($this->page_type != 'search' && $profile->is_required) $rules[] = 'required';
 			switch ($profile->form_type)
 			{
 				case 'input':
 				case 'textarea':
 					$type = 'text';
+					if ($profile->form_type == 'textarea' && $this->page_type != 'search')
+					{
+						$type = 'textarea';
+					}
+
 					if ($profile->value_type == 'email')
 					{
 						$type = 'email';
@@ -338,7 +428,6 @@ class Form_MemberProfile
 					{
 						$rules[] = array('match_pattern', $profile->value_regexp);
 					}
-					if ($profile->form_type == 'textarea') $type = 'textarea';
 
 					if ($profile->value_min)
 					{
@@ -356,6 +445,7 @@ class Form_MemberProfile
 						$rules[] = array('unique', 'member_profile.value', array(array('profile_id', $profile->id)));
 					}
 
+					if ($this->page_type == 'search') $rules = array();
 					$value = !is_null($member_profile) ? $member_profile->value : '';
 
 					$this->validation->add(
@@ -368,16 +458,18 @@ class Form_MemberProfile
 
 				case 'select':
 				case 'radio':
+					$value = '';
 					$type = $profile->form_type;
 					$options = Util_Orm::conv_cols2assoc($profile->profile_option, 'id', 'label');
-					if (is_null($member_profile))
+					$options = self::add_novalue_option($options);
+					if (!is_null($member_profile))
+					{
+						$value = $member_profile->profile_option_id;
+					}
+					elseif ($this->page_type != 'search')
 					{
 						$options_keys = array_keys($options);
 						$value = array_shift($options_keys);
-					}
-					else
-					{
-						$value = $member_profile->profile_option_id;
 					}
 					$rules[] = array('valid_string', 'numeric');
 					$rules[] = array('in_array', array_keys($options));
@@ -394,7 +486,7 @@ class Form_MemberProfile
 					$options = Util_Orm::conv_cols2assoc($profile->profile_option, 'id', 'label');
 					$value = !is_null($member_profile) ? Util_Orm::conv_col2array($member_profile, 'profile_option_id') : array();
 					$rules[] = array('checkbox_val', $options);
-					if ($profile->is_required) $rules[] = array('checkbox_require', 1);
+					if ($this->page_type != 'search' && $profile->is_required) $rules[] = array('checkbox_require', 1);
 
 					$this->validation->add(
 						$profile->name,
@@ -589,4 +681,34 @@ class Form_MemberProfile
 
 		return false;
 	}
+
+	private static function remove_rules_for_search(array $rules)
+	{
+		if (!$rules) return $rules;
+
+		$remove_rules = array(
+			'required',
+		);
+		foreach ($remove_rules as $remove_rule)
+		{
+			$key = array_search($remove_rule, $rules);
+			if ($key === false) continue;
+
+			unset($rules[$key]);
+		}
+
+		return $rules;
+	}
+
+	private static function add_novalue_option(array $options)
+	{
+		$return_value = array('' => term('form.no_selected_label'));
+		foreach ($options as $key => $value)
+		{
+			$return_value[$key] = $value;
+		}
+
+		return $return_value;
+	}
 }
+

@@ -41,7 +41,7 @@ return array(
 		),
 		'view_params' => array(
 			'list' => array(
-				'limit' => 3,
+				'limit' => 2,
 				'limit_max' => 5,
 			),
 		),

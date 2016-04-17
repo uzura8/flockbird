@@ -27,10 +27,14 @@ if ($optional_public_flag) $col_sm_size = 8;
 			<div class="col-sm-<?php echo $col_sm_size; ?>">
 
 <?php $i = 0; ?>
+<?php
+if (is_null($input_values)) $input_values = (Input::method() == 'POST') ? Input::post($name) : $default_value;
+if (!is_array($input_values)) $input_values = (array)$input_values;
+?>
 <?php foreach ($options as $value => $each_label): ?>
 <?php
 $atter['id'] = sprintf('form_%s_%s', $name, $value);
-$is_checked = in_array($value, (Input::method() == 'POST') ? (array)Input::post($name) : (array)$default_value);
+$is_checked = in_array($value, $input_values);
 $each_label = $is_small_tag ? small_tag($each_label) : $each_label;
 ?>
 <?php if ($layout_type == 'block'): ?>

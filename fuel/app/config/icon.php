@@ -39,6 +39,7 @@ $config = array(
 		//'use' => '使用する',
 		//'unuse' => '使用しない',
 		'search' => 'search',
+		'do_search' => 'search',
 		//'default' => '初期',
 		//'value' => '値',
 		//'format' => '形式',

@@ -199,7 +199,10 @@ class Controller_Common extends Controller_Hybrid
 		$limit = (int)\Input::get($limit_param_name, $limit_default);
 		if ($limit_max && $limit > $limit_max) $limit = $limit_max;
 
-		return array($limit, $page);
+		$load_position = \Input::get('position', 'replace');
+		if (!in_array($load_position, array('append', 'prepend', 'replace'))) $load_position = 'replace';
+
+		return array($limit, $page, $load_position);
 	}
 
 	public function check_response_format($accept_formats = array())

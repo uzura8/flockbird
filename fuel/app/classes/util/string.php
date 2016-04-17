@@ -318,4 +318,10 @@ class Util_String
 
 		return $str;
 	}
+
+	public static function validate_search_word($search_word_string)
+	{
+		return trim(preg_replace('/[\s　]+/u', ' ', $search_word_string));
+	}
 }
+

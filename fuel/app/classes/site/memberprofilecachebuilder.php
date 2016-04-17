@@ -47,6 +47,18 @@ class Site_MemberProfileCacheBuilder
 		return $this->current_obj ? self::update($this->member->id, $this->save_values) : self::create($this->save_values);
 	}
 
+	public function delete_for_member_profile($member_id = null, $profile_id = null)
+	{
+		$this->configure_before_save($member_id);
+		if (!$this->current_obj) return 0;
+		if (!$profile_id || !$profile = \Model_Profile::get_one4id($profile_id)) return 0;
+
+		return self::update($member_id, array(
+			$profile->name => null,
+			$profile->name.'_public_flag' => conf('public_flag.default'),
+		));
+	}
+
 	protected function configure_before_save($member_id = null)
 	{
 		if ($member_id) $this->member = Model_Member::get_one4id($member_id);

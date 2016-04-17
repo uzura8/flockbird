@@ -33,7 +33,12 @@ if (!empty($is_merge_inputs2options) && Input::post($name))
 	<div class="col-sm-<?php echo $input_col_sm_size; ?>">
 		<div class="row">
 			<div class="col-sm-<?php echo $col_sm_size; ?>">
-				<?php echo Form::select($name, Input::post($name, $default_value), $options, $atter); ?>
+				<?php echo Form::select(
+					$name,
+					(isset($input_value) && !is_null($input_value)) ? $input_value : Input::post($name, $default_value),
+					$options,
+					$atter
+				); ?>
 			</div>
 <?php if ($optional_public_flag): ?>
 			<div class="col-xs-12 col-sm-4 col-sm-offset-<?php echo (8 - $col_sm_size); ?> pull-right">

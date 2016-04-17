@@ -92,6 +92,7 @@ class Controller_Member extends Controller_Site
 	public function action_list()
 	{
 		$this->set_title_and_breadcrumbs(term('member.view', 'site.list'));
+		$this->template->subtitle = \View::forge('member/_parts/list_subtitle');
 
 		$default_params = array(
 			'latest' => 1,
@@ -111,6 +112,37 @@ class Controller_Member extends Controller_Site
 			'max_id' => $max_id,
 			'search_word' => $search_word_str,
 		));
+		$this->template->post_footer = \View::forge('_parts/load_item');
+	}
+
+	/**
+	 * Mmeber Search
+	 * 
+	 * @access  public
+	 * @return  Response
+	 */
+	public function action_search()
+	{
+		if (!conf('profile.useCacheTable.isEnabled', 'member')) throw new HttpNotFoundException;
+
+		$this->set_title_and_breadcrumbs(term('member.view', 'form.search'), array(
+			'member/list' => term('member.view', 'site.list'),
+		));
+
+		list($limit, $page) = $this->common_get_pager_list_params(
+			conf('member.view_params.list.limit'),
+			conf('member.view_params.list.limit_max')
+		);
+		$data = array(
+			'limit' => $limit,
+			'no_data_message' => sprintf('指定の%sに該当する%sがいません。', term('common.condition'), term('member.view')),
+			'loaded_position' => 'replace',
+			//'is_desplay_load_before_link' => $page > 1,
+		);
+		$data = array_merge($data, Site_Member::get_detail_search_pager_list(get_uid(), $limit, $page));
+
+		$this->template->main_container_attrs = array('data-not_render_site_summary' => 1);
+		$this->template->content = \View::forge('member/search', $data);
 		$this->template->post_footer = \View::forge('_parts/load_item');
 	}
 }

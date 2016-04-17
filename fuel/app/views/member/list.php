@@ -1,16 +1,5 @@
-<?php echo render('_parts/search_form', array(
-	'input_value' => !empty($search_word) ? $search_word : null,
-	'input_attr' => array(
-		'placeholder' => sprintf('%sで%s', term('member.name'), term('form.search')),
-		'class' => 'form-control js-keyup',
-		'data-btn' => '#btn_search_member',
-	),
-	'btn_attr' => array(
-		'id' => 'btn_search_member',
-		'data-list' => '#article_list',
-		'data-uri' => 'member/api/list.json',
-		'data-history_keys' => json_encode(array('q', 'max_id')),
-	),
+<?php echo render('member/_parts/search_form', array(
+	'search_word' => !empty($search_word) ? $search_word : null,
 )); ?>
 
 <?php

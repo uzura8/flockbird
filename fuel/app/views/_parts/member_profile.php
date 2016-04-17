@@ -31,6 +31,13 @@ switch ($page_type)
 		$image_size = 'L';
 		break;
 }
+
+if (empty($member) && !empty($member_id))
+{
+	$member = Model_Member::get_one4id($member_id);
+	if (!isset($member_profiles)) $member_profiles = Model_MemberProfile::get4member_id($member_id, true);
+}
+
 $profile_page_uri = '';
 $is_link2raw_file = true;
 if (!empty($link_uri))

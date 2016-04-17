@@ -40,4 +40,37 @@ class Controller_Member_Api extends Controller_Site_Api
 			), '_parts/member_list');
 		});
 	}
+
+	/**
+	 * Api search
+	 * 
+	 * @access  public
+	 * @return  Response (html)
+	 */
+	public function get_search()
+	{
+		$this->api_accept_formats = array('json', 'html');
+		$this->controller_common_api(function()
+		{
+			if (!conf('profile.useCacheTable.isEnabled', 'member')) throw new HttpNotFoundException;
+
+			$default_params = array(
+				'page' => 1,
+				'sort' => 'id',
+				'desc' => 1,
+				'limit' => conf('member.view_params.list.limit'),
+			);
+			list($limit, $page, $loaded_position) = $this->common_get_pager_list_params(
+				conf('member.view_params.list.limit'),
+				conf('member.view_params.list.limit_max')
+			);
+			$data = array(
+				'limit' => $limit,
+				'no_data_message' => sprintf('指定の%sに該当する%sがいません。', term('common.condition'), term('member.view')),
+				'loaded_position' => $loaded_position,
+			);
+			$data = array_merge($data, Site_Member::get_detail_search_pager_list(get_uid(), $limit, $page));
+			$this->set_response_body_api($data, '_parts/member_search_list');
+		});
+	}
 }

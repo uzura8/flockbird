@@ -276,4 +276,113 @@ class Site_Member
 	{
 		return '';
 	}
+
+	public static function get_detail_search_pager_list($self_member_id = 0, $limit = null, $page = 1, $order_by = array('member_id' => 'desc'))
+	{
+		$accept_public_flags = array(FBD_PUBLIC_FLAG_ALL);
+		if ($self_member_id) $accept_public_flags[] = FBD_PUBLIC_FLAG_MEMBER;
+
+		$form_member_profile = new Form_MemberProfile('search');
+		$form_member_profile->set_validation(array(), 'member_search');
+		$inputs = $form_member_profile->validate_for_search();
+		$profiles = $form_member_profile->get_profiles();
+
+		$query = DB::select()->from('member_profile_cache')->as_object();
+
+		// member.name
+		if (!empty($inputs['member_name'])
+				&& $form_member_profile->check_is_enabled_member_field('name')
+				&& $wheres = Site_Model::get_search_word_conds($inputs['member_name'], 'name', false, false, false))
+		{
+			$query->where_open();
+			foreach ($wheres as $where) $query->where($where[0], $where[1], $where[2]);
+			$query->where_close();
+		}
+		// member.sex
+		if (!empty($inputs['member_sex']) && $form_member_profile->check_is_enabled_member_field('sex'))
+		{
+			$query->where_open();
+			$query->where('sex', $inputs['member_sex']);
+			$query->where('sex_public_flag', 'in', $accept_public_flags);
+			$query->where_close();
+		}
+
+		// profile
+		foreach ($profiles as $profile)
+		{
+			$name = $profile->name;
+			switch ($profile->form_type)
+			{
+				case 'input':
+				case 'textarea':
+					if ($wheres = Site_Model::get_search_word_conds($inputs[$name], $name, false, false, false))
+					{
+						$query->where_open();
+						foreach ($wheres as $where) $query->where($where[0], $where[1], $where[2]);
+						$query->where($name.'_public_flag', 'in', $accept_public_flags);
+						$query->where_close();
+					}
+					break;
+
+				case 'select':
+				case 'radio':
+					if ($inputs[$name])
+					{
+						$query->where_open();
+						$query->where($name, $inputs[$name]);
+						$query->where($name.'_public_flag', 'in', $accept_public_flags);
+						$query->where_close();
+					}
+					break;
+
+				case 'checkbox':
+					if ($member_ids = Model_MemberProfile::get_member_ids4profile_id_option_ids($profile->id, (array)$inputs[$name], $accept_public_flags))
+					{
+						$query->where_open();
+						$query->where('member_id', 'in', array_unique($member_ids));
+						$query->where_close();
+					}
+					break;
+			}
+		}
+
+		// order by
+		foreach ($order_by as $key => $value)
+		{
+			if (is_numeric($key))
+			{
+				$query->order_by($value);
+			}
+			else
+			{
+				$query->order_by($key, $value);
+			}
+		}
+
+		// limit, offset
+		$page = (int)$page;
+		if ($page < 1) $page = 1;
+
+		$offset = 0;
+		$offset = $limit * ($page - 1);
+		$query->limit($limit);
+		$query->offset($offset);
+
+		// execute
+		$list = $query->execute();
+		$count = DB::count_last_query();
+
+		$next_page = ($limit && $count > $offset + $limit) ? $page + 1 : 0;
+
+		return array(
+			'profiles' => $form_member_profile->get_profiles(),
+			'val' => $form_member_profile->get_validation(),
+			'inputs' => $inputs,
+			'list' => $query->execute(),
+			'page' => $page,
+			'next_page' => $next_page,
+			'count' => $count
+		);
+	}
 }
+

@@ -42,6 +42,7 @@ $config = array(
 		'use' => '使用する',
 		'unuse' => '使用しない',
 		'search' => '検索',
+		'do_search' => '検索する',
 		'default' => '初期',
 		'value' => '値',
 		'format' => '形式',
@@ -90,6 +91,7 @@ $config = array(
 		'do_accept' => '承認する',
 		'do_read' => '既読にする',
 		'input' => '入力',
+		'no_selected_label' => '選択してください',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -163,6 +165,8 @@ $config = array(
 		'kind' => '種類',
 		'all' => 'すべて',
 		'content' => '内容',
+		'result' => '結果',
+		'condition' => '条件',
 	),
 	'member' => array(
 		'view' => 'メンバー',

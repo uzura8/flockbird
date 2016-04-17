@@ -82,5 +82,29 @@ class Model_MemberProfile extends \MyOrm\Model
 
 		return $query->get();
 	}
+
+	public static function get_member_ids4profile_id_option_ids($profile_id, $option_ids = array(), $public_flags = null)
+	{
+		if (!$option_ids) return array();
+
+		if (is_null($public_flags)) $public_flags = array($public_flags);
+		$query = self::query()->select('member_id')
+			->where('profile_id', $profile_id)
+			->where('profile_option_id', 'in', $option_ids);
+
+		if ($public_flags)
+		{
+			if (count($public_flags) == 1)
+			{
+				$query->where('public_flag', $public_flags);
+			}
+			else
+			{
+				$query->where('public_flag', 'in', $public_flags);
+			}
+		}
+
+		return \Util_Orm::conv_col2array($query->get(), 'member_id');
+	}
 }
 
