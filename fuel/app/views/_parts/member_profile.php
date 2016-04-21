@@ -1,11 +1,10 @@
 <?php
-if (empty($is_mypage)) $is_mypage = false;
-if (empty($is_list)) $is_list = false;
-if (empty($access_from)) $access_from = 'guest';
+$is_mypage = !empty($member) && $member->id == get_uid();
+if (empty($access_from)) $access_from = Auth::check() ? 'member' : 'guest';
 if (empty($display_type)) $display_type = 'detail';
 if (empty($page_type)) $page_type = 'detail';
-if (!isset($with_image_upload_form)) $with_image_upload_form = false;
 if (!isset($is_simple_list)) $is_simple_list = false;
+if (!isset($with_image_upload_form)) $with_image_upload_form = false;
 switch ($page_type)
 {
 	case 'lerge_list':
@@ -14,6 +13,8 @@ switch ($page_type)
 		$col_class_left  = 'col-xs-3';
 		$col_class_right = 'col-xs-9';
 		$image_size = 'ML';
+		$is_list = true;
+		$with_link2profile_image = false;
 		break;
 	case 'list':
 		$member_name_tag = 'h5';
@@ -21,6 +22,8 @@ switch ($page_type)
 		$col_class_left  = 'col-xs-3 col-sm-2';
 		$col_class_right = 'col-xs-9 col-sm-10';
 		$image_size = 'M';
+		$is_list = true;
+		$with_link2profile_image = false;
 		break;
 	case 'detail':
 	default :
@@ -29,6 +32,8 @@ switch ($page_type)
 		$col_class_left  = 'col-sm-4';
 		$col_class_right = 'col-sm-8';
 		$image_size = 'L';
+		$is_list = false;
+		$with_link2profile_image = !empty($with_image_upload_form) ? false : true;
 		break;
 }
 
@@ -51,10 +56,10 @@ elseif ($page_type != 'detail')
 	$is_link2raw_file = false;
 }
 
-$is_display_follow_btn  = (conf('memberRelation.follow.isEnabled') && empty($is_hide_fallow_btn) && Auth::check() && !$is_mypage && $member->id != get_uid());
-$is_display_access_block_btn = (!empty($is_display_access_block_btn) && conf('memberRelation.accessBlock.isEnabled') && Auth::check() && !$is_mypage);
-$is_display_message_btn = (is_enabled('message') && !empty($with_message_btn) && Auth::check() && !$is_mypage);
-$is_display_member_edit_btn = (empty($is_display_access_block_btn) && conf('memberRelation.accessBlock.isEnabled') && $page_type == 'detail' && !$is_mypage);
+$is_display_follow_btn       = conf('memberRelation.follow.isEnabled') && empty($hide_fallow_btn) && Auth::check() && !$is_mypage;
+$is_display_access_block_btn = conf('memberRelation.accessBlock.isEnabled') && !empty($show_access_block_btn) && Auth::check() && !$is_mypage;
+$is_display_message_btn      = is_enabled('message') && !empty($show_message_btn) && Auth::check() && !$is_mypage;
+$is_display_member_edit_btn  = conf('memberRelation.accessBlock.isEnabled') && empty($show_access_block_btn) && $page_type == 'detail' && !$is_mypage;
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
 <?php if (!empty($with_edit_btn) && $is_mypage): ?>

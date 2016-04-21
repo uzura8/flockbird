@@ -2,8 +2,8 @@
 echo render('_parts/member_list', array(
 	'is_base_page' => true,
 	'is_simple_list' => true,
-	'is_hide_fallow_btn' => $type == 'access_block',
-	'is_display_access_block_btn' => $type == 'access_block',
+	'hide_fallow_btn' => $type == 'access_block',
+	'show_access_block_btn' => $type == 'access_block',
 	'list' => $list,
 	'member_relation_name' => $type == 'follower' ? 'member_from' : 'member',
 	'next_id' => $next_id,

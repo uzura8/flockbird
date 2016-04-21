@@ -56,8 +56,8 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 
 			$this->set_response_body_api(array(
 				'is_simple_list' => true,
-				'is_hide_fallow_btn' => $type == 'access_block',
-				'is_display_access_block_btn' => $type == 'access_block',
+				'hide_fallow_btn' => $type == 'access_block',
+				'show_access_block_btn' => $type == 'access_block',
 				'list' => $list,
 				'member_relation_name' => $type == 'follower' ? 'member_from' : 'member',
 				'next_id' => $next_id,
