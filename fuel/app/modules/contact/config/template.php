@@ -16,6 +16,28 @@ return array(
 					'contact_category' => 'お問い合わせ内容',
 				),
 			),
+			'report' => array(
+				'view' =>'通報メール',
+				'format' =>'twig',
+				'title' => '通報メール',
+				'body' => array(
+					'default' => array(
+						'file' => 'contact::mail/report',
+					),
+				),
+				'variables' => array(
+					'report_category' => '通報分類',
+					'report_body' => '通報コメント',
+					'content_type' => 'コンテンツ分類',
+					'content_url' => '通報されたURL',
+					'content_body' => '通報された書き込み内容',
+					'member_id_to' => '通報されたメンバーのID',
+					'member_name_to' => '通報されたメンバーのニックネーム',
+					'member_to_admin_page_url' => '通報されたメンバーの管理画面URL',
+					'member_id_from' => '通報したメンバーのID',
+					'member_name_from' => '通報したメンバーのニックネーム',
+				),
+			),
 		),
 	),
 );

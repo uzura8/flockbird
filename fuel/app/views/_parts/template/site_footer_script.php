@@ -39,6 +39,20 @@ echo $view->render();
 <?php echo render('message::_parts/handlebars_template/list'); ?>
 </script>
 <?php 	endif; ?>
+
+<?php 	if (!empty($is_disp_report_link)): ?>
+<?php echo Asset::js('site/modules/contact/common/util.js');?>
+<?php
+$view = View::forge('_parts/modal', array(
+	'block_attrs' => array('id' => 'modal_report'),
+	'size' => 'lg',
+	'title' => term('report.view'),
+	'is_display_footer_close_btn' => true,
+));
+echo $view->render();
+?>
+<?php 	endif; ?>
+
 <?php else: ?>
 
 <?php

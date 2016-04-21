@@ -230,6 +230,12 @@ class Controller_Base extends Controller_Common
 		}
 	}
 
+	protected function set_global_disp_report_link()
+	{
+		$is_disp_report_link = Auth::check() && conf('report.isEnabled', 'contact');
+		View::set_global('is_disp_report_link', $is_disp_report_link);
+	}
+
 	/**
 	 * 以下、site, admin 共通 controller
 	 * 

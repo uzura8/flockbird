@@ -365,7 +365,6 @@ $(document).on('click', '.js-modal', function(){
 	{
 		GL.currentScrollY = $(window).scrollTop();
 	}
-
 	var option = {};
 	if (isList) {
 		loadList(
@@ -379,6 +378,7 @@ $(document).on('click', '.js-modal', function(){
 		);
 	} else {
 		if (getUri) {
+			if (!empty(getData)) getUri += '?' + $.param(getData);
 			option['remote'] = get_url(getUri);
 		}
 	}
