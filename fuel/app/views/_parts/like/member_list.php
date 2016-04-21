@@ -8,8 +8,6 @@
 <?php echo render('_parts/member_profile', array(
 	'member' => !empty($member_relation_name) ? $obj->{$member_relation_name} : $obj,
 	'member_profiles' => $with_profile ? Model_MemberProfile::get4member_id($member->id, true, 'summary') : array(),
-	'access_from' => Auth::check() ? 'member' : 'guest',
-	'is_list' => true,
 	'is_simple_list' => true,
 	'page_type' => 'lerge_list',
 	'display_type' => 'summary',

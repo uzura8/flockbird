@@ -55,7 +55,7 @@ class Controller_Member extends Controller_Admin
 			'member' => $member,
 			'member_profiles' => $member_profiles,
 			'display_type' => 'detail',
-			'is_hide_fallow_btn' => true,
+			'hide_fallow_btn' => true,
 		);
 		$this->set_title_and_breadcrumbs($member->name.' さんの詳細', array('admin/member' => term('member.view', 'site.management')));
 		$this->template->subtitle = \View::forge('member/_parts/detail_subtitle', array('member' => $member));

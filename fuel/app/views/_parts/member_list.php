@@ -41,14 +41,11 @@ $member_profiles = empty($is_simple_list) ? Model_MemberProfile::get4member_id($
 <?php echo render('_parts/member_profile', array(
 	'member' => $member_obj,
 	'member_profiles' => $member_profiles,
-	'next_id' => $next_id,
-	'access_from' => Auth::check() ? 'member' : 'guest',
-	'is_list' => true,
 	'page_type' => 'lerge_list',
 	'display_type' => 'summary',
 	'is_simple_list' => !empty($is_simple_list),
-	'is_hide_fallow_btn' => !empty($is_hide_fallow_btn),
-	'is_display_access_block_btn' => !empty($is_display_access_block_btn),
+	'hide_fallow_btn' => !empty($hide_fallow_btn),
+	'show_access_block_btn' => !empty($show_access_block_btn),
 )); ?>
 	</div>
 <?php endforeach; ?>
