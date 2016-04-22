@@ -1,6 +1,17 @@
 <?php
 $is_mypage = !empty($member) && $member->id == get_uid();
-if (empty($access_from)) $access_from = Auth::check() ? 'member' : 'guest';
+if (empty($access_from))
+{
+	if (Auth::check())
+	{
+		$access_from = $is_mypage ? 'self' : 'member';
+	}
+	else
+	{
+		$access_from = 'guest';
+	}
+}
+
 if (empty($display_type)) $display_type = 'detail';
 if (empty($page_type)) $page_type = 'detail';
 if (!isset($is_simple_list)) $is_simple_list = false;
@@ -56,10 +67,17 @@ elseif ($page_type != 'detail')
 	$is_link2raw_file = false;
 }
 
-$is_display_follow_btn       = conf('memberRelation.follow.isEnabled') && empty($hide_fallow_btn) && Auth::check() && !$is_mypage;
-$is_display_access_block_btn = conf('memberRelation.accessBlock.isEnabled') && !empty($show_access_block_btn) && Auth::check() && !$is_mypage;
-$is_display_message_btn      = is_enabled('message') && !empty($show_message_btn) && Auth::check() && !$is_mypage;
-$is_display_member_edit_btn  = conf('memberRelation.accessBlock.isEnabled') && empty($show_access_block_btn) && $page_type == 'detail' && !$is_mypage;
+$is_display_follow_btn       = false;
+$is_display_access_block_btn = false;
+$is_display_message_btn      = false;
+$is_display_member_edit_btn  = false;
+if ($access_from == 'member')
+{
+	$is_display_follow_btn       = conf('memberRelation.follow.isEnabled')      &&  empty($hide_fallow_btn);
+	$is_display_message_btn      = is_enabled('message')                        && !empty($show_message_btn);
+	$is_display_access_block_btn = conf('memberRelation.accessBlock.isEnabled') && !empty($show_access_block_btn);
+	$is_display_member_edit_btn  = conf('memberRelation.accessBlock.isEnabled') &&  empty($show_access_block_btn) && $page_type == 'detail';
+}
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
 <?php if (!empty($with_edit_btn) && $is_mypage): ?>
