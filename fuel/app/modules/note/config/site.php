@@ -15,7 +15,7 @@ return array(
 			'shareDialog' => array(
 				'note' => array(
 					'isEnabled' => true,
-					'autoPopupAfterCreated' => true,
+					'autoPopupAfterCreated' => false,
 				),
 			),
 		),
