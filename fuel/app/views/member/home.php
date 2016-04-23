@@ -7,7 +7,7 @@
 	'hide_fallow_btn' => isset($hide_fallow_btn) ? $hide_fallow_btn : false,
 	'with_edit_btn' => true,
 	'show_message_btn' => true,
-	'report_data' => $report_data,
+	'report_data' => !empty($report_data) ? $report_data : array(),
 )); ?>
 
 <?php echo render('member/_parts/tabmenu', array(

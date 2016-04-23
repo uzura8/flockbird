@@ -44,7 +44,7 @@ switch ($page_type)
 		$col_class_right = 'col-sm-8';
 		$image_size = 'L';
 		$is_list = false;
-		$with_link2profile_image = !empty($with_image_upload_form) ? false : true;
+		$with_link2profile_image = (!empty($with_image_upload_form) || IS_ADMIN) ? false : true;
 		break;
 }
 

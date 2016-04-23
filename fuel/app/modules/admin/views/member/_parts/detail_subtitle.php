@@ -1,5 +1,9 @@
 <?php
-$menus = array();
+$menus = array(array(
+	'label' => sprintf('%sの%sを%s', term('site.view'), term('page.kana'), term('form.do_confirm')),
+	'href' => 'member/'.$member->id,
+	'attr' => array('target' => '_blank'),
+));
 if (is_enabled('message') && check_acl($uri = 'admin/message/create'))
 {
 	$menus[] = array('icon_term' => 'message.view', 'attr' => array(
