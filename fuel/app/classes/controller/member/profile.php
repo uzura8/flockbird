@@ -22,12 +22,22 @@ class Controller_Member_Profile extends Controller_Member
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($id);
 		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
 		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('profile')), null, $member);
-		$this->template->content = View::forge('member/profile/index', array(
+
+		$data = array(
 			'member' => $member,
 			'is_mypage' => $is_mypage,
 			'access_from' => $access_from,
 			'member_profiles' => $member_profiles,
-		));
+		);
+		// 通報リンク
+		$data['report_data'] = $this->set_global_for_report_form() ? array(
+			'member_id' => $member->id,
+			'uri' => 'member/profile/'.$member->id,
+			'type' => 'member_profile',
+			'content' => '',
+		) : array();
+
+		$this->template->content = View::forge('member/profile/index', $data);
 	}
 
 	/**

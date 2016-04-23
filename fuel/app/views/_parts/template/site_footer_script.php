@@ -40,12 +40,11 @@ echo $view->render();
 </script>
 <?php 	endif; ?>
 
-<?php 	if (!empty($is_disp_report_link)): ?>
+<?php 	if (!empty($is_set_report_form)): ?>
 <?php echo Asset::js('site/modules/contact/common/util.js');?>
 <?php
 $view = View::forge('_parts/modal', array(
 	'block_attrs' => array('id' => 'modal_report'),
-	'size' => 'lg',
 	'title' => term('report.view'),
 	'is_display_footer_close_btn' => true,
 ));

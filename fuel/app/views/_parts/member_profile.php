@@ -67,16 +67,23 @@ elseif ($page_type != 'detail')
 	$is_link2raw_file = false;
 }
 
-$is_display_follow_btn       = false;
-$is_display_access_block_btn = false;
-$is_display_message_btn      = false;
-$is_display_member_edit_btn  = false;
+$is_display_follow_btn        = false;
+$is_display_message_btn       = false;
+$is_display_block_btn         = false;
+$is_display_block_group_link  = false;
+$is_display_report_group_link = false;
+$is_display_member_edit_group_btn = false;
 if ($access_from == 'member')
 {
-	$is_display_follow_btn       = conf('memberRelation.follow.isEnabled')      &&  empty($hide_fallow_btn);
-	$is_display_message_btn      = is_enabled('message')                        && !empty($show_message_btn);
-	$is_display_access_block_btn = conf('memberRelation.accessBlock.isEnabled') && !empty($show_access_block_btn);
-	$is_display_member_edit_btn  = conf('memberRelation.accessBlock.isEnabled') &&  empty($show_access_block_btn) && $page_type == 'detail';
+	$is_display_follow_btn  = conf('memberRelation.follow.isEnabled')      &&  empty($hide_fallow_btn);
+	$is_display_message_btn = is_enabled('message')                        && !empty($show_message_btn);
+	$is_display_block_btn   = conf('memberRelation.accessBlock.isEnabled') && !empty($show_access_block_btn);
+	if ($page_type == 'detail')
+	{
+		$is_display_block_group_link  = conf('memberRelation.accessBlock.isEnabled') &&  empty($show_access_block_btn);
+		$is_display_report_group_link = conf('report.isEnabled', 'contact')          && !empty($report_data);
+		$is_display_member_edit_group_btn = $is_display_block_group_link || $is_display_report_group_link;
+	}
 }
 ?>
 <?php if (!$is_list): ?><div class="well profile"><?php endif; ?>
@@ -106,7 +113,7 @@ if ($access_from == 'member')
 				<<?php echo $member_name_tag; ?>>
 					<?php echo member_name($member, $display_type != 'detail' ? $profile_page_uri : '', true); ?>
 
-<?php if ($is_display_message_btn || $is_display_follow_btn || $is_display_access_block_btn || $is_display_member_edit_btn): ?>
+<?php if ($is_display_follow_btn || $is_display_message_btn || $is_display_block_btn || $is_display_member_edit_group_btn): ?>
 					<div class="btn-group ml10" role="group" aria-label="action for member">
 
 <?php 	if ($is_display_follow_btn): ?>
@@ -120,7 +127,7 @@ if ($access_from == 'member')
 						)); ?>
 <?php 	endif; ?>
 
-<?php 	if ($is_display_access_block_btn): ?>
+<?php 	if ($is_display_block_btn): ?>
 						<?php echo render('_parts/btn_update_member_relation', array(
 							'relation_type' => 'access_block',
 							'size' => $edit_button_size,
@@ -135,22 +142,36 @@ if ($access_from == 'member')
 						<?php echo btn('message.form.send', 'message/member/'.$member->id, null, true, $edit_button_size, null, null, null, 'button'); ?>
 <?php 	endif; ?>
 
-<?php 	if ($is_display_member_edit_btn): ?>
+<?php 	if ($is_display_member_edit_group_btn): ?>
 <?php
 $dropdown_btn_group_attr = array(
 	'id' => 'btn_dropdown_member_'.$member->id,
 	'class' => array('dropdown'),
 );
-$menus = array(
-	array(
+$menus = array();
+if ($is_display_block_group_link)
+{
+	$menus[] = array(
 		'icon_term' => Model_MemberRelation::check_relation('access_block', get_uid(), $member->id) ? 'undo_accessBlock' : 'do_accessBlock',
 		'attr' => array(
 			'class' => 'js-update_toggle',
 			'id' => 'btn_access_block_'.$member->id,
 			'data-uri' => sprintf('member/relation/api/update/%d/access_block.json', $member->id),
 		),
-	),
-);
+	);
+}
+if ($is_display_report_group_link)
+{
+	$menus[] = array(
+		'icon_term' => 'form.post_report',
+		'attr' => array(
+			'class' => 'js-modal',
+			'data-target' => '#modal_report',
+			'data-uri' => 'contact/report/api/form.html',
+			'data-get_data' => json_encode($report_data),
+		),
+	);
+}
 echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, true, $dropdown_btn_group_attr, null, false);
 ?>
 <?php 	endif; ?>

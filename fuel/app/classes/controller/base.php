@@ -230,10 +230,12 @@ class Controller_Base extends Controller_Common
 		}
 	}
 
-	protected function set_global_disp_report_link()
+	protected function set_global_for_report_form()
 	{
-		$is_disp_report_link = Auth::check() && conf('report.isEnabled', 'contact');
-		View::set_global('is_disp_report_link', $is_disp_report_link);
+		$is_set_report_form = Auth::check() && conf('report.isEnabled', 'contact');
+		View::set_global('is_set_report_form', $is_set_report_form);
+
+		return $is_set_report_form;
 	}
 
 	/**

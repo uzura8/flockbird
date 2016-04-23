@@ -60,12 +60,12 @@ return array(
 					'label' => '自由記入',
 					'attr' => array(
 						'type' => 'textarea',
-						'rows' => 10,
-						'placeholder' => '1000文字以内で入力してください。',
+						'rows' => 5,
+						'placeholder' => '300文字以内で入力してください。',
 					),
 					'rules' => array(
 						array('trim'),
-						array('max_length', 1000),
+						array('max_length', 300),
 					),
 				),
 			),

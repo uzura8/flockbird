@@ -59,6 +59,14 @@ class Controller_Member extends Controller_Site
 			'access_from' => $access_from,
 			'display_type' => 'summary',
 		);
+		// 通報リンク
+		$data['report_data'] = $this->set_global_for_report_form() ? array(
+			'member_id' => $member->id,
+			'uri' => 'member/'.$member->id,
+			'type' => 'member',
+			'content' => '',
+		) : array();
+
 		if (is_enabled('timeline'))
 		{
 			$data['timeline'] = \Timeline\Site_Util::get_list4view(

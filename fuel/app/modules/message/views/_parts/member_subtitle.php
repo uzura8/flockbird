@@ -8,7 +8,6 @@ $menus = array(
 	array(
 		'icon_term' => 'form.post_report',
 		'attr' => array(
-			'icon_term' => 'form.post_report',
 			'class' => 'js-modal',
 			'data-target' => '#modal_report',
 			'data-uri' => 'contact/report/api/form.html',

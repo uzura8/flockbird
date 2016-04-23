@@ -4,4 +4,5 @@
 	'access_from' => $access_from,
 	'with_edit_btn' => true,
 	'show_message_btn' => true,
+	'report_data' => $report_data,
 )); ?>
