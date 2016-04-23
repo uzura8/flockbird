@@ -78,6 +78,8 @@ class Controller_Note extends \Controller_Site
 
 		// 既読処理
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'note', $id);
+		// 通報リンク
+		$this->set_global_for_report_form();
 
 		// note_album_image
 		$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();

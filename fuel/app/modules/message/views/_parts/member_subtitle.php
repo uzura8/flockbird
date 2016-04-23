@@ -1,4 +1,4 @@
-<?php if (conf('report.isEnabled', 'contact') && Auth::check() && !empty($report_data)): ?>
+<?php if (!empty($report_data)): ?>
 <?php
 $dropdown_btn_group_attr = array(
 	'id' => 'btn_dropdown_message_member',

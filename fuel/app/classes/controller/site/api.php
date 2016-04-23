@@ -279,6 +279,25 @@ class Controller_Site_Api extends Controller_Base_Site
 						//'data-msg' => $is_followed ? term('follow').'を解除しますか？' : term('follow').'しますか？',
 					));
 				}
+
+				if ($is_detail && conf('report.isEnabled', 'contact') && in_array($table, array_keys(conf('report.types', 'contact'))))
+				{
+					$report_data = array(
+						'member_id' => $member_id,
+						'uri' => Site_Util::get_action_uri($table, $id, ''),
+						'type' => $table,
+						'content' => $obj->body,
+					);
+					$menus[] = array(
+						'icon_term' => 'form.post_report',
+						'attr' => array(
+							'class' => 'js-modal',
+							'data-target' => '#modal_report',
+							'data-uri' => 'contact/report/api/form.html',
+							'data-get_data' => json_encode($report_data),
+						),
+					);
+				}
 			}
 
 			$this->set_response_body_api(array('menus' => $menus, 'is_ajax_loaded' => true), '_parts/dropdown_menu');

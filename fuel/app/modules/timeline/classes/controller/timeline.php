@@ -104,6 +104,8 @@ class Controller_Timeline extends \Controller_Site
 
 		// 既読処理
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'timeline', $id);
+		// 通報リンク
+		$this->set_global_for_report_form();
 
 		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('timeline', $this->u->id, array($timeline)) : array();

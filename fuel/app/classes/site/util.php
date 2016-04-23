@@ -542,10 +542,11 @@ class Site_Util
 
 	public static function get_action_uri($table, $id, $action, $api_response_format = null)
 	{
+		$action_path_prefix = $action ? '/' : '';
 		$controller_path = Site_Model::convert_table2controller_path($table);
-		if ($api_response_format) return sprintf('%s/api/%s/%d.%s', $controller_path, $action, $id, $api_response_format);
+		if ($api_response_format) return sprintf('%s/api%s%s/%d.%s', $controller_path, $action_path_prefix, $action, $id, $api_response_format);
 
-		return sprintf('%s/%s/%d', $controller_path, $action, $id);
+		return sprintf('%s%s%s/%d', $controller_path, $action_path_prefix, $action, $id);
 	}
 
 	public static function get_active_modules()

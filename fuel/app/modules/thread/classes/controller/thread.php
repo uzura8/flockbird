@@ -57,6 +57,8 @@ class Controller_Thread extends \Controller_Site
 
 		// 既読処理
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'thread', $id);
+		// 通報リンク
+		$this->set_global_for_report_form();
 
 		// thread_image
 		$images = Model_ThreadImage::get4thread_id($thread_id);

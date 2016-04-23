@@ -51,13 +51,14 @@ class Controller_Message extends \Controller_Site
 		$this->change_message_status2read('member', $member_id);
 
 		// 通報リンク
-		$this->set_global_for_report_form();
-		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('report_data' => array(
-			'member_id' => $member_id,
-			'uri' => 'message/member/'.$member_id,
-			'type' => 'message_member',
-			'content' => '',
-		)));
+		$this->template->subtitle = \View::forge('_parts/member_subtitle', array(
+			'report_data' => $this->set_global_for_report_form() ? array(
+				'member_id' => $member_id,
+				'uri' => 'message/member/'.$member_id,
+				'type' => 'message_member',
+				'content' => '',
+			) : array()
+		));
 
 		$this->template->post_header = \View::forge('_parts/member_header');
 		$this->template->post_footer = \View::forge('_parts/load_message');

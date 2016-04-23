@@ -79,6 +79,8 @@ class Controller_Album extends \Controller_Site
 
 		// 既読処理
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album', $id);
+		// 通報リンク
+		$this->set_global_for_report_form();
 
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);
 		list($limit, $page) = $this->common_get_pager_list_params(\Config::get('articles.limit'), \Config::get('articles.limit_max'));
