@@ -1,17 +1,5 @@
 <?php
-$is_mypage = !empty($member) && $member->id == get_uid();
-if (empty($access_from))
-{
-	if (Auth::check())
-	{
-		$access_from = $is_mypage ? 'self' : 'member';
-	}
-	else
-	{
-		$access_from = 'guest';
-	}
-}
-
+// display stting
 if (empty($display_type)) $display_type = 'detail';
 if (empty($page_type)) $page_type = 'detail';
 if (!isset($is_simple_list)) $is_simple_list = false;
@@ -48,10 +36,23 @@ switch ($page_type)
 		break;
 }
 
+// member stting
 if (empty($member) && !empty($member_id))
 {
 	$member = Model_Member::get_one4id($member_id);
 	if (!isset($member_profiles)) $member_profiles = Model_MemberProfile::get4member_id($member_id, true);
+}
+$is_mypage = !empty($member) && $member->id == get_uid();
+if (empty($access_from))
+{
+	if (Auth::check())
+	{
+		$access_from = $is_mypage ? 'self' : 'member';
+	}
+	else
+	{
+		$access_from = 'guest';
+	}
 }
 
 $profile_page_uri = '';
