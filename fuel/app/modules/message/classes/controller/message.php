@@ -31,6 +31,10 @@ class Controller_Message extends \Controller_Site
 	{
 		$data = array();
 		$this->set_title_and_breadcrumbs(term('message.view'), null, $this->u);
+		$this->template->subtitle = \View::forge('notice::_parts/link_read_all', array(
+			'tag_attr' => array('class' => 'pull-right'),
+			'is_message' => true,
+		));
 		$this->template->content = \View::forge('_parts/list_block', $data);
 	}
 
