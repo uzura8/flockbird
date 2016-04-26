@@ -48,7 +48,7 @@ class Util_Array
 		return array($before, $after);
 	}
 
-	public static function cast_values(array $values, $type, $is_check_empty = false)
+	public static function cast_values(array $values, $type, $is_check_empty = false, $is_remove_empty = false)
 	{
 		switch ($type)
 		{
@@ -66,7 +66,11 @@ class Util_Array
 		$return = array();
 		foreach ($values as $value)
 		{
-			if ($is_check_empty && empty($value)) return false;
+			if (empty($value))
+			{
+				if ($is_remove_empty) continue;
+				if ($is_check_empty) return false;
+			}
 			$return[] = $func($value);
 		}
 

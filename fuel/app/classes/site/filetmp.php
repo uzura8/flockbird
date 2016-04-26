@@ -25,7 +25,7 @@ class Site_FileTmp
 		{
 			throw new HttpInvalidInputException('Disable to upload multi files.');
 		}
-		if (!$file_tmp_ids = Util_Array::cast_values(array_keys($file_tmps_posted), 'int', true))
+		if (!$file_tmp_ids = Util_Array::cast_values(array_keys($file_tmps_posted), 'int', false, true))
 		{
 			throw new HttpInvalidInputException('Invalid input data.');
 		}

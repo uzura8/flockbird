@@ -98,6 +98,11 @@ $(function () {
 		var model = $(this).data('model') ? $(this).data('model') : 'album';
 		var parentSelector = '#' + upload_type + '_' + file_id;
 
+		if (empty(file_id)) {
+			$('#' + upload_type + '_').remove();
+			return;
+		}
+
 		if (model.length > 0 && model != 'album' && model != 'thread' && model != 'news') model = 'album';
 
 		var delete_uri = '';
