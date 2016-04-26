@@ -102,7 +102,7 @@ class Controller_Api extends \Controller_Site_Api
 			if (!$val->run()) throw new \ValidationFailedException($val->show_errors());
 			$post = $val->validated();
 			$image_tmps = \Site_FileTmp::get_file_tmps_and_check_filesize($this->u->id, $this->u->filesize_total);
-			if (!strlen($post['body']) && !$file_tmps)
+			if (!strlen($post['body']) && !$image_tmps)
 			{
 				throw new \ValidationFailedException('Data is empty.');
 			}
