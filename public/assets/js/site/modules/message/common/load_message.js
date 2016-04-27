@@ -85,13 +85,14 @@ function loadMessageDefault(listSelector, getUri) {
 		getData['max_id'] = max_id;
 		getData['before_link'] = 1;
 	}
-	loadMessage(listSelector, getUri, getData);
+	loadMessage(listSelector, getUri, getData, '', false, false);
 }
 
 function loadMessage(parentListSelector, getUri) {
 	var getData        = (arguments.length > 2) ? arguments[2] : {};
 	var trigerSelector = (arguments.length > 3) ? arguments[3] : '';
 	var isAddHisttory  = (arguments.length > 4) ? Boolean(arguments[4]) : false;
+	var isExecPostLoadFunc = (arguments.length > 5) ? Boolean(arguments[5]) : true;
 
 	//var getUri = 'message/api/talks/member/.html';
 	//var parentListSelector = '#article_list';
@@ -115,9 +116,17 @@ function loadMessage(parentListSelector, getUri) {
 		pushStateInfo,
 		null,
 		null,
-		[postLoadMessage]
+		isExecPostLoadFunc ? [postLoadMessage] : []
 	);
 }
 
 function postLoadMessage() {
+	var $listBox = $('#article_list');
+	var listBoxPositionY = $listBox.offset().top;
+	var listBoxheight = $listBox.height();
+	var postBoxheight = $('#main_post_box').height();
+	var windowHeight = window.innerHeight ? window.innerHeight: $(window).height();
+	var scrollPositionY = listBoxPositionY + listBoxheight + postBoxheight - windowHeight;
+	if (scrollPositionY < 0) scrollPositionY = 0;
+	$('html,body').animate({scrollTop:scrollPositionY});
 }
