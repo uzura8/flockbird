@@ -103,6 +103,13 @@ class Model_MemberRelation extends \MyOrm\Model
 				'foreign_table_member_id_prop' => 'member_id_from',
 			);
 		}
+		if (\Notice\Site_Util::check_enabled_notice_type('follow') && conf('memberRelation.friend.triggerType') == 'each_follows')
+		{
+			// Make friends by each follows
+			static::$_observers['MyOrm\Observer_UpdateMemberRelationByFollow'] = array(
+				'events' => array('before_save'),
+			);
+		}
 	}
 
 	protected static $relations_friend_pre = array();

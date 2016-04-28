@@ -112,6 +112,10 @@ $config = array(
 		'follow' => array(
 			'isEnabled'  => 1,
 		),
+		'friend' => array(
+			'isEnabled'  => 0,
+			'triggerType' => false,// choices: false / 'each_follows' / 'request'(not implemented)
+		),
 		'accessBlock' => array(
 			'isEnabled'  => 1,
 		),
