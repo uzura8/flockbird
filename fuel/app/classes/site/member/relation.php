@@ -4,11 +4,15 @@ class Site_Member_Relation
 {
 	public static function get_relation_types()
 	{
-		return array(
-			'access_block',
-			//'friend',
-			'follow',
-		);
+		$accept_types = array();
+		$configs = conf('memberRelation');
+		foreach ($configs as $type => $values)
+		{
+			if (empty($values['isEnabled'])) continue;
+			$accept_types[] = $type;
+		}
+
+		return $accept_types;
 	}
 
 	public static function check_member_relation($member_id_from, $member_id_to, $accepted_types = array())
