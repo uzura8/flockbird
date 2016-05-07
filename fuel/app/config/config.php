@@ -3,10 +3,10 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.7
+ * @version    1.8
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2015 Fuel Development Team
+ * @copyright  2010 - 2016 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -114,6 +114,9 @@ return array(
 	 */
 	'security' => array(
 		'csrf_autoload'    => false,
+		// 'csrf_autoload_methods'    => array('post', 'put', 'delete'),
+		// 'csrf_bad_request_on_fail' => false,
+		// 'csrf_auto_token'          => false,
 		'csrf_token_key'   => 'csrf_token',
 		'csrf_expiration'  => 0,
 
@@ -160,7 +163,7 @@ return array(
 		// 'htmlentities_flags' => ENT_QUOTES,
 
 		/**
-		 * Wether to encode HTML entities as well
+		 * Whether to encode HTML entities as well
 		 */
 		// 'htmlentities_double_encode' => false,
 
@@ -204,7 +207,7 @@ return array(
 	 */
 	// 'validation' => array(
 		/**
-		 * Wether to fallback to global when a value is not found in the input array.
+		 * Whether to fallback to global when a value is not found in the input array.
 		 */
 		// 'global_input_fallback' => true,
 	// ),
@@ -224,7 +227,7 @@ return array(
 		// 'case_sensitive' => true,
 
 		/**
-		 *  Wether to strip the extension
+		 *  Whether to strip the extension
 		 */
 		// 'strip_extension' => true,
 	// ),

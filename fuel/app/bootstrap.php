@@ -35,7 +35,7 @@ require COREPATH.'bootstrap.php';
  * Fuel::STAGING
  * Fuel::PRODUCTION
  */
-\Fuel::$env = (isset($_SERVER['FUEL_ENV']) ? $_SERVER['FUEL_ENV'] : strtolower(FBD_ENVIRONMENT));
+\Fuel::$env = \Arr::get($_SERVER, 'FUEL_ENV', \Arr::get($_ENV, 'FUEL_ENV', strtolower(FBD_ENVIRONMENT)));
 
 // include helpers.
 Util_toolkit::include_php_files(APPPATH.'helpers');
