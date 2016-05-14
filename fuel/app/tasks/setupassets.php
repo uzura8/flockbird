@@ -63,10 +63,10 @@ class SetupAssets
 	private static function compile_less()
 	{
 		$return_message = '';
-		$configs = \Config::get('less.less_source_files');
+		$configs = \Config::get('less.source_files');
 		foreach ($configs as $config)
 		{
-			\Asset::less($config, array(), null, false, true);
+			\Less::compile($config, true);
 			$return_message .= 'Compile '.$config.PHP_EOL;
 		}
 

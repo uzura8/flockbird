@@ -46,7 +46,7 @@
         "monolog/monolog": "1.5.*",
         "michelf/php-markdown": "1.4.0",
         "twig/twig" : "1.*",
-        "uzura8/fuel-less": "dev-2.0/master",
+        "oyejorge/less.php": "1.*",
         "canton7/fuelphp-casset": "1.*",
         "fabpot/goutte": "2.0.*",
         "uzura8/fuel-packages-opauth": "dev-master",

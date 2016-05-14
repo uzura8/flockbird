@@ -7,8 +7,8 @@ php oil refine install
 chmod -R 777 fuel/app/media
 chmod -R 777 public/media
 chmod -R 777 public/assets/cache
+chmod 777 public/assets/css/cache
 php oil r setupassets
-chmod -R 777 public/assets/ccss
 php oil r setupdb
 php oil r setupmodule
 php oil r setupfiles

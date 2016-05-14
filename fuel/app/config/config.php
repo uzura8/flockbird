@@ -278,7 +278,6 @@ return array(
 			'myorm',
 			'myauth',
 			'myagent',
-			'less',
 			'casset',
 		),
 
