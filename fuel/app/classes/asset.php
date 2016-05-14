@@ -3,23 +3,8 @@
  * FuelPHP LessCSS package implementation.
  */
 
-class Asset extends \Less\Asset
+class Asset extends Fuel\Core\Asset
 {
-	/**
-	 * Either adds the Less stylesheet to the group, or returns the CSS tag.
-	 *
-	 * @param array|string $stylesheets The file name, or an array files.
-	 * @param array $attr An array of extra attributes
-	 * @param string $group The asset group name
-	 * @param bool $raw Whether to return the raw file or not
-	 * @param bool $is_force_compile Compile by force regardless of enviroment
-	 * @return object|string Rendered asset or current instance when adding to group
-	 */
-	public static function less($stylesheets = array(), $attr = array(), $group = NULL, $raw = false, $is_force_compile = false)
-	{
-		return static::instance()->less($stylesheets, $attr, $group, $raw, $is_force_compile);
-	}
-
 	/**
 	 * CSS
 	 *
@@ -33,8 +18,17 @@ class Asset extends \Less\Asset
 	 * $is_minify	bool	If set to true minify and combine files at only prod env.
 	 * @return	string
 	 */
-	public static function css($stylesheets = array(), $attr = array(), $group = NULL, $raw = false, $is_minify = false, $is_use_minified_file = false)
+	public static function css($stylesheets = array(), $attr = array(), $group = NULL, $raw = false, $is_minify = false, $is_use_minified_file = false, $is_less_compiled = false)
 	{
+		if (!is_array($stylesheets)) $stylesheets = (array)$stylesheets;
+
+		if ($is_less_compiled)
+		{
+			foreach ($stylesheets as $key => $stylesheet)
+			{
+				$stylesheets[$key] = 'cache/'.$stylesheet;
+			}
+		}
 		if (Fuel::$env == Fuel::PRODUCTION)
 		{
 			if ($is_minify)
@@ -45,7 +39,13 @@ class Asset extends \Less\Asset
 				}
 				return;
 			}
-			if ($is_use_minified_file) $stylesheets = Util_File::convert_filename2min($stylesheets);
+			if ($is_use_minified_file)
+			{
+				foreach ($stylesheets as $key => $stylesheet)
+				{
+					$stylesheets[$key] = Util_File::convert_filename2min($stylesheet);
+				}
+			}
 		}
 
 		return parent::css($stylesheets, $attr, $group, $raw);

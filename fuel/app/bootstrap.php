@@ -18,7 +18,6 @@ require COREPATH.'bootstrap.php';
 	'Validation' => APPPATH.'classes/validation.php',
 	'Agent' => APPPATH.'classes/agent.php',
 	'Asset' => APPPATH.'classes/asset.php',
-	'Asset_Instance' => APPPATH.'classes/asset/instance.php',
 	'Fieldset' => APPPATH.'classes/fieldset.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 	'Inflector' => APPPATH.'classes/inflector.php',

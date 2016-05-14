@@ -7,9 +7,9 @@
 <title><?php echo $header_title ? $header_title : $title; ?></title>
 <meta name="robots" content="noindex,nofollow">
 
-<?php echo Asset::css('bootstrap.custom.admin.css');?>
+<?php echo Asset::css('bootstrap.custom.admin.css', array(), null, false, true, false, true);?>
 <?php echo render('_parts/template/load_common_css'); ?>
-<?php echo Asset::css('admin.css');?>
+<?php echo Asset::css('admin.css', array(), null, false, true, false, true);?>
 <?php echo render('_parts/template/load_common_favicon'); ?>
 
 <?php if (isset($post_header)): ?>

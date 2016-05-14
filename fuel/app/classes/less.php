@@ -1,24 +1,16 @@
 <?php
-/**
- * FuelPHP LessCSS package implementation.
- */
 
-class Asset_Instance extends \Less\Asset_Instance
+class Less
 {
 	/**
-	 * Less
-	 *
-	 * Compile a Less file and load it as a CSS asset.
+	 * Compile a Less file.
 	 *
 	 * @param array|string $stylesheets The file name, or an array files.
-	 * @param array $attr An array of extra attributes
-	 * @param string $group The asset group name
-	 * @param bool $raw Whether to return the raw file or not
 	 * @param bool $is_force_compile Compile by force regardless of enviroment
-	 * @return object|string Rendered asset or current instance when adding to group
+	 * @return null
 	 * @throws \Exception
 	 */
-	public function less($stylesheets = array(), $attr = array(), $group = null, $raw = false, $is_force_compile = false)
+	public static function compile($stylesheets = array(), $is_force_compile = false)
 	{
 		if ( ! is_array($stylesheets))
 		{
@@ -37,7 +29,7 @@ class Asset_Instance extends \Less\Asset_Instance
 			$lessfile = str_replace('.'.pathinfo($lessfile, PATHINFO_EXTENSION), '', $lessfile).'.css';
 			
 			// Full path to css compiled file
-			$compiled_css = \Config::get('asset.less_output_dir').$lessfile;
+			$compiled_css = \Config::get('less.output_dir').$lessfile;
 
 			// Compile only if we detect modifications in less file
 			if (static::_detect_modifications($source_less, $compiled_css, $is_force_compile))
@@ -46,15 +38,13 @@ class Asset_Instance extends \Less\Asset_Instance
 				static $driver = null;
 				if (!$driver)
 				{
-					$driver = \Config::get('asset.less_compiler');
+					$driver = \Config::get('less.compiler');
 				}
 
 				// Then compile the file
 				$driver::compile($source_less, $compiled_css);
 			}
 		}
-		
-		return static::css($stylesheets, $attr, $group, $raw);
 	}
 
 	/**
@@ -117,7 +107,7 @@ class Asset_Instance extends \Less\Asset_Instance
 		return false;
 	}
 
-	protected function get_source_less($lessfile_name)
+	protected static function get_source_less($lessfile_name)
 	{
 		$source_file_path = '';
 		$modules = Site_Util::get_active_modules();
@@ -129,9 +119,58 @@ class Asset_Instance extends \Less\Asset_Instance
 		}
 		if ($source_file_path) return $source_file_path;
 
-		$source_file_path = \Config::get('asset.less_source_dir').$lessfile_name;
+		$source_file_path = \Config::get('less.source_dir').$lessfile_name;
 		if (file_exists($source_file_path)) return $source_file_path;
 
 		return false;
 	}
+
+	/**
+	 * Search for @import directive in less files
+	 *
+	 * @param string $file
+	 * @return array
+	 */
+	protected static function _get_imports($file)
+	{
+		$string = \File::read($file, true);
+
+		// Remove all comments from the string
+		$newStr  = '';
+
+		$tokens = token_get_all('<?php ' . $string);
+
+		foreach ($tokens as $token)
+		{
+			if (is_array($token))
+			{
+				if (in_array($token[0], array(T_COMMENT, T_DOC_COMMENT)))
+				{
+					continue;
+				}
+
+				$token = $token[1];
+			}
+
+			$newStr .= $token;
+		}
+
+		$newStr = trim(substr($newStr, 5));
+
+		// Then look for @import pattern
+		// that matches any of these below:
+		//
+		// @import "something.css" media;
+		// @import url("something.css") media;
+		// @import url(something.css) media;
+
+		$imports = array();
+		if(preg_match_all('#@import (url\()?[\'"]?(?P<css>[^\'"]+)[\'"]?(\))?(\s*media)?;#i', $newStr, $matches))
+		{
+			$imports = $matches['css'];
+		}
+
+		return $imports;
+	}
 }
+

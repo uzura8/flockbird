@@ -222,11 +222,10 @@ class Controller_Base extends Controller_Common
 		if (!is_dev_env()) return;
 		if (IS_API) return;
 
-		$configs = \Config::get('less.less_source_files');
-		foreach ($configs as $config)
+		$source_files = \Config::get('less.source_files');
+		foreach ($source_files as $source_file)
 		{
-			//compile less
-			Asset::less($config);
+			Less::compile($source_file);
 		}
 	}
 

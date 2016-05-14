@@ -47,8 +47,8 @@ desktop.ini
 /config.php
 /public/modules/*
 /public/assets/*/modules/*
-/public/assets/ccss/*
 /public/assets/cache/*
+/public/assets/css/cache/*
 /public/xhprof.php
 /web
 /public_html
