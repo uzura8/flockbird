@@ -85,9 +85,19 @@ $ sh bin/setup/setup.sh
 
 #### アップロードファイルの保存場所をAWS S3 にする場合
 
-composer.json の require に以下の行をを追加。
+composer.json の require に以下の行を追加。
 
 ~~~~
 "aws/aws-sdk-php": "2.*"
+~~~~
+
+config.php にて、AWSの設定を行う。
+
+~~~~
+// AWS 関連設定
+define('FBD_AWS_ACCESS_KEY', '');
+define('FBD_AWS_SECRET_KEY', '');
+define('FBD_AWS_S3_BUCKET', '');
+define('FBD_AWS_S3_PATH', '');
 ~~~~
 
