@@ -12,7 +12,7 @@ class Auth_Login_Driver extends \Auth\Auth_Login_Driver
 	 */
 	public function hash_password($password, $username = '')
 	{
-		return base64_encode($this->hasher()->pbkdf2($password, static::get_salt($username, \Config::get('auth.salt')), \Config::get('auth.iterations', 10000), 32));
+		return base64_encode(hash_pbkdf2('sha256', $password, static::get_salt($username, \Config::get('auth.salt')), \Config::get('auth.iterations', 10000), 32, true));
 	}
 
 	/**
