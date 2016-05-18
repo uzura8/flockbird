@@ -27,7 +27,19 @@ if (!$col_sm_size || $col_sm_size == 12 || $optional_public_flag)
 	<div class="col-sm-<?php echo $input_col_sm_size; ?>">
 		<div class="row">
 			<div class="col-sm-<?php echo $col_sm_size; ?>">
+<?php if ($group_adons): ?>
+				<div class="input-group">
+<?php 	if (isset($group_adons['pre'])): ?>
+					<div class="input-group-addon"><?php echo $group_adons['pre']; ?></div>
+<?php 	endif; ?>
+<?php endif; ?>
 				<?php echo Form::input($name, (isset($input_value) && !is_null($input_value)) ? $input_value : Input::post($name, $default_value), $input_atter); ?>
+<?php if ($group_adons): ?>
+<?php 	if (isset($group_adons['post'])): ?>
+					<div class="input-group-addon"><?php echo $group_adons['post']; ?></div>
+<?php 	endif; ?>
+				</div>
+<?php endif; ?>
 			</div>
 <?php if ($optional_public_flag): ?>
 			<div class="col-xs-12 col-sm-4 col-sm-offset-<?php echo (8 - $col_sm_size); ?> pull-right">

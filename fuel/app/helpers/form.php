@@ -30,7 +30,7 @@ function form_close()
 	return render('_parts/form/close');
 }
 
-function form_input(Validation $val, $name, $default_value = null, $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array(), $input_value = null)
+function form_input(Validation $val, $name, $default_value = null, $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array(), $input_value = null, $group_adons = array())
 {
 	list($default_value, $label, $is_required, $input_atter) = Site_Form::get_fieid_attribute($val, $name, $default_value);
 	$data = array(
@@ -45,6 +45,7 @@ function form_input(Validation $val, $name, $default_value = null, $col_sm_size 
 		'help' => $help,
 		'optional_public_flag' => $optional_public_flag,
 		'input_value' => $input_value,
+		'group_adons' => $group_adons,
 	);
 
 	return render('_parts/form/input', $data);
