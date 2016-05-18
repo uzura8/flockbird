@@ -74,7 +74,7 @@ echo render('_parts/template/main_content', array('content' => $content, 'sub_co
 <?php if ($layout == 'normal'): ?>
 		<div class="col-sm-3" id="sidebar" role="navigation">
 <?php if (Auth::check()): ?>
-			<?php echo render('_parts/template/profile_img_box'); ?>
+			<?php echo render('_parts/template/profile_box'); ?>
 			<?php echo render('_parts/nav_list', array('header' => term('member.view', 'common.menu'), 'list' => Config::get('navigation.site.secure_side'))); ?>
 <?php endif; ?>
 <?php if (conf('viewParams.site.sideMenu.categoryList', 'news') && $news_categories = \News\Site_Util::get_category_uris(conf('viewParams.site.sideMenu.categoryList.withAllLink', 'news'))): ?>
