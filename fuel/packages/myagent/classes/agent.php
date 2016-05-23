@@ -22,7 +22,7 @@ class Agent
 
 	protected static function mobile_detect_instance()
 	{
-		require_once PKGPATH.'myagent'.DS.'vendor'.DS.'Mobile_Detect.php';
+		require_once PKGPATH.'..'.DS.'vendor'.DS.'mobiledetect'.DS.'mobiledetectlib'.DS.'Mobile_Detect.php';
 		$instance = new \Mobile_Detect();
 
 		return $instance;
