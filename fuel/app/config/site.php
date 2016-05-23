@@ -6,8 +6,8 @@ $config = array(
 	),
 	'library' => array(
 		'jqueryVersion' => array(
-			'latest' => '2.1.3',
-			'legacy' => '1.11.2',
+			'latest' => '2.2.4',
+			'legacy' => '1.12.4',
 		),
 		'angularJs' => array(
 			'isEnabled' => false,

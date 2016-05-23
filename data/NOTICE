@@ -26,7 +26,7 @@
   - url: https://github.com/uzura8/opengraph
     + forked from: https://github.com/scottmac/opengraph
 * jquery
-  - version: 2.1.3 / 1.11.2
+  - version: 2.2.4 / 1.12.4
   - license: MIT
 * Angular.js
   - version: 1.3.15
