@@ -36,7 +36,7 @@
   - version: 3.3.6
   - license: Apache License, Version 2.0
 * bootstrap-datetimepicker
-  - version: 3.0.0
+  - version: 4.17.37
   - license: MIT
   - url: https://github.com/Eonasdan/bootstrap-datetimepicker
 * bootstrap-markdown
@@ -80,11 +80,9 @@
   - version: 1.1.2
   - http://mattbradley.github.com/livestampjs/
 * moment.js
-  - version: 2.6.0
+  - version: 2.9.0
   - license: MIT
   - url: http://momentjs.com/
-* moment.lang_ja.js
-  - license: MIT
 * jQuery File Upload Plugin
   - version: 9.11.2
   - license: MIT

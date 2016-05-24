@@ -32,7 +32,7 @@ Asset::js(array(
 	'jquery.autogrow-textarea.js',
 	'jquery.jgrowl.js',
 	'moment.js',
-	'moment.lang_ja.js',
+	'moment.locale_ja.js',
 	'livestamp.js',
 	'js-url/js-url.js',
 	'util.js',

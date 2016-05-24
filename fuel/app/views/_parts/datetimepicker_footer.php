@@ -1,7 +1,6 @@
 <?php
 Asset::js(array(
 	'bootstrap-datetimepicker.js',
-	'locales/bootstrap-datetimepicker.ja.js',
 ), null, 'js_datetimepicker', false, true);
 echo Asset::render('js_datetimepicker', false, 'js');
 ?>
@@ -14,7 +13,8 @@ $(function () {
 <?php if (isset($max_date) && $max_date = 'now'): ?>
 		maxDate: moment(),     //set a maximum date (defaults to today +100 years)
 <?php endif; ?>
-		language:'ja',                  //sets language locale
+		format: 'YYYY-MM-DD HH:mm',
+		locale:'ja',                  //sets language locale
 		//defaultDate:"",                 //sets a default date, accepts js dates, strings and moment objects
 		//disabledDates:[],               //an array of dates that cannot be selected
 		//enabledDates:[],                //an array of dates that can be selected
