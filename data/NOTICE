@@ -96,9 +96,9 @@
   - license: MIT
   - http://jqueryui.com
 * Summernote
-  - version: 0.6.9
+  - version: 0.6.16
   - license: MIT
-  - url: http://hackerwins.github.io/summernote/
+  - url: http://summernote.org/
 * select2
   - version: 4.0.2
   - license: MIT
