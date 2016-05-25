@@ -100,7 +100,7 @@
   - license: MIT
   - url: http://hackerwins.github.io/summernote/
 * select2
-  - version: 4.0.0
+  - version: 4.0.2
   - license: MIT
   - url: https://select2.github.io/
 * handlebars
