@@ -104,7 +104,7 @@
   - license: MIT
   - url: https://select2.github.io/
 * handlebars
-  - version: v1.3.0
+  - version: v4.0.5
   - license: MIT
   - url: http://handlebarsjs.com
 * GMaps.js

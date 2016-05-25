@@ -1,4 +1,4 @@
-<?php echo Asset::js('handlebars-v1.3.0.js');?>
+<?php echo Asset::js('handlebars-v4.0.5.js');?>
 <?php
 $jquery_version = conf('library.jqueryVersion.latest');
 if (conf('legacyBrowserSupport.isEnabled') && \MyAgent\Agent::check_legacy_ie(conf('legacyBrowserSupport.legacyIECriteriaVersion')))
