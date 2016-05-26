@@ -88,7 +88,7 @@
   - license: MIT
   - url: https://github.com/blueimp/jQuery-File-Upload
 * blueimp Gallery JS
-  - version: JS 2.14.1
+  - version: JS 2.21.2
   - license: MIT
   - url:  https://github.com/blueimp/Gallery
 * jQuery UI Widget
