@@ -52,6 +52,7 @@ $config = array(
 					'assets/img/site/sample/01.jpg',
 					'assets/img/site/sample/02.jpg',
 					'assets/img/site/sample/03.jpg',
+					'assets/img/site/sample/04.jpg',
 				),
 			),
 			'timeline' => array(
