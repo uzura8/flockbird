@@ -9,14 +9,6 @@ $config = array(
 			'latest' => '2.2.4',
 			'legacy' => '1.12.4',
 		),
-		'angularJs' => array(
-			'isEnabled' => false,
-			'versions' => array(
-				'latest' => '1.3.15',
-				//'legacy' => '1.2.9',
-			),
-			//'legacyIECriteriaVersion' => 8,
-		),
 		//'goutte' => array(
 		//	'isEnabled'  => true,
 		//),

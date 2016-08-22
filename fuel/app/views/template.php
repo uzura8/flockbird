@@ -20,7 +20,6 @@
 <?php
 $current_page_id = site_get_current_page_id();
 $body_attrs = array('id' => $current_page_id);
-if (conf('library.angularJs.isEnabled') && $use_angularjs) $body_attrs['ng-app'] = Inflector::camelize($current_page_id);
 ?>
 <body <?php echo Util_Array::conv_array2attr_string($body_attrs); ?>>
 
