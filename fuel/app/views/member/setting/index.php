@@ -48,6 +48,16 @@
 	); ?>
 <?php endif; ?>
 
+<?php if (conf('i18n.isEnabled')): ?>
+	<?php echo form_text(
+		Form_MemberConfig::get_lang_value_label($u->id),
+		term('site.lang', 'site.setting'),
+		$label_col_size,
+		true,
+		array('uri' => 'member/setting/lang', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+	); ?>
+<?php endif; ?>
+
 </div>
 
 <div class="list-group">

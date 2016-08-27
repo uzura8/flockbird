@@ -75,3 +75,20 @@ function is_enabled_public_flag($public_flag_key)
 	return in_array(Site_Util::get_public_flag_value4key($public_flag_key), conf('public_flag.enabled'));
 }
 
+function is_enabled_i18n()
+{
+	return conf('i18n.isEnabled');
+}
+
+function get_lang()
+{
+	if (!is_enabled_i18n()) return false;
+	return Lang::get_lang();
+}
+
+function is_lang_ja()
+{
+	if (!is_enabled_i18n()) return false;
+	return Lang::get_lang() == 'ja';
+}
+

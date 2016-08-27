@@ -79,7 +79,7 @@ class Controller_Auth extends Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs('ログイン');
+		$this->set_title_and_breadcrumbs(t('site.login'));
 		$this->template->content = View::forge('auth/_parts/login', array('destination' => $destination));
 	}
 

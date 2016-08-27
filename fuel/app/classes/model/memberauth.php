@@ -18,7 +18,6 @@ class Model_MemberAuth extends \MyOrm\Model
 			'label' => 'パスワード',
 			'validation' => array(
 				'trim',
-//				'required',
 				'min_length' => array(6),
 				'max_length' => array(128),
 			),
@@ -38,8 +37,8 @@ class Model_MemberAuth extends \MyOrm\Model
 		static::$_properties['member_id'] =  array(
 			'form' => array('type' => false),
 		);
-		static::$_properties['email']['label'] = term('site.email');
-		static::$_properties['password']['label'] = term('site.password');
+		static::$_properties['email']['label'] = t('member.email');
+		static::$_properties['password']['label'] = t('member.password');
 	}
 
 	protected static $_observers = array(

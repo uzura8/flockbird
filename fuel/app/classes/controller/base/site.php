@@ -10,12 +10,40 @@ class Controller_Base_Site extends Controller_Base
 	public function before()
 	{
 		parent::before();
-		if (!IS_ADMIN && Auth::check())
+
+		if (!IS_ADMIN)
 		{
-			$this->set_notification_count();
-			$this->set_current_member_config();
+			if (Auth::check())
+			{
+				$this->set_notification_count();
+				$this->set_current_member_config();
+			}
+			if (is_enabled_i18n())
+			{
+				$this->set_lang();
+				self::load_lang();
+				self::load_config();
+			}
+			if (!Auth::check()) $this->set_login_validation();
 		}
-		if (!IS_ADMIN && !Auth::check()) $this->set_login_validation();
+	}
+
+	protected function set_lang()
+	{
+		if (IS_AUTH) $lang = Model_MemberConfig::get_value($this->u->id, 'lang');
+		if (empty($lang))  $lang = Util_Lang::get_client_accept_lang();
+		if (!empty($lang)) Lang::set_lang($lang, true);
+	}
+
+	protected static function load_lang()
+	{
+		Lang::load('site');
+	}
+
+	protected static function load_config()
+	{
+		Config::load(Site_Util::get_term_file_name(), 'term');
+		Config::load('navigation', 'navigation');
 	}
 
 	protected function get_current_user()
@@ -33,10 +61,11 @@ class Controller_Base_Site extends Controller_Base
 	{
 		Fieldset::reset();
 		$this->login_val = Validation::forge('site_login');
-		$options = array('1' => '次回から自動的にログイン');
+		$options = array('1' => term('member.remember_me'));
 		$this->login_val->add('rememberme', '', array('type' => 'checkbox', 'options' => $options))->add_rule('checkbox_val', $options);
 		$this->login_val->add_model(Model_MemberAuth::forge());
 		$this->login_val->fieldset()->field('email')->delete_rule('unique');
+		$this->login_val->fieldset()->field('password')->add_rule('required');
 		View::set_global('login_val', $this->login_val);
 	}
 

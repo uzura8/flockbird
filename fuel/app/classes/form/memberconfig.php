@@ -64,4 +64,28 @@ class Form_MemberConfig
 			$member_config->save();
 		}
 	}
+
+	public static function get_validation_lang($member_id)
+	{
+		$val = \Validation::forge('member_config_lang');
+
+		$name = 'lang';
+		$value = self::get_value($member_id, $name, self::get_default_value($name));
+		$options = self::get_lang_options();
+		$val->add($name, term('site.lang', 'site.setting'), array('type' => 'select', 'options' => $options, 'value' => $value))
+				->add_rule('required')
+				->add_rule('in_array', array_keys($options));
+
+		return $val;
+	}
+
+	public static function get_lang_options($value = null, $is_simple = false)
+	{
+		return conf('i18n.langs');
+	}
+
+	public static function get_lang_value_label($member_id)
+	{
+		return Arr::get(static::get_lang_options(), static::get_value($member_id, 'lang', static::get_default_value('lang')));
+	}
 }

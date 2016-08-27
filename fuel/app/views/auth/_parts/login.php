@@ -12,7 +12,7 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!FBD_SSL_MODE
 	<?php echo form_input($login_val, 'email', '', $col_sm_size, $label_col_sm_size); ?>
 	<?php echo form_input($login_val, 'password', '', $col_sm_size, $label_col_sm_size); ?>
 	<?php echo form_checkbox($login_val, 'rememberme', array(), $label_col_sm_size, 'block', '', array(), !empty($in_popover)); ?>
-	<?php echo form_anchor('member/recover/resend_password', term('site.password').'を忘れた場合はこちら', array(), $col_offset_size, null, true); ?>
+	<?php echo form_anchor('member/recover/resend_password', t('member.forget_password'), array(), $col_offset_size, null, true); ?>
 <?php endif; ?>
 <?php if ($is_display_form): ?>
 	<?php echo form_button('site.login', 'submit', null, null, $col_offset_size); ?>
@@ -28,7 +28,7 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!FBD_SSL_MODE
 <?php if (FBD_FACEBOOK_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/facebook',
-		icon_label('Facebookで'.term('site.login'), 'both', false, 'facebook-square', 'fa fa-'),
+		icon_label(t('member.login_with', array('service' => term('service.facebook.view'))), 'both', false, 'facebook-square', 'fa fa-'),
 		array('class' => 'btn btn-default'),
 		$col_offset_size
 	); ?>
@@ -36,7 +36,7 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!FBD_SSL_MODE
 <?php if (FBD_TWITTER_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/twitter',
-		icon_label('Twitterで'.term('site.login'), 'both', false, 'twitter', 'fa fa-'),
+		icon_label(t('member.login_with', array('service' => term('service.twitter.view'))), 'both', false, 'twitter', 'fa fa-'),
 		array('class' => 'btn btn-default'),
 		$col_offset_size
 	); ?>
@@ -44,7 +44,7 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!FBD_SSL_MODE
 <?php if (FBD_GOOGLE_APP_ID): ?>
 	<?php echo form_anchor(
 		conf('login_uri.site').'/google',
-		icon_label('Googleで'.term('site.login'), 'both', false, 'google', 'fa fa-'),
+		icon_label(t('member.login_with', array('service' => term('service.google.view'))), 'both', false, 'google', 'fa fa-'),
 		array('class' => 'btn btn-default'),
 		$col_offset_size
 	); ?>

@@ -98,6 +98,15 @@ class Site_Util
 		return preg_match('#^error/?#', Uri::string());
 	}
 
+	public static function get_term_file_name()
+	{
+		$config = 'term';
+		$lang = Lang::get_lang();
+		if ($lang != 'ja') $config .= '_'.$lang;
+
+		return $config;
+	}
+
 	public static function get_form_instance($name = 'default', $model_obj = null, $is_horizontal = true, $add_fields = array(), $btn_field = array(), $form_attr = array(), $hide_fields = array())
 	{
 		$form = Fieldset::forge($name);

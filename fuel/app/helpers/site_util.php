@@ -169,14 +169,21 @@ function term()
 	$keys = func_get_args();
 
 	if (count($keys) === 1 && is_array($keys[0])) $keys = $keys[0];
+	$delimitter = (count($keys) > 1 && !is_lang_ja()) ? ' ' : '';
 
 	$return = '';
 	foreach ($keys as $key)
 	{
+		if ($return) $return .= $delimitter;
 		$return .= Config::get('term.'.$key, $key);
 	}
 
 	return $return;	
+}
+
+function t($line, $params = array())
+{
+	return Str::tr(Config::get('term.'.$line, $line), $params);
 }
 
 function symbol($key)

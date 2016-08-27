@@ -147,6 +147,8 @@ $config = array(
 		'failure' => '失敗',
 		'tag' => 'タグ',
 		'related' => '関連',
+		'lang' => '言語',
+		'about' => 'このサイトについて',
 	),
 	'common' => array(
 		'info' => '情報',
@@ -175,6 +177,9 @@ $config = array(
 		'name' => 'ニックネーム',
 		'email' => 'メールアドレス',
 		'password' => 'パスワード',
+		'remember_me'  => '次回から自動的にログイン',
+		'forget_password' => 'パスワードを忘れた場合はこちら',
+		'login_with' => ':service でログイン',
 		'sex' => array(
 			'label' => '性別',
 			'options' => array(
@@ -224,11 +229,15 @@ $config = array(
 			'do_share' => 'シェアする',
 		),
 		'twitter' => array(
-			'view' => 'Facebook',
+			'view' => 'Twitter',
 			'do_share' => 'tweetする',
 		),
+		'google' => array(
+			'view' => 'Google',
+			'do_share' => 'シェアする',
+		),
 		'line' => array(
-			'view' => 'Facebook',
+			'view' => 'Line',
 			'do_share' => 'LINEで送る',
 		),
 	),
@@ -243,7 +252,6 @@ $config = array(
 	'do_accessBlock' => 'ブロックする',
 	'undo_accessBlock' => 'ブロックを解除する',
 	'accessBlocked'  => 'ブロック中',
-	'remember_me'  => '次回から自動的にログイン',
 	'public_flag' => array(
 		'label' => '公開範囲',
 		'options' => array(

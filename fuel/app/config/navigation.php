@@ -10,7 +10,7 @@ $config = array(
 			'album_image' => 'album/image/',
 			'member.view' => 'member/list/',
 			//'Sitemap' => 'sitemap/',
-			//'About' => 'about/',
+			//'site.about' => 'site/about',
 		),
 		'insecure_global_head' => array(
 			'timeline' => 'timeline/',
@@ -19,7 +19,7 @@ $config = array(
 			'album_image' => 'album/image/',
 			'member.view' => 'member/list/',
 			//'Sitemap' => 'sitemap/',
-			//'About' => 'about/',
+			//'site.about' => 'site/about',
 		),
 		'secure_user_dropdown' => array(
 			'page.myhome' => 'member/',
@@ -37,7 +37,7 @@ $config = array(
 			'album_image' => 'album/image/',
 			'member.view' => 'member/list/',
 			'news.view' => 'news/list/',
-			'About' => 'site/about',
+			'site.about' => 'site/about',
 		),
 		'secure_side' => array(
 			'page.myhome' => 'member/',
@@ -50,10 +50,10 @@ $config = array(
 			'site.logout' => 'auth/logout/',
 		),
 		'global_footer' => array(
-			term('news.view') => 'news/list/',
-			'このサイトについて' => 'site/about',
-			term('site.term') => 'site/term',
-			term('site.privacy_policy') => 'site/privacy_policy',
+			'news.view' => 'news/list/',
+			'site.about' => 'site/about',
+			'site.term' => 'site/term',
+			'site.privacy_policy' => 'site/privacy_policy',
 		),
 	),
 );
