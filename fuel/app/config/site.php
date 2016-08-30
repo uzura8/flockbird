@@ -17,7 +17,7 @@ $config = array(
 		//),
 	),
 	'i18n' => array(
-		'isEnabled' => true,
+		'isEnabled' => false,
 		'langs' => array(
 			'en' => 'English',
 			'ja' => '日本語',
