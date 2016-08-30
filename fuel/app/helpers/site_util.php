@@ -169,7 +169,7 @@ function term()
 	$keys = func_get_args();
 
 	if (count($keys) === 1 && is_array($keys[0])) $keys = $keys[0];
-	$delimitter = (count($keys) > 1 && !is_lang_ja()) ? ' ' : '';
+	$delimitter = (count($keys) > 1 && (is_enabled_i18n() && !is_lang_ja())) ? ' ' : '';
 
 	$return = '';
 	foreach ($keys as $key)
