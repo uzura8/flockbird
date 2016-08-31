@@ -28,7 +28,7 @@ class Controller_Member_Register extends Controller_Site
 
 		if (!$member_pre = $this->check_token())
 		{
-			Session::set_flash('error', sprintf('URLが%sです。', term('form.disabled')));
+			Session::set_flash('error', __('invalid_url'));
 			throw new HttpNotFoundException;
 		}
 
@@ -137,7 +137,7 @@ class Controller_Member_Register extends Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(term('member.view', 'site.registration', 'form.confirm'), array('member/register/signup' => term('site.signup')));
+		$this->set_title_and_breadcrumbs(__('member_registration'), array('member/register/signup' => term('site.signup')));
 		$this->template->content = View::forge('member/register/index', array(
 			'val' => $form_member_profile->get_validation(),
 			'member_public_flags' => $form_member_profile->get_member_public_flags(),

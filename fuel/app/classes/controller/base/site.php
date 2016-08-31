@@ -38,6 +38,7 @@ class Controller_Base_Site extends Controller_Base
 	protected static function load_lang()
 	{
 		Lang::load('site');
+		Lang::load('message');
 	}
 
 	protected static function load_config()
