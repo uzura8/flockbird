@@ -137,7 +137,7 @@ class Controller_Member_Register extends Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(term('member.view', 'site.registration', 'form.confirm'), array('member/signup' => term('site.signup')));
+		$this->set_title_and_breadcrumbs(term('member.view', 'site.registration', 'form.confirm'), array('member/register/signup' => term('site.signup')));
 		$this->template->content = View::forge('member/register/index', array(
 			'val' => $form_member_profile->get_validation(),
 			'member_public_flags' => $form_member_profile->get_member_public_flags(),
