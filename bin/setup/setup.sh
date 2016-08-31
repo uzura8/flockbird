@@ -5,6 +5,7 @@ export COMPOSER_PROCESS_TIMEOUT=2000
 php composer.phar update
 php oil refine install
 chmod -R 777 fuel/app/media
+chmod -R 777 fuel/app/logs/development
 chmod -R 777 public/media
 chmod -R 777 public/assets/cache
 chmod 777 public/assets/css/cache
