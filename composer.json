@@ -41,7 +41,6 @@
         "twig/twig" : "1.*",
         "oyejorge/less.php": "1.*",
         "canton7/fuelphp-casset": "1.*",
-        "fabpot/goutte": "2.0.*",
         "mobiledetect/mobiledetectlib": "2.8.*",
         "uzura8/fuel-packages-opauth": "dev-master",
         "uzura8/opengraph": "dev-master"
