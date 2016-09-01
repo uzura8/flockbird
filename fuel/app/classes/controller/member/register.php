@@ -13,6 +13,8 @@ class Controller_Member_Register extends Controller_Site
 	public function before()
 	{
 		parent::before();
+
+		if (IS_AUTH) Response::redirect('member');
 	}
 
 	/**

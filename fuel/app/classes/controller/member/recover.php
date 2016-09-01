@@ -11,6 +11,8 @@ class Controller_Member_Recover extends Controller_Site
 	public function before()
 	{
 		parent::before();
+
+		if (IS_AUTH) Response::redirect('member');
 	}
 
 	/**
