@@ -18,21 +18,23 @@ class Controller_Base_Site extends Controller_Base
 				$this->set_notification_count();
 				$this->set_current_member_config();
 			}
-			if (is_enabled_i18n())
-			{
-				$this->set_lang();
-				self::load_lang();
-				self::load_config();
-			}
+			$this->set_lang();
+			self::load_config();
+			self::load_lang();
+
 			if (!Auth::check()) $this->set_login_validation();
 		}
 	}
 
 	protected function set_lang()
 	{
-		if (IS_AUTH) $lang = Model_MemberConfig::get_value($this->u->id, 'lang');
-		if (empty($lang))  $lang = Util_Lang::get_client_accept_lang();
-		if (!empty($lang)) Lang::set_lang($lang, true);
+		$lang = 'ja';
+		if (is_enabled_i18n())
+		{
+			if (IS_AUTH) $lang = Model_MemberConfig::get_value($this->u->id, 'lang');
+			if (empty($lang))  $lang = Util_Lang::get_client_accept_lang();
+		}
+		Lang::set_lang($lang, true);
 	}
 
 	protected static function load_lang()

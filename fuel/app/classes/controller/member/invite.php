@@ -22,7 +22,7 @@ class Controller_Member_Invite extends Controller_Site
 		{
 			\Util_security::check_csrf();
 
-			$success_message = sprintf('%sを%sしました。', term('form.invite', 'site.mail'), term('form.post'));
+			$success_message = __('message_send_mail', array('label' => t('invite')));
 			$error_message = '';
 			$is_transaction_rollback = false;
 			try
@@ -31,7 +31,7 @@ class Controller_Member_Invite extends Controller_Site
 				$post = $val->validated();
 				if (Model_MemberPre::get_one4invite_member_id_and_email($this->u->id, $post['email']))
 				{
-					throw new ValidationFailedException(sprintf('その%sは既に%sです。', term('site.email'), term('form.invited')));
+					throw new ValidationFailedException(__('message_invite_mail_already_sent'));
 				}
 
 				DB::start_transaction();
@@ -55,12 +55,12 @@ class Controller_Member_Invite extends Controller_Site
 			catch(EmailValidationFailedException $e)
 			{
 				Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
-				$error_message = 'メール送信エラー';
+				$error_message = __('message_send_mail_error');
 			}
 			catch(EmailSendingFailedException $e)
 			{
 				Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
-				$error_message = 'メール送信エラー';
+				$error_message = __('message_send_mail_error');
 			}
 			catch(\Database_Exception $e)
 			{
@@ -77,7 +77,10 @@ class Controller_Member_Invite extends Controller_Site
 		}
 
 		$this->set_title_and_breadcrumbs(term('form.invite_friend'), null, $this->u);
-		$this->template->content = \View::forge('member/invite', array('val' => $val, 'member_pres' => Model_MemberPre::get4invite_member_id($this->u->id)));
+		$this->template->content = \View::forge('member/invite', array(
+			'val' => $val,
+			'member_pres' => Model_MemberPre::get4invite_member_id($this->u->id)
+		));
 	}
 
 	private static function get_validation_object()
@@ -85,12 +88,12 @@ class Controller_Member_Invite extends Controller_Site
 		$val = Validation::forge('invite');
 
 		$email = Form_Util::get_model_field('member_auth', 'email');
-		$email['attributes']['placeholder'] = sprintf('%sの%s', term('form.do_invite', 'common.friend'), term('site.email'));
-		$val->add('email', $email['label'], $email['attributes'], $email['rules']);
+		$email['attributes']['placeholder'] = __('invite_form_email_placeholder');
+		$val->add('email', t('member.email'), $email['attributes'], $email['rules']);
 
 		$val->add('message', term('common.message'), array(
 			'rows' => 3,
-			'placeholder' => sprintf('%sへの%s', term('common.friend'), term('form.invite', 'common.message', 'form._not_required')),
+			'placeholder' => __('invite_form_message_placeholder'),
 		), array('trim'));
 
 		return $val;

@@ -7,7 +7,7 @@
 <?php endforeach; ?>
 <?php endif; ?>
 <?php if (!empty($exists_required_fields)): ?>
-	<li><span class="required">*</span>の項目は入力必須</li>
+	<li><span class="required">*</span> <?php echo term('form.required_field'); ?></li>
 <?php endif; ?>
 </ul>
 </div>

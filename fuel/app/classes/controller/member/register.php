@@ -28,7 +28,7 @@ class Controller_Member_Register extends Controller_Site
 
 		if (!$member_pre = $this->check_token())
 		{
-			Session::set_flash('error', __('invalid_url'));
+			Session::set_flash('error', __('message_invalid_url'));
 			throw new HttpNotFoundException;
 		}
 

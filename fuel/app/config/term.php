@@ -47,6 +47,7 @@ $config = array(
 		'value' => '値',
 		'format' => '形式',
 		'required' => '必須',
+		'required_field' => '入力必須項目',
 		'not_required' => '任意',
 		'_not_required' => '(任意)',
 		'place' => '場所',

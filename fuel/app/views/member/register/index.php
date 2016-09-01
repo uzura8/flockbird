@@ -1,4 +1,4 @@
-<?php echo alert(__('please_input_following_items')); ?>
+<?php echo alert(__('message_please_input_following_items')); ?>
 <div class="well">
 <?php $label_size = 3; ?>
 <?php echo form_open(); ?>
@@ -15,7 +15,7 @@
 <?php endif; ?>
 	<?php echo Form::hidden('token', Input::param('token')); ?>
 	<?php echo form_text(
-		__('confirmation_to_agree_terms_of_use', array('link' => anchor('site/term', t('site.term'), false, array(), true))),
+		__('message_confirmation_to_agree_terms_of_use', array('link' => anchor('site/term', t('site.term'), false, array(), true))),
 		null,
 		$label_size,
 		true

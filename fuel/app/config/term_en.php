@@ -47,6 +47,7 @@ $config = array(
 		'value' => 'Value',
 		'format' => 'Format',
 		'required' => 'Required',
+		'required_field' => 'Required field',
 		'not_required' => 'option',
 		'_not_required' => '(option)',
 		'place' => 'Place',
