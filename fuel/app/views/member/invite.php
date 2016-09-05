@@ -22,7 +22,7 @@ $label_col_sm_size = 3;
 <tr id="invite_<?php echo $id; ?>">
 		<td><?php echo btn('form.delete', '#', 'js-ajax-delete', false, 'xs', null, array(
 			'data-uri' => 'member/invite/api/cancel/'.$id,
-			'data-msg' => term('form.invite').'を取り消しますか？',
+			'data-msg' => __('message_delete_confirm_for', array('label' => term('form.invite'))),
 			'data-parent' => '#invite_'.$id,
 		)); ?></td>
 		<td><?php echo $member_pre->email; ?></td>
