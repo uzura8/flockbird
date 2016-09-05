@@ -8,7 +8,7 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 	{
 		parent::before();
 
-		if (!conf('i18n.isEnabled')) throw new HttpNotFoundException;
+		if (!is_enabled_i18n()) throw new HttpNotFoundException;
 	}
 
 	/**

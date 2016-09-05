@@ -81,7 +81,7 @@ class Form_MemberConfig
 
 	public static function get_lang_options($value = null, $is_simple = false)
 	{
-		return conf('i18n.langs');
+		return conf('i18n.lang.options');
 	}
 
 	public static function get_lang_value_label($member_id)

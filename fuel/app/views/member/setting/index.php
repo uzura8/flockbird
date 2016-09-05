@@ -48,7 +48,7 @@
 	); ?>
 <?php endif; ?>
 
-<?php if (conf('i18n.isEnabled')): ?>
+<?php if (is_enabled_i18n()): ?>
 	<?php echo form_text(
 		Form_MemberConfig::get_lang_value_label($u->id),
 		term('site.lang', 'site.setting'),

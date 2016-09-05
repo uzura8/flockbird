@@ -17,10 +17,16 @@ $config = array(
 		//),
 	),
 	'i18n' => array(
-		'isEnabled' => false,
-		'langs' => array(
-			'en' => 'English',
-			'ja' => '日本語',
+		'isEnabled' => true,
+		'lang' => array(
+			'options' => array(
+				'en' => 'English',
+				'ja' => '日本語',
+			),
+			'files' => array(
+				'site',
+				'message',
+			),
 		),
 	),
 	'default' => array(

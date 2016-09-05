@@ -45,6 +45,13 @@ Util_toolkit::include_php_files(APPPATH.'helpers');
 // Config load.
 Config::load('site', 'site');
 Config::load('term', 'term');
+
+// Load lang fils
+if ($lang_files = Config::get('site.i18n.lang.files'))
+{
+	foreach ($lang_files as $lang_file) Lang::load($lang_file);
+}
+
 Config::load('member', 'member');
 Config::load('template', 'template');
 Config::load('less', 'less');

@@ -18,35 +18,38 @@ class Controller_Base_Site extends Controller_Base
 				$this->set_notification_count();
 				$this->set_current_member_config();
 			}
-			$this->set_lang();
-			self::load_config();
-			self::load_lang();
-
+			if ($this->reset_lang())
+			{
+				self::reload_config();
+				self::reload_lang();
+			}
 			if (!Auth::check()) $this->set_login_validation();
 		}
 	}
 
-	protected function set_lang()
+	protected function reset_lang()
 	{
-		$lang = 'ja';
-		if (is_enabled_i18n())
-		{
-			if (IS_AUTH) $lang = Model_MemberConfig::get_value($this->u->id, 'lang');
-			if (empty($lang))  $lang = Util_Lang::get_client_accept_lang();
-		}
-		Lang::set_lang($lang, true);
+		if (!is_enabled_i18n()) return false;
+
+		if (IS_AUTH) $lang = Model_MemberConfig::get_value($this->u->id, 'lang');
+		if (empty($lang))  $lang = Util_Lang::get_client_accept_lang();
+		if ($lang == Lang::get_lang()) return false;
+
+		return Lang::set_lang($lang, true);
 	}
 
-	protected static function load_lang()
-	{
-		Lang::load('site');
-		Lang::load('message');
-	}
-
-	protected static function load_config()
+	protected static function reload_config()
 	{
 		Config::load(Site_Util::get_term_file_name(), 'term');
 		Config::load('navigation', 'navigation');
+	}
+
+	protected static function reload_lang()
+	{
+		if ($lang_files = Config::get('site.i18n.lang.files'))
+		{
+			foreach ($lang_files as $lang_file) Lang::load($lang_file, null, null, true);
+		}
 	}
 
 	protected function get_current_user()
