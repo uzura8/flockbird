@@ -126,7 +126,6 @@ $config = array(
 		),
 	),
 	'member' => array(
-		'admin_member_id' => 1,
 		'name' => array(
 			'validation' => array(
 				'length' => array(
