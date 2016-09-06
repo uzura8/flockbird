@@ -32,9 +32,9 @@ return array(
 			),
 		),
 		'inviteFromAdmin' => array(
-			'isEnabled'  => 1,
+			'isEnabled'  => false,
 			'selectGroup' => array(
-				'isEnabled'  => 1,
+				'isEnabled'  => false,
 				'options' => array(
 					'specified_user',
 					'user',
