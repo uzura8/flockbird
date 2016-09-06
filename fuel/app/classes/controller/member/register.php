@@ -68,9 +68,10 @@ class Controller_Member_Register extends Controller_Site
 				}
 				$member = $auth->get_member();
 				// 仮登録情報の削除
-				if ($member_pre->invite_member_id)
+				if ($member_pre->invite_member_id || $member_pre->group)
 				{
-					$member->invite_member_id = $member_pre->invite_member_id;
+					if ($member_pre->invite_member_id) $member->invite_member_id = $member_pre->invite_member_id;
+					if ($member_pre->group) $member->group = $member_pre->group;
 					$member->save();
 					// TODO: make friend to invited_member
 				}
