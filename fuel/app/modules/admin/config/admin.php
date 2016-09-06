@@ -31,5 +31,15 @@ return array(
 				),
 			),
 		),
+		'inviteFromAdmin' => array(
+			'isEnabled'  => 1,
+			'selectGroup' => array(
+				'isEnabled'  => 1,
+				'options' => array(
+					'specified_user',
+					'user',
+				),
+			),
+		),
 	),
 );

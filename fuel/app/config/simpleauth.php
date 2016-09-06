@@ -109,6 +109,8 @@ return array(
 			'admin/member/delete' => array('POST', 'DELETE'),
 			'admin/member/group/edit' => array('POST'),
 			'admin/member/group/api/menu' => array('GET'),
+			'admin/member/invite' => array('GET', 'POST', 'DELETE'),
+			'admin/member/invite/api/cancel' => array('POST', 'DELETE'),
 			'admin/message/create' => array('GET', 'POST'),
 			'admin/message/edit' => array('GET', 'POST'),
 			'admin/message/delete' => array('GET', 'POST'),

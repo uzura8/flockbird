@@ -272,6 +272,19 @@ class Site_Member
 		return term('member.group.options.'.$group_key);
 	}
 
+	public static function get_group_options($target_group_keys = array())
+	{
+		$options = array();
+		$groups = static::get_groups();
+		foreach ($groups as $key => $value)
+		{
+			if ($target_group_keys && !in_array($key, $target_group_keys)) continue;
+			$options[$value] = \Site_Member::get_group_label($value);
+		}
+
+		return $options;
+	}
+
 	public static function get_screen_name_additional_info($member_id = null)
 	{
 		return '';
@@ -383,6 +396,11 @@ class Site_Member
 			'next_page' => $next_page,
 			'count' => $count
 		);
+	}
+
+	public static function get_admin_member_id()
+	{
+		return conf('original_user_id.site');
 	}
 }
 

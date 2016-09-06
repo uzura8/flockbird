@@ -10,6 +10,7 @@ return array(
 			'user' => 1,
 			//'guest' => 0,
 		),
+		'defaultValue' => 1,
 	),
 	'status' => array(
 		'options' => array(

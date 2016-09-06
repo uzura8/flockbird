@@ -1,0 +1,1 @@
+ALTER TABLE `member` ADD COLUMN `group` int(3) NOT NULL DEFAULT 1;
