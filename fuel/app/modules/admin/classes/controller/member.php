@@ -195,7 +195,7 @@ class Controller_Member extends Controller_Admin
 		$this->template->content = \View::forge('member/invite', array(
 			'val' => $val,
 			'is_set_group' => true,
-			'member_pres' => \Model_MemberPre::get4invite_member_id(conf('member.admin_member_id'))
+			'member_pres' => \Model_MemberPre::get4invite_member_id(\Site_Member::get_admin_member_id())
 		));
 	}
 
