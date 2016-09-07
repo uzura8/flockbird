@@ -33,6 +33,8 @@ class Site_Member_Relation
 	public static function check_enabled_relation_type($relation_type)
 	{
 		if (!$relation_type) return false;
+		$relation_type = Inflector::camelize($relation_type, true);
+
 		$relation_types = self::get_relation_types();
 		if ($relation_type == 'follower' && in_array('follow', $relation_types)) $relation_type = 'follow';
 		if (!in_array($relation_type, $relation_types)) return false;
