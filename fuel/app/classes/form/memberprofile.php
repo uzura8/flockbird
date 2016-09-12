@@ -248,7 +248,7 @@ class Form_MemberProfile
 		if ($this->page_type == 'search')
 		{
 			if ($name == 'name') $properties['rules'] = array();
-			if ($name == 'sex') $attrs['options'] = self::add_novalue_option($attrs['options']);
+			if ($name == 'sex') $attrs['options'] = Site_Form::add_novalue_option($attrs['options']);
 			if (isset($attrs['required'])) unset($attrs['required']);
 			if (!empty($properties['rules']))
 			{
@@ -461,7 +461,7 @@ class Form_MemberProfile
 					$value = '';
 					$type = $profile->form_type;
 					$options = Util_Orm::conv_cols2assoc($profile->profile_option, 'id', 'label');
-					$options = self::add_novalue_option($options);
+					$options = Site_Form::add_novalue_option($options);
 					if (!is_null($member_profile))
 					{
 						$value = $member_profile->profile_option_id;
@@ -698,17 +698,6 @@ class Form_MemberProfile
 		}
 
 		return $rules;
-	}
-
-	private static function add_novalue_option(array $options)
-	{
-		$return_value = array('' => term('form.no_selected_label'));
-		foreach ($options as $key => $value)
-		{
-			$return_value[$key] = $value;
-		}
-
-		return $return_value;
 	}
 }
 

@@ -75,4 +75,15 @@ class Site_Form
 
 		return $field->get_attribute('label');
 	}
+
+	public static function add_novalue_option(array $options)
+	{
+		$return_value = array('' => term('form.no_selected_label'));
+		foreach ($options as $key => $value)
+		{
+			$return_value[$key] = $value;
+		}
+
+		return $return_value;
+	}
 }

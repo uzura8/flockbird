@@ -104,7 +104,7 @@ function form_textarea(Validation $val, $name, $default_value = null, $label_col
 	return render('_parts/form/textarea', $data);
 }
 
-function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $is_multiple = false, $is_merge_inputs2options = false, $help = '', $optional_public_flag = array(), $input_value = null)
+function form_select(Validation $val, $name, $default_value = '', $col_sm_size = 12, $label_col_sm_size = 2, $is_multiple = false, $is_merge_inputs2options = false, $help = '', $optional_public_flag = array(), $input_value = null, $is_set_novalue_option = false)
 {
 	if (!$label_col_sm_size) $label_col_sm_size = 2;
 	$field = $val->fieldset()->field($name);
@@ -118,11 +118,15 @@ function form_select(Validation $val, $name, $default_value = '', $col_sm_size =
 	{
 		if (!is_null($field->get_attribute('value'))) $default_value = $field->get_attribute('value');
 	}
+
+	$options = $isset_field ? $field->get_options() : array();
+	if ($is_set_novalue_option) $options = Site_Form::add_novalue_option($options);
+
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,
 		'label' => $isset_field ? $field->get_attribute('label') : '',
-		'options' => $isset_field ? $field->get_options() : array(),
+		'options' => $options,
 		'atter' => $atter,
 		'default_value' => $default_value,
 		'is_required'   => $isset_field ? $field->get_attribute('required') == 'required' : false,
