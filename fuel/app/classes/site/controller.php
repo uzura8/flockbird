@@ -3,6 +3,12 @@ class Site_Controller
 {
 	public static function get_title_parts($title = array())
 	{
+		if (! empty($title['label']) && empty($title['label']['attrs']))
+		{
+			$title['label']['attrs'] = array(
+				'class' => array('fs12', 'u-va-middle'),
+			);
+		}
 		if (is_array($title))
 		{
 			$title_name  = !empty($title['name'])  ? $title['name'] : '';
