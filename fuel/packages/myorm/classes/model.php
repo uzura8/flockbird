@@ -643,4 +643,62 @@ class Model extends \Orm\Model
 
 		return $query;
 	}
+
+	public static function get_enum_values($prop, $is_value_only = false)
+	{
+		if (! isset(static::$_properties[$prop]['enum_values']))
+		{
+			throw new \FuelException(sprintf('Property %s is not set enum values.', $prop));
+		}
+		$values = static::$_properties[$prop]['enum_values'];
+
+		return $is_value_only ? array_values($values) : $values;
+	}
+
+	public static function get_enum_value4key($prop, $key, $is_return_bool = false)
+	{
+		$values = static::get_enum_values($prop);
+		if (is_numeric($key))
+		{
+			if (in_array($key, array_keys($values))) return $key;
+
+			if ($is_return_bool) return false;
+			throw new \InvalidArgumentException('Parameter is invalid.');
+		}
+
+		if (! isset($values[$key]))
+		{
+			if ($is_return_bool) return false;
+			throw new \InvalidArgumentException('Parameter is invalid.');
+		}
+
+		return $values[$key];
+	}
+
+	public static function get_enum_key4value($prop, $value, $is_return_bool = false)
+	{
+		$values = static::get_enum_values($prop);
+		if (!is_numeric($value))
+		{
+			if (in_array($value, array_keys($values))) return $value;
+
+			if ($is_return_bool) return false;
+			throw new \InvalidArgumentException('Parameter is invalid.');
+		}
+
+		foreach ($values as $key => $item)
+		{
+			if ($value == $item) return $key;
+		}
+
+		if ($is_return_bool) return false;
+		throw new \InvalidArgumentException('Parameter is invalid.');
+	}
+
+	public function check_enum_value4key($prop, $key)
+	{
+		if (is_null($this->{$prop})) return false;
+
+		return $this->{$prop} == static::get_enum_value4key($prop, $key);
+	}
 }
