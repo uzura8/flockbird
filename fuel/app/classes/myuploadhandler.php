@@ -11,7 +11,7 @@ class MyUploadHandler extends UploadHandler
 		foreach ($file_tmps as $file_tmp)
 		{
 			$file_name = $this->remove_filename_prefix($file_tmp->name);
-			$file = $this->get_file_object($file_name);
+			if (!$file = $this->get_file_object($file_name)) continue;
 			$file->is_tmp = true;
 			$file->name_prefix = $this->options['filename_prefix'];
 			$file->id = $file_tmp->id;
