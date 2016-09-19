@@ -66,14 +66,17 @@ else
 	Config::load('exif', 'exif');
 }
 
-// Config of each module load.
+// Load each module files.
 $modules = Site_Util::get_active_modules();
 foreach ($modules as $module => $path)
 {
+	// Load module configs
 	if (file_exists(sprintf('%sconfig/%s.php', $path, $module)))
 	{
 		Config::load(sprintf('%s::%s', $module, $module), $module);
 	}
+	// Include module helpers.
+	Util_toolkit::include_php_files(sprintf('%smodules/%s/helpers', APPPATH, $module));
 }
 // Config of navigation load.
 if (!IS_TASK)
