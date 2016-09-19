@@ -150,6 +150,8 @@ $config = array(
 		'related' => '関連',
 		'lang' => '言語',
 		'about' => 'このサイトについて',
+		'site_menu' => 'サイトメニュー',
+		'member_menu' => 'メンバーメニュー',
 	),
 	'common' => array(
 		'info' => '情報',
