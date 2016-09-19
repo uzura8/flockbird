@@ -695,10 +695,26 @@ class Model extends \Orm\Model
 		throw new \InvalidArgumentException('Parameter is invalid.');
 	}
 
+	public function get_enum_key($prop)
+	{
+		return static::get_enum_key4value($prop, $this->{$prop});
+	}
+
 	public function check_enum_value4key($prop, $key)
 	{
 		if (is_null($this->{$prop})) return false;
 
 		return $this->{$prop} == static::get_enum_value4key($prop, $key);
+	}
+
+	public function check_enum_value4keys($prop, $keys)
+	{
+		if (! is_array($keys)) $keys = (array)$keys;
+		foreach ($keys as $key)
+		{
+			if (static::check_enum_value4key($prop, $key)) return true;
+		}
+
+		return false;
 	}
 }
