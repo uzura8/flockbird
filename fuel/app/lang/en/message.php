@@ -12,6 +12,8 @@ return array(
 	'message_delete_confirm_for' => 'Do you delete this :label ?',
 	'message_delete_complete' => 'Deleted. ',
 	'message_delete_complete_for' => 'Deleted :label . ',
+	'message_disabled_to_delete' => 'Disabled to delete. ',
+	'message_disabled_to_delete_for' => 'This :label is disabled to delete. ',
 	'message_not_published' => 'This :label is not published. ',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => 'Please read :link . If you agree, push "Agree and register" button and complete registration. ',

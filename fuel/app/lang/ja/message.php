@@ -12,6 +12,8 @@ return array(
 	'message_delete_confirm_for' => ':labelを取り消しますか？',
 	'message_delete_complete' => '削除しました。',
 	'message_delete_complete_for' => ':labelを削除しました。',
+	'message_disabled_to_delete' => '削除できません。',
+	'message_disabled_to_delete_for' => 'このlabel:は削除できません。',
 	'message_not_published' => 'この:labelはまだ公開されていません。',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => ':link をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
