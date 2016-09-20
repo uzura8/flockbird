@@ -87,7 +87,7 @@ class Uri extends Fuel\Core\Uri
 	public static function base($include_index = true, $absolute_protocol = false)
 	{
 		$url = \Config::get('base_url');
-		if (!$absolute_protocol) $url = static::convert_protocol2resuested($url);
+		if (!$absolute_protocol) $url = static::convert_protocol2requested($url);
 
 		if ($include_index and \Config::get('index_file'))
 		{
@@ -105,7 +105,7 @@ class Uri extends Fuel\Core\Uri
 		return false;
 	}
 
-	public static function convert_protocol2resuested($url)
+	public static function convert_protocol2requested($url)
 	{
 		if (Input::protocol() != 'https') return $url;
 

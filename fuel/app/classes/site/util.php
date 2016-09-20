@@ -537,7 +537,7 @@ class Site_Util
 
 	public static function get_media_uri($uri, $is_absolute_url = false)
 	{
-		if (FBD_MEDIA_BASE_URL) return Uri::convert_protocol2resuested(FBD_MEDIA_BASE_URL.$uri);
+		if (FBD_MEDIA_BASE_URL) return Uri::convert_protocol2requested(FBD_MEDIA_BASE_URL.$uri);
 
 		return $is_absolute_url ? Uri::base(false).$uri : Uri::base_path($uri);
 	}
