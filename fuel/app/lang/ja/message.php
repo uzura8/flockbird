@@ -8,6 +8,10 @@ return array(
 	// common
 	'message_please_input_following_items' => '下記の項目をを入力してください。',
 	'message_send_mail' => ':labelメールを送信しました。',
+	'message_update_failed' => '更新に失敗しました。',
+	'message_update_failed_for' => ':labelの更新に失敗しました。',
+	'message_update_complete' => '更新しました。',
+	'message_update_complete_for' => ':labelを更新しました。',
 	'message_delete_confirm' => '削除します。よろしいですか？',
 	'message_delete_confirm_for' => ':labelを取り消しますか？',
 	'message_delete_complete' => '削除しました。',

@@ -8,6 +8,10 @@ return array(
 	// common
 	'message_please_input_following_items' => 'Please input following items. ',
 	'message_send_mail' => 'Sent :label mail. ',
+	'message_update_failed' => 'Failed to update. ',
+	'message_update_failed_for' => 'Failed to update :label. ',
+	'message_update_complete' => 'Updated. ',
+	'message_update_complete_for' => 'Updated :label. ',
 	'message_delete_confirm' => 'Is it OK to delete?',
 	'message_delete_confirm_for' => 'Do you delete this :label ?',
 	'message_delete_complete' => 'Deleted. ',
