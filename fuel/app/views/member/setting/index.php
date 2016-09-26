@@ -18,6 +18,16 @@
 	); ?>
 <?php endif; ?>
 
+<?php if (conf('address.isEnabled', 'member')): ?>
+	<?php echo form_text(
+		sprintf('<span class="text-muted">%s</span>', __('member_address_setting_description')),
+		__('member_address_setting'),
+		$label_col_size,
+		true,
+		array('uri' => 'member/setting/address', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+	); ?>
+<?php endif; ?>
+
 <?php if (is_enabled('notice')): ?>
 	<?php echo form_text(
 		sprintf('<span class="text-muted">%sを%sを%sします</span>', term('notice'), term('form.recieve', 'site.item'), term('site.setting')),

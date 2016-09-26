@@ -41,7 +41,7 @@ class Site_Form
 		return sprintf('form_%s', str_replace('[]', '', $name));
 	}
 
-	public static function get_fieid_attribute(Validation $val, $name, $default_value = null, $is_textarea = false, $optional_attr = array())
+	public static function get_fieid_attribute(Validation $val, $name, $default_value = null, $is_textarea = false, $optional_attr = array(), $is_return_assoc = false)
 	{
 		$field = $val->fieldset()->field($name);
 		$label = '';
@@ -65,7 +65,15 @@ class Site_Form
 		if (empty($input_attr['class'])) $input_attr['class'] = 'form-control';
 		if ($is_textarea) $input_attr['class'] .= ' autogrow';
 
-		return array($default_value, $label, $is_required, $input_attr);
+		$return = array(
+			'default_value' => $default_value,
+			'label' => $label,
+			'is_required' => $is_required,
+			'input_attr' => $input_attr,
+			'field' => $field,
+		);
+
+		return $is_return_assoc ? $return : array_values($return);
 	}
 
 	public static function get_label(Validation $val, $name)

@@ -64,6 +64,30 @@ CREATE TABLE `member_email_pre` (
   CONSTRAINT `member_email_pre_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `member_address` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `last_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `first_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `last_name_phonetic` varchar(50) COLLATE utf8_unicode_ci NULL,
+  `first_name_phonetic` varchar(50) COLLATE utf8_unicode_ci NULL,
+  `company_name` varchar(255) COLLATE utf8_unicode_ci NULL,
+  `country_id` int(11) NOT NULL DEFAULT 0,
+  `postal_code` varchar(20) NOT NULL,
+  `region` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `address01` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `address02` text COLLATE utf8_unicode_ci NULL,
+  `phone01` varchar(20) NOT NULL,
+  `phone02` varchar(20) NULL,
+  `description` text COLLATE utf8_unicode_ci NULL,
+  `type` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0:optional, 1:main',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `member_id_type_idx` (`member_id`, `type`),
+  CONSTRAINT `member_address_member_id_member_id` FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `oauth_provider` (
   `id` tinyint(2) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,

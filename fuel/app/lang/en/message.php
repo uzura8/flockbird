@@ -23,5 +23,7 @@ return array(
 	'message_confirmation_to_agree_terms_of_use' => 'Please read :link . If you agree, push "Agree and register" button and complete registration. ',
 	// invite friend
 	'message_invite_mail_already_sent' => sprintf('This %s is already used to invite', term('site.email')),
+	// member_address
+	'message_member_address_edit_complete' => 'Edited Address. ',
 );
 

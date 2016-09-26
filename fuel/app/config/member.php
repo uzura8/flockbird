@@ -22,4 +22,13 @@ return array(
 			'isEnabled' => true,
 		),
 	),
+	'address' => array(
+		'isEnabled' => false,
+		'type' => array(
+			'options' => array(
+				'optional' => 0,
+				'main' => 1,
+			),
+		),
+	),
 );

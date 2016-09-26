@@ -51,6 +51,34 @@ function form_input(Validation $val, $name, $default_value = null, $col_sm_size 
 	return render('_parts/form/input', $data);
 }
 
+function form_input_multi(Validation $val, array $inputs, $common_label = null, $label_col_sm_size = null, $help = null, $optional_public_flag = array())
+{
+	if (empty($label_col_sm_size)) $label_col_sm_size = 2;
+	$is_required = false;
+	$has_error = false;
+	foreach ($inputs as $name => $configs)
+	{
+		$default_value = isset($configs['value']) ? $configs['value'] : null;
+		$inputs[$name] += Site_Form::get_fieid_attribute($val, $name, $default_value, false, null, true);
+		$input_value = $inputs[$name]['default_value'];
+		$inputs[$name]['value'] = ! is_null($input_value) ? $input_value : Input::post($name, $inputs[$name]['default_value']);
+		$inputs[$name]['input_attr']['placeholder'] = $inputs[$name]['label'];
+		if (! $is_required && $inputs[$name]['is_required']) $is_required = true;
+		if (! $has_error   && $val->error($name)) $has_error = true;
+	}
+
+	return render('_parts/form/input_multi', array(
+		'val'   => $val,
+		'inputs' => $inputs,
+		'common_label' => $common_label,
+		'label_col_sm_size' => $label_col_sm_size,
+		'is_required' => $is_required,
+		'has_error' => $has_error,
+		'optional_public_flag' => $optional_public_flag,
+		'help' => $help,
+	));
+}
+
 function form_input_datetime(Validation $val, $name, $default_value = null, $format = null, $col_sm_size = 6, $label_col_sm_size = 2, $help = '', $optional_public_flag = array())
 {
 	if (is_null($format)) $format = 'YYYY-MM-DD HH:mm';
@@ -196,8 +224,9 @@ function form_radio(Validation $val, $name, $default_value = null, $label_col_sm
 	return render('_parts/form/radio', $data);
 }
 
-function form_button($term_key = '', $type = 'submit', $name = '', $atter = array(), $offset_size = 2, $label = null, $absolute_icon_key = null, $is_noname = false)
+function form_button($term_key = '', $type = '', $name = '', $atter = array(), $offset_size = 2, $label = null, $absolute_icon_key = null, $is_noname = false)
 {
+	if (!$type) $type = 'submit';
 	if (!$term_key) $term_key = 'form.do_submit';
 	$button_label = icon_label($term_key, 'both', false, $absolute_icon_key);
 

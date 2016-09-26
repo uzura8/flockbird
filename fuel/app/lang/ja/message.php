@@ -23,5 +23,7 @@ return array(
 	'message_confirmation_to_agree_terms_of_use' => ':link をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
 	// invite friend
 	'message_invite_mail_already_sent' => 'その'.term('site.email').'は既に招待済みです。',
+	// member_address
+	'message_member_address_edit_complete' => '住所を変更しました。',
 );
 
