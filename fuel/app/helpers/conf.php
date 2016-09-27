@@ -77,7 +77,7 @@ function is_enabled_public_flag($public_flag_key)
 
 function is_enabled_i18n()
 {
-	return conf('i18n.isEnabled');
+	return conf('isEnabled', 'i18n');
 }
 
 function get_lang()

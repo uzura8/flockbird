@@ -46,7 +46,7 @@ class Controller_Base_Site extends Controller_Base
 
 	protected static function reload_lang()
 	{
-		if ($lang_files = Config::get('site.i18n.lang.files'))
+		if ($lang_files = Config::get('i18n.lang.files'))
 		{
 			foreach ($lang_files as $lang_file) Lang::load($lang_file, null, null, true);
 		}

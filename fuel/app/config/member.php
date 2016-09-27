@@ -23,7 +23,7 @@ return array(
 		),
 	),
 	'address' => array(
-		'isEnabled' => false,
+		'isEnabled' => true,
 		'type' => array(
 			'options' => array(
 				'optional' => 0,

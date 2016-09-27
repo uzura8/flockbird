@@ -44,10 +44,11 @@ Util_toolkit::include_php_files(APPPATH.'helpers');
 
 // Config load.
 Config::load('site', 'site');
+Config::load('i18n', 'i18n');
 Config::load('term', 'term');
 
 // Load lang fils
-if ($lang_files = Config::get('site.i18n.lang.files'))
+if ($lang_files = Config::get('i18n.lang.files'))
 {
 	foreach ($lang_files as $lang_file) Lang::load($lang_file);
 }

@@ -16,19 +16,6 @@ $config = array(
 		//  'isEnabled' => false, // if set this true, you have to install PEAR/I18N_UnicodeNormalizer.
 		//),
 	),
-	'i18n' => array(
-		'isEnabled' => true,
-		'lang' => array(
-			'options' => array(
-				'en' => 'English',
-				'ja' => '日本語',
-			),
-			'files' => array(
-				'site',
-				'message',
-			),
-		),
-	),
 	'default' => array(
 		'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
 		'ajax_timeout' => 10000,
