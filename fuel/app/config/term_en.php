@@ -195,6 +195,7 @@ $config = array(
 		'birthday' => 'Birthday',
 		'age' => 'Age',
 		'generation' => 'Generation',
+		'country' => 'Country',
 		'registration' => 'Sign up',
 		'profile' => array(
 			'view' => 'Profile',

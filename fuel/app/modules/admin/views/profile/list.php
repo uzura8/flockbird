@@ -109,6 +109,36 @@
 </table>
 <?php endif; ?>
 
+<?php $prefix = 'profile.country.'; ?>
+<h3 class="clearfix">
+	<?php echo term('member.country', 'site.setting'); ?>
+	<?php echo btn('form.edit', 'admin/profile/country_setting', '', true, 'sm', null, array('class' => 'pull-right')); ?>
+</h3>
+<?php if (!conf($prefix.'isEnable') || !is_enabled_i18n()): ?>
+<p><?php echo term('form.unuse'); ?></p>
+<?php else: ?>
+<table class="table table-bordered">
+<tr>
+	<th><?php echo term('site.registration'); ?></th>
+	<th><?php echo term('form.update'); ?></th>
+	<th><?php echo term('form.search'); ?></th>
+	<th><?php echo term('form.place'); ?></th>
+	<th><?php echo term('form.required'); ?></th>
+	<th><?php echo term('public_flag.label', 'form.choice'); ?></th>
+	<th><?php echo term('form.publish', 'site.setting', 'form.default', 'form.value'); ?></th>
+</tr>
+<tr>
+	<td><?php echo symbol_bool(conf($prefix.'isDispRegist')); ?></td>
+	<td><?php echo symbol_bool(conf($prefix.'isDispConfig')); ?></td>
+	<td><?php echo symbol_bool(conf($prefix.'isDispSearch')); ?></td>
+	<td><?php echo Site_Profile::get_display_type_options(conf($prefix.'displayType'), true); ?></td>
+	<td><?php echo symbol_bool(conf($prefix.'isRequired')); ?></td>
+	<td><?php echo symbol_bool(conf($prefix.'publicFlag.isEdit')); ?></td>
+	<td><?php echo Site_Form::get_public_flag_options(conf($prefix.'publicFlag.default')); ?></td>
+</tr>
+</table>
+<?php endif; ?>
+
 <h2 class="clearfix">
 	<?php echo term('site.option', 'profile', 'site.setting'); ?>
 	<?php echo btn('form.create', 'admin/profile/create', '', true, 'sm', 'default', array('class' => 'pull-right')); ?>

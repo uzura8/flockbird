@@ -195,6 +195,7 @@ $config = array(
 		'birthday' => '生年月日',
 		'age' => '年齢',
 		'generation' => '年代',
+		'country' => '居住国',
 		'registration' => '新規登録',
 		'profile' => array(
 			'view' => 'プロフィール',

@@ -77,6 +77,15 @@ class Model_Member extends \MyOrm\Model
 			'data_type' => 'integer',
 			'form' => array('type' => 'radio'),
 		),
+		'country' => array(
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'max_length' => array(2), 'valid_string' => array('alpha', 'uppercase')),
+			'form' => array('type' => 'select'),
+		),
+		'country_public_flag' => array(
+			'data_type' => 'integer',
+			'form' => array('type' => 'radio'),
+		),
 		'last_login' => array('form' => array('type' => false)),
 		'previous_login' => array('form' => array('type' => false)),
 		'invite_member_id' => array('form' => array('type' => false)),
@@ -147,6 +156,16 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['birthdate_public_flag']['label'] = sprintf('%sの%s', term('member.birthdate'), term('public_flag.label'));
 		static::$_properties['birthdate_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthdate_public_flag']['validation']['in_array'][] = $options_public_flag;
+
+		$country_options = conf('country.options', 'i18n');
+		static::$_properties['country']['label'] = term('member.country');
+		static::$_properties['country']['form']['options'] = $country_options;
+		static::$_properties['country']['validation']['in_array'][] = array_keys($country_options);
+
+		$options_public_flag = Site_Util::get_public_flags();
+		static::$_properties['country_public_flag']['label'] = sprintf('%sの%s', term('member.country'), term('public_flag.label'));
+		static::$_properties['country_public_flag']['form'] = Site_Form::get_public_flag_configs();
+		static::$_properties['country_public_flag']['validation']['in_array'][] = $options_public_flag;
 
 		static::$_properties['invite_member_id'] = Util_Orm::get_relational_numeric_key_prop(false);
 

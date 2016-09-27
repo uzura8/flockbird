@@ -22,5 +22,14 @@ return array(
 			'message',
 		),
 	),
+	'country' => array(
+		'options' => array(
+			'GB' => 'United Kingdom',
+			'IN' => 'India',
+			'TH' => 'Thailand',
+			'US' => 'United States',
+			'JP' => '日本',
+		),
+	),
 );
 

@@ -64,6 +64,7 @@ class Form_MemberProfile
 	{
 		$this->validate_public_flag_member('sex');
 		$this->validate_public_flag_member('birthday');
+		$this->validate_public_flag_member('country');
 		$this->validate_public_flag_member_profile();
 	}
 
@@ -132,6 +133,8 @@ class Form_MemberProfile
 		if ($this->set_member_obj_public_flag('sex')) $is_changeed[] = 'sex_public_flag';
 		if ($this->set_member_obj_value('birthyear'))  $is_changeed[] = 'birthyear';
 		if ($this->set_member_obj_public_flag('birthyear')) $is_changeed[] = 'birthyear_public_flag';
+		if ($this->set_member_obj_value('country'))  $is_changeed[] = 'country';
+		if ($this->set_member_obj_public_flag('country')) $is_changeed[] = 'country_public_flag';
 
 		if ($this->check_is_set_field('member_birthdate_month') && $this->check_is_set_field('member_birthdate_day'))
 		{
@@ -249,6 +252,7 @@ class Form_MemberProfile
 		{
 			if ($name == 'name') $properties['rules'] = array();
 			if ($name == 'sex') $attrs['options'] = Site_Form::add_novalue_option($attrs['options']);
+			if ($name == 'country') $attrs['options'] = Site_Form::add_novalue_option($attrs['options']);
 			if (isset($attrs['required'])) unset($attrs['required']);
 			if (!empty($properties['rules']))
 			{
@@ -360,6 +364,13 @@ class Form_MemberProfile
 			$validateds[$input_name] = $this->validate_for_search_select($input_name);
 		}
 
+		$name = 'country';
+		if ($this->check_is_enabled_member_field($name))
+		{
+			$input_name = 'member_'.$name;
+			$validateds[$input_name] = $this->validate_for_search_select($input_name);
+		}
+
 		foreach ($this->profiles as $profile)
 		{
 			$input_name = $profile->name;
@@ -391,6 +402,7 @@ class Form_MemberProfile
 		// member
 		$this->set_validation_member_field('name');
 		$this->set_validation_member_field('sex');
+		$this->set_validation_member_field('country');
 		$this->set_validation_member_field_birthday();
 
 		// member_profile
@@ -593,6 +605,7 @@ class Form_MemberProfile
 	private function set_public_flags()
 	{
 		$this->set_member_public_flag('sex');
+		$this->set_member_public_flag('country');
 		$this->set_member_public_flag('birthyear');
 		$this->set_member_public_flag('birthdate');
 		$this->set_member_profile_public_flag();

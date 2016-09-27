@@ -212,6 +212,15 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 				<div class="col-xs-8"><?php echo Util_Date::conv_date_format($member->birthdate, '%d月%d日'); ?></div>
 			</div>
 <?php endif; ?>
+<?php if (!$is_simple_list
+				&& check_display_type(conf('profile.country.displayType'), $display_type)
+				&& check_public_flag($member->country_public_flag, $access_from)
+				&& $country = Site_Form::get_form_options4config('i18n.country.options', $member->country, true)): ?>
+			<div class="row">
+				<div class="col-xs-4 u-alr"><label><?php echo term('member.country'); ?></label></div>
+				<div class="col-xs-8"><?php echo $country; ?></div>
+			</div>
+<?php endif; ?>
 
 <?php if (!empty($member_profiles)): ?>
 			<?php echo render('member/profile/_parts/values', array('member' => $member, 'member_profiles' => $member_profiles, 'access_from' => $access_from, 'display_type' => $display_type)); ?>

@@ -225,6 +225,40 @@ class Controller_Profile extends Controller_Admin
 	}
 
 	/**
+	 * The country setting action.
+	 * 
+	 * @access  public
+	 * @return  void
+	 */
+	public function action_country_setting()
+	{	
+		$val = \Form_SiteConfig::get_validation('profile_country');
+		if (\Input::method() == 'POST')
+		{
+			\Util_security::check_csrf();
+
+			try
+			{
+				if (!$val->run()) throw new \FuelException($val->show_errors());
+				$post = $val->validated();
+				\DB::start_transaction();
+				\Form_SiteConfig::save($val, $post);
+				\DB::commit_transaction();
+
+				\Session::set_flash('message', term('member.country').'を変更しました。');
+				\Response::redirect('admin/profile');
+			}
+			catch(\FuelException $e)
+			{
+				if (\DB::in_transaction()) \DB::rollback_transaction();
+				\Session::set_flash('error', $e->getMessage());
+			}
+		}
+		$this->set_title_and_breadcrumbs(term('member.country', 'site.setting'), array('admin/profile' => term('profile', 'site.setting')));
+		$this->template->content = \View::forge('profile/_parts/form_basic', array('val' => $val));
+	}
+
+	/**
 	 * The delete action.
 	 * 
 	 * @access  public

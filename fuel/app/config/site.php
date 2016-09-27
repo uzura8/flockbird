@@ -507,6 +507,18 @@ $config = array(
 				),
 			),
 		),
+		'country' => array(
+			'isEnable' => 1,
+			'isDispRegist' => 1,
+			'isDispConfig' => 1,
+			'isDispSearch' => 1,
+			'displayType' => 0,
+			'isRequired' => 0,
+			'publicFlag' => array(
+				'isEdit' => 1,
+				'default' => 1,
+			),
+		),
 	),
 );
 $config = Site_Config::merge_module_configs($config, 'site');

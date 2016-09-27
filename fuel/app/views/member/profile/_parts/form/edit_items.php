@@ -42,6 +42,19 @@ if (conf('profile.birthday.birthdate.publicFlag.isEdit'))
 	<?php echo form_date($val, term('member.birthdate'), 'member_birthdate_month', 'member_birthdate_day', $label_size, null, $optional_public_flag); ?>
 <?php endif; ?>
 
+<?php if ($val->fieldset()->field('member_country')): ?>
+<?php
+$optional_public_flag = array();
+if (conf('profile.country.publicFlag.isEdit'))
+{
+	$value = conf('profile.country.publicFlag.default', null, conf('public_flag.default'));
+	if (isset($member_public_flags['country'])) $value = $member_public_flags['country'];
+	$optional_public_flag = array('name' => 'member_public_flag[country]', 'value' => $value);
+}
+?>
+	<?php echo form_select($val, 'member_country', 0, 7, $label_size, false, false, null, $optional_public_flag, null, true); ?>
+<?php endif; ?>
+
 <?php foreach ($profiles as $profile): ?>
 <?php
 $optional_public_flag = array();

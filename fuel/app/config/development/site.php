@@ -26,7 +26,7 @@ return array(
 	),
 	'member' => array(
 		'register' => array(
-			'token_lifetime' => '5 minute',// user for function.strtodate. if false, not check lifetime.
+			'token_lifetime' => '50 minute',// user for function.strtodate. if false, not check lifetime.
 		),
 		'recover' => array(
 			'password' => array(
