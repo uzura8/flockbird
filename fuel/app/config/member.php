@@ -30,5 +30,8 @@ return array(
 				'main' => 1,
 			),
 		),
+		'country' => array(
+			'isEnabled' => false,
+		),
 	),
 );

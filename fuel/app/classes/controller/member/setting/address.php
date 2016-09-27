@@ -32,8 +32,8 @@ class Controller_Member_Setting_Address extends \Controller_Site
 				$post = $val->validated();
 				$member_address->set_values($post);
 				$member_address->member_id = $this->u->id;
-				$member_address->country_id = 0;//TODO: Provisional implementation
 				$member_address->type = $member_address::get_enum_value4key('type', 'main');
+				if (! $member_address->country) $member_address->country = '';
 				\DB::start_transaction();
 				$member_address->save();
 				\DB::commit_transaction();
@@ -64,8 +64,8 @@ class Controller_Member_Setting_Address extends \Controller_Site
 		$val->add_model($member_address);
 		$val->fieldset()->field('address01')->set_attribute('placeholder', __('member_form_address01_placeholder'));
 		$val->fieldset()->field('address02')->set_attribute('placeholder', __('member_form_address02_placeholder'));
+		if (! conf('address.country.isEnabled', 'member')) $val->fieldset()->delete('country');
 		$val->fieldset()->delete('member_id');
-		$val->fieldset()->delete('country_id');
 		$val->fieldset()->delete('type');
 
 		return $val;

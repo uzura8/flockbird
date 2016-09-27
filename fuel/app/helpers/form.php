@@ -32,14 +32,14 @@ function form_close()
 
 function form_input(Validation $val, $name, $default_value = null, $col_sm_size = 12, $label_col_sm_size = 2, $help = '', $optional_public_flag = array(), $input_value = null, $group_adons = array())
 {
-	list($default_value, $label, $is_required, $input_atter) = Site_Form::get_fieid_attribute($val, $name, $default_value);
+	list($default_value, $label, $is_required, $input_attr) = Site_Form::get_fieid_attribute($val, $name, $default_value);
 	$data = array(
 		'val'   => $val,
 		'name'  => $name,
 		'label' => $label,
 		'default_value' => $default_value,
 		'is_required'   => $is_required,
-		'input_atter'   => $input_atter,
+		'input_attr'   => $input_attr,
 		'col_sm_size'   => $col_sm_size,
 		'label_col_sm_size' => $label_col_sm_size,
 		'help' => $help,

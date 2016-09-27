@@ -508,7 +508,7 @@ $config = array(
 			),
 		),
 		'country' => array(
-			'isEnable' => 1,
+			'isEnable' => 0,
 			'isDispRegist' => 1,
 			'isDispConfig' => 1,
 			'isDispSearch' => 1,

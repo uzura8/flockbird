@@ -44,10 +44,10 @@ class Model_MemberAddress extends \MyOrm\Model
 			'validation' => array('trim', 'max_length' => array(100)),
 			'form' => array('type' => 'text'),
 		),
-		'country_id' => array(
-			'data_type' => 'integer',
-			'validation' => array('required'),
-			'form' => array('type' => false),
+		'country' => array(
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'required', 'max_length' => array(2), 'valid_string' => array('alpha', 'uppercase')),
+			'form' => array('type' => 'select'),
 		),
 		'postal_code' => array(
 			'data_type' => 'text',
@@ -116,7 +116,6 @@ class Model_MemberAddress extends \MyOrm\Model
 		static::$_properties['last_name_phonetic']['label'] = term('member.address.last_name_phonetic');
 		static::$_properties['first_name_phonetic']['label'] = term('member.address.first_name_phonetic');
 		static::$_properties['company_name']['label'] = term('member.address.company_name');
-		static::$_properties['country_id']['label'] = term('member.address.country_id');
 		static::$_properties['postal_code']['label'] = term('member.address.postal_code');
 		static::$_properties['region']['label'] = term('member.address.region');
 		static::$_properties['address01']['label'] = term('member.address.address01');
@@ -128,6 +127,11 @@ class Model_MemberAddress extends \MyOrm\Model
 		static::$_properties['type']['label'] = term('member.address.type.view');
 		static::$_properties['type']['enum_values'] = conf('address.type.options', 'member');
 		static::$_properties['type']['validation']['in_array'][] = array_values(static::$_properties['type']['enum_values']);
+
+		$options = conf('country.options', 'i18n');
+		static::$_properties['country']['label'] = term('member.address.country');
+		static::$_properties['country']['form']['options'] = $options;
+		static::$_properties['country']['validation']['in_array'][] = array_keys($options);
 	}
 
 	public static function get_one_main($member_id)

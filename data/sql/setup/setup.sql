@@ -74,7 +74,7 @@ CREATE TABLE `member_address` (
   `last_name_phonetic` varchar(50) COLLATE utf8_unicode_ci NULL,
   `first_name_phonetic` varchar(50) COLLATE utf8_unicode_ci NULL,
   `company_name` varchar(255) COLLATE utf8_unicode_ci NULL,
-  `country_id` int(11) NOT NULL DEFAULT 0,
+  `country` varchar(2) DEFAULT NULL COMMENT 'Save format by  ISO 3166-1 alpha-2',
   `postal_code` varchar(20) NOT NULL,
   `region` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `address01` varchar(255) COLLATE utf8_unicode_ci NOT NULL,

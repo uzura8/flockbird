@@ -2,7 +2,7 @@
 if ($is_required)
 {
 	$label .= '<span class="required">*</span>';
-	$input_atter['required'] = 'required';
+	$input_attr['required'] = 'required';
 }
 
 $label_class = 'col-sm-'.$label_col_sm_size;
@@ -22,7 +22,7 @@ if (!$col_sm_size || $col_sm_size == 12 || $optional_public_flag)
 	$error_sm_size = 12;
 }
 ?>
-<div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>" id="<?php echo $input_atter['id']; ?>_block">
+<div class="form-group<?php if ($val->error($name)): ?> has-error<?php endif; ?>" id="<?php echo $input_attr['id']; ?>_block">
 	<?php echo Form::label($label, $name, array('class' => $label_class)); ?>
 	<div class="col-sm-<?php echo $input_col_sm_size; ?>">
 		<div class="row">
@@ -33,7 +33,7 @@ if (!$col_sm_size || $col_sm_size == 12 || $optional_public_flag)
 					<div class="input-group-addon"><?php echo $group_adons['pre']; ?></div>
 <?php 	endif; ?>
 <?php endif; ?>
-				<?php echo Form::input($name, (isset($input_value) && !is_null($input_value)) ? $input_value : Input::post($name, $default_value), $input_atter); ?>
+				<?php echo Form::input($name, (isset($input_value) && !is_null($input_value)) ? $input_value : Input::post($name, $default_value), $input_attr); ?>
 <?php if ($group_adons): ?>
 <?php 	if (isset($group_adons['post'])): ?>
 					<div class="input-group-addon"><?php echo $group_adons['post']; ?></div>

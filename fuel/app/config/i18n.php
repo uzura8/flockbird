@@ -1,7 +1,7 @@
 <?php
 
 return array(
-	'isEnabled' => true,
+	'isEnabled' => false,
 	'lang' => array(
 		'options' => array(
 			'en' => 'English',
