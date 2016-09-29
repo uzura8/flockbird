@@ -93,6 +93,9 @@ $config = array(
 		'do_read' => 'Read',
 		'input' => 'Input',
 		'no_selected_label' => 'Please select',
+		'cancel' => 'Cancel',
+		'do_cancel' => 'Cancel',
+		'selected' => 'Selected',
 	),
 	'site' => array(
 		'view' => 'Site',
@@ -140,6 +143,7 @@ $config = array(
 		'AlreadyRead' => 'Already read',
 		'content' => 'Content',
 		'forward' => 'Next',
+		'continue' => 'Continue',
 		'backward' => 'Previous',
 		'term' => 'Terms of use',
 		'privacy_policy' => 'Privacy policy',

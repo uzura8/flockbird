@@ -85,6 +85,7 @@ $config = array(
 			'key' => 'user-plus',
 			'prefix' => 'fa fa-',
 		),
+		'cancel' => 'remove',
 	),
 	'site' => array(
 		//'view' => 'サイト',
@@ -128,6 +129,7 @@ $config = array(
 		'see_more' => 'caret-down',
 		'see_latest' => 'caret-up',
 		'forward' => 'forward',
+		'continue' => 'forward',
 		'backward' => 'backward',
 		'tag' => 'tags',
 	),

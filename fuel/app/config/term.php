@@ -93,6 +93,9 @@ $config = array(
 		'do_read' => '既読にする',
 		'input' => '入力',
 		'no_selected_label' => '選択してください',
+		'cancel' => '取り消し',
+		'do_cancel' => '取り消す',
+		'selected' => '選択した',
 	),
 	'site' => array(
 		'view' => 'サイト',
@@ -140,6 +143,7 @@ $config = array(
 		'AlreadyRead' => '既読',
 		'content' => 'コンテンツ',
 		'forward' => '次へ',
+		'continue' => '次へ',
 		'backward' => '前へ',
 		'term' => '利用規約',
 		'privacy_policy' => 'プライバシーポリシー',
