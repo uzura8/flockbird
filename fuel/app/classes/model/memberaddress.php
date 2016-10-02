@@ -46,7 +46,7 @@ class Model_MemberAddress extends \MyOrm\Model
 		),
 		'country' => array(
 			'data_type' => 'varchar',
-			'validation' => array('trim', 'required', 'max_length' => array(2), 'valid_string' => array('alpha', 'uppercase')),
+			'validation' => array('trim', 'max_length' => array(2), 'valid_string' => array('alpha', 'uppercase')),
 			'form' => array('type' => 'select'),
 		),
 		'postal_code' => array(
@@ -128,10 +128,14 @@ class Model_MemberAddress extends \MyOrm\Model
 		static::$_properties['type']['enum_values'] = conf('address.type.options', 'member');
 		static::$_properties['type']['validation']['in_array'][] = array_values(static::$_properties['type']['enum_values']);
 
-		$options = conf('country.options', 'i18n');
-		static::$_properties['country']['label'] = term('member.address.country');
-		static::$_properties['country']['form']['options'] = $options;
-		static::$_properties['country']['validation']['in_array'][] = array_keys($options);
+		if (conf('address.country.isEnabled', 'member'))
+		{
+			static::$_properties['country']['validation'][] = 'required';
+			$options = conf('country.options', 'i18n');
+			static::$_properties['country']['label'] = term('member.address.country');
+			static::$_properties['country']['form']['options'] = $options;
+			static::$_properties['country']['validation']['in_array'][] = array_keys($options);
+		}
 	}
 
 	public static function get_one_main($member_id)
