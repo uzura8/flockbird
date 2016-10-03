@@ -88,7 +88,7 @@ function get_lang()
 
 function is_lang_ja()
 {
-	if (!is_enabled_i18n()) return false;
+	if (!is_enabled_i18n()) return true;
 	return Lang::get_lang() == 'ja';
 }
 

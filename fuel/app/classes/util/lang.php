@@ -16,5 +16,13 @@ class Util_Lang
 
 		return $is_all_list ? $accept_langs : $accept_langs[0];
 	}
+
+	public static function get_country_name4code($code)
+	{
+		$code = strtoupper($code);
+		if (! $country = conf('country.options.'.$code, 'i18n')) throw new InvalidArgumentException('First parameter is invalid.');
+
+		return $country;
+	}
 }
 

@@ -154,4 +154,26 @@ class Model_MemberAddress extends \MyOrm\Model
 			->order_by('created_at', 'asc')
 			->get();
 	}
+
+	public function get_full_name($is_lang_ja = false)
+	{
+		$items = array($this->first_name, $this->last_name);
+		if ($is_lang_ja) $items = array_reverse($items);
+
+		return trim(implode(' ', $items));
+	}
+
+	public function get_address($is_lang_ja = false)
+	{
+		$items = array(
+			$this->address02,
+			$this->address01,
+			$this->region,
+			$this->postal_code,
+		);
+		if ($this->country) $items[] = Util_Lang::get_country_name4code($this->country);
+		if ($is_lang_ja) $items = array_reverse($items);
+
+		return trim(implode(' ', $items));
+	}
 }

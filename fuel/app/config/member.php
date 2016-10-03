@@ -24,6 +24,7 @@ return array(
 	),
 	'address' => array(
 		'isEnabled' => false,
+		'isDisplay' => false,
 		'type' => array(
 			'options' => array(
 				'optional' => 0,
