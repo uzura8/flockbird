@@ -19,6 +19,7 @@ return array(
 	'message_disabled_to_delete' => '削除できません。',
 	'message_disabled_to_delete_for' => 'このlabel:は削除できません。',
 	'message_not_published' => 'この:labelはまだ公開されていません。',
+	'message_not_registered_for' => ':labelは登録されていません。',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => ':link をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
 	// invite friend
