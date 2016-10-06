@@ -20,6 +20,7 @@ return array(
 	'message_disabled_to_delete_for' => 'This :label is disabled to delete. ',
 	'message_not_published' => 'This :label is not published. ',
 	'message_not_registered_for' => ':label is not registered. ',
+	'message_not_input_for' => ':label is not input. ',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => 'Please read :link . If you agree, push "Agree and register" button and complete registration. ',
 	// invite friend
