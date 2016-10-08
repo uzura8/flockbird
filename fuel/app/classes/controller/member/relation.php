@@ -36,7 +36,7 @@ class Controller_Member_Relation extends Controller_Base_Site
 		if ($type == 'access_block' && $member->id != get_uid()) throw new HttpNotFoundException;
 
 		$relation_type_camelized_lower = Inflector::camelize($type, true);
-		$this->set_title_and_breadcrumbs(term($relation_type_camelized_lower, 'site.list_kana'), null, $member);
+		$this->set_title_and_breadcrumbs(term($relation_type_camelized_lower, 'site.list_kana'), array('member/setting' => t('site.setting')), $member);
 
 		$default_params = array(
 			'latest' => 1,

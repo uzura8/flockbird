@@ -7,7 +7,7 @@ if (!isset($is_simple_list)) $is_simple_list = false;
 <?php if (!empty($no_data_message)): ?>
 <?php echo $no_data_message; ?>
 <?php else: ?>
-<?php echo term('member.view'); ?>の<?php echo term('site.registration'); ?>がありません。
+<?php echo __('message_not_registered'); ?>
 <?php endif; ?>
 <?php else: ?>
 

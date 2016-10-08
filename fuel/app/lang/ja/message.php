@@ -19,6 +19,7 @@ return array(
 	'message_disabled_to_delete' => '削除できません。',
 	'message_disabled_to_delete_for' => 'このlabel:は削除できません。',
 	'message_not_published' => 'この:labelはまだ公開されていません。',
+	'message_not_registered' => '登録がありません。',
 	'message_not_registered_for' => ':labelが登録されていません。',
 	'message_not_input_for' => ':labelが入力されていません。',
 	// member registration

@@ -46,7 +46,7 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
-		$this->set_title_and_breadcrumbs($page_name, array('member/setting' => term('site.setting', 'form.update')), $this->u);
+		$this->set_title_and_breadcrumbs($page_name, array('member/setting' => term('site.setting')), $this->u);
 		$this->template->content = \View::forge('member/setting/_parts/form', array(
 			'val' => $val,
 			'label_size' => 5,

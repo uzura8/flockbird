@@ -9,5 +9,8 @@ return array(
 	'member_address_setting_description' => '住所を設定します',
 	'member_form_address01_placeholder' => '市区町村・番地',
 	'member_form_address02_placeholder' => '建物名など(オプション)',
+	'site_title_access_block_settig' => 'アクセスブロック設定',
+	'site_lead_access_block_settig' => 'ブロック中メンバーの確認と登録解除を行います。',
+	'site_lead_notice_setting' => 'お知らせ受診項目の設定を行います。',
 );
 

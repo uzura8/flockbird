@@ -30,7 +30,7 @@
 
 <?php if (is_enabled('notice')): ?>
 	<?php echo form_text(
-		sprintf('<span class="text-muted">%sを%sを%sします</span>', term('notice'), term('form.recieve', 'site.item'), term('site.setting')),
+		sprintf('<span class="text-muted">%s</span>', __('site_lead_notice_setting')),
 		term('notice', 'site.setting'),
 		$label_col_size,
 		true,
@@ -50,8 +50,8 @@
 
 <?php if (conf('memberRelation.accessBlock.isEnabled')): ?>
 	<?php echo form_text(
-		sprintf('<span class="text-muted">%sを%s・%sします</span>', term('accessBlocked', 'member.view'), term('form.confirm'), term('site.registration', 'form.delete')),
-		term('accessBlock', 'member.view', 'site.setting'),
+		sprintf('<span class="text-muted">%s</span>', __('site_lead_access_block_settig')),
+		__('site_title_access_block_settig'),
 		$label_col_size,
 		true,
 		array('uri' => 'member/relation/list/access_block', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)

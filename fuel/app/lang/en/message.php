@@ -19,6 +19,7 @@ return array(
 	'message_disabled_to_delete' => 'Disabled to delete. ',
 	'message_disabled_to_delete_for' => 'This :label is disabled to delete. ',
 	'message_not_published' => 'This :label is not published. ',
+	'message_not_registered' => 'Not registered. ',
 	'message_not_registered_for' => ':label is not registered. ',
 	'message_not_input_for' => ':label is not input. ',
 	// member registration

@@ -17,7 +17,7 @@ class Controller_Member_setting extends Controller_Member
 	 */
 	public function action_index()
 	{
-		$this->set_title_and_breadcrumbs(term('site.setting', 'site.item', 'site.list'), null, $this->u);
+		$this->set_title_and_breadcrumbs(term('site.setting'), null, $this->u);
 		$this->template->content = View::forge('member/setting/index');
 	}
 
@@ -38,7 +38,7 @@ class Controller_Member_setting extends Controller_Member
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('site.password', 'form.update'), array('member/setting/' => term('site.setting', 'form.update')), $this->u);
+		$this->set_title_and_breadcrumbs(term('site.password', 'form.update'), array('member/setting/' => term('site.setting')), $this->u);
 		$this->template->content = View::forge('_parts/setting/password');
 		$this->template->content->set_safe('html_form', $form->build('member/setting/change_password'));
 	}

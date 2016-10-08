@@ -23,7 +23,7 @@ class Controller_Member_Setting_Email extends Controller_Member
 
 		$this->set_title_and_breadcrumbs(
 			term('site.email').$action_name,
-			$is_regist_mode ? array() : array('member/setting' => term('site.setting', 'form.update')),
+			$is_regist_mode ? array() : array('member/setting' => term('site.setting')),
 			$is_regist_mode ? null : $this->u
 		);
 		$this->template->content = View::forge('member/setting/email/index', array(
@@ -113,7 +113,7 @@ class Controller_Member_Setting_Email extends Controller_Member
 		$middle_breadcrumbs = $is_regist_mode ?
 			array('member/setting/email/regist' => term('site.email', 'site.registration')) :
 			array(
-				'member/setting' => term('site.setting', 'form.update'),
+				'member/setting' => term('site.setting'),
 				'member/setting/email' => term('site.email', 'form.update'),
 			);
 		$this->set_title_and_breadcrumbs(term('site.email', $action_name, 'form.confirm'), $middle_breadcrumbs, $is_regist_mode ? null : $this->u);
