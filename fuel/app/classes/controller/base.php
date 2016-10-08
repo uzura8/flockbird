@@ -161,7 +161,7 @@ class Controller_Base extends Controller_Common
 		return conf('login_uri.site');
 	}
 
-	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false, $ogp_data = array())
+	protected function set_title_and_breadcrumbs($title = array(), $middle_breadcrumbs = array(), $member_obj = null, $module = null, $info = array(), $is_no_breadcrumbs = false, $is_no_title = false, $ogp_data = array(), $absolute_breadcrumbs_title = null)
 	{
 		$common = array(
 			'title' =>  FBD_SITE_NAME,
@@ -181,7 +181,14 @@ class Controller_Base extends Controller_Common
 		if ($info) $this->template->header_info = View::forge('_parts/information', $info);
 
 		$this->template->breadcrumbs = $is_no_breadcrumbs ? array() :
-			static::get_breadcrumbs($title_name, $middle_breadcrumbs, $member_obj, $member_obj ? $this->check_is_mypage($member_obj->id) : false, $module);
+			static::get_breadcrumbs(
+				$title_name,
+				$middle_breadcrumbs,
+				$member_obj,
+				$member_obj ? $this->check_is_mypage($member_obj->id) : false,
+				$module,
+				$absolute_breadcrumbs_title
+			);
 
 		if (!empty($ogp_data['title'])) $common['title'] = $ogp_data['title'];
 		if (!empty($ogp_data['description'])) $common['description'] = $ogp_data['description'];
@@ -190,7 +197,7 @@ class Controller_Base extends Controller_Common
 		View::set_global('common', $common);
 	}
 
-	protected static function get_breadcrumbs($title_name = '', $middle_breadcrumbs = array(), $member_obj = null, $is_mypage = false, $module = null)
+	protected static function get_breadcrumbs($title_name = '', $middle_breadcrumbs = array(), $member_obj = null, $is_mypage = false, $module = null, $title_absolute = null)
 	{
 		$breadcrumbs = IS_ADMIN ? array('admin' => term('admin.view', 'page.top')) : array('/' => term('page.top'));
 		if ($member_obj)
@@ -212,7 +219,7 @@ class Controller_Base extends Controller_Common
 			}
 		}
 		if ($middle_breadcrumbs) $breadcrumbs += $middle_breadcrumbs;
-		$breadcrumbs[''] = $title_name;
+		$breadcrumbs[''] = $title_absolute ?: $title_name;
 
 		return $breadcrumbs;
 	}
