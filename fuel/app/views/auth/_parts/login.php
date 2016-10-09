@@ -49,7 +49,9 @@ $is_display_form = (empty($in_popover) || (!empty($in_popover) && (!FBD_SSL_MODE
 		$col_offset_size
 	); ?>
 <?php endif; ?>
+<?php if (conf('member.register.signup.IsEnabled')): ?>
 	<?php echo form_anchor('member/register/signup', icon_label('member.registration', 'both', false), array('class' => 'btn btn-default btn-warning'), $col_offset_size); ?>
+<?php endif; ?>
 
 <?php echo form_close(); ?>
 <?php if (empty($in_popover)): ?></div><?php endif; ?>

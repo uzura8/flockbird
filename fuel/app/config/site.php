@@ -129,6 +129,9 @@ $config = array(
 			),
 		),
 		'register' => array(
+			'signup' => array(
+				'IsEnabled' => true,
+			),
 			'token_lifetime' => '1 day',// user for function.strtodate. if false, not check lifetime.
 			'email' => array(
 				'hideUniqueCheck' => true,

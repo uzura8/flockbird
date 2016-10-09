@@ -158,8 +158,9 @@ class Controller_Member_Register extends Controller_Site
 	 */
 	public function action_signup()
 	{
-		$val = self::get_form_signup(Model_MemberAuth::forge());
+		if (! conf('member.register.signup.IsEnabled')) throw new \HttpNotFoundException;
 
+		$val = self::get_form_signup(Model_MemberAuth::forge());
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
@@ -187,6 +188,7 @@ class Controller_Member_Register extends Controller_Site
 	 */
 	public function action_confirm_signup()
 	{
+		if (! conf('member.register.signup.IsEnabled')) throw new \HttpNotFoundException;
 		Util_security::check_method('POST');
 		Util_security::check_csrf();
 
