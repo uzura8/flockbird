@@ -104,7 +104,7 @@ class Site_MemberProfileCacheBuilder
 			{
 				$this->save_values[$member_profile_cache_col] = $this->member->{$member_col};
 			}
-			elseif ($this->current_obj->{$member_profile_cache_col} !== $this->member->{$member_col})
+			elseif (! is_null($this->member->{$member_col}) && $this->current_obj->{$member_profile_cache_col} !== $this->member->{$member_col})
 			{
 				$this->save_values[$member_profile_cache_col] = $this->member->{$member_col};
 			}
@@ -121,11 +121,11 @@ class Site_MemberProfileCacheBuilder
 			}
 			else
 			{
-				if ($this->current_obj->birthday !== $birthday)
+				if (! is_null($birthday) && $this->current_obj->birthday !== $birthday)
 				{
 					$this->save_values['birthday'] = $birthday;
 				}
-				if ($this->current_obj->birthday_public_flag !== $birthday_public_flag)
+				if (! is_null($birthday_public_flag) && $this->current_obj->birthday_public_flag !== $birthday_public_flag)
 				{
 					$this->save_values['birthday_public_flag'] = $birthday_public_flag;
 				}
