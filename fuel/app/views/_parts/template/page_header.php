@@ -12,5 +12,8 @@
 <?php 	if (isset($page_lead)): ?>
 				<div class="text-muted"><?php echo $page_lead; ?></div>
 <?php 	endif; ?>
+<?php 	if (isset($header_bottom)): ?>
+				<div id="header_bottom"><?php echo $header_bottom; ?></div>
+<?php 	endif; ?>
 			</div><!-- page-header -->
 <?php endif; ?>

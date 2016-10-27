@@ -53,6 +53,7 @@ echo render('_parts/template/page_header', array(
 	'subtitle' => isset($subtitle) ? $subtitle : null,
 	'header_info' => isset($header_info) ? $header_info : null,
 	'page_lead' => isset($page_lead) ? $page_lead : null,
+	'header_bottom' => isset($header_bottom) ? $header_bottom : null,
 ));
 ?>
 
