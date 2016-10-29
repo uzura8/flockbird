@@ -2,6 +2,11 @@
 $config = array(
 	'site' => array(
 		'common' => array(
+			'main' => array(
+				'subColumn' => array(
+					'position' => 'left',
+				),
+			),
 			'thumbnailModalLink' => array(
 				'isEnabled' => true,
 			),
