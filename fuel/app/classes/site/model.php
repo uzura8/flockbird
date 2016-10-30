@@ -271,11 +271,11 @@ class Site_Model
 	{
 		if (!$search_word_string = Util_String::validate_search_word($search_word_string))
 		{
-			return $is_return_validated_search_word_string ? array('', array()) : array();
+			return $is_return_validated_search_word_string ? array(array(), '') : array();
 		}
 		if (!$search_words = explode(' ', $search_word_string))
 		{
-			return $is_return_validated_search_word_string ? array('', array()) : array();
+			return $is_return_validated_search_word_string ? array(array(), '') : array();
 		}
 
 		$return = array();
