@@ -5,7 +5,7 @@ $block_attrs = array(
 	'class' => 'form-group',
 	'id' => sprintf('form_%s_block', implode('-', array_keys($inputs))),
 );
-if (!empty($has_error)) $block_attrs['class'][] = 'has-error';
+if (!empty($has_error)) $block_attrs['class'] .= ' has-error';
 
 $label_class = 'col-sm-'.$label_col_sm_size;
 if ($label_col_sm_size != 12) $label_class .= ' control-label';
