@@ -157,23 +157,11 @@ class Model_MemberAddress extends \MyOrm\Model
 
 	public function get_full_name($is_lang_ja = false)
 	{
-		$items = array($this->first_name, $this->last_name);
-		if ($is_lang_ja) $items = array_reverse($items);
-
-		return trim(implode(' ', $items));
+		return Site_Member_Address::get_full_name($this->first_name, $this->last_name, $is_lang_ja);
 	}
 
 	public function get_address($is_lang_ja = false)
 	{
-		$items = array(
-			$this->address02,
-			$this->address01,
-			$this->region,
-			$this->postal_code,
-		);
-		if ($this->country) $items[] = Util_Lang::get_country_name4code($this->country);
-		if ($is_lang_ja) $items = array_reverse($items);
-
-		return trim(implode(' ', $items));
+		return Site_Member_Address::get_address($this, $is_lang_ja);
 	}
 }
