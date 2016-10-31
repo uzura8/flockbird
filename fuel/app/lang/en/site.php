@@ -6,7 +6,7 @@ return array(
 	'invite_form_email_placeholder' => "Input friend's email to invite. ",
 	'invite_form_message_placeholder' => "Input message to friend. [optional]",
 	'member_address_setting' => 'Setting Address',
-	'member_address_setting_description' => 'Set Addresss',
+	'member_address_setting_description' => 'Set Address',
 	'member_form_address01_placeholder' => 'Municipality name, Street addess.',
 	'member_form_address02_placeholder' => 'Apt, Suite, Bldg, Gate Code. (optional)',
 	'site_title_access_block_settig' => 'Access block setting',
