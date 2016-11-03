@@ -1,11 +1,13 @@
 <?php
 if (empty($label_col_size)) $label_col_size = 2;
 if (empty($display_type)) $display_type = 'summary';
+if (! empty($full_name)) $full_name = $member_address->get_full_name(is_lang_ja());
+if (! empty($address))   $address = $member_address->get_address(is_lang_ja());
 ?>
 <?php if ($display_type == 'summary'): ?>
 <ul class="list-unstyled">
-	<li><?php echo $member_address->get_full_name(is_lang_ja()); ?></li>
-	<li><?php echo $member_address->get_address(is_lang_ja()); ?></li>
+	<li><?php echo $full_name; ?></li>
+	<li><?php echo $address; ?></li>
 <?php if ($member_address->company_name): ?>
 	<li><?php echo $member_address->company_name; ?></li>
 <?php endif; ?>
@@ -16,12 +18,12 @@ if (empty($display_type)) $display_type = 'summary';
 <?php else: ?>
 <div class="form-horizontal">
 	<?php echo form_text(
-		!empty($full_name) ? $full_name : $member_address->get_full_name(is_lang_ja()),
+		$full_name,
 		t('member.address.full_name'),
 		$label_col_size
 	); ?>
 	<?php echo form_text(
-		!empty($address) ? $address : $member_address->get_address(is_lang_ja()),
+		$address,
 		t('member.address.view'),
 		$label_col_size
 	); ?>
