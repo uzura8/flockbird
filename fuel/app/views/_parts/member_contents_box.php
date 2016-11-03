@@ -40,9 +40,9 @@ if (isset($content) && strlen($content))
 <?php endif; ?>
 		</div>
 
-<?php if ($date || isset($read_status, $public_flag, $model, $id)): ?>
+<?php if (! empty($date) || isset($read_status, $public_flag, $model, $id)): ?>
 		<div class="sub_info">
-<?php if ($date): ?>
+<?php if (! empty($date)): ?>
 			<small class="mr10"><?php if (!empty($date['label'])) echo $date['label'].': '; ?><?php echo site_get_time($date['datetime']) ?></small>
 <?php endif; ?>
 
