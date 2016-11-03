@@ -16,12 +16,12 @@ if (empty($display_type)) $display_type = 'summary';
 <?php else: ?>
 <div class="form-horizontal">
 	<?php echo form_text(
-		$member_address->get_full_name(is_lang_ja()),
+		!empty($full_name) ? $full_name : $member_address->get_full_name(is_lang_ja()),
 		t('member.address.full_name'),
 		$label_col_size
 	); ?>
 	<?php echo form_text(
-		$member_address->get_address(is_lang_ja()),
+		!empty($address) ? $address : $member_address->get_address(is_lang_ja()),
 		t('member.address.view'),
 		$label_col_size
 	); ?>
