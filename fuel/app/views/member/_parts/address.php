@@ -1,8 +1,8 @@
 <?php
 if (empty($label_col_size)) $label_col_size = 2;
 if (empty($display_type)) $display_type = 'summary';
-if (! empty($full_name)) $full_name = $member_address->get_full_name(is_lang_ja());
-if (! empty($address))   $address = $member_address->get_address(is_lang_ja());
+if (empty($full_name)) $full_name = $member_address->get_full_name(is_lang_ja());
+if (empty($address))   $address = $member_address->get_address(is_lang_ja());
 ?>
 <?php if ($display_type == 'summary'): ?>
 <ul class="list-unstyled">
