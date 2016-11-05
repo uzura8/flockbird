@@ -34,7 +34,7 @@ class Controller_Auth extends Controller_Site
 
 		if ($_provider) return $this->opauth_login_start($_provider, $method);
 
-		$destination = Session::get_flash('destination') ?: Input::post('destination', '');
+		$destination = Session::get_flash('destination') ?: Input::param('destination', '');
 
 		if (Input::method() == 'POST')
 		{
