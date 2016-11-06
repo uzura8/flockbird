@@ -530,7 +530,7 @@ CREATE TABLE `news_tag` (
 CREATE TABLE `notice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `foreign_table` varchar(20) NOT NULL COMMENT 'Reference table name',
-  `foreign_id` int(11) NOT NULL COMMENT 'The id of reference table',
+  `foreign_id` varchar(10) NOT NULL COMMENT 'The id of reference table',
   `type` tinyint(2) NOT NULL DEFAULT '0',
   `body` text NULL,
   `parent_table` varchar(20) NULL COMMENT 'Use for open page url.',
@@ -584,7 +584,7 @@ CREATE TABLE `notice_mail_queue` (
 CREATE TABLE `member_watch_content` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `foreign_table` varchar(20) NULL COMMENT 'Reference table name',
-  `foreign_id` int(11) NULL COMMENT 'The id of reference table',
+  `foreign_id` varchar(10) NULL COMMENT 'The id of reference table',
   `member_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),

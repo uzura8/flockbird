@@ -12,7 +12,11 @@ class Model_Notice extends \MyOrm\Model
 			'validation' => array('trim', 'required', 'max_length' => array(20)),
 			'form' => array('type' => false),
 		),
-		'foreign_id',
+		'foreign_id' => array(
+			'data_type' => 'string',
+			'validation' => array('trim', 'max_length' => array(10)),
+			'form' => array('type' => false),
+		),
 		'type' => array(
 			'data_type' => 'integer',
 			'validation' => array('required', 'valid_string' => array('numeric'), 'max_length' => array(2)),
@@ -54,7 +58,6 @@ class Model_Notice extends \MyOrm\Model
 	public static function _init()
 	{
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_accept_foreign_tables();
-		static::$_properties['foreign_id'] = \Util_Orm::get_relational_numeric_key_prop();
 		static::$_properties['type']['validation']['in_array'][] = \Config::get('notice.types');
 		static::$_properties['parent_table']['validation']['in_array'][] = Site_Util::get_accept_parent_tables();
 		static::$_properties['parent_id'] = \Util_Orm::get_relational_numeric_key_prop(false);

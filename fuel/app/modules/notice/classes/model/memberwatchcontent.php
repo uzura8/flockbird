@@ -21,7 +21,11 @@ class Model_MemberWatchContent extends \MyOrm\Model
 			'validation' => array('trim', 'required', 'max_length' => array(20)),
 			'form' => array('type' => false),
 		),
-		'foreign_id',
+		'foreign_id' => array(
+			'data_type' => 'string',
+			'validation' => array('trim', 'max_length' => array(10)),
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
 	);
 
@@ -44,7 +48,6 @@ class Model_MemberWatchContent extends \MyOrm\Model
 	public static function _init()
 	{
 		static::$_properties['member_id'] = \Util_Orm::get_relational_numeric_key_prop();
-		static::$_properties['foreign_id'] = \Util_Orm::get_relational_numeric_key_prop();
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_accept_foreign_tables();
 	}
 
