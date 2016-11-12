@@ -52,7 +52,7 @@ class Model_Album extends \MyOrm\Model
 		'foreign_table' => array(
 			'data_type' => 'text',
 			//'validation' => array('trim', array('in_array', array('note'))),
-			'validation' => array('trim', 'max_length' => array(20)),
+			'validation' => array('trim', 'max_length' => array(64)),
 			'default' => '',
 			'form' => array('type' => false),
 		),

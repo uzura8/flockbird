@@ -9,7 +9,7 @@ class Model_Notice extends \MyOrm\Model
 		'id',
 		'foreign_table' => array(
 			'data_type' => 'varchar',
-			'validation' => array('trim', 'required', 'max_length' => array(20)),
+			'validation' => array('trim', 'required', 'max_length' => array(64)),
 			'form' => array('type' => false),
 		),
 		'foreign_id' => array(
@@ -29,10 +29,14 @@ class Model_Notice extends \MyOrm\Model
 		),
 		'parent_table' => array(
 			'data_type' => 'varchar',
-			'validation' => array('trim', 'max_length' => array(20)),
+			'validation' => array('trim', 'max_length' => array(64)),
 			'form' => array('type' => false),
 		),
-		'parent_id',
+		'parent_id' => array(
+			'data_type' => 'string',
+			'validation' => array('trim', 'max_length' => array(10)),
+			'form' => array('type' => false),
+		),
 		'created_at' => array('form' => array('type' => false)),
 		'updated_at' => array('form' => array('type' => false)),
 	);

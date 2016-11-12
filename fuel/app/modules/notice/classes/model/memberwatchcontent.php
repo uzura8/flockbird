@@ -18,7 +18,7 @@ class Model_MemberWatchContent extends \MyOrm\Model
 		'member_id',
 		'foreign_table' => array(
 			'data_type' => 'varchar',
-			'validation' => array('trim', 'required', 'max_length' => array(20)),
+			'validation' => array('trim', 'required', 'max_length' => array(64)),
 			'form' => array('type' => false),
 		),
 		'foreign_id' => array(

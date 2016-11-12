@@ -21,11 +21,12 @@ class Model_TimelineChildData extends \MyOrm\Model
 		),
 		'foreign_table' => array(
 			'data_type' => 'varchar',
-			'validation' => array('trim', 'max_length' => array(20)),
+			'validation' => array('trim', 'max_length' => array(64)),
 			'form' => array('type' => false),
 		),
 		'foreign_id' => array(
-			'data_type' => 'integer',
+			'data_type' => 'string',
+			'validation' => array('trim', 'max_length' => array(10)),
 			'form' => array('type' => false),
 		),
 	);
