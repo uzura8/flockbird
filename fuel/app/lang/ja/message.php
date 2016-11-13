@@ -23,6 +23,7 @@ return array(
 	'message_not_registered' => '登録がありません。',
 	'message_not_registered_for' => ':labelが登録されていません。',
 	'message_not_input_for' => ':labelが入力されていません。',
+	'message_include_invalid_value' => ':labelに正しくない値が含まれています。',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => ':link をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
 	// invite friend
