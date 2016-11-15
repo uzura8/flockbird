@@ -156,6 +156,7 @@ $config = array(
 		'about' => 'このサイトについて',
 		'site_menu' => 'サイトメニュー',
 		'member_menu' => 'メンバーメニュー',
+		'registered_count' => '登録件数',
 	),
 	'common' => array(
 		'info' => '情報',

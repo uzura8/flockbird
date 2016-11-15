@@ -12,5 +12,6 @@ return array(
 	'site_title_access_block_settig' => 'アクセスブロック設定',
 	'site_lead_access_block_settig' => 'ブロック中メンバーの確認と登録解除を行います。',
 	'site_lead_notice_setting' => 'お知らせ受診項目の設定を行います。',
+	'additional_info_count_of' => '(:label: :count 件)',
 );
 
