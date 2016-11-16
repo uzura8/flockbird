@@ -13,5 +13,6 @@ return array(
 	'site_lead_access_block_settig' => 'Check and cancel access blocked member. ',
 	'site_lead_notice_setting' => 'Setting of Notificaton',
 	'additional_info_count_of' => '(:label: :count)',
+	'registered_count_of' => 'Registered :count :label',
 );
 
