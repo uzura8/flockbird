@@ -2,7 +2,7 @@
 <script>
 var GL = {};
 GL.execute_flg = false;
-function get_uid() {return <?php echo (!IS_ADMIN && Auth::check()) ? $u->id : 0; ?>;}
+function get_uid() {return <?php echo (!IS_ADMIN && Auth::check()) ? get_uid() : 0; ?>;}
 function check_is_admin() {return <?php echo IS_ADMIN ? 'true' : 'false'; ?>;}
 function getBasePath() {return '<?php echo Uri::base_path(); ?>';}
 function getCurrentPath() {return '<?php echo Uri::string(); ?>';}
