@@ -7,6 +7,8 @@ return array(
 	'message_send_mail_error' => 'メール送信エラー',
 	// common
 	'message_please_input_following_items' => '下記の項目をを入力してください。',
+	'message_please_register_for' => ':labelを登録してください。',
+	'message_please_edit_for' => ':labelを編集してください。',
 	'message_send_complete' => ':labelを送信しました。',
 	'message_send_mail' => ':labelメールを送信しました。',
 	'message_update_failed' => '更新に失敗しました。',

@@ -7,6 +7,8 @@ return array(
 	'message_send_mail_error' => 'Sending mail error. ',
 	// common
 	'message_please_input_following_items' => 'Please input following items. ',
+	'message_please_register_for' => 'Please register :label. ',
+	'message_please_edit_for' => 'Please edit :label. ',
 	'message_send_complete' => 'Sent :label. ',
 	'message_send_mail' => 'Sent :label mail. ',
 	'message_update_failed' => 'Failed to update. ',
