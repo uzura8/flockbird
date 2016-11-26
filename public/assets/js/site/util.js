@@ -883,7 +883,7 @@ function post_submit(selfDomElement) {
 			postUri;
 	if (href && href == '#') href = '';
 	if (empty(href) && empty(uri)) return false;
-	postUri = href ? href : get_url(uri);
+	postUri = href ? href : uri;
 	if (destination) postData['destination'] = destination;
 	if (confirmMsg) {
 		apprise(confirmMsg, {confirm: true}, function(r) {
