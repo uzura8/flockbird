@@ -54,4 +54,10 @@ class Site_Model
 
 		return $row;
 	}
+
+	public static function delete_member_watch_content(\Orm\Model $obj, $conditions)
+	{
+		if (!$member_watch_contents = \Site_Model::get4relation('\Notice\Model_MemberWatchContent', $conditions, $obj)) return false;
+		foreach ($member_watch_contents as $member_watch_content) $member_watch_content->delete();
+	}
 }

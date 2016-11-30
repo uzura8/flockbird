@@ -42,7 +42,7 @@ class Observer_DeleteNotice extends \Orm\Observer
 		if (empty($this->_conditions['type']))
 		{
 			// delete member_watch_content
-			self::delete_member_watch_content($obj, $this->_conditions);
+			\Notice\Site_Model::delete_member_watch_content($obj, $this->_conditions);
 		}
 
 		$notices = \Site_Model::get4relation('\Notice\Model_Notice', $this->_conditions, $obj);
@@ -57,9 +57,10 @@ class Observer_DeleteNotice extends \Orm\Observer
 			else
 			{
 				// delete notice_member_from
-				if (self::delete_notice_member_from($notice->id, $obj->{$this->_member_id_prop}))
+				if (\Notice\Model_NoticeMemberFrom::delete4notice_id_and_member_id($notice->id, $obj->{$this->_member_id_prop}))
 				{
-					$parent_content_member_id = \Site_Model::get_value4table_and_id($notice->foreign_table, $notice->foreign_id, $this->_foreign_table_member_id_prop);
+					$parent_content_member_id =
+						\Site_Model::get_value4table_and_id($notice->foreign_table, $notice->foreign_id, $this->_foreign_table_member_id_prop);
 					if (!\Notice\Model_NoticeMemberFrom::get_count4notice_id($notice->id, $parent_content_member_id))
 					{
 						$notice->delete();
@@ -90,18 +91,6 @@ class Observer_DeleteNotice extends \Orm\Observer
 			}
 		}
 	}
-
-	private static function delete_member_watch_content($obj, $conditions)
-	{
-		if (!$member_watch_contents = \Site_Model::get4relation('\Notice\Model_MemberWatchContent', $conditions, $obj)) return false;
-		foreach ($member_watch_contents as $member_watch_content) $member_watch_content->delete();
-	}
-
-	private static function delete_notice_member_from($notice_id, $member_id)
-	{
-		if (!$notice_member_from = \Notice\Model_NoticeMemberFrom::get4notice_id_and_member_id($notice_id, $member_id)) return false;
-
-		return $notice_member_from->delete();
-	}
 }
 // End of file deletenotice.php
+

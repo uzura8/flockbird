@@ -93,4 +93,11 @@ class Model_NoticeMemberFrom extends \MyOrm\Model
 
 		return $query->count();
 	}
+
+	public static function delete4notice_id_and_member_id($notice_id, $member_id)
+	{
+		if (!$obj = self::get4notice_id_and_member_id($notice_id, $member_id)) return false;
+
+		return $obj->delete();
+	}
 }
