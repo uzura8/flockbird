@@ -153,9 +153,17 @@ class Util_Orm
 				foreach ($conditions as $condition => $value)
 				{
 					if ($check_is_changed && !$obj->is_changed($property)) continue;
+
 					if ($condition == 'value')
 					{
-						if ($obj->{$property} != $value) continue;
+						if (is_array($value))
+						{
+							if (! in_array($obj->{$property}, $value)) continue;
+						}
+						else
+						{
+							if ($obj->{$property} != $value) continue;
+						}
 
 						return true;
 					}
