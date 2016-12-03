@@ -105,6 +105,7 @@ $config = array(
 		'auth' => 'Authentication',
 		'login' => 'Log in',
 		'logout' => 'Log out',
+		'register' => 'Register',
 		'register_for' => 'Register :label',
 		'registration' => 'Registration',
 		'unregisterd' => 'Unregistered',
