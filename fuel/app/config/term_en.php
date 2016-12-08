@@ -165,6 +165,7 @@ $config = array(
 		'request' => 'Request',
 		'invalid' => 'Invalid',
 		'error' => 'Errror',
+		'error_unexpected' => 'Unexpected Error',
 		'friend' => 'Friend',
 		'message' => 'Message',
 		'menu' => 'Menu',
@@ -179,6 +180,8 @@ $config = array(
 		'content' => 'Content',
 		'result' => 'Result',
 		'condition' => 'Condition',
+		'database' => 'Database',
+		'server' => 'Server',
 	),
 	'member' => array(
 		'view' => 'Members',

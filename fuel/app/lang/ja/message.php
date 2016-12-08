@@ -5,6 +5,8 @@ return array(
 	'message_404_not_found' => 'ページが見つかりませんでした。',
 	'message_invalid_url' => 'URL が無効です。',
 	'message_send_mail_error' => 'メール送信エラー',
+	'message_error_occurred' => 'エラーが発生しました。',
+	'message_error_occurred_for' => ':label が発生しました。',
 	// common
 	'message_please_input_following_items' => '下記の項目をを入力してください。',
 	'message_please_register_for' => ':labelを登録してください。',

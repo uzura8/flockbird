@@ -5,6 +5,8 @@ return array(
 	'message_404_not_found' => 'Page not found. ',
 	'message_invalid_url' => 'URL is invalid. ',
 	'message_send_mail_error' => 'Sending mail error. ',
+	'message_error_occurred' => 'Error occurred. ',
+	'message_error_occurred_for' => ':label occurred. ',
 	// common
 	'message_please_input_following_items' => 'Please input following items. ',
 	'message_please_register_for' => 'Please register :label. ',

@@ -165,6 +165,7 @@ $config = array(
 		'request' => 'リクエスト',
 		'invalid' => '不正な',
 		'error' => 'エラー',
+		'error_unexpected' => '予期しないエラー',
 		'friend' => '友達',
 		'message' => 'メッセージ',
 		'menu' => 'メニュー',
@@ -179,6 +180,8 @@ $config = array(
 		'content' => '内容',
 		'result' => '結果',
 		'condition' => '条件',
+		'database' => 'データベース',
+		'server' => 'サーバー',
 	),
 	'member' => array(
 		'view' => 'メンバー',

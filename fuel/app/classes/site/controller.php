@@ -39,7 +39,10 @@ class Site_Controller
 
 	public static function get_error_message($message = null, $is_db_error = false, $default_message = null)
 	{
-		if (is_null($default_message) && $is_db_error) $default_message = 'データベースエラーが発生しました。';
+		if (is_null($default_message) && $is_db_error)
+		{
+			$default_message = __('message_error_occurred_for', array('label' => t('common.database')));
+		}
 		if ($is_db_error && is_prod_env()) return $default_message;
 
 		if ($message)
