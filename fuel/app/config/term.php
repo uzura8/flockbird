@@ -43,6 +43,7 @@ $config = array(
 		'use' => '使用する',
 		'unuse' => '使用しない',
 		'search' => '検索',
+		'search_by' => ':labelで検索',
 		'do_search' => '検索する',
 		'default' => '初期',
 		'value' => '値',

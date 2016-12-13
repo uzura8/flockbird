@@ -43,6 +43,7 @@ $config = array(
 		'use' => 'use',
 		'unuse' => 'Unuse',
 		'search' => 'Search',
+		'search_by' => 'Search by :label',
 		'do_search' => 'Search',
 		'default' => 'Default',
 		'value' => 'Value',
