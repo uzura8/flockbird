@@ -98,6 +98,7 @@ $config = array(
 		'cancel' => 'Cancel',
 		'do_cancel' => 'Cancel',
 		'selected' => 'Selected',
+		'sort' => 'Sort by',
 	),
 	'site' => array(
 		'view' => 'Site',

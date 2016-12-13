@@ -98,6 +98,7 @@ $config = array(
 		'cancel' => '取り消し',
 		'do_cancel' => '取り消す',
 		'selected' => '選択した',
+		'sort' => '並べ替え',
 	),
 	'site' => array(
 		'view' => 'サイト',
