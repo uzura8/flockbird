@@ -62,6 +62,6 @@ function convert_body_by_format($body, $format = 0, $truncate_width = 0, $read_m
 
 function rm_period($str)
 {
-	return preg_replace('/^(.+)(\. ?|。)$/um', '$1', $str)
+	return preg_replace('/^(.+)(\. ?|。)$/um', '$1', $str);
 }
 
