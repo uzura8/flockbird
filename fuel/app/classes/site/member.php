@@ -319,6 +319,14 @@ class Site_Member
 			$query->where('sex_public_flag', 'in', $accept_public_flags);
 			$query->where_close();
 		}
+		// member.country
+		if (!empty($inputs['member_country']) && $form_member_profile->check_is_enabled_member_field('country'))
+		{
+			$query->where_open();
+			$query->where('country', $inputs['member_country']);
+			$query->where('country_public_flag', 'in', $accept_public_flags);
+			$query->where_close();
+		}
 
 		// profile
 		foreach ($profiles as $profile)

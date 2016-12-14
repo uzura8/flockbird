@@ -24,6 +24,14 @@ if ($val->fieldset()->field($name))
 ?>
 
 <?php
+$name = 'member_country';
+if ($val->fieldset()->field($name))
+{
+	echo form_select($val, $name, isset($inputs[$name]) ? $inputs[$name] : '', 7, $label_size);
+}
+?>
+
+<?php
 $name_month = 'member_birthdate_month';
 $name_day = 'member_birthdate_day';
 if ($val->fieldset()->field($name_month) && $val->fieldset()->field($name_day))

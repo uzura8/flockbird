@@ -25,7 +25,7 @@ if (!isset($is_simple_search)) $is_simple_search = true;
 <?php echo render('_parts/search_form', array(
 	'input_value' => !empty($search_word) ? $search_word : null,
 	'input_attr' => array(
-		'placeholder' => sprintf('%sで%s', term('member.name'), term('form.search')),
+		'placeholder' => t('form.search_by', array('label' => term('member.name'))),
 		'class' => 'form-control js-keyup',
 		'data-btn' => '#btn_search_member',
 	),
