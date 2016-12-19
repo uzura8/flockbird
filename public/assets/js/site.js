@@ -19,6 +19,14 @@ $(document).on('change', '.js-file_input', function(){
 	$(inputSelector).val($(this).val());
 });
 
+$(document).on('click', '.js-accordion-onetime', function(){
+	var targetSelector = $(this).data('target') ? $(this).data('target') : '';
+	var $targetObj = targetSelector ? $(targetSelector) : $(this).next();
+	$targetObj.show();
+	$(this).hide();
+	return false;
+});
+
 $(document).on('click', '.js-like', function(){
 	if (GL.execute_flg) return false;
 	update_like_status(this);

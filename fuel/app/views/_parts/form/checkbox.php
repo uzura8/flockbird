@@ -23,14 +23,23 @@ if ($optional_public_flag) $col_sm_size = 8;
 	<?php echo Form::label($label, $name, array('class' => $label_class)); ?>
 <?php endif; ?>
 	<div class="col-sm-<?php echo $input_col_sm_size; ?><?php if (!strlen($label) && $label_col_sm_size < 12): ?> col-sm-offset-<?php echo $label_col_sm_size; ?><?php endif; ?>">
-		<div class="row">
-			<div class="col-sm-<?php echo $col_sm_size; ?>">
-
-<?php $i = 0; ?>
 <?php
 if (is_null($input_values)) $input_values = (Input::method() == 'POST') ? Input::post($name) : $default_value;
 if (!is_array($input_values)) $input_values = (array)$input_values;
+$is_hide_input = $is_hide_on_no_vale && ! $input_values;
 ?>
+		<div class="row">
+<?php if ($is_hide_input): ?>
+				<?php echo anchor(
+					'#',
+					sprintf('%s <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>', t('site.register')),
+					false,
+					array('class' => 'col-sm-12 form-text js-accordion-onetime')
+				); ?>
+<?php endif; ?>
+			<div class="col-sm-<?php echo $col_sm_size; ?>"<?php if ($is_hide_input): ?> style="display:none;"<?php endif; ?>>
+
+<?php $i = 0; ?>
 <?php foreach ($options as $value => $each_label): ?>
 <?php
 $atter['id'] = sprintf('form_%s_%s', $name, $value);

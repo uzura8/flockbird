@@ -169,7 +169,7 @@ function form_select(Validation $val, $name, $default_value = '', $col_sm_size =
 	return render('_parts/form/select', $data);
 }
 
-function form_checkbox(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array(), $is_small_tag = false, $input_values = null)
+function form_checkbox(Validation $val, $name, $default_value = null, $label_col_sm_size = 2, $layout_type = 'block', $help = '', $optional_public_flag = array(), $is_small_tag = false, $input_values = null, $is_hide_on_no_vale = false)
 {
 	$field = $val->fieldset()->field($name);
 	$atter = array('id' => Site_Form::get_field_id($name));
@@ -191,6 +191,7 @@ function form_checkbox(Validation $val, $name, $default_value = null, $label_col
 		'optional_public_flag' => $optional_public_flag,
 		'is_small_tag' => $is_small_tag,
 		'input_values' => $input_values,
+		'is_hide_on_no_vale' => $is_hide_on_no_vale,
 	);
 
 	return render('_parts/form/checkbox', $data);
