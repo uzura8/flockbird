@@ -186,7 +186,7 @@ class Model_Profile extends \MyOrm\Model
 		static::$_properties[$property]['validation']['in_array'][] = array_keys($form_type_options);
 	}
 
-	public static function get4page_type($page_type)
+	public static function get4page_type($page_type, $ignore_names = array())
 	{
 		if (!in_array($page_type, array('regist', 'config', 'search', 'regist-config')))
 		{
@@ -204,6 +204,8 @@ class Model_Profile extends \MyOrm\Model
 		{
 			$query->where('is_disp_'.$page_type, 1);
 		}
+
+		if ($ignore_names) $query->where('name', 'not in', $ignore_names);
 
 		return $query->get();
 	}

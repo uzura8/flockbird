@@ -11,10 +11,21 @@ class Form_MemberProfile
 	private $validation = null;
 	private $validated_values = array();
 
-	public function __construct($page_type, Model_Member $member_obj = null)
+	public function __construct($page_type, $member_group = null, Model_Member $member_obj = null)
 	{
-		if (!in_array($page_type, array('regist', 'config', 'regist-config', 'search'))) throw new InvalidArgumentException('First parameter is invalid.');
-		$this->profiles = Model_Profile::get4page_type($page_type);
+		if (!in_array($page_type, array('regist', 'config', 'regist-config', 'search')))
+		{
+			throw new InvalidArgumentException('First parameter is invalid.');
+		}
+
+		if ($member_group && ! in_array($member_group, Model_Member::get_enum_values('group')))
+		{
+			throw new InvalidArgumentException('Second parameter is invalid.');
+		}
+		if (! $member_group) $member_group = conf('group.defaultValue', 'member');
+		$ignore_profile_names = (array)conf('profile.ignoreItemsForGroup.'.Model_Member::get_enum_key4value('group', $member_group));
+
+		$this->profiles = Model_Profile::get4page_type($page_type, $ignore_profile_names);
 		$this->page_type = $page_type == 'regist-config' ? 'regist' : $page_type;
 
 		$this->member_obj = $member_obj;

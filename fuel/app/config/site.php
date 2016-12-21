@@ -471,6 +471,11 @@ $config = array(
 		),
 	),
 	'profile' => array(
+		'ignoreItemsForGroup' => array(
+			//'user' => array(
+			//	'self_introduction',
+			//),
+		),
 		'name' => array(
 			'isDispConfig' => 1,
 			'isDispSearch' => 1,

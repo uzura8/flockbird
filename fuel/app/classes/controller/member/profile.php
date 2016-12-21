@@ -49,7 +49,7 @@ class Controller_Member_Profile extends Controller_Member
 	public function action_edit($type = null)
 	{
 		list($type, $is_regist) = self::validate_type($type, $this->u->id);
-		$form_member_profile = new Form_MemberProfile($type == 'regist' ? 'regist-config' : 'config', $this->u);
+		$form_member_profile = new Form_MemberProfile($type == 'regist' ? 'regist-config' : 'config', $this->u->group, $this->u);
 		$form_member_profile->set_validation();
 		if (\Input::method() == 'POST')
 		{

@@ -34,7 +34,7 @@ class Controller_Member_Register extends Controller_Site
 			throw new HttpNotFoundException;
 		}
 
-		$form_member_profile = new Form_MemberProfile('regist');
+		$form_member_profile = new Form_MemberProfile('regist', $member_pre->group);
 		$add_fields = array();
 		$add_fields['token']    = Form_Util::get_model_field('member_pre', 'token');
 		$add_fields['password'] = Form_Util::get_model_field('member_auth', 'password');
