@@ -32,7 +32,7 @@ class Controller_Member_Recover extends Controller_Site
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('site.password').'の再設定');
+		$this->set_title_and_breadcrumbs(__('member_title_resend_password'));
 		$this->template->content = View::forge('member/recover/resend_password');
 		$this->template->content->set_safe('html_form', $form->build('member/recover/send_reset_password_mail'));// form の action に入る
 	}
@@ -62,7 +62,7 @@ class Controller_Member_Recover extends Controller_Site
 		}
 		$post = $val->validated();
 
-		$message = term('site.password').'のリセット方法をメールで送信しました。';
+		$message = __('member_message_resend_password_complete');
 		if (!$member_auth = Model_MemberAuth::get4email($post['email']))
 		{
 			Session::set_flash('message', $message);
@@ -92,19 +92,19 @@ class Controller_Member_Recover extends Controller_Site
 		catch(EmailValidationFailedException $e)
 		{
 			Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
-			$error_message = 'メール送信エラー';
+			$error_message = __('message_send_mail_error');
 		}
 		catch(EmailSendingFailedException $e)
 		{
 			Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
-			$error_message = 'メール送信エラー';
+			$error_message = __('message_send_mail_error');
 		}
 		catch(\Database_Exception $e)
 		{
 			$is_transaction_rollback = true;
 			$error_message = \Site_Controller::get_error_message($e, true);
 		}
-		catch(FuelException $e)
+		catch(\FuelException $e)
 		{
 			$is_transaction_rollback = true;
 			$error_message = $e->getMessage();
@@ -132,7 +132,7 @@ class Controller_Member_Recover extends Controller_Site
 		$member_password_pre = Model_MemberPasswordPre::get4token(Input::param('token'));
 		if (!$member_password_pre || !Site_Util::check_token_lifetime($member_password_pre->updated_at, conf('member.recover.password.token_lifetime')))
 		{
-			Session::set_flash('error', sprintf('URLが%sです。', term('form.disabled')));
+			Session::set_flash('error', __('message_invalid_url'));
 			throw new HttpNotFoundException;
 		}
 
@@ -150,7 +150,7 @@ class Controller_Member_Recover extends Controller_Site
 			{
 				if (!$val->run())
 				{
-					throw new FuelException($val->show_errors() ?: term('site.password').'が正しくありません');
+					throw new FuelException($val->show_errors() ?: __('message_invalid_for', array('label' => t('site.password'))));
 				}
 				$post = $val->validated();
 				$to_email = $member_password_pre->email;
@@ -158,30 +158,30 @@ class Controller_Member_Recover extends Controller_Site
 
 				DB::start_transaction();
 				$auth->change_password_simple($member_password_pre->member_id, $post['password']);
-				$member_password_pre->delete();// 仮登録情報の削除
+				$member_password_pre->delete();// Delete pre registered data
 				DB::commit_transaction();
 
 				$mail = new Site_Mail('memberResetPassword');
 				$mail->send($to_email, array('to_name' => $to_name));
 
 				$auth->login($to_email, $post['password']);
-				Session::set_flash('message', term('site.password').'を登録しました。');
+				Session::set_flash('message', __('message_registered_for', array('label' => t('site.password'))));
 				Response::redirect('member');
 			}
 			catch(EmailValidationFailedException $e)
 			{
 				Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
-				$error_message = 'メール送信エラー';
+				$error_message = __('message_send_mail_error');
 			}
 			catch(EmailSendingFailedException $e)
 			{
 				Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
-				$error_message = 'メール送信エラー';
+				$error_message = __('message_send_mail_error');
 			}
 			catch(Auth\SimpleUserUpdateException $e)
 			{
 				$is_transaction_rollback = true;
-				$error_message = term('site.password').'の登録に失敗しました。';
+				$error_message = __('message_registered_failed_for', array('label' => t('site.password')));
 			}
 			catch(\Database_Exception $e)
 			{
@@ -200,10 +200,12 @@ class Controller_Member_Recover extends Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(term('site.password').'の再登録');
+		$this->set_title_and_breadcrumbs(__('member_title_reset_password'), array(
+			'member/recover/resend_password' => __('member_title_resend_password')
+		));
 		$data = array('val' => $val, 'member_password_pre' => $member_password_pre);
 		$this->template->content = View::forge('member/recover/reset_password', $data);
-		$this->template->content->set_safe('html_form', $form->build('member/recover/reset_password'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('member/recover/reset_password'));
 	}
 
 	public function form_resend_password()
@@ -217,15 +219,17 @@ class Controller_Member_Recover extends Controller_Site
 	public function form_reset_password()
 	{
 		$add_fields = array(
-			'password' => Form_Util::get_model_field('member_auth', 'password', sprintf('新しい%s', term('site.password'))),
-			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', sprintf('新しい%s(確認用)', term('site.password'))),
+			'password' => Form_Util::get_model_field('member_auth', 'password', term('common.new', 'site.password')),
+			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', term('common.new', 'site.password', 'form._confirm')),
 			'token' => Form_Util::get_model_field('member_pre', 'token'),
 		);
 		$add_fields['token']['attributes'] = array('type'=>'hidden', 'value' => Input::param('token'));
 		$add_fields['password']['attributes']['class'] .= ' input-xlarge';
+		$add_fields['password']['rules'][] = array('required');
 		$add_fields['password_confirm']['attributes']['class'] .= ' input-xlarge';
+		$add_fields['password_confirm']['rules'][] = array('required');
 		$add_fields['password_confirm']['rules'][] = array('match_field', 'password');
 
-		return Site_Util::get_form_instance('reset_password', null, true, $add_fields, array('value' => '変更'));
+		return Site_Util::get_form_instance('reset_password', null, true, $add_fields, array('value' => t('form.do_update')));
 	}
 }

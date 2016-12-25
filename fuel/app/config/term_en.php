@@ -25,7 +25,7 @@ $config = array(
 		'confirm' => 'Confirmation',
 		'confirming' => 'For confirmation',
 		'do_confirm' => 'Confirm',
-		'_confirm' => '(Confirm)',
+		'_confirm' => '[for Confirmation]',
 		'for_confirm' => 'For confirmation',
 		'back' => 'Back',
 		'error' => 'Error',
@@ -184,6 +184,7 @@ $config = array(
 		'condition' => 'Condition',
 		'database' => 'Database',
 		'server' => 'Server',
+		'new' => 'New',
 	),
 	'member' => array(
 		'view' => 'Members',

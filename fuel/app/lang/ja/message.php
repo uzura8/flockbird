@@ -8,13 +8,16 @@ return array(
 	'message_error_occurred' => 'エラーが発生しました。',
 	'message_error_occurred_for' => ':label が発生しました。',
 	// common
+	'message_please_input_for' => ':labelを入力してください。',
 	'message_please_input_following_items' => '下記の項目をを入力してください。',
 	'message_please_register_for' => ':labelを登録してください。',
 	'message_please_edit_for' => ':labelを編集してください。',
 	'message_registered' => '登録しました。',
 	'message_registered_for' => ':label を登録しました。',
 	'message_registered_complete' => '登録が完了しました。',
-	'message_registered_complete_for' => ':label の登録が登録しました。',
+	'message_registered_complete_for' => ':label の登録が完了しました。',
+	'message_registered_failed' => '登録に失敗しました。',
+	'message_registered_failed_for' => ':labelの登録に失敗しました。',
 	'message_send_complete' => ':labelを送信しました。',
 	'message_send_mail' => ':labelメールを送信しました。',
 	'message_update_failed' => '更新に失敗しました。',
@@ -31,7 +34,10 @@ return array(
 	'message_not_registered' => '登録がありません。',
 	'message_not_registered_for' => ':labelが登録されていません。',
 	'message_not_input_for' => ':labelが入力されていません。',
+	'message_invalid_for' => ':labelが正しくありません。',
 	'message_include_invalid_value' => ':labelに正しくない値が含まれています。',
+	'message_failed' => '失敗しました。',
+	'message_failed_for' => ':labelに失敗しました。',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => ':link をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
 	// invite friend

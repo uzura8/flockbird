@@ -1,4 +1,4 @@
-<?php echo alert('アカウントに登録したメールアドレスを入力してください。'); ?>
+<?php echo alert(__('member_message_resend_password_for_input')); ?>
 <div class="well">
 <?php echo $html_form; ?>
 </div>

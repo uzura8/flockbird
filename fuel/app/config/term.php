@@ -184,6 +184,7 @@ $config = array(
 		'condition' => '条件',
 		'database' => 'データベース',
 		'server' => 'サーバー',
+		'new' => '新しい',
 	),
 	'member' => array(
 		'view' => 'メンバー',

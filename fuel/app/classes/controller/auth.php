@@ -105,7 +105,8 @@ class Controller_Auth extends Controller_Site
 	{
 		Auth::dont_remember_me();
 		Auth::logout();
-		Session::set_flash('message', 'ログアウトしました');
+		Session::delete('lang');
+		Session::set_flash('message', __('site_message_logout_complete'));
 		Response::redirect('auth/login');
 	}
 
@@ -167,7 +168,7 @@ class Controller_Auth extends Controller_Site
 
 	protected function login_failed($is_redirect = true, $message = null)
 	{
-		Session::set_flash('error', $message ?: 'ログインに失敗しました');
+		Session::set_flash('error', $message ?: __('message_failed_for', array('label' => t('site.login'))));
 		if ($is_redirect) Response::redirect(conf('login_uri.site'));
 	}
 

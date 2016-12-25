@@ -8,6 +8,7 @@ return array(
 	'message_error_occurred' => 'Error occurred. ',
 	'message_error_occurred_for' => ':label occurred. ',
 	// common
+	'message_please_input_for' => 'Please input :label. ',
 	'message_please_input_following_items' => 'Please input following items. ',
 	'message_please_register_for' => 'Please register :label. ',
 	'message_please_edit_for' => 'Please edit :label. ',
@@ -15,6 +16,8 @@ return array(
 	'message_registered_for' => 'Registered :label. ',
 	'message_registered_complete' => 'Registration completed. ',
 	'message_registered_complete_for' => 'Registration of :label completed. ',
+	'message_registered_failed' => 'Failed to register. ',
+	'message_registered_failed_for' => 'Failed to register :label. ',
 	'message_send_complete' => 'Sent :label. ',
 	'message_send_mail' => 'Sent :label mail. ',
 	'message_update_failed' => 'Failed to update. ',
@@ -31,7 +34,10 @@ return array(
 	'message_not_registered' => 'Not registered. ',
 	'message_not_registered_for' => ':label is not registered. ',
 	'message_not_input_for' => ':label is not input. ',
+	'message_invalid_for' => ':label is invalid. ',
 	'message_include_invalid_value' => ':label include invalid values. ',
+	'message_failed' => 'Failed. ',
+	'message_failed_for' => 'Failed to :label. ',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => 'Please read :link . If you agree, push "Agree and register" button and complete registration. ',
 	// invite friend
