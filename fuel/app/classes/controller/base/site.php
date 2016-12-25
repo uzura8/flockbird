@@ -29,12 +29,8 @@ class Controller_Base_Site extends Controller_Base
 
 	protected function reset_lang()
 	{
-		if (!is_enabled_i18n()) return false;
-
-		if (IS_AUTH) $lang = Model_MemberConfig::get_value($this->u->id, 'lang');
-		if (empty($lang))  $lang = Util_Lang::get_client_accept_lang();
-		if ($lang == Lang::get_lang()) return false;
-
+		$lang = get_lang();
+		if ($lang == get_default_lang()) return false;
 		return Lang::set_lang($lang, true);
 	}
 

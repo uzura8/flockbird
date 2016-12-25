@@ -44,16 +44,15 @@ Util_toolkit::include_php_files(APPPATH.'helpers');
 
 // Config load.
 Config::load('site', 'site');
+Config::load('member', 'member');
 Config::load('i18n', 'i18n');
-Config::load('term', 'term');
-
 // Load lang fils
 if ($lang_files = Config::get('i18n.lang.files'))
 {
 	foreach ($lang_files as $lang_file) Lang::load($lang_file);
 }
+Config::load(Site_Util::get_term_file_name(false), 'term');
 
-Config::load('member', 'member');
 Config::load('template', 'template');
 Config::load('less', 'less');
 if (IS_TASK)

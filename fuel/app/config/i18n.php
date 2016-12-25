@@ -12,16 +12,6 @@ return array(
 			'message',
 		),
 	),
-	'lang' => array(
-		'options' => array(
-			'en' => 'English',
-			'ja' => '日本語',
-		),
-		'files' => array(
-			'site',
-			'message',
-		),
-	),
 	'country' => array(
 		'options' => array(
 			'GB' => 'United Kingdom',

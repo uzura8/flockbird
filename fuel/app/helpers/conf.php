@@ -75,15 +75,55 @@ function is_enabled_public_flag($public_flag_key)
 	return in_array(Site_Util::get_public_flag_value4key($public_flag_key), conf('public_flag.enabled'));
 }
 
+function is_admin()
+{
+	return defined('IS_ADMIN') && IS_ADMIN;
+}
+
 function is_enabled_i18n()
 {
 	return conf('isEnabled', 'i18n');
 }
 
-function get_lang()
+function get_default_lang()
 {
-	if (!is_enabled_i18n()) return false;
-	return Lang::get_lang();
+	return Config::get('language', 'ja');;
+}
+
+function get_client_lang()
+{
+	$accepteds = array_keys(conf('lang.options', 'i18n'));
+	if (! $set_langs = Util_Lang::get_client_accept_lang(true)) return false;
+	foreach ($set_langs as $lang)
+	{
+		if (in_array($lang, $accepteds)) return  $lang;
+	}
+
+	return false;
+}
+
+function get_lang($is_check_member_lang_setting = true)
+{
+	$default_lang = get_default_lang();
+
+	if (!is_enabled_i18n()) return $default_lang;
+	if (is_admin()) return $default_lang;
+
+	// Member setting
+	if ($lang = Session::get('lang')) return $lang;
+	if ($is_check_member_lang_setting && $member_id = get_uid())
+	{
+		if ($lang = Model_MemberConfig::get_value($member_id, 'lang'))
+		{
+			Session::set('lang', $lang);
+			return $lang;
+		}
+	}
+
+	// Client browser setting
+	if ($lang = get_client_lang()) return $lang;
+
+	return $default_lang;
 }
 
 function is_lang_ja()

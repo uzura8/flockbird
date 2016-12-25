@@ -98,10 +98,10 @@ class Site_Util
 		return preg_match('#^error/?#', Uri::string());
 	}
 
-	public static function get_term_file_name()
+	public static function get_term_file_name($is_check_member_lang_setting = true)
 	{
 		$config = 'term';
-		$lang = Lang::get_lang();
+		$lang = get_lang($is_check_member_lang_setting);
 		if ($lang != 'ja') $config .= '_'.$lang;
 
 		return $config;

@@ -33,6 +33,7 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 				\Form_MemberConfig::save($this->u->id, $val, $post);
 				\DB::commit_transaction();
 
+				\Session::set('lang', $post['lang']);
 				\Session::set_flash('message', $page_name.'を変更しました。');
 				\Response::redirect('member/setting');
 			}
