@@ -1,6 +1,6 @@
 <?php if ($val->fieldset()->field('member_name')): ?>
 	<?php echo form_input($val, 'member_name', '', 7, $label_size,
-		(is_enabled('notice') && conf('mention.isEnabled', 'notice')) ? '記号・空白は使用できません' : ''); ?>
+		(is_enabled('notice') && conf('mention.isEnabled', 'notice')) ? __('member_registration_input_help_name') : ''); ?>
 <?php endif; ?>
 
 <?php if ($val->fieldset()->field('member_sex')): ?>

@@ -3,9 +3,14 @@
 return array(
 	// Auth
 	'site_message_login_complete' => 'ログインしました。',
+	'site_message_login_failed' => 'ログインに失敗しました。',
 	'site_message_logout_complete' => 'ログアウトしました。',
+	'site_message_account_locked' => 'アカウントがロックされています。',
 	// member register
+	'member_message_signup' => 'ログインに使用するメールアドレスとパスワードを入力してください。',
+	'member_message_signup_complete' => '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。',
 	'member_registration' => term('member.view', 'site.registration'),
+	'member_registration_input_help_name' => '記号・空白は使用できません',
 	'agree_and_register' => '同意して登録する',
 	'invite_form_email_placeholder' => sprintf('%sの%s', term('form.do_invite', 'common.friend'), term('site.email')),
 	'invite_form_message_placeholder' => sprintf('%sへの%s', term('common.friend'), term('form.invite', 'common.message', 'form._not_required')),
@@ -18,6 +23,10 @@ return array(
 	'site_lead_notice_setting' => 'お知らせ受診項目の設定を行います。',
 	'additional_info_count_of' => '(:label: :count 件)',
 	'registered_count_of' => ':label :count 件 登録済み',
+	// member setting
+	'member_message_send_confirmation_code_complete' => '確認用メールを送信しました。受信したメール内に記載された確認用コードを入力してください。',
+	'member_message_error_invalid_confirmation_code' => '確認用コードが正しくないか、有効期限が過ぎてます。再度確認用メールを送信してください。',
+	'member_message_error_change_email_currently_registered' => 'そのメールアドレスは現在登録済みです。',
 	// recover account
 	'member_title_resend_password' => 'パスワードの再設定',
 	'member_message_resend_password_for_input' => 'アカウントに登録したメールアドレスを入力してください。',

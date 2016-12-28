@@ -34,7 +34,7 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 				\DB::commit_transaction();
 
 				\Session::set('lang', $post['lang']);
-				\Session::set_flash('message', $page_name.'を変更しました。');
+				\Session::set_flash('message', __('message_update_complete_for', array('label' => $page_name)));
 				\Response::redirect('member/setting');
 			}
 			catch(\ValidationFailedException $e)

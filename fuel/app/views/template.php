@@ -1,5 +1,5 @@
 <?php echo Html::doctype('html5'); ?>
-<html lang="ja">
+<html lang="<?php echo get_lang(); ?>">
 <head<?php if (is_enabled_share('facebook', 'share')): ?> prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#"<?php endif; ?>>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">

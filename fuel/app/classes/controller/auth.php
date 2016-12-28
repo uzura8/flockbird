@@ -50,7 +50,7 @@ class Controller_Auth extends Controller_Site
 				// account lock check.
 				if ($auth->check_is_account_locked($posted_email))
 				{
-					throw new FuelException('アカウントがロックされています');
+					throw new FuelException(__('site_message_account_locked'));
 				}
 				// login check.
 				if (!Auth::check() && !$auth->login($posted_email, $posted_password))
@@ -128,7 +128,7 @@ class Controller_Auth extends Controller_Site
 		new Opauth($this->_config, true);
 	}
 
-	// Twitter / Facebook ログイン成功/失敗時に呼ばれる
+	// Called on Twitter / Facebook login successed or failed
 	public function action_callback()
 	{
 		$_opauth = new Opauth($this->_config, false);
@@ -155,7 +155,7 @@ class Controller_Auth extends Controller_Site
 			return $this->login_failed();
 		}
 
-		// OAuth ログイン成功
+		// OAuth Login success
 		return $this->opauth_login($response);
 	}
 
@@ -179,10 +179,10 @@ class Controller_Auth extends Controller_Site
 		$query = Model_MemberOauth::query()->where('oauth_provider_id', $provider_id)->where('uid', $uid);
 		if ($query->count() == 0)
 		{
-			// 未登録の場合はサインアップ
+			// Sign up on unregistered
 			return $this->provider_signup($provider, $response);
 		}
-		// 登録済みの場合はログイン
+		// Log In on registered
 		$member_oauth = $query->get_one();
 		$this->force_login($member_oauth->member_id);
 		if (conf('auth.oauth.forceSetRememberMe')) Auth::remember_me();
@@ -241,7 +241,7 @@ class Controller_Auth extends Controller_Site
 			{
 				Model_MemberConfig::set_value($member->id, 'terms_un_agreement', 1);
 			}
-			// timeline 投稿
+			// Post timeline
 			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, null, 'member_register', $member->id, $member->created_at);
 			\DB::commit_transaction();
 

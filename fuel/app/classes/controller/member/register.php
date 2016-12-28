@@ -43,7 +43,6 @@ class Controller_Member_Register extends Controller_Site
 			$add_fields['password_confirm'] = Form_Util::get_model_field('member_auth', 'password', term('site.password', 'form._confirm'));
 		}
 		$form_member_profile->set_validation($add_fields, 'member_register');
-		$form_member_profile->set_validation_message('match_value', ':labelが正しくありません。');
 
 		if (Input::method() == 'POST')
 		{
@@ -56,7 +55,7 @@ class Controller_Member_Register extends Controller_Site
 				$post = $form_member_profile->get_validated_values();
 				if ($member_pre->password && $post['password'] != $member_pre->password)
 				{
-					throw new ValidationFailedException(term('site.password').'が正しくありません。');
+					throw new ValidationFailedException(__('message_invalid_for', array('label' => t('site.password'))));
 				}
 
 				DB::start_transaction();
@@ -67,7 +66,7 @@ class Controller_Member_Register extends Controller_Site
 					throw new FuelException('create member error.');
 				}
 				$member = $auth->get_member();
-				// 仮登録情報の削除
+				// Delete pre data
 				if ($member_pre->invite_member_id || $member_pre->group)
 				{
 					if ($member_pre->invite_member_id) $member->invite_member_id = $member_pre->invite_member_id;
@@ -79,17 +78,17 @@ class Controller_Member_Register extends Controller_Site
 				$password = $member_pre->password;
 				$member_pre->delete();
 
-				// member_profile 登録
+				// Register member_profile
 				$form_member_profile->set_member_obj($member);
 				$form_member_profile->seve();
 
-				// email が重複する member_pre の削除
+				// Delete member_pre duplicated email
 				if ($member_pres = \Model_MemberPre::query()->where('email', $email)->get())
 				{
 					foreach ($member_pres as $member_pre) $member_pre->delete();
 				}
 
-				// timeline 投稿
+				// Post timeline
 				if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id, $member->created_at);
 				DB::commit_transaction();
 
@@ -98,10 +97,10 @@ class Controller_Member_Register extends Controller_Site
 
 				if ($auth->login($email, $password))
 				{
-					Session::set_flash('message', sprintf('%sが%sしました。', term('site.registration'), term('form.complete')));
+					Session::set_flash('message', __('message_registered_complete'));
 					Response::redirect('member');
 				}
-				Session::set_flash('error', 'ログインに失敗しました');
+				Session::set_flash('error', __('site_message_login_failed'));
 				Response::redirect(conf('login_uri.site'));
 			}
 			catch(ValidationFailedException $e)
@@ -111,17 +110,17 @@ class Controller_Member_Register extends Controller_Site
 			catch(EmailValidationFailedException $e)
 			{
 				Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
-				$error_message = 'メール送信エラー';
+				$error_message = __('message_send_mail_error');
 			}
 			catch(EmailSendingFailedException $e)
 			{
 				Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
-				$error_message = 'メール送信エラー';
+				$error_message = __('message_send_mail_error');
 			}
 			catch(\Auth\SimpleUserUpdateException $e)
 			{
 				$is_transaction_rollback = true;
-				$error_message = 'そのアドレスは登録できません';
+				$error_message = __('message_disabled_to_register_for', array('label' => t('site.email')));
 			}
 			catch(\Database_Exception $e)
 			{
@@ -197,7 +196,7 @@ class Controller_Member_Register extends Controller_Site
 		$val->fieldset()->field('email')->delete_rule('unique');
 
 		$redirect_uri = conf('login_uri.site');
-		$success_message = '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。';
+		$success_message = __('member_message_signup_complete');
 		$error_message = '';
 		$is_transaction_rollback = false;
 		try
@@ -212,7 +211,7 @@ class Controller_Member_Register extends Controller_Site
 					Session::set_flash('message', $success_message);
 					Response::redirect($redirect_uri);
 				}
-				throw new FuelException('その'.term('site.email').'は登録できません。');
+				throw new FuelException(__('message_disabled_to_register_for', array('label' => t('site.email'))));
 			}
 
 			DB::start_transaction();
@@ -230,12 +229,12 @@ class Controller_Member_Register extends Controller_Site
 		catch(EmailValidationFailedException $e)
 		{
 			Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
-			$error_message = 'メール送信エラー';
+			$error_message = __('message_send_mail_error');
 		}
 		catch(EmailSendingFailedException $e)
 		{
 			Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
-			$error_message = 'メール送信エラー';
+			$error_message = __('message_send_mail_error');
 		}
 		catch(\Database_Exception $e)
 		{
@@ -262,7 +261,10 @@ class Controller_Member_Register extends Controller_Site
 		$val->fieldset()->field('email')->set_attribute('placeholder', 'sample@example.com');
 
 		$password_min_length_list = $member_auth::get_property_value('password', 'validation.min_length');
-		$val->fieldset()->field('password')->set_attribute('placeholder', sprintf('%d 文字以上', reset($password_min_length_list)));
+		$val->fieldset()->field('password')->set_attribute(
+			'placeholder',
+			t('form.characters_or_more', array('num' => reset($password_min_length_list)))
+		);
 
 		return $val;
 	}

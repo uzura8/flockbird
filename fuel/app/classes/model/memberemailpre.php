@@ -52,7 +52,7 @@ class Model_MemberEmailPre extends \MyOrm\Model
 		static::$_properties['email'] = Model_MemberAuth::property('email');
 		static::$_properties['token'] = Model_MemberPre::property('token');
 		static::$_properties['token']['form']['type'] = false;
-		static::$_properties['code']['label'] = term('form.confirm', 'site.code');
+		static::$_properties['code']['label'] = t('site.confirmation_code');
 		static::$_properties['code']['form']['validation']['exact_length'] = array(conf('member.setting.email.codeLength'));
 	}
 

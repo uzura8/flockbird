@@ -1,6 +1,6 @@
 <?php
 $label_size = 3;
-$btn_label = sprintf('%s用%sを%sする', term('form.confirm'), term('site.mail'), term('form.send'));
+$btn_label = t('form.do_send_for', array('label' => t('site.confirmation_mail')));
 ?>
 <div class="well">
 <?php echo form_open(true, false, !empty($action) ? array('action' => $action) : array()); ?>

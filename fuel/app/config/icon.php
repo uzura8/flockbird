@@ -9,6 +9,7 @@ $config = array(
 		'do_submit' => 'edit',
 		'send' => 'send',
 		'do_send' => 'send',
+		'do_send_for' => 'send',
 		'create' => 'plus',
 		'create_simple' => 'plus',
 		'do_create' => 'plus',

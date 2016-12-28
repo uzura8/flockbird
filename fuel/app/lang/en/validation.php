@@ -13,6 +13,7 @@ return array(
 //	'no_platform_dependent_chars' => ':label 欄に機種依存文字が含まれています。',
 //	'alpha_small_char_numeric' => ':label 欄は半角の小文字英字と数字でなければなりません。',
 //	'match_field' => ':label が一致しません。',
+	'match_value' => ':label is invalid. ',
 //	'unmatch_field' => ':label は異なる値にしてください。',
 //	'datetime_except_second' => ':label の日時が正しくありません。',
 //	'datetime_range'         => ':label の日時が正しくありません。',
