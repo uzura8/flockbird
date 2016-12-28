@@ -36,7 +36,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 					->add_rule('in_array', array_keys($options));
 		}
 
-		if (Site_Util::check_enabled_notice_type('follow'))
+		if (conf('memberRelation.follow.isEnabled') && Site_Util::check_enabled_notice_type('follow'))
 		{
 			$name = self::get_name('follow');
 			$value = self::get_value($member_id, $name, parent::get_default_value($name, 1));
