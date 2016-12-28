@@ -8,6 +8,8 @@ class Controller_Member_Setting extends \Controller_Site
 	public function before()
 	{
 		parent::before();
+
+		\Lang::load('notice');
 	}
 
 	/**
@@ -33,7 +35,7 @@ class Controller_Member_Setting extends \Controller_Site
 				\Form_MemberConfig::save($this->u->id, $val, $post);
 				\DB::commit_transaction();
 
-				\Session::set_flash('message', $page_name.'を変更しました。');
+				\Session::set_flash('message', __('message_update_complete_for', array('label' => $page_name)));
 				\Response::redirect('member/setting');
 			}
 			catch(\ValidationFailedException $e)
@@ -61,8 +63,7 @@ class Controller_Member_Setting extends \Controller_Site
 
 		if (!empty($post_values['notice_noticeMailMode']))
 		{
-			throw new \ValidationFailedException(sprintf('%sを%sには、%sを%sしてください。',
-				term('notice', 'site.mail'), term('form.recieve_mail'), term('site.email'), term('site.registration')));
+			throw new \ValidationFailedException(__('notice_error_member_setting_notice_unregistered_email'));
 		}
 	}
 }
