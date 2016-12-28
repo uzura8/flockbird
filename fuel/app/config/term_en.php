@@ -193,6 +193,7 @@ $config = array(
 		'database' => 'Database',
 		'server' => 'Server',
 		'new' => 'New',
+		'current' => 'Current',
 	),
 	'member' => array(
 		'view' => 'Members',

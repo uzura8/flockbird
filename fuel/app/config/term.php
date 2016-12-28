@@ -193,6 +193,7 @@ $config = array(
 		'database' => 'データベース',
 		'server' => 'サーバー',
 		'new' => '新しい',
+		'current' => '現在の',
 	),
 	'member' => array(
 		'view' => 'メンバー',

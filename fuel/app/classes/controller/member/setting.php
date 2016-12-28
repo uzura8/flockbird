@@ -38,7 +38,11 @@ class Controller_Member_setting extends Controller_Member
 		{
 			$form->repopulate();
 		}
-		$this->set_title_and_breadcrumbs(term('site.password', 'form.update'), array('member/setting/' => term('site.setting')), $this->u);
+		$this->set_title_and_breadcrumbs(
+			t('form.change_for', array('label' => t('site.password'))),
+			array('member/setting/' => term('site.setting')),
+			$this->u
+		);
 		$this->template->content = View::forge('_parts/setting/password');
 		$this->template->content->set_safe('html_form', $form->build('member/setting/change_password'));
 	}
@@ -70,28 +74,28 @@ class Controller_Member_setting extends Controller_Member
 			$mail = new Site_Mail('memberSettingPassword');
 			$mail->send($this->u->member_auth->email, array('to_name' => $this->u->name));
 
-			Session::set_flash('message', term('site.password').'を変更しました。');
+			Session::set_flash('message', __('message_change_complete_for', array('label' => t('site.password'))));
 			Response::redirect('member/setting');
 		}
 		catch(EmailValidationFailedException $e)
 		{
 			Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
-			$error_message = 'メール送信エラー';
+			$error_message = __('message_send_mail_error');
 		}
 		catch(EmailSendingFailedException $e)
 		{
 			Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
-			$error_message = 'メール送信エラー';
+			$error_message = __('message_send_mail_error');
 		}
 		catch(WrongPasswordException $e)
 		{
 			$is_transaction_rollback = true;
-			$error_message = sprintf('現在の%sが正しくありません。', term('site.password'));
+			$error_message = __('message_invalid_for', array('label' => term('common.current', 'site.password')));
 		}
 		catch(\Auth\SimpleUserUpdateException $e)
 		{
 			$is_transaction_rollback = true;
-			$error_message = term('site.password').'の変更に失敗しました。';
+			$error_message = __('message_change_failed_for', array('label' => t('site.password')));
 		}
 		catch(Database_Exception $e)
 		{
@@ -115,15 +119,18 @@ class Controller_Member_setting extends Controller_Member
 	public function form_setting_password()
 	{
 		$add_fields = array(
-			'old_password' => Form_Util::get_model_field('member_auth', 'password', sprintf('現在の%s', term('site.password'))),
-			'password' => Form_Util::get_model_field('member_auth', 'password', sprintf('新しい%s', term('site.password'))),
-			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', sprintf('新しい%s(確認用)', term('site.password'))),
+			'old_password' => Form_Util::get_model_field('member_auth', 'password', term('common.current', 'site.password')),
+			'password' => Form_Util::get_model_field('member_auth', 'password', term('common.new', 'site.password')),
+			'password_confirm' => Form_Util::get_model_field('member_auth', 'password', term('common.new', 'site.password', 'form._confirm')),
 		);
 		$add_fields['old_password']['attributes']['class'] .= ' input-xlarge';
+		$add_fields['old_password']['rules'][] = array('required');
 		$add_fields['password']['attributes']['class'] .= ' input-xlarge';
+		$add_fields['password']['rules'][] = array('required');
 		$add_fields['password']['rules'][] = array('unmatch_field', 'old_password');
 		$add_fields['password_confirm']['attributes']['class'] .= ' input-xlarge';
 		$add_fields['password_confirm']['rules'][] = array('match_field', 'password');
+		$add_fields['password_confirm']['rules'][] = array('required');
 
 		return Site_Util::get_form_instance('setting_password', null, true, $add_fields, array('value' => term('form.update')));
 	}
