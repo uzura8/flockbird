@@ -32,6 +32,7 @@ $config = array(
 		'for_confirm' => '確認用',
 		'confirm_for' => ':labelの確認',
 		'back' => '戻る',
+		'back_to' => ':labelに戻る',
 		'error' => 'エラー',
 		'draft' => '下書き保存',
 		'preview' => 'プレビュー',

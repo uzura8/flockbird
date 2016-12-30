@@ -32,6 +32,7 @@ $config = array(
 		'for_confirm' => 'For confirmation',
 		'confirm_for' => 'Confirm :label',
 		'back' => 'Back',
+		'back_to' => 'Back to :label',
 		'error' => 'Error',
 		'draft' => 'Draft',
 		'preview' => 'Preview',

@@ -32,5 +32,12 @@ return array(
 	'member_message_resend_password_for_input' => 'アカウントに登録したメールアドレスを入力してください。',
 	'member_message_resend_password_complete' => 'パスワードのリセット方法をメールで送信しました。',
 	'member_title_reset_password' => 'パスワードの再登録',
+	// Leave service
+	'member_title_leave_service' => 'このサイトを退会する',
+	'member_title_confirmation_of_leave_service' => 'サイト退会の最終確認',
+	'member_message_confirmation_of_leave_service' => '本当に退会しますか？(退会した場合、サイトへの投稿は全て削除されます)',
+	'member_message_leave_complete' => '退会手続きが完了しました。',
+	'member_message_leave_reservation_complete' => '退会手続きが完了しました。(登録データは順次削除されます)',
+	'member_message_leave_failed' => '退会手続きが失敗しました。',
 );
 

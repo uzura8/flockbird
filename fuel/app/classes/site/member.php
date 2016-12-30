@@ -143,12 +143,12 @@ class Site_Member
 			$member_delete_queue->save();
 			$member_auth->delete();
 			DB::commit_transaction();
-			$message = term('site.left').'を'.term('form.reserve').'しました。';
+			$message = __('member_message_leave_reservation_complete');
 		}
 		else
 		{
 			static::delete($member->id);
-			$message = term('site.left').'が'.term('form.complete').'しました。';
+			$message = __('member_message_leave_complete');
 		}
 
 		return $message;

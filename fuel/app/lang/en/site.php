@@ -32,5 +32,12 @@ return array(
 	'member_message_resend_password_for_input' => 'Please input registered email address on account. ',
 	'member_message_resend_password_complete' => 'Sent how to reset password by mail. ',
 	'member_title_reset_password' => 'Re-register Password',
+	// Leave service
+	'member_title_leave_service' => 'Leave this service',
+	'member_title_confirmation_of_leave_service' => 'Final confirmation of leave',
+	'member_message_confirmation_of_leave_service' => 'Do you really want to leave? [If you leave, all post data to the site will be deleted. ]',
+	'member_message_leave_complete' => 'The leaving procedure is completed. ',
+	'member_message_leave_reservation_complete' => 'The leaving procedure is completed. [Post data is sequentially deleting. ]',
+	'member_message_leave_failed' => 'The leaving procedure is failed. ',
 );
 

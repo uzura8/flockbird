@@ -73,7 +73,7 @@
 <div class="list-group">
 	<?php echo Html::anchor(
 		$this->u->check_registered_oauth() ? 'member/leave/confirm' : 'member/leave',
-		term('site.leave'),
+		__('member_title_leave_service'),
 		array('class' => 'list-group-item list-group-item-danger')
 	); ?>
 </div>

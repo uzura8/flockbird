@@ -1,4 +1,4 @@
-<?php echo alert(sprintf('本当に%sしますか？', term('site.left')), 'danger'); ?>
+<?php echo alert(__('member_message_confirmation_of_leave_service'), 'danger'); ?>
 <div class="well">
 <?php echo form_open(false, false, array('action' => 'member/leave/delete')); ?>
 	<?php echo form_button('site.leave', 'submit', 'submit', array('class' => 'btn btn-default btn-danger')); ?>
