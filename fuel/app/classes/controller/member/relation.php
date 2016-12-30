@@ -24,19 +24,27 @@ class Controller_Member_Relation extends Controller_Base_Site
 		$type = Inflector::singularize($type);
 		if (!Site_Member_Relation::check_enabled_relation_type($type)) throw new HttpNotFoundException;
 		$relation_type = $type == 'follower' ? 'follow' : $type;
-
-		if (!$member_id && Auth::check())
-		{
-			$member = $this->u;
-		}
-		else
-		{
-			$member = Model_Member::check_authority($member_id);
-		}
+		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($member_id);
 		if ($type == 'access_block' && $member->id != get_uid()) throw new HttpNotFoundException;
 
 		$relation_type_camelized_lower = Inflector::camelize($type, true);
-		$this->set_title_and_breadcrumbs(term($relation_type_camelized_lower, 'site.list_kana'), array('member/setting' => t('site.setting')), $member);
+		if ($is_mypage)
+		{
+			$middle_breadcrumbs = $type == 'access_block' ?
+				array('member/setting' => t('site.setting')) : array('member/me' => t('page.mypage'));
+		}
+		else
+		{
+			$middle_breadcrumbs = array(
+				'member/list' => term('member.list'),
+				'member/'.$member_id => t('member.page_of', array('label' => $member->name)),
+			);
+		}
+		$this->set_title_and_breadcrumbs(
+			term($relation_type_camelized_lower, 'site.list_kana'),
+			$middle_breadcrumbs,
+			$is_mypage ? $member : null
+		);
 
 		$default_params = array(
 			'latest' => 1,

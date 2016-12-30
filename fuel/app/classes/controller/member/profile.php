@@ -21,7 +21,17 @@ class Controller_Member_Profile extends Controller_Member
 	{
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($id);
 		$member_profiles = Model_MemberProfile::get4member_id($member->id, true);
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('profile')), null, $member);
+		$this->set_title_and_breadcrumbs(
+			$is_mypage ? t('member.profile_of_myself') : t('member.profile_of', array('label' => $member->name)),
+			$is_mypage ? array('member/me' => t('page.mypage')) : array(
+				'member/list' => term('member.list'),
+				'member/'.$id => t('member.page_of', array('label' => $member->name)),
+			),
+			$is_mypage ? $member : null, null, array(), false, false, array(
+				'title' => t('member.profile_of', array('label' => $member->name)),
+				'image' => Site_Util::get_image_uri4file_name($member->get_image(), 'P_L', 'profile'),
+			)
+		);
 
 		$data = array(
 			'member' => $member,
@@ -74,8 +84,11 @@ class Controller_Member_Profile extends Controller_Member
 			}
 		}
 		$this->set_title_and_breadcrumbs(
-			term('profile').term($is_regist ? 'site.registration' : 'form.edit'),
-			$is_regist ? array() : array('member/profile' => term('common.my', 'profile')),
+			t($is_regist ? 'site.register_for' : 'form.edit_for', array('label' => t('profile'))),
+			$is_regist ? array() : array(
+				'member/me' => t('page.mypage'),
+				'member/profile' => t('member.profile_of_myself'),
+			),
 			$is_regist ? null : $this->u
 		);
 		$this->template->content = View::forge('member/profile/edit', array(

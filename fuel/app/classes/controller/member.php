@@ -81,10 +81,11 @@ class Controller_Member extends Controller_Site
 			$data['timeline']['member'] = $member;
 			$this->template->post_footer = \View::forge('timeline::_parts/load_timelines');
 		}
-		$this->set_title_and_breadcrumbs($member->name.' さんのページ',
-			array('member/list' => term('member.view', 'site.list')),
-			null, null, array(), false, false, array(
-				'title' => $member->name.' さんのページ',
+		$this->set_title_and_breadcrumbs(
+			$is_mypage ? t('page.mypage') : t('member.page_of', array('label' => $member->name)),
+			$is_mypage ? array() : array('member/list' => term('member.list')),
+			$is_mypage ? $member : null, null, array(), false, false, array(
+				'title' => t('member.page_of', array('label' => $member->name)),
 				'image' => Site_Util::get_image_uri4file_name($member->get_image(), 'P_L', 'profile'),
 			)
 		);
@@ -99,7 +100,7 @@ class Controller_Member extends Controller_Site
 	 */
 	public function action_list()
 	{
-		$this->set_title_and_breadcrumbs(term('member.view', 'site.list'));
+		$this->set_title_and_breadcrumbs(t('member.list'));
 		$this->template->subtitle = \View::forge('member/_parts/list_subtitle');
 
 		$default_params = array(
@@ -134,7 +135,7 @@ class Controller_Member extends Controller_Site
 		if (!conf('profile.useCacheTable.isEnabled', 'member')) throw new HttpNotFoundException;
 
 		$this->set_title_and_breadcrumbs(term('member.view', 'form.search'), array(
-			'member/list' => term('member.view', 'site.list'),
+			'member/list' => term('member.list'),
 		));
 
 		list($limit, $page) = $this->common_get_pager_list_params(
