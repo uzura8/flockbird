@@ -39,5 +39,7 @@ return array(
 	'member_message_leave_complete' => '退会手続きが完了しました。',
 	'member_message_leave_reservation_complete' => '退会手続きが完了しました。(登録データは順次削除されます)',
 	'member_message_leave_failed' => '退会手続きが失敗しました。',
+	// member profile image
+	'member_error_album_image_disable_to_set_as_profile_image' => 'その写真はプロフィール写真に設定できません。',
 );
 

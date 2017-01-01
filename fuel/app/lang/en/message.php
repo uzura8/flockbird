@@ -7,6 +7,8 @@ return array(
 	'message_send_mail_error' => 'Sending mail error. ',
 	'message_error_occurred' => 'Error occurred. ',
 	'message_error_occurred_for' => ':label occurred. ',
+	'message_error_already_set' => 'This is already set. ',
+	'message_error_already_set_for' => 'This :label is already set. ',
 	// common
 	'message_please_input_for' => 'Please input :label. ',
 	'message_please_input_following_items' => 'Please input following items. ',

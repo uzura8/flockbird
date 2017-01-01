@@ -39,5 +39,7 @@ return array(
 	'member_message_leave_complete' => 'The leaving procedure is completed. ',
 	'member_message_leave_reservation_complete' => 'The leaving procedure is completed. [Post data is sequentially deleting. ]',
 	'member_message_leave_failed' => 'The leaving procedure is failed. ',
+	// member profile image
+	'member_error_album_image_disable_to_set_as_profile_image' => 'Disabled to set album image as profile image. ',
 );
 
