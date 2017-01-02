@@ -45,6 +45,8 @@ return array(
 	'message_include_invalid_value' => ':labelに正しくない値が含まれています。',
 	'message_failed' => '失敗しました。',
 	'message_failed_for' => ':labelに失敗しました。',
+	// form
+	'form_placeholder_text_enter_characters_within' => ':num文字以内で入力してください。',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => ':link をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
 	// invite friend

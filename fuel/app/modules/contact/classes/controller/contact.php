@@ -22,7 +22,9 @@ class Controller_Contact extends \Controller_Site
 			return;
 		}
 
-		Session::set_flash('message', sprintf('%sが%sです。%sしてください。', term('site.email'), term('site.unregisterd'), term('site.registration')));
+		$message = __('message_error_unregisterd_for', array('label' => t('site.email')))
+						 . __('message_please_register_for', array('label' => t('site.email')));
+		Session::set_flash('message', $message);
 		Response::redirect('member/setting/email/regist');
 	}
 
@@ -35,7 +37,7 @@ class Controller_Contact extends \Controller_Site
 	public function action_index()
 	{
 		if (!$this->val) $this->val = self::get_validation_object();
-		$this->set_title_and_breadcrumbs(term('contact.view', 'common.content', 'form.input'));
+		$this->set_title_and_breadcrumbs(term('contact.view'));
 		$this->template->content = \View::forge('index', array('val' => $this->val));
 	}
 
@@ -106,12 +108,12 @@ class Controller_Contact extends \Controller_Site
 		catch(\EmailValidationFailedException $e)
 		{
 			\Util_Toolkit::log_error('send mail error: '.__METHOD__.' validation error');
-			$error_message = 'メール送信エラー';
+			$error_message = __('message_send_mail_error');
 		}
 		catch(\EmailSendingFailedException $e)
 		{
 			\Util_Toolkit::log_error('send mail error: '.__METHOD__.' sending error');
-			$error_message = 'メール送信エラー';
+			$error_message = __('message_send_mail_error');
 		}
 		catch(\Exception $e)
 		{

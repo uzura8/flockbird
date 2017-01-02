@@ -13,7 +13,7 @@ class Site_Util
 			$rules = \Arr::get($props, 'rules', array());
 			if (in_array($props['attr']['type'], array('select', 'radio')) && !empty($props['attr']['options']))
 			{
-				$rules[] = array('in_array', $props['attr']['options']);
+				$rules[] = array('in_array', array_keys($props['attr']['options']));
 			}
 			$val->add($name, $props['label'], $attr, $rules);
 		}

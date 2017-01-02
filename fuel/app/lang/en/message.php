@@ -9,6 +9,7 @@ return array(
 	'message_error_occurred_for' => ':label occurred. ',
 	'message_error_already_set' => 'This is already set. ',
 	'message_error_already_set_for' => 'This :label is already set. ',
+	'message_error_unregisterd_for' => ':label is unregistered. ',
 	// common
 	'message_please_input_for' => 'Please input :label. ',
 	'message_please_input_following_items' => 'Please input following items. ',
@@ -45,6 +46,8 @@ return array(
 	'message_include_invalid_value' => ':label include invalid values. ',
 	'message_failed' => 'Failed. ',
 	'message_failed_for' => 'Failed to :label. ',
+	// form
+	'form_placeholder_text_enter_characters_within' => 'Please enter within :num characters. ',
 	// member registration
 	'message_confirmation_to_agree_terms_of_use' => 'Please read :link . If you agree, push "Agree and register" button and complete registration. ',
 	// invite friend

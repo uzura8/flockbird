@@ -49,7 +49,7 @@ class Controller_Report_Api extends \Controller_Site_Api
 			\Util_security::check_csrf();
 
 			$val = self::get_validation('', true);
-			if (!$val->run()) throw new \ValidationFailedException;
+			if (!$val->run()) throw new \ValidationFailedException(is_prod_env() ? '' : $val->show_errors());
 			$post = $val->validated();
 			if (!$post['member_id'] || !$member_to = \Model_Member::get_one4id($post['member_id']))
 			{
@@ -71,7 +71,7 @@ class Controller_Report_Api extends \Controller_Site_Api
 			), true);
 
 			$this->set_response_body_api(array(
-				'message' => term('report.view').'しました。',
+				'message' => __('message_send_mail', array('label' => t('report.view'))),
 			));
 		});
 	}

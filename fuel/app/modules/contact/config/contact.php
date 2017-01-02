@@ -5,11 +5,11 @@ return array(
 		'fields' => array(
 			'default' => array(
 				'body' => array(
-					'label' => 'お問い合せ本文',
+					'label' => t('contact.fields.default.body'),
 					'attr' => array(
 						'type' => 'textarea',
 						'rows' => 10,
-						'placeholder' => '1000文字以内で入力してください。',
+						'placeholder' => __('form_placeholder_text_enter_characters_within', array('num' => 1000)),
 					),
 					'rules' => array(
 						array('required'),
@@ -19,13 +19,13 @@ return array(
 			),
 			'pre' => array(
 				'category' => array(
-					'label' => 'お問い合せ内容',
+					'label' => t('contact.fields.pre.category.label'),
 					'attr' => array(
 						'type' => 'select',
 						'options' => array(
-							'' => '選択してください',
-							'使い方について' => '使い方について',
-							'その他' => 'その他',
+							'' => t('contact.fields.pre.category.options.0'),
+							'使い方について' => t('contact.fields.pre.category.options.1'),
+							'その他' => t('contact.fields.pre.category.options.2'),
 						),
 					),
 					'rules' => array(
@@ -57,11 +57,11 @@ return array(
 		'fields' => array(
 			'default' => array(
 				'body' => array(
-					'label' => '自由記入',
+					'label' => t('report.fields.default.body'),
 					'attr' => array(
 						'type' => 'textarea',
 						'rows' => 5,
-						'placeholder' => '300文字以内で入力してください。',
+						'placeholder' => __('form_placeholder_text_enter_characters_within', array('num' => 300)),
 					),
 					'rules' => array(
 						array('trim'),
@@ -71,15 +71,15 @@ return array(
 			),
 			'pre' => array(
 				'category' => array(
-					'label' => '通報分類',
+					'label' => t('report.fields.pre.category.label'),
 					'attr' => array(
 						'type' => 'select',
 						'options' => array(
-							'' => '選択してください',
-							'不快な情報を投稿している' => '不快な情報を投稿している',
-							'個人情報を投稿してる' => '個人情報を投稿してる',
-							'スパムである' => 'スパムである',
-							'その他' => 'その他',
+							'' => t('report.fields.pre.category.options.0'),
+							'不快な情報を投稿している' => t('report.fields.pre.category.options.1'),
+							'個人情報を投稿してる' => t('report.fields.pre.category.options.2'),
+							'スパムである' => t('report.fields.pre.category.options.3'),
+							'その他' => t('report.fields.pre.category.options.4'),
 						),
 					),
 					'rules' => array(
