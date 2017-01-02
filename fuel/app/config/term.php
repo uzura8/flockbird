@@ -196,6 +196,7 @@ $config = array(
 		'server' => 'サーバー',
 		'new' => '新しい',
 		'current' => '現在の',
+		'up_to' => ':valueまで',
 	),
 	'member' => array(
 		'view' => 'メンバー',

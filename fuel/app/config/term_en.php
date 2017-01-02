@@ -196,6 +196,7 @@ $config = array(
 		'server' => 'Server',
 		'new' => 'New',
 		'current' => 'Current',
+		'up_to' => 'Up to :value',
 	),
 	'member' => array(
 		'view' => 'Member',

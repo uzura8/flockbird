@@ -57,7 +57,7 @@ echo render('filetmp/_parts/upload_images', $data);
 					<?php if ($upload_type == 'img'): ?> accept="image/*"<?php endif; ?>>
 		</span>
 <?php if (empty($selects) && FBD_UPLOAD_MAX_FILESIZE): ?>
-		<span class="text-muted"><?php echo Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE); ?> まで</span>
+		<span class="text-muted "><?php echo t('common.up_to', array('value' => Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE))); ?></span>
 <?php endif; ?>
 <?php if (!empty($selects)): ?>
 	</div><!-- .form-group -->
@@ -68,7 +68,7 @@ $atters = array_merge(array('class' => 'form-control input-sm'), $selects['atter
 echo Form::select($selects['name'], $selects['value'], $selects['options'], $atters);
 ?>
 <?php if (FBD_UPLOAD_MAX_FILESIZE): ?>
-		<span class="text-muted"><?php echo Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE); ?> まで</span>
+		<span class="text-muted "><?php echo t('common.up_to', array('value' => Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE))); ?></span>
 <?php endif; ?>
 	</div><!-- .form-group -->
 </form>

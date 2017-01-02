@@ -19,6 +19,6 @@ if (!empty($accept_type)) $input_attr['accept'] = $accept_type;
 			<input id="dummy_input_<?php echo $input_id; ?>" type="text" class="form-control" placeholder="Select file..." disabled>
 		</div>
 <?php if (FBD_UPLOAD_MAX_FILESIZE): ?>
-		<span class="text-muted form-control-static "><?php echo Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE); ?> まで</span>
+		<span class="text-muted form-control-static "><?php echo t('common.up_to', array('value' => Num::format_bytes(FBD_UPLOAD_MAX_FILESIZE))); ?></span>
 <?php endif; ?>
 </div>
