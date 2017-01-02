@@ -18,33 +18,7 @@ class Controller_Base_Site extends Controller_Base
 				$this->set_notification_count();
 				$this->set_current_member_config();
 			}
-			if ($this->reset_lang())
-			{
-				self::reload_config();
-				self::reload_lang();
-			}
 			if (!Auth::check()) $this->set_login_validation();
-		}
-	}
-
-	protected function reset_lang()
-	{
-		$lang = get_lang();
-		if ($lang == get_default_lang()) return false;
-		return Lang::set_lang($lang, true);
-	}
-
-	protected static function reload_config()
-	{
-		Config::load(Site_Util::get_term_file_name(), 'term');
-		Config::load('navigation', 'navigation');
-	}
-
-	protected static function reload_lang()
-	{
-		if ($lang_files = Config::get('i18n.lang.files'))
-		{
-			foreach ($lang_files as $lang_file) Lang::load($lang_file, null, null, true);
 		}
 	}
 

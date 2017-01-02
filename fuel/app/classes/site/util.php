@@ -101,7 +101,7 @@ class Site_Util
 	public static function get_term_file_name($is_check_member_lang_setting = true)
 	{
 		$config = 'term';
-		$lang = get_lang($is_check_member_lang_setting);
+		$lang = Site_Lang::get_lang($is_check_member_lang_setting);
 		if ($lang != 'ja') $config .= '_'.$lang;
 
 		return $config;

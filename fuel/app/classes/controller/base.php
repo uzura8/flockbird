@@ -119,6 +119,7 @@ class Controller_Base extends Controller_Common
 
 	public function login_succeeded($destination = null)
 	{
+		Site_Lang::configure_lang();
 		Session::set_flash('message', __('site_message_login_complete'));
 		$redirect_uri = urldecode($destination);
 		if ($redirect_uri && Util_string::check_uri_for_redilrect($redirect_uri))

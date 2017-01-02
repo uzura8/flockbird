@@ -47,11 +47,7 @@ Config::load('site', 'site');
 Config::load('member', 'member');
 Config::load('i18n', 'i18n');
 // Load lang fils
-if ($lang_files = Config::get('i18n.lang.files'))
-{
-	foreach ($lang_files as $lang_file) Lang::load($lang_file);
-}
-Config::load(Site_Util::get_term_file_name(false), 'term');
+Site_Lang::configure_lang(false);
 
 Config::load('template', 'template');
 Config::load('less', 'less');
