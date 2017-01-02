@@ -22,5 +22,6 @@ return array(
 			'JP' => '日本',
 		),
 	),
+	'adminDefaultLang' => 'ja',
 );
 

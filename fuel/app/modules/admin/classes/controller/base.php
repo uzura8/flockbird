@@ -10,6 +10,7 @@ class Controller_Base extends \Controller_Base
 	public function before()
 	{
 		parent::before();
+		\Site_Lang::configure_lang(false);
 	}
 
 	protected function get_current_user($user_id)

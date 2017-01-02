@@ -7,7 +7,7 @@ class Site_Lang
 		$default_lang = get_default_lang();
 
 		if (!is_enabled_i18n()) return $default_lang;
-		if (is_admin()) return $default_lang;
+		if (is_admin()) return conf('adminDefaultLang', 'i18n');
 
 		// Member setting
 		if ($lang = Session::get('lang')) return $lang;
@@ -51,8 +51,8 @@ class Site_Lang
 
 	protected static function load_configs_related_lang($is_check_member_lang_setting = true)
 	{
-		Config::load(Site_Util::get_term_file_name($is_check_member_lang_setting), 'term');
-		Config::load('navigation', 'navigation');
+		Config::load(Site_Util::get_term_file_name($is_check_member_lang_setting), 'term', true);
+		Config::load(is_admin() ? 'admin::navigation' : 'navigation', 'navigation', true);
 	}
 
 	public static function get_member_set_lang($member_id)
