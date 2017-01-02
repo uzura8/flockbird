@@ -11,6 +11,7 @@ return array(
 	'message_error_already_set_for' => 'This :label is already set. ',
 	'message_error_unregisterd_for' => ':label is unregistered. ',
 	// common
+	'message_no_data_for' => 'There is no :label. ',
 	'message_please_input_for' => 'Please input :label. ',
 	'message_please_input_following_items' => 'Please input following items. ',
 	'message_please_register_for' => 'Please register :label. ',

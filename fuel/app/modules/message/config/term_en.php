@@ -1,7 +1,8 @@
 <?php
 return array(
 	'message' => array(
-		'view' => 'Messages',
+		'view' => 'Message',
+		'list' => 'Messages',
 		'form' => array(
 			'send' => 'Send Message',
 			'subject' => 'Subject',
@@ -13,18 +14,18 @@ return array(
 		),
 		'types' => array(
 			'label' => array(
-				'member' => 'メッセージ',
-				'group' => 'グループメッセージ',
-				'site_info_all' => 'サイトからのお知らせ',
-				'site_info' => 'サイトからの個別お知らせ',
-				'system_info' => 'システムからのお知らせ',
+				'member' => 'Private Message',
+				'group' => 'Group Message',
+				'site_info_all' => 'Message from the Site',
+				'site_info' => 'Private Message from the Site',
+				'system_info' => 'System Informaton',
 			),
 			'labelSimple' => array(
-				'member' => '個別',
-				'group' => 'グループ',
-				'site_info_all' => '全体メッセージ',
-				'site_info' => '個別メッセージ',
-				'system_info' => 'システム',
+				'member' => 'Private',
+				'group' => 'Group',
+				'site_info_all' => 'Site Info for All',
+				'site_info' => 'Site Info',
+				'system_info' => 'System',
 			),
 		),
 	),

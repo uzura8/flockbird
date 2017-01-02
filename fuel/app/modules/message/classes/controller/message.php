@@ -30,7 +30,7 @@ class Controller_Message extends \Controller_Site
 	public function action_list()
 	{
 		$data = array();
-		$this->set_title_and_breadcrumbs(term('message.view'), null, $this->u);
+		$this->set_title_and_breadcrumbs(term('message.list'), null, $this->u);
 		$this->template->subtitle = \View::forge('notice::_parts/link_read_all', array(
 			'tag_attr' => array('class' => 'pull-right'),
 			'is_message' => true,
@@ -51,10 +51,10 @@ class Controller_Message extends \Controller_Site
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($member_id);
 		if ($is_mypage) throw new \HttpNotFoundException;
 
-		// 既読処理
+		// Change status to read for notice
 		$this->change_message_status2read('member', $member_id);
 
-		// 通報リンク
+		// Link to report
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array(
 			'report_data' => $this->set_global_for_report_form() ? array(
 				'member_id' => $member_id,
@@ -66,7 +66,9 @@ class Controller_Message extends \Controller_Site
 
 		$this->template->post_header = \View::forge('_parts/member_header');
 		$this->template->post_footer = \View::forge('_parts/load_message');
-		$this->set_title_and_breadcrumbs(sprintf('%s との%s', $member->name, term('message.view')), array('message' => term('message.view')));
+		$this->set_title_and_breadcrumbs(__('message_title_message_with', array('name' => $member->name)), array(
+			'message' => term('message.list')
+		), $this->u);
 		$this->template->content = \View::forge('member', array('type' => 'member', 'related_id' => $member_id));
 	}
 

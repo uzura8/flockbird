@@ -10,6 +10,7 @@ return array(
 	'message_error_already_set' => '既に設定済みです。',
 	'message_error_already_set_for' => 'その:labelは既に設定済みです。',
 	// common
+	'message_no_data_for' => ':labelはありません。',
 	'message_please_input_for' => ':labelを入力してください。',
 	'message_please_input_following_items' => '下記の項目をを入力してください。',
 	'message_please_register_for' => ':labelを登録してください。',

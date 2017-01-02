@@ -10,6 +10,7 @@ return array(
 		'files' => array(
 			'site',
 			'message',
+			'message::message',
 		),
 	),
 	'country' => array(

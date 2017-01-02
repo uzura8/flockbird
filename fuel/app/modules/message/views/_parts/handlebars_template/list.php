@@ -20,5 +20,5 @@
 {{/if}}
 {{/if}}
 {{else}}
-<?php echo term('message.view'); ?>はありません
+<?php echo __('message_no_data_for', array('label' => t('message.list'))); ?>
 {{/if}}
