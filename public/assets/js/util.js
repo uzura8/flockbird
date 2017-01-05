@@ -143,3 +143,23 @@ var inArray = function(needle, haystack) {
 	return !($.inArray(needle, haystack) == -1);
 };
 
+var http_build_query = function(obj) {
+	var query = '';
+	$.each(obj, function(key, val) {
+		if (!val.length) return;
+		if (query.length) query += '&';
+		if (Array.isArray(val)) {
+			var queryItem = '';
+			$.each(val, function(i, valItem) {
+				if (!valItem.length) return;
+				if (queryItem.length) queryItem += '&';
+				queryItem += key + '[]=' + valItem;
+			});
+			query += queryItem;
+		} else {
+			query += key + '=' + val;
+		}
+	});
+	return query;
+};
+

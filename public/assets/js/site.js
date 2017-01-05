@@ -19,6 +19,35 @@ $(document).on('change', '.js-file_input', function(){
 	$(inputSelector).val($(this).val());
 });
 
+$(document).on('change', '.js-select-location', function(){
+	var uri = get_url($(this).data('uri') ? $(this).data('uri') : '');
+	var param = $(this).data('param') ? $(this).data('param') : '';
+	var getData = $(this).data('get_data') ? $(this).data('get_data') : {};
+	if (empty(uri) || empty(param)) return;
+
+	var queryStr = '';
+	if ($(this).is(':checkbox')) {
+		var checkBoxValue = $(this).val();
+		if ($(this).prop('checked')) {
+			queryStr = param + '[]=' + checkBoxValue;
+		} else if (! empty(getData[param])) {
+			getData[param].some(function(v, i) {
+				if (v == checkBoxValue) getData[param].splice(i, 1);
+			});
+		}
+	} else {
+		queryStr += param + '=' + $(this).val();
+	}
+	if (!empty(getData)) {
+		var delimitter = queryStr.length ? '&' : '';
+		queryStr += delimitter + http_build_query(getData);
+	}
+	var url = get_url(uri, false, false);
+	if (queryStr) url += '?' + queryStr;
+
+	location.href = url;
+});
+
 $(document).on('click', '.js-accordion-onetime', function(){
 	var targetSelector = $(this).data('target') ? $(this).data('target') : '';
 	var $targetObj = targetSelector ? $(targetSelector) : $(this).next();
