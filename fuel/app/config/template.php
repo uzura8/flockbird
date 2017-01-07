@@ -14,35 +14,15 @@ $config = array(
 			),
 			'signature' => array(
 				'view' =>'署名',
-				'format' =>'twig',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/signature',
-					),
-				),
 			),
 			'memberSignup' => array(
 				'view' =>'メンバー仮登録完了お知らせメール',
-				'format' =>'twig',
-				'title' => '仮登録完了のお知らせ',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_signup',
-					),
-				),
 				'variables' => array(
 					'register_url' => '登録用URL',
 				),
 			),
 			'memberRegister' => array(
 				'view' =>'メンバー登録完了お知らせメール',
-				'format' =>'twig',
-				'title' => 'メンバー登録完了のお知らせ',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_register',
-					),
-				),
 				'variables' => array(
 					'to_name' => '登録したニックネーム',
 					'to_email' => '登録したメールアドレス',
@@ -50,39 +30,18 @@ $config = array(
 			),
 			'memberLeave' => array(
 				'view' =>'メンバー退会完了お知らせメール',
-				'format' =>'twig',
-				'title' => 'メンバー退会完了のお知らせ',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_leave',
-					),
-				),
 				'variables' => array(
 					'to_name' => 'メンバー名',
 				),
 			),
 			'memberSettingPassword' => array(
 				'view' =>'パスワード変更完了のお知らせメール',
-				'format' =>'twig',
-				'title' => 'パスワード変更完了のお知らせ',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_setting_password',
-					),
-				),
 				'variables' => array(
 					'to_name' => 'メンバー名',
 				),
 			),
 			'memberRegisterEmailConfirm' => array(
 				'view' =>'メールアドレス登録確認メール',
-				'format' =>'twig',
-				'title' => 'メールアドレス登録確認',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_register_email_confirm',
-					),
-				),
 				'variables' => array(
 					'to_name' => 'メンバー名',
 					'confirmation_code' => '確認用コード',
@@ -90,26 +49,12 @@ $config = array(
 			),
 			'memberChangeEmail' => array(
 				'view' =>'メールアドレス変更完了お知らせメール',
-				'format' =>'twig',
-				'title' => 'メールアドレス変更完了のお知らせ',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_change_email',
-					),
-				),
 				'variables' => array(
 					'to_name' => 'メンバー名',
 				),
 			),
 			'memberResendPassword' => array(
 				'view' =>'パスワードの再登録確認メール',
-				'format' =>'twig',
-				'title' => 'パスワードの再登録確認',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_resend_password',
-					),
-				),
 				'variables' => array(
 					'to_name' => 'メンバー名',
 					'register_url' => '登録用URL',
@@ -117,26 +62,12 @@ $config = array(
 			),
 			'memberResetPassword' => array(
 				'view' =>'パスワード再登録完了お知らせメール',
-				'format' =>'twig',
-				'title' => 'パスワードの再登録完了のお知らせ',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_reset_password',
-					),
-				),
 				'variables' => array(
 					'to_name' => 'メンバー名',
 				),
 			),
 			'memberInvite' => array(
 				'view' =>'招待メール',
-				'format' =>'twig',
-				'title' => '{{ invite_member_name }} から {{ site_name }} の招待状が届いています',
-				'body' => array(
-					'default' => array(
-						'file' => 'mail/member_invite',
-					),
-				),
 				'variables' => array(
 					'register_url' => '登録用URL',
 					'invite_member_name' => '招待者ニックネーム',
@@ -151,14 +82,5 @@ if (FBD_INTERNATIONALIZED_DOMAIN)
 	Arr::set($config, 'mail.site.common_variables.idn_url', 'サイトURL(国際化ドメイン)');
 }
 $config = Site_Config::merge_module_configs($config, 'template');
-
-try
-{
-	$config = Site_Config::setup_configs_template($config, 'template');
-}
-catch(Database_Exception $e)
-{
-	// Task DbSetter 実行時にDBが存在しない場合があるので、スルーする
-}
 
 return $config;

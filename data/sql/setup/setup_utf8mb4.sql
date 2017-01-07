@@ -1017,15 +1017,16 @@ CREATE TABLE `site_config` (
 
 CREATE TABLE `template` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Serial number',
-  `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'Configuration name',
+  `name` varchar(64) NOT NULL DEFAULT '',
+  `lang` varchar(5) NOT NULL,
   `format` varchar(25) NOT NULL DEFAULT '' COMMENT 'format of template',
-  `title` varchar(255) NULL,
-  `body` text NULL COMMENT 'Configuration value',
+  `title` varchar(255) COLLATE utf8_unicode_ci NULL,
+  `body` text COLLATE utf8_unicode_ci NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE_idx` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Saves configurations of this site';
+  UNIQUE KEY `template_id_lang_UNIQUE_idx` (`name`, `lang`)
+) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `site_image` (

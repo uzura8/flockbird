@@ -537,6 +537,7 @@ try
 catch(Database_Exception $e)
 {
 	// Task DbSetter 実行時にDBが存在しない場合があるので、スルーする
+	if (! IS_TASK) throw $e;
 }
 
 // Change public_flag setting on closed

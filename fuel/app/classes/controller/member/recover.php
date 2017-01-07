@@ -80,7 +80,7 @@ class Controller_Member_Recover extends Controller_Site
 			$token = Model_MemberPasswordPre::save_with_token($member_auth->member_id, $post['email']);
 			DB::commit_transaction();
 
-			$mail = new Site_Mail('memberResendPassword');
+			$mail = new Site_Mail('memberResendPassword', null, get_member_lang($member_auth->member_id));
 			$mail->send($post['email'], array(
 				'to_name' => $member->name,
 				'register_url' => sprintf('%s?token=%s', uri::create('member/recover/reset_password'), $token),
@@ -161,7 +161,7 @@ class Controller_Member_Recover extends Controller_Site
 				$member_password_pre->delete();// Delete pre registered data
 				DB::commit_transaction();
 
-				$mail = new Site_Mail('memberResetPassword');
+				$mail = new Site_Mail('memberResetPassword', null, get_member_lang($member_password_pre->member_id));
 				$mail->send($to_email, array('to_name' => $to_name));
 
 				$auth->login($to_email, $post['password']);

@@ -9,7 +9,7 @@ return array(
 	// member register
 	'member_message_signup' => 'ログインに使用するメールアドレスとパスワードを入力してください。',
 	'member_message_signup_complete' => '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。',
-	'member_registration' => term('member.view', 'site.registration'),
+	'member_registration' => 'メンバー登録',
 	'member_registration_input_help_name' => '記号・空白は使用できません',
 	'agree_and_register' => '同意して登録する',
 	'invite_form_email_placeholder' => sprintf('%sの%s', term('form.do_invite', 'common.friend'), term('site.email')),

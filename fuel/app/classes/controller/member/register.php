@@ -92,7 +92,7 @@ class Controller_Member_Register extends Controller_Site
 				if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member_id, null, 'member_register', $member_id, $member->created_at);
 				DB::commit_transaction();
 
-				$mail = new Site_Mail('memberRegister');
+				$mail = new Site_Mail('memberRegister', null, get_member_lang($member_id));
 				$mail->send($member_pre->email, array('to_name' => $member->name));
 
 				if ($auth->login($email, $password))

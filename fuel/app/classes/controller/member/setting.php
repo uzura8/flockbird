@@ -71,7 +71,7 @@ class Controller_Member_setting extends Controller_Member
 			$this->change_password($post['old_password'], $post['password']);
 			DB::commit_transaction();
 
-			$mail = new Site_Mail('memberSettingPassword');
+			$mail = new Site_Mail('memberSettingPassword', null, get_member_lang($this->u->id));
 			$mail->send($this->u->member_auth->email, array('to_name' => $this->u->name));
 
 			Session::set_flash('message', __('message_change_complete_for', array('label' => t('site.password'))));

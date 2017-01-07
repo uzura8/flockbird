@@ -9,6 +9,11 @@ class Model_Template extends \MyOrm\Model
 			'validation' => array('trim', 'required', 'max_length' => array(64), 'unique' => array('template.name')),
 			'form' => array('type' => false),
 		),
+		'lang' => array(
+			'data_type' => 'varchar',
+			'validation' => array('trim', 'required', 'max_length' => array(5)),
+			'form' => array('type' => 'select'),
+		),
 		'format' => array(
 			'validation' => array('trim', 'required', 'max_length' => array(25)),
 			'form' => array('type' => false),
@@ -43,8 +48,25 @@ class Model_Template extends \MyOrm\Model
 		),
 	);
 
-	public static function get4name($name)
+	public static function _init()
 	{
-		return self::query()->where('name', $name)->get_one();
+		$lang_options = conf('lang.options', 'i18n');
+		static::$_properties['lang']['form']['options'] = $lang_options;
+		static::$_properties['lang']['validation']['in_array'][] = array_keys($lang_options);
+	}
+
+	public static function get_one4name_lang($name, $lang)
+	{
+		return self::query()
+			->where('name', $name)
+			->where('lang', $lang)
+			->get_one();
+	}
+
+	public static function get4lang($lang)
+	{
+		return self::query()
+			->where('lang', $lang)
+			->get();
 	}
 }

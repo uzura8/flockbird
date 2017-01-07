@@ -49,7 +49,6 @@ Config::load('i18n', 'i18n');
 // Load lang fils
 Site_Lang::configure_lang(false);
 
-Config::load('template', 'template');
 Config::load('less', 'less');
 if (IS_TASK)
 {

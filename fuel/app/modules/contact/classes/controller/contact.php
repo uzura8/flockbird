@@ -87,7 +87,7 @@ class Controller_Contact extends \Controller_Site
 			if (!$this->member_email) throw new \FuelException('Email not rgistered');
 
 			// Send to member
-			$mail = new \Site_Mail('contactToMember');
+			$mail = new \Site_Mail('contactToMember', null, get_member_lang($this->u->id));
 			$mail->send($this->member_email, array(
 				'to_name' => $this->u->name,
 				'body' => $post['body'],

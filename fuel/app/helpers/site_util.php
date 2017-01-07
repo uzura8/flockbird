@@ -521,3 +521,9 @@ function current_uri($is_internal_uri = false)
 
 	return trim(Uri::string(), '/');
 }
+
+function get_member_lang($member_id)
+{
+	return Site_Member::get_lang_setting($member_id);
+}
+

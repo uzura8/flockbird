@@ -67,7 +67,7 @@ class Controller_Member_Setting_Email extends Controller_Member
 					$member_email_pre = Model_MemberEmailPre::save_with_token($this->u->id, $post['email']);
 					DB::commit_transaction();
 
-					$mail = new Site_Mail('memberRegisterEmailConfirm');
+					$mail = new Site_Mail('memberRegisterEmailConfirm', null, get_member_lang($this->u->id));
 					$mail->send($post['email'], array(
 						'to_name' => $this->u->name,
 						'confirmation_code' => $member_email_pre->code,
@@ -177,7 +177,7 @@ class Controller_Member_Setting_Email extends Controller_Member
 			DB::commit_transaction();
 			$this->set_current_user();
 
-			$mail = new Site_Mail('memberRegisterEmailConfirm');
+			$mail = new Site_Mail('memberChangeEmail', null, get_member_lang($this->u->id));
 			$mail->send($email, array('to_name' => $this->u->name));
 
 			Session::set_flash(

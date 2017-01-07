@@ -8,6 +8,7 @@ class Controller_Content_Template_Mail extends Controller_Admin
 	public function before()
 	{
 		parent::before();
+		\Config::load('template', 'template');
 	}
 
 	/**
@@ -44,10 +45,15 @@ class Controller_Content_Template_Mail extends Controller_Admin
 	 * @params  integer
 	 * @return  Response
 	 */
-	public function action_edit($module = null, $name = null)
+	public function action_edit($module = null, $name = null, $lang = null)
 	{
-		list($db_key, $configs) = self::get_template_configs($module, $name);
-		if (!$configs) throw new \HttpNotFoundException;
+		if (! $lang || $lang == 'dfault') $lang = get_default_lang();
+		$accepted_langs = array_keys(conf('lang.options', 'i18n'));
+		if (! in_array($lang, $accepted_langs)) throw new \HttpNotFoundException;
+
+		list($db_key, $configs, $contents) = self::get_template_configs($module, $name, $lang);
+		if (! $configs || ! $contents) throw new \HttpNotFoundException;
+
 		$val = self::get_validation($configs);
 
 		if (\Input::method() == 'POST')
@@ -60,10 +66,11 @@ class Controller_Content_Template_Mail extends Controller_Admin
 				$post = $val->validated();
 
 				\DB::start_transaction();
-				if (!$template = \Model_Template::get4name($db_key))
+				if (!$template = \Model_Template::get_one4name_lang($db_key, $lang))
 				{
 					$template = \Model_Template::forge();
 					$template->name = $db_key;
+					$template->lang = $lang;
 					$template->format = $configs['format'];
 				}
 				$template->title = isset($post['title']) ? $post['title'] : $configs['title'];
@@ -98,8 +105,12 @@ class Controller_Content_Template_Mail extends Controller_Admin
 			)
 		);
 		$this->template->content = \View::forge('content/template/_parts/form', array(
+			'module' => $module,
+			'name' => $name,
+			'lang' => $lang,
 			'val' => $val,
 			'configs' => $configs,
+			'contents' => $contents,
 			'db_key' => $db_key,
 		));
 	}
@@ -149,6 +160,7 @@ class Controller_Content_Template_Mail extends Controller_Admin
 		$val = \Validation::forge();
 		$val->add_model(\Model_Template::forge());
 		$val->field('name')->delete_rule('required');
+		$val->field('lang')->delete_rule('required');
 		$val->field('format')->delete_rule('required');
 		$val->field('body')->add_rule('required');
 		if (empty($configs['title']))
@@ -163,19 +175,26 @@ class Controller_Content_Template_Mail extends Controller_Admin
 		return $val;
 	}
 
-	private static function get_template_configs($module, $name)
+	private static function get_template_configs($module, $name, $lang)
 	{
 		$db_key = sprintf('mail_%s_%s', $module, $name);
-		if (!$configs = \Config::get('template.'.str_replace('_', '.', $db_key)))
+		$config_key_suffix = str_replace('_', '.', $db_key);
+		if (! $configs = \Config::get('template.'.$config_key_suffix))
 		{
-			return array($db_key, null);
+			return array($db_key, null, null);
 		}
 
 		if (!isset($configs['variables'])) $configs['variables'] = array();
 		$common_variables = \Config::get(sprintf('template.mail.%s.common_variables', $module));
 		$configs['variables'] = array_merge($configs['variables'], $common_variables);
 
-		return array($db_key, $configs);
+		\Config::load('template_content_'.$lang, 'template_content', true, true);
+		if (! $contents = \Config::get('template_content.'.$config_key_suffix))
+		{
+			return array($db_key, $configs, null);
+		}
+
+		return array($db_key, $configs, $contents);
 	}
 }
 

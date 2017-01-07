@@ -162,6 +162,7 @@ class Site_Member
 		}
 		$name = $member->name;
 		$email = !empty($member->member_auth->email) ? $member->member_auth->email : '';
+		$lang = get_member_lang($member->id);
 
 		if (is_enabled('timeline')) \Timeline\Site_NoOrmModel::delete_timeline4member_id($member_id);
 		if (is_enabled('album')) \Album\Site_NoOrmModel::delete_album4member_id($member_id);
@@ -176,7 +177,7 @@ class Site_Member
 
 		if ($name && $email)
 		{
-			$mail = new Site_Mail('memberLeave');
+			$mail = new Site_Mail('memberLeave', null, $lang);
 			$mail->send($email, array('to_name' => $name));
 		}
 	}
@@ -409,6 +410,18 @@ class Site_Member
 	public static function get_admin_member_id()
 	{
 		return conf('original_user_id.site');
+	}
+
+	public static function get_lang_setting($member_id)
+	{
+		if (! is_enabled_i18n()) return get_default_lang();
+
+		if ($lang = Model_MemberConfig::get_value($member_id, 'lang'))
+		{
+			return $lang;
+		}
+
+		return get_default_lang();
 	}
 }
 

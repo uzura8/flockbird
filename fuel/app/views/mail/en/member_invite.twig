@@ -1,0 +1,29 @@
+Hello! Notice from {{ site_description }}{{ site_name }}.
+
+{{ Invite_member_name }} invited you to {{ site_name }}.
+
+{% if invite_message %}
+---- Message from {{ invite_member_name }} ----
+
+{{ invite_message }}
+
+------------------------------------------------------
+{% endif %}
+
+You can join {{ site_name }} by doing
+a member registration (free) from the following URL.
+
+
+■ Join {{ site_name }}.
+{{ register_url }}
+
+
+◆To those who do not remember the message
+If you do not remember the message, there is a possibility
+that the mail address was sent by mistake.
+In such a case, we are sorry to trouble you,
+but please contact us at the following e-mail address.
+
+{{ admin_mail }}
+
+

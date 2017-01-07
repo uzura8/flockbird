@@ -3,12 +3,16 @@
 class Site_Mail
 {
 	protected $config;
+	protected $contents;
 	protected $options = array();
 	protected $module;
 	protected $parser;
 
-	public function __construct($config_key, $options = array())
+	public function __construct($config_key, $options = array(), $lang = null)
 	{
+		if (! $lang) $lang = get_default_lang();
+		Config::load('template', 'template');
+		Config::load('template_content_'.$lang, 'template_content');
 		Package::load('email');
 		$this->options = array(
 			'is_admin' => false,
@@ -25,18 +29,21 @@ class Site_Mail
 			'debug_log_is_enabled' => conf('mail.log.develop.isEnabled'),
 			'debug_log_file_path' => conf('mail.log.develop.file_path'),
 		);
-		$this->configure($config_key, $options);
+		$this->configure($config_key, $options, $lang);
 	}
 
-	protected function configure($config_key, $options)
+	protected function configure($config_key, $options, $lang)
 	{
 		$this->setup_options($options);
+		$this->module = $this->options['is_admin'] ? 'admin' : 'site';
 		$this->setup_config($config_key);
+		$this->setup_contents($config_key, $lang);
 		$this->setup_parser();
 	}
 
 	protected function setup_options($options)
 	{
+		if (! is_array($options)) $options = (array)$options;
 		if ($options) $this->options = $options + $this->options;
 		$this->set_common_variables_default();
 	}
@@ -59,13 +66,17 @@ class Site_Mail
 
 	protected function setup_config($config_key)
 	{
-		$this->module = $this->options['is_admin'] ? 'admin' : 'site';
 		$this->config = Config::get(sprintf('template.mail.%s.%s', $this->module, $config_key));
+	}
+
+	protected function setup_contents($config_key, $lang)
+	{
+		$this->contents = Config::get(sprintf('template_content.mail.%s.%s', $this->module, $config_key));
 	}
 
 	protected function setup_parser()
 	{
-		if ($this->config['format'] != 'twig')
+		if ($this->contents['format'] != 'twig')
 		{
 			throw new FuelException('Template format is invalid.');
 		}
@@ -143,15 +154,15 @@ class Site_Mail
 	protected function set_subject($data = array())
 	{
 		if ($this->options['subject']) return;
-		if (!$this->config['title']) return;
+		if (!$this->contents['title']) return;
 
-		$this->options['subject']  = $this->parser->render($this->config['title'], $data);
+		$this->options['subject']  = $this->parser->render($this->contents['title'], $data);
 		$this->options['subject'] = Util_String::normalize_platform_dependent_chars($this->options['subject'], $this->options['is_use_normalizer']);
 	}
 
 	protected function set_body($data = array())
 	{
-		$this->options['body']  = $this->parser->render($this->config['body'], $data);
+		$this->options['body']  = $this->parser->render($this->contents['body'], $data);
 		$this->options['body'] .= $this->get_signature($data);
 		$this->options['body']  = Util_String::normalize_platform_dependent_chars($this->options['body'], $this->options['is_use_normalizer']);
 	}
@@ -160,10 +171,10 @@ class Site_Mail
 	{
 		if (!$this->options['is_add_signature']) return;
 
-		$config = Config::get(sprintf('template.mail.%s.signature', $this->module));
+		$contents = Config::get(sprintf('template_content.mail.%s.signature', $this->module));
 		if (!$data) $data = $this->options['common_variables'];
 
-		return $this->parser->render($config['body'], $data);
+		return $this->parser->render($contents['body'], $data);
 	}
 
 	protected function validate()

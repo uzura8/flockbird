@@ -28,17 +28,17 @@ class Site_Config
 		return $configs;
 	}
 
-	public static function setup_configs_template($configs)
+	public static function setup_configs_template($configs, $lang)
 	{
-		$configs = static::merge_db_configs_template($configs);
+		$configs = static::merge_db_configs_template($configs, $lang);
 		$configs = static::setup_configs_template_body($configs);
 
 		return $configs;
 	}
 
-	public static function merge_db_configs_template($configs)
+	public static function merge_db_configs_template($configs, $lang)
 	{
-		if ($db_configs = Model_Template::query()->get())
+		if ($db_configs = Model_Template::get4lang($lang))
 		{
 			foreach ($db_configs as $db_config)
 			{
@@ -70,9 +70,9 @@ class Site_Config
 					if (!empty($items['body']['default']['file']))
 					{
 						$ext = (!empty($items['format'])) ? $items['format'] : 'php';
-						if (($path = \Finder::search('views', $items['body']['default']['file'], '.'.$ext, false, false)) === false)
+						if (($path = \Finder::search('views', $items['body']['default']['file'], '.'.$ext, false, true)) === false)
 						{
-							throw new \FuelException('The requested view could not be found: '.\Fuel::clean_path($file).'.'.$ext);
+							throw new \FuelException('The requested view could not be found: '.\Fuel::clean_path($path));
 						}
 						$body = file_get_contents($path);
 					}
