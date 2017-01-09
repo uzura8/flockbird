@@ -55,16 +55,20 @@ class Site_Lang
 		Config::load(is_admin() ? 'admin::navigation' : 'navigation', 'navigation', true);
 	}
 
-	public static function get_client_lang()
+	public static function get_client_lang($is_return_default_lang = false)
 	{
 		$accepteds = array_keys(conf('lang.options', 'i18n'));
-		if (! $set_langs = Util_Lang::get_client_accept_lang(true)) return false;
+		if (! $set_langs = Util_Lang::get_client_accept_lang(true))
+		{
+			return $is_return_default_lang ? get_default_lang() : false;
+		}
+
 		foreach ($set_langs as $lang)
 		{
 			if (in_array($lang, $accepteds)) return  $lang;
 		}
 
-		return false;
+		return $is_return_default_lang ? get_default_lang() : false;
 	}
 
 	public static function get_member_set_lang($member_id)

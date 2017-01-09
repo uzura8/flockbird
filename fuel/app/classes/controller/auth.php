@@ -241,6 +241,8 @@ class Controller_Auth extends Controller_Site
 			{
 				Model_MemberConfig::set_value($member->id, 'terms_un_agreement', 1);
 			}
+			// Register lang setting
+			if (is_enabled_i18n()) Model_MemberConfig::set_value($member->id, 'lang', Site_Lang::get_client_lang(true));
 			// Post timeline
 			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, null, 'member_register', $member->id, $member->created_at);
 			\DB::commit_transaction();
