@@ -33,9 +33,9 @@ class Site_Lang
 		static::load_configs_related_lang($is_check_member_lang_setting);
 	}
 
-	public static function reset_lang($lang)
+	public static function reset_lang($lang, $is_set_session = true)
 	{
-		Session::set('lang', $lang);
+		if ($is_set_session) Session::set('lang', $lang);
 		Lang::set_lang($lang, true);
 		static::load_lang_files();
 		static::load_configs_related_lang();
@@ -55,13 +55,6 @@ class Site_Lang
 		Config::load(is_admin() ? 'admin::navigation' : 'navigation', 'navigation', true);
 	}
 
-	public static function get_member_set_lang($member_id)
-	{
-		if (! $lang = Model_MemberConfig::get_value($member_id, 'lang')) return false;
-
-		return $lang;
-	}
-
 	public static function get_client_lang()
 	{
 		$accepteds = array_keys(conf('lang.options', 'i18n'));
@@ -72,6 +65,13 @@ class Site_Lang
 		}
 
 		return false;
+	}
+
+	public static function get_member_set_lang($member_id)
+	{
+		if (! $lang = Model_MemberConfig::get_value($member_id, 'lang')) return false;
+
+		return $lang;
 	}
 }
 

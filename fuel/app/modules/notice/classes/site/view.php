@@ -50,46 +50,86 @@ class Site_View
 		return '';
 	}
 
-	public static function convert_notice_action($foreign_table, $type)
+	public static function convert_notice_message($foreign_table, $type, $subject, $lang = null)
 	{
-		switch ($type)
-		{
-			case '6':
-				return sprintf('あなた宛に%sを投稿しました。', static::convert_notice_foreign_table($foreign_table));
-			case '7':
-				return sprintf('あなた宛に%s%sを投稿しました。', static::convert_notice_foreign_table($foreign_table), term('form.comment'));
-			case '8':
-				return sprintf('あなたを%sしました。', term('follow'));
-		}
-		return sprintf('%sに%sしました。', static::convert_notice_foreign_table($foreign_table), static::convert_notice_type($foreign_table, $type));
-	}
+		if (! $lang) $lang = get_default_lang();
+		$label = static::convert_notice_foreign_table($foreign_table);
 
-	public static function convert_notice_type($foreign_table, $type)
-	{
 		switch ($type)
 		{
 			case '3':
-				return term('form.comment');
 			case '4':
-				return term('form.like');
+				$lang_item = sprintf('message_%s_from_to', $type == '3' ? 'comment' : 'like');
+				return \Lang::get($lang_item, array(
+					'subject' => $subject,
+					'object'  => $label,
+				), '', $lang);
+
 			case '5':
-				if ($foreign_table == 'album') return term('form.add_picture');
-				return term('form.add');
+				if ($foreign_table == 'album')
+				{
+					return \Lang::get('message_add_for_from_to', array(
+						'subject' => $subject,
+						'object'  => $label,
+						'label'  => t('site.picture', null, $lang),
+					), '', $lang);
+				}
+				return \Lang::get('message_add_from_to', array(
+					'subject' => $subject,
+					'object'  => t('site.picture', null, $lang),
+				), '', $lang);
+
+			case '6':
+			case '7':
+				$label = static::convert_notice_foreign_table($foreign_table);
+				if ($type == 7)
+				{
+					$delimitter = $lang == 'ja' ? '' : ' ';
+					$label .= $delimitter.t('form.comment', null, $lang);
+				}
+				return \Lang::get('message_post_for_from_to', array(
+					'subject' => $subject,
+					'object'  => t('common.you', null, $lang),
+					'label'   => $label,
+				), '', $lang);
+
+			case '8':
+				return \Lang::get('member_message_follow_from_to', array(
+					'subject' => $subject,
+					'object'  => t('common.you', null, $lang),
+				), '', $lang);
 		}
+
 		return '';
 	}
 
-	public static function get_action_members($members, $member_count)
+	public static function get_action_members($members, $member_count, $lang = null)
 	{
+		if (! $lang) $lang = get_default_lang();
+		$delimitter      = $lang == 'ja' ? 'と' : ', ';
+		$delimitter_last = $lang == 'ja' ? 'と' : ' and ';
+
 		$action_members = '';
-		foreach ($members as $member)
+		$max = count($members);
+		for ($i = 0; $i < $max; $i++)
 		{
-			if ($action_members) $action_members .= ' と ';
-			$action_members .= sprintf('%sさん', $member['name']);
+			if ($action_members)
+			{
+				if ($i == ($max - 1))
+				{
+					$action_members .= $delimitter_last;
+				}
+				elseif ($i)
+				{
+					$action_members .= $delimitter;
+				}
+			}
+			$action_members .= conv_honorific_name($members[$i]['name'], $lang);
 		}
+
 		if ($other_member_count = $member_count - count($members))
 		{
-			$action_members .= sprintf(' 他%d人', $other_member_count);
+			$action_members .= sprintf(is_lang_ja() ? ' 他%d人' : ' %d others', $other_member_count);
 		}
 
 		return $action_members;

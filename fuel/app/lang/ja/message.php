@@ -38,6 +38,11 @@ return array(
 	'message_delete_complete_for' => ':labelを削除しました。',
 	'message_disabled_to_delete' => '削除できません。',
 	'message_disabled_to_delete_for' => 'このlabel:は削除できません。',
+	'message_post_for_from_to' => ':subjectが :objectに:labelを投稿しました。',
+	'message_comment_from_to' => ':subjectが:objectにコメントしました。',
+	'message_like_from_to' => ':subjectが:objectにいいねしました。',
+	'message_add_from_to' => ':subjectが:objectに追加しました。',
+	'message_add_for_from_to' => ':subjectが:objectに:labelを追加しました。',
 	'message_not_published' => 'この:labelはまだ公開されていません。',
 	'message_not_registered' => '登録がありません。',
 	'message_not_registered_for' => ':labelが登録されていません。',
@@ -46,6 +51,7 @@ return array(
 	'message_include_invalid_value' => ':labelに正しくない値が含まれています。',
 	'message_failed' => '失敗しました。',
 	'message_failed_for' => ':labelに失敗しました。',
+	'message_check_from_url' => '以下のURLよりご確認ください。',
 	// form
 	'form_placeholder_text_enter_characters_within' => ':num文字以内で入力してください。',
 	// member registration

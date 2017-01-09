@@ -31,6 +31,7 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 		list($is_send, $member, $notice_status) = $this->check_valid_queue();
 		if (!$is_send) return;
 
+		$this->set_lang(\Site_Member::get_lang_setting($member->id));
 		$this->mail_data['to_name']  = $member->name;
 		$this->mail_data['to_email'] = $member->member_auth->email;
 		$this->mail_data['content']  = $this->get_mail_body($notice_status, $member->id);
@@ -44,6 +45,7 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 		$data['foreign_id']    = $notice_status->notice->foreign_id;
 		$data['parent_table']  = $notice_status->notice->parent_table;
 		$data['parent_id']     = $notice_status->notice->parent_id;
+		$data['lang']          = $this->lang;
 
 		return render('notice::mail/_parts/notice', $data);
 	}

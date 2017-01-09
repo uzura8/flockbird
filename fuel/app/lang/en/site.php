@@ -41,5 +41,7 @@ return array(
 	'member_message_leave_failed' => 'The leaving procedure is failed. ',
 	// member profile image
 	'member_error_album_image_disable_to_set_as_profile_image' => 'Disabled to set album image as profile image. ',
+	// member relation
+	'member_message_follow_from_to' => ':subject followed :object. ',
 );
 

@@ -5,6 +5,7 @@ abstract class Site_MailBatchSender extends Site_BatchHandler
 	protected $status_flags = array();
 	protected $send_count = 0;
 	protected $mail_handler;
+	protected $lang;
 	protected $mail_data = array();
 
 	public function __construct($options = array(), $mail_handler = null)
@@ -15,6 +16,15 @@ abstract class Site_MailBatchSender extends Site_BatchHandler
 		);
 		$this->status_flags = conf('default.statusFlags', 'task');
 		$this->mail_handler = $mail_handler;
+	}
+
+	protected function set_lang($lang = null)
+	{
+		if (! $lang) $lang = get_default_lang();
+		if ($this->lang && $this->lang == $lang) return;
+
+		Site_Lang::reset_lang($lang, false);
+		$this->lang = $lang;
 	}
 
 	protected function execute_each()
@@ -34,7 +44,7 @@ abstract class Site_MailBatchSender extends Site_BatchHandler
 		try
 		{
 			$this->mail_handler->reset_options();
-			$this->mail_handler->send(null, $this->mail_data);
+			$this->mail_handler->send(null, $this->mail_data, false, $this->lang);
 			$this->send_count++;
 			$this->each_result = $this->get_status_value('successed');
 			return;

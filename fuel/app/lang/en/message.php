@@ -39,6 +39,11 @@ return array(
 	'message_delete_complete_for' => 'Deleted :label . ',
 	'message_disabled_to_delete' => 'Disabled to delete. ',
 	'message_disabled_to_delete_for' => 'This :label is disabled to delete. ',
+	'message_post_for_from_to' => ':subject posted :label to :object. ',
+	'message_comment_from_to' => ':subject commented :object. ',
+	'message_like_from_to' => ':subject liked :object. ',
+	'message_add_from_to' => ':subject added :object. ',
+	'message_add_for_from_to' => ':subject added :label to :object. ',
 	'message_not_published' => 'This :label is not published. ',
 	'message_not_registered' => 'Not registered. ',
 	'message_not_registered_for' => ':label is not registered. ',
@@ -47,6 +52,7 @@ return array(
 	'message_include_invalid_value' => ':label include invalid values. ',
 	'message_failed' => 'Failed. ',
 	'message_failed_for' => 'Failed to :label. ',
+	'message_check_from_url' => 'Please check from the following URL. ',
 	// form
 	'form_placeholder_text_enter_characters_within' => 'Please enter within :num characters. ',
 	// member registration

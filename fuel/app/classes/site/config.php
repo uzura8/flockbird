@@ -1,7 +1,7 @@
 <?php
 class Site_Config
 {
-	public static function merge_module_configs($config, $config_name)
+	public static function merge_module_configs($config, $config_name, $group = null)
 	{
 		$modules = Module::loaded();
 		foreach ($modules as $module => $path)

@@ -181,9 +181,15 @@ function term()
 	return $return;	
 }
 
-function t($line, $params = array())
+function t($line, $params = array(), $lang = null)
 {
-	return Str::tr(Config::get('term.'.$line, $line), $params);
+	$conf_file = 'term';
+	if ($lang && $lang != 'ja')
+	{
+		$conf_file = 'term_'.$lang;
+	}
+
+	return Str::tr(Config::get($conf_file.'.'.$line, $line), $params);
 }
 
 function symbol($key)
@@ -525,5 +531,13 @@ function current_uri($is_internal_uri = false)
 function get_member_lang($member_id)
 {
 	return Site_Member::get_lang_setting($member_id);
+}
+
+function conv_honorific_name($name, $lang = null)
+{
+	if (! $lang) $lang = get_default_lang();
+	if ($lang != 'ja') return $name;
+
+	return $name.'さん';
 }
 

@@ -1,6 +1,6 @@
 <?php
 $lang = 'en';
-$file = 'template_'.$lang;
+$file = 'template_content_'.$lang;
 
 $config = array(
 	'mail' => array(
@@ -91,6 +91,15 @@ $config = array(
 				'body' => array(
 					'default' => array(
 						'file' => 'mail/'.$lang.'/member_invite',
+					),
+				),
+			),
+			'notice' => array(
+				'format' =>'twig',
+				'title' => '[{{ site_name }}] Notification mail',
+				'body' => array(
+					'default' => array(
+						'file' => 'notice::mail/'.$lang.'/notice',
 					),
 				),
 			),

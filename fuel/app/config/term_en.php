@@ -197,6 +197,7 @@ $config = array(
 		'new' => 'New',
 		'current' => 'Current',
 		'up_to' => 'Up to :value',
+		'you' => 'You',
 	),
 	'member' => array(
 		'view' => 'Member',

@@ -2,17 +2,16 @@
 
 class Site_Mail
 {
+	protected $config_key;
 	protected $config;
 	protected $contents;
 	protected $options = array();
 	protected $module;
 	protected $parser;
+	protected $lang;
 
 	public function __construct($config_key, $options = array(), $lang = null)
 	{
-		if (! $lang) $lang = get_default_lang();
-		Config::load('template', 'template');
-		Config::load('template_content_'.$lang, 'template_content');
 		Package::load('email');
 		$this->options = array(
 			'is_admin' => false,
@@ -34,10 +33,11 @@ class Site_Mail
 
 	protected function configure($config_key, $options, $lang)
 	{
+		$this->set_lang($lang);
 		$this->setup_options($options);
 		$this->module = $this->options['is_admin'] ? 'admin' : 'site';
 		$this->setup_config($config_key);
-		$this->setup_contents($config_key, $lang);
+		$this->setup_contents();
 		$this->setup_parser();
 	}
 
@@ -64,14 +64,34 @@ class Site_Mail
 
 	}
 
-	protected function setup_config($config_key)
+	protected function set_lang($lang = null)
 	{
-		$this->config = Config::get(sprintf('template.mail.%s.%s', $this->module, $config_key));
+		if (! $lang) $lang = get_default_lang();
+		$this->lang = $lang;
 	}
 
-	protected function setup_contents($config_key, $lang)
+	protected function setup_config($config_key)
 	{
-		$this->contents = Config::get(sprintf('template_content.mail.%s.%s', $this->module, $config_key));
+		Config::load('template', 'template');
+		if (! $this->config = Config::get(sprintf('template.mail.%s.%s', $this->module, $config_key)))
+		{
+			throw new FuelException('Parameter config_key is invalid');
+		}
+		$this->config_key = $config_key;
+	}
+
+	protected function setup_contents()
+	{
+		Config::load('template_content_'.$this->lang, 'template_content', true);
+		$this->contents = Config::get(sprintf('template_content.mail.%s.%s', $this->module, $this->config_key));
+	}
+
+	protected function reset_lang($lang = null)
+	{
+		if (! $lang) return;
+
+		$this->set_lang($lang);
+		$this->setup_contents();
 	}
 
 	protected function setup_parser()
@@ -102,8 +122,10 @@ class Site_Mail
 		}
 	}
 
-	public function send($to_email = null, $data = array(), $is_to_admin = false)
+	public function send($to_email = null, $data = array(), $is_to_admin = false, $lang = null)
 	{
+		if ($lang && $lang != $this->lang) $this->reset_lang($lang);
+
 		if (!$to_email && !empty($data['to_email'])) $to_email = $data['to_email'];
 		if (empty($data['to_email'])) $data['to_email'] = $to_email;
 		$this->set_to_email($to_email);
