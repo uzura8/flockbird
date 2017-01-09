@@ -103,6 +103,15 @@ $config = array(
 					),
 				),
 			),
+			'message' => array(
+				'format' =>'twig',
+				'title' => '{% if subject %}{{ subject }}{% else %} [{{ site_name }}] New messages has arrived{% endif %}',
+				'body' => array(
+					'default' => array(
+						'file' => 'message::mail/'.$lang.'/notice',
+					),
+				),
+			),
 		),
 	),
 );

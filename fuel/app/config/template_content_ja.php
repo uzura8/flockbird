@@ -103,6 +103,15 @@ $config = array(
 					),
 				),
 			),
+			'message' => array(
+				'format' =>'twig',
+				'title' => '{% if subject %}{{ subject }}{% else %}【{{ site_name }}】新着メッセージお知らせメール{% endif %}',
+				'body' => array(
+					'default' => array(
+						'file' => 'message::mail/'.$lang.'/notice',
+					),
+				),
+			),
 		),
 	),
 );

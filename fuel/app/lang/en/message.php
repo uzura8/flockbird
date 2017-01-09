@@ -44,6 +44,7 @@ return array(
 	'message_like_from_to' => ':subject liked :object. ',
 	'message_add_from_to' => ':subject added :object. ',
 	'message_add_for_from_to' => ':subject added :label to :object. ',
+	'message_recieve_for_from' => 'Recieved :label from :subject. ',
 	'message_not_published' => 'This :label is not published. ',
 	'message_not_registered' => 'Not registered. ',
 	'message_not_registered_for' => ':label is not registered. ',

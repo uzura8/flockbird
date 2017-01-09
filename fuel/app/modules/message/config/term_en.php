@@ -16,8 +16,8 @@ return array(
 			'label' => array(
 				'member' => 'Private Message',
 				'group' => 'Group Message',
-				'site_info_all' => 'Message from the Site',
-				'site_info' => 'Private Message from the Site',
+				'site_info_all' => 'Site Information Message for all',
+				'site_info' => 'Site Information Message',
 				'system_info' => 'System Informaton',
 			),
 			'labelSimple' => array(

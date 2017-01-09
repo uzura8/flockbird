@@ -31,6 +31,7 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 		list($is_send, $member, $message_recieved) = $this->check_valid_queue();
 		if (!$is_send) return;
 
+		$this->set_lang(\Site_Member::get_lang_setting($member->id));
 		$this->mail_data['to_name']  = $member->name;
 		$this->mail_data['to_email'] = $member->member_auth->email;
 		$this->mail_data['subject']  = $message_recieved->message->subject;
@@ -47,6 +48,7 @@ class Site_MailBatchSender extends \Site_MailBatchSender
 		$data['message_subject'] = $message_recieved->message->subject ?: '';
 		$data['message_body'] = $message_recieved->message->body;
 		$data['member_name_from'] = member_name($message_recieved->message->member);
+		$data['lang'] = $this->lang;
 
 		return render('message::mail/_parts/notice', $data);
 	}

@@ -43,6 +43,7 @@ return array(
 	'message_like_from_to' => ':subjectが:objectにいいねしました。',
 	'message_add_from_to' => ':subjectが:objectに追加しました。',
 	'message_add_for_from_to' => ':subjectが:objectに:labelを追加しました。',
+	'message_recieve_for_from' => ':subjectさんから:labelが届いています。',
 	'message_not_published' => 'この:labelはまだ公開されていません。',
 	'message_not_registered' => '登録がありません。',
 	'message_not_registered_for' => ':labelが登録されていません。',
