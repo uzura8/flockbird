@@ -52,7 +52,7 @@ function get_error_message(status)
 	switch (status)
 	{
 		case 401:
-			return '認証情報の取得に失敗しました。ログイン後、再度実行してください。';
+			return __('site_message_unauthorized');
 		default :
 			return default_message;
 	}
@@ -71,19 +71,19 @@ function getErrorMessage(responseObj)
 	switch (statusCode)
 	{
 		case 401:
-			return getTerms(['auth', 'info']) + 'の取得に失敗しました。' + getTerm('login') + '後、再度実行してください。';
+			return __('message_error_unauthorized');
 		case 400:
 		case 403:
 		case 404:
-			return getTerms(['invalid', 'request']) + 'です。';
+			return __('message_error_bad_request');
 		case 500:
-			return 'サーバエラーが発生しました。';
+			return __('message_error_server_error_occurred');
 	}
 
 	if (!empty(messages['default'])) return messages['default'];
 	if (defaultMessage) return defaultMessage;
 
-	return 'エラーが発生しました。';
+	return __('message_error_occurred');
 }
 
 function showErrorMessage(responseObj)
@@ -102,16 +102,15 @@ function getErrorMessageNew(responseObj)
 	switch (responseObj.status)
 	{
 		case 401:
-			return getTerms(['auth', 'info']) + 'の取得に失敗しました。' + getTerm('login') + '後、再度実行してください。';
+			return __('message_error_unauthorized');
 		case 400:
 		case 403:
 		case 404:
-			return getTerms(['invalid', 'request']) + 'です。';
+			return __('message_error_bad_request');
 		case 500:
-			return 'サーバエラーが発生しました。';
+			return __('message_error_server_error_occurred');
 	}
-
-	return 'エラーが発生しました。';
+	return __('message_error_occurred');
 }
 
 function showMessage(msg)
@@ -297,7 +296,7 @@ function loadList(getUri) {
 		error: function(result) {
 			GL.execute_flg = false;
 			removeLoading(parentListSelector, trigerSelector, 'list_loading_image', null, trigerHtml);
-			showErrorMessage(result, '読み込みに失敗しました。');
+			showErrorMessage(result, __('message_error_failed_to_read'));
 		}
 	});
 }

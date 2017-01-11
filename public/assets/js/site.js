@@ -322,8 +322,7 @@ $(document).on('click', '.js-insert_img', function(){
 	} else {
 		result = insertTextAtCaret(targetBodySelector, addValue);
 	}
-	var message = get_term('add_picture');
-	message += result ? 'しました。' : '出来ませんでした。';
+	var message = __(result ? 'message_add_for' : 'message_add_failed_for', {label: get_term('add_picture')});
 	showMessage(message);
 	return false;
 });

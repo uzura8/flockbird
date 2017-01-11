@@ -43,5 +43,9 @@ return array(
 	'member_error_album_image_disable_to_set_as_profile_image' => 'Disabled to set album image as profile image. ',
 	// member relation
 	'member_message_follow_from_to' => ':subject followed :object. ',
+	// notice
+	'notice_update_read_already' => 'Updated status to read. ',
+	// report
+	'report_error_required_report_about' => 'Please input Report about. ',
 );
 

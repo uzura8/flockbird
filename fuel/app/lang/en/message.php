@@ -3,8 +3,12 @@
 return array(
 	// error
 	'message_404_not_found' => 'Page not found. ',
+	'message_error_bad_request' => 'Invalid request. ',
+	'message_error_server_error_occurred' => 'Server error occurred. ',
+	'message_error_unauthorized' => 'Authentication failed. Please execute again after logged in. ',
 	'message_invalid_url' => 'URL is invalid. ',
 	'message_send_mail_error' => 'Sending mail error. ',
+	'message_error_failed_to_read' => 'Failed to read. ',
 	'message_error_occurred' => 'Error occurred. ',
 	'message_error_occurred_for' => ':label occurred. ',
 	'message_error_already_set' => 'This is already set. ',
@@ -42,6 +46,8 @@ return array(
 	'message_post_for_from_to' => ':subject posted :label to :object. ',
 	'message_comment_from_to' => ':subject commented :object. ',
 	'message_like_from_to' => ':subject liked :object. ',
+	'message_add_for' => 'Added :label. ',
+	'message_add_failed_for' => 'Failed to add :label. ',
 	'message_add_from_to' => ':subject added :object. ',
 	'message_add_for_from_to' => ':subject added :label to :object. ',
 	'message_recieve_for_from' => 'Recieved :label from :subject. ',

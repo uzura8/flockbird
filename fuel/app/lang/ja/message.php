@@ -1,11 +1,15 @@
 <?php
 
 return array(
-	// error
+	// Error
 	'message_404_not_found' => 'ページが見つかりませんでした。',
+	'message_error_bad_request' => '不正なリクエストです。',
+	'message_error_server_error_occurred' => 'サーバエラーが発生しました。',
+	'message_error_unauthorized' => '認証情報の取得に失敗しました。ログイン後、再度実行してください。',
 	'message_invalid_url' => 'URL が無効です。',
 	'message_send_mail_error' => 'メール送信エラー',
 	'message_error_occurred' => 'エラーが発生しました。',
+	'message_error_failed_to_read' => '読み込みに失敗しました。',
 	'message_error_occurred_for' => ':label が発生しました。',
 	'message_error_already_set' => '既に設定済みです。',
 	'message_error_already_set_for' => 'その:labelは既に設定済みです。',
@@ -41,6 +45,8 @@ return array(
 	'message_post_for_from_to' => ':subjectが :objectに:labelを投稿しました。',
 	'message_comment_from_to' => ':subjectが:objectにコメントしました。',
 	'message_like_from_to' => ':subjectが:objectにいいねしました。',
+	'message_add_for' => ':labelを追加しました。',
+	'message_add_failed_for' => ':labelの追加に失敗しました。',
 	'message_add_from_to' => ':subjectが:objectに追加しました。',
 	'message_add_for_from_to' => ':subjectが:objectに:labelを追加しました。',
 	'message_recieve_for_from' => ':subjectさんから:labelが届いています。',

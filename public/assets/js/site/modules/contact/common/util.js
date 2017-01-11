@@ -6,7 +6,7 @@ $(document).on('click', '.js-post_report', function(){
 	var trigerSelectorHtml = $(selfObj).html();
 
 	if (empty(valCategory)) {
-		showMessage('通報分類を入力してください。');
+		showMessage(__('report_error_required_report_about'));
 		return false;
 	}
 	postData['category'] = valCategory;
@@ -33,7 +33,7 @@ $(document).on('click', '.js-post_report', function(){
 			$('#form_body').val('');
 
 	if (empty(valCategory)) {
-		showMessage('通報分類を入力してください。');
+		showMessage(__('report_error_required_report_about'));
 		return false;
 	}
 	postData['category'] = valCategory;

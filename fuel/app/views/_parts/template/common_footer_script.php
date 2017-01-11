@@ -1,6 +1,7 @@
 <?php $img_max_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.accepted_max_size.default')); ?>
 <script>
 var GL = {};
+var LANG = {};
 GL.execute_flg = false;
 function get_uid() {return <?php echo (!IS_ADMIN && Auth::check()) ? get_uid() : 0; ?>;}
 function check_is_admin() {return <?php echo IS_ADMIN ? 'true' : 'false'; ?>;}
@@ -96,5 +97,27 @@ function get_config(key) {
 		app_id_facebook: '<?php echo FBD_FACEBOOK_APP_ID; ?>'
 	};
 	return config[key];
+}
+
+// i18n
+function get_lang() {return '<?php echo get_lang(); ?>';}
+var LANG = {};
+$.ajax({
+	url: getBasePath() + 'assets/cache/lang/' + get_lang() + '.json',
+	dataType: 'json',
+	async: false,
+	success: function(json) {
+		LANG = json;
+	}
+});
+var __ = function(line) {
+	var params = (arguments.length > 1) ? arguments[1] : {};
+	var translatedStr = LANG[line];
+	if (! empty(params)) {
+		$.each(params, function(key, val) {
+			translatedStr = translatedStr.replace(new RegExp(key + '\\:', 'g'), val) ;
+		});
+	}
+	return translatedStr;
 }
 </script>

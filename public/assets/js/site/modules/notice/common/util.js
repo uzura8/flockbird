@@ -23,13 +23,13 @@ $(document).on('click', '.js-notice-read_all', function(){
 		},
 		success: function(result){
 			if (result.updated_count > 0) {
-				var messageDefault = get_term('already_read') + 'にしました。';
+				var messageDefault = __('notice_update_read_already');
 				showMessage(result.message, messageDefault);
 				changeViewToRead(type);
 			}
 		},
 		error: function(result){
-			showErrorMessage(result, '変更に失敗しました。');
+			showErrorMessage(result, __('message_change_failed'));
 		}
 	});
 	return false;

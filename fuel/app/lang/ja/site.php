@@ -43,5 +43,9 @@ return array(
 	'member_error_album_image_disable_to_set_as_profile_image' => 'その写真はプロフィール写真に設定できません。',
 	// member relation
 	'member_message_follow_from_to' => ':subjectが:objectをフォローしました。',
+	// notice
+	'notice_update_read_already' => '既読にしました。',
+	// report
+	'report_error_required_report_about' => '通報内容を入力してください。',
 );
 
