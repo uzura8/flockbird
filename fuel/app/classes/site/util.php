@@ -102,7 +102,10 @@ class Site_Util
 	{
 		$config = 'term';
 		$lang = Site_Lang::get_lang($is_check_member_lang_setting);
-		if ($lang != 'ja') $config .= '_'.$lang;
+		if ($lang == 'ja') return $config;
+
+		$config .= '_'.$lang;
+		if (! Finder::search('config', $config)) return 'term_en';
 
 		return $config;
 	}
