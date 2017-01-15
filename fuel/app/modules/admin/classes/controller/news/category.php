@@ -76,8 +76,6 @@ class Controller_News_Category extends Controller_Admin
 			'admin/news' => term('news.view', 'admin.view'),
 			'admin/news/category' => term('news.category.view')
 		));
-		$this->template->post_header = \View::forge('news/_parts/form_header');
-		$this->template->post_footer = \View::forge('news/_parts/form_footer');
 		$this->template->content = \View::forge('news/category/edit', array('val' => $val, 'news' => $news_category));
 	}
 
