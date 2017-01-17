@@ -2,7 +2,7 @@
 
 class Site_Lang
 {
-	public static function get_lang($is_check_member_lang_setting = true)
+	public static function get_lang($is_check_member_lang = true, $is_check_session_lang = true)
 	{
 		$default_lang = get_default_lang();
 
@@ -10,12 +10,12 @@ class Site_Lang
 		if (is_admin()) return conf('adminDefaultLang', 'i18n');
 
 		// Member setting
-		if ($lang = Session::get('lang')) return $lang;
-		if ($is_check_member_lang_setting && $member_id = get_uid())
+		if ($is_check_session_lang && $lang = Session::get('lang')) return $lang;
+		if ($is_check_member_lang  && $member_id = get_uid())
 		{
 			if ($lang = static::get_member_set_lang($member_id))
 			{
-				Session::set('lang', $lang);
+				if ($is_check_session_lang) Session::set('lang', $lang);
 				return $lang;
 			}
 		}
@@ -26,11 +26,12 @@ class Site_Lang
 		return $default_lang;
 	}
 
-	public static function configure_lang($is_check_member_lang_setting = true)
+	public static function configure_lang($is_check_member_lang = true, $is_check_session_lang = true)
 	{
-		Lang::set_lang(static::get_lang($is_check_member_lang_setting), true);
+		$lang = static::get_lang($is_check_member_lang, $is_check_session_lang);
+		Lang::set_lang($lang, true);
 		static::load_lang_files();
-		static::load_configs_related_lang($is_check_member_lang_setting);
+		static::load_configs_related_lang($lang);
 	}
 
 	public static function reset_lang($lang, $is_set_session = true)
@@ -38,7 +39,7 @@ class Site_Lang
 		if ($is_set_session) Session::set('lang', $lang);
 		Lang::set_lang($lang, true);
 		static::load_lang_files();
-		static::load_configs_related_lang();
+		static::load_configs_related_lang($lang);
 	}
 
 	protected static function load_lang_files()
@@ -49,9 +50,9 @@ class Site_Lang
 		}
 	}
 
-	protected static function load_configs_related_lang($is_check_member_lang_setting = true)
+	protected static function load_configs_related_lang($lang)
 	{
-		Config::load(Site_Util::get_term_file_name($is_check_member_lang_setting), 'term', true);
+		Config::load(Site_Util::get_term_file_name($lang), 'term', true);
 		Config::load(is_admin() ? 'admin::navigation' : 'navigation', 'navigation', true);
 	}
 

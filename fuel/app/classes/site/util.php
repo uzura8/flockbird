@@ -98,13 +98,13 @@ class Site_Util
 		return preg_match('#^error/?#', Uri::string());
 	}
 
-	public static function get_term_file_name($is_check_member_lang_setting = true)
+	public static function get_term_file_name($lang)
 	{
 		$config = 'term';
-		$lang = Site_Lang::get_lang($is_check_member_lang_setting);
 		if ($lang == 'ja') return $config;
 
 		$config .= '_'.$lang;
+		// If file not exists, load English file.
 		if (! Finder::search('config', $config)) return 'term_en';
 
 		return $config;
