@@ -111,7 +111,7 @@ class Controller_Common extends Controller_Hybrid
 		}
 		catch(\DisableToUpdateException $e)
 		{
-			$this->response_body['errors']['message'] = $e->getMessage() ?: term('form.update').'が禁止されています。';
+			$this->response_body['errors']['message'] = $e->getMessage() ?: __('message_update_prohibited');
 			$status_code = 400;
 		}
 		catch(\Database_Exception $e)

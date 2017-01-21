@@ -32,6 +32,7 @@ return array(
 	'message_update_failed_for' => ':labelの更新に失敗しました。',
 	'message_update_complete' => '更新しました。',
 	'message_update_complete_for' => ':labelを更新しました。',
+	'message_update_prohibited' => '更新が禁止されています。',
 	'message_change_failed' => '変更に失敗しました。',
 	'message_change_failed_for' => ':labelの変更に失敗しました。',
 	'message_change_complete' => '変更しました。',

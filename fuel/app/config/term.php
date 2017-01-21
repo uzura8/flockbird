@@ -198,6 +198,8 @@ $config = array(
 		'current' => '現在の',
 		'up_to' => ':valueまで',
 		'you' => 'あなた',
+		'own_for_member_of' => ':nameさんの:label',
+		'own_for_myself_of' => '自分の:label',
 	),
 	'member' => array(
 		'view' => 'メンバー',

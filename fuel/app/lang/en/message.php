@@ -33,6 +33,7 @@ return array(
 	'message_update_failed_for' => 'Failed to update :label. ',
 	'message_update_complete' => 'Updated. ',
 	'message_update_complete_for' => 'Updated :label. ',
+	'message_update_prohibited' => 'Prohibited to update. ',
 	'message_change_failed' => 'Failed to change. ',
 	'message_change_failed_for' => 'Failed to change :label. ',
 	'message_change_complete' => 'Changed. ',

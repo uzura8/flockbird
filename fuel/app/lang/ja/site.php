@@ -23,6 +23,8 @@ return array(
 	'site_lead_notice_setting' => 'お知らせ受診項目の設定を行います。',
 	'additional_info_count_of' => '(:label: :count 件)',
 	'registered_count_of' => ':label :count 件 登録済み',
+	'member_unregistered_email' => 'メールアドレスが未登録です。登録してください。',
+	'member_unregistered_profile' => '未登録のプロフィールがあります。登録してください。',
 	// member setting
 	'member_message_send_confirmation_code_complete' => '確認用メールを送信しました。受信したメール内に記載された確認用コードを入力してください。',
 	'member_message_error_invalid_confirmation_code' => '確認用コードが正しくないか、有効期限が過ぎてます。再度確認用メールを送信してください。',

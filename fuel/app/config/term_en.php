@@ -198,6 +198,8 @@ $config = array(
 		'current' => 'Current',
 		'up_to' => 'Up to :value',
 		'you' => 'You',
+		'own_for_member_of' => ":name's :label",
+		'own_for_myself_of' => 'My :label',
 	),
 	'member' => array(
 		'view' => 'Member',

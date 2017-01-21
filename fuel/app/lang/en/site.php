@@ -23,6 +23,8 @@ return array(
 	'site_lead_notice_setting' => 'Setting of Notificaton',
 	'additional_info_count_of' => '(:label: :count)',
 	'registered_count_of' => 'Registered :count :label',
+	'member_unregistered_email' => 'Mail address is unregistered. Please register. ',
+	'member_unregistered_profile' => 'You have an unregistered profile. Please register. ',
 	// member setting
 	'member_message_send_confirmation_code_complete' => 'Sent a confirmation mail. Please enter the verification code on the received mail. ',
 	'member_message_error_invalid_confirmation_code' => 'The verification code is incorrect or the expiration date has passed. Please send the confirmation mail again. ',

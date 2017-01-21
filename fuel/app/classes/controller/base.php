@@ -92,7 +92,7 @@ class Controller_Base extends Controller_Common
 			&& !check_current_uris(conf('member.setting.email.forceRegister.accessableUri'))
 			&& empty($this->u->member_auth->email))
 		{
-			Session::set_flash('message', sprintf('%sが%sです。%sしてください。', term('site.email'), term('site.unregisterd'), term('site.registration')));
+			Session::set_flash('message', __('member_unregistered_email'));
 			Response::redirect('member/setting/email/regist');
 		}
 
@@ -101,7 +101,7 @@ class Controller_Base extends Controller_Common
 			&& !check_current_uris(conf('member.profile.forceRegisterRequired.accessableUri'))
 			&& !Site_Member::check_saved_member_profile_required($this->u))
 		{
-			Session::set_flash('message', sprintf('%sの%sがあります。%sしてください。', term('site.unregisterd'), term('profile'), term('site.registration')));
+			Session::set_flash('message', __('member_unregistered_profile'));
 			Response::redirect('member/profile/edit/regist');
 		}
 	}
@@ -175,7 +175,11 @@ class Controller_Base extends Controller_Common
 		if ($title) list($title_name, $title_label, $subtitle) = Site_Controller::get_title_parts($title);
 		if (!$is_no_title && $title_name)
 		{
-			$this->template->title = View::forge('_parts/page_title', array('name' => $title_name, 'label' => $title_label, 'subtitle' => $subtitle));
+			$this->template->title = View::forge('_parts/page_title', array(
+				'name' => $title_name,
+				'label' => $title_label,
+				'subtitle' => $subtitle,
+			));
 			$common['title'] = $title_name;
 		}
 
@@ -207,11 +211,14 @@ class Controller_Base extends Controller_Common
 			if ($is_mypage)
 			{
 				$breadcrumbs['/member'] = term('page.myhome');
-				if ($module) $breadcrumbs[sprintf('/%s/member/', $module)] = '自分の'.term($module, 'site.list');
+				if ($module)
+				{
+					$breadcrumbs[sprintf('/%s/member/', $module)] = t('common.own_for_myself_of', array('label' => term($module)));
+				}
 			}
 			else
 			{
-				$name = $member_obj->name.'さんのページ';
+				$name = t('common.own_for_member_of', array('name' => $member_obj->name, 'label' => t('page.kana')));
 				$breadcrumbs['/member/'.$member_obj->id] = $name;
 				if ($module)
 				{
@@ -363,10 +370,12 @@ class Controller_Base extends Controller_Common
 				$result = $obj->{$method}();
 			}
 			\DB::commit_transaction();
+			$message = __('message_delete_complete');
 			$target_conntent_name = $content_name ?: Site_Model::get_content_name($table);
+			if ($target_conntent_name) $message = __('message_delete_complete_for', array('label' => $target_conntent_name));
 			$data = array(
 				'result'  => (bool)$result,
-				'message' => sprintf('%s%sしました。', $target_conntent_name ? $target_conntent_name.'を' : '', term('form.delete')),
+				'message' => $message,
 			);
 
 			$this->set_response_body_api($data);
