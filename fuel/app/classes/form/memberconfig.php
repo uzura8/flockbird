@@ -70,7 +70,7 @@ class Form_MemberConfig
 		$val = \Validation::forge('member_config_lang');
 
 		$name = 'lang';
-		$value = self::get_value($member_id, $name, self::get_default_value($name));
+		$value = self::get_lang_value($member_id);
 		$options = self::get_lang_options();
 		$val->add($name, term('site.lang', 'site.setting'), array('type' => 'select', 'options' => $options, 'value' => $value))
 				->add_rule('required')
@@ -86,6 +86,19 @@ class Form_MemberConfig
 
 	public static function get_lang_value_label($member_id)
 	{
-		return Arr::get(static::get_lang_options(), static::get_value($member_id, 'lang', static::get_default_value('lang')));
+		return Arr::get(static::get_lang_options(), static::get_lang_value($member_id));
+	}
+
+	public static function get_lang_value($member_id)
+	{
+		if ($lang = Model_MemberConfig::get_value($member_id, 'lang')) return $lang;
+
+		$default_lang = get_default_lang();
+		$member = Model_Member::get_one4id($member_id);
+		if (empty($member->country)) return $default_lang;
+
+		if ($lang = conf('lang.countryLang.'.$member->country, 'i18n')) return $lang;
+
+		return $default_lang;
 	}
 }

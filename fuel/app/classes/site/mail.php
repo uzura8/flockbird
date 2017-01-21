@@ -66,7 +66,10 @@ class Site_Mail
 
 	protected function set_lang($lang = null)
 	{
-		if (! $lang) $lang = get_default_lang();
+		$default_lang = get_default_lang();
+		if (! $lang) $lang = $default_lang;
+		if (! Finder::search('config', 'template_content_'.$lang)) $lang = $default_lang;
+		
 		$this->lang = $lang;
 	}
 

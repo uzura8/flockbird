@@ -440,7 +440,7 @@ $config = array(
 		'isEnabled'  => true,
 	),
 	'member_config_default' => array(
-		'lang' => Util_Lang::get_client_accept_lang() ?: Config::get('language'),
+		'lang' => Util_Lang::get_client_accept_lang() ?: get_default_lang(),
 	),
 	// site_config default
 	'base' => array(

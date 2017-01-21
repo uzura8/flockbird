@@ -242,7 +242,12 @@ class Controller_Auth extends Controller_Site
 				Model_MemberConfig::set_value($member->id, 'terms_un_agreement', 1);
 			}
 			// Register lang setting
-			if (is_enabled_i18n()) Model_MemberConfig::set_value($member->id, 'lang', Site_Lang::get_client_lang(true));
+			if (is_enabled_i18n())
+			{
+				$lang = Site_Lang::get_client_lang(true);
+				if (! $lang) $lang = Form_MemberConfig::get_lang_value($member->id);
+				Model_MemberConfig::set_value($member->id, 'lang', $lang);
+			}
 			// Post timeline
 			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, null, 'member_register', $member->id, $member->created_at);
 			\DB::commit_transaction();

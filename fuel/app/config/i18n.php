@@ -2,10 +2,17 @@
 
 return array(
 	'isEnabled' => true,
+	'defaultLang' => 'ja',
 	'lang' => array(
 		'options' => array(
 			'en' => 'English',
 			'ja' => '日本語',
+		),
+		'countryLang' => array(
+			'US' => 'en',
+			'GB' => 'en',
+			'IN' => 'en',
+			'JP' => 'ja',
 		),
 		'files' => array(
 			'site',
@@ -15,10 +22,9 @@ return array(
 	),
 	'country' => array(
 		'options' => array(
+			'US' => 'United States',
 			'GB' => 'United Kingdom',
 			'IN' => 'India',
-			'TH' => 'Thailand',
-			'US' => 'United States',
 			'JP' => '日本',
 		),
 	),

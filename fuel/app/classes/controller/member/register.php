@@ -83,7 +83,12 @@ class Controller_Member_Register extends Controller_Site
 				$form_member_profile->seve();
 
 				// Register lang setting
-				if (is_enabled_i18n()) Model_MemberConfig::set_value($member->id, 'lang', Site_Lang::get_client_lang(true));
+				if (is_enabled_i18n())
+				{
+					$lang = Site_Lang::get_client_lang(true);
+					if (! $lang) $lang = Form_MemberConfig::get_lang_value($member->id);
+					Model_MemberConfig::set_value($member->id, 'lang', $lang);
+				}
 
 				// Delete member_pre duplicated email
 				if ($member_pres = \Model_MemberPre::query()->where('email', $email)->get())
