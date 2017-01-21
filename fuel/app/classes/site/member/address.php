@@ -17,7 +17,7 @@ class Site_Member_Address
 		if ($addresses['address01']) $items[] = $addresses['address01'];
 		if ($addresses['region'])    $items[] = $addresses['region'];
 		if ($addresses['postal_code']) $items[] = $addresses['postal_code'];
-		if ($addresses['country'] && $country = Util_Lang::get_country_name4code($addresses['country']))
+		if ($addresses['country'] && $country = Util_Lang::get_country_name4code($addresses['country'], false))
 		{
 			$items[] = $country;
 		}
