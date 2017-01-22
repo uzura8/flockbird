@@ -228,7 +228,7 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 <?php if (!$is_simple_list): ?>
 			<ul class="list-inline mt10">
 				<li><small><label><?php echo term('site.registration'); ?>:</label> <?php echo site_get_time($member->created_at) ?></small></li>
-				<?php if ($member->last_login): ?><li><small><label>最終<?php echo term('site.login'); ?>:</label> <?php echo site_get_time($member->last_login) ?></small></li><?php endif; ?>
+				<?php if ($member->last_login): ?><li><small><label><?php echo term('site.last', 'site.login'); ?>:</label> <?php echo site_get_time($member->last_login) ?></small></li><?php endif; ?>
 			</ul>
 <?php endif; ?>
 		</div>
