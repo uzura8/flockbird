@@ -200,6 +200,7 @@ $config = array(
 		'you' => 'あなた',
 		'own_for_member_of' => ':nameさんの:label',
 		'own_for_myself_of' => '自分の:label',
+		'about_hours_ago' => '約:num時間前',
 	),
 	'member' => array(
 		'view' => 'メンバー',

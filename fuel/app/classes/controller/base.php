@@ -76,7 +76,7 @@ class Controller_Base extends Controller_Common
 		list($driver, $user_id) = $this->auth_instance->get_user_id();
 		$this->u = $this->get_current_user($user_id);
 		View::set_global('u', $this->u);
-		Site_Lang::configure_lang();
+		Site_Lang::configure_lang(true, true, $this->u->country);
 	}
 
 	protected function check_required_setting_and_redirect()

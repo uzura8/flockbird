@@ -200,6 +200,7 @@ $config = array(
 		'you' => 'You',
 		'own_for_member_of' => ":name's :label",
 		'own_for_myself_of' => 'My :label',
+		'about_hours_ago' => 'About :num hours ago',
 	),
 	'member' => array(
 		'view' => 'Member',

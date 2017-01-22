@@ -105,7 +105,7 @@ class Controller_Auth extends Controller_Site
 	{
 		Auth::dont_remember_me();
 		Auth::logout();
-		Session::delete('lang');
+		Site_Lang::delete_session();
 		Session::set_flash('message', __('site_message_logout_complete'));
 		Response::redirect('auth/login');
 	}

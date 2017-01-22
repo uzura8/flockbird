@@ -87,7 +87,7 @@ function is_enabled_i18n()
 
 function get_default_lang()
 {
-	return Config::get('i18n.defaultLang', 'ja');
+	return Site_Lang::get_default_lang();
 }
 
 function get_lang($is_check_member_lang_setting = true)

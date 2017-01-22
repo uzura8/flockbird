@@ -29,5 +29,15 @@ class Util_Lang
 
 		return $country;
 	}
+
+	public static function set_locale($locale)
+	{
+		setlocale(LC_ALL, $locale);
+	}
+
+	public static function get_locale()
+	{
+		return setlocale(LC_ALL, 0);
+	}
 }
 

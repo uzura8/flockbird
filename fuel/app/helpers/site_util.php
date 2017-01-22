@@ -277,35 +277,38 @@ function img_size($file_cate, $size, $additional_table = '')
 	return Config::get(sprintf('site.upload.types.img.types.%s.sizes.%s', $file_cate, $size));
 }
 
-function site_get_time($mysql_datetime, $display_type = 'relative', $format = 'Y年n月j日 H:i', $display_both_length = '+7 day', $is_normal_timestamp = false)
+function site_get_time($mysql_datetime, $display_type = 'relative', $format = null, $display_both_length = '+7 day')
 {
 	$accept_display_types = array('relative', 'normal', 'both');
 	if (!in_array($display_type, $accept_display_types)) throw new InvalidArgumentException('Second parameter is invalid.');
+	if (empty($format)) $format = Site_Lang::get_date_format('full');
 
-	$time = $mysql_datetime;
-	if (!$is_normal_timestamp) $time = strtotime($mysql_datetime);
+	$date = Date::create_from_string($mysql_datetime, 'mysql');
+	$time = $date->get_timestamp();
 
-	$normal_time = date($format, $time);
-	if ($display_type == 'normal') return $normal_time;
+	//$current_time = date($format, $time);
+	$current_time = Date::forge()->format($format);
+	//$current_time = $date->set_timezone('Europe/London')->format($format);
+	if ($display_type == 'normal') return $current_time;
 
 	$past_time = sprintf('<span data-livestamp="%s"></span>', date(DATE_ISO8601, $time));
 
 	$display = '';
 	if ($display_type == 'both'
-		&& (is_null($display_both_length) || !is_null($display_both_length) && (time() < strtotime($normal_time.' '.$display_both_length))))
+		&& (is_null($display_both_length) || !is_null($display_both_length) && (time() < strtotime($current_time.' '.$display_both_length))))
 	{
-		$display = sprintf('%s (%s)', $normal_time, $past_time);
+		$display = sprintf('%s (%s)', $current_time, $past_time);
 	}
 	else
 	{
 		if ($time < strtotime('-1 day'))
 		{
-			$display = $normal_time;
+			$display = $current_time;
 		}
 		elseif ($time >= strtotime('-1 day') && $time < strtotime('-1 hour'))
 		{
 			$past_hours = Util_toolkit::get_past_time($time);
-			$display = sprintf('約%d時間前', $past_hours);
+			$display = t('common.about_hours_ago', array('num' => $past_hours));
 		}
 		else
 		{
