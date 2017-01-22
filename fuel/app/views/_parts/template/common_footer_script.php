@@ -115,7 +115,7 @@ var __ = function(line) {
 	var translatedStr = LANG[line];
 	if (! empty(params)) {
 		$.each(params, function(key, val) {
-			translatedStr = translatedStr.replace(new RegExp(key + '\\:', 'g'), val) ;
+			translatedStr = translatedStr.replace(new RegExp('\\:' + key, 'g'), val) ;
 		});
 	}
 	return translatedStr;

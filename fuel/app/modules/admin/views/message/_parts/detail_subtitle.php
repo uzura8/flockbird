@@ -16,12 +16,12 @@ $menus = array(
 	array('icon_term' => 'form.do_send', 'attr' => array(
 		'class' => 'js-simplePost',
 		'data-uri' => sprintf('admin/message/send/%d', $message->id),
-		'data-msg' => sprintf('%sしますか？', term('form.send')),
+		'data-msg' => __('message_send_confirm'),
 	)),
 	array('icon_term' => 'form.do_delete', 'attr' => array(
 		'class' => 'js-simplePost',
 		'data-uri' => 'admin/message/delete/'.$message->id,
-		'data-msg' => '削除します。よろしいですか？',
+		'data-msg' => __('message_delete_confirm'),
 	)),
 );
 echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));

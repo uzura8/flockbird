@@ -281,7 +281,7 @@ function form_anchor_delete($post_uri, $anchor_label = null, $attr = null, $offs
 		'id' => 'btn_delete',
 		'class' => 'btn btn-default btn-danger js-simplePost',
 		'data-uri' => $post_uri,
-		'data-msg' => '削除します。よろしいですか？',
+		'data-msg' => __('message_delete_confirm'),
 	);
 	if (!is_array($attr)) $attr = (array)$attr;
 	$attr = array_merge($attr_default, $attr);

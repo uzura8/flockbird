@@ -9,7 +9,7 @@ $menus = array(
 	array('icon_term' => 'form.do_delete', 'attr' => array(
 		'class' => 'js-simplePost',
 		'data-uri' => 'admin/content/page/delete/'.$content_page->id,
-		'data-msg' => '削除します。よろしいですか？',
+		'data-msg' => __('message_delete_confirm'),
 	)),
 );
 echo btn_dropdown('form.edit', $menus, true, null, null, true, array('class' => 'edit'));

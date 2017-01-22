@@ -306,7 +306,7 @@ function delete_item(uri)
 	var deleteTargetSelector = (arguments.length > 1) ? arguments[1] : '';
 	var id = (arguments.length > 2) ? arguments[2] : 0;
 	var itemTerm = (arguments.length > 3) ? arguments[3] : '';
-	var confirmMsg = (arguments.length > 4 && arguments[4].length) ? arguments[4] : '削除します。よろしいですか?';
+	var confirmMsg = (arguments.length > 4 && arguments[4].length) ? arguments[4] : __('message_delete_confirm');
 	var counterSelector = (arguments.length > 5) ? arguments[5] : '';
 	var callbackFunc = (arguments.length > 6) ? arguments[6] : null;
 
@@ -322,9 +322,9 @@ function deleteExecuteAjax(postUri, deleteTargetSelector)
 	var itemTerm = (arguments.length > 4) ? arguments[4] : '';
 	var counterSelector = (arguments.length > 5) ? arguments[5] : '';
 	var callbackFunc = (arguments.length > 6) ? arguments[6] : null;
-	var msgPrefix = (itemTerm.length > 0) ? itemTerm + 'を' : '';
 	var postData = {_method: 'DELETE'};
 	if (id) postData['id'] = id;
+	var msgDefault = (itemTerm.length > 0) ? __('message_delete_complete_for', {label: itemTerm}) : __('message_delete_complete');
 
 	$.ajax({
 		url : get_url(postUri),
@@ -338,12 +338,12 @@ function deleteExecuteAjax(postUri, deleteTargetSelector)
 			updateCounter(counterSelector, -1);
 			if (callbackFunc && typeof callbackFunc == 'function') callbackFunc();
 			if (is_display_message_success) {
-				var message = !empty(response.message) ? response.message : msgPrefix + '削除しました。';
+				var message = !empty(response.message) ? response.message : msgDefault;
 				showMessage(message);
 			}
 		},
 		error: function(response){
-			showErrorMessage(response, '削除に失敗しました。');
+			showErrorMessage(response, __('message_delete_failed'));
 		}
 	});
 }
@@ -394,7 +394,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 	var callbackFuncsAfterLoadList = (arguments.length > 10) ? arguments[10] : null;
 	var postData          = (arguments.length > 11) ? arguments[11] : {};
 	var isCheckInput      = (arguments.length > 12) ? arguments[12] : true;
-	var postedArticleTerm = (arguments.length > 13) ? arguments[13] : '';
+	var postedArticleTerm = (arguments.length > 13) ? arguments[13] : get_term('comment');
 	var textareaHeight    = (arguments.length > 14) ? arguments[14] : '33px';
 
 	if (GL.execute_flg) return false;
@@ -406,7 +406,6 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 	postData['body'] = body;
 	postData = set_token(postData);
 
-	if (!postedArticleTerm) postedArticleTerm = get_term('comment');
 	var trigerSelectorHtml = (trigerSelector) ? $(trigerSelector).html() : '';
 
 	$.ajax({
@@ -425,7 +424,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 			if (trigerSelector) $(trigerSelector).html(trigerSelectorHtml);
 		},
 		success: function(response){
-			var msg = !empty(response.message) ? response.message : postedArticleTerm + 'を投稿しました。';
+			var msg = !empty(response.message) ? response.message : __('message_post_for', {label: postedArticleTerm});
 			showMessage(msg);
 			loadList(getUri, listSelector, '', position, getData, null, templateSelector, counterSelector, callbackFuncsAfterLoadList);
 			if (!templateSelector) updateCounter(counterSelector);
@@ -438,7 +437,7 @@ function postComment(postUri, textareaSelector, getUri, listSelector)
 			if (!empty(response.shareFacebook)) popupFacebookShareDialog(response.shareFacebook.obj);
 		},
 		error: function(response){
-			showMessage(getErrorMessage(response, postedArticleTerm + 'の投稿に失敗しました。'));
+			showMessage(getErrorMessage(response, __('message_post_failed_for', {label: postedArticleTerm})));
 		}
 	});
 }
@@ -502,7 +501,7 @@ function update_public_flag(selfDomElement) {
 	var public_flag_original = $(selfDomElement).data('public_flag_original');
 
 	if (is_expanded_public_range(public_flag_original, public_flag)) {
-		apprise('公開範囲が広がります。実行しますか？', {'confirm':true}, function(r) {
+		apprise(__('public_flag_expand_confirm'), {'confirm':true}, function(r) {
 			if (r == true) check_is_update_children_public_flag_before_update(selfDomElement);
 		});
 	} else {
@@ -519,7 +518,7 @@ function check_is_update_children_public_flag_before_update(selfDomElement) {
 	var child_model = $(selfDomElement).data('child_model') ? $(selfDomElement).data('child_model') : '';
 
 	if (have_children_public_flag) {
-		apprise(get_term(child_model) + 'の' + get_term('public_flag') + 'も変更しますか？', {'verify':true}, function(r) {
+		apprise(__('public_flag_confirm_change_with_children_of', {label: get_term(child_model)}), {'verify':true}, function(r) {
 			if (r == true) {
 				update_public_flag_execute(selfDomElement, 1);
 			} else {
@@ -577,7 +576,7 @@ function update_public_flag_execute(selfDomElement) {
 		success: function(result, status, xhr){
 			$(buttonElement).html(result);
 			$(buttonElement).removeClass('open');
-			var msg = is_no_msg ? '' : get_term('public_flag') + 'を変更しました。';
+			var msg = is_no_msg ? '' : __('message_change_complete_for', {label: get_term('public_flag')});
 			if (is_refresh) {
 				var query_strring = '';
 				if (msg.length > 0) {
@@ -594,7 +593,7 @@ function update_public_flag_execute(selfDomElement) {
 			//var resData = $.parseJSON(result.responseText);
 			//var message = resData.error.message ? resData.error.message : get_term('public_flag') + 'の変更に失敗しました。';
 			//$.jGrowl(get_error_message(result['status'], message));
-			$.jGrowl(get_error_message(result['status'], get_term('public_flag') + 'の投稿に失敗しました。'));
+			$.jGrowl(get_error_message(result['status'], __('message_change_failed_for', {label: get_term('public_flag')})));
 		}
 	});
 }
@@ -641,7 +640,7 @@ function get_public_flag_select_button_html(selected_value) {
 function setup_simple_validation_required_popover(input_atter) {
 	$(input_atter).popover({
 		placement: 'bottom',
-		content: 'このフィールドは必須入力です。',
+		content: __('form_required'),
 		trigger: 'manual',
 		animation: true,
 		delay: { show: 500, hide: 100 }
@@ -712,8 +711,8 @@ function load_masonry_item(container_attribute, item_attribute)
 
 function sendArticle(btnObj, postData, post_uri, parent_box_attr) {
 	var add_before  = (arguments.length > 4 && arguments[4]) ? arguments[4] : false;
-	var msgSuccess = (arguments.length > 5 && arguments[5]) ? arguments[5] : '投稿に成功しました。';
-	var msgError   = (arguments.length > 6 && arguments[6]) ? arguments[6] : '投稿に失敗しました。';
+	var msgSuccess = (arguments.length > 5 && arguments[5]) ? arguments[5] : __('message_post_complete');
+	var msgError   = (arguments.length > 6 && arguments[6]) ? arguments[6] : __('message_post_failed');
 
 	var btn_html = $(btnObj).html();
 	$.ajax({
@@ -798,11 +797,11 @@ function update_like_status(selfDomElement) {
 		success: function(result){
 			if (result.result) {
 				selfDomElement_html = get_term('undo_like');
-				messageDefault = get_term('like') + 'しました。';
+				messageDefault = __('liked');
 			} else {
 				$(selfDomElement).removeClass('btn-primary');
 				selfDomElement_html = get_term('do_like');
-				messageDefault = get_term('like') + 'を取り消しました。';
+				messageDefault = __('canceled_like');
 			}
 			if (counterSelector) $(counterSelector).html(result.count);
 			$(selfDomElement).html(selfDomElement_html);
@@ -810,7 +809,7 @@ function update_like_status(selfDomElement) {
 		},
 		error: function(result){
 			$(selfDomElement).html(selfDomElement_html);
-			showErrorMessage(result, get_term('like') + 'に失敗しました。');
+			showErrorMessage(result, __('failed_to_like'));
 		}
 	});
 }
@@ -935,8 +934,8 @@ function execute_simple_post(selfDomElement) {
 
 	var id = $(selfDomElement).data('id') ? parseInt($(selfDomElement).data('id')) : 0;
 	if (id > 0) post_data['id'] = id;
-	var msg_success = '作成しました。';
-	var msg_error = '作成に失敗しました。';
+	var msg_success = __('message_create_complete');
+	var msg_error = __('message_create_failed');
 	sendArticle(selfDomElement, post_data, post_uri, '#' + parent_box, false, msg_success, msg_error);
 }
 
@@ -1079,10 +1078,10 @@ function popupFacebookShareDialog(obj)
 	var facebookObj = arrayMerge({method: 'feed'}, obj);
 	function callback(response) {
 		if (response && response.post_id) {
-			showMessage('Facebook に投稿しました。');
+			showMessage(__('message_post_to', {object: 'Facebook'}));
 		}
 	}
-	apprise('Facebook に投稿しますか？', {'confirm':true}, function(r) {
+	apprise(__('message_post_confirm_to', {object: 'Facebook'}), {'confirm':true}, function(r) {
 		if (r == true) FB.ui(facebookObj, callback);
 	});
 }

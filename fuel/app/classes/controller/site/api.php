@@ -181,7 +181,7 @@ class Controller_Site_Api extends Controller_Base_Site
 					'is_simple_list' => true,
 					'list_id' => 'liked_member_list_'.$parent_id,
 					'get_uri' => Site_Util::get_api_uri_get_liked_members(Site_Model::convert_table2controller_path($parent_table), $parent_id),
-					'no_data_message' => sprintf('%sしている%sはいません', term('form.like'), term('member.view')),
+					'no_data_message' => __('nobody_liked'),
 				);
 				if ($since_id) $data['since_id'] = $since_id;
 			}
@@ -230,7 +230,7 @@ class Controller_Site_Api extends Controller_Base_Site
 					$menus[] = array('icon_term' => 'form.do_publish', 'attr' => array(
 						'class' => 'js-simplePost',
 						'data-uri' => Site_Util::get_action_uri($table, $id, 'publish'),
-						'data-msg' => term('form.publish').'しますか？',
+						'data-msg' => __('message_publish_confirm'),
 					));
 				}
 				if ($is_enabled_to_edit)
@@ -242,7 +242,7 @@ class Controller_Site_Api extends Controller_Base_Site
 					$menus[] = array('icon_term' => 'form.do_delete', 'attr' => array(
 						'class' => $is_detail ? 'js-simplePost' : 'js-ajax-delete',
 						'data-uri' => $is_detail ? Site_Util::get_action_uri($table, $id, 'delete') : $delete_api_uri,
-						'data-msg' => term('form.delete').'します。よろしいですか。',
+						'data-msg' => __('message_delete_confirm'),
 						'data-parent' => sprintf('#%s%d', $parent_selector_prefix ?: 'article_', $id),
 					));
 				}
@@ -382,7 +382,7 @@ class Controller_Site_Api extends Controller_Base_Site
 			$get_count_method = 'get_count4'.$parent_id_prop;
 			$data = array(
 				'result'  => (int)$is_liked,
-				'message' => sprintf('%s%s。', term('form.like'), $is_liked ? 'しました' : 'を取り消しました'),
+				'message' => __($is_liked ? 'liked' : 'canceled_like'),
 				'count'   => $like_model::$get_count_method($parent_obj->id),
 			);
 
@@ -414,7 +414,7 @@ class Controller_Site_Api extends Controller_Base_Site
 
 			// Lazy validation
 			$body = trim(\Input::post('body', ''));
-			if (!strlen($body)) throw new \ValidationFailedException(sprintf('%sの入力は%sです。', term('form.comment'), term('form.required')));
+			if (!strlen($body)) throw new \ValidationFailedException(__('form_required_for', array('label' => t('form.comment'))));
 
 			if ($parent_table == 'timeline' && \Timeline\Site_Util::check_type_for_post_foreign_table_comment($parent_obj->type))
 			{

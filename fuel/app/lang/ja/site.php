@@ -45,6 +45,14 @@ return array(
 	'member_error_album_image_disable_to_set_as_profile_image' => 'その写真はプロフィール写真に設定できません。',
 	// member relation
 	'member_message_follow_from_to' => ':subjectが:objectをフォローしました。',
+	// Public flag
+	'public_flag_expand_confirm' => '公開範囲が広がります。実行しますか？',
+	'public_flag_confirm_change_with_children_of' => ':labelの公開範囲も変更しますか？',
+	// Like
+	'liked' => 'イイねしました。',
+	'canceled_like' => 'イイねを取り消しました。',
+	'failed_to_like' => 'イイねに失敗しました。',
+	'nobody_liked' => 'イイねしているメンバーはいません。',
 	// notice
 	'notice_update_read_already' => '既読にしました。',
 	// report

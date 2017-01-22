@@ -45,6 +45,13 @@ return array(
 	'member_error_album_image_disable_to_set_as_profile_image' => 'Disabled to set album image as profile image. ',
 	// member relation
 	'member_message_follow_from_to' => ':subject followed :object. ',
+	// Public flag
+	'public_flag_expand_confirm' => 'The scope of publication expands. Do you want to do it? ',
+	'public_flag_confirm_change_with_children_of' => 'Do you also change the scope of :label publication? ',
+	// Like
+	'liked' => 'Liked. ',
+	'canceled_like' => 'Canceled the Like. ',
+	'nobody_liked' => 'No members liked. ',
 	// notice
 	'notice_update_read_already' => 'Updated status to read. ',
 	// report

@@ -472,15 +472,15 @@ class Site_Util
 		{
 			case 'form.delete':
 			case 'form.do_delete':
-				return '削除します。よろしいですか？';
+				return __('message_delete_confirm');
 				break;
 			case 'form.publish':
 			case 'form.do_publish':
-				return term('form.publish').'します。よろしいですか？';
+				return __('message_publish_confirm');
 				break;
 			case 'form.unpublish':
 			case 'form.do_unpublish':
-				return term('form.unpublish').'にします。よろしいですか？';
+				return __('message_unpublish_confirm');
 				break;
 		}
 
