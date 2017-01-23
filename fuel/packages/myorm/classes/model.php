@@ -700,6 +700,19 @@ class Model extends \Orm\Model
 		return static::get_enum_key4value($prop, $this->{$prop});
 	}
 
+	public function get_enum_label($prop, $is_return_bool = false)
+	{
+		$property = static::get_property($prop);
+		$label = \Arr::get($property['form']['options'], $this->{$prop});
+		if (is_null($label))
+		{
+			if ($is_return_bool) return false;
+			throw new \InvalidArgumentException('First parameter is invalid.');
+		}
+			
+		return $label;
+	}
+
 	public function check_enum_value4key($prop, $key)
 	{
 		if (is_null($this->{$prop})) return false;
