@@ -635,4 +635,16 @@ class Site_Util
 				return FBD_PUBLIC_FLAG_FRIEND;
 		}
 	}
+
+	public static function get_moment_js_locale_file()
+	{
+		$locale_default = conf('locale.default', 'i18n');
+		if (! is_enabled_i18n()) return 'moment_locale/ja.js';
+
+		$locale = Util_Lang::get_locale();
+		$confs = conf('vendor.moment_js.locales', 'i18n');
+		$file_name = !empty($confs[$locale]) ? $confs[$locale].'.js' : $confs[$locale_default].'.js';
+
+		return 'moment_locale/'.$file_name;
+	}
 }

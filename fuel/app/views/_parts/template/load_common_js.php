@@ -12,17 +12,19 @@ if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::b
 </script>
 
 <?php
-Asset::js(array(
+$js_files = array(
 	'bootstrap.js',
 	'apprise-1.5.full.js',
 	'jquery.autogrow-textarea.js',
 	'jquery.jgrowl.js',
 	'moment.js',
-	'moment.locale_ja.js',
 	'livestamp.js',
 	'js-url/js-url.js',
 	'util.js',
-), null, 'js_common', false, true);
+);
+$moment_local_file = Site_Util::get_moment_js_locale_file();
+Arr::insert_after_value($js_files, $moment_local_file, 'moment.js');
+Asset::js($js_files, null, 'js_common', false, true);
 echo Asset::render('js_common', false, 'js');
 ?>
 

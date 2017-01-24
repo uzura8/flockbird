@@ -53,6 +53,16 @@ return array(
 		),
 		'isForceDispGMT' => true,
 	),
+	'vendor' => array(
+		'moment_js' => array(
+			'locales' => array(
+				'en_US' => 'en',
+				'en_GB' => 'en-gb',
+				'en_IN' => 'en-gb',
+				'ja_JP' => 'ja',
+			),
+		),
+	),
 	'adminDefaultLang' => 'ja',
 );
 
