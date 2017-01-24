@@ -86,19 +86,20 @@ class Form_MemberConfig
 
 	public static function get_lang_value_label($member_id)
 	{
-		return Arr::get(static::get_lang_options(), static::get_lang_value($member_id));
+		if (! $lang = Model_MemberConfig::get_value($member_id, 'lang')) return '';
+
+		return Arr::get(static::get_lang_options(), $lang, '');
 	}
 
-	public static function get_lang_value($member_id)
+	public static function get_lang_value($member_id, $is_return_default_lang = true)
 	{
 		if ($lang = Model_MemberConfig::get_value($member_id, 'lang')) return $lang;
 
 		$default_lang = get_default_lang();
-		$member = Model_Member::get_one4id($member_id);
-		if (empty($member->country)) return $default_lang;
-
+		if (! $member = Model_Member::get_one4id($member_id)) return $is_return_default_lang ? $default_lang : '';
+		if (empty($member->country)) return $is_return_default_lang ? $default_lang : '';
 		if ($lang = conf('lang.countryLang.'.$member->country, 'i18n')) return $lang;
 
-		return $default_lang;
+		return $is_return_default_lang ? $default_lang : '';
 	}
 }

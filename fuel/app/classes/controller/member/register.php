@@ -85,8 +85,9 @@ class Controller_Member_Register extends Controller_Site
 				// Register lang setting
 				if (is_enabled_i18n())
 				{
-					$lang = Site_Lang::get_client_lang(true);
-					if (! $lang) $lang = Form_MemberConfig::get_lang_value($member->id);
+					$lang = Form_MemberConfig::get_lang_value($member->id, false);
+					if (! $lang) $lang = Site_Lang::get_client_lang(true);
+					if (! $lang) $lang = get_default_lang();
 					Model_MemberConfig::set_value($member->id, 'lang', $lang);
 				}
 
