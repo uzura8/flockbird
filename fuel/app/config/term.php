@@ -173,6 +173,11 @@ $config = array(
 		'confirmation_code' => '確認用コード',
 	),
 	'common' => array(
+		'delimitter' => array(
+			'words' => '',
+			'normal' => 'と',
+			'last' => 'と',
+		),
 		'info' => '情報',
 		'request' => 'リクエスト',
 		'invalid' => '不正な',
@@ -201,6 +206,7 @@ $config = array(
 		'own_for_member_of' => ':nameさんの:label',
 		'own_for_myself_of' => '自分の:label',
 		'about_hours_ago' => '約:num時間前',
+		'other_members_count' => '他:num人',
 	),
 	'member' => array(
 		'view' => 'メンバー',

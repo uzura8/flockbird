@@ -23,13 +23,13 @@ Handlebars.registerHelper('getMessageInfo', function(member_name, type, subject)
 	switch (type)
 	{
 		case '1':
-			return '<h5>' + member_name + ' から' + get_term('messageTypeMember') + 'が届きました。</h5>';
+			return '<h5>' + __('message_recieve_member_message_from', {name: member_name}) + '</h5>';
 		case '2':
-			return '<h5>' + member_name + ' から' + get_term('messageTypeGroup') + 'が届きました。</h5>';
+			return '<h5>' + __('message_recieve_group_message_from', {name: member_name}) + '</h5>';
 		case '7':
 			return '<h4>' + subject + ' <small>' + get_term('messageTypeSiteInfoAll') + '</small></h4>';
 		case '8':
-			return '<h4>' + subject + ' <small>' + get_term('messageTypeSiteInfoAll') + '</small></h4>';
+			return '<h4>' + subject + ' <small>' + get_term('messageTypeSiteInfo') + '</small></h4>';
 		case '9':
 			return '<h4>' + subject + ' <small>' + get_term('messageTypeSystemInfo') + '</small></h4>';
 	}

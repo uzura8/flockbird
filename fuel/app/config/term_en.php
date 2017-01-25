@@ -173,6 +173,11 @@ $config = array(
 		'confirmation_code' => 'Verification Code',
 	),
 	'common' => array(
+		'delimitter' => array(
+			'words' => ' ',
+			'normal' => ', ',
+			'last' => ' and ',
+		),
 		'info' => 'Information',
 		'request' => 'Request',
 		'invalid' => 'Invalid',
@@ -201,6 +206,7 @@ $config = array(
 		'own_for_member_of' => ":name's :label",
 		'own_for_myself_of' => 'My :label',
 		'about_hours_ago' => 'About :num hours ago',
+		'other_members_count' => 'other :num members',
 	),
 	'member' => array(
 		'view' => 'Member',

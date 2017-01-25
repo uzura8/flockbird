@@ -47,6 +47,7 @@ return array(
 	'member_message_follow_from_to' => ':subjectが:objectをフォローしました。',
 	// Public flag
 	'public_flag_expand_confirm' => '公開範囲が広がります。実行しますか？',
+	'public_flag_expand_confirm' => '公開範囲が広がります。実行しますか？',
 	'public_flag_confirm_change_with_children_of' => ':labelの公開範囲も変更しますか？',
 	// Like
 	'liked' => 'イイねしました。',
@@ -57,5 +58,8 @@ return array(
 	'notice_update_read_already' => '既読にしました。',
 	// report
 	'report_error_required_report_about' => '通報内容を入力してください。',
+	// message
+	'message_recieve_member_message_from' => ':nameからメッセージが届きました。',
+	'message_recieve_group_message_from' => ':nameからグループメッセージが届きました。',
 );
 

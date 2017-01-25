@@ -16,11 +16,11 @@ function get_token_key() {return '<?php echo Config::get('security.csrf_token_ke
 function get_token() {return '<?php echo Util_security::get_csrf(); ?>';}
 function is_sp() {return <?php echo (IS_SP)? 'true' : 'false'; ?>;}
 function is_site() {return <?php echo (IS_ADMIN)? 'false' : 'true'; ?>;}
+
 function get_term(key) {
+	var params = (arguments.length > 1) ? arguments[1] : {};
+	var	termStr;
 	var terms = {
-<?php if (conf('memberRelation.follow.isEnabled')): ?>
-		'follow': '<?php echo term('follow'); ?>',
-<?php endif; ?>
 <?php if (conf('like.isEnabled')): ?>
 		'like': '<?php echo term('form.like'); ?>',
 		'do_like': '<?php echo term('form.do_like'); ?>',
@@ -39,6 +39,7 @@ function get_term(key) {
 		'album': '<?php echo term('album'); ?>',
 		'album_image': '<?php echo term('album_image'); ?>',
 		'add_picture': '<?php echo term('form.add_picture'); ?>',
+		'picture': '<?php echo term('site.picture'); ?>',
 <?php endif; ?>
 <?php if (is_enabled('timeline')): ?>
 		'timeline': '<?php echo term('timeline'); ?>',
@@ -48,8 +49,6 @@ function get_term(key) {
 <?php endif; ?>
 <?php if (is_enabled('message')): ?>
 		'message': '<?php echo term('message.view'); ?>',
-		'messageTypeMember': '<?php echo term('message.types.label.member'); ?>',
-		'messageTypeGroup': '<?php echo term('message.types.label.group'); ?>',
 		'messageTypeSiteInfo': '<?php echo term('message.types.label.site_info'); ?>',
 		'messageTypeSiteInfoAll': '<?php echo term('message.types.label.site_info_all'); ?>',
 		'messageTypeSystemInfo': '<?php echo term('message.types.label.system_info'); ?>',
@@ -64,9 +63,20 @@ function get_term(key) {
 		'auth': '<?php echo term('site.auth'); ?>',
 		'info': '<?php echo term('common.info'); ?>',
 		'request': '<?php echo term('common.request'); ?>',
-		'invalid': '<?php echo term('common.invalid'); ?>'
+		'invalid': '<?php echo term('common.invalid'); ?>',
+		'you': '<?php echo term('common.you'); ?>',
+		'other_members_count': '<?php echo term('common.other_members_count'); ?>',
+		'delimitter_words': '<?php echo term('common.delimitter.words'); ?>',
+		'delimitter_normal': '<?php echo term('common.delimitter.normal'); ?>',
+		'delimitter_last': '<?php echo term('common.delimitter.last'); ?>'
 	};
-	return terms[key];
+	termStr = terms[key];
+	if (! empty(params)) {
+		$.each(params, function(key, val) {
+			termStr = termStr.replace(new RegExp('\\:' + key, 'g'), val);
+		});
+	}
+	return termStr;
 }
 function get_config(key) {
 	var config = {
@@ -115,7 +125,7 @@ var __ = function(line) {
 	var translatedStr = LANG[line];
 	if (! empty(params)) {
 		$.each(params, function(key, val) {
-			translatedStr = translatedStr.replace(new RegExp('\\:' + key, 'g'), val) ;
+			translatedStr = translatedStr.replace(new RegExp('\\:' + key, 'g'), val);
 		});
 	}
 	return translatedStr;

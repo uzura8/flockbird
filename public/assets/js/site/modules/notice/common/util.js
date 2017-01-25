@@ -64,17 +64,22 @@ function loadNotice() {
 Handlebars.registerHelper('getNoticeInfo', function(foreign_table, type, members, members_count) {
 	var outputMemberCount = members_count - members.length;
 	if (outputMemberCount < 0) outputMemberCount = 0;
-	var output = '';
+	var subject = '';
+	var count = members.length;
 	$.each(members, function(i, val) {
-		if (output.length) output += ' と ';
 		if (empty(val)) return;
-		output += val.name;
+		if (subject.length) {
+			if (i == count - 1 && empty(outputMemberCount)) {
+				subject += get_term('delimitter_last');
+			} else {
+				subject += get_term('delimitter_normal');
+			}
+		}
+		subject += val.name;
 	});
-	if (!output.length) output = get_term('left_member');
-	if (outputMemberCount) output += ' 他' + outputMemberCount + '人';
-	output += ' が';
-	output += convertNoticeAction(foreign_table, type);
-	return output;
+	if (!subject.length) subject = get_term('left_member');
+	if (outputMemberCount) subject += get_term('delimitter_last') + get_term('other_members_count', {num: outputMemberCount});
+	return convertNoticeAction(foreign_table, type, subject);
 });
 
 Handlebars.registerHelper('getImgUri', function(fileName, size) {
@@ -104,18 +109,33 @@ function getNoticeContentUriMiddlePath(foreign_table)
 	return '';
 }
 
-function convertNoticeAction(foreign_table, type)
+function convertNoticeAction(foreign_table, type, subject)
 {
+	var label;
 	switch (type)
 	{
+		case '3':
+			return __('message_comment_from_to', {'subject': subject, 'object': get_term('you')});
+
+		case '4':
+			return __('message_like_from_to', {'subject': subject, 'object': get_term('you')});
+
+		case '5':
+			if (foreign_table == 'album') {
+				return __('message_add_for_from_to', {'subject': subject, 'object': get_term('album'), 'label': get_term('picture')});
+			}
+			return __('message_add_from_to', {'subject': subject, 'object': get_term('picture')});
+
 		case '6':
-			return 'あなた宛に' + convertNoticeForeignTable(foreign_table) + 'を投稿しました。';
+			return __('message_post_for_from_to', {'subject': subject, 'object': get_term('you'), label: convertNoticeForeignTable(foreign_table)});
+
 		case '7':
-			return 'あなた宛に' + convertNoticeForeignTable(foreign_table) + get_term('comment') + 'を投稿しました。';
+			label = convertNoticeForeignTable(foreign_table) + get_term('delimitter_words') + get_term('comment');
+			return __('message_post_for_from_to', {'subject': subject, 'object': get_term('you'), 'label': label});
+
 		case '8':
-			return 'あなたを' + get_term('follow') + 'しました。';
+			return __('member_message_follow_from_to', {'subject': subject, 'object': get_term('you')});
 	}
-	return convertNoticeForeignTable(foreign_table) + 'に' + convertNoticeType(foreign_table, type) + 'しました。';
 }
 
 function convertNoticeForeignTable(foreign_table)
@@ -133,23 +153,9 @@ function convertNoticeForeignTable(foreign_table)
 		case 'note':
 		case 'album':
 		case 'album_image':
-			var suffix = (isComment) ? get_term('comment') : '';
+			var suffix = (isComment) ? get_term('delimitter_words') + get_term('comment') : '';
 			return get_term(foreign_table) + suffix;
 	}
 	return '';
 }
 
-function convertNoticeType(foreign_table, type)
-{
-	switch (type)
-	{
-		case '3':
-			return get_term('comment');
-		case '4':
-			return get_term('like');
-		case '5':
-			if (foreign_table == 'album') return get_term('add_picture');
-			return '追加';
-	}
-	return '';
-}

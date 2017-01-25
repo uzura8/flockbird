@@ -50,7 +50,7 @@ return array(
 	'message_post_for' => ':labelを投稿しました。',
 	'message_post_to' => ':objectに投稿しました。',
 	'message_post_confirm_to' => ':objectに投稿しますか？',
-	'message_post_for_from_to' => ':subjectが :objectに:labelを投稿しました。',
+	'message_post_for_from_to' => ':subjectが:objectに:labelを投稿しました。',
 	'message_post_failed' => '投稿に失敗しました。',
 	'message_post_failed_for' => ':labelの投稿に失敗しました。',
 	'message_post_complete' => '投稿しました。',

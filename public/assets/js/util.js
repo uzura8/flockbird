@@ -42,6 +42,7 @@ function empty(data) {
 	if (data === '') return true;
 	if (data === 0) return true;
 	if (data === '0') return true;
+	if (data === {}) return true;
 	return false;
 }
 
