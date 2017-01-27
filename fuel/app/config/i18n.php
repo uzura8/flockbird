@@ -44,6 +44,7 @@ return array(
 		),
 	),
 	'date' => array(
+		'isForceDispGMT' => false,
 		'defaultFormat' => 'us',
 		'localeFormat' => array(
 			'en_US' => 'us',
@@ -51,7 +52,6 @@ return array(
 			'en_IN' => 'eu',
 			'ja_JP' => 'ja',
 		),
-		'isForceDispGMT' => true,
 	),
 	'vendor' => array(
 		'moment_js' => array(

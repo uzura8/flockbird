@@ -277,42 +277,45 @@ function img_size($file_cate, $size, $additional_table = '')
 	return Config::get(sprintf('site.upload.types.img.types.%s.sizes.%s', $file_cate, $size));
 }
 
-function site_get_time($mysql_datetime, $display_type = 'relative', $format = null, $display_both_length = '+7 day')
+function site_get_time($mysql_datetime, $display_type = 'relative', $format = null, $display_both_term_days = 7)
 {
 	$accept_display_types = array('relative', 'normal', 'both');
 	if (!in_array($display_type, $accept_display_types)) throw new InvalidArgumentException('Second parameter is invalid.');
+
+	$is_disp_gmt = conf('date.isForceDispGMT', 'i18n', false);
 	if (empty($format)) $format = Site_Lang::get_date_format('full');
+	if ($is_disp_gmt) $format .= '_tz';
 
-	$date = Date::create_from_string($mysql_datetime, 'mysql');
-	$time = $date->get_timestamp();
+	$day_seconds = 60 * 60 * 24;
+	$target_time = strtotime($mysql_datetime);
+	$target_obj = Date::forge($target_time, $is_disp_gmt ? 'Europe/London' : null);
+	$current_obj = Date::forge();
+	$current_time = $current_obj->get_timestamp();
 
-	//$current_time = date($format, $time);
-	$current_time = Date::forge()->format($format);
-	//$current_time = $date->set_timezone('Europe/London')->format($format);
-	if ($display_type == 'normal') return $current_time;
+	if ($display_type == 'normal') return $target_obj->format($format);
 
-	$past_time = sprintf('<span data-livestamp="%s"></span>', date(DATE_ISO8601, $time));
-
+	$past_time_tag = sprintf('<span data-livestamp="%s"></span>', date(DATE_ISO8601, $target_time));
 	$display = '';
 	if ($display_type == 'both'
-		&& (is_null($display_both_length) || !is_null($display_both_length) && (time() < strtotime($current_time.' '.$display_both_length))))
+		&& (is_null($display_both_term_days)
+			|| !is_null($display_both_term_days) && $current_time < ($target_time + $display_both_term_days * $day_seconds)))
 	{
-		$display = sprintf('%s (%s)', $current_time, $past_time);
+		$display = sprintf('%s (%s)', $target_obj->format($format), $past_time_tag);
 	}
 	else
 	{
-		if ($time < strtotime('-1 day'))
+		if ($target_time < ($current_time - $day_seconds * 1))
 		{
-			$display = $current_time;
+			$display = $target_obj->format($format);
 		}
-		elseif ($time >= strtotime('-1 day') && $time < strtotime('-1 hour'))
+		elseif ($target_time >= ($current_time - $day_seconds * 1) && $target_time < ($current_time - 60 * 60))
 		{
-			$past_hours = Util_toolkit::get_past_time($time);
+			$past_hours = Util_toolkit::get_past_time($target_time);
 			$display = t('common.about_hours_ago', array('num' => $past_hours));
 		}
 		else
 		{
-			$display = $past_time;
+			$display = $past_time_tag;
 		}
 	}
 
