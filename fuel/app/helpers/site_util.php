@@ -277,13 +277,13 @@ function img_size($file_cate, $size, $additional_table = '')
 	return Config::get(sprintf('site.upload.types.img.types.%s.sizes.%s', $file_cate, $size));
 }
 
-function site_get_time($mysql_datetime, $display_type = 'relative', $format = null, $display_both_term_days = 7)
+function site_get_time($mysql_datetime, $display_type = 'relative', $format_suffix = 'full', $display_both_term_days = 7)
 {
 	$accept_display_types = array('relative', 'normal', 'both');
 	if (!in_array($display_type, $accept_display_types)) throw new InvalidArgumentException('Second parameter is invalid.');
 
 	$is_disp_gmt = conf('date.isForceDispGMT', 'i18n', false);
-	if (empty($format)) $format = Site_Lang::get_date_format('full');
+	$format = Site_Lang::get_date_format($format_suffix);
 	if ($is_disp_gmt) $format .= '_tz';
 
 	$day_seconds = 60 * 60 * 24;

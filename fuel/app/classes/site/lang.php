@@ -99,7 +99,7 @@ class Site_Lang
 
 	public static function get_date_format($suffix = null)
 	{
-		$accept_suffixes = array('full', 'short', 'named');
+		$accept_suffixes = array('full', 'short', 'named', 'full_sec');
 		if ($suffix && ! in_array($suffix, $accept_suffixes)) $suffix = null;
 
 		$locale = Util_Lang::get_locale();
