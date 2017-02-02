@@ -46,7 +46,7 @@ if (!empty($start_id)) $block_attrs['data-start_id'] = $start_id;
 <?php if (!empty($is_modal)): ?>
 <hr>
 <div class="clearfix">
-	<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+	<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><?php echo t('form.close'); ?></button>
 </div>
 <?php endif; ?>
 

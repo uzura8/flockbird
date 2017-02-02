@@ -30,7 +30,7 @@ if (!isset($is_display_footer_close_btn)) $is_display_footer_close_btn = false;
 <?php if ($is_display_footer_close_btn || !empty($footer_btn_params)): ?>
 			<div class="modal-footer">
 <?php 	if ($is_display_footer_close_btn): ?>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo t('form.close'); ?></button>
 <?php 	endif; ?>
 <?php 	if (!empty($footer_btn_params)): ?>
 				<?php echo call_user_func_array('btn', $footer_btn_params); ?>

@@ -46,7 +46,7 @@ if ($confs = conf('report.fields.post', 'contact'))
 
 <div class="modal-footer">
 	<div class="clearfix">
-		<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><?php echo t('form.close'); ?></button>
 	</div>
 </div>
 
