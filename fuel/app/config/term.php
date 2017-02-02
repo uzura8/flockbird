@@ -106,6 +106,7 @@ $config = array(
 		'selected' => '選択した',
 		'sort' => '並べ替え',
 		'characters_or_more' => ':num文字以上',
+		'close' => '閉じる',
 	),
 	'site' => array(
 		'view' => 'サイト',

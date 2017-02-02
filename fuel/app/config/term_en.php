@@ -106,6 +106,7 @@ $config = array(
 		'selected' => 'Selected',
 		'sort' => 'Sort by',
 		'characters_or_more' => ':num characters or more',
+		'close' => 'Close',
 	),
 	'site' => array(
 		'view' => 'Site',

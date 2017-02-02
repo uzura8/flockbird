@@ -87,6 +87,7 @@ $config = array(
 			'prefix' => 'fa fa-',
 		),
 		'cancel' => 'remove',
+		'close' => 'remove',
 	),
 	'site' => array(
 		//'view' => 'サイト',
