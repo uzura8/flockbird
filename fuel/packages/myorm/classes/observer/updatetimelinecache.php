@@ -8,7 +8,7 @@ class Observer_UpdateTimelineCache extends \Orm\Observer
 		$props = $class::observers(get_class($this));
 	}
 
-	public function after_update(\Orm\Model $obj)
+	public function before_update(\Orm\Model $obj)
 	{
 		if (!$timeline_caches = \Timeline\Model_TimelineCache::get4timeline_id($obj->id)) return;
 

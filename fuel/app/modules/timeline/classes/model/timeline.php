@@ -183,7 +183,7 @@ class Model_Timeline extends \MyOrm\Model
 		),
 		// update 時に timeline_cache の特定のカラムのみ更新する
 		'MyOrm\Observer_UpdateTimelineCache' => array(
-			'events' => array('after_update'),
+			'events' => array('before_update'),
 		),
 		// insert 時に紐づく memberfollow_timeline を insert する
 		'MyOrm\Observer_InsertRelationialTable' => array(
