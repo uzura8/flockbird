@@ -26,19 +26,22 @@ class Site_Lang
 		return $default_lang;
 	}
 
-	public static function configure_lang($is_check_member_lang = true, $is_check_session_lang = true, $country = null)
+	public static function configure_lang($is_check_member_lang = true, $is_check_session_lang = true, $country = null, $is_first_setup = false)
 	{
 		$lang = static::get_lang($is_check_member_lang, $is_check_session_lang);
-		static::reset_lang($lang, $is_check_session_lang, $country);
+		static::reset_lang($lang, $is_check_session_lang, $country, $is_first_setup);
 		if ($is_check_session_lang && $country) static::set_session('country', $country);
 	}
 
-	public static function reset_lang($lang, $is_set_session = true, $country = null)
+	public static function reset_lang($lang, $is_set_session = true, $country = null, $is_first_setup = false)
 	{
 		if ($is_set_session) static::set_session('lang', $lang);
-		Lang::set_lang($lang, true);
-		static::load_lang_files();
-		static::load_configs_related_lang($lang);
+		if ($is_first_setup || $lang != Lang::get_lang())
+		{
+			Lang::set_lang($lang, true);
+			static::load_lang_files();
+			static::load_configs_related_lang($lang);
+		}
 		if ($is_set_session) static::set_locale($lang, $country);
 	}
 

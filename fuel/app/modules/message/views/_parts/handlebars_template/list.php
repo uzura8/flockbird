@@ -20,5 +20,5 @@
 {{/if}}
 {{/if}}
 {{else}}
-<?php echo __('message_no_data_for', array('label' => t('message.list'))); ?>
+<?php echo __('message_no_data_for', array('label' => t('message.list')), null, get_lang()); ?>
 {{/if}}

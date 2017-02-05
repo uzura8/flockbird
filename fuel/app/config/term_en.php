@@ -72,6 +72,7 @@ $config = array(
 		'like' => 'Like',
 		'do_like' => 'Like',
 		'undo_like' => 'Cancel like',
+		'liked_members' => 'Liked Members',
 		'recieve' => 'Recieve',
 		'unrecieve' => 'Reject',
 		'watch' => 'Watch',

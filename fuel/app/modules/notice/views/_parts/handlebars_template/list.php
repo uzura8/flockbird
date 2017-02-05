@@ -19,5 +19,5 @@
 {{/if}}
 {{/if}}
 {{else}}
-<?php echo __('message_no_data_for', array('label' => t('notice'))); ?>
+<?php echo __('message_no_data_for', array('label' => t('notice')), null, get_lang()); ?>
 {{/if}}
