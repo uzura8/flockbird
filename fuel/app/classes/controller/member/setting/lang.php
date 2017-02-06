@@ -19,11 +19,13 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 	 */
 	public function action_index()
 	{
+		$title_subject = is_enabled_timezone() ? term('site.lang', 'common.delimitter.and', 'site.timezone') : term('site.lang');
+		$title = $title_subject.t('common.delimitter.words').t('site.setting');
+
 		$val = \Form_MemberConfig::get_validation($this->u->id, 'lang');
 		if (\Input::method() == 'POST')
 		{
 			\Util_security::check_csrf();
-
 			try
 			{
 				if (!$val->run()) throw new \ValidationFailedException($val->show_errors());
@@ -33,7 +35,7 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 				\DB::commit_transaction();
 
 				\Site_Lang::reset_lang($post['lang']);
-				\Session::set_flash('message', __('message_update_complete_for', array('label' => term('site.lang', 'site.setting'))));
+				\Session::set_flash('message', __('message_update_complete_for', array('label' => $title_subject)));
 				\Response::redirect('member/setting');
 			}
 			catch(\ValidationFailedException $e)
@@ -46,10 +48,11 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
-		$this->set_title_and_breadcrumbs(term('site.lang', 'site.setting'), array('member/setting' => term('site.setting')), $this->u);
+		$this->set_title_and_breadcrumbs($title, array('member/setting' => term('site.setting')), $this->u);
 		$this->template->content = \View::forge('member/setting/_parts/form', array(
 			'val' => $val,
 			'label_size' => 5,
+			'select_col_size' => 8,
 			'form_params' => array('common' => array('radio' => array('layout_type' => 'grid'))),
 		));
 	}

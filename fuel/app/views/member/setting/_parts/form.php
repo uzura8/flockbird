@@ -1,6 +1,7 @@
 <div class="well">
 <?php
 if (empty($label_size)) $label_size = 4;
+if (empty($select_col_size)) $select_col_size = 4;
 if (!isset($form_params)) $form_params = array();
 $radio_layout_type = isset($form_params['common']['radio']['layout_type']) ? $form_params['common']['radio']['layout_type'] : 'block';
 ?>
@@ -11,7 +12,7 @@ $radio_layout_type = isset($form_params['common']['radio']['layout_type']) ? $fo
 <?php if (strpos($name, 'default_public_flag')): ?>
 	<?php echo form_public_flag($val, Input::post($name), false, $label_size, $name); ?>
 <?php elseif ($type == 'select'): ?>
-	<?php echo form_select($val, $name, Input::post($name), $label_size, $label_size); ?>
+	<?php echo form_select($val, $name, Input::post($name), $select_col_size, $label_size); ?>
 <?php elseif ($type == 'radio'): ?>
 	<?php echo form_radio($val, $name, Input::post($name), $label_size, isset($form_params[$name]['layout_type']) ? $form_params[$name]['layout_type'] : $radio_layout_type); ?>
 <?php elseif ($type == 'checkbox'): ?>

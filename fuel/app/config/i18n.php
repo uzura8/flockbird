@@ -53,6 +53,54 @@ return array(
 			'ja_JP' => 'ja',
 		),
 	),
+	'timezone' => array(
+		'isEnabled' => true,
+		'default' => 'Asia/Tokyo',
+		'options' => array(
+			'America/Adak' => '(GMT-10:00) Hawaii',
+			'America/Anchorage' => '(GMT-09:00) Alaska',
+			'America/Los_Angeles' => '(GMT-08:00) Pacific Time (US & Canada)',
+			'America/Denver' => '(GMT-07:00) Mountain Time (US & Canada)',
+			'America/Chicago' => '(GMT-06:00) Central Time (US & Canada)',
+			'America/New_York' => '(GMT-05:00) Eastern Time (US & Canada)',
+			'Europe/London' => '(GMT) London',
+			'Asia/Calcutta' => '(GMT+05:30) Kolkata',
+			'Asia/Tokyo' => '(GMT+09:00) Tokyo',
+		),
+		'countryTimezone' => array(
+			'US' => array(
+				'default' => 'America/New_York',
+				'options' => array(
+					'America/Adak',
+					'America/Anchorage',
+					'America/Los_Angeles',
+					'America/Denver',
+					'America/Chicago',
+					'America/New_York',
+					'Europe/London',
+					'Asia/Tokyo',
+				),
+			),
+			'GB' => array(
+				'default' => 'Europe/London',
+				'options' => array(
+					'Europe/London',
+				),
+			),
+			'IN' => array(
+				'default' => 'Asia/Calcutta',
+				'options' => array(
+					'Europe/London',
+				),
+			),
+			'JP' => array(
+				'default' => 'Asia/Tokyo',
+				'options' => array(
+					'Europe/Tokyo',
+				),
+			),
+		),
+	),
 	'vendor' => array(
 		'moment_js' => array(
 			'locales' => array(

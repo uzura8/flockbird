@@ -85,6 +85,11 @@ function is_enabled_i18n()
 	return conf('isEnabled', 'i18n');
 }
 
+function is_enabled_timezone()
+{
+	return conf('timezone.isEnabled', 'i18n', false);
+}
+
 function get_default_lang()
 {
 	return Site_Lang::get_default_lang();

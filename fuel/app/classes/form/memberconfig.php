@@ -76,10 +76,20 @@ class Form_MemberConfig
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
 
+		if (is_enabled_timezone())
+		{
+			$name = 'timezone';
+			$value = self::get_timezone_value($member_id);
+			$options = self::get_timezone_options();
+			$val->add($name, term('site.timezone', 'site.setting'), array('type' => 'select', 'options' => $options, 'value' => $value))
+					->add_rule('required')
+					->add_rule('in_array', array_keys($options));
+		}
+
 		return $val;
 	}
 
-	public static function get_lang_options($value = null, $is_simple = false)
+	public static function get_lang_options($value = null)
 	{
 		return conf('lang.options', 'i18n');
 	}
@@ -101,5 +111,29 @@ class Form_MemberConfig
 		if ($lang = conf('lang.countryLang.'.$member->country, 'i18n')) return $lang;
 
 		return $is_return_default_lang ? $default_lang : '';
+	}
+
+	public static function get_timezone_options($value = null)
+	{
+		return conf('timezone.options', 'i18n');
+	}
+
+	public static function get_timezone_value_label($member_id)
+	{
+		if (! $timezone = Model_MemberConfig::get_value($member_id, 'timezone')) return '';
+
+		return Arr::get(static::get_timezone_options(), $timezone, '');
+	}
+
+	public static function get_timezone_value($member_id, $is_return_default = true)
+	{
+		if ($timezone = Model_MemberConfig::get_value($member_id, 'timezone')) return $timezone;
+
+		$default_timezone = Config::get('i18n.timezone.default', 'Asia/Tokyo');
+		if (! $member = Model_Member::get_one4id($member_id)) return $is_return_default ? $default_timezone : '';
+		if (empty($member->country)) return $is_return_default ? $default_timezone : '';
+		if ($timezone = conf(sprintf('timezone.countryTimezone.%s.default', $member->country), 'i18n')) return $timezone;
+
+		return $is_return_default ? $default_timezone : '';
 	}
 }

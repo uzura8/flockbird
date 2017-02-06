@@ -58,15 +58,26 @@
 	); ?>
 <?php endif; ?>
 
-<?php if (is_enabled_i18n()): ?>
-	<?php echo form_text(
-		Form_MemberConfig::get_lang_value_label($u->id),
-		term('site.lang', 'site.setting'),
+<?php
+if (is_enabled_i18n())
+{
+	$title_subject = is_enabled_timezone() ? term('site.lang', 'common.delimitter.and', 'site.timezone') : term('site.lang');
+	$title = $title_subject.t('common.delimitter.words').t('site.setting');
+	$value = Form_MemberConfig::get_lang_value_label($u->id) ?: t('site.unset');
+	if (is_enabled_timezone())
+	{
+		$value .= t('common.delimitter.unit');
+		$value .= Form_MemberConfig::get_timezone_value_label($u->id) ?: t('site.unset');
+	}
+	echo form_text(
+		$value,
+		$title,
 		$label_col_size,
 		true,
 		array('uri' => 'member/setting/lang', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
-	); ?>
-<?php endif; ?>
+	);
+}
+?>
 
 </div>
 
