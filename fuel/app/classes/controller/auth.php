@@ -248,6 +248,11 @@ class Controller_Auth extends Controller_Site
 				if (! $lang) $lang = Site_Lang::get_client_lang(true);
 				if (! $lang) $lang = get_default_lang();
 				Model_MemberConfig::set_value($member->id, 'lang', $lang);
+
+				if (is_enabled_timezone())
+				{
+					Model_MemberConfig::set_value($member->id, 'timezone', Form_MemberConfig::get_timezone_value($member->id));
+				}
 			}
 			// Post timeline
 			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, null, 'member_register', $member->id, $member->created_at);
