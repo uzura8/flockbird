@@ -142,6 +142,30 @@ class Site_Lang
 		return Config::get('i18n.locale.options', array());
 	}
 
+	public static function get_timezone($member_id = 0, $is_check_session_lang = true, $is_return_default = true)
+	{
+		$timezone = '';
+		$default_timezone = Config::get('i18n.timezone.default', 'Asia/Tokyo');
+
+		if ($is_check_session_lang && $timezone = static::get_session('timezone')) return $timezone;
+		if (! $member_id || ! $member = Model_Member::get_one4id($member_id))
+		{
+			return $is_return_default ? $default_timezone : '';
+		}
+
+		if ($timezone = Model_MemberConfig::get_value($member_id, 'timezone'))
+		{
+			if ($is_check_session_lang) static::set_session('timezone', $timezone);
+			return $timezone;
+		}
+
+		if (empty($member->country)) return $is_return_default ? $default_timezone : '';
+
+		if ($timezone = conf(sprintf('timezone.countryTimezone.%s.default', $member->country), 'i18n')) return $timezone;
+
+		return $is_return_default ? $default_timezone : '';
+	}
+
 	public static function set_session($key, $lang)
 	{
 		return Session::set('i18n.'.$key, $lang);

@@ -31,7 +31,7 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 				if (!$val->run()) throw new \ValidationFailedException($val->show_errors());
 				$post = $val->validated();
 				\DB::start_transaction();
-				\Form_MemberConfig::save($this->u->id, $val, $post);
+				\Form_MemberConfig::save_lang($this->u->id, $val, $post);
 				\DB::commit_transaction();
 
 				\Site_Lang::reset_lang($post['lang']);
@@ -51,7 +51,7 @@ class Controller_Member_Setting_Lang extends \Controller_Site
 		$this->set_title_and_breadcrumbs($title, array('member/setting' => term('site.setting')), $this->u);
 		$this->template->content = \View::forge('member/setting/_parts/form', array(
 			'val' => $val,
-			'label_size' => 5,
+			'label_size' => 3,
 			'select_col_size' => 8,
 			'form_params' => array('common' => array('radio' => array('layout_type' => 'grid'))),
 		));

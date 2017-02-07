@@ -65,6 +65,13 @@ class Form_MemberConfig
 		}
 	}
 
+	public static function save_lang($member_id, Validation $val, $posted_values)
+	{
+		static::save($member_id, $val, $posted_values);
+		Site_Lang::set_session('lang', $posted_values['lang']);
+		if (is_enabled_timezone()) Site_Lang::set_session('timezone', $posted_values['timezone']);
+	}
+
 	public static function get_validation_lang($member_id)
 	{
 		$val = \Validation::forge('member_config_lang');
@@ -72,7 +79,7 @@ class Form_MemberConfig
 		$name = 'lang';
 		$value = self::get_lang_value($member_id);
 		$options = self::get_lang_options();
-		$val->add($name, term('site.lang', 'site.setting'), array('type' => 'select', 'options' => $options, 'value' => $value))
+		$val->add($name, t('site.lang'), array('type' => 'select', 'options' => $options, 'value' => $value))
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
 
@@ -81,7 +88,7 @@ class Form_MemberConfig
 			$name = 'timezone';
 			$value = self::get_timezone_value($member_id);
 			$options = self::get_timezone_options();
-			$val->add($name, term('site.timezone', 'site.setting'), array('type' => 'select', 'options' => $options, 'value' => $value))
+			$val->add($name, t('site.timezone'), array('type' => 'select', 'options' => $options, 'value' => $value))
 					->add_rule('required')
 					->add_rule('in_array', array_keys($options));
 		}
@@ -101,16 +108,16 @@ class Form_MemberConfig
 		return Arr::get(static::get_lang_options(), $lang, '');
 	}
 
-	public static function get_lang_value($member_id, $is_return_default_lang = true)
+	public static function get_lang_value($member_id, $is_return_default = true)
 	{
 		if ($lang = Model_MemberConfig::get_value($member_id, 'lang')) return $lang;
 
 		$default_lang = get_default_lang();
-		if (! $member = Model_Member::get_one4id($member_id)) return $is_return_default_lang ? $default_lang : '';
-		if (empty($member->country)) return $is_return_default_lang ? $default_lang : '';
+		if (! $member = Model_Member::get_one4id($member_id)) return $is_return_default ? $default_lang : '';
+		if (empty($member->country)) return $is_return_default ? $default_lang : '';
 		if ($lang = conf('lang.countryLang.'.$member->country, 'i18n')) return $lang;
 
-		return $is_return_default_lang ? $default_lang : '';
+		return $is_return_default ? $default_lang : '';
 	}
 
 	public static function get_timezone_options($value = null)
@@ -127,13 +134,6 @@ class Form_MemberConfig
 
 	public static function get_timezone_value($member_id, $is_return_default = true)
 	{
-		if ($timezone = Model_MemberConfig::get_value($member_id, 'timezone')) return $timezone;
-
-		$default_timezone = Config::get('i18n.timezone.default', 'Asia/Tokyo');
-		if (! $member = Model_Member::get_one4id($member_id)) return $is_return_default ? $default_timezone : '';
-		if (empty($member->country)) return $is_return_default ? $default_timezone : '';
-		if ($timezone = conf(sprintf('timezone.countryTimezone.%s.default', $member->country), 'i18n')) return $timezone;
-
-		return $is_return_default ? $default_timezone : '';
+		return Site_Lang::get_timezone($member_id, false, $is_return_default);
 	}
 }
