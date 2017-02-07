@@ -107,3 +107,10 @@ function is_lang_ja()
 	return Lang::get_lang() == 'ja';
 }
 
+function get_timezone($member_id = 0, $is_check_session_lang = true, $is_return_default = true)
+{
+	if (conf('date.isForceDispGMT', 'i18n', false)) return 'Europe/London';
+
+	return Site_Lang::get_timezone($member_id, $is_check_session_lang, $is_return_default);
+}
+

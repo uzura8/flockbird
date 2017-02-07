@@ -147,6 +147,8 @@ class Site_Lang
 		$timezone = '';
 		$default_timezone = Config::get('i18n.timezone.default', 'Asia/Tokyo');
 
+		if (! is_enabled_timezone() && $is_return_default) return $default_timezone;
+
 		if ($is_check_session_lang && $timezone = static::get_session('timezone')) return $timezone;
 		if (! $member_id || ! $member = Model_Member::get_one4id($member_id))
 		{

@@ -45,6 +45,7 @@ return array(
 	),
 	'date' => array(
 		'isForceDispGMT' => false,
+		'isDispTimezone' => false,
 		'defaultFormat' => 'us',
 		'localeFormat' => array(
 			'en_US' => 'us',
@@ -54,7 +55,7 @@ return array(
 		),
 	),
 	'timezone' => array(
-		'isEnabled' => true,
+		'isEnabled' => false,
 		'default' => 'Asia/Tokyo',
 		'options' => array(
 			'America/Adak' => '(GMT-10:00) Hawaii',

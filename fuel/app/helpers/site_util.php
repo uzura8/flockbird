@@ -282,13 +282,13 @@ function site_get_time($mysql_datetime, $display_type = 'relative', $format_suff
 	$accept_display_types = array('relative', 'normal', 'both');
 	if (!in_array($display_type, $accept_display_types)) throw new InvalidArgumentException('Second parameter is invalid.');
 
-	$is_disp_gmt = conf('date.isForceDispGMT', 'i18n', false);
+	$timezone = get_timezone(get_uid());
 	$format = Site_Lang::get_date_format($format_suffix);
-	if ($is_disp_gmt) $format .= '_tz';
+	if (conf('date.isDispTimezone', 'i18n')) $format .= '_tz';
 
 	$day_seconds = 60 * 60 * 24;
 	$target_time = strtotime($mysql_datetime);
-	$target_obj = Date::forge($target_time, $is_disp_gmt ? 'Europe/London' : null);
+	$target_obj = Date::forge($target_time, $timezone);
 	$current_obj = Date::forge();
 	$current_time = $current_obj->get_timestamp();
 
