@@ -52,12 +52,5 @@ return array(
 	'liked' => 'Liked. ',
 	'canceled_like' => 'Canceled the Like. ',
 	'nobody_liked' => 'No members liked. ',
-	// notice
-	'notice_update_read_already' => 'Updated status to read. ',
-	// report
-	'report_error_required_report_about' => 'Please input Report about. ',
-	// message
-	'message_recieve_member_message_from' => 'Recieved privete messege from :name. ',
-	'message_recieve_group_message_from' => 'Recieved group messege from :name. ',
 );
 

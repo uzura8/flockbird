@@ -8,8 +8,6 @@ class Controller_Member_Setting extends \Controller_Site
 	public function before()
 	{
 		parent::before();
-
-		\Lang::load('notice');
 	}
 
 	/**

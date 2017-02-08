@@ -54,12 +54,5 @@ return array(
 	'canceled_like' => 'イイねを取り消しました。',
 	'failed_to_like' => 'イイねに失敗しました。',
 	'nobody_liked' => 'イイねしているメンバーはいません。',
-	// notice
-	'notice_update_read_already' => '既読にしました。',
-	// report
-	'report_error_required_report_about' => '通報内容を入力してください。',
-	// message
-	'message_recieve_member_message_from' => ':nameからメッセージが届きました。',
-	'message_recieve_group_message_from' => ':nameからグループメッセージが届きました。',
 );
 
