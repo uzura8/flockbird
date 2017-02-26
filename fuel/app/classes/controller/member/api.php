@@ -66,7 +66,7 @@ class Controller_Member_Api extends Controller_Site_Api
 			);
 			$data = array(
 				'limit' => $limit,
-				'no_data_message' => sprintf('指定の%sに該当する%sがいません。', term('common.condition'), term('member.view')),
+				'no_data_message' => __('message_error_detail_search', array('label' => t('member.plural'))),
 				'loaded_position' => $loaded_position,
 			);
 			$data = array_merge($data, Site_Member::get_detail_search_pager_list(get_uid(), $limit, $page));

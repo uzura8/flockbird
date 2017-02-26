@@ -24,26 +24,15 @@ class Site_Util
 		if (!in_array($action_type, array('edit', 'delete'))) throw new InvalidArgumentException('Third parameter is invalid.');
 		if (!$album_foreign_table) return false;
 		if (!in_array($album_foreign_table, self::get_album_foreign_tables())) return false;
-
 		if ($is_bool) return true;
 
-		switch ($album_foreign_table)
-		{
-			case 'note':
-				$message_prefix = sprintf('%s用%sの', term('note'), term('album'));
-				break;
-			case 'member':
-				$message_prefix = sprintf('%s用%sの', term('profile'), term('album'));
-				break;
-			case 'timeline':
-				$message_prefix = sprintf('%s用%sの', term('timeline'), term('album'));
-				break;
-			default :
-				$message_prefix = '';
-				break;
-		}
+		$label = t('common.delimitter.of', array(
+			'subject' => t('public_flag.label'),
+			'object' => static::get_album_type4table($album_foreign_table),
+		));
+		$lang_key = sprintf('message_disabled_to_%s_for', $action_type);
 
-		return array('message' => sprintf('%s%sは%sできません。', $message_prefix, term('public_flag.label'), term('form.'.$action_type)));
+		return array('message' => __($lang_key, array('label' => $label)));
 	}
 
 	public static function get_album_foreign_tables()
@@ -54,23 +43,26 @@ class Site_Util
 	public static function get_foreign_table_info($table_name)
 	{
 		$info = array('public_flag' => conf('public_flag.default'));
+		$info['name'] = static::get_album_type4table($table_name);
+		if ($table_name == 'member') $info['public_flag'] = conf('public_flag.maxRange');
+
+		return $info;
+	}
+
+	public static function get_album_type4table($table_name, $is_throw_exception = true)
+	{
 		switch ($table_name)
 		{
 			case 'note':
-				$info['name'] = sprintf('%s用%s', term('note'), term('album'));
-				break;
+				return t('common.delimitter.for', array('subject' => t('album.view'), 'object' => t('note.view')));
 			case 'member':
-				$info['name'] = sprintf('%s用%s', term('profile'), term('album'));
-				$info['public_flag'] = conf('public_flag.maxRange');
-				break;
+				return t('common.delimitter.for', array('subject' => t('album.view'), 'object' => t('profile')));
 			case 'timeline':
-				$info['name'] = sprintf('%s用%s', term('timeline'), term('album'));
-				break;
-			default :
-				break;
+				return t('common.delimitter.for', array('subject' => t('album.view'), 'object' => t('timeline.view')));
 		}
+		if ($is_throw_exception) throw new InvalidArgumentException('First parameter is invalid.');
 
-		return $info;
+		return '';
 	}
 
 	public static function get_like_api_uri($album_image_id)
@@ -97,7 +89,7 @@ class Site_Util
 				$menus[] = array('icon_term' => 'form.set_profile_image', 'href' => '#', 'attr' => array(
 					'class' => 'js-simplePost',
 					'data-uri' => 'member/profile/image/set/'.$obj->id,
-					'data-msg' => term(array('profile', 'site.image')).'に設定しますか？',
+					'data-msg' => __('message_set_confirm_as', array('label' => term('profile', 'site.image'))),
 				));
 			}
 		}

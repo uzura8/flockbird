@@ -146,7 +146,7 @@ function load_file_tmp(get_url, file_name, parent_attr) {
 			$(parentDomElement).append(result).fadeIn('fast');
 		},
 		error: function(result) {
-			$.jGrowl(get_error_message(result['status'], '読み込みに失敗しました。'));
+			$.jGrowl(get_error_message(result['status'], __('message_error_failed_to_read')));
 		}
 	});
 }

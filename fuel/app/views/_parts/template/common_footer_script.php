@@ -33,19 +33,19 @@ function get_term(key) {
 		'already_read': '<?php echo term('site.AlreadyRead'); ?>',
 <?php endif; ?>
 <?php if (is_enabled('note')): ?>
-		'note': '<?php echo term('note'); ?>',
+		'note': '<?php echo term('note.plural'); ?>',
 <?php endif; ?>
 <?php if (is_enabled('album')): ?>
-		'album': '<?php echo term('album'); ?>',
-		'album_image': '<?php echo term('album_image'); ?>',
-		'add_picture': '<?php echo term('form.add_picture'); ?>',
+		'album': '<?php echo t('album.view'); ?>',
+		'album_image': '<?php echo t('album.image.view'); ?>',
+		'add_picture': '<?php echo t('form.add_picture'); ?>',
 		'picture': '<?php echo term('site.picture'); ?>',
 <?php endif; ?>
 <?php if (is_enabled('timeline')): ?>
-		'timeline': '<?php echo term('timeline'); ?>',
+		'timeline': '<?php echo t('timeline.view'); ?>',
 <?php endif; ?>
 <?php if (is_enabled('thread')): ?>
-		'thread': '<?php echo term('thread'); ?>',
+		'thread': '<?php echo term('thread.view'); ?>',
 <?php endif; ?>
 <?php if (is_enabled('message')): ?>
 		'message': '<?php echo term('message.view'); ?>',
@@ -68,7 +68,8 @@ function get_term(key) {
 		'other_members_count': '<?php echo term('common.other_members_count'); ?>',
 		'delimitter_words': '<?php echo term('common.delimitter.words'); ?>',
 		'delimitter_normal': '<?php echo term('common.delimitter.normal'); ?>',
-		'delimitter_last': '<?php echo term('common.delimitter.last'); ?>'
+		'delimitter_last': '<?php echo term('common.delimitter.last'); ?>',
+		'delimitter_for': '<?php echo term('common.delimitter.for'); ?>'
 	};
 	termStr = terms[key];
 	if (! empty(params)) {

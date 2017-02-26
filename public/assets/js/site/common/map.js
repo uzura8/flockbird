@@ -37,7 +37,7 @@ $(function(){
 					map.setCenter(position.coords.latitude, position.coords.longitude);
 				},
 				error: function(error){
-					alert('位置情報の取得に失敗しました。: '+error.message);
+					alert(__('maps_message_leave_failed') + error.message);
 				},
 				not_supported: function(){
 					alert("Your browser does not support geolocation");
@@ -60,7 +60,7 @@ $(function(){
 				lng = $(inputLng).val();
 
 		if (!lat || !lng) {
-			showMessage('位置を指定してください。');
+			showMessage(__('maps_message_please_set_location'));
 			$(btnSubmit).attr({disabled: 'disabled'});
 			return false;
 		}
@@ -88,7 +88,7 @@ function setLocation(map, inputLat, inputLng, markerTemplate, markerImages, btnS
 
 		map.removeMarkers();
 		if (!lat || !lng) {
-			showMessage('位置情報の取得に失敗しました。');
+			showMessage(__('maps_message_leave_failed'));
 			return false;
 		}
 		$(inputLat).val(lat);

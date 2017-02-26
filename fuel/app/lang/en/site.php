@@ -45,6 +45,9 @@ return array(
 	'member_error_album_image_disable_to_set_as_profile_image' => 'Disabled to set album image as profile image. ',
 	// member relation
 	'member_message_follow_from_to' => ':subject followed :object. ',
+	'member_message_follow' => 'Followed. ',
+	'member_message_unfollow' => 'Canceled the follow. ',
+	'member_message_error_access_blocked' => 'It is possible that this link has expired or it can not be viewed due to the setting of the page. ',
 	// Public flag
 	'public_flag_expand_confirm' => 'The scope of publication expands. Do you want to do it? ',
 	'public_flag_confirm_change_with_children_of' => 'Do you also change the scope of :label publication? ',
@@ -52,5 +55,8 @@ return array(
 	'liked' => 'Liked. ',
 	'canceled_like' => 'Canceled the Like. ',
 	'nobody_liked' => 'No members liked. ',
+	// maps
+	'maps_message_leave_failed' => 'Failed to acquire location information. ',
+	'maps_message_please_set_location' => 'Please set the location. ',
 );
 

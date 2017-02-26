@@ -45,8 +45,10 @@ return array(
 	'member_error_album_image_disable_to_set_as_profile_image' => 'その写真はプロフィール写真に設定できません。',
 	// member relation
 	'member_message_follow_from_to' => ':subjectが:objectをフォローしました。',
+	'member_message_follow' => 'フォローしました。',
+	'member_message_unfollow' => 'フォローを解除しました。',
+	'member_message_error_access_blocked' => 'このリンクは有効期限切れとなっているか、ページの設定により閲覧できなくなっている可能性があります。',
 	// Public flag
-	'public_flag_expand_confirm' => '公開範囲が広がります。実行しますか？',
 	'public_flag_expand_confirm' => '公開範囲が広がります。実行しますか？',
 	'public_flag_confirm_change_with_children_of' => ':labelの公開範囲も変更しますか？',
 	// Like
@@ -54,5 +56,8 @@ return array(
 	'canceled_like' => 'イイねを取り消しました。',
 	'failed_to_like' => 'イイねに失敗しました。',
 	'nobody_liked' => 'イイねしているメンバーはいません。',
+	// Location
+	'maps_message_leave_failed' => '位置情報の取得に失敗しました。',
+	'maps_message_please_set_location' => '位置を指定してください。',
 );
 

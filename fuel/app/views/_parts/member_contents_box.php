@@ -92,7 +92,7 @@ if (isset($public_flag, $model, $id))
 <div class="comment_info">
 	<small><span class="glyphicon glyphicon-comment"></span> <span id="comment_count_<?php echo $parent->id; ?>"><?php echo $comment['all_comment_count']; ?><span></small>
 <?php if (Auth::check()): ?>
-	<small><?php echo Html::anchor('#', 'コメントする', array('class' => 'link_comment', 'data-id' => $parent->id)); ?></small>
+	<small><?php echo Html::anchor('#', t('form.do_comment'), array('class' => 'link_comment', 'data-id' => $parent->id)); ?></small>
 <?php endif; ?>
 </div>
 <div id="comment_list_<?php echo $parent->id; ?>">
@@ -112,7 +112,10 @@ echo render('_parts/comment/list', $data);
 
 <?php if (Auth::check()): ?>
 <?php if ($comment['all_comment_count']): ?>
-<?php echo Html::anchor('#', 'コメントする', array('class' => 'link_comment hide-after_click showCommentBox', 'data-id' => $parent->id)); ?>
+<?php echo Html::anchor('#', t('form.do_comment'), array(
+	'class' => 'link_comment hide-after_click showCommentBox',
+	'data-id' => $parent->id,
+)); ?>
 <?php endif; ?>
 <?php
 $post_comment_button_attrs_def = array('class' => 'btn btn-default btn-sm btn_comment', 'id' => 'btn_comment_'.$parent->id, 'data-parent_id' => $parent->id,);

@@ -44,7 +44,7 @@ class Controller_Timeline extends \Controller_Site
 			), conf('articles.limit_max', 'timeline'), true)
 		);
 
-		$this->set_title_and_breadcrumbs(term('site.latest', 'timeline', 'site.list'));
+		$this->set_title_and_breadcrumbs(term('site.latest', 'timeline.plural'));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
@@ -71,7 +71,10 @@ class Controller_Timeline extends \Controller_Site
 		);
 		if ($member) $data['member'] = $member;
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('timeline', 'site.list')), null, $member);
+
+		$title = $is_mypage ? t('common.own_for_myself_of', array('label' => t('timeline.plural')))
+												: t('common.own_for_member_of', array('label' => t('timeline.plural'), 'name' => $member->name));
+		$this->set_title_and_breadcrumbs($title, null, $member);
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
@@ -86,7 +89,7 @@ class Controller_Timeline extends \Controller_Site
 	{
 		$this->template->post_header = \View::forge('member/_parts/myhome_header');
 		$this->template->post_footer = \View::forge('member/_parts/myhome_footer');
-		$this->set_title_and_breadcrumbs(term('page.myhome'), null, null, null, null, true, true);
+		$this->set_title_and_breadcrumbs(t('page.myhome'), null, null, null, null, true, true);
 		$this->template->content = \View::forge('member/myhome', array('public_flag' => $this->member_config->timeline_public_flag));
 	}
 
@@ -110,7 +113,7 @@ class Controller_Timeline extends \Controller_Site
 		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('timeline', $this->u->id, array($timeline)) : array();
 		list($ogp_title, $ogp_description) = Site_Util::get_timeline_ogp_contents($timeline->type, $timeline->body);
-		$this->set_title_and_breadcrumbs(term('timeline', 'site.detail'), null, $timeline->member, 'timeline', null, false, true, array(
+		$this->set_title_and_breadcrumbs(t('timeline.detail'), null, $timeline->member, 'timeline', null, false, true, array(
 			'title' => $ogp_title,
 			'description' => $ogp_description,
 			'image' => Site_Util::get_timeline_ogp_image_uri(
@@ -150,7 +153,7 @@ class Controller_Timeline extends \Controller_Site
 			Site_Model::delete_timeline($timeline, $this->u->id);
 			\DB::commit_transaction();
 
-			\Session::set_flash('message', term('timeline').'を削除しました。');
+			\Session::set_flash('message', __('message_delete_complete_for', array('label' => t('timeline.view'))));
 			\Response::redirect('timeline/member');
 		}
 		catch(\FuelException $e)

@@ -18,7 +18,7 @@ $('#form_button').click(function() {
 
 	var is_submit = false;
 	if (is_expanded_public_range(original_public_flag, changed_public_flag)) {
-		apprise('公開範囲が広がります。送信しますか？', {'confirm':true}, function(r) {
+		apprise(__('public_flag_expand_confirm'), {'confirm':true}, function(r) {
 			if (r == true) submit_album_edit();
 		});
 	} else {
@@ -27,7 +27,7 @@ $('#form_button').click(function() {
 });
 
 function submit_album_edit() {
-	apprise(get_term('album_image') + 'の' + get_term('public_flag') + 'も変更しますか？', {'verify':true}, function(r) {
+	apprise(__('public_flag_confirm_change_with_children_of', {'label': get_term('album_image')}), {'verify':true}, function(r) {
 		if (r == true) {
 			$('#is_update_children_public_flag').val(1);
 			$('form').submit();

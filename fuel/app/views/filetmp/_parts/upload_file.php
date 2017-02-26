@@ -18,7 +18,7 @@ if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $mo
 			<?php echo Form::input(
 				sprintf($prefix.'_description[%d]', $file->id),
 				isset($file->description) ? $file->description : '',
-				array('placeholder' => '表示名', 'class' => 'form-control')
+				array('placeholder' => t('common.display_name'), 'class' => 'form-control')
 			); ?>
 		</div>
 		<div class="col-xs-4">

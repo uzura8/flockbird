@@ -18,7 +18,7 @@ class Controller_Member_Setting extends \Controller_Site
 	 */
 	public function action_viewtype()
 	{
-		$page_name = term('timeline', 'site.display', 'site.setting');
+		$page_name = term('timeline.view', 'site.display', 'site.setting');
 		$val = \Form_MemberConfig::get_validation($this->u->id, 'viewtype', 'Timeline');
 		if (\Input::method() == 'POST')
 		{
@@ -41,7 +41,7 @@ class Controller_Member_Setting extends \Controller_Site
 				\Session::set_flash('error', $e->getMessage());
 			}
 		}
-		$this->set_title_and_breadcrumbs($page_name, array('member/setting' => term('site.setting')), $this->u);
+		$this->set_title_and_breadcrumbs($page_name, array('member/setting' => t('site.setting')), $this->u);
 		$this->template->content = \View::forge('member/setting/_parts/form', array('val' => $val));
 	}
 }

@@ -56,7 +56,9 @@ class Controller_Api extends \Controller_Site_Api
 			if (!$foreign_table || !$foreign_id) throw new \HttpNotFoundException();
 			if (!in_array($foreign_table, Site_Util::get_accept_foreign_tables())) throw new \HttpNotFoundException();
 
-			$this->response_body['errors']['message_default'] = term('form.watch').'状態の変更に失敗しました。';
+			$this->response_body['errors']['message_default'] = __('message_change_failed_for', array(
+				'label' => t('common.status_of_simple', array('label' => t('form.watch'))),
+			));
 			$model = \Site_Model::get_model_name($foreign_table);
 			$foreign_obj = $model::check_authority($foreign_id);
 			$member_id = ($foreign_table == 'album_image') ? $foreign_obj->album->member_id : $foreign_obj->member_id;
@@ -73,7 +75,7 @@ class Controller_Api extends \Controller_Site_Api
 
 			$data = array(
 				'result' => $is_registerd,
-				'message' => $is_registerd ? term('form.watch').'対象に追加しました。' : term('form.watch').'を解除しました。',
+				'message' => $is_registerd ? __('notice_add_watch_list') : __('notice_remove_watch_list'),
 				'html' => icon_label($is_registerd ? 'form.do_unwatch' : 'form.do_watch', 'both', false),
 			);
 			$this->set_response_body_api($data);

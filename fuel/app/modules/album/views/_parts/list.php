@@ -1,6 +1,6 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php if (!IS_API): ?><?php echo term('album'); ?>がありません。<?php endif; ?>
+<?php if (!IS_API): ?><?php echo __('message_no_data_for', array('label' => t('album.plural'))); ?><?php endif; ?>
 <?php else: ?>
 <div class="row">
 <div id="image_list">
@@ -19,7 +19,7 @@ $before_album_member_id = $album->member_id;
 				'M',
 				'album/'.$album->id
 			); ?></div>
-			<h5><?php echo Html::anchor('album/'.$album->id, strim($album->name, \Config::get('album.articles.trim_width.name'))); ?></h5>
+			<h5><?php echo Html::anchor('album/'.$album->id, strim($album->get_display_name(), \Config::get('album.articles.trim_width.name'))); ?></h5>
 <?php $disable_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table); ?>
 <?php if (!empty($is_member_page)): ?>
 			<div class="date_box">

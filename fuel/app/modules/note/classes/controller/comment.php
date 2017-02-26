@@ -33,11 +33,11 @@ class Controller_Comment extends \Controller_Site
 			// Save the post and the comment will save too
 			if ($comment->save())
 			{
-				\Session::set_flash('message', 'コメントしました。');
+				\Session::set_flash('message', __('message_comment_complete'));
 			}
 			else
 			{
-				\Session::set_flash('error', 'コメントに失敗しました。');
+				\Session::set_flash('error', __('message_comment_failed'));
 			}
 
 			\Response::redirect('note/detail/'.$note_id);
@@ -62,7 +62,7 @@ class Controller_Comment extends \Controller_Site
 		$comment = Model_NoteComment::check_authority($id, $this->u->id);
 		$comment->delete();
 
-		\Session::set_flash('message', term('note').'を削除しました。');
+		\Session::set_flash('message', __('message_delete_complete_for', array('label' => term('note.view'))));
 		\Response::redirect('note/detail/'.$comment->note_id);
 	}
 }

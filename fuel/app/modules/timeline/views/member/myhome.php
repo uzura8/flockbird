@@ -6,11 +6,11 @@
 	'with_public_flag_selector' => true,
 	'with_uploader' => true,
 	'uploader_selects' => array(
-		'label'  => term('album', 'form.choice'),
+		'label'  => t('album.view'),
 		'name'  => 'album_id',
 		'value' => 0,
 		'options' => array(
-			'0' => sprintf('%s用%s', term('timeline'), term('album')),
+			'0' => t('common.delimitter.for', array('subject' => t('album.view'), 'object' => t('timeline.view'))),
 		),
 		'atters' => array('id' => 'album_id'),
 	),
@@ -20,7 +20,10 @@
 
 	<div id="timeline_setting" class="text-right">
 		<span class="text-muted"><?php echo term('site.display', 'site.setting'); ?>:</span>
-		<?php echo render('member/_parts/timeline_viewType_selecter', array('id' => $u->id, 'timeline_viewType' => $member_config->timeline_viewType)); ?>
+		<?php echo render('member/_parts/timeline_viewType_selecter', array(
+			'id' => $u->id,
+			'timeline_viewType' => $member_config->timeline_viewType,
+		)); ?>
 	</div>
 </div>
 

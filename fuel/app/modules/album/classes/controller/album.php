@@ -39,7 +39,7 @@ class Controller_Album extends \Controller_Site
 		list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 		$data = Site_Model::get_albums($limit, $page, \Auth::check() ? $this->u->id : 0);
 
-		$this->set_title_and_breadcrumbs(term('site.latest', 'album', 'site.list'));
+		$this->set_title_and_breadcrumbs(term('site.latest', 'album.plural'));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
@@ -58,7 +58,9 @@ class Controller_Album extends \Controller_Site
 		list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 		$data = Site_Model::get_albums($limit, $page, \Auth::check() ? $this->u->id : 0, $member, $is_mypage);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('album', 'site.list')), null, $member);
+		$title = $is_mypage ? t('common.own_for_myself_of', array('label' => t('album.plural')))
+												: t('common.own_for_member_of', array('label' => t('album.plural'), 'name' => $member->name));
+		$this->set_title_and_breadcrumbs($title, null, $member, null, null, false, false, null, t('album.plural'));
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('_parts/load_masonry');
 		$this->template->content = \View::forge('_parts/list', $data);
@@ -96,7 +98,9 @@ class Controller_Album extends \Controller_Site
 			'order_by' => array('id' => 'desc'),
 		), $page);
 
-		if (\Config::get('album.display_setting.detail.display_upload_form') && !$disabled_to_update && \Auth::check() && $album->member_id == $this->u->id)
+		if (\Config::get('album.display_setting.detail.display_upload_form')
+				&& !$disabled_to_update
+				&& \Auth::check() && $album->member_id == $this->u->id)
 		{
 			$data['val'] = self::get_validation_public_flag();
 		}
@@ -107,11 +111,11 @@ class Controller_Album extends \Controller_Site
 		$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list']) : array();
 
-		$this->set_title_and_breadcrumbs($album->name, null, $album->member, 'album', null, false, false, array(
-			'title' => $album->name,
+		$this->set_title_and_breadcrumbs($album->get_display_name(), null, $album->member, 'album', null, false, false, array(
+			'title' => $album->get_display_name(),
 			'description' => $album->body,
 			'image' => \Site_Util::get_image_uri4image_list($data['list'], 'ai', 'raw'),
-		));
+		), t('site.detail'));
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));
 		$this->template->post_footer = \View::forge('_parts/detail_footer');
 		$this->template->post_footer = \View::forge('_parts/detail_footer', array('is_mypage' => check_uid($album->member_id)));
@@ -151,10 +155,10 @@ class Controller_Album extends \Controller_Site
 				if (\Module::loaded('timeline')) \Timeline\Site_Model::save_timeline($this->u->id, $album->public_flag, 'album_image', $album->id, null, null, null, $album_image_ids);
 				\DB::commit_transaction();
 
-				// thumbnail 作成 & tmp_file thumbnail 削除
+				// Create thumbnails and delete
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
-				$message = sprintf('%sをアップロードしました。', term('album_image'));
+				$message = __('message_upload_complete_for', array('label' => t('album.image.view')));
 				\Session::set_flash('message', $message);
 				$redirect_uri = 'album/detail/'.$album->id;
 				if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.album.isEnabled') && conf('service.facebook.shareDialog.album.autoPopupAfterUploaded'))
@@ -176,8 +180,8 @@ class Controller_Album extends \Controller_Site
 		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/form/upload_footer');
 		$this->set_title_and_breadcrumbs(
-			term('album_image', 'form.upload'),
-			array('/album/'.$id => $album->name),
+			t('form.upload_for', array('label' => t('album.image.view'))),
+			array('/album/'.$id => $album->get_display_name()),
 			$album->member,
 			'album'
 		);
@@ -201,10 +205,8 @@ class Controller_Album extends \Controller_Site
 		);
 
 		$this->set_title_and_breadcrumbs(
-			sprintf('%sの%s', $album->name, term('album_image')),
-			array('/album/'.$id => $album->name),
-			$album->member,
-			'album'
+			t('common.delimitter.of', array('object' => $album->get_display_name(), 'subject' => t('album.image.plural'))),
+			array('/album/'.$id => $album->get_display_name()), $album->member, 'album', null, false, false, null, t('album.image.plural')
 		);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('album' => $album, 'disabled_to_update' => $disabled_to_update));
 		$this->template->post_footer = \View::forge('_parts/slide_footer', array('is_desc' => true));
@@ -241,13 +243,15 @@ class Controller_Album extends \Controller_Site
 				list($album, $moved_files) = Model_Album::save_with_relations($post, $this->u->id, $album, $file_tmps);
 				\DB::commit_transaction();
 
-				// thumbnail 作成 & tmp_file thumbnail 削除
+				// Create thumbnails and delete
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 
-				$message = sprintf('%sを作成しました。', term('album'));
+				$message = __('message_create_complete_for', array('label' => t('album.view')));
 				\Session::set_flash('message', $message);
 				$redirect_uri = 'album/detail/'.$album->id;
-				if (FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.album.isEnabled') && conf('service.facebook.shareDialog.album.autoPopupAfterCreated'))
+				if (FBD_FACEBOOK_APP_ID
+					&& conf('service.facebook.shareDialog.album.isEnabled')
+					&& conf('service.facebook.shareDialog.album.autoPopupAfterCreated'))
 				{
 					$redirect_uri .= '?created=1';
 				}
@@ -263,7 +267,7 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('album'), term('form.do_create')), null, $this->u, 'album');
+		$this->set_title_and_breadcrumbs(__('form.do_create_for', array('label' => t('album.view'))), null, $this->u, 'album');
 		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
 		$this->template->post_footer = \View::forge('_parts/create_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
@@ -297,7 +301,7 @@ class Controller_Album extends \Controller_Site
 				list($album, $moved_files) = Model_Album::save_with_relations($post, $this->u->id, $album);
 				\DB::commit_transaction();
 
-				\Session::set_flash('message', term('album').'を編集をしました。');
+				\Session::set_flash('message', __('message_edit_complete_for', array('label' => t('album.view'))));
 				\Response::redirect('album/'.$album->id);
 			}
 			catch(Exception $e)
@@ -307,7 +311,9 @@ class Controller_Album extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('album'), term('form.do_edit')), array('/album/'.$id => $album->name), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(t('form.do_edit_for', array('label' => t('album.view'))), array(
+			'album/'.$id => $album->get_display_name(),
+		), $album->member, 'album');
 		$this->template->content = \View::forge('_parts/form', array(
 			'val' => $val,
 			'album' => $album,
@@ -347,11 +353,11 @@ class Controller_Album extends \Controller_Site
 				$posted_album_image_ids = array_map('intval', \Input::post('album_image_ids', array()));
 				if (empty($posted_album_image_ids))
 				{
-					throw new \FuelException('実施対象が選択されていません');
+					throw new \FuelException(__('message_not_selected_for', array('label' => t('common.exec_targets'))));
 				}
 				if (!\Util_Orm::check_ids_in_models($posted_album_image_ids, $album_images))
 				{
-					throw new \FuelException('実施対象が正しく選択されていません');
+					throw new \FuelException(__('message_invalid_selected_for', array('label' => t('common.exec_targets'))));
 				}
 
 				if (!$is_delete)
@@ -363,7 +369,7 @@ class Controller_Album extends \Controller_Site
 						&& (!$is_disabled_to_update_public_flag && $post['public_flag'] == 99)
 						&& ($is_enabled_map && !strlen($post['latitude']) && !strlen($post['longitude'])))
 					{
-						throw new \FuelException('入力してください');
+						throw new \FuelException(__('message_please_input'));
 					}
 				}
 
@@ -371,12 +377,12 @@ class Controller_Album extends \Controller_Site
 				if ($is_delete)
 				{
 					$result = Model_AlbumImage::delete_multiple($posted_album_image_ids);
-					$message = $result.'件削除しました';
+					$message =__('message_delete_complete_bulk', array('num' => $result));
 				}
 				else
 				{
 					$result = Model_AlbumImage::update_multiple_each($posted_album_image_ids, $post, $is_disabled_to_update_public_flag);
-					$message = $result.'件更新しました';
+					$message =__('message_edit_complete_bulk', array('num' => $result));
 				}
 				\DB::commit_transaction();
 
@@ -386,11 +392,11 @@ class Controller_Album extends \Controller_Site
 			catch(\FuelException $e)
 			{
 				if (\DB::in_transaction()) \DB::rollback_transaction();
-				$message = $e->getMessage() ?: '更新に失敗しました';
+				$message = $e->getMessage() ?: __('message_update_failed');
 				\Session::set_flash('error', $message);
 			}
 		}
-		$this->set_title_and_breadcrumbs(term('album_image', 'site.management'), array('/album/'.$id => $album->name), $album->member, 'album');
+		$this->set_title_and_breadcrumbs(term('album.image.view', 'form.edit_all'), array('album/'.$id => $album->get_display_name()), $album->member, 'album');
 		$this->template->post_header = \View::forge('_parts/datetimepicker_header');
 		$this->template->post_footer = \View::forge('_parts/edit_images_footer');
 		$data = array(
@@ -426,8 +432,7 @@ class Controller_Album extends \Controller_Site
 			$album->delete();
 			\DB::commit_transaction();
 			//if (!empty($deleted_files)) \Site_Upload::remove_files($deleted_files);
-
-			\Session::set_flash('message', term('album').'を削除しました。');
+			\Session::set_flash('message', __('message_delete_complete_for', array('label' => t('album.view'))));
 		}
 		catch(Exception $e)
 		{
@@ -463,7 +468,7 @@ class Controller_Album extends \Controller_Site
 			\DB::start_transaction();
 			list($album_image, $file) = Model_AlbumImage::save_with_relations($album_id, $this->u, $post['public_flag'], null, 'album_image');
 			\DB::commit_transaction();
-			\Session::set_flash('message', '写真を投稿しました。');
+			\Session::set_flash('message', __('imessage_upload_complete_for', array('label' => t('album.image.view'))));
 		}
 		catch(\ValidationFailedException $e)
 		{
@@ -497,15 +502,15 @@ class Controller_Album extends \Controller_Site
 	private static function get_album_image_validation($is_disabled_to_update_public_flag)
 	{
 		$val = \Validation::forge();
-		$val->add('name', 'タイトル')->add_rule('trim')->add_rule('max_length', 255);
+		$val->add('name', t('album.image.name'))->add_rule('trim')->add_rule('max_length', 255);
 		if (!$is_disabled_to_update_public_flag)
 		{
 			$options = \Site_Form::get_public_flag_options(null, 'default', true);
-			$val->add('public_flag', term('public_flag.label'), array('options' => $options, 'type' => 'radio'))
+			$val->add('public_flag', t('public_flag.label'), array('options' => $options, 'type' => 'radio'))
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
 		}
-		$val->add('shot_at', '撮影日時')
+		$val->add('shot_at', t('site.shot_at'))
 			->add_rule('trim')
 			->add_rule('max_length', 16)
 			->add_rule('datetime_except_second')
@@ -513,10 +518,10 @@ class Controller_Album extends \Controller_Site
 
 		if (is_enabled_map('edit_images', 'album'))
 		{
-			$val->add('latitude', '緯度')
+			$val->add('latitude', t('common.latitude'))
 				->add_rule('numeric_between', -90, 90);
 
-			$val->add('longitude', '経度')
+			$val->add('longitude', t('common.longitude'))
 				->add_rule('numeric_between', -180, 180);
 		}
 
@@ -527,7 +532,7 @@ class Controller_Album extends \Controller_Site
 	{
 		$val = \Validation::forge();
 		$options = \Site_Form::get_public_flag_options();
-		$val->add('public_flag', term('public_flag.label'), array('options' => $options, 'type' => 'radio'))
+		$val->add('public_flag', t('public_flag.label'), array('options' => $options, 'type' => 'radio'))
 			->add_rule('required')
 			->add_rule('in_array', array_keys($options));
 

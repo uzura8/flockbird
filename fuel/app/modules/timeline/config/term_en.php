@@ -1,5 +1,10 @@
 <?php
 
 return array(
-	'timeline' => 'Timelines',
+	'timeline' => array(
+		'view' => 'Timeline',
+		'plural' => 'Timelines',
+		'list' => 'Timeline list',
+		'detail' => 'Timeline details',
+	),
 );

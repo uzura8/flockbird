@@ -1,1 +1,1 @@
-<?php echo term('timeline'); ?> に<?php echo term('site.picture'); ?>を <?php echo $count; ?> 枚投稿しました。
+<?php echo __('message_post_images_to_with_count', array('label' => t('timeline.view'), 'num' => $count)); ?>

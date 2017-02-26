@@ -188,12 +188,12 @@ class Controller_Image_api extends \Controller_Site_Api
 	{
 		$this->controller_common_api(function() use($id)
 		{
-			$this->response_body['errors']['message_default'] = term('form.watch').'状態の変更に失敗しました。';
+			$this->response_body['errors']['message_default'] = __('message_set_failed_for', array('label' => t('cover_image')));
 			$id = intval(\Input::post('id') ?: $id);
 			$album_image = Model_AlbumImage::check_authority($id, $this->u->id);
 			if ($album_image->album->cover_album_image_id == $id)
 			{
-				throw new DisableToUpdateException(term('form.set_cover_already').'です。');
+				throw new DisableToUpdateException(__('message_error_already_set'));
 			}
 			$album_image->album->cover_album_image_id = $id;
 			\DB::start_transaction();
@@ -204,7 +204,7 @@ class Controller_Image_api extends \Controller_Site_Api
 				'album_id' => $album_image->album_id,
 				'html' => html_tag('span', array('class' => 'disabled'), term('form.set_cover_already')),
 				'is_replace' => 1,
-				'message' => term('cover_image').'に設定しました。',
+				'message' => __('message_set_complete_for', array('label' => t('cover_image'))),
 			);
 
 			$this->set_response_body_api($data);
@@ -225,7 +225,7 @@ class Controller_Image_api extends \Controller_Site_Api
 	{
 		$this->controller_common_api(function() use($id)
 		{
-			$this->response_body['errors']['message_default'] = sprintf('%sの%sに失敗しました。', term('site.location'), term('form.save'));
+			$this->response_body['errors']['message_default'] = __('message_save_failed_for', array('label' => t('site.location')));
 			$id = intval(\Input::post('id') ?: $id);
 			$album_image = Model_AlbumImage::check_authority($id, $this->u->id, 'album_image_location');
 
@@ -245,7 +245,7 @@ class Controller_Image_api extends \Controller_Site_Api
 			$data = array(
 				'status' => $status,
 				'album_image_location' => $album_image_location->to_array(),
-				'message' => sprintf('%sを%sしました。', term('site.location'), term('form.save')),
+				'message' => __('message_save_complete_for', array('label' => t('site.location'))),
 			);
 
 			$this->set_response_body_api($data);

@@ -1,1 +1,1 @@
-<div class="alert alert-error">入力値が正しくありません。</div>
+<div class="alert alert-error"><?php echo __('message_invalid_for', array('label' => t('form.input_value'))); ?></div>

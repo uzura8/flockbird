@@ -56,7 +56,12 @@ if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $mo
 			<p><?php echo Form::textarea(
 				sprintf($prefix.'_description[%d]', $file->id),
 				isset($file->description) ? $file->description : '',
-				array('rows' => 2, 'placeholder' => '写真の説明', 'class' => 'form-control', 'id' => sprintf($prefix.'_description_%d', $file->id))
+				array(
+					'rows' => 2,
+					'placeholder' => t('common.delimitter.of', array('subject' => t('common.description'), 'object' => t('site.picture'))),
+					'class' => 'form-control',
+					'id' => sprintf($prefix.'_description_%d', $file->id),
+				)
 			); ?></p>
 <?php endif; ?>
 			<?php echo Form::hidden(sprintf($prefix.'[%d]', $file->id), $file->name_prefix.$file->name, array('class' => $prefix)); ?>

@@ -45,7 +45,6 @@ class Model_AlbumImage extends \MyOrm\Model
 		),
 		'name' => array(
 			'data_type' => 'varchar',
-			'label' => '名前',
 			'validation' => array('trim', 'max_length' => array(255)),
 			'form' => array('type' => 'text', 'class' => 'form-control'),
 		),
@@ -151,7 +150,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		if (\Module::loaded('timeline'))
 		{
 			$type_album_image_profile = \Config::get('timeline.types.album_image_profile');
-			// 更新時に timeline の sort_datetime, comment_count を更新
+			// Update sort_datetime of timeline on updated
 			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
 				'events' => array('after_update'),
 				'relations' => array(

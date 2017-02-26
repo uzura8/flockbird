@@ -23,13 +23,11 @@ class Model_AlbumImageLocation extends \MyOrm\Model
 			'form' => array('type' => false),
 		),
 		'latitude' => array(
-			'label' => '緯度',
 			'data_type' => 'DECIMAL',
 			'validation' => array('required', 'numeric_between' => array(-90, 90)),
 			'form' => array('type' => 'text'),
 		),
 		'longitude' => array(
-			'label' => '経度',
 			'data_type' => 'DECIMAL',
 			'validation' => array('required', 'numeric_between' => array(-180, 180)),
 			'form' => array('type' => 'text'),
@@ -59,6 +57,12 @@ class Model_AlbumImageLocation extends \MyOrm\Model
 		//	'events' => array('before_save', 'after_load'),
 		//),
 	);
+
+	public static function _init()
+	{
+		static::$_properties['latitude']['label'] = t('common.latitude');
+		static::$_properties['longitude']['label'] = t('common.longitude');
+	}
 
 	public static function get_locations4album_image_id($album_image_id)
 	{

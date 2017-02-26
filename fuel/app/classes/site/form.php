@@ -4,7 +4,7 @@ class Site_Form
 	public static function get_public_flag_options($key = null, $type = 'default', $with_no_change_option = false)
 	{
 		$options = array();
-		if ($with_no_change_option) $options[99] = '変更しない';
+		if ($with_no_change_option) $options[99] = t('form.do_not_change');
 		$public_flags = Site_Util::get_public_flags($type);
 		foreach ($public_flags as $public_flag)
 		{

@@ -1,6 +1,6 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php echo sprintf('%sしている%sはいません', term('form.like'), term('member.view'); ?>
+<?php echo __('nobody_liked'); ?>
 <?php else: ?>
 <div id="article_list">
 <?php foreach ($list as $id => $obj): ?>

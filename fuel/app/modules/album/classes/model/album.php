@@ -30,13 +30,11 @@ class Model_Album extends \MyOrm\Model
 		),
 		'name' => array(
 			'data_type' => 'varchar',
-			'label' => '名前',
 			'validation' => array('trim', 'required', 'max_length' => array(255)),
 			'form' => array('type' => 'text'),
 		),
 		'body' => array(
 			'data_type' => 'text',
-			'label' => '説明',
 			'validation' => array('trim'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
@@ -81,7 +79,8 @@ class Model_Album extends \MyOrm\Model
 
 	public static function _init()
 	{
-		static::$_properties['name']['label'] = term('album').'名';
+		static::$_properties['name']['label'] = t('album.name');
+		static::$_properties['body']['label'] = t('common.description');
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 		static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_album_foreign_tables();
@@ -98,7 +97,7 @@ class Model_Album extends \MyOrm\Model
 		}
 		if (\Module::loaded('timeline'))
 		{
-			// 更新時に timeline の sort_datetime を更新
+			// Update sort_datetime of timeline on updated
 			$observer_key = \Config::get('timeline.types.album');
 			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
 				'events' => array('after_update'),
@@ -175,7 +174,7 @@ class Model_Album extends \MyOrm\Model
 
 		if ($is_changed_public_flag && \Module::loaded('timeline'))
 		{
-			// timeline の public_flag の更新
+			// Update public_flag of timeline
 			\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($values['public_flag'], 'album', $album->id, \Config::get('timeline.types.album'));
 		}
 
@@ -190,7 +189,7 @@ class Model_Album extends \MyOrm\Model
 
 	public function update_public_flag_with_relations($public_flag, $is_update_album_images = false)
 	{
-		// album_image の public_flag の更新
+		// Update public_flag of album_image
 		if ($is_update_album_images)
 		{
 			Model_AlbumImage::update_public_flag4album_id($this->id, $public_flag);
@@ -243,5 +242,15 @@ class Model_Album extends \MyOrm\Model
 		$album = self::get_album_for_foreign_table($member_id, $table_name);
 
 		return $album->id;
+	}
+
+	public function get_display_name()
+	{
+		if (! $name = Site_Util::get_album_type4table($this->foreign_table, false))
+		{
+			$name = $this->name;
+		}
+
+		return $name;
 	}
 }

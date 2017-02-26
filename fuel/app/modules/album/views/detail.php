@@ -40,11 +40,11 @@
 
 <div id="btn_menu">
 <?php if ($list): ?>
-<?php echo btn(sprintf('%sを見る', term('site.picture')), 'album/slide/'.$album->id, 'mr', true, null, null, null, 'picture', null, null, false); ?>
+<?php echo btn(t('form.do_see_for', array('label' => t('site.pictures'))), 'album/slide/'.$album->id, 'mr', true, null, null, null, 'picture', null, null, false); ?>
 <?php endif; ?>
 <?php if (Auth::check() && $album->member_id == $u->id): ?>
 <?php if (!$disabled_to_update): ?>
-<?php echo btn(sprintf('%sを%s', term('site.picture'), term('form.add')), 'album/upload/'.$album->id, 'mr', true, null, null, null, 'upload', null, null, false); ?>
+<?php echo btn(t('form.do_add_for', array('label' => t('site.pictures'))), 'album/upload/'.$album->id, 'mr', true, null, null, null, 'upload', null, null, false); ?>
 <?php endif; ?>
 <?php echo btn(term('site.picture', 'site.management'), 'album/edit_images/'.$album->id, null, true, null, null, null, 'th-list', null, null, false); ?>
 <?php endif; ?>
@@ -54,14 +54,14 @@
 <?php echo render('_parts/facebook/share_btn', array(
 	'images' => $list,
 	'link_uri' => 'album/'.$album->id,
-	'name' => $album->name,
+	'name' => $album->get_display_name(),
 	'description' => $album->body,
 )); ?>
 <?php 	endif; ?>
 
 <!-- share button -->
 <?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($album->public_flag)): ?>
-<?php echo render('_parts/services/share', array('disableds' => array('facebook'), 'text' => $album->name)); ?>
+<?php echo render('_parts/services/share', array('disableds' => array('facebook'), 'text' => $album->get_display_name())); ?>
 <?php endif; ?>
 
 </div>

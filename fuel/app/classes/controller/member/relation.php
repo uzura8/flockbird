@@ -27,7 +27,6 @@ class Controller_Member_Relation extends Controller_Base_Site
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($member_id);
 		if ($type == 'access_block' && $member->id != get_uid()) throw new HttpNotFoundException;
 
-		$relation_type_camelized_lower = Inflector::camelize($type, true);
 		if ($is_mypage)
 		{
 			$middle_breadcrumbs = $type == 'access_block' ?
@@ -41,7 +40,7 @@ class Controller_Member_Relation extends Controller_Base_Site
 			);
 		}
 		$this->set_title_and_breadcrumbs(
-			term($relation_type_camelized_lower, 'site.list_kana'),
+			self::get_page_title($type),
 			$middle_breadcrumbs,
 			$is_mypage ? $member : null
 		);
@@ -71,4 +70,18 @@ class Controller_Member_Relation extends Controller_Base_Site
 		));
 		$this->template->post_footer = \View::forge('_parts/load_item');
 	}
+
+	private static function get_page_title($type)
+	{
+		switch ($type)
+		{
+			case 'follow':
+				return t('member.following');
+			case 'follower':
+				return t('follower');
+		}
+
+		return term(Inflector::camelize($type, true), 'site.list_kana');
+	}
 }
+

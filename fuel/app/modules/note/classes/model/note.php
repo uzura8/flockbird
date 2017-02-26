@@ -28,13 +28,11 @@ class Model_Note extends \MyOrm\Model
 		),
 		'title' => array(
 			'data_type' => 'varchar',
-			'label' => 'タイトル',
 			'validation' => array('trim', 'required', 'max_length' => array(255)),
 			'form' => array('type' => 'text'),
 		),
 		'body' => array(
 			'data_type' => 'text',
-			'label' => '本文',
 			'validation' => array('trim', 'required'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
@@ -100,6 +98,8 @@ class Model_Note extends \MyOrm\Model
 
 	public static function _init()
 	{
+		static::$_properties['title']['label'] = t('note.title');
+		static::$_properties['body']['label'] = t('note.body');
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 

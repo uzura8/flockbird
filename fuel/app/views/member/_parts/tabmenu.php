@@ -2,7 +2,7 @@
 <?php if (is_enabled('timeline')): ?>
 	<?php echo html_tag('li', array(
 		'class' => check_current_uris(array('member/'.$member->id, 'member/me')) ? 'active' : '',
-	), navigation_link('timeline', 'member/'.$member->id)); ?>
+	), navigation_link('timeline.plural', 'member/'.$member->id)); ?>
 <?php endif; ?>
 	<?php echo html_tag('li', array(
 		'class' => check_current_uri('member/profile/'.$member->id) ? 'active' : '',
@@ -27,14 +27,14 @@
 		echo html_tag(
 			'li',
 			array('class' => check_current_uri($uri) ? 'active' : ''),
-			anchor($uri, sprintf('%s (%d)', term('follow'), Model_MemberRelation::get_count4member_id($member->id, 'follow')))
+			anchor($uri, sprintf('%s (%d)', t('following'), Model_MemberRelation::get_count4member_id($member->id, 'follow')))
 		);
 
 		$uri = sprintf('member/%d/relation/followers', $member->id);
 		echo html_tag(
 			'li',
 			array('class' => check_current_uri($uri) ? 'active' : ''),
-			anchor($uri, sprintf('%s (%d)', term('follower'), Model_MemberRelation::get_count4member_id($member->id, 'follow', 'member_id_to')))
+			anchor($uri, sprintf('%s (%d)', t('follower'), Model_MemberRelation::get_count4member_id($member->id, 'follow', 'member_id_to')))
 		);
 	}
 ?>

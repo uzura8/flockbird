@@ -96,6 +96,14 @@ class Util_Date
 		return $date_str;
 	}
 
+	public static function conv_short_date($short_date_mysql_formtat, $year = null)
+	{
+		if (! $year) $year = date('Y');
+		$date_full = $year.'-'.$short_date_mysql_formtat;
+
+		return site_get_time($date_full, 'normal', 'short');
+	}
+
 	public static function conv_date_format($date_str, $format = '%d/%d')
 	{
 		list($month, $date) = self::sprit_date_str($date_str);

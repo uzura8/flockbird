@@ -77,7 +77,7 @@ class Controller_Member_Relation_Api extends Controller_Site_Api
 	public function post_update($member_id_to = null, $relation_type = null)
 	{
 		$this->controller_common_api(function() use($member_id_to, $relation_type) {
-			$this->response_body['errors']['message_default'] = sprintf('%sに%sしました。', term('form.update'), term('site.failure'));
+			$this->response_body['errors']['message_default'] = __('message_update_failed');
 			if (!Site_Member_Relation::check_enabled_relation_type($relation_type)) throw new HttpNotFoundException;
 
 			if (!is_null(Input::post('id'))) $member_id_to = (int)Input::post('id');

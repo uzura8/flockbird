@@ -51,7 +51,7 @@ class Site_Member_Relation
 		switch ($relation_type)
 		{
 			case 'follow':
-				$icon_term = $status ? 'followed' : 'do_follow';
+				$icon_term = $status ? 'following' : 'do_follow';
 				if ($is_api_response_data)
 				{
 					$attr = $status ? array('class' => array('add' => 'btn-primary')) : array('class' => array('remove' => 'btn-primary'));

@@ -273,7 +273,7 @@ class Controller_Site_Api extends Controller_Base_Site
 				if ($table == 'timeline' && conf('articleUnfollow.isEnabled', 'timeline'))
 				{
 					$is_followed = (bool)\Timeline\Model_MemberFollowTimeline::get4timeline_id_and_member_id($obj->id, $this->u->id);
-					$menus[] = array('icon_term' => $is_followed ? 'followed' : 'do_follow', 'attr' => array(
+					$menus[] = array('icon_term' => $is_followed ? 'following' : 'do_follow', 'attr' => array(
 						'class' => 'js-update_toggle',
 						'data-uri' => sprintf('timeline/api/update_follow_status/%d.json', $obj->id),
 						//'data-msg' => $is_followed ? term('follow').'を解除しますか？' : term('follow').'しますか？',

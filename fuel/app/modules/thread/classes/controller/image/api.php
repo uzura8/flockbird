@@ -21,6 +21,6 @@ class Controller_Image_Api extends \Controller_Site_Api
 	 */
 	public function post_delete($id = null)
 	{
-		$this->api_delete_common('thread_image', $id, null, term('site.image'), 'thread');
+		$this->api_delete_common('thread_image', $id, null, t('site.image'), 'thread');
 	}
 }
