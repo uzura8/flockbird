@@ -11,7 +11,6 @@ return array(
 	'member_message_signup_complete' => 'Temporary registration is completed. Please complete this registration from the URL on the received mail.',
 	'member_registration' => 'Member Registration',
 	'member_registration_input_help_name' => 'Symbols and Spaces is disabled to set. ',
-	'agree_and_register' => 'Agree and register',
 	'invite_form_email_placeholder' => "Input friend's email to invite. ",
 	'invite_form_message_placeholder' => "Input message to friend. [optional]",
 	'member_address_setting' => 'Setting Address',

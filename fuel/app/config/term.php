@@ -129,6 +129,7 @@ $config = array(
 		'register_for' => ':labelを登録する',
 		'registration' => '登録',
 		'registration_for' => ':labelの登録',
+		'register_with_agree' => '同意して登録する',
 		'unregisterd' => '未登録',
 		'leave' => '退会する',
 		'left' => '退会',

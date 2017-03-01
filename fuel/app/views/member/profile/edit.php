@@ -11,13 +11,13 @@
 
 <?php if ($is_regist): ?>
 	<?php echo form_text(
-		anchor('site/term', '利用規約', false, array(), true).' をお読みいただき、同意される方のみ「同意して登録する」ボタンを押してください。',
+		__('message_confirmation_to_agree_terms_of_use', array('link' => anchor('site/term', t('site.term'), false, array(), true))),
 		null,
 		$label_size,
 		true
 	); ?>
 <?php endif; ?>
 
-	<?php echo form_button($is_regist ? '同意して登録する' : 'form.do_edit', 'submit', 'submit', array(), $label_size); ?>
+	<?php echo form_button($is_regist ? 'site.register_with_agree' : 'form.do_edit', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

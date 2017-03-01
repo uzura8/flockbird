@@ -128,6 +128,7 @@ $config = array(
 		'register_for' => 'Register :label',
 		'registration' => 'Registration',
 		'registration_for' => 'Register :label',
+		'register_with_agree' => 'Agree and register',
 		'unregisterd' => 'Unregistered',
 		'leave' => 'Leave',
 		'left' => 'Left',

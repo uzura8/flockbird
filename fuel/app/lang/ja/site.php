@@ -11,7 +11,6 @@ return array(
 	'member_message_signup_complete' => '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。',
 	'member_registration' => 'メンバー登録',
 	'member_registration_input_help_name' => '記号・空白は使用できません',
-	'agree_and_register' => '同意して登録する',
 	'invite_form_email_placeholder' => sprintf('%sの%s', term('form.do_invite', 'common.friend'), term('site.email')),
 	'invite_form_message_placeholder' => sprintf('%sへの%s', term('common.friend'), term('form.invite', 'common.message', 'form._not_required')),
 	'member_address_setting' => '住所設定',
