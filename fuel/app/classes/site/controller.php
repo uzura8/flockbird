@@ -103,19 +103,21 @@ class Site_Controller
 		switch ($http_status)
 		{
 			case 401:
-				$message = sprintf('%sの取得に失敗しました。%s後、再度実行してください。', term('site.auth', 'site.info'), term('site.login'));
+				$message = __('message_error_401');
 				break;
 			case 400:
 			case 403:
 			case 404:
 			case 405:
-				$message = '不正なリクエストです。';
+				$message = __('message_error_bad_request');
 				break;
 			case 500:
-				$message = !empty($response_body['errors']['message_default']) ? $response_body['errors']['message_default'] : 'サーバ'.term('form.error').'が発生しました。';
+				$message = !empty($response_body['errors']['message_default']) ?
+					$response_body['errors']['message_default'] : __('message_error_server_error_occurred');
 				break;
 			default :
-				$message = !empty($response_body['errors']['message_default']) ? $response_body['errors']['message_default'] : term('form.error').'が発生しました。';
+				$message = !empty($response_body['errors']['message_default']) ?
+					$response_body['errors']['message_default'] : __('message_error_error_occurred');
 				break;
 		}
 		if (!empty($response_body['errors']['message_default']))

@@ -52,7 +52,7 @@ echo form_upload_files(
 <?php 	endif; ?>
 <?php endif; ?>
 <?php if (conf('file.isEnabled', 'news')): ?>
-	<?php echo form_upload_files($files, false, true, 'M', array(), 'news', term('site.file'), null, null, 2, 'file'); ?>
+	<?php echo form_upload_files($files, false, true, 'M', array(), 'news', t('site.file.view'), null, null, 2, 'file'); ?>
 <?php endif; ?>
 <?php if (Config::get('news.link.isEnabled')): ?>
 	<div class="form-group">

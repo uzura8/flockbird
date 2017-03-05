@@ -90,7 +90,7 @@ class Controller_Api extends \Controller_Site_Api
 
 			$data = array(
 				'result'  => $is_registerd,
-				'message' => $is_registerd ? __('member_message_follow') : __('member_message_unfollow'),
+				'message' => $is_registerd ? __('member_message_follow') : __('member_message_cancel_follow'),
 				'html'    => icon_label($is_registerd ? 'following' : 'do_follow', 'both', false),
 			);
 			$this->set_response_body_api($data);

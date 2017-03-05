@@ -172,7 +172,7 @@ class Model_Profile extends \MyOrm\Model
 
 		if (conf('profile.useCacheTable.isEnabled', 'member'))
 		{
-			// update 時に紐づく member_profile_cache を更新する
+      // Update related member_profile_cache
 			static::$_observers['MyOrm\Observer_UpdateProfile'] = array(
 				'events' => array('after_insert', 'before_update', 'before_delete'),
 			);

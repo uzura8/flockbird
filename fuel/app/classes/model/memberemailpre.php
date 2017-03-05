@@ -19,7 +19,7 @@ class Model_MemberEmailPre extends \MyOrm\Model
 		'token' => array('form' => array('type' => false)),
 		'code' => array(
 			'data_type' => 'varchar',
-			'label' => '確認コード',
+			'label' => 'Confirmation code',
 			'validation' => array(
 				'trim',
 				'required',

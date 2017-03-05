@@ -33,7 +33,7 @@
 	<td class="image"><?php echo img($album_image->get_image(), 'S', 'album/image/'.$album_image->id); ?></td>
 	<td class="span5"><?php echo $album_image->name; ?></td>
 	<td><?php echo get_public_flag_label($album_image->public_flag, false, 'label', true); ?></td>
-	<td><?php if (isset($album_image->shot_at)) echo date('Y年n月j日 H:i', strtotime($album_image->shot_at)); ?></td>
+	<td><?php if (isset($album_image->shot_at)) echo site_get_time($album_image->shot_at, 'normal'); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

@@ -2,7 +2,7 @@
 $label_col_sm_size = 3;
 $posted = Arr::filter_keys($val->validated(), array(conf('csrf_token_key', 'security')), true);
 ?>
-<p><?php echo sprintf('下記の内容で%sしますか？', term('form.send')); ?></p>
+<p><?php echo __('message_send_confirm_following_contents'); ?></p>
 
 <div class="well">
 <?php echo form_open(false, false, array('action' => 'contact/send'), $posted); ?>

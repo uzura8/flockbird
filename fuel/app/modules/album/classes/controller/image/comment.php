@@ -34,11 +34,11 @@ class Controller_Image_comment extends \Controller_Site
 			// Save the post and the comment will save too
 			if ($comment->save())
 			{
-				\Session::set_flash('message', 'コメントしました。');
+				\Session::set_flash('message', __('message_comment_complete'));
 			}
 			else
 			{
-				\Session::set_flash('error', 'コメントに失敗しました。');
+				\Session::set_flash('error', __('message_comment_failed'));
 			}
 
 			\Response::redirect('album/image/'.$album_image_id);
@@ -65,7 +65,7 @@ class Controller_Image_comment extends \Controller_Site
 		$album_image_id = $album_image_comment->album_image_id;
 		$album_image_comment->delete();
 
-		\Session::set_flash('message', 'コメントを削除しました。');
+		\Session::set_flash('message', __('message_delete_complete_for', array('label' => t('form.comment'))));
 		\Response::redirect('album/image/'.$album_image_id);
 	}
 }

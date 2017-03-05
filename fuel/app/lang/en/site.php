@@ -45,7 +45,9 @@ return array(
 	// member relation
 	'member_message_follow_from_to' => ':subject followed :object. ',
 	'member_message_follow' => 'Followed. ',
-	'member_message_unfollow' => 'Canceled the follow. ',
+	'member_message_cancel_follow' => 'Canceled the follow. ',
+	'member_message_accessBlock' => 'Access blocked from the Member. ',
+	'member_message_cancel_accessblock' => 'The Access block was canceled. ',
 	'member_message_error_access_blocked' => 'It is possible that this link has expired or it can not be viewed due to the setting of the page. ',
 	// Public flag
 	'public_flag_expand_confirm' => 'The scope of publication expands. Do you want to do it? ',

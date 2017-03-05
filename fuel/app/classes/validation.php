@@ -316,7 +316,7 @@ class Validation extends Fuel\Core\Validation
 		$month = $date_items['month'];
 		$date = $date_items['date'];
 
-		$year = 2000;// 閏年の年を初期値としてセット
+		$year = 2000;// Set year of leap year as initial value
 		if (!empty($date_items['year']))
 		{
 			$year = $date_items['year'];
@@ -333,9 +333,6 @@ class Validation extends Fuel\Core\Validation
 		return checkdate($month, $date, $year);
 	}
 
-	/**
-	 * 値の正当性チェック
-	 */
 	public static function _validation_checkbox_val($val, $options)
 	{
 		if ($val) {
@@ -351,9 +348,9 @@ class Validation extends Fuel\Core\Validation
 	}
 
 	/**
-	 * 必須チェック
+	 * Required check
 	 *
-	 * $minで最低チェック数を指定
+	 * $min is minimum length for check
 	 */
 	public static function _validation_checkbox_require($val, $min = null)
 	{

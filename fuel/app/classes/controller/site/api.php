@@ -12,7 +12,7 @@ class Controller_Site_Api extends Controller_Base_Site
 
 
 	/**
-	 * 以下、共通 controller
+	 * common controller
 	 * 
 	 */
 
@@ -267,7 +267,6 @@ class Controller_Site_Api extends Controller_Base_Site
 					$menus[] = array('icon_term' => $is_watched ? 'form.do_unwatch' : 'form.do_watch', 'attr' => array(
 						'class' => 'js-update_toggle',
 						'data-uri' => $api_uri,
-						//'data-msg' => $is_watched ? term('form.watch').'を解除しますか？' : term('form.watch').'しますか？',
 					));
 				}
 				if ($table == 'timeline' && conf('articleUnfollow.isEnabled', 'timeline'))
@@ -276,7 +275,6 @@ class Controller_Site_Api extends Controller_Base_Site
 					$menus[] = array('icon_term' => $is_followed ? 'following' : 'do_follow', 'attr' => array(
 						'class' => 'js-update_toggle',
 						'data-uri' => sprintf('timeline/api/update_follow_status/%d.json', $obj->id),
-						//'data-msg' => $is_followed ? term('follow').'を解除しますか？' : term('follow').'しますか？',
 					));
 				}
 

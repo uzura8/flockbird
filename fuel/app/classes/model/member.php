@@ -142,24 +142,33 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['sex']['validation']['in_array'][] = array_keys($sex_options);
 
 		$options_public_flag = Site_Util::get_public_flags();
-		static::$_properties['sex_public_flag']['label'] = sprintf('%sの%s', term('member.sex.label'), term('public_flag.label'));
 		static::$_properties['sex_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['sex_public_flag']['validation']['in_array'][] = $options_public_flag;
+		static::$_properties['sex_public_flag']['label'] = t('common.delimitter.of', array(
+			'object' => t('member.sex.label'),
+			'subject' => t('public_flag.label'),
+		));
 
 		static::$_properties['birthyear']['label'] = term('member.birthyear');
 		$options = Form_Util::get_year_options(conf('member.profile.birthday.year_from'), conf('member.profile.birthday.year_to'));
 		static::$_properties['birthyear']['form']['options'] = $options;
 		static::$_properties['birthyear']['validation']['in_array'][] = array_keys($options);
 
-		static::$_properties['birthyear_public_flag']['label'] = sprintf('%sの%s', term('member.birthyear'), term('public_flag.label'));
 		static::$_properties['birthyear_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthyear_public_flag']['validation']['in_array'][] = $options_public_flag;
+		static::$_properties['birthyear_public_flag']['label'] = t('common.delimitter.of', array(
+			'object' => t('member.birthyear'),
+			'subject' => t('public_flag.label'),
+		));
 
 		static::$_properties['birthdate']['label'] = term('member.birthdate');
 
-		static::$_properties['birthdate_public_flag']['label'] = sprintf('%sの%s', term('member.birthdate'), term('public_flag.label'));
 		static::$_properties['birthdate_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['birthdate_public_flag']['validation']['in_array'][] = $options_public_flag;
+		static::$_properties['birthdate_public_flag']['label'] = t('common.delimitter.of', array(
+			'object' => t('member.birthdate'),
+			'subject' => t('public_flag.label'),
+		));
 
 		$country_options = conf('country.options', 'i18n');
 		static::$_properties['country']['label'] = term('member.country');
@@ -167,15 +176,18 @@ class Model_Member extends \MyOrm\Model
 		static::$_properties['country']['validation']['in_array'][] = array_keys($country_options);
 
 		$options_public_flag = Site_Util::get_public_flags();
-		static::$_properties['country_public_flag']['label'] = sprintf('%sの%s', term('member.country'), term('public_flag.label'));
 		static::$_properties['country_public_flag']['form'] = Site_Form::get_public_flag_configs();
 		static::$_properties['country_public_flag']['validation']['in_array'][] = $options_public_flag;
+		static::$_properties['country_public_flag']['label'] = t('common.delimitter.of', array(
+			'object' => t('member.country'),
+			'subject' => t('public_flag.label'),
+		));
 
 		static::$_properties['invite_member_id'] = Util_Orm::get_relational_numeric_key_prop(false);
 
 		if (conf('profile.useCacheTable.isEnabled', 'member'))
 		{
-			// update 時に紐づく member_profile_cache を更新する
+			// Update related member_profile_cache
 			static::$_observers['MyOrm\Observer_UpdateMemberProfileCache'] = array(
 				'events' => array('after_save'),
 			);

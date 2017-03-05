@@ -19,7 +19,7 @@ class Controller_FileTmp extends Controller_Site
 	{
 		$this->template->post_header = \View::forge('filetmp/_parts/upload_header');
 		$this->template->post_footer = \View::forge('filetmp/_parts/upload_footer');
-		$this->set_title_and_breadcrumbs('ファイルアップロード');
+		$this->set_title_and_breadcrumbs(t('upload_for_simple', array('label' => t('site.file.plural'))));
 		$this->template->content = View::forge('filetmp/upload', array());
 	}
 }

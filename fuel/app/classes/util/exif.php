@@ -54,7 +54,7 @@ class Util_Exif
 
 	public static function validate_exif($value)
 	{
-		// 配列の場合は再帰的に処理
+		// For arrays, Process recursively 
 		if (is_array($value))
 		{
 			return array_map(array('Util_Exif', 'validate_exif'), $value);
@@ -97,8 +97,7 @@ class Util_Exif
 	{
 		if (!in_array($ref, array('N', 'S', 'E', 'W'))) return false;
 		if (count($decimal60_values) < 3) return false;
-
-		//60進数から10進数に変換
+		// Convert from hexadecimal to decimal
 		$degree = static::convert_exif_gps_str2int($decimal60_values[0]);
 		$min    = static::convert_exif_gps_str2int($decimal60_values[1]);
 		$sec    = static::convert_exif_gps_str2int($decimal60_values[2]);
@@ -107,7 +106,7 @@ class Util_Exif
 		if (in_array($ref, array('N', 'S')) && $decimal10_value > 90) return false;
 		if (in_array($ref, array('E', 'W')) && $decimal10_value > 180) return false;
 
-		//南緯、または西経の場合はマイナスにして返却
+		//In the case of south latitude or west longitude, return it with minus
 		return (in_array($ref, array('S', 'W'))) ? ($decimal10_value * -1) : $decimal10_value;
 	}
 

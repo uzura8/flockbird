@@ -29,7 +29,7 @@ class Site_Member
 			$member->file_name = $file->name;
 			$member->save();
 
-			// timeline 投稿
+			// Post tmeline
 			if (is_enabled('timeline')) \Timeline\Site_Model::save_timeline($member->id, conf('public_flag.maxRange'), 'profile_image', $file->id, $member->updated_at);
 		}
 

@@ -284,7 +284,7 @@ class Controller_Member_Setting_Email extends Controller_Member
 				return false;
 			}
 
-			throw new ValidationFailedException(__('message_disabled_to_register_for', array('label' => t('member.email'))));
+			throw new ValidationFailedException(__('message_disabled_to_register_this_for', array('label' => t('member.email'))));
 		}
 
 		return true;

@@ -113,7 +113,7 @@ class Util_Date
 
 	public static function calc_age($year, $date_str = null)
 	{
-		if (!$date_str) $date_str = '1231';// 日付がない場合は最も遅い日付で年齢計算する
+		if (!$date_str) $date_str = '1231';// If no date, Calculate the age at the latest date
 		if (strpos($date_str, '-') !== false) $date_str = str_replace('-', '', $date_str);
 		$target_date = $year.$date_str;
 		$now = date('Ymd');

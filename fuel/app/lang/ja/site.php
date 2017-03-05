@@ -45,7 +45,9 @@ return array(
 	// member relation
 	'member_message_follow_from_to' => ':subjectが:objectをフォローしました。',
 	'member_message_follow' => 'フォローしました。',
-	'member_message_unfollow' => 'フォローを解除しました。',
+	'member_message_cancel_follow' => 'フォローを解除しました。',
+	'member_message_accessBlock' => 'アクセスブロックしました。',
+	'member_message_cancel_accessblock' => 'アクセスブロックを解除しました。',
 	'member_message_error_access_blocked' => 'このリンクは有効期限切れとなっているか、ページの設定により閲覧できなくなっている可能性があります。',
 	// Public flag
 	'public_flag_expand_confirm' => '公開範囲が広がります。実行しますか？',

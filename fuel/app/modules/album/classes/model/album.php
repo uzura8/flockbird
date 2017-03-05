@@ -195,7 +195,7 @@ class Model_Album extends \MyOrm\Model
 			Model_AlbumImage::update_public_flag4album_id($this->id, $public_flag);
 		}
 
-		// timeline の public_flag の更新
+		// Update public_flag of timeline
 		if (\Module::loaded('timeline'))
 		{
 			\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($public_flag, 'album', $this->id, \Config::get('timeline.types.album'));

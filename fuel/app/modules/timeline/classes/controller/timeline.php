@@ -105,9 +105,9 @@ class Controller_Timeline extends \Controller_Site
 		$timeline = Model_Timeline::check_authority($id);
 		$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
 
-		// 既読処理
+    // Update read flag
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'timeline', $id);
-		// 通報リンク
+    // Link to report
 		$this->set_global_for_report_form();
 
 		$liked_timeline_ids = (conf('like.isEnabled') && \Auth::check()) ?

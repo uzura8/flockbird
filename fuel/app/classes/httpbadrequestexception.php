@@ -7,7 +7,7 @@ class HttpBadRequestException extends \HttpException
 	 */
 	public function response()
 	{
-		$response = Request::forge('error/common', array('message' => '不正なリクエストです。'))
+		$response = Request::forge('error/common', array('message' => __('message_error_bad_request')))
 			->execute(array($this->getMessage()))
 			->response();
 		

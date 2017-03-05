@@ -112,7 +112,7 @@ class Site_Util
 
 	public static function get_no_data_talks()
 	{
-		return term('message.talks.view').'がありません。';
+		return __('message_no_data_for', array('label' => t('message.talks.view')));
 	}
 
 	public static function get_detail_page_uri($type, $related_id, $message_id, $member_id_from)

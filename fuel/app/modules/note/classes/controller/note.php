@@ -77,22 +77,18 @@ class Controller_Note extends \Controller_Site
 		$note_id = (int)$id;
 		$note = Model_Note::check_authority($note_id);
 		$this->check_browse_authority($note->public_flag, $note->member_id);
-
-		// 既読処理
+    // Update read flag
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'note', $id);
-		// 通報リンク
+		// Link to report
 		$this->set_global_for_report_form();
-
 		// note_album_image
 		$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
-
 		// note_comment
 		$default_params = array('latest' => 1);
 		list($limit, $is_latest, $is_desc, $since_id, $max_id)
 			= $this->common_get_list_params($default_params, conf('view_params_default.detail.comment.limit_max'));
 		list($list, $next_id, $all_comment_count)
 			= Model_NoteComment::get_list(array('note_id' => $note_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
-
 		// note_like
 		$is_liked_self = \Auth::check() ? Model_NoteLike::check_liked($id, $this->u->id) : false;
 

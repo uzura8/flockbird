@@ -102,7 +102,7 @@ class Controller_Contact extends \Controller_Site
 				'body' => $post['body'],
 				'category' => isset($post['category']) ? $post['category'] : '',
 			), true);
-			\Session::set_flash('message', sprintf('%sを%sしました。', term('contact.view', 'site.mail'), term('form.send')));
+			\Session::set_flash('message', __('message_send_mail', array('label' => t('contact.view'))));
 			\Response::redirect('member');
 		}
 		catch(\EmailValidationFailedException $e)
@@ -119,7 +119,7 @@ class Controller_Contact extends \Controller_Site
 		{
 			if (!$error_message = $e->getMessage())
 			{
-				$error_message = sprintf('%sの%sに%sしました。', term('site.mail'), term('form.send'), term('site.failure'));
+				$error_message = __('message_send_failed_for', array('label' => t('site.mail')));
 			}
 		}
 

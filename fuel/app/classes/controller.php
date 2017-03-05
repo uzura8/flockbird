@@ -9,7 +9,7 @@ class Controller extends Fuel\Core\Controller
 		parent::before();
 		$this->response = new Response();
 
-		// クリックジャッキング対策
+		// against click jacking
 		$this->response->set_header('X-FRAME-OPTIONS', 'SAMEORIGIN');
 	}
 }

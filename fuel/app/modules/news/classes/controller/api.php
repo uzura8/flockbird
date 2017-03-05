@@ -145,23 +145,26 @@ class Controller_Api extends \Controller_Rest
 			case 'image/jpeg':
 			case 'image/png':
 			case 'image/bmp':
-				return '画像ファイル';
 			case 'text/plain':
-				return 'テキストファイル';
+				return t('site.file.formats.text');
+
 			case 'text/csv':
-				return 'CSVファイル';
+				return t('site.file.formats.csv');
+
 			case 'application/pdf':
-				return 'PDFファイル';
+				return t('site.file.formats.pdf');
+
 			case 'application/msword':
 			case 'application/msword':
-				return 'ワードファイル';
+				return t('site.file.formats.word');
+
 			case 'application/vnd.ms-excel':
 			case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-				return '・エクセルファイル';
+				return t('site.file.formats.excel');
+
 			case 'application/vnd.ms-powerpoint':
 			case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-				return 'パワーポイントファイル';
-			default :
+				return t('site.file.formats.powerpoint');
 		}
 
 		return '';

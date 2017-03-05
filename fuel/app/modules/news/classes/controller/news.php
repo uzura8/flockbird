@@ -139,13 +139,13 @@ class Controller_News extends \Controller_Site
 		{
 			case 'closed':
 				$header_info = array(
-					'body' => sprintf('この%sはまだ%sされていません。', term('news.view'), term('form.publish')),
+					'body' => __('message_not_published', array('label' => t('news.view'))),
 					'type' => 'danger'
 				);
 				break;
 			case 'reserved':
 				$header_info = array(
-					'body' => sprintf('この%sは %s に%sされます。', term('news.view'), site_get_time($published_at, 'normal', 'Y/m/d H:i'), term('form.publish')),
+					'body' => __('message_publish_reserved_at', array('label' => t('news.view'), 'time' => site_get_time($published_at, 'normal'))),
 				);
 				break;
 		}

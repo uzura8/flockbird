@@ -9,7 +9,7 @@ class Site_FileMaker
 	private $split_num   = '';
 	private $file_name    = '';
 	private $filepath_prefix = '';
-	private $extension   = 'gif';//noimage 画像の拡張子をデフォルト値とする
+	private $extension   = 'gif';//Set default value for extension of noimag
 	private $size        = '';
 	private $width       = '';
 	private $height      = '';

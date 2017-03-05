@@ -309,7 +309,7 @@ class Model_AlbumImage extends \MyOrm\Model
 		);
 		$self->save();
 
-		// カバー写真の更新
+		// Update cover image
 		if ($timeline_type_key == 'album_image_profile')
 		{
 			if (!$album) $album = Model_Album::find($album_id);
@@ -317,7 +317,7 @@ class Model_AlbumImage extends \MyOrm\Model
 			$album->save();
 		}
 
-		// timeline 投稿
+		// Post timeline
 		if (\Module::loaded('timeline'))
 		{
 			switch ($timeline_type_key)

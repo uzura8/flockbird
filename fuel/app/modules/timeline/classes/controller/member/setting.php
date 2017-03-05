@@ -31,8 +31,7 @@ class Controller_Member_Setting extends \Controller_Site
 				\DB::start_transaction();
 				\Form_MemberConfig::save($this->u->id, $val, $post);
 				\DB::commit_transaction();
-
-				\Session::set_flash('message', $page_name.'を変更しました。');
+				\Session::set_flash('message', __('message_change_complete_for', array('label' => $page_name)));
 				\Response::redirect('member/setting');
 			}
 			catch(\FuelException $e)

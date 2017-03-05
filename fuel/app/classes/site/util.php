@@ -72,7 +72,7 @@ class Site_Util
 	public static function get_uri_reservede_words($additional_list = array())
 	{
 		$uri_reservede_words = array(
-			// common(汎用)
+			// common
 			'index',
 			'list',
 			'api',
@@ -82,7 +82,7 @@ class Site_Util
 			'delete',
 			'create',
 			'edit',
-			// site 特有
+			// Specified for site
 			'comment',
 			'like',
 		);

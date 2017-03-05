@@ -26,7 +26,7 @@ class Controller_Error extends Controller_Site
 	public function action_400()
 	{
 		$this->set_title_and_breadcrumbs('400 Bad Request', null, null, null, null, true);
-		$this->template->content = View::forge('error/common', array('message' => '不正なリクエストです。'));
+		$this->template->content = View::forge('error/common', array('message' => __('message_error_bad_request')));
 		$this->response_status = 400;
 	}
 	
@@ -103,7 +103,7 @@ class Controller_Error extends Controller_Site
 	 */
 	public function action_accessblocked()
 	{
-		$this->set_title_and_breadcrumbs('このコンテンツは現在ご利用いただけません', null, null, null, null, true);
+		$this->set_title_and_breadcrumbs(t('currently_unavailable_for', array('label' => t('site.this_content'))), null, null, null, null, true);
 		$this->template->content = View::forge('error/accessblocked');
 		$this->response_status = 403;
 	}

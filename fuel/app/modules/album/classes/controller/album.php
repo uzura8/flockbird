@@ -79,9 +79,9 @@ class Controller_Album extends \Controller_Site
 		$album = Model_Album::check_authority($id, null, 'member');
 		$this->check_browse_authority($album->public_flag, $album->member_id);
 
-		// 既読処理
+    // Update read flag
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album', $id);
-		// 通報リンク
+    // Report link
 		$this->set_global_for_report_form();
 
 		$disabled_to_update = \Album\Site_Util::check_album_disabled_to_update($album->foreign_table);

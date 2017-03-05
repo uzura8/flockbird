@@ -181,12 +181,12 @@ class Model_Thread extends \MyOrm\Model
 		{
 			if (!$is_new && $is_changed_public_flag)
 			{
-				// timeline の public_flag の更新
+				// Update public_flag of timeline
 				\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($this->public_flag, 'thread', $this->id, \Config::get('timeline.types.thread'));
 			}
 			else	
 			{
-				// timeline 投稿
+				// Post timeline
 				\Timeline\Site_Model::save_timeline($member_id, $this->public_flag, 'thread', $this->id, $this->updated_at);
 			}
 		}

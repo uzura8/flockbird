@@ -254,7 +254,7 @@ class Controller_Base extends Controller_Common
 	}
 
 	/**
-	 * 以下、site, admin 共通 controller
+	 * Common controller with site and admin
 	 * 
 	 */
 
