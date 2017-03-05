@@ -1,19 +1,19 @@
 * fuelphp
-  - version: 1.7.2
+  - version: 1.8.*
   - license: MIT
   - url: http://fuelphp.com/
 * fuel-opauth (forked)
   - version: master
   - license: MIT
   - url: https://github.com/andreoav/fuel-opauth
-* fuel-less (forked)
-  - version: 2.0/master
-  - license: MIT
-  - url: https://github.com/kriansa/fuel-less
 * fuelphp-casset
-  - version: 1.21
+  - version: 1.*
   - license: MIT
   - url: https://github.com/canton7/fuelphp-casset
+* less.php
+  - version: 1.*
+  - license: Apache License, Version 2.0
+  - url: https://github.com/oyejorge/less.php
 * Mobile Detect
   - version: 2.8.*
   - license: MIT
