@@ -51,7 +51,7 @@
   - license: http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
   - url: http://fontawesome.io/
 * jquery-ui
-  - version: 1.11.4
+  - version: 1.12.1
   - license: MIT
   - http://jqueryui.com/
 * jquery.autogrow-textarea
