@@ -41,7 +41,7 @@
   - license: MIT
   - url: http://github.com/toopay/bootstrap-markdown
 * HTML5 Shiv
-  - version: v3.7.2
+  - version: v3.7.3
   - license: MIT/GPL2 Licensed
 * Respond.js
   - version: v1.4.2
