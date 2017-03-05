@@ -33,7 +33,7 @@
   - license: Apache License, Version 2.0
   - url: http://getbootstrap.com
 * bootstrap-datetimepicker
-  - version: 4.17.37
+  - version: 4.17.47
   - license: MIT
   - url: https://github.com/Eonasdan/bootstrap-datetimepicker
 * bootstrap-markdown
