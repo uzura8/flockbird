@@ -29,8 +29,9 @@
   - version: 2.2.4 / 1.12.4
   - license: MIT
 * bootstrap
-  - version: 3.3.6
+  - version: 3.3.7
   - license: Apache License, Version 2.0
+  - url: http://getbootstrap.com
 * bootstrap-datetimepicker
   - version: 4.17.37
   - license: MIT
