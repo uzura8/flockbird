@@ -47,7 +47,7 @@
   - version: v1.4.2
   - license: MIT/GPLv2
 * Font Awesome
-  - version: 4.6.3
+  - version: 4.7.0
   - license: http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
   - url: http://fontawesome.io/
 * jquery-ui
