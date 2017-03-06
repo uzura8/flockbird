@@ -97,7 +97,7 @@
   - license: MIT
   - url: http://summernote.org/
 * select2
-  - version: 4.0.2
+  - version: 4.0.3
   - license: MIT
   - url: https://select2.github.io/
 * handlebars
