@@ -1,7 +1,7 @@
 <?php
 $prefix = $file->is_tmp ? 'file_tmp' : 'file';
 $delete_btn_attr = array(
-	'class' => 'btn btn-sm btn-default delete_file_tmp',
+	'class' => 'btn btn-sm btn-default delete_file',
 	'data-type' => $prefix,
 	'data-file_type' => 'file',
 );

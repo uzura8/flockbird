@@ -19,12 +19,12 @@ switch ($thumbnail_size)
 
 $prefix = $file->is_tmp ? 'image_tmp' : 'image';
 $delete_btn_attr = array(
-	'class' => 'btn btn-xs btn-default delete_file_tmp',
+	'class' => 'btn btn-xs btn-default delete_file',
 	'data-type' => $prefix,
 	'data-file_type' => 'img',
 );
 if (!empty($file->id)) $delete_btn_attr['data-id'] = $file->id;
-if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $model;
+if (!empty($model)) $delete_btn_attr['data-model'] = $model;
 ?>
 <div<?php if (!empty($file->id)): ?> id="<?php echo $prefix; ?>_<?php echo $file->id; ?>"<?php endif; ?> class="<?php echo $box_class_attr; ?>">
 <?php if (!empty($file->error)): ?>

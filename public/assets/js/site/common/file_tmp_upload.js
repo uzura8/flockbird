@@ -91,7 +91,7 @@ $(function () {
 			}
 	});
 
-	$(document).on('click','.delete_file_tmp', function(){
+	$(document).on('click','.delete_file', function(){
 		var file_id   = $(this).data('id') ? parseInt($(this).data('id')) : 0;
 		var upload_type = $(this).data('type') ? $(this).data('type') : 'file_tmp';
 		var file_type = $(this).data('file_type') ? $(this).data('file_type') : 'img';

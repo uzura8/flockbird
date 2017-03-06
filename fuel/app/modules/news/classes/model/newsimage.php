@@ -121,6 +121,7 @@ class Model_NewsImage extends \MyOrm\Model
 			$obj->shot_at = !empty($file->shot_at) ? $file->shot_at : date('Y-m-d H:i:s');
 			$obj->save();
 			$file->id = $obj->id;
+			$file->model = 'news';
 			$returns[] = $file;
 		}
 

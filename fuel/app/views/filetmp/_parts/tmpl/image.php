@@ -76,9 +76,9 @@ switch ($thumbnail_size)
 				{% } %}
 				<p class="subinfo<?php if ($is_subinfo_pull_right): ?> pull-right<?php endif; ?>">
 					<span class="size">{%=o.formatFileSize(file.size)%}</span>
-					<button class="btn btn-xs btn-default delete_file{%=file.is_tmp?'_tmp':''%}"
+					<button class="btn btn-xs btn-default delete_file"
 						data-id="{%=file.id%}" data-file_type="img" data-type="image{%=file.is_tmp?'_tmp':''%}"
-						{% if (!file.is_tmp) { %}<?php if (!empty($model)): ?>data-model="<?php echo $model; ?>"<?php endif; ?>{% } %}
+						{% if (file.model) { %}data-model="{%=file.model%}"{% } %}
 						{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
 							<i class="glyphicon glyphicon-trash"></i>
 					</button>

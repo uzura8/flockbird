@@ -263,7 +263,7 @@ class Controller_Image_api extends \Controller_Site_Api
 	 */
 	public function post_delete($id = null)
 	{
-		$this->api_delete_common('album_image', $id);
+		$this->api_delete_common('album_image', $id, null, t('site.picture'));
 	}
 
 	/**
