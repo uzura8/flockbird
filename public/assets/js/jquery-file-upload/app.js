@@ -6,13 +6,13 @@
  * https://blueimp.net
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  */
 
 /* jshint nomen:false */
 /* global window, angular */
 
-(function () {
+;(function () {
     'use strict';
 
     var isOnGitHub = window.location.hostname === 'blueimp.github.io',
