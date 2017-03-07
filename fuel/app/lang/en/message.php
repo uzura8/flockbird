@@ -75,6 +75,8 @@ return array(
 	'message_post_failed' => 'Failed to post. ',
 	'message_post_failed_for' => 'Failed to post :label. ',
 	'message_post_complete' => 'Posted. ',
+	'message_save_failed_for' => 'Failed to save :label. ',
+	'message_save_complete_for' => 'Saved :label. ',
 	'message_draft_complete_for' => 'Drafted and saved :label. ',
 	'message_upload_complete_for' => 'Uploaded :label. ',
 	'message_comment_failed' => 'Failed to post. ',

@@ -106,4 +106,5 @@
   - url: http://handlebarsjs.com
 * GMaps.js
   - license: MIT
+  - version: v0.4.25
   - url: http://hpneo.github.com/gmaps/
