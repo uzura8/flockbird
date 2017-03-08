@@ -59,7 +59,7 @@ class Controller_Note extends \Controller_Site
 
 		$title = $is_mypage ? t('common.own_for_myself_of', array('label' => t('note.plural')))
 												: t('common.own_for_member_of', array('label' => t('note.plural'), 'name' => $member->name));
-		$this->set_title_and_breadcrumbs($title, null, $member);
+		$this->set_title_and_breadcrumbs($title, null, $member, null, null, false, false, null, t('note.plural'));
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 		$this->template->content = \View::forge('member', $data);
 		$this->template->post_footer = \View::forge('_parts/list_footer');

@@ -213,7 +213,7 @@ class Controller_Base extends Controller_Common
 				$breadcrumbs['member'] = t('page.myhome');
 				if ($module)
 				{
-					$breadcrumbs[sprintf('%s/member', $module)] = t('common.own_for_myself_of', array('label' => t($module.'.plural')));
+					$breadcrumbs[sprintf('%s/member', $module)] = t($module.'.plural');
 				}
 			}
 			else

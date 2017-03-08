@@ -74,7 +74,7 @@ class Controller_Timeline extends \Controller_Site
 
 		$title = $is_mypage ? t('common.own_for_myself_of', array('label' => t('timeline.plural')))
 												: t('common.own_for_member_of', array('label' => t('timeline.plural'), 'name' => $member->name));
-		$this->set_title_and_breadcrumbs($title, null, $member);
+		$this->set_title_and_breadcrumbs($title, null, $member, null, null, false, false, null, t('timeline.plural'));
 		$this->template->post_footer = \View::forge('_parts/load_timelines');
 		$this->template->content = \View::forge('_parts/list', $data);
 	}
