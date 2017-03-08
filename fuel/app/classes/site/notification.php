@@ -31,24 +31,24 @@ class Site_Notification
 		if (!static::check_enabled_type($type)) throw new InvalidArgumentException(__METHOD__.':First parameter is invalid.');
 		if ($is_check_module_enabled && !is_enabled($type)) return false;
 
-		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.isEnabled', $type), 'page', false);
+		return conf(sprintf('page.navbar.notification.cache.%s.unreadCount.isEnabled', $type), 'page', false);
 	}
 
 	public static function get_cahce_expire($type = 'notice')
 	{
 		if (!static::check_enabled_type($type)) throw new InvalidArgumentException(__METHOD__.':First parameter is invalid.');
 
-		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.expire', $type), 'page');
+		return conf(sprintf('page.navbar.notification.cache.%s.unreadCount.expire', $type), 'page');
 	}
 
 	public static function get_unread_count_cache_expire($type = 'common')
 	{
-		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.expire', $type), 'page');
+		return conf(sprintf('page.navbar.notification.cache.%s.unreadCount.expire', $type), 'page');
 	}
 
 	public static function get_unread_count_cache_key($type, $member_id)
 	{
-		return conf(sprintf('site.navbar.notification.cache.%s.unreadCount.prefix', $type), 'page').$member_id;
+		return conf(sprintf('page.navbar.notification.cache.%s.unreadCount.prefix', $type), 'page').$member_id;
 	}
 
 	public static function get_unread_count_cache($type, $member_id, $is_make_cache = false)
