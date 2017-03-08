@@ -69,6 +69,7 @@ class Site_Lang
 	protected static function load_configs_related_lang($lang)
 	{
 		Config::load(Site_Util::get_term_file_name($lang), 'term', true);
+		Config::load('contact::contact', 'contact', true);
 		Config::load(is_admin() ? 'admin::navigation' : 'navigation', 'navigation', true);
 	}
 

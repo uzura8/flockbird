@@ -11,7 +11,8 @@ if ($confs = conf('contact.fields.pre', 'contact'))
 {
 	foreach ($confs as $name => $props)
 	{
-		echo form_text($posted[$name], Site_Form::get_label($val, $name), $label_col_sm_size);
+		$value = $name == 'category' ? t('contact.fields.pre.category.options.'.$posted[$name]) : $posted[$name];
+		echo form_text($value, Site_Form::get_label($val, $name), $label_col_sm_size);
 	}
 }
 ?>

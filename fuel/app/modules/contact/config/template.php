@@ -4,13 +4,6 @@ return array(
 		'site' => array(
 			'contactToMember' => array(
 				'view' =>'お問い合わせ受付メール',
-				'format' =>'twig',
-				'title' => 'お問い合わせを受け付けました',
-				'body' => array(
-					'default' => array(
-						'file' => 'contact::mail/contact_to_member',
-					),
-				),
 				'variables' => array(
 					'contact_body' => 'お問い合わせ本文',
 					'contact_category' => 'お問い合わせ内容',
@@ -18,13 +11,6 @@ return array(
 			),
 			'report' => array(
 				'view' =>'通報メール',
-				'format' =>'twig',
-				'title' => '通報メール',
-				'body' => array(
-					'default' => array(
-						'file' => 'contact::mail/report',
-					),
-				),
 				'variables' => array(
 					'report_category' => '通報分類',
 					'report_body' => '通報コメント',

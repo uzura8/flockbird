@@ -24,8 +24,8 @@ return array(
 						'type' => 'select',
 						'options' => array(
 							'' => t('contact.fields.pre.category.options.0'),
-							'使い方について' => t('contact.fields.pre.category.options.1'),
-							'その他' => t('contact.fields.pre.category.options.2'),
+							'1' => t('contact.fields.pre.category.options.1'),
+							'2' => t('contact.fields.pre.category.options.2'),
 						),
 					),
 					'rules' => array(

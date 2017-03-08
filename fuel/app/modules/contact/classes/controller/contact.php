@@ -86,22 +86,22 @@ class Controller_Contact extends \Controller_Site
 		{
 			if (!$this->member_email) throw new \FuelException('Email not rgistered');
 
-			// Send to member
-			$mail = new \Site_Mail('contactToMember', null, get_member_lang($this->u->id));
-			$mail->send($this->member_email, array(
+			$category_num = $post['category'] ?: '';
+			$variables = array(
 				'to_name' => $this->u->name,
 				'body' => $post['body'],
-				'category' => isset($post['category']) ? $post['category'] : '',
-			));
+				'category' => t('contact.fields.pre.category.options.'.$category_num),
+			);
+			// Send to member
+			$mail = new \Site_Mail('contactToMember', null, get_member_lang($this->u->id));
+			$mail->send($this->member_email, $variables);
+
 			// Send to admin
 			$mail = new \Site_Mail('contactToMember', array(
 				'reply_to' => array($this->member_email => $this->u->name),
 			));
-			$mail->send(FBD_ADMIN_MAIL, array(
-				'to_name' => $this->u->name,
-				'body' => $post['body'],
-				'category' => isset($post['category']) ? $post['category'] : '',
-			), true);
+			$mail->send(FBD_ADMIN_MAIL, $variables, true, 'ja');
+
 			\Session::set_flash('message', __('message_send_mail', array('label' => t('contact.view'))));
 			\Response::redirect('member');
 		}
