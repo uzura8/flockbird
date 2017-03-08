@@ -75,7 +75,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 				if (!$member_auth) $member_auth = \Model_MemberAuth::get_one4member_id($member_id);
 				if (empty($member_auth->email)) $value = 0;
 			}
-			$label = term('notice', 'site.mail');
+			$label = term('notice.view', 'site.mail');
 			$options = self::get_options_recieve_mail();
 			$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
 					->add_rule('valid_string', 'numeric', 'required')
@@ -91,7 +91,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 				if (!$member_auth) $member_auth = \Model_MemberAuth::get_one4member_id($member_id);
 				if (empty($member_auth->email)) $value = 0;
 			}
-			$label = term('common.newArrival', 'message.view', 'notice', 'site.mail');
+			$label = term('common.newArrival', 'message.view', 'notice.view', 'site.mail');
 			$options = self::get_options_recieve_mail();
 			$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
 					->add_rule('valid_string', 'numeric', 'required')

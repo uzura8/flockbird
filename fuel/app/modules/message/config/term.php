@@ -2,6 +2,7 @@
 return array(
 	'message' => array(
 		'view' => 'メッセージ',
+		'plural' => 'メッセージ',
 		'list' => 'メッセージ一覧',
 		'form' => array(
 			'send' => 'メッセージを送る',
