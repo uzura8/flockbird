@@ -3,6 +3,8 @@
 return array(
 	'news' => array(
 		'view' => 'News',
+		'plural' => 'News',
+		'list' => 'News List',
 		'status' => array(
 			'closed' => 'Private',
 			'published' => 'Published',
