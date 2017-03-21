@@ -27,7 +27,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 
 	public static function get_viewType_options($value = null, $is_simple = false)
 	{
-		$item = $is_simple ? t('site.entire') : t('form.do_display_for', array('label' => t('common.delmitter.of', array(
+		$item = $is_simple ? t('site.entire') : t('form.do_display_for', array('label' => t('common.delimitter.of', array(
 			'subject' => t('timeline.plural'),
 			'object' => t('site.entire'),
 		))));
@@ -35,7 +35,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 
 		if (conf('memberRelation.follow.isEnabled'))
 		{
-			$item = t('common.parts.only_of', array('label' => $is_simple ? t('member.following') : t('common.delmitter.of', array(
+			$item = t('common.parts.only_of', array('label' => $is_simple ? t('member.following') : t('common.delimitter.of', array(
 				'subject' => t('timeline.plural'),
 				'object' => t('member.following'),
 			))));
@@ -45,7 +45,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 
 		if (conf('memberRelation.friend.isEnabled'))
 		{
-			$item = t('common.parts.only_of', array('label' => $is_simple ? t('member.following') : t('common.delmitter.of', array(
+			$item = t('common.parts.only_of', array('label' => $is_simple ? t('member.following') : t('common.delimitter.of', array(
 				'subject' => t('timeline.plural'),
 				'object' => t('firiend'),
 			))));
@@ -58,7 +58,7 @@ class Form_MemberConfig extends \Form_MemberConfig
 			$item = term('member.following', 'common.delimitter.normal', t('firiend'));
 			if (! $is_simple)
 			{
-				$item = t('form.do_display_for', array('label' => t('common.delmitter.of', array(
+				$item = t('form.do_display_for', array('label' => t('common.delimitter.of', array(
 					'subject' => t('timeline.plural'),
 					'object' => $item,
 				))));
