@@ -31,7 +31,7 @@
 <?php if (is_enabled('notice')): ?>
 	<?php echo form_text(
 		sprintf('<span class="text-muted">%s</span>', __('site_lead_notice_setting')),
-		term('notice', 'site.setting'),
+		term('notice.view', 'site.setting'),
 		$label_col_size,
 		true,
 		array('uri' => 'member/setting/notice', 'text' => icon('cog').' '.t('form.edit'), 'is_safe_text' => true)
