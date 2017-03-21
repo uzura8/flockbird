@@ -1,0 +1,31 @@
+以下の内容の通報がありました。
+
+--------------------- 通報内容 -----------------------
+
+■通報分類
+{{ report_category }}
+
+■コンテンツ分類
+{{ content_type }}
+
+■コンテンツURL
+{{ content_url }}
+
+{% if content_body %}
+■通報された書き込み内容
+{{ content_body }}
+
+{% endif %}
+■通報されたメンバー
+{{ member_name_to }} (ID: {{ member_id_to }})
+{{ member_to_admin_page_url }}
+
+■通報したメンバー
+{{ member_name_from }} (ID: {{ member_id_from }})
+
+■通報コメント
+{{ report_body }}
+
+------------------------------------------------------
+
+

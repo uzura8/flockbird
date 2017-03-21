@@ -106,8 +106,8 @@ class Site_View
 	public static function get_action_members($members, $member_count, $lang = null)
 	{
 		if (! $lang) $lang = get_default_lang();
-		$delimitter      = $lang == 'ja' ? 'と' : ', ';
-		$delimitter_last = $lang == 'ja' ? 'と' : ' and ';
+		$delimitter      = t('common.delimitter.normal');
+		$delimitter_last = t('common.delimitter.last');
 
 		$action_members = '';
 		$max = count($members);
@@ -129,7 +129,7 @@ class Site_View
 
 		if ($other_member_count = $member_count - count($members))
 		{
-			$action_members .= sprintf(is_lang_ja() ? ' 他%d人' : ' %d others', $other_member_count);
+			$action_members .= ' '.t('other_members_count', array('num' => $other_member_count));
 		}
 
 		return $action_members;

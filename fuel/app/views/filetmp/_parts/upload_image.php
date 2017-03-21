@@ -19,12 +19,12 @@ switch ($thumbnail_size)
 
 $prefix = $file->is_tmp ? 'image_tmp' : 'image';
 $delete_btn_attr = array(
-	'class' => 'btn btn-xs btn-default delete_file_tmp',
+	'class' => 'btn btn-xs btn-default delete_file',
 	'data-type' => $prefix,
 	'data-file_type' => 'img',
 );
 if (!empty($file->id)) $delete_btn_attr['data-id'] = $file->id;
-if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $model;
+if (!empty($model)) $delete_btn_attr['data-model'] = $model;
 ?>
 <div<?php if (!empty($file->id)): ?> id="<?php echo $prefix; ?>_<?php echo $file->id; ?>"<?php endif; ?> class="<?php echo $box_class_attr; ?>">
 <?php if (!empty($file->error)): ?>
@@ -56,7 +56,12 @@ if (empty($file->is_tmp) && !empty($model)) $delete_btn_attr['data-model'] = $mo
 			<p><?php echo Form::textarea(
 				sprintf($prefix.'_description[%d]', $file->id),
 				isset($file->description) ? $file->description : '',
-				array('rows' => 2, 'placeholder' => '写真の説明', 'class' => 'form-control', 'id' => sprintf($prefix.'_description_%d', $file->id))
+				array(
+					'rows' => 2,
+					'placeholder' => t('common.delimitter.of', array('subject' => t('common.description'), 'object' => t('site.picture'))),
+					'class' => 'form-control',
+					'id' => sprintf($prefix.'_description_%d', $file->id),
+				)
 			); ?></p>
 <?php endif; ?>
 			<?php echo Form::hidden(sprintf($prefix.'[%d]', $file->id), $file->name_prefix.$file->name, array('class' => $prefix)); ?>

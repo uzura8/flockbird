@@ -34,7 +34,7 @@ class Controller_Member_Recover extends Controller_Site
 		}
 		$this->set_title_and_breadcrumbs(__('member_title_resend_password'));
 		$this->template->content = View::forge('member/recover/resend_password');
-		$this->template->content->set_safe('html_form', $form->build('member/recover/send_reset_password_mail'));// form の action に入る
+		$this->template->content->set_safe('html_form', $form->build('member/recover/send_reset_password_mail'));
 	}
 
 	/**

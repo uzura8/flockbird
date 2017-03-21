@@ -74,7 +74,7 @@ class Model_MessageRecievedSummary extends \MyOrm\Model
 	{
 		static::$_properties['type']['validation']['in_array'][] = Site_Util::get_types(true);
 
-		// notification cache を削除
+		// Delete notification cache
 		if (\Site_Notification::check_is_enabled_cahce('message'))
 		{
 			static::$_observers['MyOrm\Observer_ExecuteOnCreate'] = array(

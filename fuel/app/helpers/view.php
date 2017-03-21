@@ -65,3 +65,12 @@ function rm_period($str)
 	return preg_replace('/^(.+)(\. ?|。)$/um', '$1', $str);
 }
 
+function str_unit($num, $type = null)
+{
+	$num = (int)$num;
+	if (! $type || ($type && ! t('common.unit.'.$type))) $type = 'item';
+	$unit_key = sprintf('common.unit.%s.%s', $type, $num == 1 ? 'single' : 'plural');
+
+	return $num.t('common.delimitter.words').t($unit_key);
+}
+

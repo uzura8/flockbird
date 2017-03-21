@@ -31,7 +31,7 @@ class Site_FileTmp
 		}
 		if (!$file_tmps = Model_FileTmp::get4ids($file_tmp_ids))
 		{
-			throw new FuelException('ファイルが選択されていません。');
+			throw new FuelException(__('message_not_selected_for', array('label' => t('site.file.view'))));
 		}
 
 		foreach ($file_tmps as $key => $file_tmp)

@@ -1,17 +1,18 @@
 <div id="btn_menu">
 <?php if ($is_mypage) : ?>
-<?php echo btn(term('album', 'form.create'), 'album/create', 'mr', true, null, null, null, 'plus', null, null, false); ?>
+<?php echo btn(t('form.do_create_for', array('label' => t('album.view'))),
+						'album/create', 'mr', true, null, null, null, 'plus', null, null, false); ?>
 <?php endif; ?>
 <?php
-$name = $is_mypage ? '自分' :  member_name($member).'さん';
 $controller = Site_Util::get_controller_name();
-if ($controller == 'album')
-{
-	echo btn(sprintf('%sの%sを全て見る', $name, term('album_image')), sprintf('album/member/%d/images', $member->id), 'mr', true, null, null, null, 'picture', null, null, false);
-}
-elseif ($controller == 'image')
-{
-	echo btn(sprintf('%sの%sを全て見る', $name, term('album')), sprintf('album/member/%d', $member->id), 'mr', true, null, null, null, 'picture', null, null, false);
-}
+$label_target = $is_mypage ? t('common.own_for_myself_of', array('label' => t($controller == 'album' ? 'album.image.plural' : 'album.plural')))
+										 : t('common.own_for_member_of', array(
+													'label' => t($controller == 'album' ? 'album.image.plural' : 'album.plural'),
+													'name' => member_name($member),
+												));
+$btn_label = t('site.see_all_for', array('label' => $label_target));
+$uri = $controller == 'album' ? sprintf('album/member/%d/images', $member->id) : sprintf('album/member/%d', $member->id);
+echo btn($btn_label, $uri, 'mr', true, null, null, null, 'picture', null, null, false);
 ?>
 </div>
+

@@ -26,7 +26,7 @@ class Util_String
 	}
 
 	/**
-	 * @param int $digits 桁数
+	 * @param int $digits Number of digits
 	 * @return string
 	 */
 	public static function get_random_code($digits = 4)

@@ -1,4 +1,11 @@
 <?php
 return array(
-	'thread' => 'BBS',
+	'thread' => array(
+		'view' => 'BBS',
+		'plural' => 'BBS',
+		'list' => 'BBS list',
+		'detail' => 'BBS details',
+		'title' => 'Title',
+		'body' => 'Body',
+	),
 );

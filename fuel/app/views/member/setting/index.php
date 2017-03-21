@@ -1,20 +1,20 @@
 <?php $label_col_size = 4; ?>
 <div class="well form-horizontal">
 	<?php echo form_text(
-		!empty($u->member_auth->email) ? $u->member_auth->email : sprintf('<span class="text-danger">%s</span>', term('site.unset')),
-		term('site.email'),
+		!empty($u->member_auth->email) ? $u->member_auth->email : sprintf('<span class="text-danger">%s</span>', t('site.unset')),
+		t('site.email'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/email', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/email', 'text' => icon('cog').' '.t('form.edit'), 'is_safe_text' => true)
 	); ?>
 
 <?php if (!$u->check_registered_oauth(true)): ?>
 	<?php echo form_text(
-		!empty($u->member_auth->password) ? sprintf('<span class="text-muted">%s</span>', term('site.set_already')) : sprintf('<span class="text-danger">%s</span>', term('site.unset')),
-		term('site.password'),
+		!empty($u->member_auth->password) ? sprintf('<span class="text-muted">%s</span>', t('site.set_already')) : sprintf('<span class="text-danger">%s</span>', t('site.unset')),
+		t('site.password'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/password', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/password', 'text' => icon('cog').' '.t('form.edit'), 'is_safe_text' => true)
 	); ?>
 <?php endif; ?>
 
@@ -24,7 +24,7 @@
 		__('member_address_setting'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/address', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/address', 'text' => icon('cog').' '.t('form.edit'), 'is_safe_text' => true)
 	); ?>
 <?php endif; ?>
 
@@ -34,17 +34,17 @@
 		term('notice', 'site.setting'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/notice', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/notice', 'text' => icon('cog').' '.t('form.edit'), 'is_safe_text' => true)
 	); ?>
 <?php endif; ?>
 
 <?php if (is_enabled('timeline')): ?>
 	<?php echo form_text(
 		\Timeline\Form_MemberConfig::get_viewType_options($member_config->timeline_viewType),
-		term('timeline', 'site.display', 'site.setting'),
+		term('timeline.view', 'site.display', 'site.setting'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/timeline/viewtype', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/timeline/viewtype', 'text' => icon('cog').' '.t('form.edit'), 'is_safe_text' => true)
 	); ?>
 <?php endif; ?>
 
@@ -54,7 +54,7 @@
 		__('site_title_access_block_settig'),
 		$label_col_size,
 		true,
-		array('uri' => 'member/relation/list/access_block', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/relation/list/access_block', 'text' => icon('cog').' '.t('form.edit'), 'is_safe_text' => true)
 	); ?>
 <?php endif; ?>
 
@@ -74,7 +74,7 @@ if (is_enabled_i18n())
 		$title,
 		$label_col_size,
 		true,
-		array('uri' => 'member/setting/lang', 'text' => icon('cog').' '.term('form.edit'), 'is_safe_text' => true)
+		array('uri' => 'member/setting/lang', 'text' => icon('cog').' '.t('form.edit'), 'is_safe_text' => true)
 	);
 }
 ?>

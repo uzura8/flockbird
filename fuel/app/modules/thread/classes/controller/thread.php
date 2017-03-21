@@ -36,7 +36,7 @@ class Controller_Thread extends \Controller_Site
 		list($limit, $page) = $this->common_get_pager_list_params();
 		$data = Site_Model::get_list($limit, $page, get_uid());
 
-		$this->set_title_and_breadcrumbs(term('thread', 'site.list'));
+		$this->set_title_and_breadcrumbs(t('thread.list'));
 		$this->template->content = \View::forge('_parts/list', $data);
 		if (IS_AUTH) $this->template->subtitle = \View::forge('_parts/list_subtitle');
 		$this->template->post_footer = \View::forge('_parts/list_footer');
@@ -55,21 +55,18 @@ class Controller_Thread extends \Controller_Site
 		$thread = Model_Thread::check_authority($thread_id);
 		$this->check_browse_authority($thread->public_flag, $thread->member_id);
 
-		// 既読処理
+		// Update read flag
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'thread', $id);
-		// 通報リンク
+		// Report link
 		$this->set_global_for_report_form();
-
 		// thread_image
 		$images = Model_ThreadImage::get4thread_id($thread_id);
-
 		// thread_comment
 		$default_params = array('latest' => 1);
 		list($limit, $is_latest, $is_desc, $since_id, $max_id)
 			= $this->common_get_list_params($default_params, conf('view_params_default.detail.comment.limit_max'));
 		list($list, $next_id, $all_comment_count)
 			= Model_ThreadComment::get_list(array('thread_id' => $thread_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
-
 		// thread_like
 		$is_liked_self = \Auth::check() ? Model_ThreadLike::check_liked($id, $this->u->id) : false;
 
@@ -80,7 +77,7 @@ class Controller_Thread extends \Controller_Site
 			'description' => $thread->body,
 		);
 		if ($images) $ogp_infos['image'] = \Site_Util::get_image_uri4image_list($images, 't', 'raw');
-		$this->set_title_and_breadcrumbs($title, array('thread' => term('thread', 'site.list')), null, 'thread', $header_info, false, false, $ogp_infos);
+		$this->set_title_and_breadcrumbs($title, array('thread' => t('thread.list')), null, 'thread', $header_info, false, false, $ogp_infos);
 		$this->template->subtitle = \View::forge('_parts/detail_subtitle', array('thread' => $thread));
 		$this->template->post_footer = \View::forge('_parts/comment/handlebars_template');
 
@@ -125,12 +122,10 @@ class Controller_Thread extends \Controller_Site
 				$is_changed = $thread->save_with_relations($this->u->id, $post);
 				list($moved_images, $thread_image_ids) = \Site_FileTmp::save_images($image_tmps, $thread->id, 'thread_id', 'thread_image');
 				\DB::commit_transaction();
-
-				// thumbnail 作成 & tmp_file thumbnail 削除
+				// Create thumbnails and delete
 				\Site_FileTmp::make_and_remove_thumbnails($moved_images);
 
-				$message = sprintf('%sを%sしました。', term('thread'), term('form.create_simple'));
-				\Session::set_flash('message', $message);
+				\Session::set_flash('message', __('message_create_complete_for', array('label' => t('thread.view'))));
 				\Response::redirect('thread/detail/'.$thread->id);
 			}
 			catch(\Database_Exception $e)
@@ -150,7 +145,9 @@ class Controller_Thread extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(term('thread').'を書く', array('thread' => term('thread', 'site.list')), null, 'thread');
+		$this->set_title_and_breadcrumbs(t('form.do_write_for', array('label' => t('thread.view'))), array(
+			'thread' => t('thread.list'),
+		), null, 'thread');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'images' => $images));
@@ -190,11 +187,10 @@ class Controller_Thread extends \Controller_Site
 				\Site_Upload::update_image_objs4file_objects($thread_images, $images);
 				\DB::commit_transaction();
 
-				// thumbnail 作成 & tmp_file thumbnail 削除
+				// Create thumbnails and delete
 				\Site_FileTmp::make_and_remove_thumbnails($moved_images);
 
-				$message = sprintf('%sを%sしました。', term('thread'), term('form.edit'));
-				\Session::set_flash('message', $message);
+				\Session::set_flash('message', __('message_edit_complete_for', array('label' => t('thread.view'))));
 				\Response::redirect('thread/detail/'.$thread->id);
 			}
 			catch(\Database_Exception $e)
@@ -215,7 +211,9 @@ class Controller_Thread extends \Controller_Site
 		}
 		$images = array_merge($images, $image_tmps);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('thread'), term('form.do_edit')), array('/thread/'.$id => $thread->title), null, 'thread');
+		$this->set_title_and_breadcrumbs(t('form.do_edit_for', array('label' => t('thread.view'))), array(
+			'thread/'.$id => $thread->title,
+		), null, 'thread');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array(
@@ -244,7 +242,7 @@ class Controller_Thread extends \Controller_Site
 			$thread = Model_Thread::check_authority($id, $this->u->id);
 			$thread->delete();
 			\DB::commit_transaction();
-			\Session::set_flash('message', term('thread').'を削除しました。');
+			\Session::set_flash('message', __('message_delete_complete_for', array('label' => t('thread.view'))));
 		}
 		catch(\FuelException $e)
 		{

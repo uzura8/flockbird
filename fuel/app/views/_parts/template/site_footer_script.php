@@ -5,7 +5,7 @@
 $view = View::forge('_parts/modal', array(
 	'block_attrs' => array('id' => 'modal_notice_navbar'),
 	'size' => 'sm',
-	'title' => term('notice'),
+	'title' => term('notice.view'),
 	'is_display_footer_close_btn' => true,
 ));
 $view->set_safe('header_subinfo', render('notice::_parts/link_read_all', array('tag' => 'small')));

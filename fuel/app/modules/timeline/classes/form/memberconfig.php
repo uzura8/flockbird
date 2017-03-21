@@ -16,7 +16,8 @@ class Form_MemberConfig extends \Form_MemberConfig
 		$name = self::get_name('viewType');
 		$value = self::get_value($member_id, $name, parent::get_default_value('timeline_viewType', 0));
 		$options = self::get_viewType_options();
-		$val->add($name, sprintf('%sの%s', term('page.myhome'), term('timeline', 'site.display')), array('type' => 'radio', 'options' => $options, 'value' => $value))
+		$label = t('common.delimitter.of', array('object' => t('page.myhome'), 'subject' => term('timeline.view', 'site.display')));
+		$val->add($name, $label, array('type' => 'radio', 'options' => $options, 'value' => $value))
 				->add_rule('valid_string', 'numeric', 'required')
 				->add_rule('required')
 				->add_rule('in_array', array_keys($options));
@@ -26,19 +27,43 @@ class Form_MemberConfig extends \Form_MemberConfig
 
 	public static function get_viewType_options($value = null, $is_simple = false)
 	{
-		$options = array('0' => $is_simple ? term('site.view').'全体' : sprintf('%s全体の%sを表示する', term('site.view'), term('timeline')));
+		$item = $is_simple ? t('site.entire') : t('form.do_display_for', array('label' => t('common.delmitter.of', array(
+			'subject' => t('timeline.plural'),
+			'object' => t('site.entire'),
+		))));
+		$options = array('0' => $item);
+
 		if (conf('memberRelation.follow.isEnabled'))
 		{
-			$options['1'] = $is_simple ? sprintf('%sの%sのみ', term('followed'), term('member.view')) : sprintf('%sの%sの%sのみ表示する', term('followed'), term('member.view'), term('timeline'));
+			$item = t('common.parts.only_of', array('label' => $is_simple ? t('member.following') : t('common.delmitter.of', array(
+				'subject' => t('timeline.plural'),
+				'object' => t('member.following'),
+			))));
+			if (! $is_simple) $item = t('form.do_display_for', array('label' => $item));
+			$options['1'] = $item;
 		}
+
 		if (conf('memberRelation.friend.isEnabled'))
 		{
-			$options['2'] = $is_simple ? sprintf('%sのみ', term('firiend')) : sprintf('%sの%sのみ表示する', term('friend'), term('timeline'));
+			$item = t('common.parts.only_of', array('label' => $is_simple ? t('member.following') : t('common.delmitter.of', array(
+				'subject' => t('timeline.plural'),
+				'object' => t('firiend'),
+			))));
+			if (! $is_simple) $item = t('form.do_display_for', array('label' => $item));
+			$options['2'] = $item;
 		}
+
 		if (conf('memberRelation.follow.isEnabled') && conf('memberRelation.friend.isEnabled'))
 		{
-			$options['3'] = sprintf('%sの%sと%s', term('followed'), term('member.view'), term('friend'));
-			if (!$is_simple) $options['3'] .= sprintf('の%sを表示する', term('timeline'));
+			$item = term('member.following', 'common.delimitter.normal', t('firiend'));
+			if (! $is_simple)
+			{
+				$item = t('form.do_display_for', array('label' => t('common.delmitter.of', array(
+					'subject' => t('timeline.plural'),
+					'object' => $item,
+				))));
+			}
+			$options['3'] = $item;
 		}
 
 		if (!is_null($value) && isset($options[$value])) return $options[$value];

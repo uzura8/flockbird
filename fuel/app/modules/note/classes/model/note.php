@@ -28,13 +28,11 @@ class Model_Note extends \MyOrm\Model
 		),
 		'title' => array(
 			'data_type' => 'varchar',
-			'label' => 'タイトル',
 			'validation' => array('trim', 'required', 'max_length' => array(255)),
 			'form' => array('type' => 'text'),
 		),
 		'body' => array(
 			'data_type' => 'text',
-			'label' => '本文',
 			'validation' => array('trim', 'required'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
@@ -100,6 +98,8 @@ class Model_Note extends \MyOrm\Model
 
 	public static function _init()
 	{
+		static::$_properties['title']['label'] = t('note.title');
+		static::$_properties['body']['label'] = t('note.body');
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags();
 
@@ -116,7 +116,7 @@ class Model_Note extends \MyOrm\Model
 		if (is_enabled('timeline'))
 		{
 			$type_note = \Config::get('timeline.types.note');
-			// 更新時に timeline の sort_datetime, comment_count を更新
+			// Update sort_datetime, comment_count on updating timeline
 			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
 				'events' => array('after_update'),
 				'relations' => array(
@@ -202,12 +202,12 @@ class Model_Note extends \MyOrm\Model
 				list($moved_files, $album_image_ids) = \Site_FileTmp::save_images($file_tmps, $album_id, 'album_id', 'album_image', $image_public_flag);
 				\Note\Model_NoteAlbumImage::save_multiple($this->id, $album_image_ids);
 			}
-			// フォーム編集時
+			// Edited on form
 			if ($album_images && $files)
 			{
 				\Site_Upload::update_image_objs4file_objects($album_images, $files, $image_public_flag);
 			}
-			// フォーム編集以外で日記が公開された時
+			// At published note not on form edit
 			elseif ($is_published && $saved_album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 			{
 				foreach ($saved_album_images as $saved_album_image) $saved_album_image->update_public_flag($this->public_flag, true);
@@ -218,12 +218,12 @@ class Model_Note extends \MyOrm\Model
 		{
 			if ($is_published)
 			{
-				// timeline 投稿
+				// Post timeline
 				\Timeline\Site_Model::save_timeline($member_id, $this->public_flag, 'note', $this->id, $this->updated_at);
 			}
 			elseif (!$is_new && $is_changed_public_flag)
 			{
-				// timeline の public_flag の更新
+				// Update public_flag of timeline
 				\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($this->public_flag, 'note', $this->id, \Config::get('timeline.types.note'));
 			}
 		}
@@ -233,7 +233,7 @@ class Model_Note extends \MyOrm\Model
 
 	public function delete_with_relations()
 	{
-		// album_image の削除
+		// Delete album_image
 		if (\Module::loaded('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			$album_image_ids = array();
@@ -244,10 +244,10 @@ class Model_Note extends \MyOrm\Model
 			\Album\Model_AlbumImage::delete_multiple($album_image_ids);
 		}
 
-		// timeline 投稿の削除
+		// Delete timeline article
 		if (\Module::loaded('timeline')) \Timeline\Model_Timeline::delete4foreign_table_and_foreign_ids('note', $this->id);
 
-		// note の削除
+		// Delete note
 		$this->delete();
 	}
 
@@ -257,7 +257,7 @@ class Model_Note extends \MyOrm\Model
 		if (!$this->is_changed('public_flag')) return;
 		$this->save();
 
-		// album_image の public_flag の更新
+		// Update public_flag of album_image
 		if ($this->is_published && is_enabled('album') && $album_images = Model_NoteAlbumImage::get_album_image4note_id($this->id))
 		{
 			foreach ($album_images as $album_image)

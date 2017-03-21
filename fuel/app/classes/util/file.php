@@ -42,9 +42,9 @@ class Util_File
 
 	/**
 	 * type:
-	 *   relative: 縦横比を維持
-	 *   absolute: 指定の長さに変更
-	 *   crop    : 指定の長さになるようにトリミング
+	 *   relative: Keep aspect ratio
+	 *   absolute: Change to specified length
+	 *   crop    : Trim to a specified length
 	 */
 	public static function resize($original_file, $resized_file, $width, $height, $type = 'relative')
 	{
@@ -347,7 +347,7 @@ class Util_File
 		$image_data = fread($fp, filesize($file_path));
 		fclose($fp);
 
-		// 画像かどうかのチェック
+		// Check image or not
 		if ($is_check_image && !@imagecreatefromstring($image_data)) return false;
 
 		return base64_encode($image_data);

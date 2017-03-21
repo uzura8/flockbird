@@ -205,25 +205,25 @@ class Controller_Base extends Controller_Common
 
 	protected static function get_breadcrumbs($title_name = '', $middle_breadcrumbs = array(), $member_obj = null, $is_mypage = false, $module = null, $title_absolute = null)
 	{
-		$breadcrumbs = IS_ADMIN ? array('admin' => term('admin.view', 'page.top')) : array('/' => term('page.top'));
+		$breadcrumbs = IS_ADMIN ? array('admin' => term('admin.view', 'page.top')) : array('/' => t('page.top'));
 		if ($member_obj)
 		{
 			if ($is_mypage)
 			{
-				$breadcrumbs['/member'] = term('page.myhome');
+				$breadcrumbs['member'] = t('page.myhome');
 				if ($module)
 				{
-					$breadcrumbs[sprintf('/%s/member/', $module)] = t('common.own_for_myself_of', array('label' => term($module)));
+					$breadcrumbs[sprintf('%s/member', $module)] = t($module.'.plural');
 				}
 			}
 			else
 			{
 				$name = t('common.own_for_member_of', array('name' => $member_obj->name, 'label' => t('page.kana')));
-				$breadcrumbs['/member/'.$member_obj->id] = $name;
+				$breadcrumbs['member/'.$member_obj->id] = $name;
 				if ($module)
 				{
-					$key = sprintf('/%s/member/%d', $module, $member_obj->id);
-					$breadcrumbs[$key] = term($module, 'site.list');
+					$key = sprintf('%s/member/%d', $module, $member_obj->id);
+					$breadcrumbs[$key] = t($module.'.plural');
 				}
 			}
 		}
@@ -254,7 +254,7 @@ class Controller_Base extends Controller_Common
 	}
 
 	/**
-	 * 以下、site, admin 共通 controller
+	 * Common controller with site and admin
 	 * 
 	 */
 

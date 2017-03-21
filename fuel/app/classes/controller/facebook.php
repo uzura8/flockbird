@@ -19,7 +19,7 @@ class Controller_Facebook extends Controller_Site
 		$url = $this->fb->getLogoutUrl(Config::get('facebook.logout'));
 		$this->fb->destroySession();
 		Auth::logout();
-		Session::set_flash('message', 'ログアウトしました');
+		Session::set_flash('message', __('site_message_logout_complete'));
 		Response::redirect($url);
 	}
 }

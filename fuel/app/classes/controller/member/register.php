@@ -134,7 +134,7 @@ class Controller_Member_Register extends Controller_Site
 			catch(\Auth\SimpleUserUpdateException $e)
 			{
 				$is_transaction_rollback = true;
-				$error_message = __('message_disabled_to_register_for', array('label' => t('site.email')));
+				$error_message = __('message_disabled_to_register_this_for', array('label' => t('site.email')));
 			}
 			catch(\Database_Exception $e)
 			{
@@ -225,7 +225,7 @@ class Controller_Member_Register extends Controller_Site
 					Session::set_flash('message', $success_message);
 					Response::redirect($redirect_uri);
 				}
-				throw new FuelException(__('message_disabled_to_register_for', array('label' => t('site.email'))));
+				throw new FuelException(__('message_disabled_to_register_this_for', array('label' => t('site.email'))));
 			}
 
 			DB::start_transaction();

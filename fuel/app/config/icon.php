@@ -171,7 +171,7 @@ $config = array(
 	),
 	'profile' => 'user',
 	//'guest'   => 'Guest',
-	'followed' => 'ok',
+	'following' => 'ok',
 	//'friend' => 'フレンド',
 	//'remember_me'  => '次回から自動的にログイン',
 	'accessBlock'  => 'ban-circle',

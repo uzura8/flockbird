@@ -11,7 +11,6 @@ return array(
 	'member_message_signup_complete' => 'Temporary registration is completed. Please complete this registration from the URL on the received mail.',
 	'member_registration' => 'Member Registration',
 	'member_registration_input_help_name' => 'Symbols and Spaces is disabled to set. ',
-	'agree_and_register' => 'Agree and register',
 	'invite_form_email_placeholder' => "Input friend's email to invite. ",
 	'invite_form_message_placeholder' => "Input message to friend. [optional]",
 	'member_address_setting' => 'Setting Address',
@@ -45,6 +44,11 @@ return array(
 	'member_error_album_image_disable_to_set_as_profile_image' => 'Disabled to set album image as profile image. ',
 	// member relation
 	'member_message_follow_from_to' => ':subject followed :object. ',
+	'member_message_follow' => 'Followed. ',
+	'member_message_cancel_follow' => 'Canceled the follow. ',
+	'member_message_accessBlock' => 'Access blocked from the Member. ',
+	'member_message_cancel_accessblock' => 'The Access block was canceled. ',
+	'member_message_error_access_blocked' => 'It is possible that this link has expired or it can not be viewed due to the setting of the page. ',
 	// Public flag
 	'public_flag_expand_confirm' => 'The scope of publication expands. Do you want to do it? ',
 	'public_flag_confirm_change_with_children_of' => 'Do you also change the scope of :label publication? ',
@@ -52,12 +56,8 @@ return array(
 	'liked' => 'Liked. ',
 	'canceled_like' => 'Canceled the Like. ',
 	'nobody_liked' => 'No members liked. ',
-	// notice
-	'notice_update_read_already' => 'Updated status to read. ',
-	// report
-	'report_error_required_report_about' => 'Please input Report about. ',
-	// message
-	'message_recieve_member_message_from' => 'Recieved privete messege from :name. ',
-	'message_recieve_group_message_from' => 'Recieved group messege from :name. ',
+	// maps
+	'maps_message_leave_failed' => 'Failed to acquire location information. ',
+	'maps_message_please_set_location' => 'Please set the location. ',
 );
 

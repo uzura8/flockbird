@@ -186,9 +186,10 @@ class Model_News extends \MyOrm\Model
 		return $obj;
 	}
 
-	public static function get4slug($slug, $is_published = true)
+	public static function get4slug($slug, $is_published = true, $relateds = array())
 	{
 		$query = self::query()->where('slug', $slug);
+		if ($relateds) $query->related($relateds);
 		if ($is_published)
 		{
 			$query->where('is_published', 1);

@@ -425,7 +425,7 @@ class Site_Upload
 			$cache_file_dir_path = sprintf('%s%s/%s', $cache_dir_path, $size, $filepath_prefix);
 			if ($is_check_and_make_dir) $res = self::check_and_make_uploaded_dir($cache_file_dir_path);
 			$cache_file_path = $cache_file_dir_path.$file_name;
-			if (self::make_thumbnail($raw_file_path, $cache_file_path, $size) === false) $result = false;// thumbnail の作成
+			if (self::make_thumbnail($raw_file_path, $cache_file_path, $size) === false) $result = false;// Create thumbnail
 		}
 
 		return $result;

@@ -75,11 +75,11 @@ class Controller_Api extends \Controller_Site_Api
 	{
 		$this->controller_common_api(function() use($id)
 		{
-			$this->response_body['errors']['message_default'] = term('form.fallow').'状態の変更に失敗しました。';
+			$this->response_body['errors']['message_default'] = __('message_change_failed_for', array('label' => t('common.status')));
 			$id = intval(\Input::post('id') ?: $id);
 			$timeline = Model_Timeline::check_authority($id);
 			$this->check_browse_authority($timeline->public_flag, $timeline->member_id);
-			if ($timeline->member_id == $this->u->id) throw new \HttpBadRequestException;// 自分のタイムラインはフォロー解除不可
+			if ($timeline->member_id == $this->u->id) throw new \HttpBadRequestException;// Dsabled to unfollow own timeline
 
 			\DB::start_transaction();
 			$is_registerd = (int)Model_MemberFollowTimeline::change_registered_status4unique_key(array(
@@ -90,8 +90,8 @@ class Controller_Api extends \Controller_Site_Api
 
 			$data = array(
 				'result'  => $is_registerd,
-				'message' => $is_registerd ? term('follow').'しました。' : term('follow').'を解除しました。',
-				'html'    => icon_label($is_registerd ? 'followed' : 'do_follow', 'both', false),
+				'message' => $is_registerd ? __('member_message_follow') : __('member_message_cancel_follow'),
+				'html'    => icon_label($is_registerd ? 'following' : 'do_follow', 'both', false),
 			);
 			$this->set_response_body_api($data);
 		});
@@ -110,7 +110,7 @@ class Controller_Api extends \Controller_Site_Api
 	{
 		$this->controller_common_api(function()
 		{
-			$this->response_body['errors']['message_default'] = term('timeline').'の'.term('form.post').'に失敗しました。';
+			$this->response_body['errors']['message_default'] = __('message_post_failed_for', array('label' => t('timeline.view')));
 			$moved_files = array();
 			$album_image_ids = array();
 
@@ -155,7 +155,7 @@ class Controller_Api extends \Controller_Site_Api
 				$timeline = \Timeline\Site_Model::save_timeline($this->u->id, $post['public_flag'], $type_key, $album_id, null, $post['body'], $timeline, $album_image_ids);
 				\DB::commit_transaction();
 
-				// thumbnail 作成 & tmp_file thumbnail 削除
+				// Create thumbnails and delete
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files);
 			}
 			catch(\Exception $e)
@@ -167,7 +167,7 @@ class Controller_Api extends \Controller_Site_Api
 
 			$data = array(
 				'id'      => $timeline->id,
-				'message' => term('timeline').'を'.term('form.post').'しました。',
+				'message' => __('message_post_for', array('label' => t('timeline.view'))),
 			);
 			if (conf('service.facebook.shareDialog.myhome.autoPopupAfterCreated'))
 			{

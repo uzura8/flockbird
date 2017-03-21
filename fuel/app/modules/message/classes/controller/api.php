@@ -92,7 +92,7 @@ class Controller_Api extends \Controller_Site_Api
 		$this->controller_common_api(function() use($type_key, $id)
 		{
 			list($type_key, $type, $related_id, $group, $group_members) = $this->validate_talks_params($type_key, $id);
-			$this->response_body['errors']['message_default'] = term('message.view').'の'.term('form.post').'に失敗しました。';
+			$this->response_body['errors']['message_default'] = __('message_send_failed_for', array('label' => t('message.view')));
 			$image_tmps = array();
 			$moved_images = array();
 
@@ -117,7 +117,7 @@ class Controller_Api extends \Controller_Site_Api
 				}
 				\DB::commit_transaction();
 
-				// thumbnail 作成 & tmp_file thumbnail 削除
+				// Create thumbnail & delete tmp_file thumbnail
 				\Site_FileTmp::make_and_remove_thumbnails($moved_images);
 			}
 			catch(\Exception $e)
@@ -129,7 +129,7 @@ class Controller_Api extends \Controller_Site_Api
 
 			$data = array(
 				'id'      => $message->id,
-				'message' => term('message.view').'を'.term('form.post').'しました。',
+				'message' => __('message_send_complete', array('label' => t('message.view'))),
 			);
 			$this->set_response_body_api($data);
 		});

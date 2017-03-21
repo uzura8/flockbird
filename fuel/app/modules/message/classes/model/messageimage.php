@@ -27,7 +27,6 @@ class Model_MessageImage extends \MyOrm\Model
 		),
 		'name' => array(
 			'data_type' => 'varchar',
-			'label' => '名前',
 			'validation' => array('trim', 'max_length' => array(255)),
 			'form' => array('type' => 'text', 'class' => 'form-control'),
 		),
@@ -65,6 +64,11 @@ class Model_MessageImage extends \MyOrm\Model
 
 	protected static $image_prefix = 'ms';
 	protected static $count_list = array();
+
+	public static function _init()
+	{
+		static::$_properties['name']['label'] = t('common.name');
+	}
 
 	public static function get_count4message_id($message_id)
 	{

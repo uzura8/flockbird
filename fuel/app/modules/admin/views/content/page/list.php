@@ -26,8 +26,8 @@
 <?php else: ?>
 	<td class="small"><?php echo symbol('noValue'); ?></td>
 <?php endif; ?>
-	<td><?php echo site_get_time($content_page->created_at, 'relative', 'Y/m/d H:i'); ?></td>
-	<td><?php echo site_get_time($content_page->updated_at, 'relative', 'Y/m/d H:i'); ?></td>
+	<td><?php echo site_get_time($content_page->created_at); ?></td>
+	<td><?php echo site_get_time($content_page->updated_at); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

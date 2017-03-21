@@ -28,7 +28,7 @@
 		<?php echo sprintf('<span class="text-muted">%s</span>', term('site.set_already')); ?>
 <?php endif; ?>
 	</td>
-	<td><?php echo site_get_time($user->created_at, 'relative', 'Y/m/d H:i'); ?></td>
+	<td><?php echo site_get_time($user->created_at); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

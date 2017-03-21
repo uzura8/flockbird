@@ -94,7 +94,7 @@ class Site_Config
 	}
 
 	/**
-	 * module の load 状態による設定値の修正
+	 * Fix configuration for loaded modules
 	 *
 	 * @access  public
 	 * @return  null

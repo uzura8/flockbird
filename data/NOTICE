@@ -1,19 +1,19 @@
 * fuelphp
-  - version: 1.7.2
+  - version: 1.8.*
   - license: MIT
   - url: http://fuelphp.com/
 * fuel-opauth (forked)
   - version: master
   - license: MIT
   - url: https://github.com/andreoav/fuel-opauth
-* fuel-less (forked)
-  - version: 2.0/master
-  - license: MIT
-  - url: https://github.com/kriansa/fuel-less
 * fuelphp-casset
-  - version: 1.21
+  - version: 1.*
   - license: MIT
   - url: https://github.com/canton7/fuelphp-casset
+* less.php
+  - version: 1.*
+  - license: Apache License, Version 2.0
+  - url: https://github.com/oyejorge/less.php
 * Mobile Detect
   - version: 2.8.*
   - license: MIT
@@ -29,10 +29,11 @@
   - version: 2.2.4 / 1.12.4
   - license: MIT
 * bootstrap
-  - version: 3.3.6
+  - version: 3.3.7
   - license: Apache License, Version 2.0
+  - url: http://getbootstrap.com
 * bootstrap-datetimepicker
-  - version: 4.17.37
+  - version: 4.17.47
   - license: MIT
   - url: https://github.com/Eonasdan/bootstrap-datetimepicker
 * bootstrap-markdown
@@ -40,17 +41,17 @@
   - license: MIT
   - url: http://github.com/toopay/bootstrap-markdown
 * HTML5 Shiv
-  - version: v3.7.2
+  - version: v3.7.3
   - license: MIT/GPL2 Licensed
 * Respond.js
   - version: v1.4.2
   - license: MIT/GPLv2
 * Font Awesome
-  - version: 4.6.3
+  - version: 4.7.0
   - license: http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
   - url: http://fontawesome.io/
 * jquery-ui
-  - version: 1.11.4
+  - version: 1.12.1
   - license: MIT
   - http://jqueryui.com/
 * jquery.autogrow-textarea
@@ -80,11 +81,11 @@
   - license: MIT
   - url: http://momentjs.com/
 * jQuery File Upload Plugin
-  - version: 9.12.3
+  - version: 9.17.0
   - license: MIT
   - url: https://github.com/blueimp/jQuery-File-Upload
 * blueimp Gallery JS
-  - version: JS 2.21.2
+  - version: 2.25.0
   - license: MIT
   - url:  https://github.com/blueimp/Gallery
 * jQuery UI Widget
@@ -96,7 +97,7 @@
   - license: MIT
   - url: http://summernote.org/
 * select2
-  - version: 4.0.2
+  - version: 4.0.3
   - license: MIT
   - url: https://select2.github.io/
 * handlebars
@@ -105,4 +106,5 @@
   - url: http://handlebarsjs.com
 * GMaps.js
   - license: MIT
+  - version: v0.4.25
   - url: http://hpneo.github.com/gmaps/

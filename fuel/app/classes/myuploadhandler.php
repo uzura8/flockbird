@@ -162,21 +162,22 @@ class MyUploadHandler extends UploadHandler
 		$file->original_name = $original_name;
 		$file->size = $this->fix_integer_overflow(intval($size));
 		$file->type = $type;
-		if (!$extention = Util_file::check_file_type($uploaded_file, \Site_Upload::get_accept_format($this->options['upload_type']), $type, $this->options['upload_type']))
+		if (!$extention = Util_file::check_file_type($uploaded_file,
+						\Site_Upload::get_accept_format($this->options['upload_type']), $type, $this->options['upload_type']))
 		{
 			$file->error = $this->get_error_message('accept_file_types');
 			return $file;
 		}
 		if (!$filename_with_prefix = Site_Upload::make_unique_filename($extention, $this->options['filename_prefix'], $original_name))
 		{
-			$file->error = 'ファイル名の作成に失敗しました。';
+			$file->error = __('message_create_failed_for', array('label' => t('site.file.name')));
 			return $file;
 		}
 		$file->name = $this->remove_filename_prefix($filename_with_prefix);
 		$file->name_prefix = $this->options['filename_prefix'];
 		if (!\Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], null, $this->options['mkdir_mode']))
 		{
-			$file->error = 'ディレクトリの作成に失敗しました。';
+			$file->error = __('message_create_failed_for', array('label' => t('system.dir')));
 			return $file;
 		}
 		if (!$this->validate($uploaded_file, $file, $error, $index))
@@ -238,7 +239,7 @@ class MyUploadHandler extends UploadHandler
 		}
 		$this->set_additional_file_properties($file);
 
-		// exif データの取得
+		// Get exif data
 		$exif = array();
 		if ($this->options['is_save_exif_to_db'] && $extention == 'jpg')
 		{
@@ -247,13 +248,13 @@ class MyUploadHandler extends UploadHandler
 
 		if ($this->options['upload_type'] == 'img')
 		{
-			// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
+			// Resize large file & Remove Exif data
 			$file_size_before = $file->size;
 			if ($this->options['member_id'] && $this->options['user_type'] === 0 && $max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
 			{
 				$file->size = Site_Upload::check_max_size_and_resize($file_path, $max_size);
 			}
-			// Exif情報の削除
+			// Remove Exif data
 			$is_resaved = $file->size != $file_size_before;
 			if ($this->options['is_clear_exif_on_file'] && !$is_resaved)
 			{
@@ -280,7 +281,7 @@ class MyUploadHandler extends UploadHandler
 				\Util_Toolkit::log_error(sprintf('file save error: %s', $e->getMessage()));
 			}
 			$this->delete_file($filename_with_prefix, $this->options['storage_type']);
-			$file->error = 'ファイルの保存に失敗しました。';
+			$file->error = __('message_save_failed_for', array('label' => 'site.file.view'));
 		}
 
 		return $file;

@@ -35,7 +35,7 @@ class Model_FileTmp extends \MyOrm\Model
 		'description' => array(
 			'data_type' => 'text',
 			'validation' => array('trim'),
-			'form' => array('type' => 'textarea', 'cols' => 60, 'rows' => 2, 'placeholder' => '写真の説明', 'class' => 'col-xs-12'),
+			'form' => array('type' => 'textarea', 'cols' => 60, 'rows' => 2, 'placeholder' => '', 'class' => 'col-xs-12'),
 		),
 		'exif' => array(
 			'data_type' => 'text',
@@ -62,6 +62,7 @@ class Model_FileTmp extends \MyOrm\Model
 
 	public static function _init()
 	{
+		static::$_properties['description']['form']['placeholder'] = t('common.description_of', array('label' => 'site.picture'));
 		if (conf('upload.isRemoveOnBatch'))
 		{
 			static::$_observers['MyOrm\Observer_InsertFileBinDeleteQueue'] = array(

@@ -91,7 +91,7 @@ $(function () {
 			}
 	});
 
-	$(document).on('click','.delete_file_tmp', function(){
+	$(document).on('click','.delete_file', function(){
 		var file_id   = $(this).data('id') ? parseInt($(this).data('id')) : 0;
 		var upload_type = $(this).data('type') ? $(this).data('type') : 'file_tmp';
 		var file_type = $(this).data('file_type') ? $(this).data('file_type') : 'img';
@@ -146,7 +146,7 @@ function load_file_tmp(get_url, file_name, parent_attr) {
 			$(parentDomElement).append(result).fadeIn('fast');
 		},
 		error: function(result) {
-			$.jGrowl(get_error_message(result['status'], '読み込みに失敗しました。'));
+			$.jGrowl(get_error_message(result['status'], __('message_error_failed_to_read')));
 		}
 	});
 }

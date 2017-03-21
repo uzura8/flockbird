@@ -6,9 +6,9 @@
 	<div class="row member_contents">
 		<div class="col-xs-1">
 {{#if member}}
-			<a href="{{member_url member.id}}"><img src="{{img_url member.file ../../image_size.value}}" alt="{{member_screen_name member.name}}" class="img-responsive profile_image"></a>
+			<a href="{{member_url member.id}}"><img src="{{img_url member.file ../image_size.value}}" alt="{{member_screen_name member.name}}" class="img-responsive profile_image"></a>
 {{else}}
-			<img src="{{img_url member.file ../../image_size.value}}" alt="{{member_screen_name member.name}}" class="img-responsive profile_image">
+			<img src="{{img_url member.file ../image_size.value}}" alt="{{member_screen_name member.name}}" class="img-responsive profile_image">
 {{/if}}
 		</div>
 		<div class="col-xs-11">
@@ -25,7 +25,7 @@
 <?php if (conf('mention.isEnabled', 'notice') && Auth::check()): ?>
 {{#if member}}
 				<small class="ml10">
-					<a href="#" data-parent_id="{{../../parent.id}}" data-input="#textarea_comment_{{../../parent.id}}" data-hide="#link_show_comment_form_{{../../parent.id}}" data-open="#commentPostBox_{{../../parent.id}}" data-text="@{{member.name}}" id="link_reply_{{id}}" class="js-insert_text"><i class="fa fa-reply"></i><span class="hidden-xs-inline"> <?php echo term('form.do_reply'); ?></span></a>
+					<a href="#" data-parent_id="{{../parent.id}}" data-input="#textarea_comment_{{../parent.id}}" data-hide="#link_show_comment_form_{{../parent.id}}" data-open="#commentPostBox_{{../parent.id}}" data-text="@{{member.name}}" id="link_reply_{{id}}" class="js-insert_text"><i class="fa fa-reply"></i><span class="hidden-xs-inline"> <?php echo term('form.do_reply'); ?></span></a>
 				</small>
 {{/if}}
 <?php endif; ?>

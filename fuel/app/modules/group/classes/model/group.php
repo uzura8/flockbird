@@ -9,7 +9,6 @@ class Model_Group extends \MyOrm\Model
 		'id',
 		'name' => array(
 			'data_type' => 'varchar',
-			'label' => 'グループ名',
 			'validation' => array('trim'),
 			'form' => array('type' => 'text'),
 		),
@@ -45,7 +44,7 @@ class Model_Group extends \MyOrm\Model
 
 	public static function _init()
 	{
-		static::$_properties['label'] = term('group.view', 'common._name');
+		static::$_properties['name']['label'] = term('group.view', 'common._name');
 		static::$_properties['type']['validation']['in_array'][] = array_values(\Config::get('group.types'));
 
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs();

@@ -1,6 +1,6 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php echo term('thread'); ?>がありません。
+<?php echo __('message_no_data_for', array('label' => t('thread.plural'))); ?>
 <?php else: ?>
 <div id="article_list">
 <?php foreach ($list as $id => $thread): ?>
@@ -150,7 +150,7 @@ echo render('_parts/comment/list', $data);
 <?php /* post_comment_link */; ?>
 <?php if (Auth::check()): ?>
 <?php $link_comment_attr['class'] .= ' showCommentBox'; ?>
-<?php echo anchor('#', term('form.do_comment'), false, $link_comment_attr); ?>
+<?php echo anchor('#', t('form.do_comment'), false, $link_comment_attr); ?>
 <?php endif; ?>
 
 <?php else: ?>

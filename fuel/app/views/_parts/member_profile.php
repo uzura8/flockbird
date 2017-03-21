@@ -186,7 +186,7 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 				&& check_public_flag($member->sex_public_flag, $access_from)
 				&& $sex = Site_Form::get_form_options4config('term.member.sex.options', $member->sex, true)): ?>
 			<div class="row">
-				<div class="col-xs-4 u-alr"><label><?php echo term('member.sex.label'); ?></label></div>
+				<div class="col-xs-4 u-alr"><label><?php echo t('member.sex.label'); ?></label></div>
 				<div class="col-xs-8"><?php echo $sex; ?></div>
 			</div>
 <?php endif; ?>
@@ -195,11 +195,21 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 				&& check_display_type(conf('profile.birthday.birthyear.displayType'), $display_type)
 				&& check_public_flag($member->birthyear_public_flag, $access_from)): ?>
 			<div class="row">
-				<div class="col-xs-4 u-alr"><label>
-					<?php if (conf('profile.birthday.birthyear.viewType')): ?><?php echo term('member.age'); ?><?php else: ?><?php echo term('member.birthyear'); ?><?php endif; ?>
-				</label></div>
+				<div class="col-xs-4 u-alr">
+					<label><?php echo conf('profile.birthday.birthyear.viewType') ? t('member.age') : t('member.birthyear'); ?></label>
+				</div>
 				<div class="col-xs-8">
-					<?php if (conf('profile.birthday.birthyear.viewType')): ?><?php echo Util_Date::calc_age($member->birthyear, check_public_flag($member->birthdate_public_flag, $access_from) ? $member->birthdate : null); ?>歳<?php else: ?><?php echo $member->birthyear; ?>年<?php endif; ?>
+<?php 	if (conf('profile.birthday.birthyear.viewType')): ?>
+<?php
+					$age = Util_Date::calc_age(
+						$member->birthyear,
+						check_public_flag($member->birthdate_public_flag, $access_from) ? $member->birthdate : null
+					);
+					echo str_unit($age, 'age');
+?>
+<?php 	else: ?>
+					<?php echo str_unit($member->birthyear, 'year'); ?>
+<?php 	endif; ?>
 				</div>
 			</div>
 <?php endif; ?>
@@ -208,8 +218,8 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 				&& check_display_type(conf('profile.birthday.birthdate.displayType'), $display_type)
 				&& check_public_flag($member->birthdate_public_flag, $access_from)): ?>
 			<div class="row">
-				<div class="col-xs-4 u-alr"><label><?php echo term('member.birthdate'); ?></label></div>
-				<div class="col-xs-8"><?php echo Util_Date::conv_date_format($member->birthdate, '%d月%d日'); ?></div>
+				<div class="col-xs-4 u-alr"><label><?php echo t('member.birthdate'); ?></label></div>
+				<div class="col-xs-8"><?php echo Util_Date::conv_short_date($member->birthdate, $member->birthyear); ?></div>
 			</div>
 <?php endif; ?>
 <?php if (!$is_simple_list
@@ -217,7 +227,7 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 				&& check_public_flag($member->country_public_flag, $access_from)
 				&& $country = Site_Form::get_form_options4config('i18n.country.options', $member->country, true)): ?>
 			<div class="row">
-				<div class="col-xs-4 u-alr"><label><?php echo term('member.country'); ?></label></div>
+				<div class="col-xs-4 u-alr"><label><?php echo t('member.country'); ?></label></div>
 				<div class="col-xs-8"><?php echo $country; ?></div>
 			</div>
 <?php endif; ?>
@@ -227,7 +237,7 @@ echo btn_dropdown('noterm.dropdown', $menus, false, $edit_button_size, null, tru
 <?php endif; ?>
 <?php if (!$is_simple_list): ?>
 			<ul class="list-inline mt10">
-				<li><small><label><?php echo term('site.registration'); ?>:</label> <?php echo site_get_time($member->created_at) ?></small></li>
+				<li><small><label><?php echo t('site.registration'); ?>:</label> <?php echo site_get_time($member->created_at) ?></small></li>
 				<?php if ($member->last_login): ?><li><small><label><?php echo term('site.last', 'site.login'); ?>:</label> <?php echo site_get_time($member->last_login) ?></small></li><?php endif; ?>
 			</ul>
 <?php endif; ?>

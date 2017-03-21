@@ -39,7 +39,7 @@ class Controller_Member_Profile extends Controller_Member
 			'access_from' => $access_from,
 			'member_profiles' => $member_profiles,
 		);
-		// 通報リンク
+		// Report link
 		$data['report_data'] = $this->set_global_for_report_form() ? array(
 			'member_id' => $member->id,
 			'uri' => 'member/profile/'.$member->id,
@@ -71,8 +71,7 @@ class Controller_Member_Profile extends Controller_Member
 				$form_member_profile->seve();
 				if ($is_regist) Model_MemberConfig::delete_value($this->u->id, 'terms_un_agreement');
 				\DB::commit_transaction();
-
-				$message = $is_regist ? sprintf('%sが%sしました。', term('site.registration'), term('form.complete')) : term('profile').'を編集しました。';
+				$message = $is_regist ? __('message_registered_complete') : __('message_edit_complete_for', array('label' => t('profile')));
 				$redirect_uri = $is_regist ? $this->after_auth_uri : 'member/profile';
 				\Session::set_flash('message', $message);
 				\Response::redirect($redirect_uri);

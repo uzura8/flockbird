@@ -1,6 +1,6 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (!$list): ?>
-<?php echo term('note'); ?>がありません。
+<?php echo __('message_no_data_for', array('label' => t('note.plural'))); ?>
 <?php else: ?>
 <div id="article_list">
 <?php foreach ($list as $id => $note): ?>
@@ -17,7 +17,7 @@ $attr = array(
 			<h4<?php if (!$note->is_published): ?> class="has_label"<?php endif; ?>>
 				<?php echo Html::anchor('note/'.$id, strim($note->title, conf('view_params_default.list.trim_width.title'))); ?>
 <?php if (!$note->is_published): ?>
-				<?php echo label(term('form.draft'), null); ?>
+				<?php echo label(t('form.draft'), null); ?>
 <?php endif; ?>
 			</h4>
 			<div class="list_subtitle">
@@ -149,7 +149,7 @@ echo render('_parts/comment/list', $data);
 <?php /* post_comment_link */; ?>
 <?php if (Auth::check()): ?>
 <?php $link_comment_attr['class'] .= ' showCommentBox'; ?>
-<?php echo anchor('#', term('form.do_comment'), false, $link_comment_attr); ?>
+<?php echo anchor('#', t('form.do_comment'), false, $link_comment_attr); ?>
 <?php endif; ?>
 
 <?php else: ?>

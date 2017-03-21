@@ -30,7 +30,7 @@ class Controller_Message extends \Controller_Site
 	public function action_list()
 	{
 		$data = array();
-		$this->set_title_and_breadcrumbs(term('message.list'), null, $this->u);
+		$this->set_title_and_breadcrumbs(t('message.plural'), null, $this->u);
 		$this->template->subtitle = \View::forge('notice::_parts/link_read_all', array(
 			'tag_attr' => array('class' => 'pull-right'),
 			'is_message' => true,
@@ -89,7 +89,7 @@ class Controller_Message extends \Controller_Site
 		}
 		if (!in_array($this->u->id, $target_member_ids)) throw new \HttpForbiddenException;
 
-		// 既読処理
+		// Update read flag
 		$this->change_message_status2read($message->type, $message->member_id, $message->id);
 		Model_MessageRecieved::update_is_read4member_ids_and_message_ids($this->u->id, $message->id);
 
@@ -98,7 +98,7 @@ class Controller_Message extends \Controller_Site
 		if (!$message->is_sent)
 		{
 			$title['label'] = array('name' => term('form.draft'));
-			$header_info = array('body' => sprintf('この%sはまだ%sされていません。',  term('message.view'), term('form.send')));
+			$header_info = array('body' => __('message_not_send_for', array('label' => t('message.view'))));
 		}
 		elseif (Site_Util::check_admin_type($message->type))
 		{

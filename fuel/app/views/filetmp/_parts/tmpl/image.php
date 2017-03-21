@@ -76,9 +76,9 @@ switch ($thumbnail_size)
 				{% } %}
 				<p class="subinfo<?php if ($is_subinfo_pull_right): ?> pull-right<?php endif; ?>">
 					<span class="size">{%=o.formatFileSize(file.size)%}</span>
-					<button class="btn btn-xs btn-default delete_file{%=file.is_tmp?'_tmp':''%}"
+					<button class="btn btn-xs btn-default delete_file"
 						data-id="{%=file.id%}" data-file_type="img" data-type="image{%=file.is_tmp?'_tmp':''%}"
-						{% if (!file.is_tmp) { %}<?php if (!empty($model)): ?>data-model="<?php echo $model; ?>"<?php endif; ?>{% } %}
+						{% if (file.model) { %}data-model="{%=file.model%}"{% } %}
 						{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
 							<i class="glyphicon glyphicon-trash"></i>
 					</button>
@@ -87,7 +87,9 @@ switch ($thumbnail_size)
 				<p>
 					<textarea name="image{%=file.is_tmp?'_tmp':''%}_description[{%=file.id%}]"
 						id="image{%=file.is_tmp?'_tmp':''%}_description_{%=file.id%}"
-						class="form-control" placeholder="写真の説明" rows="2"></textarea>
+						class="form-control"
+						placeholder="<?php echo t('common.delimitter.of', array('subject' => t('common.description'), 'object' => t('site.picture'))); ?>"
+						rows="2"></textarea>
 				</p>
 <?php endif; ?>
 <?php if (!empty($insert_target)): ?>
@@ -101,7 +103,7 @@ switch ($thumbnail_size)
 						data-body="<?php echo $insert_target; ?>"
 						data-id="{%=file.id%}" id="img_insert_btn_{%=file.id%}"
 						class="btn btn-default btn-sm js-insert_img">
-						<i class="glyphicon glyphicon-plus"></i> 写真を挿入
+						<i class="glyphicon glyphicon-plus"></i> <?php echo t('form.insert_picture'); ?>
 					</button>
 				{% } %}
 <?php endif; ?>

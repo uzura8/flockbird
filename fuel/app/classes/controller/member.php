@@ -45,7 +45,7 @@ class Controller_Member extends Controller_Site
 		$id = (int)$id;
 		list($is_mypage, $member, $access_from) = $this->check_auth_and_is_mypage($id);
 
-		// 既読処理
+		// Update read flag
 		if (\Auth::check() && $id != $this->u->id && \Notice\Site_Util::check_enabled_notice_type('follow'))
 		{
 			$this->change_notice_status2read($this->u->id, 'member', $id);
@@ -59,7 +59,7 @@ class Controller_Member extends Controller_Site
 			'access_from' => $access_from,
 			'display_type' => 'summary',
 		);
-		// 通報リンク
+    // Report link
 		$data['report_data'] = $this->set_global_for_report_form() ? array(
 			'member_id' => $member->id,
 			'uri' => 'member/'.$member->id,
@@ -144,7 +144,7 @@ class Controller_Member extends Controller_Site
 		);
 		$data = array(
 			'limit' => $limit,
-			'no_data_message' => sprintf('指定の%sに該当する%sがいません。', term('common.condition'), term('member.view')),
+			'no_data_message' =>  __('message_error_detail_search', array('label' => t('member.plural'))),
 			'loaded_position' => 'replace',
 			//'is_desplay_load_before_link' => $page > 1,
 		);

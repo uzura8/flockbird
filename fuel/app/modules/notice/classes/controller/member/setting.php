@@ -8,8 +8,6 @@ class Controller_Member_Setting extends \Controller_Site
 	public function before()
 	{
 		parent::before();
-
-		\Lang::load('notice');
 	}
 
 	/**
@@ -20,7 +18,7 @@ class Controller_Member_Setting extends \Controller_Site
 	 */
 	public function action_index()
 	{
-		$page_name = term('notice', 'site.setting');
+		$page_name = term('notice.view', 'site.setting');
 		$val = \Form_MemberConfig::get_validation($this->u->id, 'notice', 'Notice');
 		if (\Input::method() == 'POST')
 		{

@@ -21,6 +21,6 @@ class Controller_News_File_Api extends Controller_Api
 	 */
 	public function post_delete($id = null)
 	{
-		$this->api_delete_common('news_file', $id, null, term('site.file'));
+		$this->api_delete_common('news_file', $id, null, t('site.file.view'));
 	}
 }

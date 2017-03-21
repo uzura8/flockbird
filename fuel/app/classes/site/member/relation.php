@@ -51,7 +51,7 @@ class Site_Member_Relation
 		switch ($relation_type)
 		{
 			case 'follow':
-				$icon_term = $status ? 'followed' : 'do_follow';
+				$icon_term = $status ? 'following' : 'do_follow';
 				if ($is_api_response_data)
 				{
 					$attr = $status ? array('class' => array('add' => 'btn-primary')) : array('class' => array('remove' => 'btn-primary'));
@@ -68,9 +68,20 @@ class Site_Member_Relation
 
 		if ($is_api_response_data)
 		{
+			switch ($relation_type_camelized_lower)
+			{
+				case 'follow':
+				case 'accessBlock':
+					$message = __(sprintf('member_message_%s%s', $status ? '' : 'cancel_', $relation_type_camelized_lower));
+					break;
+				default :
+					$message = __(sprintf('message_%s_complete', $status ? 'set' : 'cancel'));
+					break;
+			}
+
 			return array(
 				'is'.$relation_type_camelized_upper => (bool)$status,
-				'message' => sprintf('%s%s', term($relation_type_camelized_lower), $status ? 'しました。' : 'を解除しました。'),
+				'message' => $message,
 				'html' => icon_label($icon_term, 'both', false),
 				'attr' => $attr,
 			);

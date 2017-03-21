@@ -45,7 +45,7 @@ return array(
 		'eu_full_sec'	 => '%H:%M:%S, %d %B %Y',
 		'eu_full_sec_tz'	 => '%H:%M:%S, %d %B %Y %Z',
 		'ja'		 => '%Y/%m/%d',
-		'ja_short'	 => '%m/%d',
+		'ja_short'	 => '%m月%d日',
 		'ja_named'	 => '%Y年%m月%d日',
 		'ja_full'	 => '%Y年%m月%d日 %H:%M',
 		'ja_full_tz'	 => '%Y年%m月%d日 %H:%M %Z',

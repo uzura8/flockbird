@@ -2,6 +2,7 @@
 return array(
 	'message' => array(
 		'view' => 'Message',
+		'plural' => 'Messages',
 		'list' => 'Messages',
 		'form' => array(
 			'send' => 'Send Message',

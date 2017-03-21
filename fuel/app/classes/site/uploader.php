@@ -41,12 +41,12 @@ class Site_Uploader
 			$this->set_file_properties($uploaded_file_path);
 			if (!Site_Upload::check_and_make_uploaded_dir($this->options['upload_dir'], null, $this->options['path_chmod']))
 			{
-				throw new FuelException('ディレクトリの作成に失敗しました。');
+				throw new FuelException(__('message_create_failed_for', array('label' => t('system.dir'))));
 			}
 			$tmp_file_path = APPPATH.'tmp/'.$this->file->name;
 			if (!Util_file::move($uploaded_file_path, $tmp_file_path)) throw new FuelException('Save raw file error.');
 
-			// exif データの取得
+			// Get exif data
 			$exif = array();
 			if ($this->options['is_save_exif_to_db'] && $this->file->type == 'image/jpeg')
 			{
@@ -54,14 +54,13 @@ class Site_Uploader
 			}
 
 			$is_resaved = false;
-			// 回転状態の補正
+			// Correction of rotation
 			if ($this->options['auto_orient'] && !empty($exif['Orientation']))
 			{
 				Util_file::correct_orientation($tmp_file_path, $exif['Orientation']);
 				$is_resaved = true;
 			}
-
-			// 大きすぎる場合はリサイズ & 保存ファイルから exif 情報削除
+			// Resize large file & Remove Exif data
 			$file_size_before = $this->file->size;
 			if ($max_size = Site_Upload::get_accepted_max_size($this->options['member_id']))
 			{

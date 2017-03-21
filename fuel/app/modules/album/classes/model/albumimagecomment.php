@@ -24,7 +24,6 @@ class Model_AlbumImageComment extends \MyOrm\Model
 		'member_id',
 		'body' => array(
 			'data_type' => 'varchar',
-			'label' => 'コメント',
 			'validation' => array('trim', 'required'),
 			'form' => array('type' => 'text', 'class' => 'form-control'),
 		),
@@ -81,6 +80,7 @@ class Model_AlbumImageComment extends \MyOrm\Model
 
 	public static function _init()
 	{
+		static::$_properties['body']['label'] = t('form.comment');
 		if (\Module::loaded('timeline'))
 		{
 			$observer_key = \Config::get('timeline.types.album');

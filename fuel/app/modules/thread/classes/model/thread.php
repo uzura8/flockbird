@@ -17,13 +17,11 @@ class Model_Thread extends \MyOrm\Model
 		'id',
 		'title' => array(
 			'data_type' => 'varchar',
-			'label' => 'タイトル',
 			'validation' => array('trim', 'required', 'max_length' => array(255)),
 			'form' => array('type' => 'text'),
 		),
 		'body' => array(
 			'data_type' => 'text',
-			'label' => '本文',
 			'validation' => array('trim', 'required'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
@@ -86,7 +84,7 @@ class Model_Thread extends \MyOrm\Model
 				),
 			),
 		),
-		// delete 時に紐づくデータを削除する
+		// Delete related data on delete
 		'MyOrm\Observer_DeleteRelationalTables' => array(
 			'events' => array('before_delete'),
 			'relations' => array(
@@ -102,6 +100,8 @@ class Model_Thread extends \MyOrm\Model
 
 	public static function _init()
 	{
+		static::$_properties['title']['label'] = t('thread.title');
+		static::$_properties['body']['label'] = t('thread.body');
 		static::$_properties['public_flag']['form'] = \Site_Form::get_public_flag_configs(false, 'public');
 		static::$_properties['public_flag']['validation']['in_array'][] = \Site_Util::get_public_flags('public');
 
@@ -118,7 +118,7 @@ class Model_Thread extends \MyOrm\Model
 		if (is_enabled('timeline'))
 		{
 			$type = conf('types.thread', 'timeline');
-			// 更新時に timeline の sort_datetime, comment_count を更新
+			// Update sort_datetime and comment_count of timeline on updated
 			static::$_observers['MyOrm\Observer_UpdateRelationalTables'] = array(
 				'events' => array('after_update'),
 				'relations' => array(
@@ -181,12 +181,12 @@ class Model_Thread extends \MyOrm\Model
 		{
 			if (!$is_new && $is_changed_public_flag)
 			{
-				// timeline の public_flag の更新
+				// Update public_flag of timeline
 				\Timeline\Model_Timeline::update_public_flag4foreign_table_and_foreign_id($this->public_flag, 'thread', $this->id, \Config::get('timeline.types.thread'));
 			}
 			else	
 			{
-				// timeline 投稿
+				// Post timeline
 				\Timeline\Site_Model::save_timeline($member_id, $this->public_flag, 'thread', $this->id, $this->updated_at);
 			}
 		}

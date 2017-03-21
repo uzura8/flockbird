@@ -112,6 +112,24 @@ $config = array(
 					),
 				),
 			),
+			'contactToMember' => array(
+				'format' =>'twig',
+				'title' => 'お問い合わせを受け付けました',
+				'body' => array(
+					'default' => array(
+						'file' => 'contact::mail/'.$lang.'/contact_to_member',
+					),
+				),
+			),
+			'report' => array(
+				'format' =>'twig',
+				'title' => '通報メール',
+				'body' => array(
+					'default' => array(
+						'file' => 'contact::mail/'.$lang.'/report',
+					),
+				),
+			),
 		),
 	),
 );

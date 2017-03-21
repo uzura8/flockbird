@@ -45,19 +45,20 @@
 			<div class="article">
 <?php if (empty($album)): ?>
 				<div class="subinfo">
-					<small><?php echo term('album'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.articles.trim_width.subinfo'))); ?></small>
+					<small><?php echo t('album.view'); ?>: <?php echo Html::anchor('album/'.$album_image->album->id, strim($album_image->album->name, Config::get('album.articles.trim_width.subinfo'))); ?></small>
 				</div>
 <?php endif; ?>
 
 <?php
 // comment
-list($comments, $comment_next_id, $all_comment_count)
-	= \Album\Model_AlbumImageComment::get_list(array('album_image_id' => $album_image->id), \Config::get('album.articles.comment.limit'), true, false, 0, 0, null, false, true);
+list($comments, $comment_next_id, $all_comment_count) = \Album\Model_AlbumImageComment::get_list(
+	array('album_image_id' => $album_image->id), \Config::get('album.articles.comment.limit'), true, false, 0, 0, null, false, true
+);
 ?>
 				<div class="comment_info">
 					<small><span class="glyphicon glyphicon-comment"></span> <?php echo $all_comment_count; ?></small>
 <?php if (Auth::check()): ?>
-					<small><?php echo Html::anchor('album/image/'.$album_image->id.'?write_comment=1#comments', 'コメントする'); ?></small>
+					<small><?php echo Html::anchor('album/image/'.$album_image->id.'?write_comment=1#comments', t('form.do_comment')); ?></small>
 <?php endif; ?>
 				</div><!-- comment_info -->
 

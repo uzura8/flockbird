@@ -204,7 +204,7 @@ class Site_MemberProfileCacheBuilder
 		foreach ($profiles as $id => $profile)
 		{
 			if (isset($exist_columns[$profile->name])) continue;
-			// 複数選択項目は対象外
+			// Excluded for multiple selection
 			if ($profile->form_type == 'checkbox') continue;
 
 			$columns_name_public_flag = $profile->name.'_public_flag';

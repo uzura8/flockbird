@@ -55,13 +55,21 @@ class Site_Lang
 	{
 		if ($lang_files = Config::get('i18n.lang.files'))
 		{
-			foreach ($lang_files as $lang_file) Lang::load($lang_file, null, null, true, true);
+			foreach ($lang_files as $lang_file)
+			{
+				if (preg_match('/^([0-9a-zA-Z]+)\:\:/', $lang_file, $matches))
+				{
+					if (! is_enabled($matches[1])) continue;
+				}
+				Lang::load($lang_file, null, null, true, true);
+			}
 		}
 	}
 
 	protected static function load_configs_related_lang($lang)
 	{
 		Config::load(Site_Util::get_term_file_name($lang), 'term', true);
+		Config::load('contact::contact', 'contact', true);
 		Config::load(is_admin() ? 'admin::navigation' : 'navigation', 'navigation', true);
 	}
 

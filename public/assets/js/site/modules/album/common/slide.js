@@ -156,7 +156,7 @@ var getImageTag = function(imageUri, imageId) {
 }
 
 var setLink2DetailPage = function(imageId) {
-	$('#link2detail').html('<a href="' + get_url('album/image/' + imageId) + '" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-picture"></i> 詳細</a>');
+	$('#link2detail').html('<a href="' + get_url('album/image/' + imageId) + '" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-picture"></i> ' + get_term('show_detail') + '</a>');
 }
 
 var displayCommentAndOptionalInfo = function(image_id) {

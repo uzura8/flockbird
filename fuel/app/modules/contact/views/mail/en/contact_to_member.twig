@@ -1,0 +1,20 @@
+Hello, {{ to_name }}
+
+We received your inquiries with the following contents.
+
+--------------- Content of inquiries -----------------
+
+{% if category %}
+■Inquiry about
+
+{{ category }}
+
+
+{% endif %}
+■Details
+
+{{ body }}
+
+------------------------------------------------------
+
+

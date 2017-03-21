@@ -13,11 +13,11 @@
 <?php 	endif; ?>
 
 	<li><small>
-		<label><?php echo empty($is_simple_view) ? term('form.publish', 'site.datetime') : term('form.publish'); ?>:</label>
+		<label><?php echo empty($is_simple_view) ? t('site.published_at') : term('form.publish'); ?>:</label>
 		<?php echo site_get_time($news->published_at) ?>
 	</small></li>
 <?php if (empty($is_simple_view)): ?>
-	<li><small><label><?php echo term('site.last', 'form.updated', 'site.datetime'); ?>:</label> <?php echo site_get_time($news->updated_at) ?></small></li>
+	<li><small><label><?php echo term('site.last', 'site.updated_at'); ?>:</label> <?php echo site_get_time($news->updated_at) ?></small></li>
 <?php endif; ?>
 </ul>
 

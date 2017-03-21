@@ -7,7 +7,7 @@ if (!isset($is_simple_list)) $is_simple_list = false;
 <?php if (!empty($no_data_message)): ?>
 <?php echo $no_data_message; ?>
 <?php else: ?>
-<?php echo term('member.view'); ?>の<?php echo term('site.registration'); ?>がありません。
+<?php echo t('common.delimitter.of', array('subject' => t('site.registration'), 'object' => t('member.view'))); ?>
 <?php endif; ?>
 <?php else: ?>
 

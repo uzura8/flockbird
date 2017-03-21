@@ -288,7 +288,7 @@ $(document).on('click', '.js-insert_text', function(){
 		if (!$(hideSelector).hasClass('hidden')) $(hideSelector).addClass('hidden');
 		$(inputSelector).focus();
 	}
-	inputVal = $(inputSelector).val();
+	var inputVal = $(inputSelector).val();
 	if (insertText.length) {
 		if (inputVal.length) inputVal += ' ';
 		$(inputSelector).val(inputVal + insertText + ' ');

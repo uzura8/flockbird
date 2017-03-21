@@ -37,27 +37,6 @@ class SetupLang
 	}
 
 	/**
-	 * Usage (from command line):
-	 *
-	 * php oil r setupfiles:output_lang_js
-	 *
-	 * @return string
-	 */
-	public static function lang_js()
-	{
-		try
-		{
-			$result = self::change_less_setting();
-		}
-		catch(\FuelException $e)
-		{
-			return \Util_Task::output_message($e->getMessage(), false);
-		}
-
-		return true;
-	}
-
-	/**
 	 * output js lang files
 	 */
 	private static function output_lang_js()

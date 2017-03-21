@@ -37,7 +37,7 @@ class Controller_Note extends \Controller_Site
 		list($limit, $page) = $this->common_get_pager_list_params();
 		$data = Site_Model::get_list($limit, $page, get_uid());
 
-		$this->set_title_and_breadcrumbs(term('site.latest', 'note', 'site.list'));
+		$this->set_title_and_breadcrumbs(term('site.latest', 'note.plural'));
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 	}
@@ -57,7 +57,9 @@ class Controller_Note extends \Controller_Site
 		list($limit, $page) = $this->common_get_pager_list_params();
 		$data = Site_Model::get_list($limit, $page, \Auth::check() ? $this->u->id : 0, $member, $is_mypage, $is_draft);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('note', 'site.list')), null, $member);
+		$title = $is_mypage ? t('common.own_for_myself_of', array('label' => t('note.plural')))
+												: t('common.own_for_member_of', array('label' => t('note.plural'), 'name' => $member->name));
+		$this->set_title_and_breadcrumbs($title, null, $member, null, null, false, false, null, t('note.plural'));
 		$this->template->subtitle = $is_mypage ? \View::forge('_parts/member_subtitle') : '';
 		$this->template->content = \View::forge('member', $data);
 		$this->template->post_footer = \View::forge('_parts/list_footer');
@@ -75,22 +77,18 @@ class Controller_Note extends \Controller_Site
 		$note_id = (int)$id;
 		$note = Model_Note::check_authority($note_id);
 		$this->check_browse_authority($note->public_flag, $note->member_id);
-
-		// 既読処理
+    // Update read flag
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'note', $id);
-		// 通報リンク
+		// Link to report
 		$this->set_global_for_report_form();
-
 		// note_album_image
 		$images = is_enabled('album') ? Model_NoteAlbumImage::get_album_image4note_id($id) : array();
-
 		// note_comment
 		$default_params = array('latest' => 1);
 		list($limit, $is_latest, $is_desc, $since_id, $max_id)
 			= $this->common_get_list_params($default_params, conf('view_params_default.detail.comment.limit_max'));
 		list($list, $next_id, $all_comment_count)
 			= Model_NoteComment::get_list(array('note_id' => $note_id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
-
 		// note_like
 		$is_liked_self = \Auth::check() ? Model_NoteLike::check_liked($id, $this->u->id) : false;
 
@@ -98,8 +96,8 @@ class Controller_Note extends \Controller_Site
 		$header_info = array();
 		if (!$note->is_published)
 		{
-			$title['label'] = array('name' => term('form.draft'));
-			$header_info = array('body' => sprintf('この%sはまだ公開されていません。',  term('note')));
+			$title['label'] = array('name' => t('form.draft'));
+			$header_info = array('body' => __('message_not_published', array('label' => t('note.view'))));
 		}
 		$ogp_infos = array(
 			'title' => $note->title,
@@ -149,13 +147,16 @@ class Controller_Note extends \Controller_Site
 				list($is_changed, $is_published, $moved_files) = $note->save_with_relations($this->u->id, $post, $file_tmps);
 				\DB::commit_transaction();
 
-				// thumbnail 作成 & tmp_file thumbnail 削除
+				// Create thumbnails and delete
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'note');
 
-				$message = sprintf('%sを%sしました。', term('note'), $is_published ? term('form.create_simple') : term('form.draft'));
+				$message = __($is_published ? 'message_create_complete_for' : 'message_draft_complete_for', array('label' => t('note.view')));
 				\Session::set_flash('message', $message);
 				$redirect_uri = 'note/detail/'.$note->id;
-				if ($is_published && FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.note.isEnabled') && conf('service.facebook.shareDialog.note.autoPopupAfterCreated'))
+				if ($is_published
+					&& FBD_FACEBOOK_APP_ID
+					&& conf('service.facebook.shareDialog.note.isEnabled')
+					&& conf('service.facebook.shareDialog.note.autoPopupAfterCreated'))
 				{
 					$redirect_uri .= '?created=1';
 				}
@@ -171,7 +172,7 @@ class Controller_Note extends \Controller_Site
 			}
 		}
 
-		$this->set_title_and_breadcrumbs(term('note').'を書く', null, $this->u, 'note');
+		$this->set_title_and_breadcrumbs(t('form.do_write_for', array('label' => t('note.view'))), null, $this->u, 'note');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array('val' => $val, 'files' => $files));
@@ -213,10 +214,10 @@ class Controller_Note extends \Controller_Site
 				list($is_changed, $is_published, $moved_files) = $note->save_with_relations($this->u->id, $post, $file_tmps, $album_images, $files);
 				\DB::commit_transaction();
 
-				// thumbnail 作成 & tmp_file thumbnail 削除
+				// Create thumbnails and delete
 				\Site_FileTmp::make_and_remove_thumbnails($moved_files, 'note');
 
-				$message = sprintf('%sを%sしました。', term('note'), $is_published ? term('form.publish') : term('form.edit'));
+				$message = __($is_published ? 'message_publish_complete_for' : 'message_edit_complete_for', array('label' => t('note.view')));
 				\Session::set_flash('message', $message);
 				\Response::redirect('note/detail/'.$note->id);
 			}
@@ -231,7 +232,9 @@ class Controller_Note extends \Controller_Site
 		}
 		$files = array_merge($files, $file_tmps);
 
-		$this->set_title_and_breadcrumbs(sprintf('%sを%s', term('note'), term('form.do_edit')), array('/note/'.$id => $note->title), $note->member, 'note');
+		$this->set_title_and_breadcrumbs(t('form.do_edit_for', array('label' => t('note.view'))), array(
+			'note/'.$id => $note->title
+		), $note->member, 'note');
 		$this->template->post_header = \View::forge('_parts/form_header');
 		$this->template->post_footer = \View::forge('_parts/form_footer');
 		$this->template->content = \View::forge('_parts/form', array(
@@ -260,7 +263,7 @@ class Controller_Note extends \Controller_Site
 			$note = Model_Note::check_authority($id, $this->u->id);
 			$note->delete_with_relations();
 			\DB::commit_transaction();
-			\Session::set_flash('message', term('note').'を削除しました。');
+			\Session::set_flash('message', __('message_delete_complete_for', array('label' => t('note.view'))));
 		}
 		catch(\FuelException $e)
 		{
@@ -285,7 +288,7 @@ class Controller_Note extends \Controller_Site
 		$note = Model_Note::check_authority($id, $this->u->id);
 		if ($note->is_published)
 		{
-			\Session::set_flash('error', '既に公開されています。');
+			\Session::set_flash('error', __('message_published_already'));
 			\Response::redirect('note/detail/'.$id);
 		}
 
@@ -294,7 +297,7 @@ class Controller_Note extends \Controller_Site
 			\DB::start_transaction();
 			list($is_changed, $is_published) = $note->save_with_relations($this->u->id, array('is_published' => 1));
 			\DB::commit_transaction();
-			\Session::set_flash('message', term('note').'を公開しました。');
+			\Session::set_flash('message', __('message_publish_complete_for', array('label' => t('note.view'))));
 		}
 		catch(\FuelException $e)
 		{
@@ -310,12 +313,12 @@ class Controller_Note extends \Controller_Site
 		$val = \Validation::forge();
 		$val->add_model($note);
 
-		$val->add('published_at_time', '日時')
+		$val->add('published_at_time', t('site.datetime'))
 				->add_rule('datetime_except_second')
 				->add_rule('datetime_is_past');
 		if (empty($note->is_published))
 		{
-			$val->add('is_draft', term('form.draft'))
+			$val->add('is_draft', t('form.draft'))
 					->add_rule('valid_string', 'numeric')
 					->add_rule('in_array', array(0,1));
 		}

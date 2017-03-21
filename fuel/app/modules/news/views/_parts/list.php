@@ -1,7 +1,7 @@
 <?php if (IS_API): ?><?php echo Html::doctype('html5'); ?><body><?php endif; ?>
 <?php if (empty($list)): ?>
 <?php 	if (!IS_API): ?>
-<?php echo term('news.view'); ?>がありません。
+<?php echo __('message_not_registered_for', array('label' => t('news.view'))); ?>
 <?php 	endif; ?>
 <?php else: ?>
 <?php

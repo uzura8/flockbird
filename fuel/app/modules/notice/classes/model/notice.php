@@ -66,7 +66,7 @@ class Model_Notice extends \MyOrm\Model
 		static::$_properties['parent_table']['validation']['in_array'][] = Site_Util::get_accept_parent_tables();
 		static::$_properties['parent_id'] = \Util_Orm::get_relational_numeric_key_prop(false);
 
-		// unread cache を削除
+		// Remove unread cache
 		if (\Site_Notification::check_is_enabled_cahce('notice'))
 		{
 			static::$_observers['MyOrm\Observer_DeleteUnreadNoticeCountCache'] = array(

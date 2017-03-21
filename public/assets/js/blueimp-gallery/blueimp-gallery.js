@@ -9,7 +9,7 @@
  * https://github.com/bradbirdsall/Swipe
  *
  * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
+ * https://opensource.org/licenses/MIT
  */
 
 /* global define, window, document, DocumentTouch */
@@ -673,7 +673,7 @@
           index = indices.pop()
           this.translateX(index, touchDeltaX + this.positions[index], 0)
         }
-      } else if (this.options.closeOnSwipeUpOrDown) {
+      } else {
         this.translateY(index, this.touchDelta.y + this.positions[index], 0)
       }
     },
@@ -1176,6 +1176,7 @@
       property.replace(
         // Matches native JavaScript notation in a String,
         // e.g. '["doubleQuoteProp"].dotProp[2]'
+        // eslint-disable-next-line no-useless-escape
         /\[(?:'([^']+)'|"([^"]+)"|(\d+))\]|(?:(?:^|\.)([^\.\[]+))/g,
         function (str, singleQuoteProp, doubleQuoteProp, arrayIndex, dotProp) {
           var prop = dotProp || singleQuoteProp || doubleQuoteProp ||
@@ -1193,6 +1194,7 @@
         var prop = obj.getAttribute('data-' +
           property.replace(/([A-Z])/g, '-$1').toLowerCase())
         if (typeof prop === 'string') {
+          // eslint-disable-next-line no-useless-escape
           if (/^(true|false|null|-?\d+(\.\d+)?|\{[\s\S]*\}|\[[\s\S]*\])$/
               .test(prop)) {
             try {

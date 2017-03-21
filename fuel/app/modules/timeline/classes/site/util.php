@@ -117,24 +117,25 @@ class Site_Util
 			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
 			case \Config::get('timeline.types.album_image_timeline'):
 			case \Config::get('timeline.types.member_name'):
-				$return_body = self::get_normal_timeline_body($body, $type, $timeline_id, isset($optional_info['count']) ? $optional_info['count'] : 0, $is_detail);
+				$return_body = self::get_normal_timeline_body($body, $type, $timeline_id,
+					isset($optional_info['count']) ? $optional_info['count'] : 0, $is_detail);
 				return $is_strip_tags ? \Security::strip_tags($return_body) : $return_body;
 
 			case \Config::get('timeline.types.member_register'):// SNS への参加
-				return FBD_SITE_NAME.' に参加しました。';
+				return __('message_join_complete_for', array('label' => FBD_SITE_NAME));
 
 			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				return term('profile', 'site.picture').'を設定しました。';
+				return __('message_set_complete_for', array('label' => term('profile', 'site.picture')));
 
 			case \Config::get('timeline.types.note'):// note 投稿
-				return term('note').'を投稿しました。';
+				return __('message_post_for', array('label' => t('note.view')));
 
 			case \Config::get('timeline.types.thread'):// thread 投稿
-				return term('thread').'を投稿しました。';
+				return __('message_post_for', array('label' => t('thread.view')));
 
 			case \Config::get('timeline.types.album'):// album 作成
-				return term('album').'を作成しました。';
+				return __('message_post_for', array('label' => t('album.view')));
 
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
 				$return_body = $foreign_table_obj ? render('timeline::_parts/body_for_add_album_image', array(
@@ -156,29 +157,29 @@ class Site_Util
 		switch ($type)
 		{
 			case \Config::get('timeline.types.member_register'):// SNS への参加
-				$title = FBD_SITE_NAME.' に参加しました。';
+				$title = __('message_join_complete_for', array('label' => FBD_SITE_NAME));
 
 			case \Config::get('timeline.types.profile_image'):// profile 写真投稿
 			case \Config::get('timeline.types.album_image_profile'):// profile 写真投稿(album_image)
-				$title = term('profile', 'site.picture').'を設定しました。';
+				$title = __('message_set_complete_for', array('label' => term('profile', 'site.picture')));
 
 			case \Config::get('timeline.types.note'):// note 投稿
-				$title = term('note').'を投稿しました。';
+				$title = __('message_post_for', array('label' => t('note.view')));
 
 			case \Config::get('timeline.types.thread'):// thread 投稿
-				$title = term('thread').'を投稿しました。';
+				$title = __('message_post_for', array('label' => t('thread.view')));
 
 			case \Config::get('timeline.types.album'):// album 作成
-				$title = term('album').'を作成しました。';
+				$title = __('message_post_for', array('label' => t('album.view')));
 
 			case \Config::get('timeline.types.album_image'):// album_image 投稿
-				$title = term('album_image').'を投稿しました。';
+				$title = __('message_post_for', array('label' => t('album.view')));
 
 			case \Config::get('timeline.types.normal'):// 通常 timeline 投稿(つぶやき)
 			case \Config::get('timeline.types.album_image_timeline'):
 			case \Config::get('timeline.types.member_name'):
 			default :
-				$title = $body ?: sprintf('%sに%sしました。', term('timeline'), term('form.post'));
+				$title = __('message_post_to', array('object' => t('timeline.view')));
 		}
 		if ($is_return_title_only) return $title;
 
@@ -206,10 +207,10 @@ class Site_Util
 		{
 			if (!$image_count)
 			{
-				return sprintf('%sに%sを %d 枚投稿しました。', term('timeline'), term('site.picture'), $image_count);
+				return __('message_post_images_to_with_count', array('label' => t('timeline.view'), 'num' => $image_count));
 			}
 
-			return sprintf('%sに%sを投稿しました。', term('timeline'), term('site.picture'));
+			return __('message_post_for_to', array('label' => t('site.picture'), 'object' => t('timeline.view')));
 		}
 
 		return convert_body($body, array(
@@ -634,7 +635,7 @@ class Site_Util
 			case \Config::get('timeline.types.profile_image'):
 			case \Config::get('timeline.types.album_image_profile'):
 			case \Config::get('timeline.types.album_image'):
-				$info['disabled_to_update'] = array('message' => '変更できません。');
+				$info['disabled_to_update'] = array('message' => __('message_disabled_to_change'));
 				break;
 			default :
 				break;

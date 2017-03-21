@@ -2,9 +2,10 @@
 <?php foreach ($member_profiles as $member_profile): ?>
 <?php if ($member_profile->profile->display_type < conf('member.profile.display_type.'.$display_type)) continue; ?>
 <?php if (!check_public_flag($member_profile->public_flag, $access_from)) continue; ?>
-<?php if (!$value = profile_value($member_profile)) continue; ?>
+<?php if (! trim(strip_tags(profile_value($member_profile)))) continue; ?>
 			<div class="row">
 <?php
+$value = profile_value($member_profile);
 $is_checkbox = $member_profile->profile->form_type == 'checkbox';
 $is_view_label = true;
 if ($is_checkbox)

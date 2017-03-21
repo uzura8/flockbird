@@ -100,7 +100,7 @@ class Form_MemberProfile
 		if (!isset($values[$key])) return;
 		if (in_array($values[$key], Site_Util::get_public_flags())) return;
 
-		throw new HttpInvalidInputException('公開範囲の値が不正です。');
+		throw new HttpInvalidInputException(__('message_invalid_for', array('label' => 'public_flag.label')));
 	}
 
 	public function seve()
@@ -160,10 +160,10 @@ class Form_MemberProfile
 		if (!$is_changeed) return;
 		$this->member_obj->save();
 
-		// timeline 投稿
+		// Post timeline
 		if (!is_enabled('timeline')) return;
 		if (!in_array('name', $is_changeed)) return;
-		$body = sprintf('%sを %s に変更しました。', term('member.name'), $this->member_obj->name);
+		$body = __('message_change_complete_for_to', array('label' => t('member.name'), 'value' => $this->member_obj->name));
 		\Timeline\Site_Model::save_timeline($this->member_obj->id, conf('public_flag.maxRange'), 'member_name', $this->member_obj->id, $this->member_obj->updated_at, $body);
 	}
 
@@ -309,7 +309,7 @@ class Form_MemberProfile
 		if ($is_required) $rules[] = 'required';
 		$this->validation->add(
 			'member_birthdate_month',
-			'誕生日(月)',
+			t('member.birthdate_month'),
 			array('type' => 'select', 'options' => $options, 'value' => $month),
 			$rules
 		);
@@ -322,7 +322,7 @@ class Form_MemberProfile
 		if ($is_required) $rules[] = 'required';
 		$this->validation->add(
 			'member_birthdate_day',
-			'誕生日(日)',
+			t('member.birthdate_date'),
 			array('type' => 'select', 'options' => $options, 'value' => $month),
 			$rules
 		);
@@ -536,7 +536,7 @@ class Form_MemberProfile
 		);
 	}
 
-	// 識別名の変更がない場合は unique を確認しない
+	// Not to check unique at not changing name
 	public function remove_unique_restraint_for_updated_value()
 	{
 		foreach ($this->profiles as $profile)
@@ -564,7 +564,7 @@ class Form_MemberProfile
 			$this->validated_values['member_birthyear']
 		))
 		{
-			throw new \FuelException(term('member.birthday').'の日付が正しくありません。');
+			throw new \FuelException(__('message_invalid_for', array('label' => t('site.date_of', array('label' => t('member.birthday'))))));
 		}
 
 		$birthday_datatime = sprintf(
@@ -575,7 +575,10 @@ class Form_MemberProfile
 		);
 		if (!Validation::_validation_datetime_is_past($birthday_datatime))
 		{
-			throw new \FuelException(term('member.birthday').'に未来の日付は登録できません。');
+			throw new \FuelException(__('message_disabled_to_register_for_to', array(
+				'object' => t('member.birthday'),
+				'label' => t('site.future_date'),
+			)));
 		}
 	}
 

@@ -23,13 +23,11 @@ class Model_Message extends \MyOrm\Model
 		),
 		'subject' => array(
 			'data_type' => 'varchar',
-			'label' => '件名',
 			'validation' => array('trim', 'max_length' => array(255)),
 			'form' => array('type' => 'text'),
 		),
 		'body' => array(
 			'data_type' => 'text',
-			'label' => '本文',
 			'validation' => array('trim'),
 			'form' => array('type' => 'textarea', 'rows' => 10),
 		),
@@ -95,8 +93,8 @@ class Model_Message extends \MyOrm\Model
 
 	public static function _init()
 	{
-		static::$_properties['subject']['label'] = term('message.form.subject');
-		static::$_properties['body']['label'] = term('message.form.body');
+		static::$_properties['subject']['label'] = t('message.form.subject');
+		static::$_properties['body']['label'] = t('message.form.body');
 		static::$_properties['type']['validation']['in_array'][] = Site_Util::get_types(true);
 		//static::$_properties['foreign_table']['validation']['in_array'][] = Site_Util::get_message_foreign_tables();
 	}

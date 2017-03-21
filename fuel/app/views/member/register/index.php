@@ -20,6 +20,6 @@
 		$label_size,
 		true
 	); ?>
-	<?php echo form_button(__('agree_and_register'), 'submit', 'submit', array(), $label_size); ?>
+	<?php echo form_button('site.register_with_agree', 'submit', 'submit', array(), $label_size); ?>
 <?php echo form_close(); ?>
 </div><!-- well -->

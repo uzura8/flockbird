@@ -40,9 +40,9 @@
 <?php 	endif; ?>
 	<td class="u-sm fs12 text-<?php if (!$message->is_sent): ?>danger<?php else: ?>muted<?php endif; ?>"><?php echo term($message->is_sent ? 'form.sent' : 'form.unsent'); ?></td>
 	<td class="fs12">
-		<?php if (isset_datatime($message->sent_at)): ?><?php echo site_get_time($message->sent_at, 'both', 'Y/m/d H:i'); ?><?php else: ?><?php echo symbol('noValue'); ?><?php endif; ?>
+		<?php if (isset_datatime($message->sent_at)): ?><?php echo site_get_time($message->sent_at, 'both'); ?><?php else: ?><?php echo symbol('noValue'); ?><?php endif; ?>
 	</td>
-	<td class="fs12"><?php echo site_get_time($message->updated_at, 'relative', 'Y/m/d H:i'); ?></td>
+	<td class="fs12"><?php echo site_get_time($message->updated_at); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

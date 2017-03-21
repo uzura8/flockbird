@@ -6,7 +6,7 @@ if (conf('legacyBrowserSupport.isEnabled') && \MyAgent\Agent::check_legacy_ie(co
 	$jquery_version = conf('library.jqueryVersion.legacy');
 }
 ?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/<?php echo $jquery_version ; ?>/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/<?php echo $jquery_version ; ?>/jquery.min.js"></script>
 <script>
 if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/jquery-'.$jquery_version.'.min.js'); ?>"><\/script>')
 </script>
@@ -30,7 +30,7 @@ echo Asset::render('js_common', false, 'js');
 
 <script>var gapi;</script>
 <?php if (is_enabled_share('google')): ?>
-<script src="//apis.google.com/js/platform.js" async defer>
+<script src="https://apis.google.com/js/platform.js" async defer>
 	{lang: "ja"}
 </script>
 <?php endif; ?>

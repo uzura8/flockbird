@@ -18,7 +18,9 @@ return array(
 		'files' => array(
 			'site',
 			'message',
+			'notice::notice',
 			'message::message',
+			'contact::contact',
 		),
 	),
 	'country' => array(

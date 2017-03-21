@@ -8,26 +8,21 @@ function submit_after_confirm(action) {
 	$('#clicked_btn').val(action);
 
 	if (check_is_checked()) {
-		var action_name = '編集';
-		if (action == 'delete') action_name = '削除';
-
-		//var name        = $('#form_name').val().trim();
+		var confirmMessage = action == 'delete' ? __('message_delete_all_confirm') : __('message_edit_all_confirm');
 		var name        = $.trim($('#form_name').val());// for legacy IE.
 		var public_flag = $('input[name="public_flag"]:checked').val();
-		//var shot_at     = $('#form_shot_at').val().trim();
 		var shot_at     = $.trim($('#form_shot_at').val());// for legacy IE.
 		var lat         = $.trim($('#input_lat').val());// for legacy IE.
 		var lng         = $.trim($('#input_lng').val());// for legacy IE.
 		if (action == 'post' && !name.length && public_flag == 99 && !shot_at.length && !lat.length && !lng.length) {
-			apprise('入力してください');
+			apprise(__('message_please_input'));
 			return false;
 		}
-
-		apprise('一括' + action_name + 'しますか？', {'confirm':true}, function(r) {
+		apprise(confirmMessage, {'confirm':true}, function(r) {
 			if (r == true) $("form#form_album_edit_images").submit();
 		});
 	} else {
-		apprise('実施対象が選択されていません');
+		apprise(__('message_not_selected'));
 		return false;
 	}
 }

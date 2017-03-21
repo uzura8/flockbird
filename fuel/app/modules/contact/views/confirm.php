@@ -2,7 +2,7 @@
 $label_col_sm_size = 3;
 $posted = Arr::filter_keys($val->validated(), array(conf('csrf_token_key', 'security')), true);
 ?>
-<p><?php echo sprintf('下記の内容で%sしますか？', term('form.send')); ?></p>
+<p><?php echo __('message_send_confirm_following_contents'); ?></p>
 
 <div class="well">
 <?php echo form_open(false, false, array('action' => 'contact/send'), $posted); ?>
@@ -11,7 +11,8 @@ if ($confs = conf('contact.fields.pre', 'contact'))
 {
 	foreach ($confs as $name => $props)
 	{
-		echo form_text($posted[$name], Site_Form::get_label($val, $name), $label_col_sm_size);
+		$value = $name == 'category' ? t('contact.fields.pre.category.options.'.$posted[$name]) : $posted[$name];
+		echo form_text($value, Site_Form::get_label($val, $name), $label_col_sm_size);
 	}
 }
 ?>

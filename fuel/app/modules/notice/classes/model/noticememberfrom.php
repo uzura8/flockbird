@@ -33,7 +33,7 @@ class Model_NoticeMemberFrom extends \MyOrm\Model
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
 		),
-		// insert 時に紐づく notice_status の sort_datetime を更新する
+		// Update sort_datetime of notice_status on inserting
 		'MyOrm\Observer_UpdateRelationalTables' => array(
 			'events' => array('after_insert'),
 			'relations' => array(

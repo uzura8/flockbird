@@ -9,13 +9,13 @@ class Model_MemberAuth extends \MyOrm\Model
 		'member_id' => array('form' => array('type' => false)),
 		'email' => array(
 			'data_type' => 'varchar',
-			'label' => 'メールアドレス',
+			'label' => 'Emal',
 			'validation' => array('trim', 'required', 'max_length' => array(255), 'valid_email', 'unique' => array('member_auth.email')),
 			'form' => array('type' => 'email', 'class' => 'form-control'),
 		),
 		'password' => array(
 			'data_type' => 'varchar',
-			'label' => 'パスワード',
+			'label' => 'Password',
 			'validation' => array(
 				'trim',
 				'min_length' => array(6),

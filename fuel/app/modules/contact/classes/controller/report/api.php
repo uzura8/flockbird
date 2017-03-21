@@ -68,7 +68,7 @@ class Controller_Report_Api extends \Controller_Site_Api
 				'member_to_admin_page_url' => \Uri::create('admin/member/'.$member_to->id),
 				'member_id_from' => $this->u->id,
 				'member_name_from' => $this->u->name,
-			), true);
+			), true, 'ja');
 
 			$this->set_response_body_api(array(
 				'message' => __('message_send_mail', array('label' => t('report.view'))),

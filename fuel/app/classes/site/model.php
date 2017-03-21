@@ -51,8 +51,8 @@ class Site_Model
 			$parent_table = $table;
 			$child_type = '';
 		}
-		$content_name = term($parent_table);
-		if ($child_type) $content_name .= term('form.'.$child_type);
+		$content_name = $parent_table == 'album_image' ? t('album.image.view') : t($parent_table);
+		if ($child_type) $content_name .= t('form.'.$child_type);
 
 		return $content_name;
 	}

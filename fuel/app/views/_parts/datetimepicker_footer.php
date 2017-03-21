@@ -14,7 +14,7 @@ $(function () {
 		maxDate: moment(),     //set a maximum date (defaults to today +100 years)
 <?php endif; ?>
 		format: 'YYYY-MM-DD HH:mm',
-		locale:'ja',                  //sets language locale
+		locale: moment.locale(),          //sets language locale
 		//defaultDate:"",                 //sets a default date, accepts js dates, strings and moment objects
 		//disabledDates:[],               //an array of dates that cannot be selected
 		//enabledDates:[],                //an array of dates that can be selected

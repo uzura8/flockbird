@@ -76,8 +76,8 @@ $dropdown_btn_attr = array(
 	<td><?php echo Html::anchor('admin/member/'.$member->id, $member->name); ?></td>
 	<td><?php echo (isset($member->sex) && strlen($member->sex)) ?
 				\Site_Form::get_form_options4config('term.member.sex.options', $member->sex) : symbol('noValue'); ?></td>
-	<td class="fs12"><?php echo site_get_time($member->created_at, 'relative', 'Y/m/d H:i'); ?></td>
-	<td class="fs12"><?php echo site_get_time($member->last_login, 'relative', 'Y/m/d H:i'); ?></td>
+	<td class="fs12"><?php echo site_get_time($member->created_at); ?></td>
+	<td class="fs12"><?php echo site_get_time($member->last_login); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

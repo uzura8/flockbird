@@ -39,7 +39,7 @@ class Controller_News extends \Controller_Site
 		list($limit, $page) = $this->common_get_pager_list_params();
 		$data = Site_Model::get_list($limit, $page, \Auth::check());
 
-		$this->set_title_and_breadcrumbs(term('site.latest', 'news.view', 'site.list'));
+		$this->set_title_and_breadcrumbs(t('news.plural'));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->content->set_safe('html_bodys', Site_Model::convert_raw_bodys($data['list']));
@@ -59,7 +59,7 @@ class Controller_News extends \Controller_Site
 		$data = Site_Model::get_list($limit, $page, \Auth::check(), $news_category->id);
 		$data['category_name'] = $category_name;
 
-		$this->set_title_and_breadcrumbs($news_category->label, array('news/list' => term('site.latest', 'news.view', 'site.list')));
+		$this->set_title_and_breadcrumbs($news_category->label, array('news/list' => t('news.plural')));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->content->set_safe('html_bodys', Site_Model::convert_raw_bodys($data['list']));
@@ -80,7 +80,7 @@ class Controller_News extends \Controller_Site
 		$data = Site_Model::get_list($limit, $page, \Auth::check(), null, $ids);
 		$data['tag_string'] = implode(', ', $tags);
 
-		$this->set_title_and_breadcrumbs(sprintf('%s: %s', term('site.tag'), implode(', ', $tags)), array('news/list' => term('site.latest', 'news.view', 'site.list')));
+		$this->set_title_and_breadcrumbs(sprintf('%s: %s', term('site.tag'), implode(', ', $tags)), array('news/list' => t('news.plural')));
 		$this->template->post_footer = \View::forge('_parts/list_footer');
 		$this->template->content = \View::forge('_parts/list', $data);
 		$this->template->content->set_safe('html_bodys', Site_Model::convert_raw_bodys($data['list']));
@@ -95,13 +95,16 @@ class Controller_News extends \Controller_Site
 	 */
 	public function action_detail($slug = null)
 	{
-		if (!$news = Model_News::get4slug($slug)) throw new \HttpNotFoundException;
+		if (!$news = Model_News::get4slug($slug, true, 'news_category')) throw new \HttpNotFoundException;
 
 		$images = \Config::get('news.image.isEnabled') ? \News\Model_NewsImage::get4news_id($news->id) : array();
 		$files  = \Config::get('news.file.isEnabled') ? \News\Model_NewsFile::get4news_id($news->id) : array();
 		$tags   = \Config::get('news.tags.isEnabled') ? \News\Model_NewsTag::get_names4news_id($news->id) : array();
 
-		$this->set_title_and_breadcrumbs($news->title, array('news' => term('news.view', 'site.list')));
+		$this->set_title_and_breadcrumbs($news->title, array(
+			'news' => t('news.plural'),
+			'news/category/'.$news->news_category->name => $news->news_category->label,
+		));
 		$this->template->subtitle = \View::forge('_parts/news_subinfo', array('news' => $news));
 		$this->template->content = \View::forge('detail', array('news' => $news, 'images' => $images, 'files' => $files, 'tags' => $tags));
 		if (Site_Util::check_editor_enabled()) $this->template->content->set_safe('html_body', $news->body);
@@ -139,13 +142,13 @@ class Controller_News extends \Controller_Site
 		{
 			case 'closed':
 				$header_info = array(
-					'body' => sprintf('この%sはまだ%sされていません。', term('news.view'), term('form.publish')),
+					'body' => __('message_not_published', array('label' => t('news.view'))),
 					'type' => 'danger'
 				);
 				break;
 			case 'reserved':
 				$header_info = array(
-					'body' => sprintf('この%sは %s に%sされます。', term('news.view'), site_get_time($published_at, 'normal', 'Y/m/d H:i'), term('form.publish')),
+					'body' => __('message_publish_reserved_at', array('label' => t('news.view'), 'time' => site_get_time($published_at, 'normal'))),
 				);
 				break;
 		}

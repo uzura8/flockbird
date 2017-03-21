@@ -11,7 +11,6 @@ return array(
 	'member_message_signup_complete' => '仮登録が完了しました。受信したメール内に記載された URL より本登録を完了してください。',
 	'member_registration' => 'メンバー登録',
 	'member_registration_input_help_name' => '記号・空白は使用できません',
-	'agree_and_register' => '同意して登録する',
 	'invite_form_email_placeholder' => sprintf('%sの%s', term('form.do_invite', 'common.friend'), term('site.email')),
 	'invite_form_message_placeholder' => sprintf('%sへの%s', term('common.friend'), term('form.invite', 'common.message', 'form._not_required')),
 	'member_address_setting' => '住所設定',
@@ -45,8 +44,12 @@ return array(
 	'member_error_album_image_disable_to_set_as_profile_image' => 'その写真はプロフィール写真に設定できません。',
 	// member relation
 	'member_message_follow_from_to' => ':subjectが:objectをフォローしました。',
+	'member_message_follow' => 'フォローしました。',
+	'member_message_cancel_follow' => 'フォローを解除しました。',
+	'member_message_accessBlock' => 'アクセスブロックしました。',
+	'member_message_cancel_accessblock' => 'アクセスブロックを解除しました。',
+	'member_message_error_access_blocked' => 'このリンクは有効期限切れとなっているか、ページの設定により閲覧できなくなっている可能性があります。',
 	// Public flag
-	'public_flag_expand_confirm' => '公開範囲が広がります。実行しますか？',
 	'public_flag_expand_confirm' => '公開範囲が広がります。実行しますか？',
 	'public_flag_confirm_change_with_children_of' => ':labelの公開範囲も変更しますか？',
 	// Like
@@ -54,12 +57,8 @@ return array(
 	'canceled_like' => 'イイねを取り消しました。',
 	'failed_to_like' => 'イイねに失敗しました。',
 	'nobody_liked' => 'イイねしているメンバーはいません。',
-	// notice
-	'notice_update_read_already' => '既読にしました。',
-	// report
-	'report_error_required_report_about' => '通報内容を入力してください。',
-	// message
-	'message_recieve_member_message_from' => ':nameからメッセージが届きました。',
-	'message_recieve_group_message_from' => ':nameからグループメッセージが届きました。',
+	// Location
+	'maps_message_leave_failed' => '位置情報の取得に失敗しました。',
+	'maps_message_please_set_location' => '位置を指定してください。',
 );
 

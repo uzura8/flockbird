@@ -31,7 +31,7 @@ class Controller_Image extends \Controller_Site
 		list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 		$data = Site_Model::get_album_images($limit, $page, \Auth::check() ? $this->u->id : 0);
 
-		$this->set_title_and_breadcrumbs(term('album_image', 'site.list'), array('album' => term('album', 'site.list')));
+		$this->set_title_and_breadcrumbs(t('album.image.list'), array('album' => t('album.list')));
 		$this->template->post_footer = \View::forge('image/_parts/list_footer');
 		$this->template->content = \View::forge('image/_parts/list', $data);
 	}
@@ -49,13 +49,17 @@ class Controller_Image extends \Controller_Site
 		list($is_mypage, $member) = $this->check_auth_and_is_mypage($member_id);
 		list($limit, $page) = $this->common_get_pager_list_params(conf('articles.limit', 'album'), conf('articles.limit_max', 'album'));
 
-		$data = Site_Model::get_album_images($limit, $page, \Auth::check() ? $this->u->id : 0, $member, $is_mypage, array('related' => array('album')));
+		$data = Site_Model::get_album_images($limit, $page, get_uid(), $member, $is_mypage, array('related' => array('album')));
 		$data['member'] = $member;
 		$data['is_member_page'] = true;
 		$data['liked_album_image_ids'] = (conf('like.isEnabled') && \Auth::check()) ?
 			\Site_Model::get_liked_ids('album_image', $this->u->id, $data['list']) : array();
 
-		$this->set_title_and_breadcrumbs(sprintf('%sの%s', $is_mypage ? '自分' : $member->name.'さん', term('album_image', 'site.list')), null, $member);
+		$title = $is_mypage ? t('common.own_for_myself_of', array('label' => t('album.image.plural')))
+												: t('common.own_for_member_of', array('label' => t('album.image.plural'), 'name' => $member->name));
+		$this->set_title_and_breadcrumbs($title, array(
+			'album/member/'.$member_id => t('album.plural'),
+		), $member, null, null, false, false, null, t('album.image.plural'));
 		$this->template->subtitle = \View::forge('_parts/member_subtitle', array('member' => $member, 'is_mypage' => $is_mypage));
 		$this->template->post_footer = \View::forge('image/_parts/list_footer');
 
@@ -76,7 +80,7 @@ class Controller_Image extends \Controller_Site
 		$this->check_browse_authority($album_image->public_flag, $album_image->album->member_id);
 		$locations = is_enabled_map('image/detail', 'album') ? Model_AlbumImageLocation::get_locations4album_image_id($id) : null;
 
-		// 既読処理
+		// Update read flag
 		if (\Auth::check()) $this->change_notice_status2read($this->u->id, 'album_image', $id);
 
 		// album image_comment
@@ -84,8 +88,8 @@ class Controller_Image extends \Controller_Site
 		list($limit, $is_latest, $is_desc, $since_id, $max_id)
 			= $this->common_get_list_params($default_params, conf('view_params_default.detail.comment.limit_max'));
 		list($list, $next_id, $all_comment_count)
-			= Model_AlbumImageComment::get_list(array('album_image_id' => $id), $limit, $is_latest, $is_desc, $since_id, $max_id, null, false, true);
-
+			= Model_AlbumImageComment::get_list(array('album_image_id' => $id),
+					$limit, $is_latest, $is_desc, $since_id, $max_id, array(), false, true);
 		// album_image_like
 		$is_liked_self = \Auth::check() ? Model_AlbumImageLike::check_liked($id, $this->u->id) : false;
 
@@ -113,13 +117,16 @@ class Controller_Image extends \Controller_Site
 			$slide_file_names = $this->get_slide_file_names($album_image);
 		}
 
-		$title = Site_Util::get_album_image_display_name($album_image, term('album_image', 'site.detail'));
-		$this->set_title_and_breadcrumbs($title, array('/album/'.$album_image->album_id => $album_image->album->name), $album_image->album->member, 'album',
-			null, false, false, array(
+		$title = Site_Util::get_album_image_display_name($album_image, t('album.image.detail'));
+		$this->set_title_and_breadcrumbs($title, array(
+				'album/'.$album_image->album_id => $album_image->album->name,
+			),
+			$album_image->album->member, 'album', null, false, false, array(
 				'title' => $album_image->album->name,
 				'description' => $album_image->name ?: FBD_SITE_NAME,
 				'image' => \Site_Util::get_image_uri4image_list($album_image, 'ai', 'raw'),
-			));
+			), t('site.detail')
+		);
 		$this->template->subtitle = \View::forge('image/_parts/detail_subtitle', array('album_image' => $album_image));
 		$this->template->post_header = \View::forge('image/_parts/detail_header');
 		$this->template->post_footer = \View::forge('image/_parts/detail_footer', array(
@@ -155,7 +162,7 @@ class Controller_Image extends \Controller_Site
 				if (empty($post['name']) && empty($post['shot_at_time'])
 					&& ($is_enabled_map && !strlen($post['latitude']) && !strlen($post['longitude'])))
 				{
-					throw new \FuelException('入力してください');
+					throw new \FuelException(__('message_please_input'));
 				}
 				$disabled_to_update_message = Site_Util::check_album_disabled_to_update($album_image->album->foreign_table);
 				if ($disabled_to_update_message && isset($post['public_flag']) && $album_image->public_flag != $post['public_flag'])
@@ -167,7 +174,7 @@ class Controller_Image extends \Controller_Site
 				$album_image->update_with_relations($post);
 				\DB::commit_transaction();
 
-				\Session::set_flash('message', term('album_image').'を編集をしました。');
+				\Session::set_flash('message', __('message_edit_complete_for', array('label' => t('album.image.view'))));
 				\Response::redirect('album/image/'.$album_image->id);
 			}
 			catch(\FuelException $e)
@@ -179,7 +186,7 @@ class Controller_Image extends \Controller_Site
 
 		$album_image_page_title = Site_Util::get_album_image_display_name($album_image, term('album_image', 'site.detail'));
 		$this->set_title_and_breadcrumbs(
-			sprintf('%sを%s', term('album_image'), term('form.do_edit')),
+			t('form.do_edit_for', array('label' => t('album.image.view'))),
 			array('/album/'.$album_image->album_id => $album_image->album->name, '/album/image/'.$id => $album_image_page_title),
 			$album_image->album->member,
 			'album'
@@ -208,8 +215,7 @@ class Controller_Image extends \Controller_Site
 			\DB::start_transaction();
 			$album_image->delete();
 			\DB::commit_transaction();
-
-			\Session::set_flash('message', term('album_image').'を削除しました。');
+			\Session::set_flash('message', __('message_delete_complete_for', array('label' => t('album.image.view'))));
 		}
 		catch (Exception $e)
 		{
@@ -237,17 +243,17 @@ class Controller_Image extends \Controller_Site
 					->add_rule('in_array', \Site_Util::get_public_flags());
 		}
 
-		$val->add('shot_at_time', '撮影日時')
+		$val->add('shot_at_time', t('site.shot_at'))
 				->add_rule('required')
 				->add_rule('datetime_except_second')
 				->add_rule('datetime_is_past');
 
 		if (is_enabled_map('image/edit', 'album'))
 		{
-			$val->add('latitude', '緯度')
+			$val->add('latitude', t('common.latitude'))
 				->add_rule('numeric_between', -90, 90);
 
-			$val->add('longitude', '経度')
+			$val->add('longitude', t('common.longitude'))
 				->add_rule('numeric_between', -180, 180);
 		}
 

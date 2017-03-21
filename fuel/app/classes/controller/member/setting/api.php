@@ -43,7 +43,7 @@ class Controller_Member_Setting_Api extends Controller_Site_Api
 			$response_body = self::get_response_for_update_config($name, array('id' => $member_id, $name => $value));
 			$this->response_body = $this->format == 'html' ? $response_body : array(
 				'html' => $response_body,
-				'message' => sprintf('%sを%sしました。', term('site.display', 'site.setting'), term('form.update')),
+				'message' => __('message_update_complete_for', array('label' => term('site.display', 'site.setting'))),
 			);
 		});
 	}
@@ -91,7 +91,8 @@ class Controller_Member_Setting_Api extends Controller_Site_Api
 		switch ($name)
 		{
 			case 'timeline_viewType':
-				return sprintf('%sの%sしました。', term('site.display', 'site.setting'), term('form.update'));
+				return __('message_update_complete_for', array('label' => term('site.display', 'site.setting')));
+
 			case 'timeline_public_flag':
 			default :
 				break;
@@ -105,8 +106,8 @@ class Controller_Member_Setting_Api extends Controller_Site_Api
 		switch ($name)
 		{
 			case 'timeline_viewType':
-				return sprintf('%sの%sに%sしました。', term('site.display', 'site.setting'), term('form.update'), term('site.failure'));
-				break;
+				return __('message_update_failed_for', array('label' => term('site.display', 'site.setting')));
+
 			case 'timeline_public_flag':
 			default :
 				break;
