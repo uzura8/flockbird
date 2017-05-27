@@ -13,7 +13,7 @@ if ($file_cate == 'ai' && $image)
 	$image_name = $image->name;
 	$is_link2raw_file = false;
 }
-elseif (in_array($file_cate, array('nw', 't', 'ms')) && $image)
+elseif (in_array($file_cate, $original_table_keys) && $image)
 {
 	$file_name = $image->file_name;
 	$link_uri = '';

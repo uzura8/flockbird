@@ -106,4 +106,21 @@ class Site_Config
 			Config::set('site.upload.types.img.types.m.save_as_album_image', false);
 		}
 	}
+
+	public static function get_form_options($key, $file = 'site', $term_key = null)
+	{
+		$options = conf($key, $file);
+		if (! $term_key) return array_flip($options);
+
+		$terms = Config::get('term.'.$term_key);
+		$return_options = array();
+		foreach ($options as $key => $value)
+		{
+			if (! isset($terms[$key])) continue;
+
+			$return_options[$value] = $terms[$key];
+		}
+
+		return $return_options;
+	}
 }

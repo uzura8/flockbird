@@ -42,6 +42,10 @@ $config = array(
 	'original_user_id' => array(
 		'site'  => 1,
 	),
+	'model' => array(
+		'exceptionalNameTables' => array(
+		),
+	),
 	'batch' => array(
 		'default' => array(
 			'limit' => array(

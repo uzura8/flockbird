@@ -20,6 +20,10 @@ class Site_Model
 			case 'member_follow_timeline':
 				return 'timeline';
 		}
+		if ($exceptionals = conf('model.exceptionalNameTables'))
+		{
+			if (! empty($exceptionals[$table])) return $exceptionals[$table];
+		}
 
 		return '';
 	}
