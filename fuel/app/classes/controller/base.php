@@ -24,6 +24,7 @@ class Controller_Base extends Controller_Common
 		$this->set_current_user();
 		$this->check_required_setting_and_redirect();
 		self::setup_assets();
+		self::setup_global_vals();
 	}
 
 	protected function set_default_data()
@@ -77,6 +78,17 @@ class Controller_Base extends Controller_Common
 		$this->u = $this->get_current_user($user_id);
 		View::set_global('u', $this->u);
 		if (! IS_ADMIN) Site_Lang::configure_lang(true, true, $this->u->country);
+	}
+
+	protected function setup_global_vals()
+	{
+		$original_table_keys = array();
+		$upload_configs = conf('upload.types.img.types');
+		foreach ($upload_configs as $key => $configs)
+		{
+			if (! empty($configs['isOriginalTable'])) $original_table_keys[] = $key;
+		}
+		View::set_global('original_table_keys', $original_table_keys);
 	}
 
 	protected function check_required_setting_and_redirect()

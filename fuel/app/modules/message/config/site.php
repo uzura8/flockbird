@@ -11,6 +11,7 @@ return array(
 			'img' => array(
 				'types' => array(
 					'ms' => array(
+						'isOriginalTable' => true,
 						'sizes' => array(
 							'S' => '80x80',
 							'M' => '800x800',

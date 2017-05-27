@@ -8,6 +8,7 @@ return array(
 			'img' => array(
 				'types' => array(
 					'nw' => array(
+						'isOriginalTable' => true,
 						'sizes' => array(
 							'M' => '220x220',
 							'L' => '600x600',
