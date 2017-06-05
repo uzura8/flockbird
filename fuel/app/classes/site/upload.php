@@ -566,4 +566,20 @@ class Site_Upload
 
 		return $file->get_file_path();
 	}
+
+	public static function upload_simple($white_list = array(), $save_path = null)
+	{		
+		$config = array(
+			'path' => $save_path ?: APPPATH.'tmp',
+			'randomize' => true,
+		);
+		if ($white_list) $config['ext_whitelist'] = $white_list;
+		\Upload::process($config);
+
+		if (!\Upload::is_valid()) throw new \FuelException('File is invalid');
+		\Upload::save();
+		$files = \Upload::get_files();
+
+		return $files[0]['saved_to'].$files[0]['saved_as'];
+	}
 }
