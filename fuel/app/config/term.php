@@ -24,6 +24,7 @@ $config = array(
 		'upload' => 'アップロード',
 		'upload_for' => ':labelをアップロード',
 		'upload_for_simple' => ':labelアップロード',
+		'download' => 'download',
 		'update' => '変更',
 		'do_update' => '変更する',
 		'updated' => '更新',
@@ -209,6 +210,7 @@ $config = array(
 		'registered_count' => '登録件数',
 		'confirmation_mail' => '確認用メール',
 		'confirmation_code' => '確認用コード',
+		'country_code' => '国コード',
 	),
 	'common' => array(
 		'delimitter' => array(
@@ -280,6 +282,7 @@ $config = array(
 		'own_for_myself_of' => '自分の:label',
 		'about_hours_ago' => '約:num時間前',
 		'other_members_count' => '他:num人',
+		'country' => '国',
 	),
 	'system' => array(
 		'dir' => 'ディレクトリ',

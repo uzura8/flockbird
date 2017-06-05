@@ -24,6 +24,7 @@ $config = array(
 		'upload' => 'Upload',
 		'upload_for' => 'Upload :label',
 		'upload_for_simple' => 'Upload :label',
+		'download' => 'download',
 		'update' => 'Update',
 		'do_update' => 'Update',
 		'updated' => 'Update',
@@ -209,6 +210,7 @@ $config = array(
 		'registered_count' => 'Registered Count',
 		'confirmation_mail' => 'Confirmation mail',
 		'confirmation_code' => 'Verification Code',
+		'country_code' => 'Country Code',
 	),
 	'common' => array(
 		'delimitter' => array(
@@ -280,6 +282,7 @@ $config = array(
 		'own_for_myself_of' => 'My :label',
 		'about_hours_ago' => 'About :num hours ago',
 		'other_members_count' => 'other :num members',
+		'country' => 'Country',
 	),
 	'system' => array(
 		'dir' => 'Directory',

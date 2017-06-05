@@ -20,6 +20,7 @@ $config = array(
 		'do_delete' => 'trash',
 		'delete_all' => 'trash',
 		'upload' => 'upload',
+		'download' => 'download',
 		'update' => 'refresh',
 		'updated' => 'refresh',
 		//'confirm' => '確認',
