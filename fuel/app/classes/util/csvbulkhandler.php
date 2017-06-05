@@ -30,7 +30,7 @@ class Util_CsvBulkHandler
 		$data = \Format::forge($data, 'csv')->to_array();
 		$result_ids = array();
 		\DB::start_transaction();
-		if ($this->option['is_update_all']) $this->truncate_tables();
+		if (! empty($this->options['is_update_all']) $this->truncate_tables();
 		foreach($data as $row)
 		{
 			if ($id = $this->save_record($row)) $result_ids[] = $id;
