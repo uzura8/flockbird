@@ -8,6 +8,7 @@ return array(
 //	'valid_url'     => ':label 欄には正しい URL を入力する必要があります。',
 	'unique'        => 'This :label is disabled to rgister. ',
 //	'not_in_array'  => 'その :label は登録できません。',
+	'in_array' => ':label is invalid. ',
 //	'match_pattern' => ':label 欄にエラーがあります。',
 //	'no_controll' => ':label 欄に使用できない文字が含まれています。',
 //	'no_platform_dependent_chars' => ':label 欄に機種依存文字が含まれています。',
