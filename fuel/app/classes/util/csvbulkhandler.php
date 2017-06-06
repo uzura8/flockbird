@@ -23,14 +23,25 @@ class Util_CsvBulkHandler
 		if ($options) $this->options = $options + $this->options;
 	}
 
-	public function execute($file_path)
+	public function make_file($data = array(), $is_add_title_row = true)
+	{
+		$data = static::convert2output_array($data, array_keys($this->options['columns']));
+		if (! $csv_data = \Format::forge($data)->to_csv()) return false;
+
+		$file_path = static::get_randam_file_path();
+		file_put_contents($file_path, $csv_data);
+
+		return $file_path;
+	}
+
+	public function bulk_save($file_path)
 	{
 		//$this->output_start_message();
 		$data = static::get_file_data($file_path);
 		$data = \Format::forge($data, 'csv')->to_array();
 		$result_ids = array();
 		\DB::start_transaction();
-		if (! empty($this->options['is_update_all']) $this->truncate_tables();
+		if (! empty($this->options['is_update_all'])) $this->truncate_tables();
 		foreach($data as $row)
 		{
 			if ($id = $this->save_record($row)) $result_ids[] = $id;
@@ -56,18 +67,18 @@ class Util_CsvBulkHandler
 		$data = str_replace("\r", "\n", $data);
 		//$data = mb_convert_encoding($data, 'UTF-8', "JIS, sjis-win, eucjp-win");
 		file_put_contents($file_path, $data);
-		$file_path = static::convert_header_row($file_path);
+		$file_path = static::format($file_path);
 		if (!$data = file_get_contents($file_path)) throw new \FuelException('File is empty');
 
 		return $data;
 	}
 
-	protected function convert_header_row($original_file_path)
+	protected function format($original_file_path)
 	{
 		if (!file_exists($original_file_path)) throw new \FuelException('File is not exists');
 		$original = fopen($original_file_path, 'r');
 
-		$formated_file_path = sprintf('%stmp/%s.csv', APPPATH, \Util_String::get_random());
+		$formated_file_path = static::get_randam_file_path();
 		$formated = fopen($formated_file_path, 'w');
 		if (!$original || !$formated) throw new \FuelException('Disabled to open file');
 
@@ -120,6 +131,33 @@ class Util_CsvBulkHandler
 		$key = $this->options['columns'][$prop];
 
 		return $row[$key];
+	}
+
+	protected static function convert2output_array($objs = array(), $accept_props = array())
+	{
+		if (empty($objs) || ! is_array($objs)) return $objs;
+
+		foreach ($objs as $i => $obj)
+		{
+			$row = $obj->to_array();
+			if ($accept_props)
+			{
+				foreach ($row as $prop => $value)
+				{
+					if (in_array($prop, $accept_props)) continue;
+					unset($row[$prop]);
+				}
+			}
+
+			$objs[$i] = $row;
+		}
+
+		return $objs;
+	}
+
+	protected static function get_randam_file_path()
+	{
+		return sprintf('%stmp/%s.csv', APPPATH, \Util_String::get_random());
 	}
 }
 
