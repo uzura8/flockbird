@@ -1,5 +1,6 @@
 $(function(){
 	$('textarea.autogrow').autogrow();
+	$('[data-toggle="popover"]').popover()
 
 	if (checkIsRenderSiterSummary()) {
 		renderSiteSummary();

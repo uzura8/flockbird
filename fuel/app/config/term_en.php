@@ -211,6 +211,7 @@ $config = array(
 		'confirmation_mail' => 'Confirmation mail',
 		'confirmation_code' => 'Verification Code',
 		'country_code' => 'Country Code',
+		'help' => 'Help',
 	),
 	'common' => array(
 		'delimitter' => array(

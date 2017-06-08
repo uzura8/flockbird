@@ -135,6 +135,7 @@ $config = array(
 		'continue' => 'forward',
 		'backward' => 'backward',
 		'tag' => 'tags',
+		'help' => 'question-sign',
 	),
 	'member' => array(
 		'profile' => array(

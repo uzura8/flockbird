@@ -211,6 +211,7 @@ $config = array(
 		'confirmation_mail' => '確認用メール',
 		'confirmation_code' => '確認用コード',
 		'country_code' => '国コード',
+		'help' => 'ヘルプ',
 	),
 	'common' => array(
 		'delimitter' => array(
