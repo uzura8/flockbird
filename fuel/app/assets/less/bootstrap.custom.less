@@ -191,24 +191,42 @@ dl.list-inline {
 	> dd {
 		display: inline-block;
 		padding-right: 10px;
-	} 
-} 
-
-.dl-horizontal {
-	&.dl-horizontal-xs {
-		dt {
-			width: 50px;
-		}
-		dd {
-			margin-left: 70px;
-		}
 	}
-	&.dl-horizontal-sm {
-		dt {
-			width: 100px;
+}
+
+@media (min-width: @screen-sm-min) {
+	.dl-horizontal {
+		&.dl-horizontal-xs {
+			dt {
+				width: 50px;
+			}
+			dd {
+				margin-left: 70px;
+			}
 		}
-		dd {
-			margin-left: 120px;
+		&.dl-horizontal-sm {
+			dt {
+				width: 100px;
+			}
+			dd {
+				margin-left: 120px;
+			}
+		}
+		&.dl-horizontal-md {
+			dt {
+				width: 200px;
+			}
+			dd {
+				margin-left: 220px;
+			}
+		}
+		&.dl-horizontal-lg {
+			dt {
+				width: 300px;
+			}
+			dd {
+				margin-left: 320px;
+			}
 		}
 	}
 }
