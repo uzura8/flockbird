@@ -202,7 +202,8 @@ function form_radio(Validation $val, $name, $default_value = null, $label_col_sm
 	if (!in_array($layout_type, array('block', 'inline', 'grid'))) throw new InvalidArgumentException('Fifth parameter is invalid.');
 
 	$field = $val->fieldset()->field($name);
-	$atter = array('id' => Site_Form::get_field_id($name));
+	$atter = $field->get_attribute();
+	$atter['id'] = Site_Form::get_field_id($name);
 	if (!is_null($field->get_attribute('value')))
 	{
 		$default_value = $field->get_attribute('value');
