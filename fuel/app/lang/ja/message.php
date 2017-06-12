@@ -90,6 +90,7 @@ return array(
 	'message_add_for_from_to' => ':subjectが:objectに:labelを追加しました。',
 	'message_join_complete_for' => ':labelに参加しました。',
 	'message_recieve_for_from' => ':subjectさんから:labelが届いています。',
+	'message_please_set_for' => ':labelを設定してください。',
 	'message_set_confirm_as' => ':label に設定してもよろしいですか? ',
 	'message_set_complete' => '設定しました。',
 	'message_set_complete_for' => ':labelに設定しました。',

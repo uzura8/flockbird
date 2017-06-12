@@ -89,6 +89,7 @@ return array(
 	'message_add_for_from_to' => ':subject added :label to :object. ',
 	'message_join_complete_for' => 'Joined :label. ',
 	'message_recieve_for_from' => 'Recieved :label from :subject. ',
+	'message_please_set_for' => 'Please set :label. ',
 	'message_set_confirm_as' => 'Is it OK to set as :label ? ',
 	'message_set_complete' => 'Set. ',
 	'message_set_complete_for' => 'Set :label. ',
