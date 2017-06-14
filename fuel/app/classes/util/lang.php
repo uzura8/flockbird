@@ -30,6 +30,13 @@ class Util_Lang
 		return $country;
 	}
 
+	public static function get_country_options($is_add_nodata = false)
+	{
+		if (! $is_add_nodata) return conf('country.options', 'i18n');
+
+		return array('' => t('common.all')) + conf('country.options', 'i18n');
+	}
+
 	public static function set_locale($locale)
 	{
 		setlocale(LC_ALL, $locale);
