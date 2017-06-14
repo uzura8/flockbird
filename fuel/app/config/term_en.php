@@ -224,6 +224,7 @@ $config = array(
 			'of' => ':subject of :object',
 		),
 		'unit' => array(
+			'view' => '単位',
 			'item' => array(
 				'single' => 'item',
 				'plural' => 'items',
