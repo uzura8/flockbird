@@ -30,11 +30,12 @@ class Util_Lang
 		return $country;
 	}
 
-	public static function get_country_options($is_add_nodata = false)
+	public static function get_country_options($is_add_nodata = false, $nodata_label = '')
 	{
 		if (! $is_add_nodata) return conf('country.options', 'i18n');
+		if (! $nodata_label) $nodata_label = t('common.all');
 
-		return array('' => t('common.all')) + conf('country.options', 'i18n');
+		return array('' => $nodata_label) + conf('country.options', 'i18n');
 	}
 
 	public static function set_locale($locale)
