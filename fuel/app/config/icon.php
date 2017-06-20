@@ -22,6 +22,7 @@ $config = array(
 		'upload' => 'upload',
 		'download' => 'download',
 		'update' => 'refresh',
+		'do_update' => 'refresh',
 		'updated' => 'refresh',
 		//'confirm' => '確認',
 		'do_confirm' => 'arrow-right',
