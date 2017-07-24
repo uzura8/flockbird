@@ -11,9 +11,10 @@
 * 画像ストレージに Amazon S3 を指定可能
 * 大規模サイト向けに複数サーバ構成可能
 * 複数DBサーバ(レプリケーション)に対応
+* 多言語対応
 
 #### Demoサイト
-* [Demoサイト](http://demo.flockbird.uzuralife.com/)
+* [Demoサイト](http://demo.flockbird.uzura.work/)
 
 ### 動作環境
 * Apache(mod_rewrite を使用可能)
@@ -37,6 +38,7 @@
 * アルバム
 * BBS
 * 新着通知
+* 多言語対応
 
 ### 管理画面
 * アカウント管理
