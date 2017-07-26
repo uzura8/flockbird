@@ -165,7 +165,7 @@ function _get_definition($strings)
 
 function _convert2bytes($val)
 {
-	$val  = trim($val);
+	$val  = intval(trim($val));
 	$last = strtolower($val[strlen($val) - 1]);
 	switch($last) {
 		case 'g':
