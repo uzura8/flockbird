@@ -1,20 +1,17 @@
-==============
 Flockbird とは
 ==============
 * Flockbird は OSS の SNS エンジンです
 * Flockbird は Framework に FuelPHP1.X を使用しています
 * Licenseは MIT ライセンスです
 * [Flockbird](http://uzura8.github.io/flockbird/)
-* [Demo](http://demo.flockbird.uzuralife.com)
+* [Demo](http://demo.flockbird.uzura.work)
 
-=======
 動作環境
 =======
 * Apache(mod_rewrite を使用可能)
 * PHP5.4 以上
-* MySQL5.0 以上   
+* MySQL5.0 以上
 
-================
 インストール方法
 ================
 
