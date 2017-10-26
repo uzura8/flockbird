@@ -294,15 +294,15 @@ return array(
 		 */
 		'modules'  => array_merge(array(
 			'notice',
-			'timeline',
-			'note',
-			'album',
-			'group',
-			'message',
+			//'timeline',
+			//'note',
+			//'album',
+			//'group',
+			//'message',
 			'content',
 			'contact',
-			'news',
-			'thread',
+			//'news',
+			//'thread',
 			'admin',
 			'api'
 		), $GLOBALS['_FBD_ADDITIONAL_MODULES']),

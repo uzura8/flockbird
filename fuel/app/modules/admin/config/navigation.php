@@ -6,19 +6,19 @@ $configs = array(
 			term('site.view', 'site.management') => array(
 				term('member.view', 'site.list') => 'admin/member/',
 				term('profile', 'site.setting') => 'admin/profile/',
-				term('message.view', 'site.list') => 'admin/message/',
+				//term('message.view', 'site.list') => 'admin/message/',
 			),
 			term('site.content', 'site.management') => array(
-				term('news.view', 'site.list') => 'admin/news/',
-				term('news.view', 'form.create') => conf('image.isInsertBody', 'news') ? array(
-					'href' => 'admin/news/create_instantly',
-					'method' => 'POST',
-					'attr' => array(
-						'class' => 'js-simplePost',
-						'data-msg' => term('news.view').'を'.term('form.create').'します。よろしいですか？',
-					),
-				) : 'admin/news/create',
-				term('news.category.view') => 'admin/news/category/',
+				//term('news.view', 'site.list') => 'admin/news/',
+				//term('news.view', 'form.create') => conf('image.isInsertBody', 'news') ? array(
+				//	'href' => 'admin/news/create_instantly',
+				//	'method' => 'POST',
+				//	'attr' => array(
+				//		'class' => 'js-simplePost',
+				//		'data-msg' => term('news.view').'を'.term('form.create').'します。よろしいですか？',
+				//	),
+				//) : 'admin/news/create',
+				//term('news.category.view') => 'admin/news/category/',
 				term('content.page', 'site.management') => 'admin/content/page/',
 				term('site.image', 'site.management') => 'admin/content/image/',
 				term('site.mail', 'site.template', 'site.management') => 'admin/content/template/mail/',
@@ -48,8 +48,8 @@ $configs = array(
 			term('admin.view', 'page.view', 'page.top') => 'admin/',
 			term('member.view', 'site.management') => 'admin/member/',
 			term('profile', 'site.setting') => 'admin/profile/',
-			term('message.view', 'site.list') => 'admin/message/',
-			term('site.content', 'site.management') => 'admin/news/',
+			//term('message.view', 'site.list') => 'admin/message/',
+			//term('site.content', 'site.management') => 'admin/news/',
 			term('admin.view', 'page.view', 'site.setting') => 'admin/account/',
 			term('site.view') => FBD_SITE_URL ?: '/',
 		),
