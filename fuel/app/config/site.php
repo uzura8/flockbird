@@ -9,6 +9,14 @@ $config = array(
 			'latest' => '2.2.4',
 			'legacy' => '1.12.4',
 		),
+		'vue' => array(
+			'isEnabled'  => false,
+			'version' => '2.4.4',
+		),
+		'axios' => array(
+			'isEnabled'  => false,
+			'version' => '0.16.2',
+		),
 		//'goutte' => array(
 		//	'isEnabled'  => true,
 		//),

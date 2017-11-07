@@ -11,6 +11,20 @@ if (conf('legacyBrowserSupport.isEnabled') && \MyAgent\Agent::check_legacy_ie(co
 if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/jquery-'.$jquery_version.'.min.js'); ?>"><\/script>')
 </script>
 
+<?php if (conf('library.vue.isEnabled')): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/<?php echo conf('library.vue.version') ; ?>/vue.min.js"></script>
+<script>
+if (typeof Vue == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/vue.min.js'); ?>"><\/script>')
+</script>
+<?php endif; ?>
+
+<?php if (conf('library.axios.isEnabled')): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/<?php echo conf('library.axios.version') ; ?>/axios.min.js"></script>
+<script>
+if (typeof axios == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/axios.min.js'); ?>"><\/script>')
+</script>
+<?php endif; ?>
+
 <?php
 $js_files = array(
 	'bootstrap.js',

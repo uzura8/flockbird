@@ -108,3 +108,11 @@
   - license: MIT
   - version: v0.4.25
   - url: http://hpneo.github.com/gmaps/
+* Vue.js
+  - license: MIT
+  - version: v2.4.4
+  - url: https://vuejs.org/index.html
+* axios
+  - license: MIT
+  - version: v0.16.2
+  - url: https://github.com/axios/axios
