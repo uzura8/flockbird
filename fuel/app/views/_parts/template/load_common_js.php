@@ -16,6 +16,14 @@ if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::b
 <script>
 if (typeof Vue == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/vue.min.js'); ?>"><\/script>')
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.0.4/theme-chalk/index.css">
+<?php 	if (conf('library.vue.element.isEnabled')): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/<?php echo conf('library.vue.element.version') ; ?>/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/<?php echo conf('library.vue.element.version') ; ?>/locale/ja.js"></script>
+<script>
+ELEMENT.locale(ELEMENT.lang.ja)
+<?php 	endif; ?>
+</script>
 <?php endif; ?>
 
 <?php if (conf('library.axios.isEnabled')): ?>
