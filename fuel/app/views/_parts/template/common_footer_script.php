@@ -2,6 +2,7 @@
 <script>
 var GL = {};
 var LANG = {};
+GL.conf = {};
 GL.execute_flg = false;
 function get_uid() {return <?php echo (!IS_ADMIN && Auth::check()) ? get_uid() : 0; ?>;}
 function check_is_admin() {return <?php echo IS_ADMIN ? 'true' : 'false'; ?>;}
