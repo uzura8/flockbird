@@ -112,6 +112,10 @@
   - license: MIT
   - version: v2.4.4
   - url: https://vuejs.org/index.html
+* Element
+  - license: MIT
+  - version: v2.0.4
+  - url: http://element.eleme.io/
 * axios
   - license: MIT
   - version: v0.16.2

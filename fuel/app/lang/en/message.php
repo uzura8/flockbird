@@ -19,6 +19,9 @@ return array(
 	'message_error_already_set_for' => 'This :label is already set. ',
 	'message_error_unregisterd_for' => ':label is unregistered. ',
 	'message_error_detail_search' => 'Your search conditions did not match any :label. ',
+	// form
+	'form_dialog_confirm' => 'Confirm',
+	'form_dialog_cancel' => 'Cancel',
 	// common
 	'message_no_data_for' => 'There is no :label. ',
 	'message_please_input' => 'Please input. ',
