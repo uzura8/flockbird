@@ -33,3 +33,21 @@ dl.c-horizontal-dl {
 		margin-bottom: @parts-margin-xxs;
 	}
 } 
+
+div.c-input-group {
+  input[type="text"] {
+    padding-right: 30px;
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  }
+  position: relative;
+  .c-input-group-suffix {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    z-index: 3;
+    height: 100%;
+    text-align: center;
+    color: #b4bccc;
+    transition: all .3s;
+  }
+}
