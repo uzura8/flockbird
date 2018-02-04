@@ -12,3 +12,21 @@
 <?php echo render('_parts/tags', array('tags' => $tags)); ?>
 <?php endif; ?>
 
+<!-- share button -->
+<?php $share_configs = conf(sprintf('%s.news.shareButton', is_admin() ? 'admin' : 'site'), 'page', array()); ?>
+<?php if ($news->is_published && ! empty($share_configs['isEnabled'])): ?>
+<div class="comment_info">
+<?php
+	$disableds = array();
+	if (empty($share_configs['twitter']['isEnabled'])) $disableds[] = 'twitter';
+	if (empty($share_configs['google']['isEnabled'])) $disableds[] = 'google';
+	if (empty($share_configs['line']['isEnabled'])) $disableds[] = 'line';
+	if (empty($share_configs['facebook']['share']['isEnabled'])) $disableds[] = 'facebook';
+	echo render('_parts/services/share', array(
+		'disableds' => $disableds,
+		'uri' => 'news/detail/'.$news->slug,
+		'text' => $news->title,
+	));
+?>
+</div>
+<?php endif; ?>
