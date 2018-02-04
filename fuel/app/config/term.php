@@ -185,6 +185,7 @@ $config = array(
 		'link' => 'リンク',
 		'shot' => '撮影',
 		'see_more' => 'もっとみる',
+		'see_all' => 'すべてみる',
 		'see_all_for' => ':labelをすべてみる',
 		'see_latest' => '最新をみる',
 		'unread' => '未読',
