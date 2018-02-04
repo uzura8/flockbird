@@ -101,9 +101,14 @@ class Controller_News extends \Controller_Site
 		$files  = \Config::get('news.file.isEnabled') ? \News\Model_NewsFile::get4news_id($news->id) : array();
 		$tags   = \Config::get('news.tags.isEnabled') ? \News\Model_NewsTag::get_names4news_id($news->id) : array();
 
+		$ogp_infos = array(
+			'title' => $news->title,
+			'description' => strip_tags($news->body),
+		);
+		if ($images) $ogp_infos['image'] = \Site_Util::get_image_uri4image_list($images, 'nw', 'raw');
 		$middle_breadcrumbs = array('news' => t('news.plural'));
 		if ($news->news_category) $middle_breadcrumbs['news/category/'.$news->news_category->name] = $news->news_category->label;
-		$this->set_title_and_breadcrumbs($news->title, $middle_breadcrumbs);
+		$this->set_title_and_breadcrumbs($news->title, $middle_breadcrumbs, null, null, null, false, false, $ogp_infos);
 
 		$this->template->subtitle = \View::forge('_parts/news_subinfo', array('news' => $news));
 		$this->template->content = \View::forge('detail', array('news' => $news, 'images' => $images, 'files' => $files, 'tags' => $tags));
