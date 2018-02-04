@@ -123,6 +123,7 @@ $.ajax({
 });
 var __ = function(line) {
 	var params = (arguments.length > 1) ? arguments[1] : {};
+	if (empty(LANG[line])) return '';
 	var translatedStr = LANG[line];
 	if (! empty(params)) {
 		$.each(params, function(key, val) {
