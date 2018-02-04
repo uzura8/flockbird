@@ -1,4 +1,8 @@
 <?php
+if (is_enabled('news') && is_null(\Config::get('news')))
+{
+	\Config::load('news::news', 'news');
+}
 
 $configs = array(
 	'admin' => array(
