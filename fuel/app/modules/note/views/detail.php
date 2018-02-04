@@ -42,7 +42,10 @@ echo render('_parts/like/count_and_link_execute', $data_like_link);
 
 <!-- share button -->
 <?php if (conf('site.common.shareButton.isEnabled', 'page') && check_public_flag($note->public_flag)): ?>
-<?php echo render('_parts/services/share', array('disableds' => array('facebook'), 'text' => $note->title)); ?>
+<?php echo render('_parts/services/share', array(
+  'disableds' => FBD_FACEBOOK_APP_ID && conf('service.facebook.shareDialog.note.isEnabled') ? array('facebook') : array(),
+  'text' => $note->title),
+); ?>
 <?php endif; ?>
 
 </div><!-- .comment_info -->

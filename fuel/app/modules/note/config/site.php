@@ -14,7 +14,7 @@ return array(
 		'facebook' => array(
 			'shareDialog' => array(
 				'note' => array(
-					'isEnabled' => true,
+					'isEnabled' => false,
 					'autoPopupAfterCreated' => false,
 				),
 			),
