@@ -101,10 +101,10 @@ class Controller_News extends \Controller_Site
 		$files  = \Config::get('news.file.isEnabled') ? \News\Model_NewsFile::get4news_id($news->id) : array();
 		$tags   = \Config::get('news.tags.isEnabled') ? \News\Model_NewsTag::get_names4news_id($news->id) : array();
 
-		$this->set_title_and_breadcrumbs($news->title, array(
-			'news' => t('news.plural'),
-			'news/category/'.$news->news_category->name => $news->news_category->label,
-		));
+		$middle_breadcrumbs = array('news' => t('news.plural'));
+		if ($news->news_category) $middle_breadcrumbs['news/category/'.$news->news_category->name] = $news->news_category->label;
+		$this->set_title_and_breadcrumbs($news->title, $middle_breadcrumbs);
+
 		$this->template->subtitle = \View::forge('_parts/news_subinfo', array('news' => $news));
 		$this->template->content = \View::forge('detail', array('news' => $news, 'images' => $images, 'files' => $files, 'tags' => $tags));
 		if (Site_Util::check_editor_enabled()) $this->template->content->set_safe('html_body', $news->body);
