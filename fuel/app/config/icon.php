@@ -67,6 +67,7 @@ $config = array(
 		'do_unwatch' => 'eye-close',
 		//'post' => '投稿',
 		//'do_post' => '投稿する',
+		'see_post' => 'globe',
 		'save' => 'save',
 		'do_save' => 'save',
 		'do_reset_default' => array(

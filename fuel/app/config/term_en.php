@@ -84,6 +84,7 @@ $config = array(
 		'do_not_watch' => 'Do not watch',
 		'post' => 'Post',
 		'do_post' => 'Post',
+		'see_post' => 'See Posted',
 		'save' => 'Save',
 		'do_save' => 'Save',
 		'do_reset_default' => 'Reset',

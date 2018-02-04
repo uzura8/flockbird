@@ -84,6 +84,7 @@ $config = array(
 		'do_not_watch' => 'ウォッチしない',
 		'post' => '投稿',
 		'do_post' => '投稿する',
+		'see_post' => '投稿をみる',
 		'save' => '保存',
 		'do_save' => '保存する',
 		'do_reset_default' => 'デフォルトに戻す',
