@@ -18,6 +18,9 @@ return array(
 	'message_error_already_set' => '既に設定済みです。',
 	'message_error_already_set_for' => 'その:labelは既に設定済みです。',
 	'message_error_detail_search' => '指定の条件に該当する:labelがいません。',
+	// form
+	'form_dialog_confirm' => 'はい',
+	'form_dialog_cancel' => 'キャンセル',
 	// common
 	'message_no_data_for' => ':labelはありません。',
 	'message_please_input' => '入力してください。',

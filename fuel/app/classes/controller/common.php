@@ -7,6 +7,7 @@ class Controller_Common extends Controller_Hybrid
 	protected $response_body;
 	protected $api_accept_formats = array('json');
 	protected $api_not_check_csrf = false;
+	protected $is_response_raw_result = false;
 
 	public function before()
 	{
@@ -132,7 +133,7 @@ class Controller_Common extends Controller_Hybrid
 			if (!empty($e)) Util_Toolkit::log_error(is_prod_env() ? $e->getMessage() : $e->__toString());
 			if (\DB::in_transaction()) \DB::rollback_transaction();
 		}
-		$response_body = Site_Controller::supply_response_body($this->response_body, $status_code, $this->format);
+		$response_body = Site_Controller::supply_response_body($this->response_body, $status_code, $this->format, array(), $this->is_response_raw_result);
 
 		return self::response($response_body, $status_code);
 	}

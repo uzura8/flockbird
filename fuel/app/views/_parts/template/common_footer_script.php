@@ -1,8 +1,11 @@
 <?php $img_max_sizes = Site_Upload::conv_size_str_to_array(conf('upload.types.img.accepted_max_size.default')); ?>
 <script>
-var GL = {};
+var GL = {
+	conf: {},
+	term: {},
+	execute_flg: false
+};
 var LANG = {};
-GL.execute_flg = false;
 function get_uid() {return <?php echo (!IS_ADMIN && Auth::check()) ? get_uid() : 0; ?>;}
 function check_is_admin() {return <?php echo IS_ADMIN ? 'true' : 'false'; ?>;}
 function getBasePath() {return '<?php echo Uri::base_path(); ?>';}

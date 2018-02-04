@@ -64,7 +64,7 @@ class Site_Controller
 		return $message ?: $default_message;
 	}
 
-	public static function supply_response_body($response_body = array(), $http_status = null, $format = null, $response_body_default = array())
+	public static function supply_response_body($response_body = array(), $http_status = null, $format = null, $response_body_default = array(), $is_response_raw_result = false)
 	{
 		if (!$response_body || !$http_status) return $response_body;
 
@@ -72,6 +72,7 @@ class Site_Controller
 
 		if (in_array($http_status, array(200, 201, 202)))
 		{
+			if ($is_response_raw_result) return $response_body;
 			if (!is_array($response_body)) return $response_body;
 
 			$response_body['status'] = 1;

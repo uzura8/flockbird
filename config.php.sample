@@ -57,6 +57,10 @@ $GLOBALS['_FBD_ADDITIONAL_MODULES'] = array(
 $GLOBALS['_FBD_ACCESS_ACCEPT_IPS']['admin'] = array(
 );
 
+// Routes setting
+define('FBD_ROUTES_ROOT_PATH', 'site/index');
+define('FBD_ROUTES_MYHOME_PATH', 'timeline/myhome');
+
 
 // サイト名
 define('FBD_SITE_NAME', 'サンプルSNS');

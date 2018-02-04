@@ -11,6 +11,28 @@ if (conf('legacyBrowserSupport.isEnabled') && \MyAgent\Agent::check_legacy_ie(co
 if (typeof jQuery == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/jquery-'.$jquery_version.'.min.js'); ?>"><\/script>')
 </script>
 
+<?php if (conf('library.vue.isEnabled')): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/<?php echo conf('library.vue.version') ; ?>/vue.min.js"></script>
+<script>
+if (typeof Vue == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/vue.min.js'); ?>"><\/script>')
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.0.4/theme-chalk/index.css">
+<?php 	if (conf('library.vue.element.isEnabled')): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/<?php echo conf('library.vue.element.version') ; ?>/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/<?php echo conf('library.vue.element.version') ; ?>/locale/ja.js"></script>
+<script>
+ELEMENT.locale(ELEMENT.lang.ja)
+<?php 	endif; ?>
+</script>
+<?php endif; ?>
+
+<?php if (conf('library.axios.isEnabled')): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/<?php echo conf('library.axios.version') ; ?>/axios.min.js"></script>
+<script>
+if (typeof axios == 'undefined') document.write('<script src="<?php echo Uri::base_path('assets/js/axios.min.js'); ?>"><\/script>')
+</script>
+<?php endif; ?>
+
 <?php
 $js_files = array(
 	'bootstrap.js',

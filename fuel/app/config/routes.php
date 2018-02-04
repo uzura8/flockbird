@@ -1,8 +1,9 @@
 <?php
 $routes = array(
-	'_root_'  => 'site/index',  // The default route
+	'_root_'  => FBD_ROUTES_ROOT_PATH,  // The default route
 	'_404_'   => 'error/404',   // The main 404 route
-	
+
+	'^member/?$'  => FBD_ROUTES_MYHOME_PATH,
 	'^member/(\d+)/relation/(follows|followers|friends)'  => 'member/relation/list/$2/$1',
 	'^member/me'  => 'member/home/me',
 	'member/(\d+)'  => 'member/home/$1',

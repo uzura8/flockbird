@@ -252,7 +252,7 @@ class Model extends \Orm\Model
 		return array($is_return_array ? $list_array : $list, $next_id, $all_records_count);
 	}
 
-	public static function get_all($relateds = array(), $params = array(), $order_by = null, $limit = 0, $offset = 0, $selects = array(), $return_with_all_count = false)
+	public static function get_all($relateds = array(), $params = array(), $order_by = null, $limit = 0, $offset = 0, $selects = array(), $with_all_count = false, $as_array = false)
 	{
 		$all_count = 0;
 		if (!is_array($relateds)) $relateds = (array)$relateds;
@@ -262,13 +262,19 @@ class Model extends \Orm\Model
 		if ($selects) $query->select($selects);
 		if ($relateds) $query->related($relateds);
 		if ($params) $query = static::set_where($query, $params);
-		if ($return_with_all_count) $all_count = $query->count();
+		if ($with_all_count) $all_count = $query->count();
 		if ($limit) $query->rows_limit($limit);
 		if ($offset) $query->rows_offset($offset);
+		$list = $query->get();
+		if ($as_array)
+		{
+			$list_array = array();
+			foreach ($list as $key => $obj) $list_array[] = $obj->to_array();
+		}
 
-		if ($return_with_all_count) return array($query->get(), $all_count);
+		if ($with_all_count) return array($as_array ? $list_array : $list, $all_count);
 
-		return $query->get();
+		return $as_array ? $list_array : $list;
 	}
 
 	public static function get4slug($slug)

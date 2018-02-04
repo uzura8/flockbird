@@ -49,7 +49,7 @@ class Auth_Login_Simpleauth extends \Auth\Auth_Login_Simpleauth
 			'email'           => $email,
 			'group'           => (int) $group,
 			'profile_fields'  => serialize($profile_fields),
-			'last_login'      => 0,
+			'last_login'      => null,
 			'login_hash'      => '',
 			'created_at'      => date('Y-m-d H:i:s'),
 			'updated_at'      => date('Y-m-d H:i:s'),
