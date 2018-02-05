@@ -21,7 +21,7 @@ if (\Timeline\Site_Util::check_type_to_get_access_from($type))
 	$access_from_member_relation = \Site_Member::get_access_from_member_relation($member_id, $self_member_id);
 }
 
-$member = Model_Member::check_authority($member_id);
+$member = Model_Member::get_one4id($member_id);
 ?>
 <?php if (isset($liked_timeline_ids)): ?>
 <?php echo Form::hidden('liked_timeline_ids', json_encode($liked_timeline_ids), array('id' => 'liked_timeline_ids')); ?>
