@@ -642,6 +642,7 @@ class Site_Util
 		if (! is_enabled_i18n()) return 'moment_locale/ja.js';
 
 		$locale = Util_Lang::get_locale();
+		if ($locale == 'en_US') return '';
 		$confs = conf('vendor.moment_js.locales', 'i18n');
 		$file_name = !empty($confs[$locale]) ? $confs[$locale].'.js' : $confs[$locale_default].'.js';
 

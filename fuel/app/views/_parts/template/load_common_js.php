@@ -44,8 +44,7 @@ $js_files = array(
 	'js-url/js-url.js',
 	'util.js',
 );
-$moment_local_file = Site_Util::get_moment_js_locale_file();
-Arr::insert_after_value($js_files, $moment_local_file, 'moment.js');
+if ($moment_local_file = Site_Util::get_moment_js_locale_file()) Arr::insert_after_value($js_files, $moment_local_file, 'moment.js');
 Asset::js($js_files, null, 'js_common', false, true);
 echo Asset::render('js_common', false, 'js');
 ?>
