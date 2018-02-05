@@ -1,3 +1,7 @@
+<?php if (!empty($content_inserted)): ?>
+<?php echo convert_body_by_format($content_inserted, $content_inserted_format); ?>
+<?php endif; ?>
+
 <?php if (!empty($timelines['list'])): ?>
 <h3><?php echo term('site.latest', 'timeline.plural'); ?></h3>
 <?php echo render('timeline::_parts/list', $timelines); ?>

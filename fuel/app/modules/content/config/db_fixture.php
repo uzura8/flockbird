@@ -25,5 +25,13 @@ return array(
 			'body' => '準備中',
 			'format' => 1,
 		),
+		array(
+			'slug' => 'page_content_site_index',
+			'is_secure' => 0,
+			'admin_user_id' => 1,
+			'title' => '差し込みコンテンツ(サイトトップ)',
+			'body' => '',
+			'format' => 1,
+		),
 	),
 );

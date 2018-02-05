@@ -83,11 +83,22 @@ class Controller_Site extends Controller_Base_Site
 			}
 			$this->template->post_header_content = View::forge('site/_parts/slide', array('image_uris' => $images));
 		}
+
+		if (is_enabled('content')
+			&& \Content\Site_Util::check_editor_enabled()
+			&& $content_page = \Content\Model_ContentPage::get_one4unique_key('page_content_site_index', array(), 'slug'))
+		{
+			$data['content_inserted_format'] = $content_page->format;
+		}
 		$this->set_title_and_breadcrumbs('', null, null, null, null, true, true);
 		$this->template->content = View::forge('site/index', $data);
 		if (!empty($data['news_list']['list']))
 		{
 			$this->template->content->set_safe('html_bodys', \News\Site_Model::convert_raw_bodys($data['news_list']['list']));
+		}
+		if (!empty($content_page))
+		{
+			$this->template->content->set_safe('content_inserted', trim($content_page->body));
 		}
 	}
 }
