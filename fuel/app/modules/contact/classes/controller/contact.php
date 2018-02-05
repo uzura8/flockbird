@@ -24,8 +24,8 @@ class Controller_Contact extends \Controller_Site
 
 		$message = __('message_error_unregisterd_for', array('label' => t('site.email')))
 						 . __('message_please_register_for', array('label' => t('site.email')));
-		Session::set_flash('message', $message);
-		Response::redirect('member/setting/email/regist');
+		\Session::set_flash('message', $message);
+		\Response::redirect('member/setting/email/regist');
 	}
 
 	/**
