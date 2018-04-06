@@ -35,15 +35,16 @@ function objectSort(object) {
 	return sorted;
 }
 
-function empty(data) {
+var empty = function (data) {
 	if (data === null) return true;
 	if (data === undefined) return true;
 	if (data === false) return true;
 	if (data === '') return true;
-	if (data === 0) return true;
 	if (data === '0') return true;
+	if (data === 0) return true;
+	if (typeof data === 'object' && !Object.keys(data).length) return true;
 	return false;
-}
+};
 
 function focusLast(inputSelector) {
 	var body = $(inputSelector).val();
