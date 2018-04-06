@@ -191,12 +191,17 @@ class Util_Array
 
 	public static function rand_weighted(array $array)
 	{
+		if (empty($array) || ! is_array($array)) throw new \InvalidArgumentException('Parameter is invalid.');
+
 		$sum  = array_sum($array);
 		$rand = rand(1, $sum);
 		foreach($array as $key => $weight)
 		{
 			if (($sum -= $weight) < $rand) return $key;
 		}
+		$values = array_keys($array);
+
+		return array_shift($values);
 	}
 
 	public static function conv_arrays2key_value_str($list, $delimitter = null)
