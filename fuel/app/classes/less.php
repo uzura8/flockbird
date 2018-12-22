@@ -74,9 +74,8 @@ class Less
 		// Add the first file to the imports array
 		$imports = array($source_less);
 
-		while($element = each($imports))
+		foreach($imports as $file)
 		{
-			$file = $element[1];
 			$base_dir = dirname($file);
 
 			if($css_imports = static::_get_imports($file))
