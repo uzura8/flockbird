@@ -163,7 +163,7 @@ define('FBD_IS_LIMIT_UPLOAD_FILE_SIZE', false);
 //);
 
 //// 画像・ファイルサーバを分ける場合のURL設定(スキーム付きで指定する)
-//define('FBD_MEDIA_BASE_URL', 'http://media.example.com/');
+//define('FBD_MEDIA_BASE_URL', '');
 
 //// 運用関連設定
 // 出力ログ設定
