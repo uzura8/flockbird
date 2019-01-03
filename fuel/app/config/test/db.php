@@ -1,8 +1,25 @@
 <?php
 /**
- * The test database settings. These get merged with the global settings.
+ * Fuel is a fast, lightweight, community driven PHP 5.4+ framework.
  *
- * This environment is primarily used by unit tests, to run on a controlled environment.
+ * @package    Fuel
+ * @version    1.9-dev
+ * @author     Fuel Development Team
+ * @license    MIT License
+ * @copyright  2010 - 2018 Fuel Development Team
+ * @link       https://fuelphp.com
+ */
+
+/**
+ * -----------------------------------------------------------------------------
+ *  Database settings for testing environment
+ * -----------------------------------------------------------------------------
+ *
+ *  This environment is primarily used by unit tests, to run on a
+ *  controlled environment.
+ *
+ *  These settings get merged with the global settings.
+ *
  */
 
 //return array(

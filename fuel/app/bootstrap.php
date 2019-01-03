@@ -1,11 +1,22 @@
 <?php
+/**
+ * Fuel is a fast, lightweight, community driven PHP 5.4+ framework.
+ *
+ * @package    Fuel
+ * @version    1.9-dev
+ * @author     Fuel Development Team
+ * @license    MIT License
+ * @copyright  2010 - 2018 Fuel Development Team
+ * @link       https://fuelphp.com
+ */
 
 // Load original setting file.
 require APPPATH.'config.inc.php';
 
-// Bootstrap the framework DO NOT edit this
+// Bootstrap the framework - THIS LINE NEEDS TO BE FIRST!
 require COREPATH.'bootstrap.php';
 
+// Add framework overload classes here
 \Autoloader::add_classes(array(
 	// Add classes you want to override here
 	// Example: 'View' => APPPATH.'classes/view.php',
@@ -22,6 +33,7 @@ require COREPATH.'bootstrap.php';
 	'Fieldset' => APPPATH.'classes/fieldset.php',
 	'Fieldset_Field' => APPPATH.'classes/fieldset/field.php',
 	'Inflector' => APPPATH.'classes/inflector.php',
+	// Example: 'View' => APPPATH.'classes/myview.php',
 ));
 
 // Register the autoloader
@@ -35,7 +47,7 @@ require COREPATH.'bootstrap.php';
  * Fuel::STAGING
  * Fuel::PRODUCTION
  */
-\Fuel::$env = \Arr::get($_SERVER, 'FUEL_ENV', \Arr::get($_ENV, 'FUEL_ENV', strtolower(FBD_ENVIRONMENT)));
+Fuel::$env = Arr::get($_SERVER, 'FUEL_ENV', Arr::get($_ENV, 'FUEL_ENV', getenv('FUEL_ENV') ?: strtolower(FBD_ENVIRONMENT)));
 
 // include helpers.
 Util_toolkit::include_php_files(APPPATH.'helpers');

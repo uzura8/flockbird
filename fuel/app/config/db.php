@@ -12,20 +12,14 @@
 
 /**
  * -----------------------------------------------------------------------------
- *  Database settings for development environment
+ *  Global database settings
  * -----------------------------------------------------------------------------
  *
- *  These settings get merged with the global settings.
+ *  Set database configurations here to override environment specific
+ *  configurations
  *
  */
 
-//return array(
-//	'default' => array(
-//		'connection'  => array(
-//			'dsn'        => 'mysql:host=localhost;dbname=fuel_dev',
-//			'username'   => 'root',
-//			'password'   => 'root',
-//		),
-//	),
-//);
-return $GLOBALS['_FBD_DSN']['development'];
+return array(
+
+);
