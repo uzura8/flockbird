@@ -14,9 +14,9 @@ define('FBD_ENVIRONMENT', 'PRODUCTION');
 define('FBD_URI_PATH', '/');// set setting path, if not set on document root
 
 // if use Internationalized Domain, set IDN here.
-//define('FBD_INTERNATIONALIZED_DOMAIN', '国際化ドメイン.JP');
+//define('FBD_INTERNATIONALIZED_DOMAIN', 'internationalized-domain-name-example.jp');
 
-// DBサーバ接続設定
+// DB Server connection setting
 $GLOBALS['_FBD_DSN']['production'] = array(
 	// MasterDB 設定
 	'default' => array(
@@ -28,32 +28,31 @@ $GLOBALS['_FBD_DSN']['production'] = array(
 		),
 		'charset' => 'utf8',// if use setting of utf8mb4, this line has to be commented out
 		//'charset' => 'utf8mb4',// if use this setting, mysql version has to be over 5.5.3 and set my.cnf innodb_large_prefix option
-		'connection_rate' => 0,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続). 0 を指定すると更新時のみ接続
-		//'readonly' => array(),// readonly は指定しない(connection_rate 設定が効かなくなる)
+		'connection_rate' => 0,// Connection frequency rate to refer on master-slave configuration. If set higher, connected more frequently. If set 0, connected on update only.
+		//'readonly' => array(),// Don't set readonly. If set, connection_rate setting is disabled.
 	),
 );
 // Use mysql environment variable MYSQL_PWD at executing sql from script.(Using mysql 5.6 or later, you have to set this true)
 //define('FBD_USE_ENV_VAL_MYSQL_PWD', false);
 
-// 暗号化キー(ASCII文字列)
+// Encrypt key (set ASCII chars only)
 define('FBD_ENCRYPTION_KEY', 'put_some_key_for_encryption_in_here');
 
 /**
  * ssl mode:
- *     使用には FBD_DOMAIN の SSL 証明書のサーバ設定が必要
+ *     Set SSL certificate of FBD_DOMAIN to WEB server, if use this.
  *
- * false    : SSL を使用しない
- * 'ALL'    : 全ページで SSL の使用を必須とする
- * 'PARTIAL': 指定のページのみで SSL の使用を必須とするsite.ssl_required)
- *              fuel/config/site.php の ssl_required で設定
+ * false    : not use SSL connection.
+ * 'ALL'    : Force to use SSL connection on all pages.
+ * 'PARTIAL': Use SSL connection on specified pages only. (You shoud set ssl_required on fuel/config/site.php)
  */
 define('FBD_SSL_MODE', false);
 
-// 追加読み込みモジュール
+// Set additional modules.
 $GLOBALS['_FBD_ADDITIONAL_MODULES'] = array(
 );
 
-// 管理画面アクセス許可IP設定 (未指定の場合、IP制限しない)
+// If you need access restriction to administrater pages, set ips to allow. If not set, allow to access from all ips.
 $GLOBALS['_FBD_ACCESS_ACCEPT_IPS']['admin'] = array(
 );
 
@@ -62,80 +61,80 @@ define('FBD_ROUTES_ROOT_PATH', 'site/index');
 define('FBD_ROUTES_MYHOME_PATH', 'timeline/myhome');
 
 
-// サイト名
+// Site name and meta settings.
 define('FBD_SITE_NAME', 'サンプルSNS');
 define('FBD_SITE_DESCRIPTION', 'サンプルSNSです');
 define('FBD_HEADER_DESCRIPTION_DEFAULT', 'サンプルSNSです。');
 define('FBD_HEADER_KEYWORDS_DEFAULT', 'SNS,サンプル');
 //define('FBD_COPYRIGHT', '');
 
-// 外部サイト設定
+// If you set this, top page is at other domain site.
 //define('FBD_SITE_URL', '');
 
 
-// 運営会社名(英語) copy right に使用
+// Site operating company name (used this at copy right)
 //define('FBD_ADMIN_COMPANY_NAME', '');
-// 運営会社名(日本語)
+// Site operating company name localized
 //define('FBD_ADMIN_COMPANY_NAME_JP', '');
 
-// 運営者名 (お問い合わせフォームに表示)
+// Site operating team name (used at contact form)
 define('FBD_ADMIN_NAME', FBD_SITE_NAME.' 運営事務局');
 
-// 運営者メールアドレス (お問い合わせフォームに表示)
+// Site operating team's email address (used at contact form)
 define('FBD_ADMIN_MAIL', 'admin@example.com');
 
-// Google 関連設定
+// Google settings
 define('GOOGLE_ANALYTICS_TRACKING_CODE', '');
 define('GOOGLE_SITE_VERIFICATION', '');
 define('GOOGLE_API_KEY', '');
 
-// AWS 関連設定
+// AWS settings
 define('FBD_AWS_ACCESS_KEY', '');
 define('FBD_AWS_SECRET_KEY', '');
 define('FBD_AWS_S3_BUCKET', '');
 define('FBD_AWS_S3_PATH', '');
 
 
-// 認証関連設定
-// 複数ログインを認めるか
+// Auth settings
+// Setting to allow multiple login
 define('SITE_MULTIPLE_LOGINS', false);
 define('ADMIN_MULTIPLE_LOGINS', false);
 
-// Facebook 関連設定
+// Facebook settings
 define('FBD_FACEBOOK_APP_ID', '');
 define('FBD_FACEBOOK_APP_SECRET', '');
 
-// Twitter 関連設定
+// Twitter settings
 define('FBD_TWITTER_APP_ID', '');
 define('FBD_TWITTER_APP_SECRET', '');
 
-// Google 関連設定
+// Google settings
 define('FBD_GOOGLE_APP_ID', '');
 define('FBD_GOOGLE_APP_SECRET', '');
 
 
-// アップロードするファイルの最大サイズ(単位: byte / 0 = no maximum)
-// 未指定の場合は php.ini の値
-// define('FBD_UPLOAD_MAX_FILESIZE', 1 * 1024 * 1024);
+// Max size to upload. 
+// If not set, applied value in php.ini
+// define('FBD_UPLOAD_MAX_FILESIZE', '10MB');
 
-// 一度にアップロードできるファイル数
-// 未指定の場合は php.ini の値
+// Number of files enabled to uipload
+// If not set, applied by value in php.ini
 // define('FBD_MAX_FILE_UPLOADS', 20);
 
-// 画像ライブラリの指定 ( gd / imagick / imagemagick )
+// Set image library ( gd / imagick / imagemagick )
 define('FBD_IMAGE_DRIVER', 'gd');
 
-// ImageMagick のパス(ImageMagick を使用する場合のみ)
+// path of ImageMagick(only use ImageMagick)
 // define('FBD_IMAGE_IMGMAGICK_PATH', '/usr/bin/');
 
-// 画像変換後のQUALITY値
+// Image quality after converted
 define('FBD_IMAGE_OUTPUT_IMAGE_QUALITY', 98);
 
-// メンバーごとにアップロードファイルサイズの上限を設けるかどうか
+// Set true, if you want set upload file size limit for each member
 define('FBD_IS_LIMIT_UPLOAD_FILE_SIZE', false);
 
 
-//// 複数DBサーバ接続設定
+//// Setting of multiple db server
 //$GLOBALS['_FBD_DSN']['production'] = array(
 //	// SlaveDB 設定
 //	'slave1' => array(
@@ -146,7 +145,7 @@ define('FBD_IS_LIMIT_UPLOAD_FILE_SIZE', false);
 //			'password'   => '',
 //		),
 //		'table_prefix' => '',
-//		'connection_rate' => 1,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続)
+//		'connection_rate' => 1,// Connection frequency rate to refer on master-slave configuration. If set higher, connected more frequently. If set 0, connected on update only.
 //	),
 //	// file_bin DB 設定
 //	'file_bin_db' => array(
@@ -157,19 +156,19 @@ define('FBD_IS_LIMIT_UPLOAD_FILE_SIZE', false);
 //			'password'   => '',
 //		),
 //		'table_prefix' => '',
-//		'connection_rate' => 0,// master-slave 構成時の参照の接続頻度(値が大きいほど高頻度で接続). 0 を指定すると更新時のみ接続
-//		//'readonly' => array(),// readonly は指定しない(connection_rate 設定が効かなくなる)
+//		'connection_rate' => 0,// Connection frequency rate to refer on master-slave configuration. If set higher, connected more frequently. If set 0, connected on update only.
+//		//'readonly' => array(),// Don't set readonly. If set, connection_rate setting is disabled.
 //	),
 //);
 
-//// 画像・ファイルサーバを分ける場合のURL設定(スキーム付きで指定する)
+//// Setting of media server url, if you deliver from other server(Need to set with http scheme)
 //define('FBD_MEDIA_BASE_URL', '');
 
-//// 運用関連設定
-// 出力ログ設定
+//// Setting for operation
+// Output log level setting
 define('FBD_OUTPUT_ERROR_LOG_LEVEL', 'error'); // false / error / warning / info / debug
 
-// 開発関連設定
-// プロファイル実行設定
+//// Setting for development
+// Profiling setting
 define('FBD_PROFILING', false);
 
