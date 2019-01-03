@@ -15,7 +15,7 @@ Environment
 Getting Started
 ===============
 
-###　1. Set and edit config file (config.php) ###
+###　1. Set and edit config file (config.php)
 
 ~~~~
 $ cp config.php.sample config.php
