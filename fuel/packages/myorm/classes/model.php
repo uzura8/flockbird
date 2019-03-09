@@ -554,7 +554,7 @@ class Model extends \Orm\Model
 		$ignore_props = array_unique(static::get_ignore_props2edit() + $ignore_props_additional);
 		foreach ($values as $key => $value)
 		{
-			if (!isset($this->{$key})) continue;
+			if (!isset(static::$_properties[$key])) continue;
 			if (in_array($key, $ignore_props)) continue;
 
 			$this->{$key} = $value;
