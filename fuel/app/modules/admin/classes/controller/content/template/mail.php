@@ -54,7 +54,7 @@ class Controller_Content_Template_Mail extends Controller_Admin
 		list($db_key, $configs, $contents) = self::get_template_configs($module, $name, $lang);
 		if (! $configs || ! $contents) throw new \HttpNotFoundException;
 
-		$val = self::get_validation($configs);
+		$val = self::get_validation($contents);
 
 		if (\Input::method() == 'POST')
 		{
@@ -71,10 +71,10 @@ class Controller_Content_Template_Mail extends Controller_Admin
 					$template = \Model_Template::forge();
 					$template->name = $db_key;
 					$template->lang = $lang;
-					$template->format = $configs['format'];
+					$template->format = $contents['format'];
 				}
-				$template->title = isset($post['title']) ? $post['title'] : $configs['title'];
-				$template->body  = isset($post['body']) ? $post['body'] : $configs['body'];
+				$template->title = isset($post['title']) ? $post['title'] : $contents['title'];
+				$template->body  = isset($post['body']) ? $post['body'] : $contents['body'];
 				$template->save();
 				\DB::commit_transaction();
 
@@ -122,11 +122,11 @@ class Controller_Content_Template_Mail extends Controller_Admin
 	 * @params  integer
 	 * @return  Response
 	 */
-	public function action_reset($db_key = null)
+	public function action_reset($db_key = null, $lang = null)
 	{
 		\Util_security::check_method('POST');
 		\Util_security::check_csrf();
-		if (!$template = \Model_Template::get4name($db_key))
+		if (!$template = \Model_Template::get_one4name_lang($db_key, $lang))
 		{
 			throw new \HttpNotFoundException;
 		}
@@ -155,7 +155,7 @@ class Controller_Content_Template_Mail extends Controller_Admin
 		\Response::redirect('admin/content/template/mail');
 	}
 
-	private static function get_validation(array $configs)
+	private static function get_validation(array $contents)
 	{
 		$val = \Validation::forge();
 		$val->add_model(\Model_Template::forge());
@@ -163,7 +163,7 @@ class Controller_Content_Template_Mail extends Controller_Admin
 		$val->field('lang')->delete_rule('required');
 		$val->field('format')->delete_rule('required');
 		$val->field('body')->add_rule('required');
-		if (empty($configs['title']))
+		if (empty($contents['title']))
 		{
 			$val->fieldset()->delete('title');
 		}
