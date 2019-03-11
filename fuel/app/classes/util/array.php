@@ -171,9 +171,11 @@ class Util_Array
 
 	public static function get_first_key(array $array)
 	{
-		$row = each($array);
-
-		return $row['key'];
+		if (! $array) return '';
+		foreach ($array as $key => $value)
+		{
+			return $key;
+		}
 	}
 
 	public static function get_first(array $array)
