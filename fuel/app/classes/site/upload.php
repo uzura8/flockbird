@@ -346,8 +346,12 @@ class Site_Upload
 			$options['image_library'] =  0;
 			if (FBD_IMAGE_DRIVER == 'imagemagick')
 			{
-				$options['image_library'] = 1;
+				$options['image_library'] = 2;
 				$options['convert_bin'] = FBD_IMAGE_IMGMAGICK_PATH.'convert';
+			}
+			elseif (FBD_IMAGE_DRIVER == 'imagick')
+			{
+				$options['image_library'] = 1;
 			}
 			$options['image_versions'] = array(
 				'' => array(
